@@ -1,0 +1,58 @@
+.table-head-style1{ background: #434a54;margin: 0; border-radius: 6px 6px 0 0; padding: 6px 0; }
+.selected-all{ color: #fff; font-size: 14px;;padding: 0 20px;line-height: 30px }
+.input-group-btn{ height: 30px;}
+.test1{ background: #fff;color: #1b7a8b;}
+.table thead th{ font-size: 14px;}
+.btn_pl{height:30px;min-width:80px;line-height: 16px;}
+.opera  span{ padding: 0 5px;}
+.opera .pass{ color:#21b9bb;}
+.opera .no_pass{ color:#ed5565;}
+
+input[type=checkbox],input[type=radio]{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: bottom;
+    background: #fff;
+    border: 1px solid green;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+}
+
+input[type=checkbox]:active,input[type=radio]:active {
+    border-color: green;
+    background: #ebebeb;
+}
+
+input[type=checkbox]:hover {
+    border-color: #c6c6c6;
+    -webkit-box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
+    -moz-box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
+}
+
+input[type=checkbox]:checked,input[type=radio]:checked {
+    background: #fff;
+}
+
+input[type=checkbox]:checked::after {
+    content: url(/cwx/images/cb.png);
+    display: block;
+    position: absolute;
+    top: -5px;
+    right: 0px;
+    left: -5px
+}
+
+input[type=checkbox]:focus {
+    outline: none;
+    border-color: green;
+}

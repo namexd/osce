@@ -1,0 +1,20 @@
+#renow_info p{ font-size: 16px; line-height:50px;}
+
+
+.Reason  textarea{
+    width: 100%;border:1px solid #dce0e4;
+    height: 100px;
+    line-height: 20px;
+    border-radius: 4px;
+    padding:10px 5px;
+}
+.time_select  label{display: inline-block; float: left; font-weight: normal;}
+.time_select  input{ width:75%;  border:1px solid #dce0e4; border-radius: 4px;
+    line-height: 26px; height:36px;
+    padding-left:25px; font-size: 14px;
+    background:url("../../common/img/Calendar.png") no-repeat #fff 6px 9px;
+    background-size: 15px;float: right;}
+.time_select   input:last-child{margin-top:10px;}
+.time_select   span{ width: 10%; float: left;
+    text-align:center; color: #dce0e4; font-weight: bold;
+    line-height:36px; }

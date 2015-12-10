@@ -1,0 +1,32 @@
+.table-head-style1{ background: #434a54;margin: 0; border-radius: 6px 6px 0 0; padding: 6px 0; }
+.head-opera{ color: #fff; font-size: 14px;;padding: 0 20px;line-height: 30px }
+.input-group-btn{ height: 30px;}
+.test1{ background: #fff;color: #1b7a8b;}
+.table thead th{ font-size: 14px;}
+.btn_pl{height:30px;min-width:80px;line-height: 16px;}
+
+/*commons*/
+.opera  span{ padding: 0 5px; cursor: pointer;}
+.opera .span_primary{ color:#21b9bb;}
+.opera .span_danger{ color:#ed5565;}
+.border-white{ border:1px solid #fff;}
+
+/*input_image*/
+.file-preview{ padding: 0;}
+
+.file-preview-frame{margin: 8px 20px;}
+.file-preview-frame:hover{box-shadow: none; float: left;}
+.file-preview-image{  padding-bottom: 15px;}
+.file-actions .glyphicon-hand-down { display: none;}
+.file-actions .kv-file-upload{ visibility: hidden;}
+
+/*layer*/
+
+.modal-header{ background-color: #f6f8fa; color: #95b8fd;}
+.modal .modal-dialog{ margin-top: 20%;}
+.modal-body .clink_more{
+    background-color: #408aff; color: #fff; position: absolute; right: -16px; bottom: 0;
+    display: inline-table;padding: 5px 15px; border-radius: 24px 0 0 24px;
+    cursor: pointer;
+}
+.modal-body textarea{ margin-top: 10px; height: 200px; }

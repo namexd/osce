@@ -1,0 +1,49 @@
+#Equipment_info p{ font-size: 16px; line-height:36px;}
+
+#Equipment_info .time_select{ overflow: hidden;}
+#Equipment_info .time_select  label{display: inline-block; float: left; font-weight: normal;}
+#Equipment_info .time_select  input{ width:75%;  border:1px solid #dce0e4; border-radius: 4px;
+    line-height: 26px; height:36px;
+    padding-left:25px; font-size: 14px;
+    background:url("../../common/img/Calendar.png") no-repeat #fff 6px 9px;
+    background-size: 15px;float: right;}
+
+#Equipment_info .time_select  span{ width: 10%; float: left;
+    text-align:center; color: #dce0e4; font-weight: bold;
+    line-height: 36px; }
+
+.Reason  textarea{
+    width: 100%;border:1px solid #dce0e4;
+    height: 100px;
+    line-height: 20px;
+    border-radius: 4px;
+    padding:10px 5px;
+}
+#Equipment_info  p span{ padding:0 10px;}
+#Equipment_info  .State1{ color:#6595e1;}
+#Equipment_info  .State2{ color:#ff0000;}
+#Equipment_info  .State3{ color:#a2a2a2;}
+
+.select2-container .select2-selection--single{height: 40px; border:1px solid #dce0e4;}
+.select2-container--default .select2-selection--single .select2-selection__arrow{top:3px;}
+
+/*ȷ������*/
+#recheck_info small{ color: #a2a2a2;}
+#recheck_info p{ font-size: 16px; line-height:36px;}
+
+#recheck_info .show{
+    height: 40px; border:1px solid #dce0e4; background: #fff;
+    width: 100%; border-radius:0.3em; text-indent: 5px;
+}
+#recheck_info .time_select  label{display: inline-block; float: left; font-weight: normal;}
+#recheck_info .time_select  input{ width: 45%; float: left; border:1px solid #dce0e4; border-radius: 4px;
+    line-height: 40px; font-size: 16px; text-indent: 5px;
+    background: #fff; }
+#recheck_info .time_select  input:last-child{ width: 45%; float: left;}
+#recheck_info .time_select  span{ width: 10%; float: left;
+    text-align:center; color: #dce0e4; font-weight: bold;
+    line-height: 40px; }
+
+.wait { text-align: center;}
+
+.wait p{font-size: 16px; line-height:36px;color: #a2a2a2;}

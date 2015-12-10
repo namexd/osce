@@ -1,0 +1,53 @@
+.main_list  .title_nav .title{    width: 20%;}
+.detail_list ul li div{   width: 20%;}
+
+.detail_list .Time_slot p{
+    line-height: 20px; height:18px;
+}
+.detail_list .Time_slot p span{color:#6595e1; }
+.attention  a{color:#6595e1;}
+
+#borrow_history  .State1{ color:#6595e1;}
+#borrow_history  .State2{ color:#ff0000;}
+#borrow_history  .State3{ color:#a2a2a2;}
+
+
+/*外借确认归还table*/
+.check_info .title{
+    font-size: 16px;line-height:40px;
+    height:40px; border-top:1px solid #DCE0E4; border-bottom: 1px solid #DCE0E4; background: #fff; width:100%; padding: 0 3%;}
+
+.check_info .title .i_right{float:right;margin:8px 0px 0 0;font-size:26px;color:#ccc;}
+.phone_box{border-bottom: 1px solid #DCE0E4;}
+.check_info textarea{ border: none;}
+.check_info select{ border: none; padding-left: 90px;}
+/*箭头旋转*/
+.rotate90 {
+    filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+/*历史外借时间设置*/
+.history_time_select {overflow: hidden;}
+.history_time_select input{margin-top: 10px;}
+.history_time_select .left{width:82%}
+.history_time_select .right{width:15%}
+
+.history_time_select { overflow: hidden;}
+.history_time_select label{display: inline-block; float: left; font-weight: normal; line-height:28px; margin-top:15px;}
+.history_time_select  input{ width:75%;  border:1px solid #dce0e4; border-radius: 4px;
+    line-height: 26px; height:36px;
+    padding-left:25px; font-size: 14px;
+    background:url("../../common/img/Calendar.png") no-repeat #fff 6px 9px;
+    background-size: 15px;float: right;}
+.history_time_select   input:last-child{margin-top:10px;}
+.history_time_select   span{ width: 10%; float: left;
+    text-align:center; color: #dce0e4; font-weight: bold;
+    line-height:36px; }
+
+
+
+
