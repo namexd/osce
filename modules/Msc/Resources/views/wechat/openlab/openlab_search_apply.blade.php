@@ -73,7 +73,7 @@
     <div class="form-group">
         <label for="">使用时段</label>
         <div class="txt">
-            {{@$ClassroomPlanInfo['get_plan'][0]['begintime']}}-{{$ClassroomPlanInfo['get_plan'][0]['endtime']}}
+            {{@$ClassroomPlanInfo['begintime']}}-{{$ClassroomPlanInfo['endtime']}}
         </div>
     </div>
     <div class="form-group">
