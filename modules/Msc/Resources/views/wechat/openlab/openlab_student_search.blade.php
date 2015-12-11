@@ -17,21 +17,19 @@
 <script>
 
     $(document).ready(function(){
-         if($('#get_type').html() == 'success'){
-
+        if($('#get_type').html() == 'success'){
             $.confirm({
-                    title: '提示：',
-                    content: '操作成功',
-                    confirmButton: '　　　是　　　 ' ,
-                    cancelButton: '　　　　　　',
-                    confirmButtonClass: 'btn-info',
-                    confirm:function(){
-                         window.location.href="/msc/wechat/open-laboratory/type-list";
-                    }
-                })
+                title: '提示：',
+                content: '操作成功',
+                confirmButton: '　　　是　　　 ' ,
+                cancelButton: '　　　　　　',
+                confirmButtonClass: 'btn-info',
+                confirm:function(){
+                        $('#get_type').html('false');
+                        window.location.href="/msc/wechat/open-laboratory/type-list";
+                }
+            });
         }
-
-
         var now_page=1;
         var qj={page:now_page,dateTime:today};//设置页码
         var url="{{ url('/msc/wechat/open-laboratory/laboratory-data') }}";

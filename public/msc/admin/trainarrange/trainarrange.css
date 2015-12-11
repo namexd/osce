@@ -1,6 +1,6 @@
 .ibox-title {position: relative;}
 .right_btn {position: absolute;right: 20px;top: 10px}
-.right_btn input {float: right;padding: 3px 12px;margin-left: 15px;}
+.right_btn input {float: right;padding: 6px 12px;margin-left: 15px;}
 .agile_box{border:1px solid #E7EAEC;border-radius:3px;}
 .agile_box .agile_tit{height:40px;line-height:40px;border-bottom:1px solid #E7EAEC;text-align:center;font-size:14px;background:#F9F9F9;}
 .agile-list{padding-left:5px}
