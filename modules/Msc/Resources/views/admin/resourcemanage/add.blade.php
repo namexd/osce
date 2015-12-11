@@ -154,17 +154,6 @@
                             '</div>';
 		    	$("#code_list").append(str);
 		    });
-		    $("#code_list").delegate(".code_add","click",function(){
-		    	var  str='<div class="form-group">'+
-                                '<label class="col-sm-2 control-label"></label>'+
-                                '<div class="col-sm-10 add_box">'+
-                                    '<input type="text" id="" name="code[]" class="code_txt left form-control" value="">'+
-                                    '<input type="button" id="" name="" class="code_del left btn btn-danger" value="删 除" />'+
-                                '</div>'+
-                            '</div>';
-		    	$("#code_list").append(str);
-		    	$(this).remove();
-		    });
 		    $("#code_list").delegate(".code_del","click",function(){
 		    	$(this).parents(".form-group").remove();
 		    	$(this).remove();
