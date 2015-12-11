@@ -68,6 +68,7 @@ class ResourcesDevice extends  CommonModel {
             $join->on('resources_lab.id','=','resources_device.resources_lab_id')
                  ->where('resources_device.id', '=', $id);
         })->select([
+            'resources_device.name as name', // 设备名字
             'resources_lab.begintime as begintime', // 实验室开门时间
             'resources_lab.endtime as endtime', // 实验室关门时间
             'resources_device.max_use_time as max_use_time', // 仪器使用一次时间(min)
@@ -111,6 +112,7 @@ class ResourcesDevice extends  CommonModel {
             }
             $temp['time'] = $timeSec;
             $temp['id']   = $id;
+            $temp['name'] = $item->name;
 
 
             $data[] = $temp;
