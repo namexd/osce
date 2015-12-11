@@ -2,7 +2,7 @@
 
 @section('only_head_css')
 <link href="{{asset('msc/wechat/resourcemanage/css/information.css')}}" rel="stylesheet" type="text/css" />
-<link href="{{asset('msc/wechat/resourcemanage/resourcemanage/reourcemanage.css')}}" rel="stylesheet" type="text/css" />
+
 <link rel="stylesheet" href="{{asset('msc/common/css/bootstrapValidator.css')}}">
 <style>
     .bv-form .help-block {
