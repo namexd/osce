@@ -260,12 +260,25 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">编码</label>
                                 <div class="col-sm-10 add_box">
-                                	<input  type="text" id="" name="code[]" class=" left form-control" value="">
+                                	<input  type="text" id="" name="code[]" class=" left form-control" value="{{$resource['items'][0]['code']}}">
                             		<input type="button" id="" name="" class="code_add left btn btn-info" value="添 加">
                                 </div>
                             </div>
                             <div id="code_list">
-                            	
+                            	@foreach($resource['items'] as $key => $list)
+                            		@if($key == 0)
+                            		
+                            		@else
+                            		<div class="form-group">
+										<label class="col-sm-2 control-label">
+										</label>
+										<div class="col-sm-10 add_box">
+											<input type="text" id="" name="code[]" class="code_txt left form-control" value="{{$list['code']}}">
+											<input type="button" id="" name="" class="code_del left btn btn-danger" value="删 除">
+										</div>
+									</div>
+                            		@endif
+                            	@endforeach
                             </div>
 	                        <div class="hr-line-dashed"></div>
                             <div class="form-group">

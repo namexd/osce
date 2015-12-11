@@ -106,7 +106,7 @@
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="ibox float-e-margins">
-		<form class="form-horizontal" action="url(/msc/admin/training/add-training-preview)" method="post" id="form">
+		<form class="form-horizontal" action="{{url('/msc/admin/training/add-training-preview')}}" method="post" id="form">
 			<div class="ibox-title of">
 				<h5 class="col-sm-6">培训安排</h5>
 				<div class="right_btn">
