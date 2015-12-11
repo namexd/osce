@@ -257,6 +257,62 @@ class ResourcesManagerController extends MscController
     }
 
     /**
+     * 根据pid创建一个资源分类实体
+     * @method POST
+     * @url /msc/admin/resources-manager/add-cate-by-pid
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        $pid        分类pid
+     *
+     * @return int 新增分类实体id/false
+     *
+     * @version 0.2
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2015-12-11 15:31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postAddCateByPid (Request $request)
+    {
+        $this->validate($request,[
+            'pid'  => 'required|integer',
+        ]);
+
+        $pid = $request->input('pid');
+
+        $data = [
+            'repeat_max'     => 0,
+            'pid'            => $pid,
+            'name'           => '',
+            'manager_id'     => 0,
+            'manager_name'   => '',
+            'manager_mobile' => '',
+            'location'       => '',
+            'detail'         => '',
+            'loan_days'      => 0,
+        ];
+
+        $cate = ResourcesToolsCate::create($data);
+
+        if ($cate instanceof ResourcesToolsCate)
+        {
+            $cateId = $cate->id;
+
+            return response()->json(
+                $this->success_data($cateId)
+            );
+        }
+        else
+        {
+            return response()->json(false);
+        }
+
+
+
+    }
+
+    /**
      * 新增资源工具类别
      * @method POST /msc/admin/resources-manager/add-resources-tools-cate
      * @access public
@@ -693,11 +749,14 @@ class ResourcesManagerController extends MscController
                 $hasData[] = $item->url;
             }
             $imagePathCopy = $formData['images_path'];
-            foreach($formData['images_path'] as $key=>$path)
+            if ($imagePathCopy)
             {
-                if(in_array($path, $hasData))
+                foreach($formData['images_path'] as $key=>$path)
                 {
-                    unset($imagePathCopy[$key]);
+                    if(in_array($path, $hasData))
+                    {
+                        unset($imagePathCopy[$key]);
+                    }
                 }
             }
             $ImageNew = $imagePathCopy;

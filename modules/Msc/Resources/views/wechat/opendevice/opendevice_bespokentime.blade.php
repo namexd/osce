@@ -12,8 +12,8 @@
 	<script>
 		$(function(){
 			var name=$(".name").text().split('\n')[1];
-			$(".top-title").text(name);
 			var date=window.location.href.split('/')[8];
+			$(".top-title").text(name+' - '+date.substring(5,10));
 			var url=$(".url").attr("href").replace('@',date);
 			$(".url").attr("href",url);
 		})

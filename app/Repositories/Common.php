@@ -10,7 +10,7 @@ use Overtrue\Wechat\Message;
 use Overtrue\Wechat\Staff;
 use Queue;
 use App;
-use Request;
+use Illuminate\Http\Request;
 
 
 class Common{
@@ -91,7 +91,6 @@ class Common{
      *
      */
     public static function saveImage(Request $request,$name){
-
         if($request->hasFile($name) && $request->file($name)->isValid()){
 
             $image=$request->file($name);
