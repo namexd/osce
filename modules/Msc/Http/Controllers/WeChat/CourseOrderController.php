@@ -101,9 +101,11 @@ class CourseOrderController extends MscWeChatController {
 		 ->first();
 		$studentClass = $studentClass->get();
 	 	//$groups = $groups->get();
-
-	 	$ClassroomPlanInfo->begintime = date('H:i',strtotime($ClassroomPlanInfo->begintime));
-	 	$ClassroomPlanInfo->endtime = date('H:i',strtotime($ClassroomPlanInfo->endtime));
+		if(!empty($ClassroomPlanInfo)){
+			$ClassroomPlanInfo->begintime = date('H:i',strtotime($ClassroomPlanInfo->begintime));
+	 		$ClassroomPlanInfo->endtime = date('H:i',strtotime($ClassroomPlanInfo->endtime));
+		}
+	 	
 	 	
 		$data = [
 			'ClassroomPlanInfo'=>$ClassroomPlanInfo,
@@ -120,7 +122,6 @@ class CourseOrderController extends MscWeChatController {
 	//保存课程预约信息（）
 	///msc/wechat/course-order/postAddClassRoomApply
 	public function postAddClassRoomApply(Request $request) {   
-		//dd(Input::get());
 		$this->validate($request, [      
 			'course_name' => 'required',      
 			'detail' => 'required',       
@@ -175,7 +176,6 @@ class CourseOrderController extends MscWeChatController {
 	public function postAddCourseToAplan(ResourcesClassroomPlan $plan,ResourcesClassroomCourses $rcc){
 		DB::connection('msc_mis')->beginTransaction();
 		$CourseToAplan = DB::connection('msc_mis')->table('resources_lab_plan')->where('id', Input::get('rcp'))->update(['status' => 0]);
-		//dd($CourseToAplan);
 		if(!$CourseToAplan){
 			DB::connection('msc_mis')->rollback();
 			return redirect()->intended('/msc/wechat/course-order/course-confirm?id='. Input::get('rcp'));
