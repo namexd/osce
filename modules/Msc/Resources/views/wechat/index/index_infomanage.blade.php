@@ -22,14 +22,14 @@
                 <div class="col-sm-6 column">
                     <div class="normal_background ">
                         <span class="manageindex_icon icon1"></span>
-                        <a href="{{ url('/msc/wechat/open-laboratory/type-list') }}"><span>开放实验室的预约使用</span></a>
+                        <a  href="{{route('wechat.lab-tools.getOpenToolsOrderIndex')}}" ><span>开放设备的预约使用</span></a>
                     </div>
                 </div>
                 <div class="col-sm-6 column">
-                    <a  href="{{route('wechat.lab-tools.getOpenToolsOrderIndex')}}" >
+                    <a href="{{ url('/msc/wechat/open-laboratory/type-list') }}">
                     <div class="normal_background">
                         <span class="manageindex_icon icon2"></span>
-                        <span>开放设备的预约使用</span>
+                        <span>开放实验室的预约使用</span>
                     </div>
                     </a>
                 </div>
