@@ -615,14 +615,8 @@ class TrainingController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postAddTrainingPreview (Request $request)
-<<<<<<< .mine
     {    	
-||||||| .r1243
-    {
-    	dd($request->all());
-=======
-    {
->>>>>>> .r1255
+
         $this->validate($request,[
             'id'              => 'required|integer',
             'trainingCourses' => 'required|array',
