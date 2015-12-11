@@ -16,6 +16,8 @@
         border: none;
         font-weight: bolder;
     }
+    .checkbox tr td:first-child{padding-top: 10px;}
+    .check_ids{}
     </style>
 @stop
 
@@ -239,12 +241,44 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">需带材料：</label>
                 <div class="col-sm-9">
-                    <select class="form-control" multiple="multiple">
-                        <option value="辅导员证明材料">辅导员证明材料</option>
-                        <option value="借条">借条</option>
-                        <option value="学生证">学生证</option>
-                        <option value="身份证">身份证</option>
-                    </select>
+                    <table class="checkbox">
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="辅导员证明材料">
+                                </label>
+                            </td>
+                            <td>&nbsp;辅导员证明材料</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="借条">
+                                </label>
+                            </td>
+                            <td>&nbsp;借条</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="学生证">
+                                </label>
+                            </td>
+                            <td>&nbsp;学生证</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="身份证">
+                                </label>
+                            </td>
+                            <td>&nbsp;身份证</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -268,7 +302,7 @@ $(function(){
             $('#Form3').attr('value',$(this).parent().parent().parent().attr('value'));
             $('#start').val('');
             $('#end').val('');
-            $('#Form3').find('select').val('');
+            $('#Form3').find('.check_icon').removeClass('check');
             $('#Form3').show();
             $('#Form2').hide();
         }
@@ -277,10 +311,17 @@ $(function(){
     /*通过审核*/
     $('#apply-yes').click(function(){
         var req = {};
-        var materials = $('#Form3').find('select').val();
+        var materials = [];
+        //材料勾选
+        $('#Form3 .checkbox').find('tr').each(function(index,elem){
+            var thisSibling = $(elem).find('div').siblings();
+            if($(elem).find('div').hasClass('check')){
+                materials.push(thisSibling.val());
+            };
+        });
         req['time_start'] = $('#start').val();
         req['time_end'] = $('#end').val();
-        //防止join报错
+        //防止join报错 
         if(materials==null){
             req['idcard_type'] = materials;
         }else{
@@ -322,6 +363,22 @@ $(function(){
             }
         });
     })
+
+    /**
+     *多选框
+     */
+    $('.check_ids').click(function(){
+
+        var thisSibling = $(this).siblings();
+        //判断check
+        if(thisSibling.hasClass('check')){
+            thisSibling.removeClass('check');
+        }else{
+            thisSibling.addClass('check');
+        }
+    });
+
+
 
 })
     </script>
