@@ -138,7 +138,7 @@ class OpenDeviceController extends MscWeChatController
         $id = intval($id);		
 
         $resourceDevice = new ResourcesDevice();
-        $data = $resourceDevice->getTimeList($id, $date);						
+        $data = $resourceDevice->getTimeList($id, $date);
 
 
         return view('msc::wechat.opendevice.opendevice_bespokentime',['data'=>$data]);       

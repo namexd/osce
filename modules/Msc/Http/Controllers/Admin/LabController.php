@@ -146,20 +146,38 @@ class LabController extends MscController
             'orderby' => 'sometimes',
         ]);
         $keyword    	=   e(urldecode($request->get('keyword')));
-        $date       		=   $request->get('date');
-        $order      	=   e($request->get('order'));
-        $orderby    	=   e($request->get('orderby'));
-        $orderby    	=   empty($orderby)?    'desc':$orderby;
-        $order      	=   empty($order)?      'created_at'    :   $order;
+        $date       	=   $request->get('date');
+        $orderName      =   e($request->get('order_name'));
+        $orderType    	=   e($request->get('order_type'));
+        $orderType    	=   empty($orderType)?    'desc':$orderType;
+        $orderName      =   empty($orderName)?      '5'    :   $orderName;
+        $date           =   empty($date)?      date('Y-m-d')    :   $date;
 
-        $date       =   empty($date)?      date('Y-m-d')    :   $date;
+        //使用数组保存需要会显的数值
+        $rollMsg = ['',''];
+        $rollMsg[0] = $date;
+        if ($keyword !== '') {
+            $rollMsg[1] = $keyword;
+        }
 
-        $order = [$order, $orderby];
-        
+        //处理排序
+        switch ($orderName) {
+            case '1':
+                $orderName = ['student.name','teacher.name'];
+                break;
+            case '2':
+                $orderName = ['resources_lab.status','resources_lab.status'];
+                break;
+            default:
+                $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
+        }
+        $order = [$orderName, $orderType];
+        $groups = ResourcesClassroomApply::find(1)->groups;
+//        dd($groups);
+
         $ResourcesClassroomApply = new ResourcesClassroomApply();
         $list = $ResourcesClassroomApply->getWaitExamineList($keyword, $date, $order);
-
-        return view('msc::admin.openlab.openaudit', ['pagination' => $list]);
+        return view('msc::admin.openlab.openaudit', ['pagination' => $list,'rollmsg' => $rollMsg]);
     }
 
     /**

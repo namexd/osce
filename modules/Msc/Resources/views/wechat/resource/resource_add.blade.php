@@ -60,12 +60,13 @@
         </ul> -->
     </div>
     <div class="add_main">
-        <i class="fa fa-angle-right leibie"></i>
+
         <div class="form-group">
             <label for="">类别</label>
             <input type="button" class="form-control xuan_type"  name="cate_id_sm" style="" value="请选择类别" required="">
             <input type="hidden" id="hide-type" name="resources_type"/>
             <input type="hidden" id="hide-type-id" name="cate_id" />
+            <i class="fa fa-angle-right more"></i>
         </div>
         <div class="form-group">
             <label for="">名称</label>

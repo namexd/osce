@@ -95,6 +95,10 @@
 					
 				});
 			})
+			
+			$("#submit").click(function(){
+				
+			})
 		});
     </script>
 @stop
@@ -102,37 +106,37 @@
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="ibox float-e-margins">
-		<div class="ibox-title of">
-			<h5 class="col-sm-6">培训安排</h5>
-			<div class="right_btn">
-				<button class="btn btn-default marr_5" id="return">取消</button>
-				<button class="btn btn-default marr_5">打印</button>
-				<button class="btn btn-default marr_5"><a class="nou clo0 look_group" href="{{ route('msc.training.editTrainingGroup', ['id'=>$training->id])}}">查看分组学员</a></button>
-				<button class="btn btn-default marr_5 edit">编辑</button>
-				<button class="btn btn-primary tj" data-toggle="modal" data-target="#myModal" flag="yes">提交</button>
+		<form class="form-horizontal" action="url(/msc/admin/training/add-training-preview)" method="post" id="form">
+			<div class="ibox-title of">
+				<h5 class="col-sm-6">培训安排</h5>
+				<div class="right_btn">
+					<button class="btn btn-default marr_5" id="return">取消</button>
+					<button class="btn btn-default marr_5">打印</button>
+					<button class="btn btn-default marr_5"><a class="nou clo0 look_group" href="{{ route('msc.training.editTrainingGroup', ['id'=>$training->id])}}">查看分组学员</a></button>
+					<button class="btn btn-default marr_5 edit">编辑</button>
+					<button class="btn btn-primary tj" id="submit" data-toggle="modal" data-target="#myModal" flag="yes">提交</button>
+				</div>
 			</div>
-		</div>
-		<div class="ibox-content bor0">
-			<form class="form-horizontal" action="url(/msc/admin/training/add-training-preview)" method="post" id="form">
-				<input type="hidden" name="id" id="id" value="{{$training['id']}}" />
+			<div class="ibox-content bor0">
+				<input type="hidden" name="id" id="id" value="$training['id']}}" />
 				<div class="form-group">
 		            <label class="col-sm-1 control-label font12">培训名称</label>
 		            <div class="col-sm-11">
-		            	<input type="text" name="name" class="form-control col-sm-12 padt_7 bgw train_name" value="{{$training['name']}}" readonly="readonly" />
+		            	<input type="text" name="name" class="form-control col-sm-12 padt_7 bgw train_name" value="$training['name']}}" readonly="readonly" />
 		            </div>
 		        </div>
 		        <div class="hr-line-dashed"></div>
 		        <div class="form-group">
 		        	<label class="col-sm-1 control-label font12">培训人数</label>
                     <div class="col-sm-11">
-		            	<input type="text" name="num" class="form-control col-sm-12 padt_7 bgw train_num" value="{{$training['total']}}" readonly="readonly" />
+		            	<input type="text" name="num" class="form-control col-sm-12 padt_7 bgw train_num" value="$training['total']}}" readonly="readonly" />
 		            </div>
 		        </div>
 		         <div class="hr-line-dashed"></div>
 		        <div class="form-group">
 		        	<label class="col-sm-1 control-label font12">培训时间</label>
 		            <div class="col-sm-11 padt_7 time_no">
-                        <div class="col-sm-6 "><span id="begindate">{{$training['begindate']}}</span>&nbsp;至&nbsp;<span id="enddate">{{$training['enddate']}}</span></div>
+                        <div class="col-sm-6 "><span id="begindate">$training['begindate']}}</span>&nbsp;至&nbsp;<span id="enddate">$training['enddate']}}</span></div>
                     </div>
                     <div class="col-sm-11 time_ok">
                         <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="begindate">
@@ -183,10 +187,9 @@
                          </table>
                     </div>
 		        </div>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
-
 @stop
 
 @section('layer_content')

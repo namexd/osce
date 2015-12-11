@@ -17,6 +17,7 @@
 				if(date.length==0){
 					return;
 				}
+				$("#layer_loading").show();//加载中显示
 				$.ajax({
 					type:"post",
 					url:"{{ url('/msc/wechat/lab/openlab-history-list') }}",
@@ -25,7 +26,23 @@
 		            	date : date
 		            },
 					success:function(data){
+						$("#layer_loading").hide();
 						console.log(data);
+							
+						for (var i=0;i<data['data']['total'];i++) {
+							var arr=data['data']['rows']['labHisList']['data'][i];							
+							var id=arr['id'];
+							var src='/msc/wechat/lab/openlab-history-item/'+id;	
+							var name=arr['name'];
+							var firsttime =arr['begin_datetime'].substring(5,11);
+							var endtime = arr['end_datetime'].substring(5,11);
+							var user=arr['user'];
+							var str='<li><a href="'+src+'"><div>'+
+							'<span>'+name+'</span></div><div>'+
+							'<p><span>'+firsttime+'</span>-<span>'+endtime+'</span></p></div><div>'+
+							'<span>'+user+'</span></div></a></li>';
+							$("#history_list").append(str);
+						}
 					}
 				});
 			})
@@ -40,6 +57,9 @@
         <i class="fa fa-angle-left clof font26 icon_return"></i>
     </a>
        	历史记录
+    <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
+        <i class="fa fa-home clof font26 icon_return"></i>
+    </a>
 </div>
 
 <div class="history_time_select w_90">
@@ -59,18 +79,7 @@
             <div class=" title">使用者</div>
         </div>
         <div class="history_list">
-            <ul>
-				<li><a href="#">
-					<div>
-						<span>教室</span>
-					</div>
-					<div>
-						<p><span>12.02</span>-<span>11.26</span></p>
-					</div>
-					<div>
-						<span>张三等三十人</span>
-					</div>
-				</a></li>
+            <ul id="history_list">
             </ul>
         </div>
     </div>

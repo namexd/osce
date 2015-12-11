@@ -18,7 +18,7 @@
     </a>
 </div>
 <ul class="manage_list">
-    <li><a class="ablock nou" href="{{ url('/msc/wechat/open-laboratory/open-lab-list') }}"><i class="icons4 icon17"></i><span>预约申请管理 <i class="fa fa-angle-right i_right"></i></span></a></li>
+    <li><a class="ablock nou" href="{{route('wechat.lab.openLabApplyList')}}"><i class="icons4 icon17"></i><span>预约申请管理 <i class="fa fa-angle-right i_right"></i></span></a></li>
 </ul>
 <ul class="manage_list">
     <li><a class="ablock nou" href="{{ route('wechat.open-device.HistoryList') }}"><i class="icons4 icon18"></i><span>历史记录 <i class="fa fa-angle-right i_right"></i></span></a></li>

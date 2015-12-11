@@ -71,19 +71,18 @@ class LabController extends MscWeChatController
 
         $order      =   [$order,$orderby];
 
-        $ResourcesClassroomApply    =   new ResourcesClassroomApply();
-        $list       =   $ResourcesClassroomApply    ->  getWaitExamineList($keyword,$date,$order);
+        //$ResourcesClassroomApply    =   new ResourcesClassroomApply();
+        $ResourcesOpenLabApply      =   new ResourcesOpenLabApply();
+        $list       =   $ResourcesOpenLabApply    ->  getWaitExamineList();
         $data=[];
         foreach($list as $item)
         {
             $data[]=[
                 'id'                        =>  $item->id,
-                'name'                      =>  $item->name,
-                'original_begin_datetime'   =>  date('Y/m/d H:i',strtotime($item->original_begin_datetime)),
-                'original_end_datetime'     =>  date('H:i',strtotime($item->original_end_datetime)),
-                'code'                      =>  $item->code,
-                'group'                     =>  empty($item->groups)? '--':$item->groups->first()->name,
-                'applyer_name'              =>  $item['studentName'] or (is_null($item->applyer)? '-':$item->applyer->name),
+                'name'                      =>  $item->lab->name,
+                'original_begin_datetime'   =>  date('Y/m/d',strtotime($item->apply_date)) .' '. date('H:i',strtotime($item->OpenLabCalendar->begintime)),
+                'original_end_datetime'     =>  date('H:i',strtotime($item->OpenLabCalendar->endtime)),
+                'applyer_name'              =>  $item->applyUser->name,
                 'detail'                    =>  $item->detail,
                 'status'                    =>  $item->status,
             ];
@@ -95,7 +94,7 @@ class LabController extends MscWeChatController
 
     /**
      * 审核通过/拒绝开放实验室的申请
-     * @api POST /msc/admin/lab/change-open-lab-apply-status
+     * @api POST /msc/wechat/lab/change-open-lab-apply-status
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -369,7 +368,7 @@ class LabController extends MscWeChatController
     }
     /**
      * 获得一条开放实验室历史使用记录详情
-     * @method GET /msc/wechat/openlab-history-item
+     * @method GET /msc/wechat/lab/openlab-history-item
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -384,13 +383,11 @@ class LabController extends MscWeChatController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getOpenlabHistoryItem ($id)
-    {
+    {    	
         $id = intval($id);
-
         $labHis = new ResourcesLabHistory();
         $data =  $labHis->getWechatItem($id);
-
-        dd($data);
+		return view('msc::wechat.resource.openlab_history_details',['data'=>$data]);
     }
 
 }

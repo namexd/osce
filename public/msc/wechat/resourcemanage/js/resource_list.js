@@ -3,7 +3,7 @@
  */
 
 function ajaxRequest(data,url){
-    $("#layer_loading").show();//加载中显示
+
     $.ajax({
         type:'get',
         url:url,
@@ -30,7 +30,7 @@ function ajaxRequest(data,url){
                         '</li>'
                     );
                 }
-                $("#layer_loading").hide(200);//加载结束消失
+
             }
             else{
                 //console.log((res.message).split(':')[0]);

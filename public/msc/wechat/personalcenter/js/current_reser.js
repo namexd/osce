@@ -2,7 +2,7 @@
  * Created by Administrator on 2015/12/9 0009.
  */
 function gethistory(qj,url){
-    $("#layer_loading").show();//加载中显示
+
     var str="";
     $.ajax({
         url:url,
@@ -24,7 +24,7 @@ function gethistory(qj,url){
                     +' </a></li>';
             });
             $(".detail_list ul").append(str);
-            $("#layer_loading").hide(200);//加载结束消失
+
         }
     });
 }

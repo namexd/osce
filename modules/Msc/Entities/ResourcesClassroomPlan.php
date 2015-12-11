@@ -110,7 +110,6 @@ class ResourcesClassroomPlan extends CommonModel
                 'type'                          =>  $data['type'],
                 'status'                        =>  0,
             ];
-            dd($planData);
             $plan   =   $this   ->  create($planData);
             if(!$plan)
             {
@@ -233,5 +232,25 @@ class ResourcesClassroomPlan extends CommonModel
         }
         return $teacherList;
     }
+	
+	public function getConflicts ($classroomCourseId, $currentdate, $begintime, $endtime)
+	{
+		return $this->where('resources_lab_course_id', $classroomCourseId)
+		            ->whereIn('status', [0, 1])
+					->whereRaw(
+						'unix_timestamp(currentdate)=? ',
+        				[strtotime($currentdate)]
+					)->where(function($query)use($begintime, $endtime){
+						$query->whereRaw(
+						'unix_timestamp(begintime)>? and unix_timestamp(begintime)<? ',
+        				[strtotime($begintime), strtotime($endtime)]
+						);
+					})->where(function($query)use($begintime, $endtime){
+						$query->whereRaw(
+						'uunix_timestamp(endtime)>? and unix_timestamp(endtime)<? ',
+        				[strtotime($begintime), strtotime($endtime)]
+						);
+					})->get();				
+	}
 
 }

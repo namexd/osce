@@ -3,7 +3,7 @@
  */
 function gethistory(qj,url,getdetail){
 
-    $("#layer_loading").show();//加载中显示
+
     $.ajax({
         url:url, /*${ctx}/*/
         type:"get",
@@ -33,7 +33,7 @@ function gethistory(qj,url,getdetail){
                 );
 
             });
-            $("#layer_loading").hide(200);//加载结束消失
+
         },
 
     });

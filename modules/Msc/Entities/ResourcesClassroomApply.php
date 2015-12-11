@@ -37,9 +37,6 @@ class ResourcesClassroomApply extends  CommonModel {
             return $this->belongsTo ('App\Entities\User', 'apply_uid', 'id');
         }
 
-    
-
-
         //根据条件查询 相关课程信息列表（唐俊）
         public function getClassroomApplyList ($orderBy = 'id', $pageNum = 20) {
             return $this->builder->with ('classroom', 'applyer')->orderBy ($orderBy)->paginate ($pageNum);
@@ -51,7 +48,8 @@ class ResourcesClassroomApply extends  CommonModel {
         }
 
         public function groups () {
-            return $this->hasMany ('Modules\Msc\Entities\ResourcesClassroomApplyGroup', 'resources_lab_apply_id', 'id');
+//            return $this->hasMany ('Modules\Msc\Entities\ResourcesClassroomApplyGroup', 'resources_lab_apply_id', 'id');
+            return $this->hasManyThrough('Modules\Msc\Entities\Groups','Modules\Msc\Entities\ResourcesClassroomApplyGroup','student_group_id','id');
         }
 
     /**
@@ -78,12 +76,11 @@ class ResourcesClassroomApply extends  CommonModel {
                 $join->on ('resources_lab_apply.apply_uid', '=', 'teacher.id');
             }
         )->where ('resources_lab_apply.status', '=', '0');
+        $builder->whereRaw ('unix_timestamp(resources_lab_apply.original_begin_datetime)>= ? ', [strtotime ($date)]);
         if ($courseName) {
-            $builder = $builder->where ('resources_lab.name', '=', $courseName);
+            $builder = $builder->where ('resources_lab.name', 'like', '%'.$courseName.'%');
         }
-        if ($date) {
-            $builder->whereRaw ('unix_timestamp(resources_lab_apply.original_begin_datetime)>= ? ', [strtotime ($date)]);
-        }
+
         $builder->select (
             [
                 'resources_lab.name as name',
@@ -99,53 +96,59 @@ class ResourcesClassroomApply extends  CommonModel {
                 'resources_lab_apply.apply_user_type as apply_user_type',
             ]
         );
-        return $builder->orderBy ('resources_lab_apply.' . $order[0], $order[1])->paginate (config ('msc.page_size'));
+//        dd($order[0][1]);
+        return $builder->orderBy ($order[0][0], $order[1])->orderBy($order[0][1],$order[1])->paginate (config ('msc.page_size'));
     }
 
 
-
-
-        public function getExaminedList ($courseName = '', $date = '', $order = ['resources_lab_apply.created_at', 'desc']) {
-            $builder = $this->leftJoin (
-                'resources_lab',
-                function ($join) {
-                    $join->on ('resources_lab_apply.resources_lab_id', '=', 'resources_lab.id');
-                }
-            )->leftJoin (
-                'student',
-                function ($join) {
-                    $join->on ('resources_lab_apply.apply_uid', '=', 'student.id');
-                }
-            )->leftJoin (
-                'teacher',
-                function ($join) {
-                    $join->on ('resources_lab_apply.apply_uid', '=', 'teacher.id');
-                }
-            )->where ('resources_lab_apply.status', '<>', '0');
-            if ($courseName) {
-                $builder = $builder->where ('resources_lab.name', '=', $courseName);
+    /**
+     * 已审核申请列表
+     * @param string $courseName
+     * @param string $date
+     * @param array $order
+     * @return mixed
+     */
+    public function getExaminedList ($courseName, $date, $order) {
+        $builder = $this->leftJoin (
+            'resources_lab',
+            function ($join) {
+                $join->on ('resources_lab_apply.resources_lab_id', '=', 'resources_lab.id');
             }
-            if ($date) {
-                $builder->whereRaw ('unix_timestamp(resources_lab_apply.original_begin_datetime)>= ? ', [strtotime ($date)]);
+        )->leftJoin (
+            'student',
+            function ($join) {
+                $join->on ('resources_lab_apply.apply_uid', '=', 'student.id');
             }
-            $builder->select (
-                [
-                    'resources_lab.name as name',
-                    'resources_lab_apply.original_begin_datetime as original_begin_datetime',
-                    'resources_lab_apply.original_end_datetime as original_end_datetime',
-                    'resources_lab_apply.original_end_datetime as original_end_datetime',
-                    'resources_lab.code as code',
-                    'student.name as student_name',
-                    'teacher.name as teacher_name' ,
-                    'resources_lab_apply.detail as detail',
-                    'resources_lab_apply.status as status',
-                    'resources_lab_apply.id as id',
-                    'resources_lab_apply.apply_uid as apply_uid',
-                    'resources_lab_apply.apply_user_type as apply_user_type'
-                ]
-            );
-            return $builder->orderBy ('resources_lab_apply.' . $order[0], $order[1])->paginate (config ('msc.page_size'));
+        )->leftJoin (
+            'teacher',
+            function ($join) {
+                $join->on ('resources_lab_apply.apply_uid', '=', 'teacher.id');
+            }
+        )->where ('resources_lab_apply.status', '<>', '0');
+        if ($courseName) {
+            $builder = $builder->where ('resources_lab.name', 'like', '%'.$courseName.'%');
         }
+        if ($date) {
+            $builder->whereRaw ('unix_timestamp(resources_lab_apply.original_begin_datetime)>= ? ', [strtotime ($date)]);
+        }
+        $builder->select (
+            [
+                'resources_lab.name as name',
+                'resources_lab_apply.original_begin_datetime as original_begin_datetime',
+                'resources_lab_apply.original_end_datetime as original_end_datetime',
+                'resources_lab_apply.original_end_datetime as original_end_datetime',
+                'resources_lab.code as code',
+                'student.name as student_name',
+                'teacher.name as teacher_name' ,
+                'resources_lab_apply.detail as detail',
+                'resources_lab.status as status',
+                'resources_lab_apply.id as id',
+                'resources_lab_apply.apply_uid as apply_uid',
+                'resources_lab_apply.apply_user_type as apply_user_type'
+            ]
+        );
+        return $builder->orderBy ($order[0], $order[1])->paginate (config ('msc.page_size'));
+    }
 
         //审核通过或拒绝一个申请
         public function dealApply ($id, $status, $desc, $type) {
@@ -196,13 +199,13 @@ class ResourcesClassroomApply extends  CommonModel {
             switch ($value) {
                 //0=待审核 1=已通过 2=不通过
                 case 0:
-                    $name = '待审核';
+                    $name = '不可预约';
                     break;
                 case 1:
-                    $name = '已通过';
+                    $name = '正常';
                     break;
                 case 2:
-                    $name = '不通过';
+                    $name = '已预约';
                     break;
                 default:
                     $name = '-';

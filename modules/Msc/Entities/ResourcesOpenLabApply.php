@@ -163,4 +163,14 @@ class ResourcesOpenLabApply extends CommonModel
             Common::sendMsg($applyer ->  openid,$reject);
         }
     }
+    public function getWaitExamineList(){
+        return $this   ->  where('status','=',0)
+                ->  whereRaw(
+                    'unix_timestamp(apply_date) > ?',
+                    [
+                        strtotime(date('Y-m-d'))
+                    ]
+                )
+                ->  paginate(config('msc.page_size'));
+    }
 }

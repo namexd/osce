@@ -113,9 +113,9 @@
             /*时间选择*/
             var start = {
                 elem: "#start",
-                format: "YYYY-MM-DD hh:mm:ss",
-                min: "1970-00-00 00:00:00",
-                max: "2099-06-16 23:59:59",
+                format: "YYYY-MM-DD",
+                min: "1970-00-00",
+                max: "2099-06-16",
                 istime: true,
                 istoday: false,
                 choose: function (a) {
@@ -176,10 +176,10 @@
                                 </button>
                                 <ul class="dropdown-menu order-classroom">
                                     <li value="1">
-                                        <a href="{{route('msc.admin.lab.openLabApplyList',['orderby'=>'asc', 'order'=>'applyer_name'])}}">升序</a>
+                                        <a href="{{route('msc.admin.lab.openLabApplyList',['order_type'=>'asc', 'order_name'=>'1'])}}">升序</a>
                                     </li>
                                     <li value="-1">
-                                        <a href="{{route('msc.admin.lab.openLabApplyList',['orderby'=>'desc','order'=>'applyer_name'])}}">降序</a>
+                                        <a href="{{route('msc.admin.lab.openLabApplyList',['order_type'=>'desc','order_name'=>'1'])}}">降序</a>
                                     </li>
                                 </ul>
                             </div>
@@ -193,10 +193,10 @@
                                 </button>
                                 <ul class="dropdown-menu order-classroom">
                                     <li value="1">
-                                        <a href="{{route('msc.admin.lab.openLabApplyList',['orderby'=>'asc'])}}">升序</a>
+                                        <a href="{{route('msc.admin.lab.openLabApplyList',['order_type'=>'asc', 'order_name' => '2'])}}">升序</a>
                                     </li>
                                     <li value="-1">
-                                        <a href="{{route('msc.admin.lab.openLabApplyList',['orderby'=>'desc'])}}">降序</a>
+                                        <a href="{{route('msc.admin.lab.openLabApplyList',['order_type'=>'desc', 'order_name' => '2'])}}">降序</a>
                                     </li>
                                 </ul>
                             </div>
@@ -236,7 +236,7 @@
                             <td>{{$item['code']}}</td>
                             <td>{{ $item['studentName'] or (is_null($item->applyer)? '-':$item->applyer->name)}}</td>
                             <td>{{$item['detail']}}</td>
-                            <td>{{ empty($item->groups)? '--':$item->groups->first()->name}}</td>
+                            <td>{{ is_null($item->groups->first()->name) ? '-' : $item->groups->first()->name }}</td>
                             <td class="status">{{$item['status']}}</td>
                             <td class="opera">
                                 <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>

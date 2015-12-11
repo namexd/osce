@@ -228,7 +228,7 @@ class OpenLaboratoryController extends MscWeChatController {
 				}
 			}
 			$PlanGroup = DB::connection('msc_mis')->table('resources_openlab_apply_group')->insert($data);
-			
+
 			$this->rollback_func($PlanGroup,$url);
 			if(!$PlanGroup){
 				DB::connection('msc_mis')->rollback();
@@ -242,6 +242,7 @@ class OpenLaboratoryController extends MscWeChatController {
 				'resources_lab_id' => Input::get('c_id'),
 				// 'end_datetime' => date('Y-m-d',time()).' '.$timestamp[1],
 				// 'begin_datetime' => date('Y-m-d',time()).' '.$timestamp[0],
+				'apply_date' => Input::get('apply_date'),
 				'apply_uid' => $user->id,
 				'apply_type' => 0,
 				'resources_lab_calendar_id' => Input::get('p_id'),

@@ -22,4 +22,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $app;
     }
+    protected function getRandItem($list){
+        $index  =   rand(0,count($list)-1);
+        foreach($list as $key=>$item){
+            if($index==$key)
+            {
+                return $item;
+            }
+        }
+    }
 }

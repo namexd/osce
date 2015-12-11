@@ -1,8 +1,5 @@
 /*table_list*/
-.form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
-.form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
-    padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
-.form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:16px;padding-left:95px}
+
 .btn1
 { background-color:#6595e1; font-size:18px;
     width:100%; height:36px;
@@ -48,6 +45,10 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px!important;}
 
 
+.form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
+.form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
+    padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
+.form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:16px;padding-left:95px}
 .form-group .xuan_type{padding-left:95px;text-align:left!important;color:#999}
 .form-group .set_text{padding-left:105px;text-align:left!important;color:#333;}
 .form-group .gn_txt{width:100%;min-height:24px;overflow:hidden;height:30px;line-height:24px;margin-bottom:10px;padding:6px 20px 6px  90px;font-size:16px;position:relative}
@@ -57,7 +58,7 @@
 .add_main{width:100%;background:#fff;padding:0px 3% 0;position:relative;margin-bottom: 10px;border-bottom:1px solid #DCE0E4;}
 .add_main .form-group:last-child{ border-bottom: none;}
 .submit_box{margin-bottom:20px}
-.leibie{position:absolute;right:6%;top:15px;font-size:26px;color:#999}
+.add_main .form-group .more{position:absolute;right:6%;top:12px;font-size:26px;color:#999}
 
 
 

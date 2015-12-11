@@ -312,7 +312,7 @@ class TrainingController extends MscController
             return redirect()->route('msc.training.addTrainingPlan', [$trainingId]);
         }
         catch (\Exception $e)
-        {        	
+        {
             DB::rollback();
             return back()->with('error', '提交分组信息失败');
         }
@@ -344,7 +344,7 @@ class TrainingController extends MscController
 
     /**
      * 导入培训安排excel
-     * @method GET /msc/admin/training/import-training-plan
+     * @method POST /msc/admin/training/import-training-plan
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -368,12 +368,7 @@ class TrainingController extends MscController
 
             $planInfo = Common::arrayChTOEn($planInfo, 'msc.importForCnToEn.training_plan');
 
-            /*
-            return response()->json(
-                $this->success_data(['plan' => $planInfo])
-            );
-            */
-            // 把培训安排信息写入缓存
+            // 把培训安排信息写入缓存 预览时使用
             Cache::put('trainingPlan'.Auth::user()->id, $planInfo, config('session.lifetime'));
 			            
 			die(json_encode(['plan' => $planInfo]));
@@ -467,23 +462,23 @@ class TrainingController extends MscController
         foreach ($groupInfo as $key => $item)
         {
             $temp = [];
-            $itemArray = explode(',', $item);
-            $groupArray = explode(':', $itemArray['0']);
+            $itemArray   = explode(',', $item);
+            $groupArray  = explode(':', $itemArray['0']);
             $mobileArray = explode(':', $itemArray['2']);
-			$nameArray = explode(':', $itemArray['1']);
-            $temp['group'] = $groupArray['1'];
+			$nameArray   = explode(':', $itemArray['1']);
+
+            $temp['group']  = $groupArray['1'];
             $temp['mobile'] = $mobileArray['1'];
-			$temp['name'] = $nameArray['1'];
+			$temp['name']   = $nameArray['1'];
             $data[] = $temp;
         }
 		
 		die(json_encode(['groupinfo'=>$data]));
-        //return view('msc::admin.trainarrange.look-group');
     }
 
     /**
      * 修改分组-处理-前提是组数没改变
-     * @method GET /msc/admin/training/edit-training-group
+     * @method POST /msc/admin/training/edit-training-group
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -543,8 +538,8 @@ class TrainingController extends MscController
 			foreach ($list as $stu)
             {
             	$infoArray   = explode(',', $stu);
-				$groupArray  = explode(':', $infoArray['0']);
-				$nameArray   = explode(':', $infoArray['1']);
+				//$groupArray  = explode(':', $infoArray['0']);
+				//$nameArray   = explode(':', $infoArray['1']);
 				$mobileArray = explode(':', $infoArray['2']);
 				
                 $user = User::where('mobile', $mobileArray['1'])->firstOrFail();
@@ -620,8 +615,14 @@ class TrainingController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postAddTrainingPreview (Request $request)
+<<<<<<< .mine
+    {    	
+||||||| .r1243
     {
     	dd($request->all());
+=======
+    {
+>>>>>>> .r1255
         $this->validate($request,[
             'id'              => 'required|integer',
             'trainingCourses' => 'required|array',
@@ -639,24 +640,37 @@ class TrainingController extends MscController
             $_conflictArray = [];
             foreach ($trainingCourses as $trainingCourse)
             {
+            	// 字符串分割成数组
+            	$itemArray      = explode(',', $trainingCourse);
+				$courseArray    = explode(':', $itemArray['1']);
+				$addressArray   = explode(':', $itemArray['2']);
+				$groupArray     = explode(':', $itemArray['0']);
+				$beginTimeArray = explode(':', $itemArray['3']);
+				$endTimeArray   = explode(':', $itemArray['4']);
+				
+				
                 // 课程信息
-                $course = Courses::where('code', $trainingCourse['course_code'])->firstOrFail();
+                $course = Courses::where('code', $courseArray['1'])->firstOrFail();
                 // 教室信息
-                $classroom = ResourcesClassroom::where('code', $trainingCourse['address_code'])->firstOrFail();
+                $classroom = ResourcesClassroom::where('code', $addressArray['1'])->firstOrFail();
                 // 课程、教室关联关系
                 $classroomCourseModel = new ResourcesClassroomCourses();
                 $classroomCourse = $classroomCourseModel->where('resources_lab_id', $classroom->id)->where('course_id', $course->id)->firstOrFail();
 
                 // 检查教室计划情况
-                $currentDate = $trainingCourse['begin_dt']->format('Y-m-d');
-                $begintime = $trainingCourse['begin_dt']->format('H:i');
-                $endtime = $trainingCourse['end_dt']->format('H:i');
 
+                $currentDate = date('Y-m-d', strtotime($beginTimeArray['1']));
+                $begintime   = date('H:i:s', strtotime($beginTimeArray['1']));
+                $endtime     = date('H:i:s', strtotime($endTimeArray['1']));
+				/*
                 $classroomPlanBuilder = ResourcesClassroomPlan::where('currentdate', $currentDate); // 时间
                 $classroomPlanBuilder = $classroomPlanBuilder->where('begintime', '<=', $endtime);
                 $classroomPlanBuilder = $classroomPlanBuilder->orWhere('endtime', '>=', $begintime);
                 $classroomPlanBuilder = $classroomPlanBuilder->where('resources_lab_course_id', $classroomCourse->id); //教室
                 $classroomPlans = $classroomPlanBuilder->whereIn('status', [0, 1])->get(); // 计划状态
+				 */
+				$classroomPlan  = new ResourcesClassroomPlan();
+				$classroomPlans = $classroomPlan->getConflicts($classroomCourse->id, $currentDate, $begintime, $endtime);
                 $occupationFlag = $classroomPlans ? true : false;
 
                 // 写入发生冲突的课程安排-已经计划好的
@@ -688,13 +702,13 @@ class TrainingController extends MscController
 
                 // 写入发生冲突的课程安排-培训课程
                 $_data = [
-                    'group'     => MscCommon::hanzi2num($trainingCourse['group']),
+                    'group'     => MscCommon::hanzi2num($groupArray['1']),
                     'courseId'  => $course->id,
                     'course'    => $course->name,
                     'address'   => $classroom->name,
-                    'date'      => $trainingCourse['begin_dt']->format('Y-m-d'),
-                    'begintime' => $trainingCourse['begin_dt']->format('H:i'),
-                    'endtime'   => $trainingCourse['end_dt']->format('H:i'),
+                    'date'      => date('Y-m-d', strtotime($beginTimeArray['1'])),
+                    'begintime' => date('H:i:s', strtotime($beginTimeArray['1'])),
+                    'endtime'   => date('H:i:s', strtotime($endTimeArray['1'])),
                 ];
                 $_conflictArray[] = $_data;
 
@@ -702,9 +716,9 @@ class TrainingController extends MscController
                 $data = [
                     'course_id'              => $course->id,
                     'training_id'            => $trainingId,
-                    'resources_lab_id' => $classroom->id,
-                    'begin_dt'               => $trainingCourse['begin_dt']->format('Y-m-d H:i'),
-                    'end_dt'                 => $trainingCourse['end_dt']->format('Y-m-d H:i'),
+                    'resources_lab_id'       => $classroom->id,
+                    'begin_dt'               => date('Y-m-d H:i:s', strtotime($beginTimeArray['1'])),
+                    'end_dt'                 => date('Y-m-d H:i:s', strtotime($endTimeArray['1'])),
                     'validation_pass'        => $occupationFlag ? 0 : 1,
                 ];
 
@@ -918,14 +932,14 @@ class TrainingController extends MscController
 
                     // 检查教室计划情况
                     $currentDate = $editItem['begin_dt']->format('Y-m-d');
-                    $begintime = $editItem['begin_dt']->format('H:i');
-                    $endtime = $editItem['end_dt']->format('H:i');
+                    $begintime   = $editItem['begin_dt']->format('H:i');
+                    $endtime     = $editItem['end_dt']->format('H:i');
 
                     $classroomPlanBuilder = ResourcesClassroomPlan::where('currentdate', $currentDate); // 时间
                     $classroomPlanBuilder = $classroomPlanBuilder->where('begintime', '<=', $endtime);
                     $classroomPlanBuilder = $classroomPlanBuilder->orWhere('endtime', '>=', $begintime);
                     $classroomPlanBuilder = $classroomPlanBuilder->where('resources_lab_course_id', $classroomCourse->id); //教室
-                    $classroomPlans = $classroomPlanBuilder->whereIn('status', [0, 1])->get(); // 计划状态
+                    $classroomPlans       = $classroomPlanBuilder->whereIn('status', [0, 1])->get(); // 计划状态
 
                     if ($classroomPlans)
                     {
@@ -936,9 +950,9 @@ class TrainingController extends MscController
                     // 无冲突
                     $theClassroomPlan = ResourcesClassroomPlan::findOrFail($editItem['id']);
                     $theClassroomPlan->resources_lab_course_id = $classroomCourse->id;
-                    $theClassroomPlan->currentdate = $currentDate;
-                    $theClassroomPlan->begintime = $begintime;
-                    $theClassroomPlan->$endtime = $endtime;
+                    $theClassroomPlan->currentdate             = $currentDate;
+                    $theClassroomPlan->begintime               = $begintime;
+                    $theClassroomPlan->$endtime                = $endtime;
 
                     $result = $theClassroomPlan->save();
                     if (!$result)

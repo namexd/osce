@@ -101,7 +101,7 @@ class ResourcesDevice extends  CommonModel {
                     );
                 })->get();
 
-            if ($plans) // 有未使用的计划
+            if (0!=count($plans)) // 有未使用的计划
             {
                 $temp['status'] = 1; // 不可预约
             }

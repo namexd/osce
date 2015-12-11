@@ -19,7 +19,7 @@ class OpenDeviceTest  extends TestCase
         $list   =   \Modules\Msc\Entities\Student::where('id','>',48)->get();
         return $this->getRandItem($list);
     }
-    private function getRandItem($list){
+    protected function getRandItem($list){
         $index  =   rand(0,count($list)-1);
         foreach($list as $key=>$item){
             if($index==$key)
