@@ -187,7 +187,7 @@ class PersonalCenterController extends MscWeChatController {
 		$resourcesDeviceApply	=	new ResourcesDeviceApply();
 		$list				=	$resourcesDeviceApply	->	getMyApply($user->id);
 		// 无翻页
-		return view('msc::wechat.myreservation.current_reser',['list'=>$list]);
+		return view('msc::wechat.personalcenter.myreservation',['list'=>$list]);
 	}
 
 	/**

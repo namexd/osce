@@ -7,7 +7,7 @@
             width: 50%;
         }
         .add_main .submit_box{
-            top: 122px;
+            top: 100px;
             right: 20px;
         }
     </style>
@@ -123,7 +123,7 @@
                             {{$item["time"]}}
                         </div>
                         <div class="submit_box">
-                            <button class="btn2 cancel"  type="button" auditid="{{$item["id"]}}">取消预约
+                            <button class="btn2 cancel"  type="button" auditid="{{$item["id"]}}">取消
                             </button>
                         </div>
                     </div>
