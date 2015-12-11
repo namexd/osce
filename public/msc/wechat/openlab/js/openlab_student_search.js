@@ -29,7 +29,7 @@ function gethistory(qj,url,getdetail){
                     if(this.is_appointment=="1"){
                         opera='<div class="opera"><span class="State2">已预约</span></div>';
                     }else {
-                        opera= '<a href="'+getdetail+'?id='+this.id+'&apply_date='+today+'&apply_type=0'+'"><div class="opera">'+'<span class="State1">预约</span>'+'</div>'
+                        opera= '<a href="'+getdetail+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=0'+'"><div class="opera">'+'<span class="State1">预约</span>'+'</div>'
                     }
                 }else if(this.resources_classroom.status=="2"){
                     status="";

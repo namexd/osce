@@ -706,6 +706,8 @@ class ResourcesManagerController extends MscController
      * * string        location          资源地址(必须的)
      * * string        detail            资源表述(必须的)
      * * Array         images_path       图片 e.g:<input type="hidden" name="images_path[]" value="/images/201511/13/2015111311051447430.png">
+     * * Array         items             单品列表[0=>'id:1,code:123']
+     *
      * @return Response
      *
      * @version 0.2
@@ -722,14 +724,38 @@ class ResourcesManagerController extends MscController
             'manager_mobile' => 'required|mobile_phone',
             'location'       => 'required|max:50|min:0',
             'detail'         => 'sometimes|max:255|min:0',
+            'items'          => 'required|array',
         ]);
 
-        $formData = $request->only(['id', 'images_path']);
-        $id = (int)$formData['id'];
+        $formData         = $request->only(['id', 'images_path']);
+        $id               = (int)$formData['id'];
+        $itemCodeArray    = $request->input('items');
+
         $resourcesRepository = App::make('\Modules\Msc\Repositories\ResourcesRepository');
 
         $connection = DB::connection('msc_mis');
         $connection->beginTransaction();
+
+        // 更新单品code
+        foreach ($itemCodeArray as $itemCode)
+        {
+            if ('' == $itemCode)
+            {
+                continue;
+            }
+
+            $tempItemCodeArray = explode(',', $itemCode);
+            $itemIdArray       = explode(':', $tempItemCodeArray['0']);
+            $itemCodeArray     = explode(':', $tempItemCodeArray['1']);
+
+            $result = ResourcesToolsItems::where('id', '=', $itemIdArray['1'])->update(['code'=>$itemCodeArray['1']]);
+            if (!$result)
+            {
+                DB::rollback();
+                //throw new \Exception('修改编号失败');
+                return redirect()->back()->withErrors(new \Exception('修改编号失败'));
+            }
+        }
 
         //删除修改后删除的图片
         $resourcesTools = ResourcesTools::find($id);
