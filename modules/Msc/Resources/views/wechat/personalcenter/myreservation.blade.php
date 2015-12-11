@@ -19,6 +19,7 @@
             $(".cancel").click(function(){
                 var $this = $(this);
                 var id = $this.attr('auditid');
+                var url="{{ route('msc.personalCenter.cancelOpenDeviceApply')}}";
                 $.confirm({
                     title:'提示',
                     content: '是否取消预约设备？',
@@ -27,15 +28,7 @@
                     confirmButtonClass: 'btn-info',
                     cancelButtonClass: 'btn-danger',
                     confirm:function(){
-                        $.ajax({
-                            url:"{{ route('msc.personalCenter.cancelOpenDeviceApply')}}",
-                            type:"get",
-                            dataType:"json",
-                            data:{id:id},
-                            success: function(result) {
-
-                            }
-                        });
+                        location.href = url+"?id="+id;
                     }
                 })
 
@@ -83,12 +76,13 @@
 
 @stop
 @section('content')
+
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         我的预约
-        <a class="right header_btn" href="">
+        <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
 
@@ -108,19 +102,19 @@
                     <div class="form-group">
                         <label for="">设备名称</label>
                         <div class="txt">
-                            {{$item["name"]}}
+                            {{$item->resourcesLabDevices->name}}
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="">设备编号</label>
                         <div class="txt">
-                            {{$item["code"]}}
+                            {{$item->resourcesLabDevices->code}}
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="">预约时段</label>
                         <div class="txt">
-                            {{$item["time"]}}
+                            {{date('m.d',strtotime($item['original_begin_datetime']))}}-{{date('m.d',strtotime($item['original_end_datetime']))}}
                         </div>
                         <div class="submit_box">
                             <button class="btn2 cancel"  type="button" auditid="{{$item["id"]}}">取消
