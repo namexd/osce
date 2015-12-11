@@ -102,6 +102,9 @@
                 $('#Form').css('display', 'none');
                 $('#code').css('display', 'block');
 
+                // 清空div
+                $("#qrcode-area").empty();
+
                 var codesInputs = $(this).parent().find('input');
                 var codeVal = '';
                 var codeText = '';
