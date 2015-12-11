@@ -1,7 +1,7 @@
 @extends('msc::admin.layouts.admin')
 
 @section('only_css')
-	<link rel="stylesheet" href="{{asset('msc/admin/trainarrange/trainarrange.css')}}">
+	<link  rel="stylesheet"  href="{{asset('msc/admin/trainarrange/trainarrange.css')}}">	
 	<style type="text/css">
 		#editable td input{width:90%;margin-left:5%;}
 		.look_group:hover{color:#000;}
@@ -110,11 +110,13 @@
 			<div class="ibox-title of">
 				<h5 class="col-sm-6">培训安排</h5>
 				<div class="right_btn">
-					<button class="btn btn-default marr_5" id="return">取消</button>
-					<button class="btn btn-default marr_5">打印</button>
-					<button class="btn btn-default marr_5"><a class="nou clo0 look_group" href="{{ route('msc.training.editTrainingGroup', ['id'=>$training->id])}}">查看分组学员</a></button>
-					<button class="btn btn-default marr_5 edit">编辑</button>
 					<button class="btn btn-primary tj" id="submit" data-toggle="modal" data-target="#myModal" flag="yes">提交</button>
+					<input type="button" class="btn btn-default marr_5 edit" id="" value="编辑" />
+					<a class="nou clo0 look_group" href="{{ route('msc.training.editTrainingGroup', ['id'=>$training->id])}}">
+						<input type="button" class="btn btn-default marr_5" id="" value="查看分组学员" />
+					</a>
+					<input type="button" class="btn btn-default marr_5" id="" value="打印" />
+					<input type="button" class="btn btn-default marr_5" id="return" value="取消" />
 				</div>
 			</div>
 			<div class="ibox-content bor0">
