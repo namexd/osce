@@ -49,7 +49,7 @@ class CourseOrderController extends MscWeChatController {
 		$resources_lab_plan_builder = $resources_lab_plan_builder
 			->join('resources_lab_courses', 'resources_lab_plan.resources_lab_course_id', '=', 'resources_lab_courses.id')
 			->join('resources_lab', 'resources_lab_courses.resources_lab_id', '=', 'resources_lab.id')
-			->select('resources_lab_plan.id','resources_lab_plan.currentdate','resources_lab_plan.begintime', 'resources_lab_plan.endtime','resources_lab.status','resources_lab.name');
+			->select('resources_lab_plan.id','resources_lab_plan.currentdate','resources_lab_plan.begintime', 'resources_lab_plan.endtime','resources_lab_plan.status','resources_lab.name');
 
 
 
@@ -100,7 +100,7 @@ class CourseOrderController extends MscWeChatController {
 		 ->select('r_c_p.currentdate','r_c_p.begintime', 'r_c_p.endtime', 'r_c.name','r_c_p.id','c.name as cname')
 		 ->first();
 		$studentClass = $studentClass->get();
-	 	//$groups = $groups->get();
+	 	$groups = $groups->get();
 		if(!empty($ClassroomPlanInfo)){
 			$ClassroomPlanInfo->begintime = date('H:i',strtotime($ClassroomPlanInfo->begintime));
 	 		$ClassroomPlanInfo->endtime = date('H:i',strtotime($ClassroomPlanInfo->endtime));
@@ -175,19 +175,24 @@ class CourseOrderController extends MscWeChatController {
 	//courseApply
 	public function postAddCourseToAplan(ResourcesClassroomPlan $plan,ResourcesClassroomCourses $rcc){
 		DB::connection('msc_mis')->beginTransaction();
-		$CourseToAplan = DB::connection('msc_mis')->table('resources_lab_plan')->where('id', Input::get('rcp'))->update(['status' => 0]);
+		$CourseToAplan = DB::connection('msc_mis')->table('resources_lab_plan')->where('id', Input::get('rcp'))->update(['status' => 2]);
+		//dd($CourseToAplan);
 		if(!$CourseToAplan){
 			DB::connection('msc_mis')->rollback();
 			return redirect()->intended('/msc/wechat/course-order/course-confirm?id='. Input::get('rcp'));
 		}
 
 		$r_c_c_id = $plan->where('id','=', Input::get('rcp'))->first();
-		$r_c_id = $rcc->where('id','=',$r_c_c_id->resources_lab_course_id)->first();
-		$room_update = DB::connection('msc_mis')->table('resources_lab')->where('id', $r_c_id->resources_lab_id)->update(['status' => 2]);
-		if(!$room_update){
+		if($r_c_c_id){
+			$r_c_id = $rcc->where('id','=',$r_c_c_id->resources_lab_course_id)->first();
+			$room_update = DB::connection('msc_mis')->table('resources_lab')->where('id', $r_c_id->resources_lab_id)->update(['status' => 2]);
+			if(!$room_update){
 			DB::connection('msc_mis')->rollback();
 			return redirect()->intended('/msc/wechat/course-order/course-confirm?id='. Input::get('rcp'));
 		}
+		}
+		
+		
 		$arr['resources_lab_plan_id'] = Input::get('rcp');
 		$data = array();
 		if(Input::get('class_id')){

@@ -158,26 +158,31 @@ class OpenLaboratoryController extends MscWeChatController {
 
 	//预约实验室用户类型列表
 	public function getTypeList(ResourcesClassroom $resourcesClassroom){
-		$user = Auth::user();
-		$user_type = $user->user_type;
-		switch ($user_type) {
-			case 1:
-				$view = 'openlab_teacher_search';
-				break;
-			case 2:
-				$view = 'openlab_student_search';
-				break;
-			default:
-				return view('msc::wechat.index.index_error',array('error_msg'=>'你是管理员？'));
-				break;
-		}
-		//获取教室资源列表
-		$resourcesClassroomList = $resourcesClassroom->getClassroomList();
-		$data = [
-			'resourcesClassroomList'=>$resourcesClassroomList,
-		];
-		//dd($data);
-		return view('msc::wechat.openlab.'.$view,$data);
+			$i= !empty($i)?$i:0;
+			if($i > 0){
+				return redirect()->intended('/msc/wechat/open-laboratory/order-lab?id='. Input::get('c_id'));
+			}else{
+				$user = Auth::user();
+				$user_type = $user->user_type;
+				switch ($user_type) {
+					case 1:
+						$view = 'openlab_teacher_search';
+						break;
+					case 2:
+						$view = 'openlab_student_search';
+						break;
+					default:
+						return view('msc::wechat.index.index_error',array('error_msg'=>'你是管理员？'));
+						break;
+				}
+				//获取教室资源列表
+				$resourcesClassroomList = $resourcesClassroom->getClassroomList();
+				$data = [
+					'resourcesClassroomList'=>$resourcesClassroomList,
+				];
+				//dd($data);
+				return view('msc::wechat.openlab.'.$view,$data);
+			}
 	}
 
 
@@ -235,7 +240,7 @@ class OpenLaboratoryController extends MscWeChatController {
 			}
 
 			DB::connection('msc_mis')->commit();
-			return redirect()->intended('/msc/wechat/open-laboratory/type-list?type=success');
+			return redirect()->intended('/msc/wechat/open-laboratory/type-list');
 		}elseif(Input::get('user_type') == 2){
 			$data = [
 				'resources_lab_id' => Input::get('c_id'),
@@ -251,7 +256,7 @@ class OpenLaboratoryController extends MscWeChatController {
 			$resources=ResourcesOpenLabApply::create($data);
 			if($resources){
 				DB::connection('msc_mis')->commit();
-				return redirect()->intended('/msc/wechat/open-laboratory/type-list?type=success');
+				return redirect()->intended('/msc/wechat/open-laboratory/type-list');
 			}else{
 				return redirect()->intended('/msc/wechat/open-laboratory/order-lab?id='. Input::get('c_id'));
 			}
@@ -371,7 +376,7 @@ class OpenLaboratoryController extends MscWeChatController {
 
     	$resourt = DB::connection('msc_mis')->table('resources_device_apply')->where('id','=',Input::get('id'))->update($data);
     	if($resourt){
-    		return redirect()->intended('/msc/wechat/open-laboratory/open-lab-list?type=success'); 
+    		return redirect()->intended('/msc/wechat/open-laboratory/open-lab-list'); 
     	}else{
     		return view('msc::wechat.index.index_error',array('error_msg'=>'操作失败'));
     	}
@@ -404,7 +409,7 @@ class OpenLaboratoryController extends MscWeChatController {
 
     	//dd($resourt);
     	if($resourt){
-    		return redirect()->intended('/msc/wechat/open-laboratory/open-lab-list?type=success'); 
+    		return redirect()->intended('/msc/wechat/open-laboratory/open-lab-list'); 
     	}else{
     		return view('msc::wechat.index.index_error',array('error_msg'=>'操作失败'));
     	}
