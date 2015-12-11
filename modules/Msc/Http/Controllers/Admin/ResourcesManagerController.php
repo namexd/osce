@@ -266,7 +266,7 @@ class ResourcesManagerController extends MscController
      * <b>post请求字段：</b>
      * * int        $pid        分类pid
      *
-     * @return int 新增分类实体id
+     * @return int 新增分类实体id/false
      *
      * @version 0.2
      * @author wangjiang <wangjiang@misrobot.com>
