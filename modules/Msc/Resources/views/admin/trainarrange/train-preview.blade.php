@@ -106,7 +106,7 @@
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="ibox float-e-margins">
-		<form class="form-horizontal" action="url(/msc/admin/training/add-training-preview)" method="post" id="form">
+		<form class="form-horizontal" action="{{url('/msc/admin/training/add-training-preview')}}" method="post" id="form">
 			<div class="ibox-title of">
 				<h5 class="col-sm-6">培训安排</h5>
 				<div class="right_btn">
@@ -118,25 +118,25 @@
 				</div>
 			</div>
 			<div class="ibox-content bor0">
-				<input type="hidden" name="id" id="id" value="$training['id']}}" />
+				<input type="hidden" name="id" id="id" value="{{$training['id']}}" />
 				<div class="form-group">
 		            <label class="col-sm-1 control-label font12">培训名称</label>
 		            <div class="col-sm-11">
-		            	<input type="text" name="name" class="form-control col-sm-12 padt_7 bgw train_name" value="$training['name']}}" readonly="readonly" />
+		            	<input type="text" name="name" class="form-control col-sm-12 padt_7 bgw train_name" value="{{$training['name']}}" readonly="readonly" />
 		            </div>
 		        </div>
 		        <div class="hr-line-dashed"></div>
 		        <div class="form-group">
 		        	<label class="col-sm-1 control-label font12">培训人数</label>
                     <div class="col-sm-11">
-		            	<input type="text" name="num" class="form-control col-sm-12 padt_7 bgw train_num" value="$training['total']}}" readonly="readonly" />
+		            	<input type="text" name="num" class="form-control col-sm-12 padt_7 bgw train_num" value="{{$training['total']}}" readonly="readonly" />
 		            </div>
 		        </div>
 		         <div class="hr-line-dashed"></div>
 		        <div class="form-group">
 		        	<label class="col-sm-1 control-label font12">培训时间</label>
 		            <div class="col-sm-11 padt_7 time_no">
-                        <div class="col-sm-6 "><span id="begindate">$training['begindate']}}</span>&nbsp;至&nbsp;<span id="enddate">$training['enddate']}}</span></div>
+                        <div class="col-sm-6 "><span id="begindate">{{$training['begindate']}}</span>&nbsp;至&nbsp;<span id="enddate">{{$training['enddate']}}</span></div>
                     </div>
                     <div class="col-sm-11 time_ok">
                         <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="begindate">

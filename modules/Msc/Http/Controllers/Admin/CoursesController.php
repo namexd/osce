@@ -36,7 +36,7 @@ class CoursesController extends MscController
    /* public function getTest(){
         return view('msc::admin.open_equipment_manage.openequ_audited');
     }*/
-    /**
+    /**dfdsfsfsdfsdfdsfds
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
      * @access public
