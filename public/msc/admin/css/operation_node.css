@@ -1,0 +1,74 @@
+.list_table{
+    float:left;
+    width:1080px;
+    background:#fff}
+.list_table table th{
+    color:#323a46;
+    font-size:14px;
+    font-weight:500;
+    background:#f1f6fa}
+.list_table table td{
+    color:#5b6676}
+.list_table table a.tit{
+    float:left;
+    padding:8px 20px}
+.list_table .cor_fff{
+    background:#fff}
+.list_table .cor_f9f{
+    background:#f9fbfd}
+.list_table tr:hover{
+    background:#fdfaf5}
+.list_table td .was{
+    color:#5b6676;
+    text-decoration:none}
+.list_table td .will{
+    color:#ff9600}
+.list_table td a.bj,
+.list_table td a.ck,
+.list_table td a.sc{
+    float:left;
+    width:20px;
+    height:20px;
+    font-size:0;
+    margin-left:5px;
+    background:url(../images/st-bj-ico.png) no-repeat}
+.list_table td a.bj{
+    margin-left:20px;
+    background-position:0 -72px}
+.list_table td a.ck{
+    background-position:0 -112px}
+.list_table td a.sc{
+    background-position:0 -152px}
+.list_table td a.bj:hover{
+    background:url(../images/caozuo.png) no-repeat 0 -20px}
+.list_table td a.ck:hover{
+    background:url(../images/caozuo.png) no-repeat -25px -20px}
+.list_table td a.sc:hover{
+    background:url(../images/caozuo.png) no-repeat -50px -20px}
+
+.bnt_add_type,
+.bnt_add_type_,
+.bnt_show_input,
+.bnt_hidden_input
+{
+    float:left;
+    width:20px;
+    height:20px;
+    font-size:0;
+    margin-left:5px;
+    background: url("../images/bnt_add_type.gif") no-repeat center;
+}
+.show_input{
+    height: 20px;
+    cursor: pointer;
+}
+.bnt_show_input,
+.bnt_hidden_input{
+    cursor: pointer;
+    padding-top: 12px;
+    background: url('../images/but_an_type.gif') no-repeat left;
+}
+.bnt_hidden_input{
+    display: none;
+    background: url('../images/bnt_back_type.gif') no-repeat center;
+}
