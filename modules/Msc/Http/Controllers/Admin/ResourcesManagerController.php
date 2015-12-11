@@ -200,6 +200,7 @@ class ResourcesManagerController extends MscController
         }
 
         $categroy = $resources->categroy;
+        $items    = $resources->items;
         if (!$resources->resources)
         {
            throw new \Exception('资源不存在');
@@ -224,6 +225,7 @@ class ResourcesManagerController extends MscController
             'locationName'   => $resources->location, // 设备位置
             'detail'         => $resources->detail, // 功能描述
             'image'          => $imagesArray, // 设备图片
+            'items'          => $items, // 该类设备包含的单品列表
         ];
 
         return view('msc::admin.resourcemanage.Existing_read', ['resource'=>$data]);
@@ -307,9 +309,6 @@ class ResourcesManagerController extends MscController
         {
             return response()->json(false);
         }
-
-
-
     }
 
     /**
@@ -636,7 +635,7 @@ class ResourcesManagerController extends MscController
     public function getEditResources(Request $request)
     {
         $this->validate($request, [
-            'id' 		=> 	'required|integer',
+            'id'   => 	'required|integer',
         ]);
 
         $id = (int)Input::get('id');
@@ -654,6 +653,7 @@ class ResourcesManagerController extends MscController
         }
 
         $images = $resources->resources->images;
+        $items  = $resources->items;
         if($images)
         {
             $imagesArray = $images->toArray();
@@ -673,6 +673,7 @@ class ResourcesManagerController extends MscController
             'locationName'   => $resources->location, // 设备位置
             'image'          => $imagesArray, // 设备图片
             'detail'         => $resources->detail, //设备描述
+            'items'          => $items, // 该类设备下面单品列表
         ];
 
         if($categroy)
