@@ -14,14 +14,14 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 	//http://www.mis.hx/msc/admin/resources-manager/user-register
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
 
-		Route::controller('resources-manager', 'ResourcesManagerController');
+		//Route::controller('resources-manager', 'ResourcesManagerController');TODO： 2015-12-11 罗海华 解决 路由被拦截的问题
 		Route::get('resources-manager/classroom-list', ['uses'=>'ResourcesManagerController@getClassroomList','as'=>'msc.resourcesManager.classroomList']);
 		Route::get('resources-manager/record-info', ['uses'=>'ResourcesManagerController@getRecordInfo','as'=>'msc.admin.resourcesManager.getRecordInfo']);
 		Route::get('resources-manager/borrow-record-list', ['uses'=>'ResourcesManagerController@getBorrowRecordList','as'=>'msc.admin.resourcesManager.getBorrowRecordList']);
 		Route::get('resources-manager/statistics', ['uses'=>'ResourcesManagerController@getStatistics','as'=>'msc.admin.resourcesManager.getStatistics']);
-		Route::get('resources-manager/examine-borrow-apply', ['uses'=>'ResourcesManagerController@postExamineBorrowingApply','as'=>'msc.admin.resourcesManager.postExamineBorrowingApply']);
-
-
+		Route::post('resources-manager/examine-borrow-apply', ['uses'=>'ResourcesManagerController@postExamineBorrowingApply','as'=>'msc.admin.resourcesManager.postExamineBorrowingApply']);
+		Route::get('resources-manager/wait-examine-list', ['uses'=>'ResourcesManagerController@getWaitExamineList','as'=>'msc.admin.resourcesManager.getWaitExamineList']);
+		Route::post('resources-manager/examine-borrowing-apply', ['uses'=>'ResourcesManagerController@postExamineBorrowingApply','as'=>'msc.admin.resourcesManager.postExamineBorrowingApply']);
 
 		//Route::controller('examine', 'ExamineController');
 		Route::controller('courses', 'CoursesController');
@@ -100,6 +100,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::controller('user', 'UserController');
 		Route::controller('wechat', 'WeChatController');
 		Route::controller('personal-center', 'PersonalCenterController');
+		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
 		//开放设备当前预约
 		Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.personalCenter.myApply']);
 		//开放设备使用历史

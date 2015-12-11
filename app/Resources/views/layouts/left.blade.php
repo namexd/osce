@@ -42,7 +42,7 @@
                     <li>
                         <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">设备外借归还管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="{{action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getExamineList')}}">审核申请</a>
+                            <li><a class="J_menuItem" href="{{route('msc.admin.resourcesManager.getWaitExamineListByToolsName')}}">审核申请</a>
                             </li>
                             <li><a  class="J_menuItem" href="{{action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getBorrowedList')}}">现有外借设备</a>
                             </li>

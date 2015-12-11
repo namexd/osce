@@ -155,15 +155,14 @@
                         <input  type="checkbox" class="check_id" value="{{ $item['id'] }}" >
                     </label>
                 </td>
-                <td>{{$item->id}}</td>
-                <td>{{$item->name}}</td>
-                <td>{{$item->begindate or '未知'}}-{{$item->enddate or '未知'}}</td>
-
-                <td>{{$item->code}}</td>
-                <td>{{is_null($item->lenderInfo)? '-':$item->lenderInfo->name}}</td>
-                <td>{{$item->detail}}</td>
-                <td><span class="state3">{{ is_null($item->resourcesToolItem)? '-':($item->resourcesToolItem->pid>0? '是':'否') }}</span></td>
-                <td>暂时没实现</td>
+                <td>{{$item ->  id}}</td>
+                <td>{{$item ->  resourcesTool  ->name}}</td>
+                <td>{{$item ->  begindate or '未知'}}-{{$item->enddate or '未知'}}</td>
+                <td>{{$item ->  code}}</td>
+                <td>{{is_null($item ->  lenderInfo)? '-':$item->lenderInfo->name}}</td>
+                <td>{{$item ->  detail}}</td>
+                <td style="text-align: center;"><span class="state3">{{ $item   ->pid? '是':'否' }}</span></td>
+                <td>{{$item ->  status}}</td>
                 <td>
                     <div class="opera">
                         <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
