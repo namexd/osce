@@ -3,6 +3,9 @@
  	<link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
     <style type="text/css">
     	.has-error .form-control{border-color: #ed5565!important;}
+    	.has-error .form-control{border-color: #ed5565!important;}
+    	.code_add,.code_del{position:absolute;right:15px;top:0;}
+    	.add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
     </style>
 @stop
 @section('only_js')
@@ -138,7 +141,22 @@
 		              	});
 		            }
 		        });
-		    }) ;
+		    });
+		    
+		    $(".code_add").click(function(){
+		    	var  str='<div class="form-group">'+
+                                '<label class="col-sm-2 control-label"></label>'+
+                                '<div class="col-sm-10 add_box">'+
+                                    '<input type="text" id="" name="code[]" class="code_txt left form-control" value="">'+
+                                    '<input type="button" id="" name="" class="code_del left btn btn-danger" value="删 除" />'+
+                                '</div>'+
+                            '</div>';
+		    	$("#code_list").append(str);
+		    });
+		    $("#code_list").delegate(".code_del","click",function(){
+		    	$(this).parents(".form-group").remove();
+		    	$(this).remove();
+		    });
         });
     </script>
 @stop
@@ -239,6 +257,17 @@
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">编码</label>
+                                <div class="col-sm-10 add_box">
+                                	<input  type="text" id="" name="code[]" class=" left form-control" value="">
+                            		<input type="button" id="" name="" class="code_add left btn btn-info" value="添 加">
+                                </div>
+                            </div>
+                            <div id="code_list">
+                            	
+                            </div>
+	                        <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-white cancel" type="button">取消</button>
