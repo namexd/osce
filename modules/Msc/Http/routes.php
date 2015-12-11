@@ -100,7 +100,6 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::controller('user', 'UserController');
 		Route::controller('wechat', 'WeChatController');
 		Route::controller('personal-center', 'PersonalCenterController');
-		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
 		//开放设备当前预约
 		Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.personalCenter.myApply']);
 		//开放设备使用历史
