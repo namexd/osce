@@ -48,7 +48,6 @@
 			laydate(end);
 			$(".edit").on('click',function(){
 				if($(this).val()=="编辑"){
-					console.log("a");
 					$(this).val("完成").removeClass("btn-default").addClass("btn-primary");
 					$(".train_name,.train_num").removeAttr("readonly").css("border","1px solid #ccc");
 					$(".train_name").focus().val($(".train_name").val());
@@ -58,7 +57,6 @@
 					$(".time_no").hide();
 					$(".time_ok").show();
 				}else{
-					console.log("b");
 					$(this).val("编辑").removeClass("btn-primary").addClass("btn-default");
 					$(".tj").removeAttr("disabled");
 					$(this).blur();
@@ -227,7 +225,7 @@
 	                      </div>
 	                      <div class="form-group">
 	                          <div class="col-sm-2 control-label"><label>变更安排</label></div>
-	                          <div class="col-sm-10 padt_7"><p>开放性伤口包扎课程</p></div>
+	                          <div class="col-sm-10 padt_7"><p>{{$training['name']}}</p></div>
 	                      </div>
 	                      <div class="form-group">
 	                          <div class="col-sm-2 control-label"><label>&nbsp;</label></div>
