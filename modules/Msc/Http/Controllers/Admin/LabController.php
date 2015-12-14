@@ -81,7 +81,7 @@ class LabController extends MscController
         // 获取列表
         $labHis     = new ResourcesLabHistory();
         $pagination = $labHis->getPcList($where, $order);
-        
+
         foreach ($pagination as $key => $item) {
             $pagination[$key]['user'] = $item->applyUserInfo ? $item->applyUserInfo->name : ''; // 预约人名字
         }
