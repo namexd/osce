@@ -47,17 +47,19 @@
 			laydate(start);
 			laydate(end);
 			$(".edit").on('click',function(){
-				if($(this).text()=="编辑"){
-					$(this).text("完成").removeClass("btn-default").addClass("btn-primary");
-					$(".tj").attr("data-toggle","");
+				if($(this).val()=="编辑"){
+					console.log("a");
+					$(this).val("完成").removeClass("btn-default").addClass("btn-primary");
 					$(".train_name,.train_num").removeAttr("readonly").css("border","1px solid #ccc");
 					$(".train_name").focus().val($(".train_name").val());
 					$(".tj").attr("disabled","disabled");
+					$("#start").val($("#begindate").text());
+					$("#end").val($("#enddate").text());
 					$(".time_no").hide();
 					$(".time_ok").show();
 				}else{
-					$(this).text("编辑").removeClass("btn-danger").addClass("btn-default");
-					$(".tj").attr("data-toggle","modal");
+					console.log("b");
+					$(this).val("编辑").removeClass("btn-primary").addClass("btn-default");
 					$(".tj").removeAttr("disabled");
 					$(this).blur();
 					$(".train_name,.train_num").attr("readonly","readonly").css("border","0");
