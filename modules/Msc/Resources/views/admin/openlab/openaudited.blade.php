@@ -164,7 +164,7 @@
                     </td>
                     <td>{{$item['detail']}}</td>
                     <td>{{empty($item->labApplyGroups->first()->groups->name) ? '-' : $item->labApplyGroups->first()->groups->name}}</td>
-                    <td class="status">{{$item['status']}}</td>
+                    <td class="status">{{ $item['status'] }}</td>
                     <td class="opera">
                         <span class="read notice modal-control" data-toggle="modal" data-target="#myModal" >紧急通知</span>
                     </td>

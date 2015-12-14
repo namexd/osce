@@ -174,7 +174,13 @@
                         <td>{{$item['code']}}</td>
                         <td>{{ $item['student_name'] }}</td>
                         <td>{{$item['detail']}}</td>
-                        <td class="status">{{$item['status']}}</td>
+                        <td class="status">
+                            @if($item['status'] === -2) 已损坏
+                            @elseif($item['status'] === 0) 不允许借出
+                            @elseif($item['status'] === 1) 正常
+                            @elseif($item['status'] === 2) 已借出
+                            @endif
+                        </td>
                         <td class="opera">
                             <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" >紧急通知</span>
                         </td>
