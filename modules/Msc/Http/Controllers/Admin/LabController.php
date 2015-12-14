@@ -142,8 +142,8 @@ class LabController extends MscController
         $this->validate($request, [
             'date' => 'sometimes|date_format:Y-m-d',
             'keyword' => 'sometimes',
-            'order' => 'sometimes',
-            'orderby' => 'sometimes',
+            'orderType' => 'sometimes',
+            'orderName' => 'sometimes',
         ]);
         $keyword    	=   e(urldecode($request->get('keyword')));
         $date       	=   $request->get('date');
@@ -172,8 +172,7 @@ class LabController extends MscController
                 $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
         }
         $order = [$orderName, $orderType];
-        $groups = ResourcesClassroomApply::find(1)->groups;
-//        dd($groups);
+
 
         $ResourcesClassroomApply = new ResourcesClassroomApply();
         $list = $ResourcesClassroomApply->getWaitExamineList($keyword, $date, $order);
@@ -250,22 +249,51 @@ class LabController extends MscController
         $this->validate($request, [
             'date' => 'sometimes|date_format:Y-m-d',
             'keyword' => 'sometimes',
-            'order' => 'sometimes',
-            'orderby' => 'sometimes',
+            'orderName' => 'sometimes',
+            'orderType' => 'sometimes',
         ]);
         $keyword = e(urldecode($request->get('keyword')));
         $date = $request->get('date');
-        $order = e($request->get('order'));
-        $orderby = e($request->get('orderby'));
-        $orderby = empty($orderby) ? 'desc' : $orderby;
-        $order = empty($order) ? 'created_at' : $orderby;
+        $orderName = e($request->get('order_name'));
+        $orderType = e($request->get('order_type'));
+        $orderType = empty($orderType) ? 'desc' : $orderType;
+        $orderName = empty($orderName) ? '5' : $orderName;
         $date = empty($date) ? date('Y-m-d') : $date;
+        //处理排序
+        switch ($orderName) {
+            case '1':
+                $orderName = ['student.name','teacher.name'];
+                break;
+            case '2':
+                $orderName = ['resources_lab.status','resources_lab.status'];
+                break;
+            default:
+                $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
+        }
+        $order = [$orderName, $orderType];
 
-        $order = [$order, $orderby];
+        //使用数组保存需要会显的数值
+        $rollMsg = ['',''];
+        $rollMsg[0] = $date;
+        if ($keyword !== '') {
+            $rollMsg[1] = $keyword;
+        }
+        //$groups = ResourcesClassroomApply::find(1)->groups->first()->name;
+        //$groups = ResourcesClassroomApply::find(1)->labApplyGroups->first()->groups->name;
+
 
         $ResourcesClassroomApply = new ResourcesClassroomApply();
         $list = $ResourcesClassroomApply->getExaminedList($keyword, $date, $order);
-        return view('msc::admin.openlab.openaudited', ['pagination' => $list]);
+//        foreach($list as $item)
+//        {
+//            $connection =   \DB::connection('msc_mis');
+//            $connection ->enableQueryLog();
+//            dd($item->labApplyGroups->first()->groups->name);
+//            $item->labApplyGroups()->get();
+//            $c= $connection ->getQueryLog();
+//            dd($c);
+//        }
+        return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg]);
     }
 
     /**
