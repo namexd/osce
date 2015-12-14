@@ -242,7 +242,7 @@ class OpenDeviceController extends MscWeChatController
 
         if ($result)
 		{
-			return view('msc::wechat.opendevice.opendevice_homepage');
+            return redirect()->intended('/msc/wechat/open-device/open-tools-order-index');
 		}
     }
 

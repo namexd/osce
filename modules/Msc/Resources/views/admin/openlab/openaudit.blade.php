@@ -140,10 +140,10 @@
                 <div class="col-xs-6 col-md-4">
                     <form method="get" action="/msc/admin/lab/open-lab-apply-list">
                         <div class="input-group pull-left col-md-5 searchbox">
-                            <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="date">
+                            <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="date" value="{{$rollmsg[0]}}">
                         </div>
                         <div class="input-group pull-left col-md-5 searchbox">
-                            <input type="text" placeholder="实验室名称" class="input-sm form-control" name="keyword" value="">
+                            <input type="text" placeholder="实验室名称" class="input-sm form-control" name="keyword" value="{{$rollmsg[1]}}">
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                             </span>
@@ -234,9 +234,10 @@
                             <td>{{date('Y/m/d',strtotime($item['original_begin_datetime']))}}</td>
                             <td>{{date('H:i',strtotime($item['original_begin_datetime']))}}-{{date('H:i',strtotime($item['original_end_datetime']))}}</td>
                             <td>{{$item['code']}}</td>
-                            <td>{{ $item['studentName'] or (is_null($item->applyer)? '-':$item->applyer->name)}}</td>
+                            <td>{{empty($item->applyer->name) ? '-':$item->applyer->name}}</td>
                             <td>{{$item['detail']}}</td>
-                            <td>{{ is_null($item->groups->first()->name) ? '-' : $item->groups->first()->name }}</td>
+                            <td>{{empty($item->labApplyGroups->first()->groups->name) ? '-' : $item->labApplyGroups->first()->groups->name}}</td>
+                            {{--<td>{{dd(empty($item->labApplyGroups))}}</td>--}}
                             <td class="status">{{$item['status']}}</td>
                             <td class="opera">
                                 <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
