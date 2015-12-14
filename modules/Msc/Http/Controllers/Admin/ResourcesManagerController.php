@@ -325,14 +325,13 @@ class ResourcesManagerController extends MscController
     {
         $this->validate($request,[
             'id'   => 'required|integer',
-            'name' => 'required|max:50|min:0',
+            'key' => 'required',
         ]);
-
+        $key = $request->input('key');
+        $val = $request->input('val');
         $id   = $request->input('id');
-        $name = urldecode(e($request->input('name')));
-
-        $resourcesToolsCate = ResourcesToolsCate::findOrFail($id);
-        $resourcesToolsCate->name = $name;
+        $resourcesToolsCate = ResourcesToolsCate::find($id);
+        $resourcesToolsCate->$key = $val;
 
         return response()->json($resourcesToolsCate->save());
     }
@@ -369,7 +368,7 @@ class ResourcesManagerController extends MscController
         }
         else
         {
-            $resourcesToolsCate = ResourcesToolsCate::findOrFail($id);
+            $resourcesToolsCate = ResourcesToolsCate::find($id);
             return response()->json($resourcesToolsCate->delete());
         }
     }
