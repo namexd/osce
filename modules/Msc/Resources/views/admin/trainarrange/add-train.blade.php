@@ -50,12 +50,12 @@
 			        name: {/*键名username和input name值对应*/
 			            validators: {
 			                notEmpty: {/*非空提示*/
-			                    message: '用户名不能为空'
+			                    message: '培训名称不能为空'
 			                },
 			                stringLength: {
 			                    min: 1,
 			                    max: 50,
-			                    message: '用户名长度必须在1-50之间'
+			                    message: '培训名称长度必须在1-50之间'
 			                }
 			            }
 			        }
