@@ -98,7 +98,7 @@
             );
 
             //日期搜索
-            $builder = $builder->whereRaw ('unix_timestamp(resources_device_apply.original_begin_datetime)>= ? ' , [ strtotime ($date) ]);
+            $builder = $builder->whereRaw ('unix_timestamp(resources_device_apply.original_begin_datetime)>= ? ' , [ strtotime (date('Y-m-d',strtotime($date)))]);
 
             //关键字搜索
             if ($keyword !== '') {
