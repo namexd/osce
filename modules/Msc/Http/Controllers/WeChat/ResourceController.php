@@ -188,12 +188,13 @@ class ResourceController extends MscWeChatController {
 				$builder=$builder->where('name','like','%'.$keyword.'%');
 			}
 			$pagination	=$builder->orderBy('id','desc')->paginate(20);
+
 			$list=[];
 			foreach($pagination as $item)
 			{
 
 				$resources=$item->resources;
-				$imagesList=$resources->images;
+				$imagesList=is_null($resources)? []:$resources->images;
 				$image=count($imagesList)? $imagesList->first():'';
 				$path=empty($image)? '':$image->url;
 				$data=[

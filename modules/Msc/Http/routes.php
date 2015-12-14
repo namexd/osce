@@ -22,6 +22,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::post('resources-manager/examine-borrow-apply', ['uses'=>'ResourcesManagerController@postExamineBorrowingApply','as'=>'msc.admin.resourcesManager.postExamineBorrowingApply']);
 		Route::get('resources-manager/wait-examine-list', ['uses'=>'ResourcesManagerController@getWaitExamineList','as'=>'msc.admin.resourcesManager.getWaitExamineList']);
 		Route::post('resources-manager/examine-borrowing-apply', ['uses'=>'ResourcesManagerController@postExamineBorrowingApply','as'=>'msc.admin.resourcesManager.postExamineBorrowingApply']);
+		Route::post('resources-manager/borrowedList', ['uses'=>'ResourcesManagerController@getBorrowedList','as'=>'msc.admin.resourcesManager.getBorrowedList']);
 
 		//Route::controller('examine', 'ExamineController');
 		Route::controller('courses', 'CoursesController');
