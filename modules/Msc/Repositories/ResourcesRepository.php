@@ -105,11 +105,11 @@ class ResourcesRepository extends BaseRepository
                 {
                     throw new \Exception('该申请已经作废');
                 }
-                if($validated==1&&strtotime($apply->begindate)<strtotime($time_start))
+                if($validated==1&&strtotime($apply->begindate)>strtotime($time_start))
                 {
                     throw new \Exception('请在申请使用期内设定取件时间');
                 }
-                if($validated==1&&strtotime($apply->enddate)>strtotime($time_end))
+                if($validated==1&&strtotime($apply->enddate)<strtotime($time_end))
                 {
                     throw new \Exception('请在申请使用期内设定取件时间');
                 }

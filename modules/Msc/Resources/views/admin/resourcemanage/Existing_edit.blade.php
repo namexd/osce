@@ -273,7 +273,8 @@
 										<label class="col-sm-2 control-label">
 										</label>
 										<div class="col-sm-10 add_box">
-											<input type="text" id="" name="code[]" class="code_txt left form-control" value="{{$list['code']}}">
+											<input type="hidden" name="code[]" id="" value="code:{{$list['code']}}" />
+											<input type="text" id="" name="" class="code_txt left form-control" value="{{$list['code']}}">
 											<input type="button" id="" name="" class="code_del left btn btn-danger" value="删 除">
 										</div>
 									</div>

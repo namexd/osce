@@ -198,6 +198,36 @@ class TrainingController extends MscController
     }
 
     /**
+     * 根据手机号判断用户是否存在
+     * @method POST
+     * @url /msc/admin/resources-manager/check-mobile-exist
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        $mobile        手机号
+     *
+     * @return bool
+     *
+     * @version 0.2
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2015-12-11 17:26
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postCheckMobileExist (Request $request)
+    {
+        $this->validate($request,[
+            'mobile'  => 'required|mobile_phone',
+        ]);
+
+        $moblie = $request->input('mobile');
+
+        return response()->json(
+            User::where('mobile', '=', $moblie)->first()
+        );
+    }
+
+    /**
      * 新建培训分组-处理
      * @method POST /msc/admin/training/add-training-group
      * @access public

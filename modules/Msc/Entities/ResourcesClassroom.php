@@ -37,10 +37,10 @@ class ResourcesClassroom extends  CommonModel {
 /*    public function getStatusAttribute($value){
         return $this->statusAttrName[$value];
     }
-
+*/
     public function getstatusAttrName(){
         return $this->statusAttrName;
-    }*/
+    }
 
     /**
      * 已分配到该资源的课程

@@ -28,8 +28,6 @@ class ResourcesBorrowing extends  CommonModel
         return $this->belongsTo('App\Entities\User','lender');
     }
 
-
-
     public function user(){
         return $this->hasOne('App\Entities\User','id','lender');
     }
@@ -72,5 +70,37 @@ class ResourcesBorrowing extends  CommonModel
             break;
         }
         return $name;
+    }
+
+    public function getWaitExamineListByToolsName($name,$pid=false){
+         $builder   =   $this   ->  with([
+                'resourcesTool'    =>  function($qurey) use ($name){
+                    if(!is_null($name))
+                    {
+                        $qurey  ->where('name','like','%'.$name.'%');
+                    }
+                }
+        ])  ->  whereRaw(
+            'unix_timestamp(begindate)  >= ?',
+            [
+                strtotime(date('Y-m-d'))
+            ]
+        )   ->  orderBy('begindate','asc')
+            ->  where('status','=',1)
+            ->  where('loan_validated','=',0)
+            ->  where('apply_validated','=',0);
+        if($pid!==false)
+        {
+            //如果
+            if($pid==1)
+            {
+                $builder    =   $builder    ->  where('pid','>',0);
+            }
+            if($pid==2)
+            {
+                $builder    =   $builder    ->  where('pid','=',0);
+            }
+        }
+        return    $builder->  paginate(config('msc.page_size'));
     }
 }
