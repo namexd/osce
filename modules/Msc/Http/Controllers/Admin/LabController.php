@@ -172,9 +172,6 @@ class LabController extends MscController
                 $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
         }
         $order = [$orderName, $orderType];
-        $groups = ResourcesClassroomApply::find(1)->groups;
-//        dd($groups);
-
         $ResourcesClassroomApply = new ResourcesClassroomApply();
         $list = $ResourcesClassroomApply->getWaitExamineList($keyword, $date, $order);
         return view('msc::admin.openlab.openaudit', ['pagination' => $list,'rollmsg' => $rollMsg]);

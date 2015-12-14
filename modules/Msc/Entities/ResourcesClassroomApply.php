@@ -147,6 +147,10 @@ class ResourcesClassroomApply extends  CommonModel {
                 'resources_lab_apply.apply_user_type as apply_user_type'
             ]
         );
+        if($order[0]=='created_at')
+        {
+            $order[0]   =   $this->table.'.created_at';
+        }
         return $builder->orderBy ($order[0], $order[1])->paginate (config ('msc.page_size'));
     }
 
