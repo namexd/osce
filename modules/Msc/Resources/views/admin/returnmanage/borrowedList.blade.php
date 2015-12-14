@@ -129,7 +129,7 @@
             req['detail'] = $('#Form2').find('textarea').val();
             $.ajax({
                 type:"get",
-                url:"{{action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getTipBack')}}",
+                url:"{{route('msc.admin.resourcesManager.getTipBack')}}",
                 data:req,
                 success:function(res){
                     if(res.code==1){
