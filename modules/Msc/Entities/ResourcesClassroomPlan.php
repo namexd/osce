@@ -17,7 +17,7 @@ use Modules\Msc\Entities\ResourcesClassroomPlanTeacher;
 class ResourcesClassroomPlan extends CommonModel
 {
     protected $connection	=	'msc_mis';
-    protected $table 		= 	'resources_openlab_plan';
+    protected $table 		= 	'resources_lab_plan';
     public    $timestamps	=	true;
     protected $primaryKey	=	'id';
     public    $incrementing	=	true;
