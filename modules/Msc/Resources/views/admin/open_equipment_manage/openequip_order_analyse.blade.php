@@ -316,6 +316,14 @@
                                 }
                                 data['xAxis'] = xAxis;
                                 data['yAxis'] = yAxis;
+
+                                //用户体验操作 数据少导致太宽
+                                if(data.xAxis.length<8){
+                                    var len = data.xAxis.length;
+                                    for(var i = len;i<=8;i++){
+                                        (data.xAxis).push('');
+                                    }
+                                }
                                 chart(data);
 
                             }else{

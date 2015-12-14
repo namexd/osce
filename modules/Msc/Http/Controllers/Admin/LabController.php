@@ -81,7 +81,6 @@ class LabController extends MscController
         // 获取列表
         $labHis     = new ResourcesLabHistory();
         $pagination = $labHis->getPcList($where, $order);
-        dd($pagination);
 
         foreach ($pagination as $key => $item) {
             $pagination[$key]['user'] = $item->applyUserInfo ? $item->applyUserInfo->name : ''; // 预约人名字
@@ -172,7 +171,6 @@ class LabController extends MscController
                 $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
         }
         $order = [$orderName, $orderType];
-
 
         $ResourcesClassroomApply = new ResourcesClassroomApply();
         $list = $ResourcesClassroomApply->getWaitExamineList($keyword, $date, $order);
@@ -279,7 +277,8 @@ class LabController extends MscController
             $rollMsg[1] = $keyword;
         }
         //$groups = ResourcesClassroomApply::find(1)->groups->first()->name;
-        //$groups = ResourcesClassroomApply::find(1)->labApplyGroups->first()->groups->name;
+//        $groups = ResourcesClassroomApply::find(11)->labApplyGroups->first()->groups->name;
+//        dd($groups);
 
 
         $ResourcesClassroomApply = new ResourcesClassroomApply();
