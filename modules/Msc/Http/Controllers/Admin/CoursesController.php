@@ -36,7 +36,7 @@ class CoursesController extends MscController
    /* public function getTest(){
         return view('msc::admin.open_equipment_manage.openequ_audited');
     }*/
-    /**dfdsfsfsdfsdfdsfds
+    /**
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
      * @access public
@@ -59,6 +59,7 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
+            dd($data);
             //已经存在的数据
             $dataHaven=[];
             //添加失败的数据
@@ -116,7 +117,7 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.coursesPlan');
-
+            dd($data);
             //失败原因 包
             $falseData=[];
             $dataConflict=[];
