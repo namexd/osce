@@ -29,7 +29,7 @@
             elem: "#start",
             format: "YYYY/MM/DD hh:mm:ss",
             min: "1970-00-00 00:00:00",
-            max: "2099-06-16 23:59:59",
+            max: "2099-12-06 23:59:59",
             istime: true,
             istoday: false,
             choose: function (a) {
@@ -41,7 +41,7 @@
             elem: "#end",
             format: "YYYY/MM/DD hh:mm:ss",
             min: "1970-00-00 00:00:00",
-            max: "2099-06-16 23:59:59",
+            max: "2099-12-16 23:59:59",
             istime: true,
             istoday: false,
             choose: function (a) {
@@ -86,14 +86,14 @@
             <!--<button type="button" class="btn btn_pl btn-link" ng-click="examine_reject()">批量未通过</button>-->
         </div>
         <div class="col-xs-6 col-md-4">
-
+          <form action="{{route('msc.admin.resourcesManager.getWaitExamineList')}}">
             <div class="input-group">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" placeholder="请输入关键字" name="keyword" class="input-sm form-control">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                     </span>
             </div>
-
+          </form>
         </div>
 
     </div>
@@ -119,10 +119,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#">是</a>
+                                <a href="{{route('msc.admin.resourcesManager.getWaitExamineList',['pid'=>1])}}">是</a>
                             </li>
                             <li>
-                                <a href="#">否</a>
+                                <a href="{{route('msc.admin.resourcesManager.getWaitExamineList',['pid'=>2])}}">否</a>
                             </li>
                         </ul>
                     </div>
@@ -166,7 +166,7 @@
                 <td style="text-align: center;"><span class="state3">{{ $item   ->pid? '是':'否' }}</span></td>
                 <td>{{$item ->  status}}</td>
                 <td>
-                    <div class="opera">
+                    <div class="opera" end-time="{{$item->enddate or '未知'}}">
                         <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
                         <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>
                     </div>
@@ -298,6 +298,11 @@ $(function(){
             $('#Form2').show();
             $('#Form3').hide();
         }else{
+            //时间控制  只能是外借时间之前的时间  2015-12-14 mao bug
+            var end_time = $(this).parent().attr('end-time');
+            start.max = end_time;
+            end.max = end_time;
+
             $('#Form3').attr('value',$(this).parent().parent().parent().attr('value'));
             $('#start').val('');
             $('#end').val('');

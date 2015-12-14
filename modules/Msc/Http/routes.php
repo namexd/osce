@@ -14,7 +14,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 	//http://www.mis.hx/msc/admin/resources-manager/user-register
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
 
-		//Route::controller('resources-manager', 'ResourcesManagerController');TODO： 2015-12-11 罗海华 解决 路由被拦截的问题
+		Route::controller('resources-manager', 'ResourcesManagerController');//TODO： 2015-12-11 罗海华 解决 路由被拦截的问题
+		Route::get('resources-manager/resources-list', ['uses'=>'ResourcesManagerController@getWaitExamineList','as'=>'msc.admin.resourcesManager.getWaitExamineList']);
+		
 		Route::get('resources-manager/classroom-list', ['uses'=>'ResourcesManagerController@getClassroomList','as'=>'msc.resourcesManager.classroomList']);
 		Route::get('resources-manager/record-info', ['uses'=>'ResourcesManagerController@getRecordInfo','as'=>'msc.admin.resourcesManager.getRecordInfo']);
 		Route::get('resources-manager/borrow-record-list', ['uses'=>'ResourcesManagerController@getBorrowRecordList','as'=>'msc.admin.resourcesManager.getBorrowRecordList']);
