@@ -20,8 +20,9 @@
 			var left = parseInt($this.css('margin-left'));
 			var pid = tr.attr('pid');
 			if(open_child){
+				//open_child = false;
+				$.getJSON("{{route('msc.admin.resourcesManager.getAjaxResourcesToolsCate')}}",'id='+pid,function(obj){
 				open_child = false;
-				$.getJSON("{{ url('/msc/admin/resources-manager/ajax-resources-tools-cate') }}",'id='+pid,function(obj){
 					var str = '';
 					if(obj != undefined && obj.length>0){
 						for(var i=0;i<obj.length;i++){

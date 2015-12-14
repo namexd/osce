@@ -15,11 +15,11 @@
                     <li class="active">
                         <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a class="active J_menuItem" href="{{url('msc/admin/resources-manager/resources-list')}}">现有资源</a>
+                            <li><a class="active J_menuItem" href="{{route('msc.admin.resourcesManager.getResourcesList')}}">现有资源</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{url('/msc/admin/resources-manager/add-resources')}}">新增资源</a>
+                            <li><a  class="J_menuItem" href="{{route('msc.admin.resourcesManager.getAddResources')}}">新增资源</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{url('/msc/admin/resources-manager/resources-cate-list')}}">资源类别管理</a>
+                            <li><a  class="J_menuItem" href="{{route('msc.admin.resourcesManager.getResourcesCateList')}}">资源类别管理</a>
                             </li>
                         </ul>
                     </li>

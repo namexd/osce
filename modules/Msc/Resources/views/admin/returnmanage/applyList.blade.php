@@ -16,6 +16,8 @@
         border: none;
         font-weight: bolder;
     }
+    .checkbox tr td:first-child{padding-top: 10px;}
+    .check_ids{}
     </style>
 @stop
 
@@ -27,7 +29,7 @@
             elem: "#start",
             format: "YYYY/MM/DD hh:mm:ss",
             min: "1970-00-00 00:00:00",
-            max: "2099-06-16 23:59:59",
+            max: "2099-12-06 23:59:59",
             istime: true,
             istoday: false,
             choose: function (a) {
@@ -39,7 +41,7 @@
             elem: "#end",
             format: "YYYY/MM/DD hh:mm:ss",
             min: "1970-00-00 00:00:00",
-            max: "2099-06-16 23:59:59",
+            max: "2099-12-16 23:59:59",
             istime: true,
             istoday: false,
             choose: function (a) {
@@ -84,14 +86,14 @@
             <!--<button type="button" class="btn btn_pl btn-link" ng-click="examine_reject()">批量未通过</button>-->
         </div>
         <div class="col-xs-6 col-md-4">
-
+          <form action="{{route('msc.admin.resourcesManager.getWaitExamineList')}}">
             <div class="input-group">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" placeholder="请输入关键字" name="keyword" class="input-sm form-control">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                     </span>
             </div>
-
+          </form>
         </div>
 
     </div>
@@ -117,10 +119,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#">是</a>
+                                <a href="{{route('msc.admin.resourcesManager.getWaitExamineList',['pid'=>1])}}">是</a>
                             </li>
                             <li>
-                                <a href="#">否</a>
+                                <a href="{{route('msc.admin.resourcesManager.getWaitExamineList',['pid'=>2])}}">否</a>
                             </li>
                         </ul>
                     </div>
@@ -164,7 +166,7 @@
                 <td style="text-align: center;"><span class="state3">{{ $item   ->pid? '是':'否' }}</span></td>
                 <td>{{$item ->  status}}</td>
                 <td>
-                    <div class="opera">
+                    <div class="opera" end-time="{{$item->enddate or '未知'}}">
                         <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
                         <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>
                     </div>
@@ -238,12 +240,44 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">需带材料：</label>
                 <div class="col-sm-9">
-                    <select class="form-control" multiple="multiple">
-                        <option value="辅导员证明材料">辅导员证明材料</option>
-                        <option value="借条">借条</option>
-                        <option value="学生证">学生证</option>
-                        <option value="身份证">身份证</option>
-                    </select>
+                    <table class="checkbox">
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="辅导员证明材料">
+                                </label>
+                            </td>
+                            <td>&nbsp;辅导员证明材料</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="借条">
+                                </label>
+                            </td>
+                            <td>&nbsp;借条</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="学生证">
+                                </label>
+                            </td>
+                            <td>&nbsp;学生证</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="check_label">
+                                    <div class="check_icon"></div>
+                                    <input  type="checkbox" class="check_ids" value="身份证">
+                                </label>
+                            </td>
+                            <td>&nbsp;身份证</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -264,10 +298,15 @@ $(function(){
             $('#Form2').show();
             $('#Form3').hide();
         }else{
+            //时间控制  只能是外借时间之前的时间  2015-12-14 mao bug
+            var end_time = $(this).parent().attr('end-time');
+            start.max = end_time;
+            end.max = end_time;
+
             $('#Form3').attr('value',$(this).parent().parent().parent().attr('value'));
             $('#start').val('');
             $('#end').val('');
-            $('#Form3').find('select').val('');
+            $('#Form3').find('.check_icon').removeClass('check');
             $('#Form3').show();
             $('#Form2').hide();
         }
@@ -276,10 +315,17 @@ $(function(){
     /*通过审核*/
     $('#apply-yes').click(function(){
         var req = {};
-        var materials = $('#Form3').find('select').val();
+        var materials = [];
+        //材料勾选
+        $('#Form3 .checkbox').find('tr').each(function(index,elem){
+            var thisSibling = $(elem).find('div').siblings();
+            if($(elem).find('div').hasClass('check')){
+                materials.push(thisSibling.val());
+            };
+        });
         req['time_start'] = $('#start').val();
         req['time_end'] = $('#end').val();
-        //防止join报错
+        //防止join报错 
         if(materials==null){
             req['idcard_type'] = materials;
         }else{
@@ -321,6 +367,22 @@ $(function(){
             }
         });
     })
+
+    /**
+     *多选框
+     */
+    $('.check_ids').click(function(){
+
+        var thisSibling = $(this).siblings();
+        //判断check
+        if(thisSibling.hasClass('check')){
+            thisSibling.removeClass('check');
+        }else{
+            thisSibling.addClass('check');
+        }
+    });
+
+
 
 })
     </script>

@@ -47,9 +47,9 @@ class ResourcesClassroomApply extends  CommonModel {
             return $this->builder->with ('classroom', 'applyer')->get ()->first ();
         }
 
-        public function groups () {
-//            return $this->hasMany ('Modules\Msc\Entities\ResourcesClassroomApplyGroup', 'resources_lab_apply_id', 'id');
-            return $this->hasManyThrough('Modules\Msc\Entities\Groups','Modules\Msc\Entities\ResourcesClassroomApplyGroup','student_group_id','id');
+        public function labApplyGroups () {
+            return $this->hasMany ('Modules\Msc\Entities\ResourcesClassroomApplyGroup', 'resources_lab_apply_id', 'id');
+            //            return $this->hasManyThrough('Modules\Msc\Entities\Groups','Modules\Msc\Entities\ResourcesClassroomApplyGroup','student_group_id','id');
         }
 
     /**
@@ -147,11 +147,14 @@ class ResourcesClassroomApply extends  CommonModel {
                 'resources_lab_apply.apply_user_type as apply_user_type'
             ]
         );
+
         if($order[0]=='created_at')
         {
             $order[0]   =   $this->table.'.created_at';
         }
-        return $builder->orderBy ($order[0], $order[1])->paginate (config ('msc.page_size'));
+
+        return $builder->orderBy ($order[0][0], $order[1])->orderBy($order[0][1],$order[1])->paginate (config ('msc.page_size'));
+
     }
 
         //审核通过或拒绝一个申请

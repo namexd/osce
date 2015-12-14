@@ -17,7 +17,7 @@
         $(function () {
             $('.cancel').click(function (){
                 //history.go(-1);
-                var url = '{{ url("/msc/admin/resources-manager/resources-list") }}';
+                var url = "{{ route('msc.admin.resourcesManager.getResourcesList') }}";
                 window.location.href = url;
             });
             $(".img_box").delegate(".del_img","click",function(){
@@ -28,7 +28,7 @@
 				$("#select_Category").siblings().remove();
 				if(id==-1){
 				}else{
-					$.ajax('/msc/admin/resources-manager/ajax-resources-tools-cate',{
+					$.ajax("{{route('msc.admin.resourcesManager.getAjaxResourcesToolsCate')}}",{
 			            type: 'get',
 			            data: {id:id},
 			            success:function(data) {
@@ -174,7 +174,7 @@
             </div>
             <div class="ibox-content" >
             	
-            	<form method="post" class="form-horizontal" id="sourceForm" action="{{ url('/msc/admin/resources-manager/edit-resources') }}">
+            	<form method="post" class="form-horizontal" id="sourceForm" action="{{ route('msc.admin.resourcesManager.postEditResources') }}">
             		<input type="hidden" name="resources_type" id="resources_type" value="TOOLS" />
 	                <div class="row">
 		                <div class="col-md-5">
