@@ -24,7 +24,7 @@
                 var name = $(this).data('name');
                 $('.sname').text(name);
                 $('[name=id]').val(id);
-                $.ajax('/msc/admin/resources-manager/rejected-resources',{
+                $.ajax({"{{route('msc.admin.resourcesManager.getRejectedResources')}}"},{
                 	type: 'get',
 		            data: {id:id},
 		            success:function(data) {
@@ -79,7 +79,7 @@
                             ids.push($(trs[i]).find('.checkbox_input input').val());
                         }
                     }
-                    var url = '{{ url("/msc/admin/resources-manager/rejected-resources-all") }}';
+                    var url = "{{route('msc.admin.resourcesManager.postRejectedResourcesAll')}}";
                     $.post(url, {ids: ids}, function (e){
                         if(1 == e.code)
                         {
@@ -205,8 +205,8 @@
                         <td>{{ $v['locationName'] }}</td>
                         <td>
                             <div class="opera">
-                                <a href="{{ url('msc/admin/resources-manager/resources') }}?id={{ $v['id'] }}"><span class="read  state1">查看</span></a>
-                                <a href="{{ url('/msc/admin/resources-manager/edit-resources') }}?id={{ $v['id'] }}"><span class="edit state1">编辑</span></a>
+                                <a href="{{ route('msc.admin.resourcesManager.getResources') }}?id={{ $v['id'] }}"><span class="read  state1">查看</span></a>
+                                <a href="{{ route('msc.admin.resourcesManager.getResources') }}?id={{ $v['id'] }}"><span class="edit state1">编辑</span></a>
                                 <span class="Scrap state2" data-toggle="modal" data-target="#myModal" data-id="{{ $v['id'] }}" data-name="{{ $v['name'] }}">报废</span>
                                 <span class="Print state1" data-toggle="modal" data-target="#myModal" data-resource-id="{{ $v['resourcesId'] }}">二维码打印</span>
                                 {{-- 编号列表 --}}
@@ -233,7 +233,7 @@
 
 
 @section('layer_content')
-    <form class="form-horizontal" id="Form" novalidate="novalidate" action="{{ url('msc/admin/resources-manager/rejected-resources') }}" method="post">
+    <form class="form-horizontal" id="Form" novalidate="novalidate" action="{{ route('msc.admin.resourcesManager.postRejectedResources') }}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">报废</h4>
