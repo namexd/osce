@@ -170,58 +170,7 @@
                                 <th>操作</th>
                             </tr>
                             </thead>
-                            <tbody><!-- 
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span>已结束</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">课件</span></a>
-                                            <a href="javascript:void(0)"><span class="edit state1">视频</span></a>
-                                            <span class="Scrap state1" data-toggle="modal" data-target="#myModal" data-id="41" data-name="123123">报告</span>
-                                            <span class="Print state1" data-toggle="modal" data-target="#myModal" data-resource-id="30">详情</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span class="state-ing">进行中</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">编辑</span></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span class="state-before">未开始</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">监控</span></a>
-                                        </div>
-                                    </td>
-                                </tr> -->
+                            <tbody>
                             </tbody>
                         </table>
                         <div class="btn-group pull-right">
@@ -271,59 +220,7 @@
                                 <th>操作</th>
                             </tr>
                             </thead>
-                            <tbody><!-- 
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span>已结束</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">课件</span></a>
-                                            <a href="javascript:void(0)"><span class="edit state1">视频</span></a>
-                                            <span class="Scrap state1" data-toggle="modal" data-target="#myModal" data-id="41" data-name="123123">报告</span>
-                                            <span class="Print state1" data-toggle="modal" data-target="#myModal" data-resource-id="30">详情</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span>已结束</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">编辑</span></a>
-                                            <a href="javascript:void(0)"><span class="read state2">取消</span></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span>已结束</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">监控</span></a>
-                                        </div>
-                                    </td>
-                                </tr> -->
+                            <tbody>
                             </tbody>
                         </table>
                         <div class="btn-group pull-right">
@@ -373,57 +270,7 @@
                                 <th>操作</th>
                             </tr>
                             </thead>
-                            <tbody><!-- 
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span>已结束</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">记录</span></a>
-                                            <a href="javascript:void(0)"><span class="edit state1">详情</span></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span class="state-before">未开始</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">监控</span></a>
-                                            <a href="javascript:void(0)"><span class="edit state2">取消</span></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>医检</td>
-                                    <td>2015/9/11</td>
-                                    <td>8:00-15:00</td>
-                                    <td>临床技能中心7F</td>
-                                    <td>一组</td>
-                                    <td>窦祥阳</td>
-                                    <td>18500124557</td>
-                                    <td><span class="state-before">未开始</span></td>
-                                    <td>
-                                        <div class="opera">
-                                            <a href="javascript:void(0)"><span class="read  state1">编辑</span></a>
-                                        </div>
-                                    </td>
-                                </tr> -->
+                            <tbody>
                             </tbody>
                         </table>
                         <div class="btn-group pull-right">
@@ -442,121 +289,7 @@
                     <h5>紧急预约通知</h5>
                     <span class="label label-warning-light">新消息</span>
                 </div>
-                <div class="ibox-content timeline" id="timeline"><!-- 
-                    <div class="timeline-item">
-                        <div class="row">
-                            <div class="col-xs-3 date ui-sortable">
-                                <i class="fa fa-clock-o"></i> 2015-01-12 15:00
-                                <br>
-                            </div>
-                            <div class="col-xs-7 content ui-sortable">
-                                <div class="item-info">
-                                    <label>课程内容:</label>
-                                    <span>方法性综合评价</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>预约教室:</label>
-                                    <span>临床技能中心7F（可预约多个教室）</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>预约时间:</label>
-                                    <span>2015/09/18 08:00-15:00</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>申请老师:</label>
-                                    <span>李老师</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>联系方式:</label>
-                                    <span>13811111111</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>课程人数:</label>
-                                    <span>60人</span>
-                                </div>
-                                <div class="item-info">
-                                    <button class="btn btn-white">拒绝</button>
-                                    <button class="btn btn-primary">通过</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="row">
-                            <div class="col-xs-3 date ui-sortable">
-                                <i class="fa fa-clock-o"></i> 2015-01-12 15:00
-                                <br>
-                            </div>
-                            <div class="col-xs-7 content ui-sortable">
-                                <div class="item-info">
-                                    <label>课程内容:</label>
-                                    <span>方法性综合评价</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>预约教室:</label>
-                                    <span>临床技能中心7F（可预约多个教室）</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>预约时间:</label>
-                                    <span>2015/09/18 08:00-15:00</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>申请老师:</label>
-                                    <span>李老师</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>联系方式:</label>
-                                    <span>13811111111</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>课程人数:</label>
-                                    <span>60人</span>
-                                </div>
-                                <div class="item-info">
-                                    <button class="btn btn-white">拒绝</button>
-                                    <button class="btn btn-primary">通过</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="row">
-                            <div class="col-xs-3 date ui-sortable">
-                                <i class="fa fa-clock-o"></i> 2015-01-12 15:00
-                                <br>
-                            </div>
-                            <div class="col-xs-7 content ui-sortable">
-                                <div class="item-info">
-                                    <label>课程内容:</label>
-                                    <span>方法性综合评价</span>
-                                </div>
-                                <div class="item-info classroom">
-                                    <label>预约教室:</label>
-                                    <span>临床技能中心7F（可预约多个教室）</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>预约时间:</label>
-                                    <span>2015/09/18 08:00-15:00</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>申请老师:</label>
-                                    <span>李老师</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>联系方式:</label>
-                                    <span>13811111111</span>
-                                </div>
-                                <div class="item-info">
-                                    <label>课程人数:</label>
-                                    <span>60人</span>
-                                </div>
-                                <div class="item-info" value="11">
-                                    <button class="btn btn-white modal-control" data-toggle="modal" data-target="#myModal" flag="no">拒绝</button>
-                                    <button class="btn btn-primary modal-control" data-toggle="modal" data-target="#myModal" flag="yes">通过</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
+                <div class="ibox-content timeline" id="timeline">
                 </div>
             </div>
         </div>
@@ -1384,12 +1117,12 @@
                 success: function (data, status)
                 {
                     if(data.code == 1){
-                        //$('.add_img').before('<li><img src="'+(url+data.data.path)+'" width="100%"><i class="fa fa-remove font14 del_img"></i><input type="hidden" name="images_path[]" value="'+data.data.path+'"><>');
+                        layer.alert('导入成功！');
                     }
                 },
                 error: function (data, status, e)
                 {
-                    //console.log(data);
+                        layer.alert('导入失败！');
                 }
             });
         }) ;
@@ -1404,12 +1137,12 @@
                 success: function (data, status)
                 {
                     if(data.code == 1){
-                        //$('.add_img').before('<li><img src="'+(url+data.data.path)+'" width="100%"><i class="fa fa-remove font14 del_img"></i><input type="hidden" name="images_path[]" value="'+data.data.path+'"><>');
+                        layer.alert('导入成功！');
                     }
                 },
                 error: function (data, status, e)
                 {
-                    //console.log(data);
+                    layer.alert('导入失败！');
                 }
             });
         }) ;
