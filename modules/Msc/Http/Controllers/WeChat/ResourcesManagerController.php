@@ -45,7 +45,7 @@ class ResourcesManagerController extends MscWeChatController
 
     //测试地址 /msc/wechat/resources-manager/test
     public function getTest(){
-    	return view('msc::wechat.opendevice.end_confirm');
+    	return view('msc::wechat.attendance.attendance_check');
 		//return view('msc::wechat.opendevice.opendevice_renew');
 	}
 
