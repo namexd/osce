@@ -47,9 +47,9 @@ class ResourcesClassroomApply extends  CommonModel {
             return $this->builder->with ('classroom', 'applyer')->get ()->first ();
         }
 
-        public function groups () {
-//            return $this->hasMany ('Modules\Msc\Entities\ResourcesClassroomApplyGroup', 'resources_lab_apply_id', 'id');
-            return $this->hasManyThrough('Modules\Msc\Entities\Groups','Modules\Msc\Entities\ResourcesClassroomApplyGroup','student_group_id','id');
+        public function labApplyGroups () {
+            return $this->hasMany ('Modules\Msc\Entities\ResourcesClassroomApplyGroup', 'resources_lab_apply_id', 'id');
+            //            return $this->hasManyThrough('Modules\Msc\Entities\Groups','Modules\Msc\Entities\ResourcesClassroomApplyGroup','student_group_id','id');
         }
 
     /**

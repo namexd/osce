@@ -279,7 +279,8 @@ class LabController extends MscController
             $rollMsg[1] = $keyword;
         }
         //$groups = ResourcesClassroomApply::find(1)->groups->first()->name;
-        //$groups = ResourcesClassroomApply::find(1)->labApplyGroups->first()->groups->name;
+//        $groups = ResourcesClassroomApply::find(11)->labApplyGroups->first()->groups->name;
+//        dd($groups);
 
 
         $ResourcesClassroomApply = new ResourcesClassroomApply();

@@ -14,7 +14,18 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 	//http://www.mis.hx/msc/admin/resources-manager/user-register
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
 
-		//Route::controller('resources-manager', 'ResourcesManagerController');TODO： 2015-12-11 罗海华 解决 路由被拦截的问题
+		Route::controller('resources-manager', 'ResourcesManagerController');//TODO： 2015-12-11 罗海华 解决 路由被拦截的问题
+		Route::get('resources-manager/resources-list', ['uses'=>'ResourcesManagerController@getWaitExamineList','as'=>'msc.admin.resourcesManager.getWaitExamineList']);
+		Route::get('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@getRejectedResources','as'=>'msc.admin.resourcesManager.getRejectedResources']);
+		Route::post('resources-manager/rejected-resources-all', ['uses'=>'ResourcesManagerController@postRejectedResourcesAll','as'=>'msc.admin.resourcesManager.postRejectedResourcesAll']);
+		Route::get('resources-manager/resources', ['uses'=>'ResourcesManagerController@getResources','as'=>'msc.admin.resourcesManager.getResources']);
+		Route::post('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@postRejectedResources','as'=>'msc.admin.resourcesManager.postRejectedResources']);
+		Route::post('resources-manager/edit-resources', ['uses'=>'ResourcesManagerController@postEditResources','as'=>'msc.admin.resourcesManager.postEditResources']);
+		Route::get('resources-manager/resources-list', ['uses'=>'ResourcesManagerController@getResourcesList','as'=>'msc.admin.resourcesManager.getResourcesList']);
+		Route::get('resources-manager/ajax-resources-tools-cate', ['uses'=>'ResourcesManagerController@getAjaxResourcesToolsCate','as'=>'msc.admin.resourcesManager.getAjaxResourcesToolsCate']);
+		Route::get('resources-manager/add-resources', ['uses'=>'ResourcesManagerController@getAddResources','as'=>'msc.admin.resourcesManager.getAddResources']);
+		Route::get('resources-manager/resources-cate-list', ['uses'=>'ResourcesManagerController@getResourcesCateList','as'=>'msc.admin.resourcesManager.getResourcesCateList']);
+
 		Route::get('resources-manager/classroom-list', ['uses'=>'ResourcesManagerController@getClassroomList','as'=>'msc.resourcesManager.classroomList']);
 		Route::get('resources-manager/record-info', ['uses'=>'ResourcesManagerController@getRecordInfo','as'=>'msc.admin.resourcesManager.getRecordInfo']);
 		Route::get('resources-manager/borrow-record-list', ['uses'=>'ResourcesManagerController@getBorrowRecordList','as'=>'msc.admin.resourcesManager.getBorrowRecordList']);
