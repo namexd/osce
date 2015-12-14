@@ -22,4 +22,8 @@ class ResourcesClassroomApplyGroup extends CommonModel
 
     protected $fillable 	=	[];
     public $search          =   [];
+
+    public function groups(){
+        return $this->belongsTo('\Modules\Msc\Entities\Groups','student_group_id','id');
+    }
 }

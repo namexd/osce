@@ -236,7 +236,7 @@
                             <td>{{$item['code']}}</td>
                             <td>{{empty($item->applyer->name) ? '-':$item->applyer->name}}</td>
                             <td>{{$item['detail']}}</td>
-                            <td>{{is_null($item->labApplyGroups) ? '-' : $item->labApplyGroups->first()->groups->name}}</td>
+                            <td>{{empty($item->labApplyGroups->first()->groups->name) ? '-' : $item->labApplyGroups->first()->groups->name}}</td>
                             {{--<td>{{dd(empty($item->labApplyGroups))}}</td>--}}
                             <td class="status">{{$item['status']}}</td>
                             <td class="opera">
