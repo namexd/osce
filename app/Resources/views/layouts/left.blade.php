@@ -93,6 +93,18 @@
                         </ul>
                     </li>
 
+                    <li>
+                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label">用户权限管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{{ route('msc.admin.user.StudentList') }}">用户管理</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="#">角色权限管理</a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
             </div>
         </nav>
