@@ -118,5 +118,7 @@ class ResourcesTools extends CommonModel {
         }
         return $name;
     }
+    public function addTools(){
 
+    }
 }

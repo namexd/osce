@@ -100,6 +100,24 @@ class ResourcesClassroom extends  CommonModel {
 
         return $result;
     }
+    //新增 实验室
+    public function addLabResource($input){
+        $data   =   [
+            'name'  =>  $input['name'],
+            'code'  =>  $input['code'],
+            'location'  =>  $input['location'],
+            'begintime'  =>  $input['begintime'],
+            'endtime'  =>  $input['endtime'],
+            'opened'  =>  $input['opened'],
+            'manager_id'  =>  $input['manager_id'],
+            'manager_name'  =>  $input['manager_name'],
+            'manager_mobile'  =>  $input['manager_mobile'],
+            'detail'  =>  $input['detail'],
+            'status'  =>  1,
+            'resources_type'  =>  1,
+        ];
+        return $this->create($data);
+	}
 
     //给教室选择下拉列表提供数据
     public function getClassroomName($keyword = '') {
@@ -115,7 +133,8 @@ class ResourcesClassroom extends  CommonModel {
     }
 
     //给教室的具体监控界面提供数据
-    public function getClassroomDetails($id) {
+
+
 //        $builder = $this->where($this->table.'.id','=',$id)->with(['courseClassroomCourses' => function ($q) {
 //            $q->with(['resourcesLabPlan' => function ($q) {
 //                $q->where('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))->where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
