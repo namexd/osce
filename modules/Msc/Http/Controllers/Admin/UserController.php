@@ -35,8 +35,8 @@ class UserController extends BaseController {
     public function getStudentList (Request $request)
     {
         $this->validate($request, [
-            'order_name' 		=> 	'sometimes|max:50',
-            'order_type'		=> 	'sometimes|integer|min:0|max:1',
+            'order_name' 		=> 	'sometimes|string|between:2:50',
+            'order_type'		=> 	'sometimes|in:0,1',
             'keyword' 		    => 	'sometimes', // TODO 查询关键字约束
         ]);
 
@@ -45,8 +45,7 @@ class UserController extends BaseController {
         $keyword   = urldecode(e($request->input('keyword')));
 
         // 排序
-        $order = [];
-        if (!empty($orderName))
+        if ($orderName)
         {
             if ($orderType)
             {
@@ -62,7 +61,7 @@ class UserController extends BaseController {
             $order = ['id', 'desc']; // 默认按照ID降序排列
         }
 
-        $student = new Student();
+        $student    = new Student();
         $pagination = $student->getFilteredPaginateList($keyword, $order);
 
         $list = [];
@@ -146,8 +145,8 @@ class UserController extends BaseController {
     public function getTeacherList (Request $request)
     {
         $this->validate($request, [
-            'order_name' 		=> 	'sometimes|max:50',
-            'order_type'		=> 	'sometimes|integer|min:0|max:1',
+            'order_name' 		=> 	'sometimes|string|between:2,50',
+            'order_type'		=> 	'sometimes|in:0,1',
             'keyword' 		    => 	'sometimes', // TODO 查询关键字约束
         ]);
 
@@ -156,8 +155,7 @@ class UserController extends BaseController {
         $keyword   = urldecode(e($request->input('keyword')));
 
         // 排序
-        $order = [];
-        if (!empty($orderName))
+        if ($orderName)
         {
             if ($orderType)
             {
@@ -173,7 +171,7 @@ class UserController extends BaseController {
             $order = ['id', 'desc']; // 默认按照ID降序排列
         }
 
-        $teacher = new Teacher();
+        $teacher    = new Teacher();
         $pagination = $teacher->getFilteredPaginateList($keyword, $order);
 
         $list = [];
