@@ -1855,7 +1855,7 @@ class CoursesController extends MscController
 
     }
     /**
-     * 根据ajax请求获取对应楼号的层数
+     * 根据ajax请求获取对应楼号
      * @api GET /msc/admin/courses/class-observe
      * @access public
      * @return json数据
@@ -1870,7 +1870,7 @@ class CoursesController extends MscController
                         '临床医学楼','新八教学楼'
         ];
 
-        return response()->json($data);
+        return view('',['data'=>$data]);
 
     }
 
