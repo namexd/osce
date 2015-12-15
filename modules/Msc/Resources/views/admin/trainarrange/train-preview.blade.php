@@ -47,17 +47,15 @@
 			laydate(start);
 			laydate(end);
 			$(".edit").on('click',function(){
-				if($(this).text()=="编辑"){
-					$(this).text("完成").removeClass("btn-default").addClass("btn-primary");
-					$(".tj").attr("data-toggle","");
+				if($(this).val()=="编辑"){
+					$(this).val("完成").removeClass("btn-default").addClass("btn-primary");
 					$(".train_name,.train_num").removeAttr("readonly").css("border","1px solid #ccc");
 					$(".train_name").focus().val($(".train_name").val());
 					$(".tj").attr("disabled","disabled");
 					$(".time_no").hide();
 					$(".time_ok").show();
 				}else{
-					$(this).text("编辑").removeClass("btn-danger").addClass("btn-default");
-					$(".tj").attr("data-toggle","modal");
+					$(this).val("编辑").removeClass("btn-primary").addClass("btn-default");
 					$(".tj").removeAttr("disabled");
 					$(this).blur();
 					$(".train_name,.train_num").attr("readonly","readonly").css("border","0");
@@ -225,7 +223,7 @@
 	                      </div>
 	                      <div class="form-group">
 	                          <div class="col-sm-2 control-label"><label>变更安排</label></div>
-	                          <div class="col-sm-10 padt_7"><p>开放性伤口包扎课程</p></div>
+	                          <div class="col-sm-10 padt_7"><p>{{$training['name']}}</p></div>
 	                      </div>
 	                      <div class="form-group">
 	                          <div class="col-sm-2 control-label"><label>&nbsp;</label></div>

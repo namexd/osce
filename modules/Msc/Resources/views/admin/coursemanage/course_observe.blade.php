@@ -59,40 +59,13 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/coursemanage/js/coursemanage.js')}}"></script>
     <script>
-        $(function(){
-            //二级菜单展开
-            $(".first-level>p").click(function(){
-                if($(this).attr("flag")=="false"){
-                    $(this).attr("flag","true");
-                    $(this).find(".glyphicon-chevron-right").hide();
-                    $(this).find(".glyphicon-chevron-down").show();
-                    $(this).next().show();
-                }else{
-                    $(this).attr("flag","false");
-                    $(this).find(".glyphicon-chevron-right").show();
-                    $(this).find(".glyphicon-chevron-down").hide();
-                    $(this).next().hide();
-                }
-            })
-            //三级菜单
-            $(".second-level>p").click(function(){
-                if($(this).attr("flag")=="false"){
-                    $(this).attr("flag","true");
-                    $(this).find(".glyphicon-chevron-right").hide();
-                    $(this).find(".glyphicon-chevron-down").show();
-                    $(this).next().show();
-                }else{
-                    $(this).attr("flag","false");
-                    $(this).find(".glyphicon-chevron-right").show();
-                    $(this).find(".glyphicon-chevron-down").hide();
-                    $(this).next().hide();
-                }
-            })
-        })
+
     </script>
 @stop
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'course_observe'}">
     <div class="row  main-content">
         <div class="content-left ibox-content">
             <div class="serach-box">
@@ -137,14 +110,15 @@
                                    <li class="third-level">103</li>
                                </ul>
                            </li>
-
                        </ul>
                    </li>
                </ul>
             </nav>
         </div>
         <div class="content-right ibox-content">
+            <div class="">
 
+            </div>
         </div>
     </div>
 @stop

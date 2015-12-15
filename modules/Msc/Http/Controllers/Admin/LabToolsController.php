@@ -109,7 +109,6 @@ class LabToolsController extends MscController
      */
     public function getOpenLabToolsUseHistory(Request $request)
     {
-
         //验证各个字段的值
         $this->validate($request, [
             'keyword' => 'sometimes',
