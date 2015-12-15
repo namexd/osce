@@ -33,9 +33,9 @@ use Modules\Msc\Repositories\Common as MscCommon;
 class CoursesController extends MscController
 {
 
-   /* public function getTest(){
-        return view('msc::admin.open_equipment_manage.openequ_audited');
-    }*/
+    public function getTest(){
+        return view('msc::admin.coursemanage.course_observe');
+    }
     /**
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
@@ -1929,7 +1929,7 @@ class CoursesController extends MscController
         }
     }
     /**
-     * 根据ajax请求获取对应楼号的层数
+     * 根据ajax请求获取对应教室
      * @api GET /msc/admin/courses/class-observe
      * @access public
      * @return json数据
@@ -1941,12 +1941,9 @@ class CoursesController extends MscController
      */
     public function getClassObserve(Request $request) {
         $data = [
-            'content'   => 'XXX',
-            'teacher'   => '授课老师1',
-            'day'       => '2015-11-30',
-            'time'      => '9:41:32',
-            'strength'  => '123',
-            'build'     => ['临床医学院','新八教学楼'],
+            'classroom' => ['教室','教室','教室','教室','教室'],
+            'id'        => ['1','2','3','4','5'],
+            'code'      => ['101','102','103','201','202']
         ];
 
         return response()->json($data);

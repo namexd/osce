@@ -28,6 +28,12 @@
     @section('afterStyle')
     @show{{-- 在内联样式之后填充一些东西 --}}
 
+    @section('only_css')
+    @show{{-- 页面独有的css样式表 --}}
+
+    @section('only_js')
+    @show{{-- 页面独有的js --}}
+
 </head>
 <body @section('body_attr')class=""@show{{-- 追加类属性 --}}>
 
