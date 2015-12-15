@@ -76,7 +76,8 @@ class UserController extends BaseController
             ];
         }
 
-        dd($list);
+        //dd($list);
+        return view('msc::admin.usermanage.student_manage', ['list'=>$list]);
     }
 
     /**
@@ -149,7 +150,7 @@ class UserController extends BaseController
 
 
         return $this->getStudentItem($studentId);
-
+		
     }
 
     /**
