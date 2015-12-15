@@ -72,7 +72,7 @@ Route::group(['prefix' => "test"],function(){
  * */
 Route::group(['prefix' => "auth",'middleware' => []], function()
 {
-
     Route::get('/auth-manage', ['uses'=>'AuthController@AuthManage','as'=>'auth.AuthManage']);
+    Route::get('/set-permissions', ['uses'=>'AuthController@SetPermissions','as'=>'auth.SetPermissions']);
 
 });
