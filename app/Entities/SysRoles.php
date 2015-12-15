@@ -1,22 +1,34 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: wangjiang
- * Date: 2015/12/15 0015
- * Time: 13:55
+ * User: fengyell <Luohaihua@misrobot.com>
+ * Date: 2015年12月15日
+ * Time: 11:18:06
  */
 
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class SysRoles extends Model
 {
-    public $timestamps	    =	true;
-    public $incrementing	=	true;
-
     protected $connection	=	'sys_mis';
     protected $table 		= 	'sys_roles';
-    protected $primaryKey	=	'id';
-    protected $fillable 	=	['name', 'slug', 'description'];
+
+    protected $fillable 	=	["name","slug","description"];
+   	public function __construct(){
+	}
+
+	/**
+	 * 获取角色列表
+	 *时间2015年12月15日11:23:06、
+	 *whg
+	 */
+	public function getRolesList(){
+		$roleslist=$this->paginate(config('msc.page_size',10));
+		return $roleslist;
+	}
+
+
 }
