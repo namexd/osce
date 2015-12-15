@@ -44,7 +44,7 @@
 
     <div class="row table-head-style1 ">
       <form method="get" action="{{route('msc.admin.lab-tools.getOpenLabToolsUseHistory')}}">
-        <div class="col-xs-6 col-md-6">
+        <div class="col-xs-6 col-md-6" style="width: 280px;">
                 <div class="form-group">
                     <div class="col-sm-12">
                         <input type="text" placeholder="请选择日期" class="form-control layer-date laydate-icon" id="start" name="date">

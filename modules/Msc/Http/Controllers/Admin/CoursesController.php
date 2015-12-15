@@ -1939,14 +1939,14 @@ class CoursesController extends MscController
      * @param Request $request
      */
     public function getClassObserve(Request $request) {
-        $data = [
-            'classroom' => ['教室','教室','教室','教室','教室'],
-            'id'        => ['1','2','3','4','5'],
-            'code'      => ['101','102','103','201','202']
-        ];
+        $this->validate($request,[
+            'keyword' => 'sometimes',
+        ]);
 
-        return response()->json($data);
-    }
+        $keyword = e(urldecode($request->get('keyword')));
+        $ResourcesClassroom = new ResourcesClassroom();
+        //$data = $ResourcesClassroom->getClassroomName($keyword);
+        return view('',['data'=>$data]);
 
     /**
      * 根据ajax请求获取对应楼号的层数
