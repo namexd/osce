@@ -58,6 +58,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		Route::get('courses/download-courses-list-tpl', ['uses'=>'CoursesController@getDownloadCoursesListTpl','as'=>'msc.courses.downloadCoursesListTpl']);
 		Route::get('courses/download-courses-plan-tpl', ['uses'=>'CoursesController@getDownloadCoursesPlanTpl','as'=>'msc.courses.downloadCoursesPlanTpl']);
+		//课程监管
+		Route::get('courses/class-observe-video', ['uses'=>'CoursesController@getClassObserveVideo','as'=>'msc.courses.classObserveVideo']);
 
 
 		Route::controller('verify', 'VerifyController');

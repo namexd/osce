@@ -34,7 +34,7 @@ class CoursesController extends MscController
 {
 
     public function getTest(){
-        return view('msc::admin.coursemanage.course_observe');
+        return view('');
     }
     /**
      * 导入课程
@@ -1867,12 +1867,18 @@ class CoursesController extends MscController
      */
     public function getClassObserve(Request $request) {
         $data = [
-            'classroom' => ['教室','教室','教室','教室','教室'],
-            'id'        => ['1','2','3','4','5'],
-            'code'      => ['101','102','103','201','202']
+//            'classroom' => ['教室','教室','教室','教室','教室'],
+//            'id'        => ['1','2','3','4','5'],
+//            'code'      => ['101','102','103','201','202']
+        [
+            'classroom'=>'教室','id' => '1','code'=>101,
+        ],
+            [
+                'classroom'=>'教室','id' => '2','code'=>102,
+            ]
         ];
 
-        return view('',['data'=>$data]);
+        return view('msc::admin.coursemanage.course_observe',['data'=>$data]);
 
     }
 
@@ -1960,20 +1966,17 @@ class CoursesController extends MscController
 //     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
 //     * @param Request $request e.g(id)
 //     */
-//    public function getClassObserveVideo(Request $request) {
-//        $this->validate($request,[
-//            'id'=>'sometimes|integer',
-//        ]);
-//        $id = $request->get('id');
-//        if ($id) {
-//            $data = [
-//                'content' => 'XXX',
-//                'teacher' => 'XXX',
-//                'day'     => '2015-11-30',
-//                'time'    => '9:41:32',
-//                'stronge' => '123'
-//            ];
-//        }
-//        return response()->json($data);
-//    }
+    public function getClassObserveVideo(Request $request) {
+        $this->validate($request,[
+            'id'=>'sometimes|integer',
+        ]);
+        $id = $request->get('id');
+        if ($id) {
+            $data = [
+                'content' => 'XXX',
+                'teacher' => 'XXX',
+            ];
+        }
+        return response()->json($data);
+    }
 }

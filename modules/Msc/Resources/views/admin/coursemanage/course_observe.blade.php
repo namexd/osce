@@ -1,60 +1,8 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
-
+    <link rel="stylesheet" href="{{asset('msc/admin/coursemanage/css/course_observe.css')}}">
     <style type="text/css">
-        .main-content{
-            margin: 20px;
-        }
-        .content-left{
-            width: 30%;
-            margin-right: 20px;
-            height: 800px;
-        }
-        .content-right{
-            width: 68%;
-            height: 800px;
-        }
-        .serach-box input{
-            height: 34px;
-            width: 85%;
-        }
-        .serach-box button{
-            width: 15%;
-        }
-        .ibox-content{
-            clear: inherit;
-            float: left;
-        }
-        .classroom-list{
-            margin-top: 50px;
-        }
-        ul,p{
-            padding: 0;
-            margin: 0;
-        }
-        .first-level ul{
-            display: none;
-        }
-        .first-level p{
-            cursor: pointer;
-            padding: 10px 0;
-            border-bottom: 1px solid #dddddd;
-        }
-        .first-level>p{
-            font-weight: 700;
-        }
-        .first-level i{
-            float: right;
-        }
-        .second-level li:hover{
-            background-color: #ccc;
-        }
-        .second-level li{
-            padding: 5px;
-        }
-        .glyphicon-chevron-down{
-            display: none;
-        }
+
     </style>
 @stop
 
@@ -65,7 +13,7 @@
     </script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_observe'}">
+    <input type="hidden" id="parameter" value="{'pagename':'course_observe','lessonUrl':'{{route("msc.courses.classObserveVideo")}}'}">
     <div class="row  main-content">
         <div class="content-left ibox-content">
             <div class="serach-box">
@@ -73,50 +21,46 @@
             </div>
             <nav class="classroom-list">
                <ul>
-                   <li class="first-level">
-                       <p flag="false">临床医学楼
-                           <i class="glyphicon glyphicon-chevron-right"></i>
-                           <i class="glyphicon glyphicon-chevron-down"></i>
-                       </p>
-                       <ul>
-                           <li class="second-level">
-                               <p flag="false">一层
-                                   <i class="glyphicon glyphicon-chevron-right"></i>
-                                   <i class="glyphicon glyphicon-chevron-down"></i>
-                               </p>
-                               <ul>
-                                   <li class="third-level">101</li>
-                                   <li class="third-level">102</li>
-                                   <li class="third-level">103</li>
-                               </ul>
-                           </li>
 
-                       </ul>
-                   </li>
                    <li class="first-level">
-                       <p flag="false">新八医学楼
+                       <p flag="false">临床教学楼
                            <i class="glyphicon glyphicon-chevron-right"></i>
                            <i class="glyphicon glyphicon-chevron-down"></i>
                        </p>
                        <ul>
+                           @forelse($data as $item)
                            <li class="second-level">
-                               <p flag="false">一层
-                                   <i class="glyphicon glyphicon-chevron-right"></i>
-                                   <i class="glyphicon glyphicon-chevron-down"></i>
+                               <p flag="false" id="{{$item['id']}}">
+                                   {{$item['code']}}{{$item['classroom']}}
                                </p>
-                               <ul>
+                               {{--<ul>
                                    <li class="third-level">101</li>
                                    <li class="third-level">102</li>
                                    <li class="third-level">103</li>
-                               </ul>
+                               </ul>--}}
                            </li>
+                            @empty
+                           @endforelse
                        </ul>
                    </li>
+
+
                </ul>
             </nav>
         </div>
         <div class="content-right ibox-content">
-            <div class="">
+            <div class="row content-head">
+                <div class="pull-left head-left">
+                    <label for=""><span>课程内容:</span><span id="lesson"></span></label>
+                    <label for=""><span>授课老师:</span><span id="teacher"></span></label>
+                </div>
+                <div class="pull-right head-right">
+                    <span id="year"></span>
+                    <span id="hour"></span>
+                    <span>信号强度<span id="info-strength"></span></span>
+                </div>
+            </div>
+            <div>
 
             </div>
         </div>
