@@ -100,7 +100,7 @@
                                 <a class="J_menuItem" href="{{ route('msc.admin.user.StudentList') }}">用户管理</a>
                             </li>
                             <li>
-                                <a class="J_menuItem" href="{{ url('auth/auth_manage') }}">角色权限管理</a>
+                                <a class="J_menuItem" href="{{ route('auth.AuthManage') }}">角色权限管理</a>
                             </li>
                         </ul>
                     </li>
