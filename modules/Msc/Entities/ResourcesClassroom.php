@@ -67,6 +67,7 @@ class ResourcesClassroom extends  CommonModel {
         return $this->hasMany('Modules\Msc\Entities\ResourcesClassroomCourses','resources_lab_id','id');
     }
 
+
     //获取教室资源 列表 （唐俊）
     public function getClassroomList(){
         return $this->get();
@@ -80,6 +81,8 @@ class ResourcesClassroom extends  CommonModel {
     public function resourcesClassroomApply(){
         return $this->hasMany('Modules\Msc\Entities\ResourcesClassroomApply','resources_lab_id','id');
     }
+
+
     //获取实验室资源列表
     public function getLaboratoryClassroomList($data){
 
@@ -96,5 +99,29 @@ class ResourcesClassroom extends  CommonModel {
         }])->paginate(7);
 
         return $result;
+    }
+
+    //给教室选择下拉列表提供数据
+    public function getClassroomName($keyword = '') {
+        if ($keyword !== '') {
+            $result = $this->where($this->table.'.code','like','%'.$keyword.'%')->where($this->table.'.name','like','%'.$keyword.'%');
+        }
+        $result = select([
+            "$this->table" . '.id as id',
+            "$this->table" . '.name as name'
+        ])->get();
+
+        return $result;
+    }
+
+    //给教室的具体监控界面提供数据
+    public function getClassroomDetails($id) {
+        $builder = $this->where($this->table.'.id','=',$id)->with(['courseClassroomCourses' => function ($q) {
+            $q->with(['resourcesLabPlan' => function ($q) {
+                $q->where('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))->where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+                    ->with('course');
+            }]);
+        }]);
+        return $builder;
     }
 }
