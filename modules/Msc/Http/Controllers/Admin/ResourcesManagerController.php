@@ -1214,7 +1214,7 @@ class ResourcesManagerController extends MscController
 
     /**
      * 审核申请 列表
-     * @api GET /msc/admin/resources-manager/examine-list
+     * @api GET /msc/admin/resources-manager/wait-examine-list
      * @access public
      *
      * @param Request $request post请求<br><br>

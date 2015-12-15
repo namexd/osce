@@ -59,7 +59,6 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
-            dd($data);
             //已经存在的数据
             $dataHaven=[];
             //添加失败的数据
@@ -1850,5 +1849,67 @@ class CoursesController extends MscController
         }
         $userService = new \Overtrue\Wechat\Staff(config('wechat.app_id'), config('wechat.secret'));
         return $userService->send($msg)->to($openid);
+    }
+	
+    public function getVideoList(Request $request){
+
+    }
+    /**
+     * 根据ajax请求获取对应楼号的层数
+     * @api GET /msc/admin/courses/class-observe
+     * @access public
+     * @return json数据
+     * @version 1.0
+     * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date 2015-12-15 14:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @param Request $request
+     */
+    public function getClassObserve(Request $request) {
+        $data = [
+            'content'   => 'XXX',
+            'teacher'   => '授课老师1',
+            'day'       => '2015-11-30',
+            'time'      => '9:41:32',
+            'strength'  => '123',
+            'build'     => ['临床医学院','新八教学楼'],
+        ];
+
+        return response()->json($data);
+
+    }
+
+    /**
+     * 根据ajax请求获取对应楼号的层数
+     * @api GET /msc/admin/courses/class-observe-building
+     * @access public
+     * @return json数据
+     * @version 1.0
+     * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date 2015-12-15 11:51
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @param Request $request e.g(id)
+     */
+    public function getClassObserveBuilding(Request $request) {
+        $this->validate($request,[
+            'id'=>'sometimes|integer',
+        ]);
+        $id = $request->get('id');
+        try {
+            if ($id === 1) {
+                $data = [
+                    '一层', '二层', '三层', '四层',
+                ];
+            } elseif ($id === 2) {
+                $data = [
+                    '一层', '二层', '三层', '四层', '五层', '六层'
+                ];
+            }
+            return response()->json($data);
+        }
+        catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+
     }
 }
