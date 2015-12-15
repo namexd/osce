@@ -37,5 +37,7 @@ return [
 		],
 	],
 	'idcard_type'  	=>		[	1=>'身份证',	2=>'护照'],
-	'page_size'		=>		10
+	'page_size'		=>		10,
+	'video_host'	=>		'192.168.1.200',
+	'video_port'	=>		'9090',
 ];

@@ -70,4 +70,10 @@ class User extends Model implements AuthenticatableContract,
 
         return $status;
     }
+
+    // 用户相关角色
+    public function roles()
+    {
+        return $this->belongsToMany('App\Entities\SysRoles', 'sys_user_role', 'user_id', 'role_id');
+    }
 }

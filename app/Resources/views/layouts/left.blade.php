@@ -94,7 +94,7 @@
                     </li>
 
                     <li>
-                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label">用户权限管理</span><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-user"></i> <span class="nav-label">用户权限管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a class="J_menuItem" href="{{ route('msc.admin.user.StudentList') }}">用户管理</a>
@@ -109,3 +109,4 @@
             </div>
         </nav>
         <!--左侧导航结束-->
+
