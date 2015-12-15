@@ -75,20 +75,24 @@
         margin-right: 14px;
     }
     .time_set input{vertical-align: bottom;}
+    .apply-sousuo{width: 290px;float: left;margin-left: 40px;}
+    .btn-link{color: #a6b0c3!important;}
+    .btn-link:hover{color: #fff!important;}
+    .check_label{margin-bottom: -2px!important;}
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="row table-head-style1 ">
-        <div class="col-xs-6 col-md-4 selected-all">
+        <div class="col-xs-12 col-md-12 selected-all">
+			
+			<div class="input-group" style="float: left;">
+	            <button type="button" class="btn btn_pl btn-link" ng-click="examine_del()">审核通过</button>
+	            <button type="button" class="btn btn_pl btn-link" ng-click="examine_through()">审核不通过</button>
+	            <!--<button type="button" class="btn btn_pl btn-link" ng-click="examine_reject()">批量未通过</button>-->
+	       </div>
 
-            <button type="button" class="btn btn_pl btn-link" ng-click="examine_del()">审核通过</button>
-            <button type="button" class="btn btn_pl btn-link" ng-click="examine_through()">审核不通过</button>
-            <!--<button type="button" class="btn btn_pl btn-link" ng-click="examine_reject()">批量未通过</button>-->
-        </div>
-        <div class="col-xs-6 col-md-4">
-          <form action="{{route('msc.admin.resourcesManager.getWaitExamineList')}}">
-            <div class="input-group">
-                <input type="text" placeholder="请输入关键字" name="keyword" class="input-sm form-control">
+            <div class="input-group apply-sousuo">
+                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                     </span>
@@ -101,7 +105,7 @@
         <table class="table table-striped" id="table-striped">
             <thead>
             <tr>
-                <th width="100">
+                <th width="30">
                     <label class="check_label all_checked">
                         <div class="check_icon"></div>
                         <input  type="checkbox"  value="">
