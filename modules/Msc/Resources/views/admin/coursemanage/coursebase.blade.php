@@ -1122,6 +1122,7 @@
                 },
                 error: function (data, status, e)
                 {
+                    console.log(data,status)
                         layer.alert('导入失败！');
                 }
             });

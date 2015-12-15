@@ -2,6 +2,7 @@
 @section('only_css')
     <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
     <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+    <link rel="stylesheet" href="{{asset('msc/admin/css/demo.css')}}">
     <style type="text/css">
         #left-content .form-control{border: 0;}
         .title .col-sm-2 label span{margin-left: 24%;}
@@ -10,7 +11,6 @@
             height: 30px;
             background: #F5F5F5;
         }
-        .nav-bar{margin-left: -25px;}
         .nav-bar li{
             list-style: none;
             float: left;
@@ -26,6 +26,11 @@
             margin-right: 15px;
         }
         .tools-tips span:first-child{margin-right: 8px;}
+        .video{
+            height: 700px;
+            width: 1080px;
+        }
+        .fa{cursor: pointer;}
     </style>
 @stop
 
@@ -127,9 +132,7 @@
                 </ul>
             </div>
             <div class="content" style="height:600px;">
-                <video src="/i/movie.ogg" controls="controls">
-                your browser does not support the video tag
-                </video>
+                <div id="divPlugin" class="video"></div>
             </div>
         </div>
     </div>
@@ -138,6 +141,7 @@
 
 @section('only_js')
 <script src="{{asset('msc/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
+<script src="{{asset('msc/admin/js/webVideoCtrl.js')}}"></script>
 <script>
 $(function(){
     /**
@@ -183,8 +187,147 @@ $(function(){
         myChart.setOption(option);
     }
     //测试
-    chart({xAxis:[],yAxis:[]})
-    //chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});       
+    //chart({xAxis:[],yAxis:[]})
+    chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});  
+
+
+
+    /**
+     *检查插件是否已经安装过
+     */
+    if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
+        alert("您还未安装过插件，双击开发包目录里的WebComponents.exe安装！");
+        return;
+    }
+    
+    /**
+     *初始化插件参数及插入插件
+     */
+    WebVideoCtrl.I_InitPlugin(1130, 600, {
+        iWndowType: 1,
+        cbSelWnd: function (xmlDoc) {
+            g_iWndIndex = $(xmlDoc).find("SelectWnd").eq(0).text();
+            var szInfo = "当前选择的窗口编号：" + g_iWndIndex;
+            alert(szInfo);
+        }
+    });
+    WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
+
+    /**
+     *检查插件是否最新
+     */
+    if (-1 == WebVideoCtrl.I_CheckPluginVersion()) {
+        alert("检测到新的插件版本，双击开发包目录里的WebComponents.exe升级！");
+        return;
+    }
+
+
+    /**
+     *登录
+     */
+    function clickLogin() {
+        var szIP = '192.168.1.250',
+            szPort = '80',
+            szUsername = 'admin',
+            szPassword = 'misrobot123';
+
+        if ("" == szIP || "" == szPort) {
+            return;
+        }
+
+        var iRet = WebVideoCtrl.I_Login(szIP, 1, szPort, szUsername, szPassword, {
+            success: function (xmlDoc) {
+                alert(szIP + " 登录成功！");
+
+                /*$("#ip").prepend("<option value='" + szIP + "'>" + szIP + "</option>");
+                setTimeout(function () {
+                    $("#ip").val(szIP);
+                    getChannelInfo();
+                }, 10);*/
+            },
+            error: function () {
+                alert(szIP + " 登录失败！");
+            }
+        });
+
+        if (-1 == iRet) {
+            alert(szIP + " 已登录过！");
+        }
+    }
+
+    /**
+     *开始预览
+     */
+    function StartRealPlay() {
+        var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
+            szIP = '192.168.1.250';//$("#ip").val(),
+            iStreamType = parseInt('1', 10),  //默认主码流
+            iChannelID = parseInt('1', 10),  //通道号
+            bZeroChannel =  false,
+            szInfo = "";
+
+        if ("" == szIP) {
+            return;
+        }
+
+        if (oWndInfo != null) {// 已经在播放了，先停止
+            WebVideoCtrl.I_Stop();
+        }
+
+        var iRet = WebVideoCtrl.I_StartRealPlay(szIP, {
+            iStreamType: iStreamType,
+            iChannelID: iChannelID,
+            bZeroChannel: bZeroChannel
+        });
+
+        if (0 == iRet) {
+            szInfo = "开始预览成功！";
+        } else {
+            szInfo = "开始预览失败！";
+        }
+
+        alert(szIP + " " + szInfo);
+    }
+
+    /**
+     *停止播放
+     */
+    $('.fa-times').click(function(){
+        var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
+        szInfo = "";
+
+        if (oWndInfo != null) {
+            var iRet = WebVideoCtrl.I_Stop();
+            if (0 == iRet) {
+                szInfo = "停止预览成功！";
+            } else {
+                szInfo = "停止预览失败！";
+            }
+            alert(oWndInfo.szIP + " " + szInfo);
+        }
+    });
+
+    /**
+     *选择不同的摄像头
+     */
+    $('.nav-bar').on('click','li',function(){
+        var thisElement = $(this);
+        $('.nav-bar li a').removeClass('active');
+        thisElement.find('a').addClass('active');
+    });
+
+    //返回列表
+    $('.fa-arrows-alt').click(function(){
+        //WebVideoCtrl.I_FullScreen(true);
+    });
+
+    //测试
+    clickLogin();//登录
+    $('.active').click(function(){
+        StartRealPlay();
+    });
+
+
 })
 </script>
 @stop
