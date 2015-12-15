@@ -33,9 +33,9 @@ use Modules\Msc\Repositories\Common as MscCommon;
 class CoursesController extends MscController
 {
 
-   /* public function getTest(){
-        return view('msc::admin.open_equipment_manage.openequ_audited');
-    }*/
+    public function getTest(){
+        return view('msc::admin.coursemanage.course_observe_detail');
+    }
     /**
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
