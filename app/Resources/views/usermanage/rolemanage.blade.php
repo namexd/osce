@@ -5,58 +5,12 @@
 @stop
 
 @section('only_js')
-    <script>
-        /**
-         *角色权限管理弹出框处理
-         *吴冷眉
-         *QQ：2632840780
-         *2015-12-15
-         *update：wulengmei（2015-12-15 17:25） （最近更新/更改 作者及时间）
-         **/
-        var pars;
-        $(function(){
-
-            delete_user();
-            choice_from();
-        });
-        function rolemanage(){
-            var url = pars.ajaxurl;
-            console.log("测试引用"+url);
-            delete_user();
-        }
-        function  choice_from(){
-            $("#add_role").click(function(){
-
-                $("#Form1").show();
-                $("#Form2").hide();
-            })
-            $(".edit_role").click(function(){
-                
-                $("#edit_id").val($(this).parent().siblings(".open-id").text());
-                $("#edit_name").val($(this).parent().siblings(".role_name").text());
-                $("#edit_des").val($(this).parent().siblings(".role_descrip").text())  
-                $("#Form2").show();
-                $("#Form1").hide();
-            })
-        }
-        function  delete_user(){
-            $('.delete').click(function(){
-                var id = $(this).attr('data');
-                layer.confirm('你确定删除？', {
-                    btn: ['是','否'] //按钮
-                }, function(){
-                    window.location.href="/auth/delete-role?id="+id;
-                });
-            });
-            
-        }
-
-    </script>
+    <script src="{{asset('msc/admin/usermanage/rolemanage.js')}}"></script>
 @stop
 
 @section('content')
 
-    <input type="hidden" id="parameter" value="{'pagename':'rolemanage','ajaxurl':' '}" />
+    <input type="hidden" id="parameter" value="{'pagename':'rolemanage'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="ibox float-e-margins">
