@@ -35,7 +35,7 @@ class AuthController extends BaseController
     public function AuthManage(){
 
         $roleList = $this->SysRoles->getRolesList();
-        return view('role.role',['roleList'=>$roleList]);
+        return view('',['roleList'=>$roleList]);
     }
 
     /**
