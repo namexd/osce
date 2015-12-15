@@ -7,6 +7,7 @@
         border: none;
         font-weight: bolder;
     }
+    #start,#end{width: 160px;}
     </style>
 @stop
 
@@ -55,7 +56,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="row table-head-style1 ">
-        <div class="col-xs-6 col-md-6">
+        <div class="col-xs-6 col-md-6" style="width: 390px;">
                 <div class="form-group">
                     <div class="col-sm-12">
                         <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start">
@@ -66,7 +67,7 @@
         </div>
         <div class="col-xs-6 col-md-2">
 
-            <div class="input-group">
+            <div class="input-group" style="width: 290px;">
                 <input type="text" placeholder="请输入关键字" class="input-sm form-control">
             <span class="input-group-btn">
                 <button type="button" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
