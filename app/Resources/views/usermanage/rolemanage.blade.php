@@ -1,4 +1,4 @@
-@extends('msc::admin.layouts.admin')
+@extends('layouts.usermanage')
 
 @section('only_css')
     <link href="{{asset('')}}" rel="stylesheet">
