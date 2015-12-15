@@ -17,6 +17,7 @@
         $(function(){
 
             delete_user();
+            choice_from();
         });
         function rolemanage(){
             var url = pars.ajaxurl;
@@ -25,20 +26,29 @@
         }
         function  choice_from(){
             $("#add_role").click(function(){
+
                 $("#Form1").show();
                 $("#Form2").hide();
             })
-            $("#edit_role").click(function(){
+            $(".edit_role").click(function(){
+                
+                $("#edit_id").val($(this).parent().siblings(".open-id").text());
+                $("#edit_name").val($(this).parent().siblings(".role_name").text());
+                $("#edit_des").val($(this).parent().siblings(".role_descrip").text())  
                 $("#Form2").show();
                 $("#Form1").hide();
             })
         }
         function  delete_user(){
-            $(".delete").click(function(){
-                parent.layer.alert('确定删除管理员XXXXX', {
-                    skin: 'layui-layer-molv' //样式类名
+            $('.delete').click(function(){
+                var id = $(this).attr('data');
+                layer.confirm('你确定删除？', {
+                    btn: ['是','否'] //按钮
+                }, function(){
+                    window.location.href="/auth/delete-role?id="+id;
                 });
-            })
+            });
+            
         }
 
     </script>
@@ -65,18 +75,19 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                @foreach($roleList as $role)
                     <tr>
-                        <td class="open-id">1</td>
-                        <td>超级管理员</td>
-                        <td>超级管理员就是最大最大的帅哥！！！！！</td>
+                        <td class="open-id">{{@$role->id}}</td>
+                        <td class="role_name">{{@$role->name}}</td>
+                        <td class="role_descrip">{{@$role->description}}</td>
 
                         <td class="opera">
-                            <span class="state1 modal-control" data-toggle="modal" data-target="#myModal" id="edit_role" >编辑</span>
+                            <span class="state1 edit_role modal-control" data-toggle="modal" data-target="#myModal" data="{{@$role->id}}">编辑</span>
                             <span class="state1 modal-control" >设置权限</span>
-                            <span class="state2 delete" >删除</span>
+                            <span class="state2 delete" data="{{@$role->id}}">删除</span>
                         </td>
                     </tr>
+                @endforeach
                     </tbody>
                 </table>
                 <div class="pull-right">
@@ -119,29 +130,30 @@
         </div>
     </form>
 
-    <form class="form-horizontal" id="Form2" novalidate="novalidate" style="display: none">
+    <form type="post" action="{{ url('/auth/edit-role') }}" class="form-horizontal" id="Form2" novalidate="novalidate" style="display: none" >
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">编辑角色</h4>
         </div>
         <div class="modal-body">
+            <input id="edit_id" type="hidden" name="" class="form-control" placeholder="请输入文本" value="">
             <div class="form-group">
                 <label class="col-sm-3 control-label">角色名称：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="" class="form-control" placeholder="请输入文本" value="绑定的内容">
+                    <input id="edit_name" type="text" name="" class="form-control" placeholder="请输入文本" value="绑定的内容">
 
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">角色描述：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="" class="form-control" placeholder="请输入文本" value="绑定的内容">
+                    <input id="edit_des" type="text" name="" class="form-control" placeholder="请输入文本" value="绑定的内容">
 
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-success" id='sure-notice' class="notAgree" data-dismiss="modal" aria-hidden="true">确定</button>
+            <button type="submit" class="btn btn-success" id='sure-notice' class="notAgree" data-dismiss="modal" aria-hidden="true">确定</button>
         </div>
     </form>
 @stop{{-- 内容主体区域 --}}
