@@ -59,7 +59,6 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
-            dd($data);
             //已经存在的数据
             $dataHaven=[];
             //添加失败的数据
@@ -1850,5 +1849,9 @@ class CoursesController extends MscController
         }
         $userService = new \Overtrue\Wechat\Staff(config('wechat.app_id'), config('wechat.secret'));
         return $userService->send($msg)->to($openid);
+    }
+
+    public function getVideoList(Request $request){
+
     }
 }
