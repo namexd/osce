@@ -1850,7 +1850,10 @@ class CoursesController extends MscController
         $userService = new \Overtrue\Wechat\Staff(config('wechat.app_id'), config('wechat.secret'));
         return $userService->send($msg)->to($openid);
     }
+	
+    public function getVideoList(Request $request){
 
+    }
     /**
      * 根据ajax请求获取对应楼号的层数
      * @api GET /msc/admin/courses/class-observe
@@ -1864,7 +1867,7 @@ class CoursesController extends MscController
      */
     public function getClassObserve(Request $request) {
         $data = [
-            '临床医学楼','新八教学楼'
+                        '临床医学楼','新八教学楼'
         ];
 
         return response()->json($data);
@@ -1890,11 +1893,13 @@ class CoursesController extends MscController
         try {
             if ($id === 1) {
                 $data = [
+                    
                     'floor' => ['一层', '二层', '三层', '四层'],
                     'id' => $id,
                 ];
             } elseif ($id === 2) {
                 $data = [
+                    
                     'floor' => ['一层', '二层', '三层', '四层', '五层', '六层'],
                     'id' => $id,
                 ];
@@ -1942,7 +1947,6 @@ class CoursesController extends MscController
             return response()->json($this->fail($ex));
         }
     }
-
     /**
      * 根据ajax请求获取对应层的教室具体信息
      * @api GET /msc/admin/courses/class-observe-video
