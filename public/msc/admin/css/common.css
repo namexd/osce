@@ -41,6 +41,7 @@ a{-webkit-touch-callout:none;}
 .ablock{display:block;width:100%;height:100%}
 .txta_l{text-align: left;}
 .txta_r{text-align: right;}
+.overflow{overflow: hidden;}
 
 /*width*/
 .w_90{width:90%;margin:0 auto; }
