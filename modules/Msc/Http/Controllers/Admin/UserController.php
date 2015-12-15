@@ -10,6 +10,7 @@ namespace Modules\Msc\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
 
+
 class UserController extends BaseController {
 
     /**
@@ -121,5 +122,198 @@ class UserController extends BaseController {
         ];
 
         dd($data);
+    }
+
+    /**
+     * 编辑学生回显
+     * @method GET
+     * @url /msc/admin/user/student-edit/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        $id        学生编号
+     *
+     * @return getStudentItem
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 14:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentEdit ($id){
+
+        $studentId=intval($id);
+
+
+        return $this->getStudentItem($studentId);
+
+    }
+
+    /**
+     * 编辑学生
+     * @method GET
+     * @url /msc/admin/user/student-submit/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        $id        学生编号
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 15:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postStudentSave(Request $request){
+        dd(11);
+        $this->validate($request, [
+            'id'        =>  'required|min:0|max:10',
+            'name' 		=> 	'required|max:50',
+            'code'		=> 	'required|integer|min:0|max:32',
+            'gender'          =>'required|min:0|max:1',
+            'grade' 	=> 	'required|integer|min:0|max:11',
+            'student_type' 	 => 	'required|integer|min:0|max:3',
+            'professional' 	 => 	'required|integer|min:0|max:11',
+            'validated' 	 => 	'required|integer|min:0|max:1',
+            'moblie' 	 => 	'required|integer|max:11',
+            'idcard_type' 	 => 	'required|integer|min:0|max:1',
+            'idcard' 	 => 	'required|integer|min:0|max:50',
+        ]);
+
+        $data=$request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional', 'validated', 'moblie', 'idcard_type', 'idcard' ]);
+
+        $studentModel=new Student();
+
+        $result=$studentModel->saveEditStudent($data);
+
+        if($result){
+            return response() -> json(
+                ['success'=>true]
+            );
+        }
+        return response() -> json(
+            ['success'=>false]
+        );
+    }
+
+    /**
+     * 添加学生信息
+     * @method GET
+     * @url /msc/admin/user/student-add/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post数据：</b>
+     * *
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 16:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postStudentAdd (Request $request){
+        dd(11);
+        $this->validate($request, [
+            'name' 		=> 	'required|max:50',
+            'code'		=> 	'required|integer|min:0|max:32',
+            'gender'          =>'required|min:0|max:1',
+            'grade' 	=> 	'required|integer|min:0|max:11',
+            'student_type' 	 => 	'required|integer|min:0|max:3',
+            'professional' 	 => 	'required|integer|min:0|max:11',
+            'validated' 	 => 	'required|integer|min:0|max:1',
+            'moblie' 	 => 	'required|integer|max:11',
+            'idcard_type' 	 => 	'required|integer|min:0|max:1',
+            'idcard' 	 => 	'required|integer|min:0|max:50',
+        ]);
+
+        $data=$request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional', 'validated', 'moblie', 'idcard_type', 'idcard' ]);
+
+        $studentModel=new Student();
+
+        $result=$studentModel->postAddStudent($data);
+
+        if($result){
+            return response() -> json(
+                ['success'=>true]
+            );
+        }
+        return response() -> json(
+            ['success'=>false]
+        );
+    }
+
+
+    /**
+     * 软删除
+     * @method GET
+     * @url /msc/admin/user/student-trashed/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        $id        学生编号
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 16:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentTrashed ($id){
+        $id=intval($id);
+
+        $studentModel=new Student();
+
+        $result=$studentModel->SoftTrashed($id);
+
+        if($result){
+            return response() -> json(
+                ['success'=>true]
+            );
+        }
+        return response() -> json(
+            ['success'=>false]
+        );
+    }
+
+    /**
+     * 改变状态
+     * @method GET
+     * @url /msc/admin/user/student-status/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        $id        学生编号
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 17:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentStatus ($id){
+
+        $studentId=intval($id);
+
+        $studentModel=new Student();
+
+        $result=$studentModel->changeStatus($studentId);
+
+        if($result){
+            return response() -> json(
+                ['success'=>true]
+            );
+        }
+        return response() -> json(
+            ['success'=>false]
+        );
     }
 }
