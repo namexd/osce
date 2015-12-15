@@ -65,3 +65,14 @@ Route::group(['prefix' => "api/1.0/client", 'namespace' => 'App\Http\Controllers
 Route::group(['prefix' => "test"],function(){
     Route::get('index', 'IndexController@index');
 });
+
+
+/*
+ * 权限管理
+ * */
+Route::group(['prefix' => "auth",'middleware' => []], function()
+{
+
+    Route::get('/auth-manage', ['uses'=>'AuthController@AuthManage','as'=>'auth.AuthManage']);
+
+});

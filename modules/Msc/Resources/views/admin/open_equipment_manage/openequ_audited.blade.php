@@ -102,11 +102,10 @@
                     </div>
                     <div class="input-group pull-left col-md-5 searchbox">
                         @if($rollmsg['1']=="")
-                            <input type="text" placeholder="请输入实验室名称" class="input-sm form-control" name="keyword" value="">
+                            <input type="text"  placeholder="请输入实验室名称" class="input-sm form-control" name="keyword" value="">
                         @else
-                            <input type="text" placeholder="{{$rollmsg['1']}}" class="input-sm form-control" name="keyword" value="">
+                            <input type="text"  placeholder="{{$rollmsg['1']}}" class="input-sm form-control" name="keyword" value="{{$rollmsg['1']}}">
                         @endif
-
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                             </span>

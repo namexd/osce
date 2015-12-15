@@ -1,27 +1,23 @@
 @extends('msc::wechat.layouts.admin')
 
 @section('only_head_css')
-<link href="{{asset('msc/wechat/personalcenter/css/course_date.css')}}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{{asset('msc/wechat/personalcenter/css/documentation.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{asset('msc/wechat/personalcenter/css/jalendar.css')}}" type="text/css" />
 <style type="text/css">
-    *{margin:0;padding:0px;}
-    #calendar{margin-top:100px;padding:0px 5px;width:250px;height:30px;line-height:30px;border-radius:3px;border:1px solid #ccc;cursor:pointer;text-align:center;}
+
 </style>
 
 
 @stop
 @section('only_head_js')
-    <script src="{{asset('msc/wechat/personalcenter/js/zlDate.js')}}"></script>
-    <script>
-
-        $(document).ready(function(){
-           AjaxTime();
-        });
-        function AjaxTime(){
-            $.get("{{asset('msc/wechat/personalcenter/js/date.php')}}",function(data) {
-                pickerEvent.setPriceArr(eval("("+data+")"));
-                pickerEvent.Init("calendar");
+    <script type="text/javascript" src="{{asset('msc/wechat/personalcenter/js/jalendar.js')}}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#myId').jalendar({
+                color: '#ed145a', // Unlimited Colors
+                lang: 'ZH' // Format: English — 'EN', Türkçe — 'TR'
             });
-        }
+        });
     </script>
 
 @stop
@@ -38,4 +34,14 @@
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>
+
+    <div id="myId" class="jalendar">
+        <div class="added-event" data-date="14/12/2015" data-time="Tüm Gün" data-title="WWDC 13 on San Francisco, LA"></div>
+        <div class="added-event" data-date="16/12/2015" data-time="20:45" data-title="Tarkan İstanbul Concert on Harbiye Açık Hava Tiyatrosu"></div>
+        <div class="added-event" data-date="17/12/2015" data-time="21:00" data-title="CodeCanyon İstanbul Meeting on Starbucks, Kadıköy"></div>
+        <div class="added-event" data-date="17/12/2015" data-time="22:00" data-title="Front-End Design and Javascript Conferance on Haliç Kongre Merkezi"></div>
+        <div class="added-event" data-date="17/12/2015" data-time="22:00" data-title="Lorem ipsum dolor sit amet"></div>
+    </div>
+
+
 @stop
