@@ -1932,7 +1932,7 @@ class CoursesController extends MscController
      * 根据ajax请求获取对应教室
      * @api GET /msc/admin/courses/class-observe
      * @access public
-     * @return json数据
+     * @return array
      * @version 1.0
      * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
      * @date 2015-12-15 14:50
@@ -1940,48 +1940,34 @@ class CoursesController extends MscController
      * @param Request $request
      */
     public function getClassObserve(Request $request) {
-        $this->validate($request,[
+        $this->validate($request, [
             'keyword' => 'sometimes',
         ]);
 
         $keyword = e(urldecode($request->get('keyword')));
         $ResourcesClassroom = new ResourcesClassroom();
-        //$data = $ResourcesClassroom->getClassroomName($keyword);
-        return view('',['data'=>$data]);
+        $data = $ResourcesClassroom->getClassroomName($keyword);
+        return view('', ['data' => $data]);
+    }
 
     /**
-     * 根据ajax请求获取对应楼号的层数
-     * @api GET /msc/admin/courses/class-observe-building
+     * 根据ajax请求获取对应教室
+     * @api GET /msc/admin/courses/class-observe-video
      * @access public
-     * @return json数据
+     * @return array
      * @version 1.0
      * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @date 2015-12-15 11:51
+     * @date 2015-12-15 14:50
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @param Request $request e.g(id)
+     * @param Request $request
      */
-    public function getClassObserveBuilding(Request $request) {
-        $this->validate($request,[
-            'id'=>'sometimes|integer',
-        ]);
+    public function getClassObserveVideo(Request $request) {
         $id = $request->get('id');
-        try {
-            if ($id === 1) {
-                $data = [
-                    '一层', '二层', '三层', '四层',
-                ];
-            } elseif ($id === 2) {
-                $data = [
-                    '一层', '二层', '三层', '四层', '五层', '六层'
-                ];
-            }
-            return response()->json($data);
-        }
-        catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
-
+        $ResourcesClassroom = new ResourcesClassroom();
+        $data = $ResourcesClassroom->getClassroomDetails($id);
+        dd($data);
     }
+
     /*socket收发数据
         @host(string) socket服务器IP
         @post(int) 端口

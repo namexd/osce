@@ -116,12 +116,43 @@ class ResourcesClassroom extends  CommonModel {
 
     //给教室的具体监控界面提供数据
     public function getClassroomDetails($id) {
-        $builder = $this->where($this->table.'.id','=',$id)->with(['courseClassroomCourses' => function ($q) {
-            $q->with(['resourcesLabPlan' => function ($q) {
-                $q->where('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))->where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
-                    ->with('course');
-            }]);
-        }]);
-        return $builder;
+//        $builder = $this->where($this->table.'.id','=',$id)->with(['courseClassroomCourses' => function ($q) {
+//            $q->with(['resourcesLabPlan' => function ($q) {
+//                $q->where('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))->where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+//                    ->with('course');
+//            }]);
+//        }]);
+        $builder = $this->leftJoin (
+            'resources_lab_courses',
+            function ($join) {
+                $join->on('resources_lab_courses.course_id','=',$this->table.'.id');
+            }
+        )   ->  leftJoin (
+            'resources_lab_plan',
+            function ($join) {
+                $join->on('resources_lab_plan.course_id','=','resources_lab_courses.course_id');
+            }
+        )   ->  leftJoin (
+            'courses',
+            function ($join) {
+                $join->on('resources_lab_courses.course_id','=','courses.id');
+            }
+        )   ->  leftJoin (
+            'teacher_courses',
+            function ($join) {
+                $join->on('courses.id','=','teacher_courses.course_id');
+            }
+        )   ->  leftJoin (
+            'teacher',
+            function ($join) {
+                $join->on('teacher_courses.teacher_id','=','id');
+            }
+        )   ->where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))   ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+            ->select([
+                'courses.name as courses_name',
+                'teacher.name as teacher_name',
+                'resources_lab.name as lab_name',
+            ]);
+        return $builder->get();
     }
 }
