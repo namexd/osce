@@ -55,9 +55,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('courses/provisional-courses-plan', ['uses'=>'CoursesController@getProvisionalCoursesPlan','as'=>'msc.courses.ProvisionalCoursesPlan']);
 		Route::get('courses/best-time', ['uses'=>'CoursesController@getBestTime','as'=>'msc.courses.BestTime']);
 		Route::get('courses/classroom-time', ['uses'=>'CoursesController@getClassroomTime','as'=>'msc.courses.ClassroomTime']);
+		Route::get('courses/video-check', ['uses'=>'CoursesController@getClassroomTime','as'=>'msc.courses.ClassroomTime']);
 
 		Route::get('courses/download-courses-list-tpl', ['uses'=>'CoursesController@getDownloadCoursesListTpl','as'=>'msc.courses.downloadCoursesListTpl']);
-		Route::get('courses/download-courses-plan-tpl', ['uses'=>'CoursesController@getDownloadCoursesPlanTpl','as'=>'msc.courses.downloadCoursesPlanTpl']);
+		Route::get('courses/download-courses-plan-tpl', ['uses'=>'CoursesController@getVideoCheck','as'=>'msc.courses.getVideoCheck']);
 
 
 		Route::controller('verify', 'VerifyController');
@@ -110,6 +111,14 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('user/student-item/{id}', ['uses'=>'UserController@getStudentItem','as'=>'msc.admin.user.StudentItem']);
 		Route::get('user/teacher-list', ['uses'=>'UserController@getTeacherList','as'=>'msc.admin.user.TeacherList']);
 		Route::get('user/teacher-item/{id}', ['uses'=>'UserController@getTeacherItem','as'=>'msc.admin.user.TeacherItem']);
+
+
+		Route::get('user/student-edit/{id}', ['uses'=>'UserController@getStudentEdit','as'=>'msc.admin.user.StudentEdit']);
+		Route::get('user/student-trashed/{id}', ['uses'=>'UserController@getStudentTrashed','as'=>'msc.admin.user.StudentTrashed']);
+		Route::get('user/student-status/{id}', ['uses'=>'UserController@getStudentStatus','as'=>'msc.admin.user.StudentStatus']);
+
+		Route::post('user/student-add', ['uses'=>'UserController@postStudentAdd','as'=>'msc.admin.user.StudentAdd']);
+		Route::post('user/student-save', ['uses'=>'UserController@postStudentSave','as'=>'msc.admin.user.StudentSaveEdit']);
 
 
 	});
