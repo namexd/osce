@@ -116,7 +116,6 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.coursesPlan');
-            dd($data);
             //失败原因 包
             $falseData=[];
             $dataConflict=[];
@@ -1868,7 +1867,7 @@ class CoursesController extends MscController
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2015-12-15
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
+     *  //http://hx.mis_api.local/msc/admin/courses/video-check?id=1&start=2015-12-14%2008:00:00&end=2015-12-14%2009:00:00
      */
     public function getVideoCheck(Request $request){
         $this->validate($request,[

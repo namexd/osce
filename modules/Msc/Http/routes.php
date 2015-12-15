@@ -33,7 +33,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::post('resources-manager/examine-borrow-apply', ['uses'=>'ResourcesManagerController@postExamineBorrowingApply','as'=>'msc.admin.resourcesManager.postExamineBorrowingApply']);
 		Route::get('resources-manager/wait-examine-list', ['uses'=>'ResourcesManagerController@getWaitExamineList','as'=>'msc.admin.resourcesManager.getWaitExamineList']);
 		Route::post('resources-manager/examine-borrowing-apply', ['uses'=>'ResourcesManagerController@postExamineBorrowingApply','as'=>'msc.admin.resourcesManager.postExamineBorrowingApply']);
-		Route::get('resources-manager/borrowedList', ['uses'=>'ResourcesManagerController@getBorrowedList','as'=>'msc.admin.resourcesManager.getBorrowedList']);
+		Route::get('resources-manager/borrowed-list', ['uses'=>'ResourcesManagerController@getBorrowedList','as'=>'msc.admin.resourcesManager.getBorrowedList']);
 		Route::get('resources-manager/tip-back', ['uses'=>'ResourcesManagerController@getTipBack','as'=>'msc.admin.resourcesManager.getTipBack']);
 
 		//Route::controller('examine', 'ExamineController');
@@ -57,8 +57,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('courses/classroom-time', ['uses'=>'CoursesController@getClassroomTime','as'=>'msc.courses.ClassroomTime']);
 		Route::get('courses/video-check', ['uses'=>'CoursesController@getClassroomTime','as'=>'msc.courses.ClassroomTime']);
 
-		Route::get('courses/download-courses-list-tpl', ['uses'=>'CoursesController@getDownloadCoursesListTpl','as'=>'msc.courses.downloadCoursesListTpl']);
-		Route::get('courses/download-courses-plan-tpl', ['uses'=>'CoursesController@getVideoCheck','as'=>'msc.courses.getVideoCheck']);
+		Route::get('courses/download-courses-list-tpl',['uses'=>'CoursesController@getDownloadCoursesListTpl','as'=>'msc.admin.courses.getDownloadCoursesListTpl']);
+		Route::get('courses/download-courses-plan-tpl',['uses'=>'CoursesController@getDownloadCoursesPlanTpl','as'=>'msc.admin.courses.getDownloadCoursesPlanTpl']);
+		Route::get('courses/video-check', ['uses'=>'CoursesController@getVideoCheck','as'=>'msc.courses.getVideoCheck']);
 
 
 		Route::controller('verify', 'VerifyController');

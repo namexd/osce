@@ -97,4 +97,22 @@ class ResourcesClassroom extends  CommonModel {
 
         return $result;
     }
+    //新增 实验室
+    public function addLabResource($input){
+        $data   =   [
+            'name'  =>  $input['name'],
+            'code'  =>  $input['code'],
+            'location'  =>  $input['location'],
+            'begintime'  =>  $input['begintime'],
+            'endtime'  =>  $input['endtime'],
+            'opened'  =>  $input['opened'],
+            'manager_id'  =>  $input['manager_id'],
+            'manager_name'  =>  $input['manager_name'],
+            'manager_mobile'  =>  $input['manager_mobile'],
+            'detail'  =>  $input['detail'],
+            'status'  =>  1,
+            'resources_type'  =>  1,
+        ];
+        return $this->create($data);
+    }
 }
