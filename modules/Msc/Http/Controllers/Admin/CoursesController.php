@@ -1901,8 +1901,6 @@ class CoursesController extends MscController
                 $data = [
                     '一层', '二层', '三层', '四层', '五层', '六层'
                 ];
-            } else {
-                
             }
             return response()->json($data);
         }
