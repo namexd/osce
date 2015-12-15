@@ -1864,12 +1864,7 @@ class CoursesController extends MscController
      */
     public function getClassObserve(Request $request) {
         $data = [
-            'content'   => 'XXX',
-            'teacher'   => '授课老师1',
-            'day'       => '2015-11-30',
-            'time'      => '9:41:32',
-            'strength'  => '123',
-            'build'     => ['临床医学院','新八教学楼'],
+            '临床医学楼','新八教学楼'
         ];
 
         return response()->json($data);
@@ -1895,19 +1890,84 @@ class CoursesController extends MscController
         try {
             if ($id === 1) {
                 $data = [
-                    '一层', '二层', '三层', '四层',
+                    'floor' => ['一层', '二层', '三层', '四层'],
+                    'id' => $id,
                 ];
             } elseif ($id === 2) {
                 $data = [
-                    '一层', '二层', '三层', '四层', '五层', '六层'
+                    'floor' => ['一层', '二层', '三层', '四层', '五层', '六层'],
+                    'id' => $id,
                 ];
             }
+            $data['succuss'] = 'succuss';
             return response()->json($data);
         }
         catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
-
     }
 
+    /**
+     * 根据ajax请求获取对应层的教室
+     * @api GET /msc/admin/courses/class-observe-classroom
+     * @access public
+     * @return json数据
+     * @version 1.0
+     * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date 2015-12-15 11:51
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @param Request $request e.g(id)
+     */
+    public function getClassObserveClassroom(Request $request) {
+        $this->validate($request,[
+            'id'=>'sometimes|integer',
+        ]);
+        $id = $request->get('id');
+        try {
+            if ($id === 11) {
+                $data = [
+                    'classroom' => ['101教室', '102教室', '103教室', '104教室'],
+                    'id' => $id,
+                ];
+            } elseif ($id === 12) {
+                $data = [
+                    'classroom' => '201教室', '202教室', '203教室', '204教室', '205教室', '206教室',
+                    'id' => $id,
+                ];
+            }
+            $data['succuss'] = 'succuss';
+            return response()->json($data);
+        }
+        catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+    }
+
+    /**
+     * 根据ajax请求获取对应层的教室具体信息
+     * @api GET /msc/admin/courses/class-observe-video
+     * @access public
+     * @return json数据
+     * @version 1.0
+     * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date 2015-12-15 11:51
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @param Request $request e.g(id)
+     */
+    public function getClassObserveVideo(Request $request) {
+        $this->validate($request,[
+            'id'=>'sometimes|integer',
+        ]);
+        $id = $request->get('id');
+        if ($id) {
+            $data = [
+                'content' => 'XXX',
+                'teacher' => 'XXX',
+                'day'     => '2015-11-30',
+                'time'    => '9:41:32',
+                'stronge' => '123'
+            ];
+        }
+        return response()->json($data);
+    }
 }
