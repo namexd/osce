@@ -130,18 +130,17 @@
          */
         public function viewDeviceReserveHistoryList ($id) {
             //将预约消息的$id转化为设备的$id
-//            dd(123);
-
             $id = $this->find ($id)->resources_device_id;
             //构建sql语句
             $builder = $this->leftJoin ('resources_device' , function ($join) {
                 $join->on ('resources_device.id' , '=' , $this->table . '.resources_device_id');
             })->leftJoin ('resources_device_apply' , function ($join) {
-                $join->on ('resources_device_history.resources_device_id' , '=' , 'resources_device_apply.resources_device_id');
+                //TODO:罗海华 修改关联 为 resources_device_apply，使列表和详情页逻辑统一 2015-12-15 22:01
+                $join->on ('resources_device_history.resources_device_apply_id' , '=' , 'resources_device_apply.id');
             })->leftJoin ('resources_lab' , function ($join) {
                 $join->on ('resources_device.resources_lab_id' , '=' , 'resources_lab.id');
             })->leftJoin ('student' , function ($join) {
-                $join->on ('student.id' , '=' , $this->table . '.opertion_uid');
+                $join->on ('resources_device_apply.apply_uid','=','student.id');
             })->where ('resources_device.id' , '=' , $id);
             //选择搜索的字段
             $builder->select (

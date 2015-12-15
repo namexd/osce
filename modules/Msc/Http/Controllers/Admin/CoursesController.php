@@ -1938,16 +1938,17 @@ class CoursesController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      * @param Request $request
      */
-    public function getClassObserve(Request $request) {
-        $this->validate($request,[
+    public function getClassObserve(Request $request)
+    {
+        $this->validate($request, [
             'keyword' => 'sometimes',
         ]);
 
         $keyword = e(urldecode($request->get('keyword')));
         $ResourcesClassroom = new ResourcesClassroom();
-        //$data = $ResourcesClassroom->getClassroomName($keyword);
-        return view('',['data'=>$data]);
-
+        $data = $ResourcesClassroom->getClassroomName($keyword);
+        return view('', ['data' => $data]);
+    }
     /**
      * 根据ajax请求获取对应楼号的层数
      * @api GET /msc/admin/courses/class-observe-building

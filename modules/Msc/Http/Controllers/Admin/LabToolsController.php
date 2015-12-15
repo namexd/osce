@@ -178,16 +178,15 @@ class LabToolsController extends MscController
      */
     public function getOpenLabToolsUseHistoryView(Request $request)
     {
-//        $this->validate($request,[
-//            'id' => 'required|integer',
-//        ]);
+        $this->validate($request,[
+            'id' => 'required|integer',
+        ]);
 
         $id = $request->get('id');
         //把主键id传入模型的具体方法中,得到具体的数据
         $ResourcesDeviceHistory = new ResourcesDeviceHistory();
 
         $data = $ResourcesDeviceHistory->viewDeviceReserveHistoryList($id);
-
         return view('msc::admin.open_equipment_manage.openequip_order_history_detail', ['data' => $data]);
     }
 
