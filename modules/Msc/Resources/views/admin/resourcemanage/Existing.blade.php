@@ -7,6 +7,10 @@
         .modal-header{ background-color: #f6f8fa; color: #95b8fd;}
         .modal-body textarea{margin-top: 10px; height: 200px;resize:none;}
         .sname{width:396px;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;}
+        #table-striped td{font-size: 13px;}
+        .btn_pl{color: #a6b0c3!important;}
+        .btn_pl:hover{color:#fff!important;}
+        .check_label{margin-bottom: -2px!important;}
     </style>
 @stop
 @section('only_js')
