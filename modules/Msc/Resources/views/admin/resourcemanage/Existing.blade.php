@@ -153,7 +153,7 @@
             <table class="table table-striped" id="table-striped">
                 <thead>
                 <tr>
-                    <th width="100">
+                    <th width="40">
                         <label class="check_label all_checked">
                             <div class="check_icon"></div>
                             <input  type="checkbox"  value="">
