@@ -19,7 +19,7 @@ $(function(){
             //数据实时更新
             courseObserveDetail.update();
             //下载
-            courseObserveDetail.download(pars.downloadVideo,{id:$('.active').parent().attr('value'),start:'2015-12-06 08:00:00',end:'2015-12-06 08:00:00'});
+            courseObserveDetail.download(pars.downloadVideo,{id:$('.active').parent().attr('value'),start:$('#start').val(),end:$('#end').val()});
             break;
         case "course_vcr":course_vcr();break;
     }
@@ -176,7 +176,10 @@ var courseObserveDetail = (function(mod){
          */
         if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
             alert("您还未安装过插件，双击开发包目录里的WebComponents.exe安装！");
-            location.href = download_url;
+            var iframe  =$('<iframe>').attr('src',download_url);
+            var box=    $('<div>').css('display','none');
+            box.append(iframe);
+            $('body').append(box);
             return;
         }
         
@@ -198,6 +201,10 @@ var courseObserveDetail = (function(mod){
          */
         if (-1 == WebVideoCtrl.I_CheckPluginVersion()) {
             alert("检测到新的插件版本，双击开发包目录里的WebComponents.exe升级！");
+            var iframe  =$('<iframe>').attr('src',download_url);
+            var box=    $('<div>').css('display','none');
+            box.append(iframe);
+            $('body').append(box);
             return;
         }
 
@@ -346,7 +353,10 @@ var courseObserveDetail = (function(mod){
                 data:req,
                 success:function(res){
                     if(res.code==1){
-                        location.href = res.url;
+                        var iframe  =$('<iframe>').attr('src',res.url);
+                        var box=    $('<div>').css('display','none');
+                        box.append(iframe);
+                        $('body').append(box);
                     }
                     else if(res.code==2){
                         alert(res.message);

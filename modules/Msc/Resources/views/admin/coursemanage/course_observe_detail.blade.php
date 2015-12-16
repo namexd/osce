@@ -46,6 +46,8 @@
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">课程内容</label>
+                    <input type="hidden" value="2015-12-16 08:00:00" id="start">
+                    <input type="hidden" value="2015-12-16 14:00:00" id="end">
                     <div class="col-sm-10">
                         <div class="form-control">{{$courses_name}}</div>
                     </div>
