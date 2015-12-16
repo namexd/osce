@@ -1875,8 +1875,9 @@ class CoursesController extends MscController
         try{
             $model=new ResourcesClassroom();
             $rst=$model->getClassroomDetails($lab_id)->first();
+
             $vcrs=$model->getClassroomVideo($lab_id);
-            dd($vcrs);
+
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
@@ -1885,6 +1886,7 @@ class CoursesController extends MscController
                 'total'                  =>    40,
                 'unabsence'              =>    39,
             ];
+
             //PC-Admin-002-课程监管.png
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
@@ -1914,6 +1916,7 @@ class CoursesController extends MscController
         try{
             $model = new ResourcesClassroom();
             $data = $model -> getCourseVcrByPlanId($plan_id);
+            dd($data);
             return view('',$data);
         }catch (\Exception $ex){
             $this -> fail($ex);
