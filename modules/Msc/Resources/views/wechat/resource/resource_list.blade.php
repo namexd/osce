@@ -65,8 +65,8 @@
 
             /*跳转到详情页*/
             $('.detail_list').find('ul').on('click','li',function(){
-                //location.href = 'http://www.mis.hx/msc/wechat/resource/resource?id='+$(this).attr('id')+'&type='+$(this).attr('type');
-                location.href = "{{ url('/msc/wechat/resource/resource-paginate') }}?id="+$(this).attr('id')+"&type="+$(this).attr('type');
+                location.href = 'http://www.mis.hx/msc/wechat/resource/resource?id='+$(this).attr('id')+'&type='+$(this).attr('type');
+                //location.href = "{{ url('/msc/wechat/resource/resource-paginate') }}?id="+$(this).attr('id')+"&type="+$(this).attr('type');
             });
         });
 

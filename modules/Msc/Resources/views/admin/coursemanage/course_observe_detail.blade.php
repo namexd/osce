@@ -120,10 +120,9 @@
             </div>
             <div class="tools-bar">
                 <ul class="nav-bar">
-                    <li value="1"><a class="active" href="javascript:void(0)">1号摄像机</a></li>
-                    <li value="1"><a href="javascript:void(0)">2号摄像机</a></li>
-                    <li value="1"><a href="javascript:void(0)">3号摄像机</a></li>
-                    <li value="1"><a href="javascript:void(0)">4号摄像机</a></li>
+                    @foreach($vcrs as $index    =>$item)
+                        <li value="{{$item->vid}}"><a href="javascript:void(0)" class="{{$index==0? 'active':''}}">{{$item->vname}}</a></li>
+                    @endforeach
                     <div class="tools-tips">
                         <a href="javascript:void(0)">下载</a>&nbsp;&nbsp;
                         <span class="fa fa-arrows-alt"></span>

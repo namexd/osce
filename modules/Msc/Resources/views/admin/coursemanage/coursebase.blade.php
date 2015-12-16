@@ -575,7 +575,7 @@
                 var reqInit = {};
                 //请求数据
                 reqInit['bagindate'] = $('#start').val();
-                reqInit['enddate'] = $('#start').val();
+                reqInit['enddate'] = $('#end').val();
                 reqInit['field'] = 'classroom';//此处关键字先默认为classroom。还可以为course，看后期需求
                 reqInit['keyword'] = $('#search-input').val();
                 if(thisElement.attr('flag')=='page'){
@@ -636,7 +636,7 @@
             //默认数据
             var req = {};
             req['bagindate'] = $('#start').val();
-            req['enddate'] = $('#start').val();
+            req['enddate'] = $('#end').val();
             req['field'] = 'classroom';//此处关键字先默认为classroom。还可以为course，看后期需求
             req['keyword'] = $('#search-input').val();
             req['page'] = 1;
@@ -660,7 +660,7 @@
         /*基础课程*/
         var reqInit = {};
         reqInit['bagindate'] = $('#start').val();
-        reqInit['enddate'] = $('#start').val();
+        reqInit['enddate'] = $('#end').val();
         reqInit['field'] = 'classroom';//此处关键字先默认为classroom。还可以为course，看后期需求
         reqInit['keyword'] = $('#search-input').val();
         reqInit['page'] = 1;
@@ -677,8 +677,8 @@
             };
             //操作
             var option = {
-                '1':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
-                '0':'<a href="javascript:void(0)"><span class="read  state1">监控</span></a>',
+                '1':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
+                '0':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
                 '-1':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a>'
             }
             $.ajax({
@@ -730,8 +730,8 @@
             };
             //操作
             var option = {
-                '1':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
-                '0':'<a href="javascript:void(0)"><span class="read  state1">监控</span></a>',
+                '1':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
+                '0':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
                 '-1':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a><a href="javascript:void(0)"><span class="read  state2">取消</span></a>'
             }
             $.ajax({
@@ -783,7 +783,7 @@
             }
             var option = {
                 '1':'<a href="javascript:void(0)"><span class="read  state1">记录</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
-                '0':'<a href="javascript:void(0)"><span class="read  state1">监控</span></a>',
+                '0':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
                 '-1':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a><a href="javascript:void(0)"><span class="read  state2">取消</span></a>'
             }
             $.ajax({
@@ -829,7 +829,7 @@
         $('#search').click(function(){
             var req = {};
             req['bagindate'] = $('#start').val();
-            req['enddate'] = $('#start').val();
+            req['enddate'] = $('#end').val();
             req['field'] = 'classroom';//此处关键字先默认为classroom。还可以为course，看后期需求
             req['keyword'] = $('#search-input').val();
             req['page'] = 1;
@@ -1162,7 +1162,7 @@
             }
             req['order'] = 'classroom';
             req['bagindate'] = $('#start').val();
-            req['enddate'] = $('#start').val();
+            req['enddate'] = $('#end').val();
             req['field'] = 'classroom';//此处关键字先默认为classroom。还可以为course，看后期需求
             req['keyword'] = $('#search-input').val();
             req['page'] = 1;
@@ -1194,7 +1194,7 @@
             }
             req['order'] = 'classroom';
             req['bagindate'] = $('#start').val();
-            req['enddate'] = $('#start').val();
+            req['enddate'] = $('#end').val();
             req['field'] = 'classroom';//此处关键字先默认为classroom。还可以为course，看后期需求
             req['keyword'] = $('#search-input').val();
             req['page'] = 1;
@@ -1214,6 +1214,18 @@
                break;
             }
         });
+
+    /**
+     *跳转到视频详情页面
+     */
+    $('.tab-content').on('click','.state1',function(){
+        var thisElement = $(this);
+        if($(this).attr('value')==undefined){
+
+        }else{
+            location.href = $(this).attr('value')+'?id='+thisElement.parent().parent().attr('value');
+        }
+    });
 
 
     })
