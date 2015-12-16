@@ -58,4 +58,67 @@ class Teacher extends CommonModel {
 
         return $builder->orderBy($order['0'], $order['1'])->paginate(config('msc.page_size',10));
     }
+
+    //保存编辑教职工数据
+    public function saveEditTeacher($data){
+        $connection=\DB::connection('msc_mis');
+        $connection->beginTransaction();
+
+        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+
+        $result=$connection->table('teacher')->update($item);
+        if($result==false){
+            $connection->rollBack();
+        }
+
+        $connection=\DB::connection('sys_mis');
+        $users=array('id'=>$data['id'],'gender'=>$data['gender'],'moblie'=>$data['moblie']);
+        $result=$connection->table('users')->update($users);
+        if($result==false){
+            $connection->rollBack();
+        }
+
+        $connection->commit();
+    }
+
+    //保存添加教职工
+
+    public function postAddTeacher($data){
+        $connection=\DB::connection('msc_mis');
+
+
+        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+
+        $id=$connection->table('teacher')->insertGetId($item);
+
+
+        $connection=\DB::connection('sys_mis');
+        $users=array('id'=>$id,'gender'=>$data['gender'],'moblie'=>$data['moblie'],'status'=>$data['status']);
+
+        $result=$connection->table('users')->insert($users);
+
+        return $result;
+    }
+
+    //软删除
+    public function SoftTrashed($id){
+        $connection=\DB::connection('sys_mis');
+
+        return $connection->table('users')->where('id',$id)->update(['status'=>2]);
+
+    }
+
+    //更改状态
+    public function changeStatus($id){
+        $connection=\DB::connection('sys_mis');
+
+        $data=$connection->table('users')->where('id',$id)->select('status')->first();
+
+        foreach($data as $tmp){
+           $status=$tmp;
+        };
+
+        return $connection->table('users')->where('id',$id)->update(['status'=>1-$status]);
+
+    }
 }
