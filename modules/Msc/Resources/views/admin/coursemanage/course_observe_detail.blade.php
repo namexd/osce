@@ -64,7 +64,7 @@
                     <label class="col-sm-2 control-label">考勤率</label>
                     <div class="col-sm-10" style="height:98px">
                         <div class="form-control">
-                            <span>{{$unabsence/$total*100}}%</span>
+                            <span>{{round(($unabsence/$total*100),2)}}%</span>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
