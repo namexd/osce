@@ -9,15 +9,17 @@ $(function(){
         case "course_observe_detail":
             //courseObserveDetail.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
             //初始化
-            courseObserveDetail.initVideo(1130,600,1,"divPlugin");
+            courseObserveDetail.initVideo(1130,600,1,"divPlugin",pars.downloadUrl);
             //登录
             courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
             //切换视频
             courseObserveDetail.changeVideo();
-
+            //停止
             courseObserveDetail.stopPlay(0);
-
+            //数据实时更新
             courseObserveDetail.update();
+            //下载
+            courseObserveDetail.download(pars.downloadVideo,{id:$('.active').parent().attr('value'),start:$('#start').val(),end:$('#end').val()});
             break;
         case "course_vcr":course_vcr();break;
     }
@@ -168,12 +170,16 @@ var courseObserveDetail = (function(mod){
      *count 显示窗口数  1:1x1,2：2x2
      *elem dom id字符串
      */
-    mod.initVideo = function(width,height,count,elem){
+    mod.initVideo = function(width,height,count,elem,download_url){
         /**
          *检查插件是否已经安装过
          */
         if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
             alert("您还未安装过插件，双击开发包目录里的WebComponents.exe安装！");
+            var iframe  =$('<iframe>').attr('src',download_url);
+            var box=    $('<div>').css('display','none');
+            box.append(iframe);
+            $('body').append(box);
             return;
         }
         
@@ -195,6 +201,10 @@ var courseObserveDetail = (function(mod){
          */
         if (-1 == WebVideoCtrl.I_CheckPluginVersion()) {
             alert("检测到新的插件版本，双击开发包目录里的WebComponents.exe升级！");
+            var iframe  =$('<iframe>').attr('src',download_url);
+            var box=    $('<div>').css('display','none');
+            box.append(iframe);
+            $('body').append(box);
             return;
         }
 
@@ -329,7 +339,35 @@ var courseObserveDetail = (function(mod){
         //WebVideoCtrl.I_FullScreen(true);
     });
 
-    
+    /**
+     *下载 
+     *downVideo 下载地址
+     *req 请求数据
+     */
+    mod.download = function(downVideo,req){
+        $('#download').click(function(){
+            $.ajax({
+                type:'get',
+                async:true,
+                url:downVideo,
+                data:req,
+                success:function(res){
+                    if(res.code==1){
+                        var iframe  =$('<iframe>').attr('src',res.url);
+                        var box=    $('<div>').css('display','none');
+                        box.append(iframe);
+                        $('body').append(box);
+                    }
+                    else if(res.code==2){
+                        alert(res.message);
+                    }else{
+                        alert(res.message.split(':')[1]);
+                    }
+                }
+            });
+        });
+    }
+
     return mod;
 
 })(courseObserveDetail||{})
