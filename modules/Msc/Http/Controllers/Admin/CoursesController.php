@@ -36,9 +36,6 @@ class CoursesController extends MscController
     public function getTest(){
 
         return view('msc::admin.coursemanage.course_observe_detail');
-
-        return view('');
-
     }
     /**
      * 导入课程
@@ -1862,12 +1859,10 @@ class CoursesController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string        courses_name        课程内容
-     *   string        teacher_name        老师姓名
-     *   string        resources_lab_name  教室名称
+     * * int           lab_id               教师id
      * * int           vcr_id              摄像机id
      *
-     * @return view
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
      *
      * @version 1.0
      * @author  gaoshichong
@@ -1877,19 +1872,24 @@ class CoursesController extends MscController
      */
     public function getCoursesVcr(Request $request){
         $this->validate($request,[
-            'courses_name'           =>   "required|string",
-            'teacher_name'           =>   "required|string",
-            'resources_lab_name'     =>   "required|string",
-            'vcr_id'                 =>   "required|integer",
+
         ]);
-        $data    =[
-            'courses_name'           =>    $request->get("courses_name"),
-            'teacher_name'           =>    $request->get("teacher_name"),
-            'resources_lab_name'     =>    $request->get("resources_lab_name"),
-            'vcr_id'                 =>    $request->get("vcr_id"),
-        ];
-        //PC-Admin-002-课程监管.png
-        return view('',$data);
+        try{
+            $model=new ResourcesClassroom();
+            $rst=$model->getClassroomDetails(2)->first();
+            $data    =      [
+                'courses_name'           =>    $rst->courses_name,
+                'teacher_name'           =>    $rst->teacher_name,
+                'lab_name'               =>    $rst->lab_name,
+                'vcr_id'                 =>    33,
+                'total'                  =>    40,
+                'unabsence'              =>    39,
+            ];
+            //PC-Admin-002-课程监管.png
+            return view('',$data);
+        }catch (\Exception $ex){
+
+        }
     }
 	/**
      *  下载视频前检查
@@ -1969,7 +1969,7 @@ class CoursesController extends MscController
         }
     }
     /**
-     * 根据ajax请求获取对应教室
+     * 根据get请求获取对应教室
      * @api GET /msc/admin/courses/class-observe
      * @access public
      * @return array
@@ -1988,7 +1988,6 @@ class CoursesController extends MscController
         $keyword = e(urldecode($request->get('keyword')));
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomName($keyword);
-       
         return view('msc::admin.coursemanage.course_observe', ['data' => $data]);
     }
 
@@ -1996,7 +1995,7 @@ class CoursesController extends MscController
      * 根据ajax请求获取对应教室的详情
      * @api GET /msc/admin/courses/class-observe-video
      * @access public
-     * @return array
+     * @return json teacher_name:老师名字,courses_name:课程名字,id:教室id,video:摄像头id和名字,video_count:摄像头数量
      * @version 1.0
      * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
      * @date 2015-12-15 14:50
@@ -2007,7 +2006,27 @@ class CoursesController extends MscController
         $id = $request->get('id');
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomDetails($id);
-        dd($data);
+        $data = $data->toArray();
+        //通过教室ID查询摄像头ID和摄像头名字
+        $video = $ResourcesClassroom->getClassroomVideo($id);
+        $videoCount = count($video);
+        $video = $video->toArray();
+        if (count($data) === 0) {
+            $data = [
+                [
+                    'teacher_name' => '目前未有老师上课',
+                    'courses_name' => '目前无课',
+                ],
+            ];
+        }
+
+        foreach ($data as $item) {
+            $item['id']         = $id;
+            $item['video']      = $video;
+            $item['video_count'] = $videoCount;
+        }
+
+        return response()->json($item);
     }
 
     /*socket收发数据
@@ -2033,4 +2052,32 @@ class CoursesController extends MscController
             return true;
         }
     }
+
+    /**
+     * 单个视频
+     * @api GET /msc/admin/courses/classroom-vcr
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view {摄像头ID：id，'教室ID':$vcr->resources_lab_id}
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-16 15:44
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getClassroomVcr(Request $request){
+        $id =   intval( $request    ->  id);
+        if(empty($id))
+        {
+            abort(404);
+        }
+        $vcr    =   ResourcesLabVcr::find($id);
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id]);
+    }
+
 }

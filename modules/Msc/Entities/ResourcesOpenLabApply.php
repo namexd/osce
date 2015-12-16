@@ -62,6 +62,8 @@ class ResourcesOpenLabApply extends CommonModel
     public function lab(){
         return $this    ->  hasOne('Modules\Msc\Entities\ResourcesClassroom','id','resources_lab_id');
     }
+
+
     public function getUrgentApplyList($date='',$keyword='',$order=[]){
         $builder    =   $this   ->  leftJoin(
             'resources_lab',
@@ -163,10 +165,25 @@ class ResourcesOpenLabApply extends CommonModel
             Common::sendMsg($applyer ->  openid,$reject);
         }
     }
+    /**
+     * 获取普通预约待审审核列表
+     * @return pagenation
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-16 13:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
     public function getWaitExamineList(){
+        $this   -> with([
+            'classroomCourses'  =>  function($qurey){
+                //罗海华 未处理完 脚本
+            }
+        ]);
         return $this   ->  where('status','=',0)
                 ->  whereRaw(
-                    'unix_timestamp(apply_date) > ?',
+                    'unix_timestamp(apply_date) = ?',
                     [
                         strtotime(date('Y-m-d'))
                     ]

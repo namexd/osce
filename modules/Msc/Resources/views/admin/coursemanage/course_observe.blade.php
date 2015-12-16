@@ -1,19 +1,21 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
     <link rel="stylesheet" href="{{asset('msc/admin/coursemanage/css/course_observe.css')}}">
+    <link rel="stylesheet" href="{{asset('msc/admin/css/demo.css')}}">
     <style type="text/css">
 
     </style>
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/js/webVideoCtrl.js')}}"></script>
     <script src="{{asset('msc/admin/coursemanage/js/coursemanage.js')}}"></script>
     <script>
 
     </script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_observe','lessonUrl':'{{route("msc.courses.classObserveVideo")}}'}">
+    <input type="hidden" id="parameter" value="{'pagename':'course_observe','lessonUrl':'{{route("msc.admin.courses.getClassObserve")}}'}">
     <div class="row  main-content">
         <div class="content-left ibox-content">
             <div class="serach-box">

@@ -137,7 +137,7 @@ class AuthController extends BaseController
         if(!empty($PermissionMenuArr))
             $menuList = $SysPermissionMenu->getPermissionMenuList($PermissionMenuArr);
 
-        dd($menuList);
+        //dd($menuList);
 
         return  view('usermanage.rolemanage_detail');
     }
