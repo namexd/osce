@@ -1927,13 +1927,13 @@ class CoursesController extends MscController
      * @api GET /msc/admin/courses/video-check
      * @access public
      *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
      * * string        id        摄像头ID(必须的)
-     * * string        start     视频开始时间(必须的) e.g:
-     * * string        end       视频结束时间(必须的) e.g:
+     * * string        start     视频开始时间(必须的) e.g:2015-12-16 08:00:00
+     * * string        end       视频结束时间(必须的) e.g:2015-12-16 08:00:00
      *
-     * @return json {url:下载视频文件的地址}
+     * @return json {url:下载视频文件的地址} | {msg:消息提示}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -1967,24 +1967,16 @@ class CoursesController extends MscController
                 {
                     $url    =   '';
                     //请求成功
-                    if($json->code  ==  2000)
-                    {
-                        $url    =   $json   ->  url;
-                    }
-                    //如果文件正在提取
-                    if($json->code  ==  2020)
-                    {
-                        return response()->json(
-                            $this   ->  success_data(['msg' =>  '请耐心等待',2,'获取成功'])
-                        );
-                    }
                     switch($json->code)
                     {
                         case 2000:
                             $url    =   $json   ->  url;
                             break;
+                        //如果文件正在提取
                         case 2020:
-                            throw new \Exception($json    ->  msg);
+                            return response()->json(
+                                $this   ->  success_data(['msg' =>  '请耐心等待',2,'获取成功'])
+                            );
                             break;
                         default:
                             throw new \Exception($json    ->  msg);
