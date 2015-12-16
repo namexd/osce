@@ -1970,7 +1970,15 @@ class CoursesController extends MscController
         $id = $request->get('id');
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomDetails($id);
-        dd($data);
+        if (count($data) === 0) {
+            $data = [
+                [
+                    'teacher_name' => '目前未有老师上课',
+                    'courses_name' => '目前尚未有老师上课',
+                ],
+            ];
+        }
+        return response()->json($data);
     }
 
     /*socket收发数据

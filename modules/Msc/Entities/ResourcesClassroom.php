@@ -169,13 +169,12 @@ class ResourcesClassroom extends  CommonModel {
             function ($join) {
                 $join->on('teacher_courses.teacher_id','=','teacher.id');
             }
-        )   ->  where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))
-            ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+        )   ->  whereRaw ('unix_timestape(resources_lab_plan.begintime) <= ?',[strtotime(date('Y-m-d'))])
+            ->  whereRaw ('unix_timestape(resources_lab_plan.endtime) <= ?',[strtotime(date('Y-m-d'))])
             ->  where($this->table.'.id','=',$id)
             ->  select([
                 'courses.name as courses_name',
                 'teacher.name as teacher_name',
-                'resources_lab.name as lab_name',
             ]);
         return $builder->get();
     }
