@@ -37,7 +37,11 @@
 
                         <td class="opera">
                             <span class="state1 edit_role modal-control" data-toggle="modal" data-target="#myModal" data="{{@$role->id}}">编辑</span>
-                            <a class="state1 modal-control" href="{{ route('auth.SetPermissions') }}">设置权限</a>
+<<<<<<< HEAD
+                            <a class="state1 modal-control" href="{{ route('auth.SetPermissions',[@$role->id]) }}">设置权限</a>
+=======
+                            <span class="state1 modal-control" >设置权限</span>
+>>>>>>> 7cc1d709f2906d1a6770519b78e8a8f233aef24d
                             <span class="state2 delete" data="{{@$role->id}}">删除</span>
                         </td>
                     </tr>

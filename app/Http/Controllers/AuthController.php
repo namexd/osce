@@ -11,6 +11,8 @@ use App\Entities\SysRoles;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
+use App\Entities\SysRolePermission;
+use App\Entities\SysPermissionMenu;
 use DB;
 class AuthController extends BaseController
 {   
@@ -101,12 +103,42 @@ class AuthController extends BaseController
      * @return view
      *
      * @version 0.8
-     * @author whg <weihuiguo@misrobot.com>
+     * @author tangjun <tangjun@misrobot.com>
      * @date 2015年12月15日13:59:39
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */ 
 
-    public function SetPermissions(){
+    public function SetPermissions($id,SysRolePermission $SysRolePermission,SysPermissionMenu $SysPermissionMenu){
+        $data = [];
+        if(!empty($id)){
+            $data['roleId'] = $id;
+        }
+        $PermissionList = $SysRolePermission->getPermissionList($data);
+
+        $PermissionMenuArr = [];
+        $PermissionOperationArr = [];
+        $PermissionElementArr = [];
+        if(!empty($PermissionList->SysPermissions)){
+            foreach($PermissionList->SysPermissions as $val){
+                switch($val['type']){
+                    case 'MENU':
+                        $PermissionMenuArr[] =  $val['id'];
+                    break;
+                    case 'OPERATION':
+                        $PermissionOperationArr[] = $val['id'];
+                        break;
+                    case 'ELEMENT':
+                        $PermissionElementArr[] = $val['id'];
+                        break;
+                }
+            }
+        }
+        $menuList = [];
+        if(!empty($PermissionMenuArr))
+            $menuList = $SysPermissionMenu->getPermissionMenuList($PermissionMenuArr);
+
+        dd($menuList);
+
         return  view('usermanage.rolemanage_detail');
     }
 

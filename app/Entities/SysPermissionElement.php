@@ -11,10 +11,10 @@ namespace App\Entities;
 use Illuminate\Database\Eloquent\Model;
 
 
-class SysPermissions extends Model
+class SysPermissionElement extends Model
 {
     protected $connection	=	'sys_mis';
-    protected $table 		= 	'sys_permissions';
+    protected $table 		= 	'sys_permission_element';
 
 
 

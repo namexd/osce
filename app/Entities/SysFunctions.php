@@ -11,10 +11,15 @@ namespace App\Entities;
 use Illuminate\Database\Eloquent\Model;
 
 
-class SysPermissionFunction extends Model
+class SysFunctions extends Model
 {
     protected $connection	=	'sys_mis';
-    protected $table 		= 	'sys_permission_function';
+    protected $table 		= 	'sys_functions';
+
+
+    public function getPermissionMenuList(){
+
+    }
 
 
 

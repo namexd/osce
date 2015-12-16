@@ -17,6 +17,19 @@ class SysPermissionMenu extends Model
     protected $table 		= 	'sys_permission_menu';
 
 
+    public function getPermissionMenuList($PermissionMenuArr){
+        $thisBuilder = $this;
+        if(!empty($PermissionMenuArr) && is_array($PermissionMenuArr)){
+            $thisBuilder = $thisBuilder->whereIn('permission_id',$PermissionMenuArr);
+        }
+        return  $thisBuilder->with('SysMenus')->first();
+    }
+
+    public function SysMenus(){
+        return  $this->hasMany('App\Entities\SysMenus','id','menu_id');
+    }
+
+
 
 
 }
