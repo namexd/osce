@@ -126,7 +126,8 @@ class ResourcesClassroom extends  CommonModel {
         }
         $result = $this->select([
             "$this->table" . '.id as id',
-            "$this->table" . '.name as name'
+            "$this->table" . '.name as name',
+            "$this->table" . '.code as code'
         ])->get();
 
         return $result;
