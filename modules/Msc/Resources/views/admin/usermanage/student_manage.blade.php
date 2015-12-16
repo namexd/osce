@@ -64,27 +64,47 @@
 			})
 
 			$("body").on('click','#look',function(){
-				console.log(idName);
 				$.ajax({
 					type:"get",
-					url: "{{ route('msc.admin.user.StudentItem', ['id'=>93]) }}",
+					url: "/msc/admin/user/student-item/"+idName,
 					async:false,
 					success:function(res){
-						console.log(res);
+						var data=JSON.parse(res);
+						$(".look-name").val(data.name);//姓名
+						$(".look-code").val(data.code);//学号
+						if(data.gender=="男"){
+							$(".look-man").attr("checked","checked");
+						}else if(data.gender=="女"){
+							$(".look-woman").attr("checked","checked");
+						}
+						$(".look-grade").val(data.grade);//年级
+						$(".look-student_type").find("option[text='"+data.student_type+"']").attr(".look-student_type",true);//类别
+						$(".look-profession_name").find("option[text='"+data.profession_name+"']").attr(".look-profession_name",true);//专业
+						$(".look-mobile").val(data.mobile);//手机
+						$(".look-card").val(data.idcard);//证件号码
+						
 					}
 				});
 			})
 			$("body").on('click','#edit',function(){
-				console.log(idName);
 				$.ajax({
 					type:"get",
-					url:"/msc/admin/user/student-save",
-					data:{
-						id:idName
-					},
+					url:"/msc/admin/user/student-edit/"+idName,
 					async:true,
 					success:function(res){
-						console.log(res);
+						var data=JSON.parse(res);
+						$(".edit-name").val(data.name);//姓名
+						$(".edit-code").val(data.code);//学号
+						if(data.gender=="男"){
+							$(".edit-man").attr("checked","checked");
+						}else if(data.gender=="女"){
+							$(".edit-woman").attr("checked","checked");
+						}
+						$(".edit-grade").val(data.grade);//年级
+						$(".edit-student_type").find("option[text='"+data.student_type+"']").attr(".edit-student_type",true);//类别
+						$(".edit-profession_name").find("option[text='"+data.profession_name+"']").attr(".edit-profession_name",true);//专业
+						$(".edit-mobile").val(data.mobile);//手机
+						$(".edit-idcard").val(data.idcard);//证件号码
 					}
 				});
 			})
@@ -255,35 +275,34 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control name" value="" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">学号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control code" />
             </div>
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
-        		<input type="checkbox" class="check_icon" /> <span style="padding-right: 40px;">男</span>
-            	<input type="checkbox" class="check_icon" /> <span>女</span>
+        		<input type="radio" class="check_icon" name="student_type"  value="1"/> <span style="padding-right: 40px;">男</span>
+            	<input type="radio" class="check_icon" name="student_type" value="0" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">年级</label>
             <div class="col-sm-10">
-                <select class="form-control" id="">
-                    <option value="">一年级</option>
-                    <option value="">二年级</option>
-                    <option value="">三年级</option>
+                <select class="form-control grade" id="">
+                    <option value="2015">2015</option>
+                    <option value="14">14</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">类别</label>
             <div class="col-sm-10">
-                <select class="form-control" id="">
+                <select class="form-control student_type" id="">
                     <option value="">本科</option>
                     <option value="">专科</option>
                 </select>
@@ -292,31 +311,35 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">专业</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <!--<input type="text" class="form-control" />-->
+                <select class="form-control profession_name" name="professional">
+                	<option value="1">儿科</option>
+                	<option value="2">设计</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control mobile" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">证件</label>
             <div class="col-sm-4" style="padding-right: 0;">
-                <select class="form-control" id="">
+                <select class="form-control idcard" id="">
                     <option value="">证件类型</option>
                     <option value="">身份证</option>
                     <option value="">驾驶证</option>
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control" />
+            	<input type="text" class="form-control card" />
             </div>
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="submit" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
@@ -331,63 +354,66 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" value="张三" disabled="disabled" />
+                <input type="text" class="form-control look-name" value="" disabled="disabled" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">学号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control look-code" disabled="disabled" />
             </div>
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
-        		<input type="checkbox" class="check_icon" /> <span style="padding-right: 40px;">男</span>
-            	<input type="checkbox" class="check_icon" /> <span>女</span>
+        		<input type="radio" class="check_icon look-man" name="student_type"  value="1" disabled="disabled"/> <span style="padding-right: 40px;">男</span>
+            	<input type="radio" class="check_icon look-woman" name="student_type" value="0" disabled="disabled" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">年级</label>
             <div class="col-sm-10">
-                <select class="form-control" id="">
-                    <option value="">一年级</option>
-                    <option value="">二年级</option>
-                    <option value="">三年级</option>
+                <select class="form-control look-grade" id="" disabled="disabled">
+                    <option value="2015">2015</option>
+                    <option value="14">14</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">类别</label>
             <div class="col-sm-10">
-                <select class="form-control" id="">
+                <select class="form-control look-student_type" id="" disabled="disabled">
                     <option value="">本科</option>
                     <option value="">专科</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">专业</label>
+            <label class="col-sm-2 look-control-label">专业</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <!--<input type="text" class="form-control" />-->
+                <select class="form-control look-profession_name" name="professional" disabled="disabled">
+                	<option value="1">儿科</option>
+                	<option value="2">设计</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control look-mobile" disabled="disabled" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">证件</label>
             <div class="col-sm-4" style="padding-right: 0;">
-                <select class="form-control" id="">
+                <select class="form-control look-idcard" id="" disabled="disabled">
                     <option value="">证件类型</option>
                     <option value="">身份证</option>
                     <option value="">驾驶证</option>
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control" />
+            	<input type="text" class="form-control look-card" disabled="disabled" />
             </div>
         </div>
         <div class="form-group">
@@ -398,7 +424,7 @@
     </div>
 </form>
 <!--编辑-->
-<form class="form-horizontal" id="Form3" novalidate="novalidate" action="" method="post" style="display: none;">
+<form class="form-horizontal" id="Form3" novalidate="novalidate" action="/msc/admin/user/student-save" method="post" style="display: none;">
 	<div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">编辑</h4>
@@ -407,63 +433,67 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" value="张三" />
+                <input type="text" class="form-control edit-name" value="张三" name="name" />
+                <input type="hidden" value="{{$list['id']}}" name="id"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">学号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control edit-code" name="code"/>
             </div>
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
-        		<input type="checkbox" class="check_icon" /> <span style="padding-right: 40px;">男</span>
-            	<input type="checkbox" class="check_icon" /> <span>女</span>
+        		<input type="radio" class="check_icon edit-man" name="gender" value="1" /> <span style="padding-right: 40px;">男</span>
+            	<input type="radio" class="check_icon edit-woman" name="gender" value="0" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">年级</label>
             <div class="col-sm-10">
-                <select class="form-control" id="">
-                    <option value="">一年级</option>
-                    <option value="">二年级</option>
-                    <option value="">三年级</option>
+                <select class="form-control edit-grade" id="" name="grade">
+                    <option value="0">2015</option>
+                    <option value="1">2014</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">类别</label>
             <div class="col-sm-10">
-                <select class="form-control" id="">
-                    <option value="">本科</option>
-                    <option value="">专科</option>
+                <select class="form-control edit-student_type" id="" name="student_type">
+                    <option value="0">本科</option>
+                    <option value="1">专科</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">专业</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <!--<input type="text" class="form-control" name="professional" />-->
+                <select class="form-control edit-professional_name" name="professional_name">
+                	<option value="1">儿科</option>
+                	<option value="2">设计</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control edit-mobile" name="mobile" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">证件</label>
             <div class="col-sm-4" style="padding-right: 0;">
-                <select class="form-control" id="">
+                <select class="form-control edit-idcard_type" id="" name="idcard_type">
                     <option value="">证件类型</option>
-                    <option value="">身份证</option>
-                    <option value="">驾驶证</option>
+                    <option value="0">身份证</option>
+                    <option value="1">驾驶证</option>
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control" />
+            	<input type="text" class="form-control edit-idcard" name="idcard" />
             </div>
         </div>
         <div class="form-group">
