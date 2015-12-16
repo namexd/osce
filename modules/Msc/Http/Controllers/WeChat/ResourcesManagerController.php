@@ -677,6 +677,7 @@ print_r(unserialize($new));
     * 新增外接设备
     */
     private function addToolsResources(Request $request){
+
         $this->validate($request,[
             'repeat_max'=>'sometimes|integer',
             'name'=>'required',
@@ -690,11 +691,11 @@ print_r(unserialize($new));
         ]);
         $formData = $request->only(['repeat_max', 'name', 'cate_id', 'manager_id','manager_name', 'manager_mobile',  'location', 'detail','loan_days','total','images_path']);
         $codeList=$request->get('code');
-
-        try
-        {
+//        try
+//        {
             foreach($codeList as $code)
             {
+
                 if(empty($code))
                 {
                     throw new \Exception('编码不能为空');
@@ -788,17 +789,15 @@ print_r(unserialize($new));
                     throw new \Exception('资源编码保存失败');
                 }
             }
-            dd($result);
             $connection->commit();
             return redirect()->action('\Modules\Msc\Http\Controllers\WeChat\ResourceController@getResourceAdd');
             // return back()->withInput(); @todo with some status code
-        }
-        catch(\Exception $ex)
-        {
-            dd(123);
-            $connection->rollback();
-            return redirect()->back()->withErrors($ex);
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            $connection->rollback();
+//            return redirect()->back()->withErrors($ex);
+//        }
     }
     /*
     * 新增教室

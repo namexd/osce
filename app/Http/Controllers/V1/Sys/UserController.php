@@ -684,6 +684,18 @@ class UserController extends ApiBaseController {
 					$this->success_data($dataReturn,1,'验证失败')
 			);
 		}
+
+
+	}
+
+	/**
+	 * 通过id查询数据返回页面进行展示
+	 */
+	public function showStudentById(Request $request){
+		$id=(int)$request::get('id');
+		$Student=User::find($id);
+		return view()->with('Student',$Student);
+
 	}
 
 }

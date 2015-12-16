@@ -2,6 +2,7 @@
 
 namespace Modules\Msc\Entities;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Msc\Entities\CommonModel;
 use App\Entities\User;
 
@@ -56,5 +57,102 @@ class Student extends CommonModel {
         }
     }
 
+    // 学生类型获取器
+    public function getStudentTypeAttribute ($value)
+    {
+        switch ($value) {
+            case 1:
+                $type = '本科';
+                break;
 
+            case 2:
+                $type = '专科';
+                break;
+
+            default:
+                $type = '-';
+        }
+
+        return $type;
+    }
+
+    // 获得分页列表
+    public function getFilteredPaginateList ($kwd='', $order=['id', 'desc'])
+    {
+        $builder = $this;
+
+        if ($kwd)
+        {
+            $builder = $builder->whereRaw(
+                'locate(?, student.name)>0 or locate(?, student.code)>0 ',
+                [$kwd, $kwd]
+            );
+        }
+
+        return $builder->orderBy($order['0'], $order['1'])->paginate(config('msc.page_size',10));
+    }
+
+    //保存编辑数据
+    public function saveEditStudent($data){
+       $connection=\DB::connection('msc_mis');
+       $connection->beginTransaction();
+
+       $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$data['professional'],'student_type'=>$data['student_type']);
+
+       $result=$connection->table('student')->save($item);
+       if($result==false){
+          $connection->rollBack();
+       }
+
+       $connection=\DB::connection('sys_mis');
+       $users=array('id'=>$data['id'],'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+       $result=$connection->table('users')->save($users);
+        if($result==false){
+            $connection->rollBack();
+        }
+
+        $connection->commit();
+    }
+
+    //保存添加学生
+
+    public function postAddStudent($data){
+        $connection=\DB::connection('msc_mis');
+
+
+        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$data['professional'],'student_type'=>$data['student_type']);
+
+        $id=$connection->table('student')->insertGetId($item);
+
+
+        $connection=\DB::connection('sys_mis');
+        $users=array('id'=>$id,'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+
+        $result=$connection->table('users')->insert($users);
+
+        return $result;
+    }
+
+    //软删除
+    public function SoftTrashed($id){
+        $connection=\DB::connection('sys_mis');
+
+        return $connection->table('users')->where('id',$id)->update(['status'=>2]);
+
+    }
+
+    //更改状态
+    public function changeStatus($id){
+         $connection=\DB::connection('sys_mis');
+
+
+         $data=$connection->table('users')->where('id',$id)->select('status')->find(2);
+
+         foreach($data as $tmp){
+            $status=$tmp;
+         }
+
+         return $connection->table('users')->where('id',$id)->update(['status'=>1-$status]);
+
+    }
 }

@@ -36,4 +36,8 @@ class ResourcesClassroomCourses extends  CommonModel {
     {
         return $query->where('resources_lab_id', $labId)->where('course_id', $courseId);
     }
+
+    public function resourcesLabPlan() {
+        return $this->hasMany('Modules\Msc\Entities\ResourcesClassroomPlan','course_id','course_id');
+    }
 }

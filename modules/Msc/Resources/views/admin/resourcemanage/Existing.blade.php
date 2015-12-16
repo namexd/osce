@@ -7,6 +7,10 @@
         .modal-header{ background-color: #f6f8fa; color: #95b8fd;}
         .modal-body textarea{margin-top: 10px; height: 200px;resize:none;}
         .sname{width:396px;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;}
+        #table-striped td{font-size: 13px;}
+        .btn_pl{color: #a6b0c3!important;}
+        .btn_pl:hover{color:#fff!important;}
+        .check_label{margin-bottom: -2px!important;}
     </style>
 @stop
 @section('only_js')
@@ -149,7 +153,7 @@
             <table class="table table-striped" id="table-striped">
                 <thead>
                 <tr>
-                    <th width="100">
+                    <th width="40">
                         <label class="check_label all_checked">
                             <div class="check_icon"></div>
                             <input  type="checkbox"  value="">
@@ -238,7 +242,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">报废</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="overflow: hidden;">
             <div class="form-group">
                 <input type="hidden" name="id" value="{$resource['id']}"/>
                 <label class="col-sm-3 control-label">设备名称：</label>
@@ -268,16 +272,16 @@
                     <textarea id="comment" disabled="disabled" class="form-control" aria-required="true"></textarea>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-success" >提交并报废</button>
+
+            <button type="submit" class="btn btn-success" style="float: right;">提交并报废</button>
+
         </div>
     </form>
 
 
 <!-- 二维码在此显示, 显示时将上一个form设置为 display-->
     <div id="code">
-        <div class="modal-header">
+        <div class="modal-header" style="overflow: hidden;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body" id="qrcode-area">

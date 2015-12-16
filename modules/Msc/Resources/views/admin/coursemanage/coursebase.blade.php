@@ -96,10 +96,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{route('msc.courses.downloadCoursesListTpl')}}">课程清单模版</a>
+                                <a href="{{route('msc.admin.courses.getDownloadCoursesListTpl')}}">课程清单模版</a>
                             </li>
                             <li>
-                                <a href="{{route('msc.courses.downloadCoursesPlanTpl')}}">课程计划导入清单</a>
+                                <a href="{{route('msc.admin.courses.getDownloadCoursesPlanTpl')}}">课程计划导入清单</a>
                             </li>
                         </ul>
                     </div>
@@ -1113,16 +1113,18 @@
                 url:"{{action('\Modules\Msc\Http\Controllers\Admin\CoursesController@postImportCourses')}}",
                 secureuri:false,//
                 fileElementId:'file0',//必须要是 input file标签 ID
-                dataType: 'json',//
+                dataType: 'text',//
                 success: function (data, status)
                 {
+                    data    =   data.replace('<pre>','').replace('</pre>','');
+                    data    =   eval('('+data+')');
                     if(data.code == 1){
                         layer.alert('导入成功！');
                     }
                 },
                 error: function (data, status, e)
                 {
-                        layer.alert('导入失败！');
+                    layer.alert('导入失败！');
                 }
             });
         }) ;
@@ -1133,9 +1135,11 @@
                 url:"{{action('\Modules\Msc\Http\Controllers\Admin\CoursesController@postImportCoursesPlan')}}",
                 secureuri:false,//
                 fileElementId:'file1',//必须要是 input file标签 ID
-                dataType: 'json',//
+                dataType: 'text',//
                 success: function (data, status)
                 {
+                    data    =   data.replace('<pre>','').replace('</pre>','');
+                    data    =   eval('('+data+')');
                     if(data.code == 1){
                         layer.alert('导入成功！');
                     }

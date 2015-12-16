@@ -34,6 +34,9 @@
     .txt{color:#b7bbc2;font-size:12px;font-weight:100;}
     .check{float:left;margin-left:3px;}
     .btn-primary:hover{background:#286090;}
+    .form-control:focus{border-color: #408aff!important;}
+    .btn-primary{background: #408aff;color: #408aff;color: #fff;}
+    .btn-primary:hover{border:1px solid #286090}
 </style>
 
 <div class="middle-box text-center loginscreen  animated fadeInDown">

@@ -25,4 +25,55 @@ class User extends Model implements AuthenticatableContract,
     protected $hidden 		= 	['password','openid'];
     protected $fillable 	=	['username','name','password','openid','mobile','nickname','gender','qq','weixinnickname','country','province','city','adress','avatar','email','lastlogindate','idcard_type','idcard','status',]  ;
 
+    // 用户性别获取器
+    public function getGenderAttribute ($value)
+    {
+        switch ($value) {
+            case 1:
+                $gender = '男';
+                break;
+
+            case 2:
+                $gender = '女';
+                break;
+
+            case 0:
+                $gender = '未知';
+                break;
+
+            default:
+                $gender = '-';
+        }
+
+        return $gender;
+    }
+
+    // 用户状态获取器
+    public function getStatusAttribute ($value)
+    {
+        switch ($value) {
+            case 1:
+                $status = '正常';
+                break;
+
+            case 2:
+                $status = '禁用';
+                break;
+
+            case 3:
+                $status = '删除';
+                break;
+
+            default:
+                $status = '-';
+        }
+
+        return $status;
+    }
+
+    // 用户相关角色
+    public function roles()
+    {
+        return $this->belongsToMany('App\Entities\SysRoles', 'sys_user_role', 'user_id', 'role_id');
+    }
 }
