@@ -153,7 +153,7 @@
             <table class="table table-striped" id="table-striped">
                 <thead>
                 <tr>
-                    <th width="100">
+                    <th width="40">
                         <label class="check_label all_checked">
                             <div class="check_icon"></div>
                             <input  type="checkbox"  value="">
@@ -242,7 +242,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">报废</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="overflow: hidden;">
             <div class="form-group">
                 <input type="hidden" name="id" value="{$resource['id']}"/>
                 <label class="col-sm-3 control-label">设备名称：</label>
@@ -272,16 +272,16 @@
                     <textarea id="comment" disabled="disabled" class="form-control" aria-required="true"></textarea>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-success" >提交并报废</button>
+
+            <button type="submit" class="btn btn-success" style="float: right;">提交并报废</button>
+
         </div>
     </form>
 
 
 <!-- 二维码在此显示, 显示时将上一个form设置为 display-->
     <div id="code">
-        <div class="modal-header">
+        <div class="modal-header" style="overflow: hidden;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body" id="qrcode-area">

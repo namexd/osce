@@ -28,14 +28,14 @@ class AuthController extends BaseController
      * @return view
      *
      * @version 0.8
-     * @author tangjun <tangjun@misrobot.com>
-     * @date 2015-12-15 10:35
+     * @author whg <whg@misrobot.com>
+     * @date 2015年12月15日17:39:08
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function AuthManage(){
 
         $roleList = $this->SysRoles->getRolesList();
-        return view('role.role',['roleList'=>$roleList]);
+        return view('usermanage.rolemanage',['roleList'=>$roleList]);
     }
 
     /**
@@ -113,7 +113,7 @@ class AuthController extends BaseController
     /**
      * 删除角色
      * @method GET /auth/role-manage
-     * @author tangjun <tangjun@misrobot.com>
+     * @author whg <weihuiguo@misrobot.com>
      * @date 2015-12-15 14:20
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -132,8 +132,28 @@ class AuthController extends BaseController
         }
     }
 
-
-    public function aa(){
-         return  redirect()->back()->withErrors(['系统繁忙']);
+    /**
+     * 编辑角色
+     * @method GET /auth/role-manage
+     * @author whg <weihuiguo@misrobot.com>
+     * @date 2015-12-15 14:20
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function editRole(){
+        dd(Input::get());
+        $this->validate($Request,[
+            'name' => 'required|min:2|max:10',
+            ]);
+        $data = [
+            'name' => Input::get('name'),
+            'slug' => Input::get('slug'),
+            'description'=>Input::get('description')
+        ];
+        $addNewRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>Input::get('id')])->update($data);
+        if($addNewRole){
+            return redirect()->intended('/auth/auth-manage');
+        }else{
+            return  redirect()->back()->withErrors(['系统繁忙']);
+        }
     }
 }   

@@ -30,4 +30,9 @@ class Courses extends Model
     {
         return $this->belongsToMany('Modules\Msc\Entities\ResourcesClassroom', 'resources_lab_courses', 'course_id', 'resources_lab_id');
     }
+
+    public function courses() {
+        return $this->hasOne('ResourcesClassroomCourses','course_id','id');
+    }
+    
 }

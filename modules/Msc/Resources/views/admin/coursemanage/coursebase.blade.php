@@ -96,10 +96,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{route('msc.courses.downloadCoursesListTpl')}}">课程清单模版</a>
+                                <a href="{{route('msc.admin.courses.getDownloadCoursesListTpl')}}">课程清单模版</a>
                             </li>
                             <li>
-                                <a href="{{route('msc.courses.downloadCoursesPlanTpl')}}">课程计划导入清单</a>
+                                <a href="{{route('msc.admin.courses.getDownloadCoursesPlanTpl')}}">课程计划导入清单</a>
                             </li>
                         </ul>
                     </div>

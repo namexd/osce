@@ -697,39 +697,5 @@ class UserController extends ApiBaseController {
 		return view()->with('Student',$Student);
 
 	}
-	/**
-	 *新增学生
-	 */
-	public function editStudent(Request $request){
-		$this->validate();
-
-		$id=$request->get('id');
-		//如果Id存在则是修改页面,不存在就是增加
-		if($id){
-			$this->showStudentById($id);
-			$data=$request->get;
-			DB::table('student')->where()->update();
-			return true;
-		}else{
-			DB::table('student')->insert();
-			return 1;
-		}
-	}
-
-		/**
-		 * 软删除
-		 */
-		public function TrashedStudentById(Request $request){
-
-			return true;
-		}
-
-		/**
-		 * 更改状态
-		 */
-		public function changeStatusById(Request $request){
-
-			return false;
-		}
 
 }

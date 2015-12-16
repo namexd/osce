@@ -19,7 +19,7 @@ class OpenLabTest  extends TestCase
         $list   =   \Modules\Msc\Entities\Student::where('id','>',48)->get();
         return $this->getRandItem($list);
     }
-    //获取随机学生
+    //获取随机教师
     private function getRandTeacher(){
         $list   =   \Modules\Msc\Entities\Teacher::where('id','>',48)->get();
         return $this->getRandItem($list);
@@ -53,11 +53,14 @@ class OpenLabTest  extends TestCase
             ->action('get','\Modules\Msc\Http\Controllers\WeChat\OpenLaboratoryController@getLaboratoryData','',['dateTime'=>$date]);
         $view   = $response->getContent();
         $json   =   json_decode($view);
-        $timeList=$json    ->  data    ->rows->ClassroomApplyList  ->data;
-        $timeGet   =   $this->getRandItem($timeList);
-        $resources_lab_id   =   $timeGet->resources_lab_id;
+        $timeList=$json    ->  data    ->rows   ->  ClassroomApplyList  ->data;
+        $timeGet   =   $this->  getRandItem($timeList);
+
+        $resources_lab_id   =   $timeGet    ->  resources_lab_id;
+        dd($resources_lab_id);
         $resources_lab_calendae   =   $timeGet->resources_open_lab_apply;
-        $timeRand   =   $this->getRandItem($resources_lab_calendae);
+        $timeRand   =   $this-> getRandItem($resources_lab_calendae);
+
         $resources_lab_calendar_id  =   $timeRand-> resources_lab_calendar_id;
         $course_id  =   $timeRand   ->  course_id;
         $data   =   [

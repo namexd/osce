@@ -14,7 +14,7 @@ class ResourcesLabCalendar extends Model
 {
     protected $connection	=	'msc_mis';
 
-    protected $table 		= 	'resources_openlab_calendar';
+    protected $table 		= 	'resources_lab_calendar';
     protected $fillable 	=	['id', 'resoutces_lab_id', 'week', 'begintime','endtime'];
 
 
@@ -30,26 +30,22 @@ class ResourcesLabCalendar extends Model
 
     }
 
-
-    //»ñÈ¡ÊµÑéÊÒ×ÊÔ´ÁÐ±í
-    public function getLaboratoryClassroomList($data){
+    //根据日历表，获取教室安排信息
+    public function getCourseArrangementList($data){
         $thisBuilder = $this;
-        if(!empty($data['month']) && !empty($data['days'])){
-            $thisBuilder = $this->where('resources_openlab_calendar.month', 'like', '%'.$data['month'].'%')->where('resources_lab_calendar.days','like','%'.$data['days'].'%');
-        }
 
+        if(!empty($data['week'])){
+            $thisBuilder->where('week','like', '%'.$data['week'].'%');
+        }
         $result = $thisBuilder->with(['resourcesClassroom' => function($query)
         {
             $query->where('opened','=',1);
-
-        },'resourcesClassroomApply' => function($q)
-        {
-            $q->where('apply_user_type','=',0);
 
         }])->paginate(7);
 
 
         return $result;
+
     }
 
     

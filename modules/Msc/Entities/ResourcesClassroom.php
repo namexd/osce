@@ -67,6 +67,7 @@ class ResourcesClassroom extends  CommonModel {
         return $this->hasMany('Modules\Msc\Entities\ResourcesClassroomCourses','resources_lab_id','id');
     }
 
+
     //获取教室资源 列表 （唐俊）
     public function getClassroomList(){
         return $this->get();
@@ -80,6 +81,8 @@ class ResourcesClassroom extends  CommonModel {
     public function resourcesClassroomApply(){
         return $this->hasMany('Modules\Msc\Entities\ResourcesClassroomApply','resources_lab_id','id');
     }
+
+
     //获取实验室资源列表
     public function getLaboratoryClassroomList($data){
 
@@ -96,5 +99,79 @@ class ResourcesClassroom extends  CommonModel {
         }])->paginate(7);
 
         return $result;
+    }
+    //新增 实验室
+    public function addLabResource($input){
+        $data   =   [
+            'name'  =>  $input['name'],
+            'code'  =>  $input['code'],
+            'location'  =>  $input['location'],
+            'begintime'  =>  $input['begintime'],
+            'endtime'  =>  $input['endtime'],
+            'opened'  =>  $input['opened'],
+            'manager_id'  =>  $input['manager_id'],
+            'manager_name'  =>  $input['manager_name'],
+            'manager_mobile'  =>  $input['manager_mobile'],
+            'detail'  =>  $input['detail'],
+            'status'  =>  1,
+            'resources_type'  =>  1,
+        ];
+        return $this->create($data);
+	}
+
+    //给教室选择下拉列表提供数据
+    public function getClassroomName($keyword = '') {
+        if ($keyword !== '') {
+            $result = $this->where($this->table.'.code','like','%'.$keyword.'%')->where($this->table.'.name','like','%'.$keyword.'%');
+        }
+        $result = select([
+            "$this->table" . '.id as id',
+            "$this->table" . '.name as name'
+        ])->get();
+
+        return $result;
+    }
+
+    //给教室的具体监控界面提供数据
+
+
+//        $builder = $this->where($this->table.'.id','=',$id)->with(['courseClassroomCourses' => function ($q) {
+//            $q->with(['resourcesLabPlan' => function ($q) {
+//                $q->where('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))->where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+//                    ->with('course');
+//            }]);
+//        }]);
+        $builder = $this->leftJoin (
+            'resources_lab_courses',
+            function ($join) {
+                $join->on('resources_lab_courses.course_id','=',$this->table.'.id');
+            }
+        )   ->  leftJoin (
+            'resources_lab_plan',
+            function ($join) {
+                $join->on('resources_lab_plan.course_id','=','resources_lab_courses.course_id');
+            }
+        )   ->  leftJoin (
+            'courses',
+            function ($join) {
+                $join->on('resources_lab_courses.course_id','=','courses.id');
+            }
+        )   ->  leftJoin (
+            'teacher_courses',
+            function ($join) {
+                $join->on('courses.id','=','teacher_courses.course_id');
+            }
+        )   ->  leftJoin (
+            'teacher',
+            function ($join) {
+                $join->on('teacher_courses.teacher_id','=','id');
+            }
+        )   ->where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))   ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+            ->select([
+                'courses.name as courses_name',
+                'teacher.name as teacher_name',
+                'resources_lab.name as lab_name',
+            ]);
+        return $builder->get();
     }
 }
