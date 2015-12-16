@@ -167,7 +167,7 @@ class ResourcesClassroom extends  CommonModel {
         )   ->  leftJoin (
             'teacher',
             function ($join) {
-                $join->on('teacher_courses.teacher_id','=','id');
+                $join->on('teacher_courses.teacher_id','=','teacher.id');
             }
         )   ->  where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))
             ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))

@@ -1952,8 +1952,7 @@ class CoursesController extends MscController
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomName($keyword);
        
-        dd($data);
-        return view('', ['data' => $data]);
+        return view('msc::admin.coursemanage.course_observe', ['data' => $data]);
     }
 
     /**
