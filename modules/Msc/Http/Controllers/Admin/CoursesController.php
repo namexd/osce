@@ -34,10 +34,10 @@ use Modules\Msc\Repositories\Common as MscCommon;
 class CoursesController extends MscController
 {
 
-    public function getTest(){
+    /*public function getTest(){
 
         return view('msc::admin.coursemanage.course_observe_detail');
-    }
+    }*/
     /**
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
@@ -1887,7 +1887,7 @@ class CoursesController extends MscController
                 'unabsence'              =>    39,
             ];
             //PC-Admin-002-课程监管.png
-            return view('',$data);
+            return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
 
         }

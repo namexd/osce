@@ -14,7 +14,6 @@ use Modules\Msc\Entities\Teacher;
 
 class UserController extends BaseController
 {
-
     /**
      * 学生列表
      * @method GET
@@ -244,7 +243,6 @@ class UserController extends BaseController
         );
     }
 
-
     /**
      * 软删除
      * @method GET
@@ -416,7 +414,6 @@ class UserController extends BaseController
     }
 
     /**
-     *
      * 编辑时教职工回显
      * @method GET
      * @url /msc/admin/user/teacher-list
@@ -531,7 +528,7 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
-    
+
     /**
      * 软删除 只是更改状态
      * @method GET
@@ -602,5 +599,4 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
-
 }
