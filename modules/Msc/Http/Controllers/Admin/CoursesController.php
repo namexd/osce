@@ -1969,7 +1969,7 @@ class CoursesController extends MscController
         }
     }
     /**
-     * 根据ajax请求获取对应教室
+     * 根据get请求获取对应教室
      * @api GET /msc/admin/courses/class-observe
      * @access public
      * @return array
@@ -1995,7 +1995,7 @@ class CoursesController extends MscController
      * 根据ajax请求获取对应教室的详情
      * @api GET /msc/admin/courses/class-observe-video
      * @access public
-     * @return array
+     * @return json teacher_name:老师名字,courses_name:课程名字,id:教室id,video:摄像头id和名字,video_count:摄像头数量
      * @version 1.0
      * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
      * @date 2015-12-15 14:50
@@ -2006,7 +2006,27 @@ class CoursesController extends MscController
         $id = $request->get('id');
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomDetails($id);
-        dd($data);
+        $data = $data->toArray();
+        //通过教室ID查询摄像头ID和摄像头名字
+        $video = $ResourcesClassroom->getClassroomVideo($id);
+        $videoCount = count($video);
+        $video = $video->toArray();
+        if (count($data) === 0) {
+            $data = [
+                [
+                    'teacher_name' => '目前未有老师上课',
+                    'courses_name' => '目前无课',
+                ],
+            ];
+        }
+
+        foreach ($data as $item) {
+            $item['id']         = $id;
+            $item['video']      = $video;
+            $item['video_count'] = $videoCount;
+        }
+
+        return response()->json($item);
     }
 
     /*socket收发数据
@@ -2057,8 +2077,7 @@ class CoursesController extends MscController
             abort(404);
         }
         $vcr    =   ResourcesLabVcr::find($id);
-
-        //return view('',['id'=>$id]);
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id]);
     }
 
 }
