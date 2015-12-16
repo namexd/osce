@@ -1988,7 +1988,6 @@ class CoursesController extends MscController
         $keyword = e(urldecode($request->get('keyword')));
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomName($keyword);
-       
         return view('msc::admin.coursemanage.course_observe', ['data' => $data]);
     }
 
@@ -2036,5 +2035,31 @@ class CoursesController extends MscController
             socket_close ($socket);
             return true;
         }
+    }
+
+    /**
+     * 单个视频
+     * @api GET /msc/admin/courses/classroom-vcr
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getClassroomVcr(Request $request){
+        $id =   intval( $request    ->  id);
+        if(empty($id))
+        {
+            abort(404);
+        }
+        //return view('',['id'=>$id]);
     }
 }
