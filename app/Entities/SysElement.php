@@ -17,8 +17,8 @@ class SysElement extends Model
     protected $table 		= 	'sys_element';
 
 
-    public function getPermissionMenuList(){
-
+    public function getElementList($pid=0){
+        return  $this->where('pid','=',$pid)->get();
     }
 
 

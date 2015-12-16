@@ -64,6 +64,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('courses/class-observe', ['uses'=>'CoursesController@getClassObserve','as'=>'msc.admin.courses.getClassObserve']);
 		//课程监管摄像头
 		Route::get('courses/classroom-vcr', ['uses'=>'CoursesController@getClassroomVcr','as'=>'msc.admin.courses.getClassroomVcr']);
+
+		Route::get('courses/download-video-activx', ['uses'=>'CoursesController@getDownloadVideoActivx','as'=>'msc.admin.courses.getDownloadVideoActivx']);
+
 		//课程监管详情
 		Route::get('courses/courses-vcr', ['uses'=>'CoursesController@getCoursesVcr','as'=>'msc.admin.courses.getCoursesVcr']);
 

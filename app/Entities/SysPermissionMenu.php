@@ -22,7 +22,7 @@ class SysPermissionMenu extends Model
         if(!empty($PermissionMenuArr) && is_array($PermissionMenuArr)){
             $thisBuilder = $thisBuilder->whereIn('permission_id',$PermissionMenuArr);
         }
-        return  $thisBuilder->with('SysMenus')->first();
+        return  $thisBuilder->with('SysMenus')->get();
     }
 
     public function SysMenus(){
