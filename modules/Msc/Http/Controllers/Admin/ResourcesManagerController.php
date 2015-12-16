@@ -192,6 +192,7 @@ class ResourcesManagerController extends MscController
         $id = (int)Input::get('id');
 
         $resources = ResourcesTools::find($id);
+        dd($resources);
         if (!$resources)
         {
             return response()->json(
@@ -757,13 +758,17 @@ class ResourcesManagerController extends MscController
      */
     public function getRejectedResources(Request $request)
     {
+
+
         $this->validate($request, [
             'id' 		=> 	'required|integer',
         ]);
 
+
         $id = (int)Input::get('id');
 
         $resources = ResourcesTools::find($id);
+
         if(!$resources)
         {
             return response()->json(
@@ -781,7 +786,6 @@ class ResourcesManagerController extends MscController
 		} 		
 		$resources = $resources->toArray();
 
-        dd($resources);
         return response()->json(
         	[
 				'resources'      => $resources,

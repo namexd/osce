@@ -16,7 +16,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		Route::controller('resources-manager', 'ResourcesManagerController');//TODO： 2015-12-11 罗海华 解决 路由被拦截的问题
 		Route::get('resources-manager/resources-list', ['uses'=>'ResourcesManagerController@getWaitExamineList','as'=>'msc.admin.resourcesManager.getWaitExamineList']);
-		Route::get('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@getRejectedResources','as'=>'msc.admin.resourcesManager.getRejectedResources']);
+		Route::get('resources-manager/rejected-resources/{$id}', ['uses'=>'ResourcesManagerController@getRejectedResources','as'=>'msc.admin.resourcesManager.getRejectedResources']);
 		Route::post('resources-manager/rejected-resources-all', ['uses'=>'ResourcesManagerController@postRejectedResourcesAll','as'=>'msc.admin.resourcesManager.postRejectedResourcesAll']);
 		Route::get('resources-manager/resources', ['uses'=>'ResourcesManagerController@getResources','as'=>'msc.admin.resourcesManager.getResources']);
 		Route::post('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@postRejectedResources','as'=>'msc.admin.resourcesManager.postRejectedResources']);
@@ -121,14 +121,14 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('user/student-status/{id}', ['uses'=>'UserController@getStudentStatus','as'=>'msc.admin.user.StudentStatus']);
 
 		Route::post('user/student-add', ['uses'=>'UserController@postStudentAdd','as'=>'msc.admin.user.StudentAdd']);
-		Route::post('user/student-save', ['uses'=>'UserController@postStudentSave','as'=>'msc.admin.user.StudentSaveEdit']);
+		Route::post('user/student-save', ['uses'=>'UserController@postStudentSave','as'=>'msc.admin.user.StudentSave']);
 
 		Route::get('user/teacher-edit/{id}', ['uses'=>'UserController@getTeacherEdit','as'=>'msc.admin.user.TeacherEdit']);
 		Route::get('user/teacher-trashed/{id}', ['uses'=>'UserController@getTeacherTrashed','as'=>'msc.admin.user.TeacherTrashed']);
 		Route::get('user/teacher-status/{id}', ['uses'=>'UserController@getTeacherStatus','as'=>'msc.admin.user.TeacherStatus']);
 
 		Route::post('user/teacher-add', ['uses'=>'UserController@postTeacherAdd','as'=>'msc.admin.user.TeacherAdd']);
-		Route::post('user/teacher-save', ['uses'=>'UserController@postTeacherSave','as'=>'msc.admin.user.TeacherSaveEdit']);
+		Route::post('user/teacher-save', ['uses'=>'UserController@postTeacherSave','as'=>'msc.admin.user.TeacherSave']);
 
 
 	});

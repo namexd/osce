@@ -149,7 +149,7 @@ class UserController extends BaseController
 
     /**
      * 编辑学生
-     * @method GET
+     * @method POST
      * @url /msc/admin/user/student-submit/{id}
      * @access public
      *
@@ -198,7 +198,7 @@ class UserController extends BaseController
 
     /**
      * 添加学生信息
-     * @method GET
+     * @method POST
      * @url /msc/admin/user/student-add/{id}
      * @access public
      *
@@ -213,7 +213,7 @@ class UserController extends BaseController
      * @date 2015-12-15 16:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postStudentAdd(Request $request,$status=0)
+    public function postStudentAdd(Request $request,$status=1)
     {
         $this->validate($request, [
             'name' => 'required|max:50',
@@ -222,7 +222,6 @@ class UserController extends BaseController
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
             'professional' => 'required|integer|min:0|max:11',
-            'validated' => 'required|integer|min:0|max:1',
             'moblie' => 'required|integer|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
             'idcard' => 'required|unique|integer|min:0|max:50',
@@ -505,7 +504,7 @@ class UserController extends BaseController
      * @date 2015-12-15 16:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTeacherAdd(Request $request,$status=0)
+    public function postTeacherAdd(Request $request,$status=1)
     {
 
         $this->validate($request, [
