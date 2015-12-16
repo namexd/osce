@@ -17,6 +17,14 @@ class SysPermissions extends Model
     protected $table 		= 	'sys_permissions';
 
 
+    public function getPermissionsAll(){
+        $thisBuilder = $this;
+        return  $thisBuilder->get();
+    }
+
+    public function SysMenus(){
+
+    }
 
 
 }
