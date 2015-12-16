@@ -2143,7 +2143,7 @@ class CoursesController extends MscController
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2015-12-16 19:32
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
