@@ -278,4 +278,24 @@ class PersonalCenterController extends MscWeChatController {
 		);
 	}
 
+	/**
+	 * 我的課程
+	 * @method GET /msc/wechat/personal-center/my-course
+	 * @access public
+	 *
+	 * @param Request $request get请求<br><br>
+	 * <b>get请求字段：</b>
+	 * @return view
+	 *
+	 * varchar   code           设备code
+	 * @version 0.6
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-16 14:20
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
+	public function getMyCourse(){
+		return view('msc::wechat.personalcenter.mycourse');
+	}
+
+
 }
