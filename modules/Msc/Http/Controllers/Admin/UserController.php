@@ -384,6 +384,8 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
+
+
         /** *int        $id        老师编号
      *
      * @return view
@@ -413,4 +415,76 @@ class UserController extends BaseController
         dd($data);
 
     }
+
+
+    /**
+     * 导入学生用户
+     * @api GET /msc/admin/User/import-Student-user
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        courses-plan        课程文件的excl(必须的)
+     *
+     * @return object
+     *
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function  postImportStudentUser(Request $request){
+        try{
+            $data= Common::getExclData($request,'student');
+            $studentInfo = array_shift($data);
+            //将中文头转换翻译成英文
+            $studentInfo = Common::arrayChTOEn($studentInfo,'msc.importForCnToEn.student_group');
+            dd($data);
+            //已经存在的数据
+            $dataHaven=[];
+            //添加失败的数据
+            $dataFalse=[];
+            //判断是否存在这个学生用户
+            foreach($studentInfo as $studentData){
+                if($studentData['student_code']&&$studentData['name']){
+                    if(Student::where('code','=',$studentData['student_code']->count()==0)){
+
+                        $student=Student::create($studentData);
+
+                        if($student==false){
+                            $dataFalse[]=$studentData;
+                        }
+                    }
+                    else{
+                        $dataHaven[]=$studentData;
+                    }
+                }
+            }
+            return response()->json(
+                $this->success_data(['result'=>true,'dataFalse'=>$dataFalse,'dataHaven'=>$dataHaven])
+            );
+        }
+        catch(\Exception $e)
+        {
+            return response()->json($this->fail($e));
+        }
+    }
+
+
+
+    public  function getExportStudentUser(){
+
+
+
+
+
+
+
+        
+    }
+
+
+
+
 }
