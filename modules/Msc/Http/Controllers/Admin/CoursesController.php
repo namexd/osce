@@ -36,9 +36,6 @@ class CoursesController extends MscController
     public function getTest(){
 
         return view('msc::admin.coursemanage.course_observe_detail');
-
-        return view('');
-
     }
     /**
      * 导入课程
