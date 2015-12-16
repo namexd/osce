@@ -146,7 +146,7 @@ class ResourcesClassroom extends  CommonModel {
         $builder = $this->leftJoin (
             'resources_lab_courses',
             function ($join) {
-                $join->on('resources_lab_courses.course_id','=',$this->table.'.id');
+                $join->on('resources_lab_courses.resources_lab_id','=',$this->table.'.id');
 
             }
         )   ->  leftJoin (
