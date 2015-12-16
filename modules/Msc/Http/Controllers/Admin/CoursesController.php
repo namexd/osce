@@ -2094,7 +2094,7 @@ class CoursesController extends MscController
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id}
+     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id,'摄像头名称'：$vcr->name,'username':$vcr->username,'password':$vcr->password,'port':$vcr->port,channel:$vcr->id,'ip':$vcr->ip}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -2109,11 +2109,12 @@ class CoursesController extends MscController
             abort(404);
         }
         $vcrRelation    =   ResourcesLabVcr::where('vcr_id','=',$id)->first();
+        $vcr            =   $vcrRelation    ->  vcr;
         if(empty($vcrRelation))
         {
             abort(404);
         }
-        return view('msc::admin.coursemanage.course_vcr',['id'=>$id,'vcrRelation'=>$vcrRelation]);
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id,'vcrRelation'=>$vcrRelation,'vcr'=>$vcr]);
     }
 
 }
