@@ -99,14 +99,14 @@ class Student extends CommonModel {
 
        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$data['professional'],'student_type'=>$data['student_type']);
 
-       $result=$connection->table('student')->save($item);
+       $result=$connection->table('student')->update($item);
        if($result==false){
           $connection->rollBack();
        }
 
        $connection=\DB::connection('sys_mis');
-       $users=array('id'=>$data['id'],'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
-       $result=$connection->table('users')->save($users);
+       $users=array('id'=>$data['id'],'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard'],'status'=>$data['status']);
+       $result=$connection->table('users')->update($users);
         if($result==false){
             $connection->rollBack();
         }
@@ -146,7 +146,7 @@ class Student extends CommonModel {
          $connection=\DB::connection('sys_mis');
 
 
-         $data=$connection->table('users')->where('id',$id)->select('status')->find(2);
+         $data=$connection->table('users')->select('status')->find($id);
 
          foreach($data as $tmp){
             $status=$tmp;

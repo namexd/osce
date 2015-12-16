@@ -120,15 +120,10 @@ class UserController extends BaseController
     }
 
     /**
-     * <<<<<<< HEAD
      * 编辑学生回显
      * @method GET
      * @url /msc/admin/user/student-edit/{id}
-     * =======
-     * 教师列表
      * @method GET
-     * @url /msc/admin/user/teacher-list
-     * >>>>>>> be479b948e07af3b3d2842357553dcda20a1a802
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -174,17 +169,17 @@ class UserController extends BaseController
     {
         dd(11);
         $this->validate($request, [
-            'id' => 'required|min:0|max:10',
+            'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
+            'code' => 'required|unique|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
             'professional' => 'required|integer|min:0|max:11',
             'validated' => 'required|integer|min:0|max:1',
-            'moblie' => 'required|integer|max:11',
+            'moblie' => 'required|unique|integer|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|integer|min:0|max:50',
+            'idcard' => 'required|unique|integer|min:0|max:50',
         ]);
 
         $data = $request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional', 'validated', 'moblie', 'idcard_type', 'idcard']);
@@ -220,12 +215,12 @@ class UserController extends BaseController
      * @date 2015-12-15 16:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postStudentAdd(Request $request)
+    public function postStudentAdd(Request $request,$status=0)
     {
         dd(11);
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
+            'code' => 'required|unique|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
@@ -233,11 +228,11 @@ class UserController extends BaseController
             'validated' => 'required|integer|min:0|max:1',
             'moblie' => 'required|integer|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|integer|min:0|max:50',
+            'idcard' => 'required|unique|integer|min:0|max:50',
         ]);
 
         $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional', 'validated', 'moblie', 'idcard_type', 'idcard']);
-
+        $data['status']=$status;
         $studentModel = new Student();
 
         $result = $studentModel->postAddStudent($data);
@@ -348,10 +343,9 @@ class UserController extends BaseController
     }
 
     /**
-     * 查看老师
+     * 更改学生状态
      * @method GET
-     * @url /msc/admin/user/teacher-item/{id}
-     * >>>>>>> be479b948e07af3b3d2842357553dcda20a1a802
+     * @url /msc/admin/user/student-status/{id}
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -384,14 +378,24 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
-        /** *int        $id        老师编号
+
+    /**
+     * 查看老师
+     * @method GET
+     * @url /msc/admin/user/teacher-item/{id}
+     * @access public
      *
-     * @return view
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * <<<<<<< HEAD
+     * * int        $id        学生编号
+     *
+     * @return blooean
      *
      * @version 0.8
-     * @author wangjiang < wangjiang@misrobot . com >
-     * @date 2015 - 12 - 15 14:04
-     * @copyright 2013 - 2015 MIS misrobot . com Inc . All Rights Reserved
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2015-12-15 17:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getTeacherItem($id)
     {
@@ -413,4 +417,198 @@ class UserController extends BaseController
         dd($data);
 
     }
+
+
+
+    /**
+     *
+     * 编辑时教职工回显
+     * @method GET
+     * @url /msc/admin/user/teacher-list
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * <<<<<<< HEAD
+     * * int        $id        学生编号
+     *
+     * @return getTeacherItem
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 14:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getTeacherEdit($id)
+    {
+
+        $teacherId = intval($id);
+
+
+        return $this->getTeacherItem($teacherId);
+
+    }
+
+    /**
+     * 提交编辑教职工
+     * @method GET
+     * @url /msc/admin/user/teacher-save/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        $id        教师编号
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 15:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postTeacherSave(Request $request)
+    {
+        dd(11);
+        $this->validate($request, [
+            'id' => 'sometimes|min:0|max:10',
+            'name' => 'required|max:50',
+            'code' => 'required|unique|integer|min:0|max:32',
+            'gender' => 'required|min:0|max:1',
+            'teacher_dept' => 'required|integer|min:0|max:3',
+            'moblie' => 'required|unique|integer|max:11',
+        ]);
+
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'moblie']);
+
+        $teacherModel = new Teacher();
+
+        $result = $teacherModel->saveEditTeacher($data);
+
+        if ($result) {
+            return response()->json(
+                ['success' => true]
+            );
+        }
+        return response()->json(
+            ['success' => false]
+        );
+    }
+
+    /**
+     * 添加教职工信息
+     * @method GET
+     * @url /msc/admin/user/teacher-add/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post数据：</b>
+     * *
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 16:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postTeacherAdd(Request $request,$status=0)
+    {
+
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'code' => 'required|unique|integer|min:0|max:32',
+            'gender' => 'required|min:0|max:1',
+            'teacher_dept' => 'required|integer|min:0|max:3',
+            'moblie' => 'required|unique|integer|max:11',
+        ]);
+
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'moblie']);
+        $data['status']=$status;
+        $teacherModel = new Teacher();
+
+        $result = $teacherModel->postAddTeacher($data);
+
+        if ($result) {
+            return response()->json(
+                ['success' => true]
+            );
+        }
+        return response()->json(
+            ['success' => false]
+        );
+    }
+
+
+    /**
+     * 软删除
+     * @method GET
+     * @url /msc/admin/user/teacher-trashed/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        $id        教师编号
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 16:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getTeacherTrashed($id)
+    {
+        $id = intval($id);
+
+        $teacherModel = new Teacher();
+
+        $result = $teacherModel->SoftTrashed($id);
+
+        if ($result) {
+            return response()->json(
+                ['success' => true]
+            );
+        }
+        return response()->json(
+            ['success' => false]
+        );
+    }
+
+    /**
+     * 更改教师状态
+     * @method GET
+     * @url /msc/admin/user/teacher-status/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * <<<<<<< HEAD
+     * * int        $id        教师编号
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 17:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getTeacherStatus($id)
+    {
+
+        $teacherId = intval($id);
+
+        $teacherModel = new Teacher();
+
+        $result = $teacherModel->changeStatus($teacherId);
+
+        if ($result) {
+            return response()->json(
+                ['success' => true]
+            );
+        }
+        return response()->json(
+            ['success' => false]
+        );
+    }
+
 }
