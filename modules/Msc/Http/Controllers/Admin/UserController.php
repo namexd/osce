@@ -128,10 +128,9 @@ class UserController extends BaseController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * <<<<<<< HEAD
      * * int        $id        学生编号
      *
-     * @return getStudentItem
+     * @return blooean
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -158,7 +157,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        $id        学生编号
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -167,7 +166,6 @@ class UserController extends BaseController
      */
     public function postStudentSave(Request $request)
     {
-        dd(11);
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
@@ -208,7 +206,7 @@ class UserController extends BaseController
      * <b>post数据：</b>
      * *
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -217,7 +215,7 @@ class UserController extends BaseController
      */
     public function postStudentAdd(Request $request,$status=0)
     {
-        dd(11);
+
         $this->validate($request, [
             'name' => 'required|max:50',
             'code' => 'required|unique|integer|min:0|max:32',
@@ -258,7 +256,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        $id        学生编号
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -429,10 +427,9 @@ class UserController extends BaseController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * <<<<<<< HEAD
      * * int        $id        学生编号
      *
-     * @return getTeacherItem
+     * @return blooean
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -459,7 +456,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        $id        教师编号
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -468,7 +465,7 @@ class UserController extends BaseController
      */
     public function postTeacherSave(Request $request)
     {
-        dd(11);
+
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
@@ -504,7 +501,7 @@ class UserController extends BaseController
      * <b>post数据：</b>
      * *
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -540,7 +537,7 @@ class UserController extends BaseController
 
 
     /**
-     * 软删除
+     * 软删除 只是更改状态
      * @method GET
      * @url /msc/admin/user/teacher-trashed/{id}
      * @access public
@@ -549,7 +546,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        $id        教师编号
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -582,10 +579,9 @@ class UserController extends BaseController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * <<<<<<< HEAD
      * * int        $id        教师编号
      *
-     * @return blooean
+     * @return josn
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>

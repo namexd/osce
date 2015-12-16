@@ -5,7 +5,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Student.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Student.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Teacher.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Teacher.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/UserController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/routes.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/routes.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="mis-msc.iws" />
@@ -31,36 +30,21 @@
       <file leaf-file-name="UserController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/UserController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="17.828571">
-              <caret line="472" column="30" selection-start-line="472" selection-start-column="30" selection-end-line="472" selection-end-column="30" />
+            <state vertical-scroll-proportion="-18.485714">
+              <caret line="186" column="43" selection-start-line="186" selection-start-column="43" selection-end-line="186" selection-end-column="43" />
               <folding>
                 <element signature="e#144#172#0#PHP" expanded="true" />
                 <element signature="e#294#824#0#PHP" expanded="false" />
                 <element signature="e#829#2402#0#PHP" expanded="false" />
                 <element signature="e#2408#2833#0#PHP" expanded="false" />
                 <element signature="e#2838#3501#0#PHP" expanded="false" />
-                <element signature="e#3507#3983#0#PHP" expanded="false" />
-                <element signature="e#3988#4125#0#PHP" expanded="false" />
-                <element signature="e#4131#4561#0#PHP" expanded="false" />
-                <element signature="e#4566#5764#0#PHP" expanded="false" />
-                <element signature="e#5770#6172#0#PHP" expanded="false" />
-                <element signature="e#6177#7356#0#PHP" expanded="false" />
-                <element signature="e#7363#7793#0#PHP" expanded="false" />
-                <element signature="e#7798#8166#0#PHP" expanded="false" />
-                <element signature="e#8172#8627#0#PHP" expanded="false" />
-                <element signature="e#8632#9996#0#PHP" expanded="false" />
-                <element signature="e#10002#10454#0#PHP" expanded="false" />
-                <element signature="e#10459#10842#0#PHP" expanded="false" />
-                <element signature="e#10848#11296#0#PHP" expanded="false" />
-                <element signature="e#11301#11882#0#PHP" expanded="false" />
-                <element signature="e#11890#12351#0#PHP" expanded="false" />
-                <element signature="e#12356#12491#0#PHP" expanded="false" />
-                <element signature="e#12497#12928#0#PHP" expanded="false" />
-                <element signature="e#13767#14170#0#PHP" expanded="false" />
-                <element signature="e#14175#14982#0#PHP" expanded="false" />
-                <element signature="e#14989#15419#0#PHP" expanded="false" />
-                <element signature="e#15424#15792#0#PHP" expanded="false" />
-                <element signature="e#15798#16250#0#PHP" expanded="false" />
+                <element signature="e#3961#4098#0#PHP" expanded="false" />
+                <element signature="e#7731#8099#0#PHP" expanded="false" />
+                <element signature="e#8105#8560#0#PHP" expanded="false" />
+                <element signature="e#8565#9929#0#PHP" expanded="false" />
+                <element signature="e#9935#10387#0#PHP" expanded="false" />
+                <element signature="e#10392#10775#0#PHP" expanded="false" />
+                <element signature="e#12262#12397#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -69,8 +53,48 @@
       <file leaf-file-name="Teacher.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/Teacher.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.14705883">
-              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.4117647">
+              <caret line="100" column="7" selection-start-line="100" selection-start-column="7" selection-end-line="100" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResourcesOpenLabApply.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesOpenLabApply.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-36.4">
+              <caret line="168" column="53" selection-start-line="168" selection-start-column="53" selection-end-line="168" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LabController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LabController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-8.4">
+              <caret line="715" column="63" selection-start-line="715" selection-start-column="63" selection-end-line="715" selection-end-column="63" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResourcesLabHistory.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesLabHistory.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.7142857">
+              <caret line="34" column="67" selection-start-line="34" selection-start-column="67" selection-end-line="34" selection-end-column="67" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResourcesDevice.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesDevice.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="69.08572">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -79,8 +103,8 @@
       <file leaf-file-name="Student.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/Student.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.857142">
-              <caret line="149" column="0" selection-start-line="149" selection-start-column="0" selection-end-line="149" selection-end-column="0" />
+            <state vertical-scroll-proportion="-15.6">
+              <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
               <folding>
                 <element signature="e#40#74#0#PHP" expanded="true" />
               </folding>
@@ -91,8 +115,8 @@
       <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/Msc/Http/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.84127">
-              <caret line="127" column="117" selection-start-line="127" selection-start-column="117" selection-end-line="127" selection-end-column="117" />
+            <state vertical-scroll-proportion="-8.253968">
+              <caret line="130" column="21" selection-start-line="130" selection-start-column="21" selection-end-line="130" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -295,7 +319,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="xpath.settings" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="WebServerToolWindowFactoryState" value="true" />
   </component>
@@ -329,7 +353,7 @@
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SvnConfiguration">
-    <configuration />
+    <configuration>C:\Users\Administrator\AppData\Roaming\Subversion</configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -341,28 +365,28 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="1" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17083333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -409,64 +433,113 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesTools.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6764705">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesToolsCate.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.11764706">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesToolsItems.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesLocation.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesDevice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="69.08572">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesLabHistory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.7142857">
+          <caret line="34" column="67" selection-start-line="34" selection-start-column="67" selection-end-line="34" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Http/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.253968">
+          <caret line="130" column="21" selection-start-line="130" selection-start-column="21" selection-end-line="130" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/UserController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="17.828571">
-          <caret line="472" column="30" selection-start-line="472" selection-start-column="30" selection-end-line="472" selection-end-column="30" />
+        <state vertical-scroll-proportion="-18.485714">
+          <caret line="186" column="43" selection-start-line="186" selection-start-column="43" selection-end-line="186" selection-end-column="43" />
           <folding>
             <element signature="e#144#172#0#PHP" expanded="true" />
             <element signature="e#294#824#0#PHP" expanded="false" />
             <element signature="e#829#2402#0#PHP" expanded="false" />
             <element signature="e#2408#2833#0#PHP" expanded="false" />
             <element signature="e#2838#3501#0#PHP" expanded="false" />
-            <element signature="e#3507#3983#0#PHP" expanded="false" />
-            <element signature="e#3988#4125#0#PHP" expanded="false" />
-            <element signature="e#4131#4561#0#PHP" expanded="false" />
-            <element signature="e#4566#5764#0#PHP" expanded="false" />
-            <element signature="e#5770#6172#0#PHP" expanded="false" />
-            <element signature="e#6177#7356#0#PHP" expanded="false" />
-            <element signature="e#7363#7793#0#PHP" expanded="false" />
-            <element signature="e#7798#8166#0#PHP" expanded="false" />
-            <element signature="e#8172#8627#0#PHP" expanded="false" />
-            <element signature="e#8632#9996#0#PHP" expanded="false" />
-            <element signature="e#10002#10454#0#PHP" expanded="false" />
-            <element signature="e#10459#10842#0#PHP" expanded="false" />
-            <element signature="e#10848#11296#0#PHP" expanded="false" />
-            <element signature="e#11301#11882#0#PHP" expanded="false" />
-            <element signature="e#11890#12351#0#PHP" expanded="false" />
-            <element signature="e#12356#12491#0#PHP" expanded="false" />
-            <element signature="e#12497#12928#0#PHP" expanded="false" />
-            <element signature="e#13767#14170#0#PHP" expanded="false" />
-            <element signature="e#14175#14982#0#PHP" expanded="false" />
-            <element signature="e#14989#15419#0#PHP" expanded="false" />
-            <element signature="e#15424#15792#0#PHP" expanded="false" />
-            <element signature="e#15798#16250#0#PHP" expanded="false" />
+            <element signature="e#3961#4098#0#PHP" expanded="false" />
+            <element signature="e#7731#8099#0#PHP" expanded="false" />
+            <element signature="e#8105#8560#0#PHP" expanded="false" />
+            <element signature="e#8565#9929#0#PHP" expanded="false" />
+            <element signature="e#9935#10387#0#PHP" expanded="false" />
+            <element signature="e#10392#10775#0#PHP" expanded="false" />
+            <element signature="e#12262#12397#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Msc/Http/routes.php">
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LabController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.84127">
-          <caret line="127" column="117" selection-start-line="127" selection-start-column="117" selection-end-line="127" selection-end-column="117" />
+        <state vertical-scroll-proportion="-8.4">
+          <caret line="715" column="63" selection-start-line="715" selection-start-column="63" selection-end-line="715" selection-end-column="63" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/Student.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.857142">
-          <caret line="149" column="0" selection-start-line="149" selection-start-column="0" selection-end-line="149" selection-end-column="0" />
+        <state vertical-scroll-proportion="-15.6">
+          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
           <folding>
             <element signature="e#40#74#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/ResourcesOpenLabApply.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-36.4">
+          <caret line="168" column="53" selection-start-line="168" selection-start-column="53" selection-end-line="168" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/Teacher.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.14705883">
-          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.4117647">
+          <caret line="100" column="7" selection-start-line="100" selection-start-column="7" selection-end-line="100" selection-end-column="7" />
           <folding />
         </state>
       </provider>
