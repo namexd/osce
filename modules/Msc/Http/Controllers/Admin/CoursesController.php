@@ -1861,7 +1861,7 @@ class CoursesController extends MscController
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
      * * int           lab_id               教室
-     *
+     *   int           vcr_id               默认摄像机id
      *
      * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数  vcrs:摄像机信息
      *
@@ -1872,7 +1872,9 @@ class CoursesController extends MscController
      *
      */
     public function getCoursesVcr(Request $request){
+       
         $lab_id=$request->get("lab_id");
+        $vcr_id=$request->get("vcr_id");
         try{
             $model=new ResourcesClassroom();
             $rst=$model->getClassroomDetails($lab_id)->first();
@@ -1886,6 +1888,7 @@ class CoursesController extends MscController
                 'vcrs'                   =>    $vcrs,
                 'total'                  =>    40,
                 'unabsence'              =>    39,
+                'vcr_id'                 =>    $vcr_id,
             ];
             //PC-Admin-002-课程监管.png
             return view('msc::admin.coursemanage.course_observe_detail',$data);
