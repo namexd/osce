@@ -78,6 +78,6 @@ Route::group(['prefix' => "auth",'middleware' => []], function()
     Route::get('/add-new-role', ['uses'=>'AuthController@postAddNewRole','as'=>'auth.postAddNewRole']);
     Route::get('/delete-role', ['uses'=>'AuthController@deleteRole','as'=>'auth.deleteRole']);
 
-    Route::get('/set-permissions', ['uses'=>'AuthController@SetPermissions','as'=>'auth.SetPermissions']);
+    Route::get('/set-permissions/{id}', ['uses'=>'AuthController@SetPermissions','as'=>'auth.SetPermissions']);
     Route::get('/edit-role', ['uses'=>'AuthController@editRole','as'=>'auth.editRole']);
 });

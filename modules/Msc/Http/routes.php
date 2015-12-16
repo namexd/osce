@@ -123,6 +123,13 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::post('user/student-add', ['uses'=>'UserController@postStudentAdd','as'=>'msc.admin.user.StudentAdd']);
 		Route::post('user/student-save', ['uses'=>'UserController@postStudentSave','as'=>'msc.admin.user.StudentSaveEdit']);
 
+		Route::get('user/teacher-edit/{id}', ['uses'=>'UserController@getTeacherEdit','as'=>'msc.admin.user.TeacherEdit']);
+		Route::get('user/teacher-trashed/{id}', ['uses'=>'UserController@getTeacherTrashed','as'=>'msc.admin.user.TeacherTrashed']);
+		Route::get('user/teacher-status/{id}', ['uses'=>'UserController@getTeacherStatus','as'=>'msc.admin.user.TeacherStatus']);
+
+		Route::post('user/teacher-add', ['uses'=>'UserController@postTeacherAdd','as'=>'msc.admin.user.TeacherAdd']);
+		Route::post('user/teacher-save', ['uses'=>'UserController@postTeacherSave','as'=>'msc.admin.user.TeacherSaveEdit']);
+
 
 	});
 
