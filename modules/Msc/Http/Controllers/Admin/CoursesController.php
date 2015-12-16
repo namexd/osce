@@ -1863,7 +1863,7 @@ class CoursesController extends MscController
      * * int           lab_id               教室
      *
      *
-     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数  vcrs:摄像机信息
      *
      * @version 1.0
      * @author  gaoshichong
@@ -1876,11 +1876,13 @@ class CoursesController extends MscController
         try{
             $model=new ResourcesClassroom();
             $rst=$model->getClassroomDetails($lab_id)->first();
+            $vcrs=$model->getClassroomVideo($lab_id);
+            dd($vcrs);
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
                 'lab_name'               =>    $rst->lab_name,
-                'vcr_id'                 =>    [33,35],
+                'vcrs'                   =>    $vcrs,
                 'total'                  =>    40,
                 'unabsence'              =>    39,
             ];
