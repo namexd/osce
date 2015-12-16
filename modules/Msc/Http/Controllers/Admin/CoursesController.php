@@ -34,7 +34,11 @@ class CoursesController extends MscController
 {
 
     public function getTest(){
+
+        return view('msc::admin.coursemanage.course_observe_detail');
+
         return view('msc::admin.coursemanage.course_observe');
+
     }
     /**
      * 导入课程
@@ -59,6 +63,7 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
+
             //已经存在的数据
             $dataHaven=[];
             //添加失败的数据
