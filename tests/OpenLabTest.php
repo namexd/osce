@@ -57,7 +57,7 @@ class OpenLabTest  extends TestCase
         $timeGet   =   $this->  getRandItem($timeList);
 
         $resources_lab_id   =   $timeGet    ->  resources_lab_id;
-        dd($resources_lab_id);
+
         $resources_lab_calendae   =   $timeGet->resources_open_lab_apply;
         $timeRand   =   $this-> getRandItem($resources_lab_calendae);
 

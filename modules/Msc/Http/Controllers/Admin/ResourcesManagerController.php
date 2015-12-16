@@ -200,6 +200,7 @@ class ResourcesManagerController extends MscController
         }
 
         $categroy = $resources->categroy;
+        $items    = $resources->items;
         if (!$resources->resources)
         {
            throw new \Exception('资源不存在');
@@ -224,6 +225,7 @@ class ResourcesManagerController extends MscController
             'locationName'   => $resources->location, // 设备位置
             'detail'         => $resources->detail, // 功能描述
             'image'          => $imagesArray, // 设备图片
+            'items'          => $items, // 该类设备包含的单品列表
         ];
 
         return view('msc::admin.resourcemanage.Existing_read', ['resource'=>$data]);
@@ -254,6 +256,59 @@ class ResourcesManagerController extends MscController
         $firstLvCateList = ResourcesToolsCate::where('pid', 0)->get()->toArray();
 
         return view ('msc::admin.resourcemanage.cate_list', ['list'=>$firstLvCateList]);
+    }
+
+    /**
+     * 根据pid创建一个资源分类实体
+     * @method POST
+     * @url /msc/admin/resources-manager/add-cate-by-pid
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        $pid        分类pid
+     *
+     * @return int 新增分类实体id/false
+     *
+     * @version 0.2
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2015-12-11 15:31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postAddCateByPid (Request $request)
+    {
+        $this->validate($request,[
+            'pid'  => 'required|integer',
+        ]);
+
+        $pid = $request->input('pid');
+
+        $data = [
+            'repeat_max'     => 0,
+            'pid'            => $pid,
+            'name'           => '',
+            'manager_id'     => 0,
+            'manager_name'   => '',
+            'manager_mobile' => '',
+            'location'       => '',
+            'detail'         => '',
+            'loan_days'      => 0,
+        ];
+
+        $cate = ResourcesToolsCate::create($data);
+
+        if ($cate instanceof ResourcesToolsCate)
+        {
+            $cateId = $cate->id;
+
+            return response()->json(
+                $this->success_data($cateId)
+            );
+        }
+        else
+        {
+            return response()->json(false);
+        }
     }
 
     /**
@@ -597,6 +652,7 @@ class ResourcesManagerController extends MscController
         }
 
         $images = $resources->resources->images;
+        $items  = $resources->items;
         if($images)
         {
             $imagesArray = $images->toArray();
@@ -616,6 +672,7 @@ class ResourcesManagerController extends MscController
             'locationName'   => $resources->location, // 设备位置
             'image'          => $imagesArray, // 设备图片
             'detail'         => $resources->detail, //设备描述
+            'items'          => $items, // 该类设备下面单品列表
         ];
 
         if($categroy)
@@ -648,6 +705,7 @@ class ResourcesManagerController extends MscController
      * * string        location          资源地址(必须的)
      * * string        detail            资源表述(必须的)
      * * Array         images_path       图片 e.g:<input type="hidden" name="images_path[]" value="/images/201511/13/2015111311051447430.png">
+     * * Array         items             单品列表[0=>'id:1,code:123']
      * @return Response
      *
      * @version 0.2
@@ -664,14 +722,38 @@ class ResourcesManagerController extends MscController
             'manager_mobile' => 'required|mobile_phone',
             'location'       => 'required|max:50|min:0',
             'detail'         => 'sometimes|max:255|min:0',
+            'items'          => 'required|array',
         ]);
 
-        $formData = $request->only(['id', 'images_path']);
-        $id = (int)$formData['id'];
+        $formData         = $request->only(['id', 'images_path']);
+        $id               = (int)$formData['id'];
+        $itemCodeArray    = $request->input('items');
+
         $resourcesRepository = App::make('\Modules\Msc\Repositories\ResourcesRepository');
 
         $connection = DB::connection('msc_mis');
         $connection->beginTransaction();
+
+        // 更新单品code
+        foreach ($itemCodeArray as $itemCode)
+        {
+            if ('' == $itemCode)
+            {
+                continue;
+            }
+
+            $tempItemCodeArray = explode(',', $itemCode);
+            $itemIdArray       = explode(':', $tempItemCodeArray['0']);
+            $itemCodeArray     = explode(':', $tempItemCodeArray['1']);
+
+            $result = ResourcesToolsItems::where('id', '=', $itemIdArray['1'])->update(['code'=>$itemCodeArray['1']]);
+            if (!$result)
+            {
+                DB::rollback();
+                //throw new \Exception('修改编号失败');
+                return redirect()->back()->withErrors(new \Exception('修改编号失败'));
+            }
+        }
 
         //删除修改后删除的图片
         $resourcesTools = ResourcesTools::find($id);
