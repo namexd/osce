@@ -18,6 +18,7 @@ use Modules\Msc\Entities\ResourcesClassroomCourses;
 use Modules\Msc\Entities\ResourcesClassroomPlan;
 use Modules\Msc\Entities\ResourcesClassroomPlanAlter;
 use Modules\Msc\Entities\ResourcesClassroomPlanTeacher;
+use Modules\Msc\Entities\ResourcesLabVcr;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Training;
 use Modules\Msc\Entities\TrainingCourse;
@@ -2062,7 +2063,7 @@ class CoursesController extends MscController
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view {摄像头ID：id，'教室ID':$vcr->resources_lab_id}
+     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -2076,8 +2077,12 @@ class CoursesController extends MscController
         {
             abort(404);
         }
-        $vcr    =   ResourcesLabVcr::find($id);
-        return view('msc::admin.coursemanage.course_vcr',['id'=>$id]);
+        $vcrRelation    =   ResourcesLabVcr::where('vcr_id','=',$id)->first();
+        if(empty($vcrRelation))
+        {
+            abort(404);
+        }
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id,'vcrRelation'=>$vcrRelation]);
     }
 
 }
