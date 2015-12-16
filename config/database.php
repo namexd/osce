@@ -54,13 +54,10 @@ return [
 
         'msc_mis' => [
             'driver'    => 'mysql',
-//            'host'      => env('DB_HOST', '127.0.0.1'),
 			'host'      => env('DB_HOST', '192.168.0.254'),
             'database'  => env('DB_DATABASE', 'msc_mis_1'),
             'username'  => env('DB_USERNAME', 'sys_mis'),
-//			'username'  => env('DB_USERNAME', 'root'),
             'password'  => env('DB_PASSWORD', 'sys_mis'),
-//			'password'  => env('DB_PASSWORD', 'root'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -69,11 +66,8 @@ return [
         'sys_mis' => [
             'driver'    => 'mysql',
             'host'      => env('DB_HOST', '192.168.0.254'),
-//			'host'      => env('DB_HOST', '127.0.0.1'),
             'database'  => env('DB_DATABASE', 'sys_mis'),
-//            'username'  => env('DB_USERNAME', 'root'),
 			'username'  => env('DB_USERNAME', 'sys_mis'),
-//            'password'  => env('DB_PASSWORD', 'root'),
 			'password'  => env('DB_PASSWORD', 'sys_mis'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',

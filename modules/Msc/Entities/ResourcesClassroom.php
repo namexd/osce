@@ -82,7 +82,6 @@ class ResourcesClassroom extends  CommonModel {
         return $this->hasMany('Modules\Msc\Entities\ResourcesClassroomApply','resources_lab_id','id');
     }
 
-
     //获取实验室资源列表
     public function getLaboratoryClassroomList($data){
 
@@ -181,10 +180,20 @@ class ResourcesClassroom extends  CommonModel {
 
     //根据计划id获取课程视频信息
     public function getCourseVcrByPlanId($id){
+
         $plan = ResourcesClassroomPlan::find($id);
-        $teachers=$plan->teachersRelation;
+        $teachers = $plan->teachersRelation;
         foreach($teachers as $teacher){
-            $teacher_name[]=$teacher->teacher->name;
+            $teacher_name[] = $teacher->teacher->name;
+        }
+
+        $classroom_id = $plan -> classroomCourses -> classroom -> id;
+        $resourceslab=ResourcesLabVcr::where('resources_lab_id',$classroom_id) -> get();
+        foreach($resourceslab as $item){
+            $vcr = array();
+            $vcr['vcr_id']   = Vcr::find($item -> vcr_id)->id;
+            $vcr['vcr_name'] = Vcr::find($item -> vcr_id)->name;
+            $vcrs[] = $vcr;
         }
         $data=[
             "currentdate"       =>    $plan->currentdate,
@@ -192,10 +201,10 @@ class ResourcesClassroom extends  CommonModel {
             "endtime"           =>    $plan->endtime,
             "courses_name"      =>    $plan->course->name,
             "lab_ame"           =>    $plan->classroomCourses->classroom->name,
-            "teacher_name"      =>    $teacher_name
+            "teacher_name"      =>    $teacher_name,
+            'vcrs'              =>    $vcrs,
         ];
-        $vcr_ids=array(1,2,3);
-      return $data;
+        return $data;
 	}
 
     public function getClassroomVideo($id) {

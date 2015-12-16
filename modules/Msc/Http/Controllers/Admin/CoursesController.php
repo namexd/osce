@@ -1863,7 +1863,7 @@ class CoursesController extends MscController
      * * int           lab_id               教室
      *
      *
-     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数  vcrs:摄像机信息
      *
      * @version 1.0
      * @author  gaoshichong
@@ -1872,17 +1872,17 @@ class CoursesController extends MscController
      *
      */
     public function getCoursesVcr(Request $request){
-        $this->validate($request,[
-
-        ]);
+        $lab_id=$request->get("lab_id");
         try{
             $model=new ResourcesClassroom();
-            $rst=$model->getClassroomDetails(2)->first();
+            $rst=$model->getClassroomDetails($lab_id)->first();
+            $vcrs=$model->getClassroomVideo($lab_id);
+            dd($vcrs);
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
                 'lab_name'               =>    $rst->lab_name,
-                'vcr_id'                 =>    [33,35],
+                'vcrs'                   =>    $vcrs,
                 'total'                  =>    40,
                 'unabsence'              =>    39,
             ];
@@ -1893,7 +1893,7 @@ class CoursesController extends MscController
         }
     }
     /**
-     * 获取课程信息和摄像机信息
+     * 获取下载课程信息
      * @api GET /msc/admin/courses/download-course
      * @access public
      *
@@ -1902,7 +1902,7 @@ class CoursesController extends MscController
      * * int           plan_id               计划id
      *
      *
-     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
+     * @return view
      *
      * @version 1.0
      * @author  gaoshichong
@@ -1911,16 +1911,13 @@ class CoursesController extends MscController
      *
      */
     public function getDownloadCourse(Request $request){
-        $this->validate($request,[
-
-        ]);
+        $plan_id=$request->get("plan_id");
         try{
-            $model=new ResourcesClassroom();
-            $data=$model->getCourseVcrByPlanId(1);
-            dd($data);
+            $model = new ResourcesClassroom();
+            $data = $model -> getCourseVcrByPlanId($plan_id);
             return view('',$data);
         }catch (\Exception $ex){
-            $this->fail($ex);
+            $this -> fail($ex);
         }
     }
 	/**
