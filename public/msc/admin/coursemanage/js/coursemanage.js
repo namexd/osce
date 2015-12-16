@@ -17,14 +17,22 @@ $(function(){
 
             courseObserveDetail.stopPlay(0)
             break;
+        case "course_vcr":course_vcr();break;
     }
 })
+/*课程监管摄像头页面引用
+lizhiyuan*/
+function course_vcr(){
+    //初始化
+    courseObserveDetail.initVideo(1130,600,1,"divPlugin");
+    //登录
+    courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
+}
 /*课程监管首页引用
  lizhiyuan
  qq:973261287
  2015/12/15*/
 function course_observe(){
-    courseObserveDetail.initVideo(300,300,1,'divPlugin');
     //二级菜单展开
     $(".first-level>p").click(function(){
         if($(this).attr("flag")=="false"){
@@ -56,7 +64,6 @@ function course_observe(){
         $(this).addClass("active");
         var $classroomId=$(this).attr("id");
         getLesson($classroomId,pars.lessonUrl);
-        courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
     })
     //ajax获取课程和老师信息
     function getLesson(id,url){

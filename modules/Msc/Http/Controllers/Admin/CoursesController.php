@@ -2055,11 +2055,12 @@ class CoursesController extends MscController
      *
      */
     public function getClassroomVcr(Request $request){
+//        dd(1111);
         $id =   intval( $request    ->  id);
         if(empty($id))
         {
             abort(404);
         }
-        //return view('',['id'=>$id]);
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id]);
     }
 }

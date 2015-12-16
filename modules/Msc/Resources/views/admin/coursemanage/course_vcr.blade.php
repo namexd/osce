@@ -14,5 +14,9 @@
     </script>
 @stop
 @section('content')
-    <div id="divPlugin" class="video"></div>
+    <input type="hidden" id="parameter" value="{'pagename':'course_vcr'}">
+
+    <div>
+        <div id="divPlugin" class="video"></div>
+    </div>
 @stop
