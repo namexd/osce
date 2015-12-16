@@ -26,7 +26,7 @@ $(function(){
  2015/12/15*/
 function course_observe(){
     courseObserveDetail.initVideo(1130,600,1);
-    courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
+
     //二级菜单展开
     $(".first-level>p").click(function(){
         if($(this).attr("flag")=="false"){
@@ -58,6 +58,7 @@ function course_observe(){
         $(this).addClass("active");
         var $classroomId=$(this).attr("id");
         getLesson($classroomId,pars.lessonUrl);
+        courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
     })
     //ajax获取课程和老师信息
     function getLesson(id,url){
@@ -69,9 +70,9 @@ function course_observe(){
                 id:id
             },
             success: function(result){
-
-                $("#lesson").html(result[0].courses_name);
-                $("#teacher").html(result[0].teacher_name);
+                //console.log(result);
+                $("#lesson").html(result.courses_name);
+                $("#teacher").html(result.teacher_name);
             }
         });
     }
