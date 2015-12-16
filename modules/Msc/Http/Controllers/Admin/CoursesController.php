@@ -1951,6 +1951,7 @@ class CoursesController extends MscController
         $keyword = e(urldecode($request->get('keyword')));
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomName($keyword);
+        dd($data);
         return view('', ['data' => $data]);
     }
 
