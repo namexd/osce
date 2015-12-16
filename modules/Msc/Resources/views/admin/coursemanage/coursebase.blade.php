@@ -685,7 +685,7 @@
                 type:"get",
                 url:"{{action('\Modules\Msc\Http\Controllers\Admin\CoursesController@getNormalCoursesPlanData')}}",
                 async:true,
-                data:JSON.stringify(req),
+                data:req,
                 success:function(res){
                     if(res.code==1){
                         var data = res.data.rows;
@@ -738,7 +738,7 @@
                 type:"get",
                 url:"{{action('\Modules\Msc\Http\Controllers\Admin\CoursesController@getProvisionalCoursesPlanData')}}",
                 async:true,
-                data:JSON.stringify(req),
+                data:req,
                 success:function(res){
                     if(res.code==1){
                         var data = res.data.rows;
@@ -790,7 +790,7 @@
                 type:"get",
                 url:"{{action('\Modules\Msc\Http\Controllers\Admin\CoursesController@getTrainingCoursesPlanList')}}",
                 async:true,
-                data:JSON.stringify(req),
+                data:req,
                 success:function(res){
                     if(res.code==1){
                         var data = res.data.rows;

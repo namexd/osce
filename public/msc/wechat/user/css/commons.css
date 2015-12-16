@@ -23,6 +23,12 @@
 .normal_select{width:100%; border:1px solid #ccc; border-radius:4px;text-indent: 80px;}
 .form-control.select2-container{ width:100%;line-height:36px; height:36px;border:1px solid #ccc; }
 .form-group  input{border:1px solid #ccc; border-radius:4px; padding-left:80px; }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+input[type="number"]{-moz-appearance:textfield;}
 /*input-end*/
 
 .select2-container .select2-choice{padding:0 0 0 24%; height:36px;line-height:36px;}

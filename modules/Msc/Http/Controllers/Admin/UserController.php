@@ -215,7 +215,6 @@ class UserController extends BaseController
      */
     public function postStudentAdd(Request $request,$status=0)
     {
-
         $this->validate($request, [
             'name' => 'required|max:50',
             'code' => 'required|unique|integer|min:0|max:32',
@@ -282,7 +281,7 @@ class UserController extends BaseController
     }
 
     /**
-     * 改变状态
+     * 老师列表
      * @method GET
      * @url /msc/admin/user/student-status/{id}
      * =======
@@ -341,43 +340,6 @@ class UserController extends BaseController
     }
 
     /**
-     * 更改学生状态
-     * @method GET
-     * @url /msc/admin/user/student-status/{id}
-     * @access public
-     *
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * <<<<<<< HEAD
-     * * int        $id        学生编号
-     *
-     * @return blooean
-     *
-     * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
-     * @date 2015-12-15 17:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getStudentStatus($id)
-    {
-
-        $studentId = intval($id);
-
-        $studentModel = new Student();
-
-        $result = $studentModel->changeStatus($studentId);
-
-        if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
-        }
-        return response()->json(
-            ['success' => false]
-        );
-    }
-
-    /**
      * 查看老师
      * @method GET
      * @url /msc/admin/user/teacher-item/{id}
@@ -416,7 +378,42 @@ class UserController extends BaseController
 
     }
 
+    /**
+     * 更改学生状态
+     * @method GET
+     * @url /msc/admin/user/student-status/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * <<<<<<< HEAD
+     * * int        $id        学生编号
+     *
+     * @return blooean
+     *
+     * @version 0.8
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date 2015-12-15 17:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentStatus($id)
+    {
 
+        $studentId = intval($id);
+
+        $studentModel = new Student();
+
+        $result = $studentModel->changeStatus($studentId);
+
+        if ($result) {
+            return response()->json(
+                ['success' => true]
+            );
+        }
+        return response()->json(
+            ['success' => false]
+        );
+    }
 
     /**
      *
@@ -534,8 +531,7 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
-
-
+    
     /**
      * 软删除 只是更改状态
      * @method GET

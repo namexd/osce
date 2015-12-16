@@ -124,9 +124,10 @@ class ResourcesClassroom extends  CommonModel {
         if ($keyword !== '') {
             $result = $this->where($this->table.'.code','like','%'.$keyword.'%')->where($this->table.'.name','like','%'.$keyword.'%');
         }
-        $result = select([
+        $result = $this->select([
             "$this->table" . '.id as id',
-            "$this->table" . '.name as name'
+            "$this->table" . '.name as name',
+            "$this->table" . '.code as code'
         ])->get();
 
         return $result;
@@ -134,6 +135,7 @@ class ResourcesClassroom extends  CommonModel {
 
     //给教室的具体监控界面提供数据
 
+    public function getClassroomDetails ($id) {
 
 //        $builder = $this->where($this->table.'.id','=',$id)->with(['courseClassroomCourses' => function ($q) {
 //            $q->with(['resourcesLabPlan' => function ($q) {
@@ -144,7 +146,8 @@ class ResourcesClassroom extends  CommonModel {
         $builder = $this->leftJoin (
             'resources_lab_courses',
             function ($join) {
-                $join->on('resources_lab_courses.course_id','=',$this->table.'.id');
+                $join->on('resources_lab_courses.resources_lab_id','=',$this->table.'.id');
+
             }
         )   ->  leftJoin (
             'resources_lab_plan',
@@ -164,10 +167,12 @@ class ResourcesClassroom extends  CommonModel {
         )   ->  leftJoin (
             'teacher',
             function ($join) {
-                $join->on('teacher_courses.teacher_id','=','id');
+                $join->on('teacher_courses.teacher_id','=','teacher.id');
             }
-        )   ->where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))   ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
-            ->select([
+        )   ->  where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))
+            ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+            ->  where($this->table.'.id','=',$id)
+            ->  select([
                 'courses.name as courses_name',
                 'teacher.name as teacher_name',
                 'resources_lab.name as lab_name',
