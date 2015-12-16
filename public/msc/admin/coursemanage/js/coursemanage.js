@@ -15,7 +15,9 @@ $(function(){
             //切换视频
             courseObserveDetail.changeVideo();
 
-            courseObserveDetail.stopPlay(0)
+            courseObserveDetail.stopPlay(0);
+
+            courseObserveDetail.update();
             break;
     }
 })
@@ -277,7 +279,30 @@ var courseObserveDetail = (function(mod){
             mod.StartRealPlay(0,iChannelID,'192.168.1.250');
         });
     }
-    
+
+    /**
+     *检测是否大于10
+     */
+    function testTime(res){
+        return res>=10?res:'0'+res;
+    }
+
+    /**
+     *当前时间写入
+     */
+    function nowTime(){
+        var nowDay = ((new Date()).getFullYear()) +'-'+((new Date()).getMonth()>=9?((new Date()).getMonth()+parseInt(1)):('0'+((new Date()).getMonth()+parseInt(1))))+'-'+((new Date()).getDate()>=10?(new Date()).getDate():('0'+((new Date()).getDate()+parseInt(1))));
+        var time = (new Date()).getHours()+':'+testTime((new Date()).getMinutes())+':'+testTime((new Date()).getSeconds());
+        $('#nowDay').text(nowDay);
+        $('#time').text(time);
+    }
+
+    /**
+     *实时写入
+     */
+    mod.update = function(){
+        setInterval(nowTime,1000);
+    }
 
     /**
      *返回列表
