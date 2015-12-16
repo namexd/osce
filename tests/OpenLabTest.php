@@ -55,10 +55,12 @@ class OpenLabTest  extends TestCase
         $json   =   json_decode($view);
         $timeList=$json    ->  data    ->rows   ->  ClassroomApplyList  ->data;
         $timeGet   =   $this->  getRandItem($timeList);
-        dd($timeList);
+
         $resources_lab_id   =   $timeGet    ->  resources_lab_id;
+        dd($resources_lab_id);
         $resources_lab_calendae   =   $timeGet->resources_open_lab_apply;
         $timeRand   =   $this-> getRandItem($resources_lab_calendae);
+
         $resources_lab_calendar_id  =   $timeRand-> resources_lab_calendar_id;
         $course_id  =   $timeRand   ->  course_id;
         $data   =   [
