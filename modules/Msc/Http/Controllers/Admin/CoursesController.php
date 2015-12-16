@@ -1887,7 +1887,6 @@ class CoursesController extends MscController
                 'total'                  =>    40,
                 'unabsence'              =>    39,
             ];
-
             //PC-Admin-002-课程监管.png
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
