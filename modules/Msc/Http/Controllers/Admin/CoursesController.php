@@ -1955,7 +1955,7 @@ class CoursesController extends MscController
     }
 
     /**
-     * 根据ajax请求获取对应教室
+     * 根据ajax请求获取对应教室的详情
      * @api GET /msc/admin/courses/class-observe-video
      * @access public
      * @return array
