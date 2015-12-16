@@ -37,7 +37,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'course_observe_detail','downloadUrl':'{{route("msc.admin.courses.getDownloadVideoActivx")}}'}">
+<input type="hidden" id="parameter" value="{'pagename':'course_observe_detail','downloadUrl':'{{route("msc.admin.courses.getDownloadVideoActivx")}}','downloadVideo':'{{route("msc.courses.getVideoCheck")}}'}">
 <div class="row">
     <!-- 左侧 -->
     <div class="col-sm-4">
@@ -124,8 +124,8 @@
                         <li value="{{$item->vid}}"><a href="javascript:void(0)" class="{{$index==0? 'active':''}}">{{$item->vname}}</a></li>
                     @endforeach
                     <div class="tools-tips">
-                        <a href="javascript:void(0)">下载</a>&nbsp;&nbsp;
-                        <span class="fa fa-arrows-alt"></span>
+                        <a href="javascript:void(0)" id="download">下载</a>&nbsp;&nbsp;
+                        <a href="{{route('msc.admin.courses.getClassObserve')}}" class="fa fa-arrows-alt"></a>
                         <span class="fa fa-times"></span>
                     </div>
                 </ul>
