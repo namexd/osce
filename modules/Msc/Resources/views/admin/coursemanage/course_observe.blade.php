@@ -15,7 +15,8 @@
     </script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_observe','lessonUrl':'{{route("msc.admin.courses.getClassObserve")}}'}">
+    <input type="hidden" id="parameter"
+           value="{'pagename':'course_observe','lessonUrl':'{{route("msc.admin.courses.getClassObserve")}}','vcrUrl':'{{route("msc.admin.courses.getClassroomVcr")}}'}">
     <div class="row  main-content">
         <div class="content-left ibox-content">
             <div class="serach-box">
@@ -62,7 +63,7 @@
                     <span>信号强度<span id="info-strength"></span></span>
                 </div>
             </div>
-            <div>
+            <div id="vcr-box">
 
             </div>
         </div>
