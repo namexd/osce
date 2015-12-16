@@ -61,7 +61,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('courses/download-courses-plan-tpl',['uses'=>'CoursesController@getDownloadCoursesPlanTpl','as'=>'msc.admin.courses.getDownloadCoursesPlanTpl']);
 		Route::get('courses/video-check', ['uses'=>'CoursesController@getVideoCheck','as'=>'msc.courses.getVideoCheck']);
 		//课程监管
-		Route::get('courses/class-observe-video', ['uses'=>'CoursesController@getClassObserveVideo','as'=>'msc.courses.classObserveVideo']);
+		Route::get('courses/class-observe-video', ['uses'=>'CoursesController@getClassObserve','as'=>'msc.admin.courses.getClassObserve']);
 
 
 		Route::controller('verify', 'VerifyController');
@@ -146,6 +146,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//开放设备取消预约
 		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
 		Route::get('personal-center/info-manage',['uses'=>'PersonalCenterController@getInfoManage','as'=>'msc.personalCenter.infoManage']);
+		//我的課程
+		Route::get('personal-center/my-course',['uses'=>'PersonalCenterController@getMyCourse','as'=>'msc.personalCenter.MyCourse']);
 
 		Route::controller('resource', 'ResourceController');
 		Route::controller('resources-manager', 'ResourcesManagerController');
