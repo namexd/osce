@@ -55,7 +55,6 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('courses/provisional-courses-plan', ['uses'=>'CoursesController@getProvisionalCoursesPlan','as'=>'msc.courses.ProvisionalCoursesPlan']);
 		Route::get('courses/best-time', ['uses'=>'CoursesController@getBestTime','as'=>'msc.courses.BestTime']);
 		Route::get('courses/classroom-time', ['uses'=>'CoursesController@getClassroomTime','as'=>'msc.courses.ClassroomTime']);
-		Route::get('courses/video-check', ['uses'=>'CoursesController@getClassroomTime','as'=>'msc.courses.ClassroomTime']);
 
 		Route::get('courses/download-courses-list-tpl',['uses'=>'CoursesController@getDownloadCoursesListTpl','as'=>'msc.admin.courses.getDownloadCoursesListTpl']);
 		Route::get('courses/download-courses-plan-tpl',['uses'=>'CoursesController@getDownloadCoursesPlanTpl','as'=>'msc.admin.courses.getDownloadCoursesPlanTpl']);
