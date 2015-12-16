@@ -770,7 +770,7 @@ class ResourcesManagerController extends MscController
                 $this->fail(new \Exception('资源不存在'))
             );
         }
-				
+
 		$resourcesItems = [];
 		foreach ($resources->items as $resourcesToolsItems)
 		{
@@ -781,7 +781,7 @@ class ResourcesManagerController extends MscController
 		} 		
 		$resources = $resources->toArray();
 
-
+        dd($resources);
         return response()->json(
         	[
 				'resources'      => $resources,
