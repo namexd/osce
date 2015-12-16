@@ -76,7 +76,7 @@
             <div class=" title">编号</div>
             <div class=" title">时间段</div>
             <div class=" title">使用人</div>
-            <div class=" title">作态</div>
+            <div class=" title">状态</div>
         </div>
         <div class="detail_list">
             <ul>

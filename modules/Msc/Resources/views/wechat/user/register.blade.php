@@ -119,7 +119,7 @@
                 <input type="password" name="confirm_password" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
-            <input class="btn" type="submit" id="#bling" value="提交保存" />
+            <input class="btn" type="submit" id="#bling" value="提交审核" />
         </form>
 
     </div>
@@ -203,12 +203,17 @@
                </select>
                <label for="ipt_zjh"><span>*</span></label>
            </div>
-            <div class="form-group card-list" style="width:65%;float:right;" >
 
-                <input type="text" class="form-control no_zjh" style="padding-left:2px;" disabled="disabled" name="idcard" placeholder="请选择证件类型" />
+            <div class="form-group card-list no_zjh" style="width:65%;float:right;" >
 
-                <input style="display: none;padding-left:2px;" class="form-control ipt_zjh"  name="idcard"   placeholder="请输入身份证编号" />
-                <input style="display: none;padding-left:2px;"  class="form-control hz_zjh" name="idcard2"   placeholder="请输入护照编号" />
+                <input type="text" class="form-control" style="padding-left:2px;" disabled="disabled"  placeholder="请选择证件类型" />
+            </div>
+            <div class="form-group card-list ipt_zjh" style="width:65%;float:right;display: none">
+
+                <input style="padding-left:2px;"  class="form-control " name="idcard"   placeholder="请输入身份证号码" />
+            </div>
+            <div class="form-group card-list hz_zjh" style="width:65%;float:right;display: none">
+                <input style="padding-left:2px;"  class="form-control " name="idcard2"   placeholder="请输入护照编号" />
             </div>
             <div class="clear"></div>
             <div class="form-group">
@@ -217,7 +222,7 @@
             <div class="form-group">
                 <input type="password" name="confirm_password" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
-            <input class="btn" type="submit" id="#bling2" value="提交保存" />
+            <input class="btn" type="submit" id="#bling2" value="提交审核" />
 
         </form>
     </div>
@@ -456,7 +461,7 @@
                         message: '证件号码不能为空'
                     },
                     regexp: {
-                        regexp: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                         message: '请输入正确的身份证号码'
                     }
                 }
@@ -512,15 +517,18 @@
 
         if(type=="0"){
             $(".no_zjh").show();
-            $(".no_zjh").siblings("input").hide();
+            $(".ipt_zjh").hide();
+            $(".hz_zjh").hide();
         }
        if(type=="1"){
            $(".ipt_zjh").show();
-           $(".ipt_zjh").siblings("input").hide();
+           $(".no_zjh").hide();
+           $(".hz_zjh").hide();
         }
         if(type=="2"){
             $(".hz_zjh").show();
-            $(".hz_zjh").siblings("input").hide();
+            $(".ipt_zjh").hide();
+            $(".no_zjh").hide();
         }
     });
 
