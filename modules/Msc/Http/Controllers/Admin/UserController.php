@@ -120,20 +120,14 @@ class UserController extends BaseController
     }
 
     /**
-     * <<<<<<< HEAD
+     * 
      * 编辑学生回显
      * @method GET
      * @url /msc/admin/user/student-edit/{id}
-     * =======
-     * 教师列表
-     * @method GET
-     * @url /msc/admin/user/teacher-list
-     * >>>>>>> be479b948e07af3b3d2842357553dcda20a1a802
      * @access public
-     *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * <<<<<<< HEAD
+     * 
      * * int        $id        学生编号
      *
      * @return getStudentItem
@@ -292,7 +286,7 @@ class UserController extends BaseController
      * 改变状态
      * @method GET
      * @url /msc/admin/user/student-status/{id}
-     * =======
+     * 
      * * string        order_name      排序字段名
      * * string        order_type      排序方式(1:Desc 0:asc)
      * * string        keyword         关键字
@@ -347,20 +341,12 @@ class UserController extends BaseController
         dd($list);
     }
 
-    /**
-     * 查看老师
-     * @method GET
-     * @url /msc/admin/user/teacher-item/{id}
-     * >>>>>>> be479b948e07af3b3d2842357553dcda20a1a802
-     * @access public
-     *
+	/**
+     * 修改学生状态
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * <<<<<<< HEAD
-     * * int        $id        学生编号
-     *
+     * int        $id        学生编号
      * @return blooean
-     *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
      * @date 2015-12-15 17:30
@@ -384,9 +370,13 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
-
-
-        /** *int        $id        老师编号
+	 /**
+     * 查看老师
+     * @method GET
+     * @url /msc/admin/user/teacher-item/{id}
+     * @param Request $request get请求<br><br>
+     * @access public
+	 * int        $id        老师编号
      *
      * @return view
      *
