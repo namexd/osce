@@ -25,6 +25,8 @@ $(function(){
  qq:973261287
  2015/12/15*/
 function course_observe(){
+    courseObserveDetail.initVideo(1130,600,1);
+    courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
     //二级菜单展开
     $(".first-level>p").click(function(){
         if($(this).attr("flag")=="false"){
