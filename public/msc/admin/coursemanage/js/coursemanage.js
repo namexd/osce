@@ -8,12 +8,12 @@ $(function(){
         case "course_observe":course_observe();break;
     }
 })
-/*¿Î³Ì¼à¹ÜÊ×Ò³ÒıÓÃ
-lizhiyuan
-qq:973261287
-2015/12/15*/
+/*è¯¾ç¨‹ç›‘ç®¡é¦–é¡µå¼•ç”¨
+ lizhiyuan
+ qq:973261287
+ 2015/12/15*/
 function course_observe(){
-    //¶ş¼¶²Ëµ¥Õ¹¿ª
+    //äºŒçº§èœå•å±•å¼€
     $(".first-level>p").click(function(){
         if($(this).attr("flag")=="false"){
             $(this).attr("flag","true");
@@ -27,25 +27,25 @@ function course_observe(){
             $(this).next().hide();
         }
     })
-    //Èı¼¶²Ëµ¥
+    //ä¸‰çº§èœå•
     $(".second-level>p").click(function(){
         /*if($(this).attr("flag")=="false"){
-            $(this).attr("flag","true");
-            $(this).find(".glyphicon-chevron-right").hide();
-            $(this).find(".glyphicon-chevron-down").show();
-            $(this).next().show();
-        }else{
-            $(this).attr("flag","false");
-            $(this).find(".glyphicon-chevron-right").show();
-            $(this).find(".glyphicon-chevron-down").hide();
-            $(this).next().hide();
-        }*/
+         $(this).attr("flag","true");
+         $(this).find(".glyphicon-chevron-right").hide();
+         $(this).find(".glyphicon-chevron-down").show();
+         $(this).next().show();
+         }else{
+         $(this).attr("flag","false");
+         $(this).find(".glyphicon-chevron-right").show();
+         $(this).find(".glyphicon-chevron-down").hide();
+         $(this).next().hide();
+         }*/
         $(".second-level>p").removeClass("active");
         $(this).addClass("active");
         var $classroomId=$(this).attr("id");
         getLesson($classroomId,pars.lessonUrl);
     })
-    //ajax»ñÈ¡¿Î³ÌºÍÀÏÊ¦ĞÅÏ¢
+    //ajaxè·å–è¯¾ç¨‹å’Œè€å¸ˆä¿¡æ¯
     function getLesson(id,url){
         $.ajax({
             url:url,
@@ -60,7 +60,7 @@ function course_observe(){
             }
         });
     }
-    //»ñÈ¡µ±Ç°Ê±¼ä
+    //è·å–å½“å‰æ—¶é—´
     function getCurrentTime(){
         var d = new Date();
         var year = d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
@@ -73,7 +73,7 @@ function course_observe(){
         $("#hour").html(hour);
         setTimeout(getCurrentTime,1000);
     }
-    //Ò³Ãæ¼ÓÔØ¾ÍÖ´ĞĞ²¿·Ö
+    //é¡µé¢åŠ è½½å°±æ‰§è¡Œéƒ¨åˆ†
     getCurrentTime();
 }
 
