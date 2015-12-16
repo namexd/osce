@@ -55,8 +55,9 @@ function course_observe(){
                 id:id
             },
             success: function(result){
-                $("#lesson").html(result.content);
-                $("#teacher").html(result.teacher);
+
+                $("#lesson").html(result[0].courses_name);
+                $("#teacher").html(result[0].teacher_name);
             }
         });
     }

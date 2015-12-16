@@ -1970,7 +1970,11 @@ class CoursesController extends MscController
         $id = $request->get('id');
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomDetails($id);
-        dd($data);
+        foreach ($data as $item) {
+            $item['video_id'] = 33;
+        }
+
+        return response()->json($item);
     }
 
     /*socket收发数据
