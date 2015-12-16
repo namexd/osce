@@ -92,21 +92,44 @@ class Student extends CommonModel {
         return $builder->orderBy($order['0'], $order['1'])->paginate(config('msc.page_size',10));
     }
 
-    //保存编辑数据
+    /**
+     *
+     * @method POST
+     * @url /msc/admin/user/student-save/saveEditStudent
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * array       $data        控制器传递参数
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16 14:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function saveEditStudent($data){
+
        $connection=\DB::connection('msc_mis');
+
        $connection->beginTransaction();
 
        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$data['professional'],'student_type'=>$data['student_type']);
 
        $result=$connection->table('student')->update($item);
-       if($result==false){
-          $connection->rollBack();
+
+        if($result==false){
+            $connection->rollBack();
        }
 
        $connection=\DB::connection('sys_mis');
+
+
        $users=array('id'=>$data['id'],'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard'],'status'=>$data['status']);
+
        $result=$connection->table('users')->update($users);
+
         if($result==false){
             $connection->rollBack();
         }
@@ -114,9 +137,26 @@ class Student extends CommonModel {
         $connection->commit();
     }
 
-    //保存添加学生
+    /**
+     *
+     * @method POST
+     * @url /msc/admin/user/student-add/postAddStudent
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * array        $data        控制器传递参数
+     *
+     * @return blooean
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16 14:40
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
 
     public function postAddStudent($data){
+
         $connection=\DB::connection('msc_mis');
 
 
@@ -124,8 +164,12 @@ class Student extends CommonModel {
 
         $id=$connection->table('student')->insertGetId($item);
 
+        if(!$id){
+            return false;
+        }
 
         $connection=\DB::connection('sys_mis');
+
         $users=array('id'=>$id,'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
 
         $result=$connection->table('users')->insert($users);
@@ -133,16 +177,50 @@ class Student extends CommonModel {
         return $result;
     }
 
-    //软删除
+    /**
+     *
+     * @method GET
+     * @url /msc/admin/user/student-trashed/{id}/SoftTrashed
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        id        主键id
+     *
+     * @return blooean
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16  14:45
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function SoftTrashed($id){
+
         $connection=\DB::connection('sys_mis');
 
         return $connection->table('users')->where('id',$id)->update(['status'=>2]);
 
     }
 
-    //更改状态
+    /**
+     *
+     * @method GET
+     * @url /msc/admin/user/student-status/{id}/changeStatus
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        id        主键id
+     *
+     * @return blooean
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16 14:48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function changeStatus($id){
+
          $connection=\DB::connection('sys_mis');
 
 

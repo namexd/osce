@@ -59,7 +59,23 @@ class Teacher extends CommonModel {
         return $builder->orderBy($order['0'], $order['1'])->paginate(config('msc.page_size',10));
     }
 
-    //保存编辑教职工数据
+    /**
+     *
+     * @method POST
+     * @url /msc/admin/user/teacher-save/saveEditTeacher
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * array       $data        控制器传递参数
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16 14:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function saveEditTeacher($data){
         $connection=\DB::connection('msc_mis');
         $connection->beginTransaction();
@@ -81,8 +97,24 @@ class Teacher extends CommonModel {
         $connection->commit();
     }
 
-    //保存添加教职工
 
+    /**
+     *
+     * @method POST
+     * @url /msc/admin/user/teacher-add/postAddTeacher
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * array        $data        控制器传递参数
+     *
+     * @return blooean
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16 14:40
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function postAddTeacher($data){
         $connection=\DB::connection('msc_mis');
 
@@ -91,6 +123,9 @@ class Teacher extends CommonModel {
 
         $id=$connection->table('teacher')->insertGetId($item);
 
+        if(!$id){
+            return false;
+        }
 
         $connection=\DB::connection('sys_mis');
         $users=array('id'=>$id,'gender'=>$data['gender'],'moblie'=>$data['moblie'],'status'=>$data['status']);
@@ -100,7 +135,23 @@ class Teacher extends CommonModel {
         return $result;
     }
 
-    //软删除
+    /**
+     *
+     * @method GET
+     * @url /msc/admin/user/teacher-trashed/{id}/SoftTrashed
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        id        主键id
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16  14:45
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function SoftTrashed($id){
         $connection=\DB::connection('sys_mis');
 
@@ -108,7 +159,23 @@ class Teacher extends CommonModel {
 
     }
 
-    //更改状态
+    /**
+     *
+     * @method GET
+     * @url /msc/admin/user/teacher-status/{id}/changeStatus
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        id        主键id
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhoucong@misrobot.com>
+     * @date 2015-12-16 14:48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function changeStatus($id){
         $connection=\DB::connection('sys_mis');
 

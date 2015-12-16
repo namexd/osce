@@ -169,14 +169,33 @@ class ResourcesClassroom extends  CommonModel {
             function ($join) {
                 $join->on('teacher_courses.teacher_id','=','teacher.id');
             }
-        )   ->  where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))
-            ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+        )   ->  whereRaw ('unix_timestamp(resources_lab_plan.begintime) <= ?',[strtotime(date('Y-m-d'))])
+            ->  whereRaw ('unix_timestamp(resources_lab_plan.endtime) <= ?',[strtotime(date('Y-m-d'))])
             ->  where($this->table.'.id','=',$id)
             ->  select([
                 'courses.name as courses_name',
                 'teacher.name as teacher_name',
-                'resources_lab.name as lab_name',
             ]);
+        return $builder->get();
+    }
+
+    public function getClassroomVideo($id) {
+        $builder = $this->leftJoin(
+            'resources_lab_vcr',
+            function ($join) {
+                $join->on('resources_lab_vcr.resources_lab_id','=',$this->table.'.id');
+            }
+        )   ->leftJoin(
+            'vcr',
+            function ($join) {
+                $join->on('vcr.id','=','resources_lab_vcr.vcr_id');
+            }
+        )   ->where($this->table.'.id','=',$id)
+            ->select([
+                'vcr.id as vid',
+                'vcr.name as vname',
+        ]);
+
         return $builder->get();
     }
 }
