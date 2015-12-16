@@ -26,9 +26,9 @@ $(function(){
 lizhiyuan*/
 function course_vcr(){
     //初始化
-    courseObserveDetail.initVideo(500,300,1,"divPlugin");
+    courseObserveDetail.initVideo(600,400,1,"divPlugin");
     //登录
-    courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
+    courseObserveDetail.Login({ip:pars.ip,ports:pars.port,user:pars.username,passwd:pars.password});
 }
 /*课程监管首页引用
  lizhiyuan
@@ -66,6 +66,7 @@ function course_observe(){
         $(this).addClass("active");
         var $classroomId=$(this).attr("id");
         getLesson($classroomId,pars.lessonUrl);
+
     })
     //ajax获取课程和老师信息
     function getLesson(id,url){
@@ -81,7 +82,7 @@ function course_observe(){
                 var vcr='';
                 for(var i=0;i<result.video_count;i++){
                     var vcrUrl=pars.vcrUrl+"?id="+result.video[i].vid;
-                    vcr+='<iframe src="'+vcrUrl+'" frameborder="0" width="500px" height="340px"></iframe>';
+                    vcr+='<iframe src="'+vcrUrl+'" frameborder="0" width="600px" height="440px"></iframe>';
                     console.log(result.video[i].vname);
                 }
                 $("#vcr-box").empty();
