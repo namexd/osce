@@ -2052,7 +2052,6 @@ class CoursesController extends MscController
      */
     public function getClassroomVcr(Request $request){
         $id =   intval( $request    ->  id);
-
         if(empty($id))
         {
             abort(404);
