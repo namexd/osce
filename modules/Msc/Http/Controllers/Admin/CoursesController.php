@@ -18,6 +18,7 @@ use Modules\Msc\Entities\ResourcesClassroomCourses;
 use Modules\Msc\Entities\ResourcesClassroomPlan;
 use Modules\Msc\Entities\ResourcesClassroomPlanAlter;
 use Modules\Msc\Entities\ResourcesClassroomPlanTeacher;
+use Modules\Msc\Entities\ResourcesLabVcr;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Training;
 use Modules\Msc\Entities\TrainingCourse;
@@ -33,10 +34,10 @@ use Modules\Msc\Repositories\Common as MscCommon;
 class CoursesController extends MscController
 {
 
-    public function getTest(){
+    /*public function getTest(){
 
         return view('msc::admin.coursemanage.course_observe_detail');
-    }
+    }*/
     /**
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
@@ -1858,10 +1859,10 @@ class CoursesController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * int           lab_id               教师id
-     * * int           vcr_id              摄像机id
+     * * int           lab_id               教室
      *
-     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
+     *
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数  vcrs:摄像机信息
      *
      * @version 1.0
      * @author  gaoshichong
@@ -1870,24 +1871,52 @@ class CoursesController extends MscController
      *
      */
     public function getCoursesVcr(Request $request){
-        $this->validate($request,[
-
-        ]);
+        $lab_id=$request->get("lab_id");
         try{
             $model=new ResourcesClassroom();
-            $rst=$model->getClassroomDetails(2)->first();
+            $rst=$model->getClassroomDetails($lab_id)->first();
+            $vcrs=$model->getClassroomVideo($lab_id);
+            dd($vcrs);
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
                 'lab_name'               =>    $rst->lab_name,
-                'vcr_id'                 =>    33,
+                'vcrs'                   =>    $vcrs,
                 'total'                  =>    40,
                 'unabsence'              =>    39,
             ];
             //PC-Admin-002-课程监管.png
+            return view('msc::admin.coursemanage.course_observe_detail',$data);
+        }catch (\Exception $ex){
+            $this->fail($ex);
+        }
+    }
+    /**
+     * 获取下载课程信息
+     * @api GET /msc/admin/courses/download-course
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int           plan_id               计划id
+     *
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author  gaoshichong
+     * @date 2015-12-16 15:39:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getDownloadCourse(Request $request){
+        $plan_id=$request->get("plan_id");
+        try{
+            $model = new ResourcesClassroom();
+            $data = $model -> getCourseVcrByPlanId($plan_id);
             return view('',$data);
         }catch (\Exception $ex){
-
+            $this -> fail($ex);
         }
     }
 	/**
@@ -2061,11 +2090,11 @@ class CoursesController extends MscController
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return object
+     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id,'摄像头名称'：$vcr->name,'username':$vcr->username,'password':$vcr->password,'port':$vcr->port,channel:$vcr->id,'ip':$vcr->ip}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2015-12-16 15:44
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
@@ -2075,6 +2104,13 @@ class CoursesController extends MscController
         {
             abort(404);
         }
-        //return view('',['id'=>$id]);
+        $vcrRelation    =   ResourcesLabVcr::where('vcr_id','=',$id)->first();
+        $vcr            =   $vcrRelation    ->  vcr;
+        if(empty($vcrRelation))
+        {
+            abort(404);
+        }
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id,'vcrRelation'=>$vcrRelation,'vcr'=>$vcr]);
     }
+
 }
