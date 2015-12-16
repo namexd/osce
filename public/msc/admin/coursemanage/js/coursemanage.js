@@ -9,7 +9,7 @@ $(function(){
         case "course_observe_detail":
             //courseObserveDetail.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
             //初始化
-            courseObserveDetail.initVideo(1130,600,1,"divPlugin");
+            courseObserveDetail.initVideo(1130,600,1,"divPlugin",pars.downloadUrl);
             //登录
             courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
             //切换视频
@@ -168,12 +168,13 @@ var courseObserveDetail = (function(mod){
      *count 显示窗口数  1:1x1,2：2x2
      *elem dom id字符串
      */
-    mod.initVideo = function(width,height,count,elem){
+    mod.initVideo = function(width,height,count,elem,download_url){
         /**
          *检查插件是否已经安装过
          */
         if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
             alert("您还未安装过插件，双击开发包目录里的WebComponents.exe安装！");
+            window.open(download_url);
             return;
         }
         
