@@ -2094,7 +2094,7 @@ class CoursesController extends MscController
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id,'摄像头名称'：$vcr->name,'username':$vcr->username,'password':$vcr->password,'port':$vcr->port,channel:$vcr->id}
+     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id,'摄像头名称'：$vcr->name,'username':$vcr->username,'password':$vcr->password,'port':$vcr->port,channel:$vcr->id,'ip':$vcr->ip}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
