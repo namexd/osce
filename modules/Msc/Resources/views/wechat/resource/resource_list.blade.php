@@ -3,6 +3,10 @@
 @section('only_head_css')
 <link href="{{asset('msc/wechat/resourcemanage/css/information.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('msc/wechat/resourcemanage/resourcemanage/reourcemanage.css')}}" rel="stylesheet" type="text/css" />
+<style>
+    .detail_list .name img{width: 55%;float: left;}
+    .detail_list .name span{width: 45%;float: left;}
+</style>
 @stop
 
 @section('only_head_js')
@@ -47,7 +51,7 @@
                 var selectType = thisElement.attr('value');
                 var req = {type:selectType,keyword:'',page:1};
                 //数据请求结果
-                ajaxRequest(req);
+                ajaxRequest(req,url);
             });
 
             /*搜索*/
@@ -56,7 +60,7 @@
                 var selectType = $('#thelist').find('.check').attr('value');
                 var req = {type:selectType,keyword:$('#search').val(),page:1};
                 //数据请求结果
-                ajaxRequest(req);
+                ajaxRequest(req,url);
             })
 
             /*跳转到详情页*/
