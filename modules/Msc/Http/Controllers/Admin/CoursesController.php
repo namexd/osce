@@ -37,7 +37,7 @@ class CoursesController extends MscController
 
         return view('msc::admin.coursemanage.course_observe_detail');
 
-        return view('msc::admin.coursemanage.course_observe');
+        return view('');
 
     }
     /**
@@ -1856,6 +1856,42 @@ class CoursesController extends MscController
     }
 
     /**
+     * 获取课程信息和摄像机信息
+     * @api GET /msc/admin/courses/courses-vcr
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        courses_name        课程内容
+     *   string        teacher_name        老师姓名
+     *   string        resources_lab_name  教室名称
+     * * int           vcr_id              摄像机id
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author  gaoshichong
+     * @date 2015-12-15 11:04:22
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getCoursesVcr(Request $request){
+        $this->validate($request,[
+            'courses_name'           =>   "required|string",
+            'teacher_name'           =>   "required|string",
+            'resources_lab_name'     =>   "required|string",
+            'vcr_id'                 =>   "required|integer",
+        ]);
+        $data    =[
+            'courses_name'           =>    $request->get("courses_name"),
+            'teacher_name'           =>    $request->get("teacher_name"),
+            'resources_lab_name'     =>    $request->get("resources_lab_name"),
+            'vcr_id'                 =>    $request->get("vcr_id"),
+        ];
+        //PC-Admin-002-课程监管.png
+        return view('',$data);
+    }
+	/**
      *  下载视频前检查
      * @api GET /msc/admin/courses/video-check
      * @access public
@@ -1943,7 +1979,8 @@ class CoursesController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      * @param Request $request
      */
-    public function getClassObserve(Request $request) {
+    public function getClassObserve(Request $request)
+    {
         $this->validate($request, [
             'keyword' => 'sometimes',
         ]);
@@ -1951,11 +1988,12 @@ class CoursesController extends MscController
         $keyword = e(urldecode($request->get('keyword')));
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomName($keyword);
-        return view('', ['data' => $data]);
+       
+        return view('msc::admin.coursemanage.course_observe', ['data' => $data]);
     }
 
     /**
-     * 根据ajax请求获取对应教室
+     * 根据ajax请求获取对应教室的详情
      * @api GET /msc/admin/courses/class-observe-video
      * @access public
      * @return array
