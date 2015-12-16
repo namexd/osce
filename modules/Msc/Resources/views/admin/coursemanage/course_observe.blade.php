@@ -31,7 +31,7 @@
                            @forelse($data as $item)
                            <li class="second-level">
                                <p flag="false" id="{{$item['id']}}">
-                                   {{$item['code']}}{{$item['classroom']}}
+                                   {{$item['code']}}{{$item['name']}}
                                </p>
                                {{--<ul>
                                    <li class="third-level">101</li>

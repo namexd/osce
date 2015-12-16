@@ -33,13 +33,13 @@ use Modules\Msc\Repositories\Common as MscCommon;
 class CoursesController extends MscController
 {
 
-    public function getTest(){
+   /* public function getTest(){
 
         return view('msc::admin.coursemanage.course_observe_detail');
 
-        return view('msc::admin.coursemanage.course_observe');
+        return view('');
 
-    }
+    }*/
     /**
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
@@ -1951,7 +1951,7 @@ class CoursesController extends MscController
         $keyword = e(urldecode($request->get('keyword')));
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomName($keyword);
-        return view('', ['data' => $data]);
+        return view('msc::admin.coursemanage.course_observe', ['data' => $data]);
     }
 
     /**

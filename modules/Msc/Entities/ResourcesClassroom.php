@@ -124,9 +124,10 @@ class ResourcesClassroom extends  CommonModel {
         if ($keyword !== '') {
             $result = $this->where($this->table.'.code','like','%'.$keyword.'%')->where($this->table.'.name','like','%'.$keyword.'%');
         }
-        $result = select([
+        $result = $this->select([
             "$this->table" . '.id as id',
-            "$this->table" . '.name as name'
+            "$this->table" . '.name as name',
+            "$this->table" . '.code as code'
         ])->get();
 
         return $result;
