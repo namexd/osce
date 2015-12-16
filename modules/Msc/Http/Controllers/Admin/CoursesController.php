@@ -1859,8 +1859,8 @@ class CoursesController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * int           lab_id               教师id
-     * * int           vcr_id              摄像机id
+     * * int           lab_id               教室
+     *
      *
      * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
      *
@@ -1881,14 +1881,45 @@ class CoursesController extends MscController
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
                 'lab_name'               =>    $rst->lab_name,
-                'vcr_id'                 =>    33,
+                'vcr_id'                 =>    [33,35],
                 'total'                  =>    40,
                 'unabsence'              =>    39,
             ];
             //PC-Admin-002-课程监管.png
             return view('',$data);
         }catch (\Exception $ex){
+            $this->fail($ex);
+        }
+    }
+    /**
+     * 获取课程信息和摄像机信息
+     * @api GET /msc/admin/courses/download-course
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int           plan_id               计划id
+     *
+     *
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
+     *
+     * @version 1.0
+     * @author  gaoshichong
+     * @date 2015-12-16 15:39:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getDownloadCourse(Request $request){
+        $this->validate($request,[
 
+        ]);
+        try{
+            $model=new ResourcesClassroom();
+            $data=$model->getCourseVcrByPlanId(1);
+            dd($data);
+            return view('',$data);
+        }catch (\Exception $ex){
+            $this->fail($ex);
         }
     }
 	/**
