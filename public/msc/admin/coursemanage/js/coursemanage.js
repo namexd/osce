@@ -15,10 +15,21 @@ $(function(){
             //切换视频
             courseObserveDetail.changeVideo();
 
-            courseObserveDetail.stopPlay(0)
+            courseObserveDetail.stopPlay(0);
+
+            courseObserveDetail.update();
             break;
+        case "course_vcr":course_vcr();break;
     }
 })
+/*课程监管摄像头页面引用
+lizhiyuan*/
+function course_vcr(){
+    //初始化
+    courseObserveDetail.initVideo(1130,600,1,"divPlugin");
+    //登录
+    courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
+}
 /*课程监管首页引用
  lizhiyuan
  qq:973261287
@@ -66,8 +77,9 @@ function course_observe(){
                 id:id
             },
             success: function(result){
-                $("#lesson").html(result.content);
-                $("#teacher").html(result.teacher);
+                //console.log(result);
+                $("#lesson").html(result.courses_name);
+                $("#teacher").html(result.teacher_name);
             }
         });
     }
@@ -277,7 +289,30 @@ var courseObserveDetail = (function(mod){
             mod.StartRealPlay(0,iChannelID,'192.168.1.250');
         });
     }
-    
+
+    /**
+     *检测是否大于10
+     */
+    function testTime(res){
+        return res>=10?res:'0'+res;
+    }
+
+    /**
+     *当前时间写入
+     */
+    function nowTime(){
+        var nowDay = ((new Date()).getFullYear()) +'-'+((new Date()).getMonth()>=9?((new Date()).getMonth()+parseInt(1)):('0'+((new Date()).getMonth()+parseInt(1))))+'-'+((new Date()).getDate()>=10?(new Date()).getDate():('0'+((new Date()).getDate()+parseInt(1))));
+        var time = (new Date()).getHours()+':'+testTime((new Date()).getMinutes())+':'+testTime((new Date()).getSeconds());
+        $('#nowDay').text(nowDay);
+        $('#time').text(time);
+    }
+
+    /**
+     *实时写入
+     */
+    mod.update = function(){
+        setInterval(nowTime,1000);
+    }
 
     /**
      *返回列表

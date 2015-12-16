@@ -30,7 +30,7 @@
                             </li>
                             <li><a class="active J_menuItem" href="{{url('/msc/admin/training/add-training')}}">培训安排</a>
                             </li>
-                            <li><a class="active J_menuItem" href="" onclick="return false;">课程监管</a>
+                            <li><a class="active J_menuItem" href="{{route('msc.admin.courses.getClassObserve')}}">课程监管</a>
                             </li>
                         </ul>
                     </li>

@@ -60,6 +60,9 @@ class ResourcesClassroomApply extends  CommonModel {
      * @return
      */
     public function getWaitExamineList ($courseName, $date, $order) {
+        $connection =   DB::connection('msc_mis');
+        $connection ->enableQueryLog();
+
         $builder = $this->leftJoin (
             'resources_lab',
             function ($join) {
@@ -97,6 +100,9 @@ class ResourcesClassroomApply extends  CommonModel {
             ]
         );
 //        dd($order[0][1]);
+        $builder->orderBy ($order[0][0], $order[1])->orderBy($order[0][1],$order[1])->paginate (config ('msc.page_size'));
+        $c=$connection ->getQueryLog();
+        dd($c);
         return $builder->orderBy ($order[0][0], $order[1])->orderBy($order[0][1],$order[1])->paginate (config ('msc.page_size'));
     }
 

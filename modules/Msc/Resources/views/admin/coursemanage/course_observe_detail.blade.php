@@ -47,14 +47,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">课程内容</label>
                     <div class="col-sm-10">
-                        <div class="form-control">xxxxxxx</div>
+                        <div class="form-control">{{$courses_name}}</div>
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">授课老师</label>
                     <div class="col-sm-10 select_code">
-                        <div class="form-control">李老师</div>
+                        <div class="form-control">{{$teacher_name}}</div>
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -62,7 +62,7 @@
                     <label class="col-sm-2 control-label">考勤率</label>
                     <div class="col-sm-10" style="height:98px">
                         <div class="form-control">
-                            <span>97.8%</span>
+                            <span>{{$unabsence/$total*100}}%</span>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -73,9 +73,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>30</td>
-                                        <td>29</td>
-                                        <td>1</td>
+                                        <td>{{$total}}</td>
+                                        <td>{{$unabsence}}</td>
+                                        <td>{{$total-$unabsence}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -110,10 +110,10 @@
                 <h4>
                     <div class="row">
                         <div class="col-sm-10">
-                            <label class="font-noraml">临床教学楼1楼10001室</label>
+                            <label class="font-noraml">{{$lab_name}}</label>
                         </div>
                         <div class="col-sm-2">
-                            <label class="font-noraml">2014-10-28 <span>8:00</span></label>
+                            <label class="font-noraml"><b id="nowDay"></b><span id="time">8:00:00</span></label>
                         </div>
                     </div>
                 </h4>
