@@ -21,7 +21,7 @@
     <div>
         <div class="vcr-head">
             <span id="vcr-name" class="pull-left">{{$vcr->name}}</span>
-            <a href="{{}}" target="iframe0"><span id="vcr-go" class="fa fa-arrows-alt pull-right"></span></a>
+            <a href="{{route('msc.admin.courses.getCoursesVcr',['lab_id'=>$vcrRelation->resources_lab_id])}}" target="iframe0"><span id="vcr-go" class="fa fa-arrows-alt pull-right"></span></a>
         </div>
         <div id="divPlugin" class="video"></div>
     </div>
