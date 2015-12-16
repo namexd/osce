@@ -5,7 +5,7 @@
 <link href="{{asset('msc/wechat/resourcemanage/resourcemanage/reourcemanage.css')}}" rel="stylesheet" type="text/css" />
 <style>
     .detail_list .name img{width: 55%;float: left;}
-    .detail_list .name span{width: 45%;float: left;}
+    .detail_list .name span{width: 45%;float: left;text-align: left;}
 </style>
 @stop
 
