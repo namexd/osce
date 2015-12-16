@@ -1890,7 +1890,7 @@ class CoursesController extends MscController
             //PC-Admin-002-课程监管.png
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
-            $this->fail($ex);
+            return redirect()->back()->withErrors($ex);
         }
     }
     /**

@@ -37,7 +37,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'course_observe_detail'}">
+<input type="hidden" id="parameter" value="{'pagename':'course_observe_detail','downloadUrl':'{{route("msc.admin.courses.getDownloadVideoActivx")}}'}">
 <div class="row">
     <!-- 左侧 -->
     <div class="col-sm-4">
@@ -113,7 +113,7 @@
                             <label class="font-noraml">{{$lab_name}}</label>
                         </div>
                         <div class="col-sm-2">
-                            <label class="font-noraml"><b id="nowDay"></b><span id="time">8:00:00</span></label>
+                            <label class="font-noraml"><b id="nowDay">2015-12-11</b><span id="time">8:00:00</span></label>
                         </div>
                     </div>
                 </h4>
