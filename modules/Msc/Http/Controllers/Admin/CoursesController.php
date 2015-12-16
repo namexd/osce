@@ -60,7 +60,6 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
-
             //已经存在的数据
             $dataHaven=[];
             //添加失败的数据
@@ -1812,7 +1811,7 @@ class CoursesController extends MscController
      *
      */
     public function getDownloadCoursesListTpl(){
-        $this->downloadfile('coursesList.xlsx',public_path('download').'/coursesList.xlsx');
+        $this->downloadfile('coursesList.xlsx',public_path('download').'/coursesPlan.xlsx');
     }
     /**
      * 下载课程计划导入清单模板excl
@@ -1829,7 +1828,7 @@ class CoursesController extends MscController
      *
      */
     public function getDownloadCoursesPlanTpl(){
-        $this->downloadfile('coursesPlan.xlsx',public_path('download').'/coursesPlan.xlsx');
+        $this->downloadfile('coursesPlan.xlsx',public_path('download').'/coursesList.xlsx');
     }
     private function downloadfile($filename,$filepath){
         header('Content-Description: File Transfer');
