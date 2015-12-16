@@ -26,7 +26,7 @@ $(function(){
 lizhiyuan*/
 function course_vcr(){
     //初始化
-    courseObserveDetail.initVideo(1130,600,1,"divPlugin");
+    courseObserveDetail.initVideo(500,300,1,"divPlugin");
     //登录
     courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
 }
@@ -77,7 +77,15 @@ function course_observe(){
                 id:id
             },
             success: function(result){
-                //console.log(result);
+                console.log(result);
+                var vcr='';
+                for(var i=0;i<result.video_count;i++){
+                    var vcrUrl=pars.vcrUrl+"?id="+result.video[i].vid;
+                    vcr+='<iframe src="'+vcrUrl+'" frameborder="0" width="500px" height="340px"></iframe>';
+                    console.log(result.video[i].vname);
+                }
+                $("#vcr-box").empty();
+                $("#vcr-box").append(vcr);
                 $("#lesson").html(result.courses_name);
                 $("#teacher").html(result.teacher_name);
             }

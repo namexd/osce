@@ -3,6 +3,8 @@
     <link rel="stylesheet" href="{{asset('msc/admin/css/demo.css')}}">
     <style type="text/css">
 
+
+
     </style>
 @stop
 
@@ -17,6 +19,10 @@
     <input type="hidden" id="parameter" value="{'pagename':'course_vcr'}">
 
     <div>
+        <div class="vcr-head">
+            <div id="vcr-name" class="pull-left">{{$vcr->name}}</div>
+            <div id="vcr-go" class="pull-right"></div>
+        </div>
         <div id="divPlugin" class="video"></div>
     </div>
 @stop
