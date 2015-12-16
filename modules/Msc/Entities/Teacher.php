@@ -42,4 +42,20 @@ class Teacher extends CommonModel {
             }
         }
     }
+
+    // 获得分页列表
+    public function getFilteredPaginateList ($kwd='', $order=['id', 'desc'])
+    {
+        $builder = $this;
+
+        if ($kwd)
+        {
+            $builder = $builder->whereRaw(
+                'locate(?, teacher.name)>0 or locate(?, teacher.code)>0 ',
+                [$kwd, $kwd]
+            );
+        }
+
+        return $builder->orderBy($order['0'], $order['1'])->paginate(config('msc.page_size',10));
+    }
 }

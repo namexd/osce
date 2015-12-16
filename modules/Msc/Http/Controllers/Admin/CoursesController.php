@@ -34,7 +34,11 @@ class CoursesController extends MscController
 {
 
     public function getTest(){
+<<<<<<< HEAD
         return view('msc::admin.coursemanage.course_observe_detail');
+=======
+        return view('msc::admin.coursemanage.course_observe');
+>>>>>>> 31daf97916c30e66d0c783cf2f7fd67bd57145b7
     }
     /**
      * 导入课程
@@ -59,7 +63,10 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
+<<<<<<< HEAD
             //dd($data);
+=======
+>>>>>>> 31daf97916c30e66d0c783cf2f7fd67bd57145b7
             //已经存在的数据
             $dataHaven=[];
             //添加失败的数据
@@ -117,7 +124,6 @@ class CoursesController extends MscController
             $coursesList= array_shift($data);
             //将中文表头 按照配置 翻译成 英文字段名
             $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.coursesPlan');
-            dd($data);
             //失败原因 包
             $falseData=[];
             $dataConflict=[];
@@ -1850,5 +1856,146 @@ class CoursesController extends MscController
         }
         $userService = new \Overtrue\Wechat\Staff(config('wechat.app_id'), config('wechat.secret'));
         return $userService->send($msg)->to($openid);
+    }
+
+    /**
+     *  下载视频前检查
+     * @api GET /msc/admin/courses/video-check
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id        摄像头ID(必须的)
+     * * string        start     视频开始时间(必须的) e.g:
+     * * string        end       视频结束时间(必须的) e.g:
+     *
+     * @return json {url:下载视频文件的地址}
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *  //http://hx.mis_api.local/msc/admin/courses/video-check?id=1&start=2015-12-14%2008:00:00&end=2015-12-14%2009:00:00
+     */
+    public function getVideoCheck(Request $request){
+        $this->validate($request,[
+            'id'            =>  'required|integer',
+            'start'         =>  'required|date_format:Y-m-d H:i:s',
+            'end'           =>  'required|date_format:Y-m-d H:i:s',
+        ]);
+        $id     =   $request    ->  get('id');
+        $start  =   $request    ->  get('start');
+        $end    =   $request    ->  get('end');
+
+        $host   =   config('msc.video_host');
+        $port   =   config('msc.video_port');
+        $param    =   [
+            'channel'   =>  $id,
+            'start'     =>  $start,
+            'stop'      =>  $end,
+        ];
+        try{
+            $jsonData   =   $this   ->  socket($host,$port,json_encode($param),1);
+            if($jsonData)
+            {
+                if($json    =   json_decode($jsonData))
+                {
+                    $url    =   '';
+                    //请求成功
+                    if($json->code  ==  2000)
+                    {
+                        $url    =   $json   ->  path;
+                    }
+                    else
+                    {
+                        throw new \Exception($json    ->  msg);
+                    }
+                    if(empty($url))
+                    {
+                        throw new \Exception('没有获取到源文件路径');
+                    }
+                    response()->json(
+                        $this   ->  success_data(['url' =>  $url,1,'获取成功'])
+                    );
+                }
+                else
+                {
+                    throw new \Exception('数据源解析错误，请联系管理员');
+                }
+            }
+            else
+            {
+                throw new \Exception('获取视频源地址失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            response()->json(
+                $this->fail($ex)
+            );
+        }
+    }
+    /**
+     * 根据ajax请求获取对应教室
+     * @api GET /msc/admin/courses/class-observe
+     * @access public
+     * @return array
+     * @version 1.0
+     * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date 2015-12-15 14:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @param Request $request
+     */
+    public function getClassObserve(Request $request) {
+        $this->validate($request, [
+            'keyword' => 'sometimes',
+        ]);
+
+        $keyword = e(urldecode($request->get('keyword')));
+        $ResourcesClassroom = new ResourcesClassroom();
+        $data = $ResourcesClassroom->getClassroomName($keyword);
+        return view('', ['data' => $data]);
+    }
+
+    /**
+     * 根据ajax请求获取对应教室
+     * @api GET /msc/admin/courses/class-observe-video
+     * @access public
+     * @return array
+     * @version 1.0
+     * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date 2015-12-15 14:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @param Request $request
+     */
+    public function getClassObserveVideo(Request $request) {
+        $id = $request->get('id');
+        $ResourcesClassroom = new ResourcesClassroom();
+        $data = $ResourcesClassroom->getClassroomDetails($id);
+        dd($data);
+    }
+
+    /*socket收发数据
+        @host(string) socket服务器IP
+        @post(int) 端口
+        @str(string) 要发送的数据
+        @back 1|0 socket端是否有数据返回
+        返回true|false|服务端数据
+    */
+    protected function socket($host,$port,$str,$back=0){
+        $socket = socket_create(AF_INET,SOCK_STREAM,0);
+        if ($socket < 0) return false;
+        $result = @socket_connect($socket,$host,$port);
+        if ($result == false)return false;
+        socket_write($socket,$str,strlen($str));
+
+        if($back!=0){
+            $input = socket_read($socket,1024);
+            socket_close ($socket);
+            return $input;
+        }else{
+            socket_close ($socket);
+            return true;
+        }
     }
 }
