@@ -1876,8 +1876,9 @@ class CoursesController extends MscController
         try{
             $model=new ResourcesClassroom();
             $rst=$model->getClassroomDetails($lab_id)->first();
+
             $vcrs=$model->getClassroomVideo($lab_id);
-            dd($vcrs);
+
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
@@ -1889,7 +1890,7 @@ class CoursesController extends MscController
             //PC-Admin-002-课程监管.png
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
-            $this->fail($ex);
+            return redirect()->back()->withErrors($ex);
         }
     }
     /**
@@ -1915,6 +1916,7 @@ class CoursesController extends MscController
         try{
             $model = new ResourcesClassroom();
             $data = $model -> getCourseVcrByPlanId($plan_id);
+            dd($data);
             return view('',$data);
         }catch (\Exception $ex){
             $this -> fail($ex);
@@ -1956,6 +1958,7 @@ class CoursesController extends MscController
             'start'     =>  $start,
             'stop'      =>  $end,
         ];
+
         try{
             $jsonData   =   $this   ->  socket($host,$port,json_encode($param),1);
             if($jsonData)
@@ -1966,17 +1969,32 @@ class CoursesController extends MscController
                     //请求成功
                     if($json->code  ==  2000)
                     {
-                        $url    =   $json   ->  path;
+                        $url    =   $json   ->  url;
                     }
-                    else
+                    //如果文件正在提取
+                    if($json->code  ==  2020)
                     {
-                        throw new \Exception($json    ->  msg);
+                        return response()->json(
+                            $this   ->  success_data(['msg' =>  '请耐心等待',2,'获取成功'])
+                        );
+                    }
+                    switch($json->code)
+                    {
+                        case 2000:
+                            $url    =   $json   ->  url;
+                            break;
+                        case 2020:
+                            throw new \Exception($json    ->  msg);
+                            break;
+                        default:
+                            throw new \Exception($json    ->  msg);
+                            break;
                     }
                     if(empty($url))
                     {
                         throw new \Exception('没有获取到源文件路径');
                     }
-                    response()->json(
+                    return response()->json(
                         $this   ->  success_data(['url' =>  $url,1,'获取成功'])
                     );
                 }
@@ -1992,7 +2010,7 @@ class CoursesController extends MscController
         }
         catch(\Exception $ex)
         {
-            response()->json(
+            return response()->json(
                 $this->fail($ex)
             );
         }
@@ -2114,4 +2132,22 @@ class CoursesController extends MscController
         return view('msc::admin.coursemanage.course_vcr',['id'=>$id,'vcrRelation'=>$vcrRelation,'vcr'=>$vcr]);
     }
 
+    /**
+     * 下载视频插件
+     * @api GET /msc/admin/courses/download-video-activx
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-16 19:32
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getDownloadVideoActivx(){
+        $this->downloadfile('WebComponents.exe',public_path('download').'/WebComponents.exe');
+    }
 }

@@ -17,8 +17,12 @@ class SysFunctions extends Model
     protected $table 		= 	'sys_functions';
 
 
-    public function getPermissionMenuList(){
+    public function getFunctionsList(){
+        return  $thisBuilder = $this->with('SysPermissionFunction')->get();
+    }
 
+    public function SysPermissionFunction(){
+        return  $this->hasOne('App\Entities\SysPermissionFunction','function_id','id');
     }
 
 

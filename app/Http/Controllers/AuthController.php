@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Entities\SysRolePermission;
 use App\Entities\SysPermissionMenu;
+use App\Entities\SysPermissionFunction;
+use App\Entities\SysPermissions;
+use App\Entities\SysMenus;
+use App\Entities\SysFunctions;
 use DB;
 class AuthController extends BaseController
 {   
@@ -108,40 +112,83 @@ class AuthController extends BaseController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */ 
 
-    public function SetPermissions($id,SysRolePermission $SysRolePermission,SysPermissionMenu $SysPermissionMenu){
+    public function SetPermissions($id,SysRolePermission $SysRolePermission,SysMenus $SysMenus,SysFunctions $SysFunctions){
+
         $data = [];
         if(!empty($id)){
             $data['roleId'] = $id;
         }
         $PermissionList = $SysRolePermission->getPermissionList($data);
+        $MenusList = $SysMenus->getMenusList();
+        $FunctionsList = $SysFunctions->getFunctionsList();
 
-        $PermissionMenuArr = [];
-        $PermissionOperationArr = [];
-        $PermissionElementArr = [];
-        if(!empty($PermissionList->SysPermissions)){
-            foreach($PermissionList->SysPermissions as $val){
-                switch($val['type']){
-                    case 'MENU':
-                        $PermissionMenuArr[] =  $val['id'];
-                    break;
-                    case 'OPERATION':
-                        $PermissionOperationArr[] = $val['id'];
-                        break;
-                    case 'ELEMENT':
-                        $PermissionElementArr[] = $val['id'];
-                        break;
-                }
+        $MenusList = $this->node_merge($MenusList);
+        $FunctionsList = $this->node_merge($FunctionsList);
+
+        $PermissionIdArr = [];
+        if(!empty($PermissionList)){
+            foreach($PermissionList as $v){
+                $PermissionIdArr[] = $v['permission_id'];
             }
         }
-        $menuList = [];
-        if(!empty($PermissionMenuArr))
-            $menuList = $SysPermissionMenu->getPermissionMenuList($PermissionMenuArr);
 
-        //dd($menuList);
+        $data = [
+            'PermissionIdArr'=>$PermissionIdArr,
+            'MenusList'=>$MenusList,
+            'FunctionsList'=>$FunctionsList,
+            'role_id'=>$id
+        ];
 
-        return  view('usermanage.rolemanage_detail');
+        return  view('usermanage.rolemanage_detail',$data);
     }
 
+    /**
+     * 权限设置页面
+     * @method GET /auth/save-permissions
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return view
+     *
+     * @version 0.8
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2015年12月15日13:59:39
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function SavePermissions(Request $Request,SysRolePermission $SysRolePermission){
+        $this->validate($Request,[
+            'role_id'       => 'required|integer',
+        ]);
+        $role_id = $Request->get('role_id');
+        $permissionIdArr = $Request->get('permission_id');
+        $status = $SysRolePermission->where('role_id','=',$role_id)->get();
+
+        DB::connection('sys_mis')->beginTransaction();
+        $rew = false;
+        if(empty($status->toArray())){
+            $rew = true;
+        }else{
+            $rew = $SysRolePermission->DelRolePermission($role_id);
+        }
+        if($rew){
+            $R = $SysRolePermission->AddRolePermission($permissionIdArr,$role_id);
+            if($R){
+                DB::connection('sys_mis')->commit();
+                return redirect()->intended('/auth/auth-manage');
+            }else{
+                DB::connection('sys_mis')->rollBack();
+                dd('權限編輯失敗');
+            }
+        }else{
+            DB::connection('sys_mis')->rollBack();
+            dd('權限編輯失敗');
+        }
+
+
+
+    }
     /**
      * 删除角色
      * @method GET /auth/role-manage
@@ -187,5 +234,23 @@ class AuthController extends BaseController
         }else{
             return  redirect()->back()->withErrors(['系统繁忙']);
         }
+    }
+
+    //递归通过pid 将其压入到一个多维数组!
+    /*
+     * $node 存放所有节点的节点数组
+     * $access 判断有误权限
+     * $pid 父id
+     * return 多维数组;
+     * */
+    public  function node_merge($node,$pid=0){
+        $arr = array();
+        foreach($node as $v){
+            if($v['pid'] == $pid){
+                $v["child"] = $this->node_merge($node,$v["id"]);
+                $arr[] = $v;
+            }
+        }
+        return  $arr ;
     }
 }   
