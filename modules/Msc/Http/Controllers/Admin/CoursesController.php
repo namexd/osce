@@ -2042,20 +2042,24 @@ class CoursesController extends MscController
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return object
+     * @return view {摄像头ID：id，'教室ID':$vcr->resources_lab_id}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2015-12-16 15:44
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
     public function getClassroomVcr(Request $request){
         $id =   intval( $request    ->  id);
+
         if(empty($id))
         {
             abort(404);
         }
+        $vcr    =   ResourcesLabVcr::find($id);
+
         //return view('',['id'=>$id]);
     }
+
 }
