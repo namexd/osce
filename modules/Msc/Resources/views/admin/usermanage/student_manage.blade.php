@@ -1,6 +1,11 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
     <link rel="stylesheet" type="text/css" href="{{asset('/msc/admin/usermanage/usermanage.css')}}"/>
+    <style>
+    	.modal-content{width: 500px;}
+    	.check_icon{margin: 0!important;}
+    	#Form1 .btn-primary,#Form2 .btn-primary,#Form3 .btn-primary,#Form4 .btn-primary,#Form5 .btn-primary{padding:6px 20px;margin:10px 0 0 15px;}
+    </style>
 @stop
 
 @section('only_js')
@@ -11,6 +16,79 @@
 			$("#search").click(function(){
 				var keyword=$("#keyword").val();
 			})
+			
+			
+			for(var i=0;i<$(".table tr").length;i++){
+				$("#false-del").parents("tr").remove();//假删除数据隐藏
+			}
+			var idName;
+			$(".table a").click(function(){
+				idName=$(this).parents("tr").children(".idName").text();
+				$("#Form1,#Form2,#Form3,#Form4,#Form5").css("display","none");
+				var className=$(this).attr("id");
+				switch(className){
+					case "new-add":
+						$("#Form1").css("display","block");
+						break;
+					case "look":
+						$("#Form2").css("display","block");
+						break;
+					case "edit":
+						$("#Form3").css("display","block");
+						break;
+					case "forbidden":
+						$("#Form4 .modal-body").text("确认禁用"+$(this).parents("tr").children(".userName").text()+"用户？")
+						$("#Form4").css("display","block");
+						break;
+					case "del":
+						$("#Form5 .modal-body").text("确认删除"+$(this).parents("tr").children(".userName").text()+"用户？");
+						$("#Form5").css("display","block");
+						break;
+				}
+			})
+			$(".btn-del").click(function(){
+				$.ajax({
+					type:"get",
+					url:"/msc/admin/user/student-trashed/"+idName,
+					async:true
+				});
+				 history.go(0);
+			})
+			$(".btn-forbidden,#recover").click(function(){
+				$.ajax({
+					type:"get",
+					url:"/msc/admin/user/student-status/"+idName,
+					async:true
+				});
+				 history.go(0);
+			})
+
+			$("body").on('click','#look',function(){
+				console.log(idName);
+				$.ajax({
+					type:"get",
+					url: "{{ route('msc.admin.user.StudentItem', ['id'=>93]) }}",
+					async:false,
+					success:function(res){
+						console.log(res);
+					}
+				});
+			})
+			$("body").on('click','#edit',function(){
+				console.log(idName);
+				$.ajax({
+					type:"get",
+					url:"/msc/admin/user/student-save",
+					data:{
+						id:idName
+					},
+					async:true,
+					success:function(res){
+						console.log(res);
+					}
+				});
+			})
+			
 		})
 	</script>
 @stop
@@ -42,7 +120,7 @@
 				            </form>
 				        </div>
 				        <div class="col-xs-6 col-md-9 user_btn">
-				        	<input type="button" class="right btn btn-blue" name="" id="" value="新增学生"/>
+				        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增学生" data-toggle="modal" data-target="#myModal"/>
 				        	<input type="button" class="right btn btn-default" name="" id="" value="导出"/>
 				        	<input type="button" class="right btn btn-default" name="" id="" value="导入"/>
 				        </div>
@@ -56,7 +134,7 @@
 				                <th>学号</th>
 				                <th>
 				                	<div class="btn-group Examine">
-				                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">年纪<span class="caret"></span></button>
+				                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">年级<span class="caret"></span></button>
 				                        <ul class="dropdown-menu">
 				                            <li>
 				                                <a href="#">2015</a>
@@ -118,8 +196,8 @@
 				            <tbody>
 				            	@foreach($list as $list)
 					            	<tr>
-					                    <td>{{$list['id']}}</td>
-					                    <td>{{$list['name']}}</td>
+					                    <td class="idName">{{$list['id']}}</td>
+					                    <td class="userName">{{$list['name']}}</td>
 					                    <td>{{$list['code']}}</td>
 					                    <td>{{$list['grade']}}</td>
 					                    <td>{{$list['student_type']}}</td>
@@ -133,14 +211,16 @@
 					                    	<td>{{$list['status']}}</td>
 					                    @endif
 				                    	<td>
-					                    	<a href="#" class="status1">查看</a>
-					                    	<a href="#" class="status1">编辑</a>
+					                    	<a href="#" class="status1" id="look" data-toggle="modal" data-target="#myModal">查看</a>
+					                    	<a href="#" class="status1" id="edit" data-toggle="modal" data-target="#myModal">编辑</a>
 					                    	@if($list['status']=="禁用")
-						                    	<a href="#" class="status4">恢复</a> 
+						                    	<a href="#" class="status4" id="recover">恢复</a>
+						                    @elseif($list['status']=="删除")
+						                    	<a href="#" class="status4" id="false-del">删除</a> 
 						                    @else
-						                    	<a href="#" class="status2">禁用</a>
+						                    	<a href="#" class="status2" id="forbidden" data-toggle="modal" data-target="#myModal">禁用</a>
 						                    @endif
-					                    	<a href="#" class="status3">删除</a>
+					                    	<a href="#" class="status3" id="del" data-toggle="modal" data-target="#myModal">删除</a>
 					                    </td>
 					                </tr>
 				            	@endforeach
@@ -162,4 +242,261 @@
         </div>
     </div>
 </div>
+@stop
+
+@section('layer_content')
+<!--新增-->
+<form class="form-horizontal" id="Form1" novalidate="novalidate" action="" method="post" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">新增学生</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">姓名</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">学号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+        	<div class="col-sm-offset-2" style="padding-left: 15px;">
+        		<input type="checkbox" class="check_icon" /> <span style="padding-right: 40px;">男</span>
+            	<input type="checkbox" class="check_icon" /> <span>女</span>
+        	</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">年级</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="">
+                    <option value="">一年级</option>
+                    <option value="">二年级</option>
+                    <option value="">三年级</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">类别</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="">
+                    <option value="">本科</option>
+                    <option value="">专科</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">专业</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">手机号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">证件</label>
+            <div class="col-sm-4" style="padding-right: 0;">
+                <select class="form-control" id="">
+                    <option value="">证件类型</option>
+                    <option value="">身份证</option>
+                    <option value="">驾驶证</option>
+                </select>
+            </div>
+            <div class="col-sm-6" style="padding-left: 0;">
+            	<input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+        	<div class="col-sm-offset-2">
+        		<button type="submit" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">确定</button>
+        	</div>
+        </div>
+    </div>
+</form>
+<!--查看-->
+<form class="form-horizontal" id="Form2" novalidate="novalidate" action="" method="post" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">查看</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">姓名</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="张三" disabled="disabled" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">学号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+        	<div class="col-sm-offset-2" style="padding-left: 15px;">
+        		<input type="checkbox" class="check_icon" /> <span style="padding-right: 40px;">男</span>
+            	<input type="checkbox" class="check_icon" /> <span>女</span>
+        	</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">年级</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="">
+                    <option value="">一年级</option>
+                    <option value="">二年级</option>
+                    <option value="">三年级</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">类别</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="">
+                    <option value="">本科</option>
+                    <option value="">专科</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">专业</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">手机号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">证件</label>
+            <div class="col-sm-4" style="padding-right: 0;">
+                <select class="form-control" id="">
+                    <option value="">证件类型</option>
+                    <option value="">身份证</option>
+                    <option value="">驾驶证</option>
+                </select>
+            </div>
+            <div class="col-sm-6" style="padding-left: 0;">
+            	<input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+        	<div class="col-sm-offset-2">
+        		<button type="submit" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
+        	</div>
+        </div>
+    </div>
+</form>
+<!--编辑-->
+<form class="form-horizontal" id="Form3" novalidate="novalidate" action="" method="post" style="display: none;">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">编辑</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">姓名</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="张三" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">学号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+        	<div class="col-sm-offset-2" style="padding-left: 15px;">
+        		<input type="checkbox" class="check_icon" /> <span style="padding-right: 40px;">男</span>
+            	<input type="checkbox" class="check_icon" /> <span>女</span>
+        	</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">年级</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="">
+                    <option value="">一年级</option>
+                    <option value="">二年级</option>
+                    <option value="">三年级</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">类别</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="">
+                    <option value="">本科</option>
+                    <option value="">专科</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">专业</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">手机号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">证件</label>
+            <div class="col-sm-4" style="padding-right: 0;">
+                <select class="form-control" id="">
+                    <option value="">证件类型</option>
+                    <option value="">身份证</option>
+                    <option value="">驾驶证</option>
+                </select>
+            </div>
+            <div class="col-sm-6" style="padding-left: 0;">
+            	<input type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+        	<div class="col-sm-offset-2">
+        		<button type="submit" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
+        	</div>
+        </div>
+    </div>
+</form>
+<!--禁用-->
+<form class="form-horizontal" id="Form4" novalidate="novalidate" action="" method="post" style="display: none;">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">禁用</h4>
+    </div>
+    <div class="modal-body">
+                    确定禁用xxx用户?
+    </div>
+    <div class="form-group" style="text-align: center;">
+    	<button type="button" class="btn btn-primary btn-forbidden" data-dismiss="modal" aria-hidden="true">确定</button>
+    </div>
+</form>
+<!--删除-->
+<form class="form-horizontal" id="Form5" novalidate="novalidate" action="" method="post" style="display: none;">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">删除</h4>
+    </div>
+    <div class="modal-body">
+                    确定删除xxx用户?
+    </div>
+    <div class="form-group" style="text-align: center;">
+    	<button type="button" class="btn btn-primary btn-del" data-dismiss="modal" aria-hidden="true">确定</button>
+    </div>
+</form>
 @stop{{-- 内容主体区域 --}}

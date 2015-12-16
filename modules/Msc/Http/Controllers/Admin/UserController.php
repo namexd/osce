@@ -149,7 +149,7 @@ class UserController extends BaseController
     /**
      * 编辑学生
      * @method GET
-     * @url /msc/admin/user/student-submit/{id}
+     * @url /msc/admin/user/student-save
      * @access public
      *
      * @param Request $request get请求<br><br>
