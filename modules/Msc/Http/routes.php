@@ -146,6 +146,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//开放设备取消预约
 		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
 		Route::get('personal-center/info-manage',['uses'=>'PersonalCenterController@getInfoManage','as'=>'msc.personalCenter.infoManage']);
+		//我的課程
+		Route::get('personal-center/my-course',['uses'=>'PersonalCenterController@getMyCourse','as'=>'msc.personalCenter.MyCourse']);
 
 		Route::controller('resource', 'ResourceController');
 		Route::controller('resources-manager', 'ResourcesManagerController');

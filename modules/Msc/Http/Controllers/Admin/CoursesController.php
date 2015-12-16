@@ -36,9 +36,6 @@ class CoursesController extends MscController
     public function getTest(){
 
         return view('msc::admin.coursemanage.course_observe_detail');
-
-        return view('');
-
     }
     /**
      * 导入课程
@@ -1862,12 +1859,10 @@ class CoursesController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string        courses_name        课程内容
-     *   string        teacher_name        老师姓名
-     *   string        resources_lab_name  教室名称
+     * * int           lab_id               教师id
      * * int           vcr_id              摄像机id
      *
-     * @return view
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
      *
      * @version 1.0
      * @author  gaoshichong
@@ -1877,19 +1872,24 @@ class CoursesController extends MscController
      */
     public function getCoursesVcr(Request $request){
         $this->validate($request,[
-            'courses_name'           =>   "required|string",
-            'teacher_name'           =>   "required|string",
-            'resources_lab_name'     =>   "required|string",
-            'vcr_id'                 =>   "required|integer",
+
         ]);
-        $data    =[
-            'courses_name'           =>    $request->get("courses_name"),
-            'teacher_name'           =>    $request->get("teacher_name"),
-            'resources_lab_name'     =>    $request->get("resources_lab_name"),
-            'vcr_id'                 =>    $request->get("vcr_id"),
-        ];
-        //PC-Admin-002-课程监管.png
-        return view('',$data);
+        try{
+            $model=new ResourcesClassroom();
+            $rst=$model->getClassroomDetails(2)->first();
+            $data    =      [
+                'courses_name'           =>    $rst->courses_name,
+                'teacher_name'           =>    $rst->teacher_name,
+                'lab_name'               =>    $rst->lab_name,
+                'vcr_id'                 =>    33,
+                'total'                  =>    40,
+                'unabsence'              =>    39,
+            ];
+            //PC-Admin-002-课程监管.png
+            return view('',$data);
+        }catch (\Exception $ex){
+
+        }
     }
 	/**
      *  下载视频前检查
