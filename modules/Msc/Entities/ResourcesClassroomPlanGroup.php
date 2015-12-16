@@ -25,4 +25,12 @@ class ResourcesClassroomPlanGroup extends CommonModel
     public function groups(){
         return $this->belongsTo('\Modules\Msc\Entities\Groups','student_group_id','id');
     }
+
+    //通过计划id查找应到人数
+    public function getTotal($id){
+        $build=$this->leftJoin("student_group",function($join){
+            $join->on($this->table.'.student_group_id','=','student_group.group_id');
+        })->where($this->table.".resources_lab_plan_id",'=',$id);
+        return $build->count();
+    }
 }

@@ -120,8 +120,8 @@
             </div>
             <div class="tools-bar">
                 <ul class="nav-bar">
-                    @foreach($vcrs as $index    =>$item)
-                        <li value="{{$item->vid}}"><a href="javascript:void(0)" class="{{$index==0? 'active':''}}">{{$item->vname}}</a></li>
+                    @foreach($vcrs as $index =>$item)
+                        <li value="{{$item['vcr_id']}}"><a href="javascript:void(0)" class="{{$index==0? 'active':''}}">{{$item['vcr_name']}}</a></li>
                     @endforeach
                     <div class="tools-tips">
                         <a href="javascript:void(0)">下载</a>&nbsp;&nbsp;
