@@ -179,6 +179,25 @@ class ResourcesClassroom extends  CommonModel {
         return $builder->get();
     }
 
+    //根据计划id获取课程视频信息
+    public function getCourseVcrByPlanId($id){
+        $plan = ResourcesClassroomPlan::find($id);
+        $teachers=$plan->teachersRelation;
+        foreach($teachers as $teacher){
+            $teacher_name[]=$teacher->teacher->name;
+        }
+        $data=[
+            "currentdate"       =>    $plan->currentdate,
+            "begintime"         =>    $plan->begintime,
+            "endtime"           =>    $plan->endtime,
+            "courses_name"      =>    $plan->course->name,
+            "lab_ame"           =>    $plan->classroomCourses->classroom->name,
+            "teacher_name"      =>    $teacher_name
+        ];
+        $vcr_ids=array(1,2,3);
+      return $data;
+	}
+
     public function getClassroomVideo($id) {
         $builder = $this->leftJoin(
             'resources_lab_vcr',
@@ -197,5 +216,6 @@ class ResourcesClassroom extends  CommonModel {
         ]);
 
         return $builder->get();
+
     }
 }

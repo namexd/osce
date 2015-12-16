@@ -201,6 +201,7 @@ class ResourceController extends MscWeChatController {
 					'image'=>$path,
 					'name'=>$item->name,
 					'id'=>$item->id,
+					'type'=>$type,
 				];
 				$list[]=$data;
 			}

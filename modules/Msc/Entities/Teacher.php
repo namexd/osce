@@ -44,19 +44,42 @@ class Teacher extends CommonModel {
     }
 
     // 获得分页列表
-    public function getFilteredPaginateList ($kwd='', $order=['id', 'desc'])
+    public function getFilteredPaginateList ($kwd='', $status='', $teacherDept='')
     {
-        $builder = $this;
+        $userDb    = config('database.connections.sys_mis.database');
+        $userTable = $userDb.'.users';
+
+        $teacherDb    = config('database.connections.msc_mis.database');
+        $teacherTable = $teacherDb.'.teacher';
+
+        $builder = $this->leftJoin($userTable, function($join) use($userTable, $teacherTable) {
+            $join->on($userTable.'.id', '=', $teacherTable.'.id');
+        });
 
         if ($kwd)
         {
             $builder = $builder->whereRaw(
-                'locate(?, teacher.name)>0 or locate(?, teacher.code)>0 ',
-                [$kwd, $kwd]
+                'locate(?, '.$teacherTable.'.name)>0 or locate(?, '.$teacherTable.'.code)>0 or locate(?, '.$userTable.'.mobile)>0 ',
+                [$kwd, $kwd, $kwd]
             );
         }
 
-        return $builder->orderBy($order['0'], $order['1'])->paginate(config('msc.page_size',10));
+        if ($status)
+        {
+            $builder = $builder->where($userTable.'.status', '=', $status);
+        }
+
+        if ($teacherDept)
+        {
+            $builder = $builder->where($teacherTable.'.teacher_dept', '=', $teacherDept);
+        }
+
+        return $builder->select([
+            $teacherTable.'.id as id',
+            $teacherTable.'.name as name',
+            $teacherTable.'.code as code',
+            $teacherTable.'.teacher_dept as teacher_dept',
+        ])->orderBy($teacherTable.'.id')->paginate(config('msc.page_size',10));
     }
 
     /**

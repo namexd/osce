@@ -18,6 +18,7 @@ use Modules\Msc\Entities\ResourcesClassroomCourses;
 use Modules\Msc\Entities\ResourcesClassroomPlan;
 use Modules\Msc\Entities\ResourcesClassroomPlanAlter;
 use Modules\Msc\Entities\ResourcesClassroomPlanTeacher;
+use Modules\Msc\Entities\ResourcesLabVcr;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Training;
 use Modules\Msc\Entities\TrainingCourse;
@@ -1859,8 +1860,8 @@ class CoursesController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * int           lab_id               教师id
-     * * int           vcr_id              摄像机id
+     * * int           lab_id               教室
+     *
      *
      * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
      *
@@ -1881,14 +1882,45 @@ class CoursesController extends MscController
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
                 'lab_name'               =>    $rst->lab_name,
-                'vcr_id'                 =>    33,
+                'vcr_id'                 =>    [33,35],
                 'total'                  =>    40,
                 'unabsence'              =>    39,
             ];
             //PC-Admin-002-课程监管.png
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
+            $this->fail($ex);
+        }
+    }
+    /**
+     * 获取课程信息和摄像机信息
+     * @api GET /msc/admin/courses/download-course
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int           plan_id               计划id
+     *
+     *
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
+     *
+     * @version 1.0
+     * @author  gaoshichong
+     * @date 2015-12-16 15:39:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getDownloadCourse(Request $request){
+        $this->validate($request,[
 
+        ]);
+        try{
+            $model=new ResourcesClassroom();
+            $data=$model->getCourseVcrByPlanId(1);
+            dd($data);
+            return view('',$data);
+        }catch (\Exception $ex){
+            $this->fail($ex);
         }
     }
 	/**
@@ -2062,7 +2094,7 @@ class CoursesController extends MscController
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view {摄像头ID：id，'教室ID':$vcr->resources_lab_id}
+     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -2076,8 +2108,12 @@ class CoursesController extends MscController
         {
             abort(404);
         }
-        $vcr    =   ResourcesLabVcr::find($id);
-        return view('msc::admin.coursemanage.course_vcr',['id'=>$id]);
+        $vcrRelation    =   ResourcesLabVcr::where('vcr_id','=',$id)->first();
+        if(empty($vcrRelation))
+        {
+            abort(404);
+        }
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id,'vcrRelation'=>$vcrRelation]);
     }
 
 }
