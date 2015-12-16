@@ -24,8 +24,7 @@ $(function(){
  qq:973261287
  2015/12/15*/
 function course_observe(){
-    courseObserveDetail.initVideo(1130,600,1);
-
+    courseObserveDetail.initVideo(300,300,1,'divPlugin');
     //二级菜单展开
     $(".first-level>p").click(function(){
         if($(this).attr("flag")=="false"){

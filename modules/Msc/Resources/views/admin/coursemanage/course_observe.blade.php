@@ -63,7 +63,15 @@
                 </div>
             </div>
             <div>
-                <div id="divPlugin" class="video"></div>
+                @forelse()
+                    <iframe src="" frameborder="0">
+
+                    </iframe>
+                @endforelse
+                {{--<div id="divPlugin" class="video"></div>
+                <div id="divPlugin1" class="video"></div>
+                <div id="divPlugin2" class="video"></div>
+                <div id="divPlugin3" class="video"></div>--}}
             </div>
         </div>
     </div>
