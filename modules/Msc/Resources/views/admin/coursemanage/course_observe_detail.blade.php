@@ -30,10 +30,7 @@
             margin-right: 15px;
         }
         .tools-tips span:first-child{margin-right: 8px;}
-        .video{
-            height: 700px;
-            width: 1080px;
-        }
+        .tools-tips a {color: #676a6c}
         .fa{cursor: pointer;}
     </style>
 @stop
@@ -112,25 +109,23 @@
             <div class="title">
                 <h4>
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-sm-10">
                             <label class="font-noraml">临床教学楼1楼10001室</label>
                         </div>
                         <div class="col-sm-2">
                             <label class="font-noraml">2014-10-28 <span>8:00</span></label>
-                        </div>
-                        <div class="col-sm-2">
-                            <label class="pull-right font-noraml">信号强度123</label>
                         </div>
                     </div>
                 </h4>
             </div>
             <div class="tools-bar">
                 <ul class="nav-bar">
-                    <li><a class="active" href="javascript:void(0)">1号摄像机</a></li>
-                    <li><a href="javascript:void(0)">2号摄像机</a></li>
-                    <li><a href="javascript:void(0)">3号摄像机</a></li>
-                    <li><a href="javascript:void(0)">4号摄像机</a></li>
+                    <li value="1"><a class="active" href="javascript:void(0)">1号摄像机</a></li>
+                    <li value="1"><a href="javascript:void(0)">2号摄像机</a></li>
+                    <li value="1"><a href="javascript:void(0)">3号摄像机</a></li>
+                    <li value="1"><a href="javascript:void(0)">4号摄像机</a></li>
                     <div class="tools-tips">
+                        <a href="javascript:void(0)">下载</a>&nbsp;&nbsp;
                         <span class="fa fa-arrows-alt"></span>
                         <span class="fa fa-times"></span>
                     </div>

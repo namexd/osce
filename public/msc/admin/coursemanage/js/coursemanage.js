@@ -7,16 +7,15 @@ $(function(){
     switch(pars.pagename){
         case "course_observe":course_observe();break;
         case "course_observe_detail":
-            courseObserveDetail.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
-
-            courseObserveDetail.initVideo(1130,600,1);
-
+            //courseObserveDetail.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
+            //初始化
+            courseObserveDetail.initVideo(1130,600,1,"divPlugin");
+            //登录
             courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'misrobot123'});
-
-            //courseObserveDetail.stopPlay(0);
-
+            //切换视频
             courseObserveDetail.changeVideo();
 
+            courseObserveDetail.stopPlay(0)
             break;
     }
 })
@@ -147,8 +146,9 @@ var courseObserveDetail = (function(mod){
      *width 视频窗口宽度
      *height 视频窗口高度
      *count 显示窗口数  1:1x1,2：2x2
+     *elem dom id字符串
      */
-    mod.initVideo = function(width,height,count){
+    mod.initVideo = function(width,height,count,elem){
         /**
          *检查插件是否已经安装过
          */
@@ -168,7 +168,7 @@ var courseObserveDetail = (function(mod){
                 alert(szInfo);
             }
         });
-        WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
+        WebVideoCtrl.I_InsertOBJECTPlugin(elem);
 
         /**
          *检查插件是否最新
@@ -272,24 +272,23 @@ var courseObserveDetail = (function(mod){
             var thisElement = $(this);
             $('.nav-bar li a').removeClass('active');
             thisElement.find('a').addClass('active');
-        });
-
-        //测试
-        $('.active').click(function(){
-            mod.StartRealPlay(0,'1','192.168.1.250');
+            //切换通道即切换视频 
+            var iChannelID = thisElement.attr('value'); //通道号
+            mod.StartRealPlay(0,iChannelID,'192.168.1.250');
         });
     }
     
 
-    //返回列表
+    /**
+     *返回列表
+     */
     $('.fa-arrows-alt').click(function(){
         //WebVideoCtrl.I_FullScreen(true);
     });
 
     
-
-
     return mod;
+
 })(courseObserveDetail||{})
 
 
