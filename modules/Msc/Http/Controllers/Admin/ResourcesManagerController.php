@@ -83,7 +83,7 @@ class ResourcesManagerController extends MscController
             ];
         }
 
-        //dd($data);
+//        dd($data);
         return view('msc::admin.resourcemanage.Existing', ['list'=>$data, 'pagination'=>$pagination]);
     }
 
