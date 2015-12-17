@@ -237,7 +237,7 @@ class Student extends CommonModel {
 
         $connection=\DB::connection('sys_mis');
 
-        return $connection->table('users')->where('id',$id)->update(['status'=>2]);
+        return $connection->table('users')->where('id',$id)->update(['status'=>3]);
 
     }
 
@@ -269,7 +269,7 @@ class Student extends CommonModel {
             $status=$tmp;
          }
 
-         return $connection->table('users')->where('id',$id)->update(['status'=>1-$status]);
+         return $connection->table('users')->where('id',$id)->update(['status'=>3-$status]);
 
     }
 }

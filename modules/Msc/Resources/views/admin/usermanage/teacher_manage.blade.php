@@ -19,8 +19,8 @@
     <div class="panel-heading">
         <div class="panel-options">
             <ul class="nav nav-tabs">
-                <li class=""><a href="http://www.msc.hx/msc/admin/user/student-list">学生管理</a></li>
-                <li class="active"><a href="http://www.msc.hx/msc/admin/user/teacher-list">教职工管理</a></li>
+                <li class=""><a href="/msc/admin/user/student-list">学生管理</a></li>
+                <li class="active"><a href="/msc/admin/user/teacher-list">教职工管理</a></li>
             </ul>
         </div>
     </div>
