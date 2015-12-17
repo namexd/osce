@@ -17,10 +17,13 @@ class SysMenus extends Model
     protected $table 		= 	'sys_menus';
 
 
-    public function getPermissionMenuList(){
-
+    public function getMenusList(){
+        return  $thisBuilder = $this->with('SysPermissionMenu')->get();
     }
 
+    public function SysPermissionMenu(){
+        return  $this->hasOne('App\Entities\SysPermissionMenu','menu_id','id');
+    }
 
 
 
