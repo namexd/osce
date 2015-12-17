@@ -20,7 +20,7 @@
 
     <div>
         <div class="vcr-head">
-            <div id="vcr-name" class="pull-left">{{$vcr->name}}</div>
+            <div id="vcr-name" class="pull-left">{{empty($vcr->name)? '-':$vcr->name->adsf}}</div>
             <div id="vcr-go" class="pull-right"></div>
         </div>
         <div id="divPlugin" class="video"></div>

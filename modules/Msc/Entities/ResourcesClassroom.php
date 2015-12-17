@@ -175,6 +175,8 @@ class ResourcesClassroom extends  CommonModel {
             ->  select([
                 'courses.name as courses_name',
                 'teacher.name as teacher_name',
+                $this->table.'.name as lab_name',
+                'resources_lab_plan.id as pid'
             ]);
         return $builder->get();
     }
@@ -184,10 +186,7 @@ class ResourcesClassroom extends  CommonModel {
 
         $plan = ResourcesClassroomPlan::find($id);
         $teachers = $plan->teachersRelation;
-        foreach($teachers as $teacher){
-            $teacher_name[] = $teacher->teacher->name;
-        }
-
+        $teacher_name = $teachers->first()->teacher->name;
         $classroom_id = $plan -> classroomCourses -> classroom -> id;
         $resourceslab=ResourcesLabVcr::where('resources_lab_id',$classroom_id) -> get();
         foreach($resourceslab as $item){
@@ -196,6 +195,9 @@ class ResourcesClassroom extends  CommonModel {
             $vcr['vcr_name'] = Vcr::find($item -> vcr_id)->name;
             $vcrs[] = $vcr;
         }
+        $unabsence=ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$id)->count();
+        $ResourcesClassroomPlanGroup=new ResourcesClassroomPlanGroup();
+        $total=$ResourcesClassroomPlanGroup->getTotal($id);
         $data=[
             "currentdate"       =>    $plan->currentdate,
             "begintime"         =>    $plan->begintime,
@@ -204,6 +206,8 @@ class ResourcesClassroom extends  CommonModel {
             "lab_ame"           =>    $plan->classroomCourses->classroom->name,
             "teacher_name"      =>    $teacher_name,
             'vcrs'              =>    $vcrs,
+            'unabsence'         =>    $unabsence,
+            'total'             =>    $total,
         ];
         return $data;
 	}

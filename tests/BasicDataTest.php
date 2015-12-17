@@ -24,6 +24,15 @@ class BasicDataTest extends TestCase
             30,45,60,120
         ];
     }
+    public function getGrade(){
+        $config =   [
+            '2015',
+            '2014',
+            '2013',
+            '2012',
+        ];
+        return $this->getRandItem($config);
+    }
     private function getTimeToTime(){
         return  [
             '08:00-09:00',
@@ -37,6 +46,36 @@ class BasicDataTest extends TestCase
     private function getRandStudent(){
         $list   =   \Modules\Msc\Entities\Student::where('id','>',48)->get();
         return $this->getRandItem($list);
+    }
+	public function testFullUserData(){
+		$studentList    =   \App\Entities\User::where('name','like','%学生%')->get();
+		$teacherList    =   \App\Entities\User::where('name','like','%教师%')->get();
+//        foreach($studentList as $student)
+//        {
+//            $codeInfo   =   explode('测试学生',$student->name);
+//            $data   =   [
+//                'id'          =>  $student->id,
+//                'name'          =>  $student->name,
+//                'code'          =>  $codeInfo[1],
+//                'grade'         =>  $this->getGrade(),
+//                'professional'  =>  1,
+//                'student_type'  =>  1,
+//                'validated'  =>  1,
+//            ];
+//            \Modules\Msc\Entities\Student::firstOrCreate($data);
+//        }
+//        foreach($teacherList as $teacher)
+//        {
+//            $codeInfo   =   explode('测试教师',$teacher->name);
+//            $data   =   [
+//                'id'          =>  $teacher->id,
+//                'name'          =>  $teacher->name,
+//                'code'          =>  $codeInfo[1],
+//                'teacher_dept'  =>  1,
+//                'validated'  =>  1,
+//            ];
+//            \Modules\Msc\Entities\Teacher::firstOrCreate($data);
+//        }
     }
     //新增课程
     public function testAddCourses(){
