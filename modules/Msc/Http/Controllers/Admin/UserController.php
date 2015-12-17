@@ -306,7 +306,7 @@ class UserController extends BaseController
 
     /**
      * 添加学生信息
-     * @method GET
+     * @method POST
      * @url /msc/admin/user/student-add
      * @access public
      *

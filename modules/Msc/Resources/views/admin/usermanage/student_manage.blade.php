@@ -89,7 +89,7 @@
 					}
 				});
 			}
-			function edit(){
+			function edit(){ 
 				$.ajax({
 					type:"get",
 					url:"/msc/admin/user/student-edit/"+idName,
