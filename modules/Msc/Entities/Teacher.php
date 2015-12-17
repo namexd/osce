@@ -106,8 +106,8 @@ class Teacher extends CommonModel {
         $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
 
         $result=$connection->table('teacher')->where('id',$data['id'])->update($item);
-        if($result==false){
-            return $result;
+        if($result===false){
+            return false;
         }
 
         $connection=\DB::connection('sys_mis');
@@ -116,7 +116,7 @@ class Teacher extends CommonModel {
 
         $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
-        if($result==false){
+        if($result===false){
             return false;
         }
 

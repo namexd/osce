@@ -17,7 +17,7 @@ class ResourcesOpenLabPlan extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'resources_openlab_plan';
-    protected $fillable 	=	['id', 'resources_openlab_id', 'resources_openlab_calendar_id', 'course_id','currentdate','begintime','endtime','type','status','apply_person_total','resorces_lab_person_total'];
+    protected $fillable 	=	['id', 'resources_openlab_id', 'resources_openlab_calendar_id', 'course_id','currentdate','begintime','endtime','type','status','apply_person_total','resorces_lab_person_total','resources_openlab_apply_id'];
 
     public function calendar(){
         return $this->belongsTo('\Modules\Msc\Entities\ResourcesOpenLabCalendar','resources_lab_calendar_id','id');
@@ -31,6 +31,9 @@ class ResourcesOpenLabPlan extends Model
 
     public function teachers(){
         return $this->hasMany('\Modules\Msc\Entities\ResourcesOpenLabPlanTeacher','resources_openlab_plan_id','id');
+    }
+    public function apply(){
+        return $this->belongsTo('\Modules\Msc\Entities\ResourcesOpenLab','resources_openlab_plan_id','id');
     }
     public function getConflicts($labId, $date, $beginTime, $endTime){
         $Conflicts  =   $this   ->  with(
@@ -232,5 +235,14 @@ class ResourcesOpenLabPlan extends Model
             'status'                        =>  0
         ];
         return $this->create($data);
+    }
+    public function checkSameUrgent($resources_openlab_calendar_id,$currentdate){
+        return $this->with([
+            'apply' =>  function($qurey){
+                $qurey  ->  where('apply_type','=',2);
+            }
+        ])  ->  where('resources_openlab_calendar_id','=',$resources_openlab_calendar_id)
+            ->  where('currentdate','=',$currentdate)
+            ->  count();
     }
 }
