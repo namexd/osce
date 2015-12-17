@@ -212,9 +212,10 @@ class ResourcesOpenLabApply extends CommonModel
         ])->  whereRaw(
             'unix_timestamp(apply_date) > ?',
             [
-                strtotime(date('Y-m-d'))
+                $date,
+              //strtotime(date('Y-m-d'))
             ]
-        )->  paginate(config('msc.page_size'));
+        ) -> paginate(config('msc.page_size'));
     }
     //处理开放实验室审核
     public function dealApply($id, $status, $reject){

@@ -225,7 +225,7 @@ class Student extends CommonModel {
             return  $professional_id;
         }
 
-        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
+        $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
 
         $id=$connection->table('student')->insertGetId($item);
 
