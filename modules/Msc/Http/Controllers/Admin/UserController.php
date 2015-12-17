@@ -282,7 +282,7 @@ class UserController extends BaseController
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
-            'professional' => 'required|max:50',
+            'professional_name' => 'required|max:50',
             'validated' => 'required|integer|min:0|max:1',
             'moblie' => 'required|unique|integer|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
