@@ -94,8 +94,6 @@
             <i class="fa fa-plus fa-lg multi-control"></i>
         </div>
         <div class="hacker-hidden"></div>
-        <input type="hidden" name="images_path[]" value="测试1">
-        <input type="hidden" name="images_path[]" value="测试2">
     </div>
     <div class="w_94 submit_box">
         <input type="submit" ng-disabled="form.$invalid" class="btn1" value="保存"/>

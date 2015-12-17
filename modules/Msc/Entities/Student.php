@@ -160,38 +160,38 @@ class Student extends CommonModel {
 
         $professional=$connection->table('student_professional')->where('name',$data['professional_name'])->first();
 
-        $professional_id=$professional->id;
+        if(!$professional){
 
-        if(!empty($professional_id)){
+            $professional_id=$connection->table('student_professional')->insertGetId(['name'=>$data['professional_name']]);
 
-            $professional_id=$connection->table('student_professional')->insertGetId($data['professional_name']);
-
+        }else{
+            $professional_id=$professional->id;
         }
 
-       $connection->beginTransaction();
 
-       $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
+       $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
 
-       $result=$connection->table('student')->update($item);
+       $result=$connection->table('student')->where('id',$data['id'])->update($item);
 
         if($result==false){
-            $connection->rollBack();
+            return $result;
        }
 
        $connection=\DB::connection('sys_mis');
 
 
-       $users=array('id'=>$data['id'],'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard'],'status'=>$data['status']);
+       $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
 
-       $result=$connection->table('users')->update($users);
+
+       $result=$connection->table('users')->where('id',$data['id'])->update($users);
+
+
 
         if($result==false){
-            $connection->rollBack();
-            return false;
+            return $result;
         }
 
-        $connection->commit();
-        return true;
+        return $result;
     }
 
     /**
@@ -216,16 +216,14 @@ class Student extends CommonModel {
 
         $connection=\DB::connection('msc_mis');
 
-        $professional_id=$connection->table('student_professional')->where('name',$data['professional'])->select('id')->first();
+        $professional_id=$connection->table('student_professional')->where('name',$data['professional_name'])->select('id')->first();
 
-        if($professional_id){
-            return $professional_id;
-        }else{
-            $professional_id=$connection->table('student_professional')->insertGetId($data['professional']);
-            return  $professional_id;
+        if(!$professional_id){
+
+            $professional_id=$connection->table('student_professional')->insertGetId($data['professional_name']);
         }
 
-        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
+        $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
 
         $id=$connection->table('student')->insertGetId($item);
 

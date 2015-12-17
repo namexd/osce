@@ -85,3 +85,5 @@ input[type="number"]{-moz-appearance:textfield;}
 .radio_icon.check{background-position:0 -21px}
 .radio_label input{position:absolute;left:-999px;top:0;opacity:0}
 .radio_box b{font-size: 14px;}
+/*下拉框去渐变*/
+.normal_select:focus{border-color: #ccc;}
