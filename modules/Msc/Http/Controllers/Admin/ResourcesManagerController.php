@@ -83,7 +83,7 @@ class ResourcesManagerController extends MscController
             ];
         }
 
-        //dd($data);
+//        dd($data);
         return view('msc::admin.resourcemanage.Existing', ['list'=>$data, 'pagination'=>$pagination]);
     }
 
@@ -192,6 +192,7 @@ class ResourcesManagerController extends MscController
         $id = (int)Input::get('id');
 
         $resources = ResourcesTools::find($id);
+
         if (!$resources)
         {
             return response()->json(
@@ -839,20 +840,24 @@ class ResourcesManagerController extends MscController
      */
     public function getRejectedResources(Request $request)
     {
+
+
         $this->validate($request, [
             'id' 		=> 	'required|integer',
         ]);
 
+
         $id = (int)Input::get('id');
 
         $resources = ResourcesTools::find($id);
+
         if(!$resources)
         {
             return response()->json(
                 $this->fail(new \Exception('资源不存在'))
             );
         }
-				
+
 		$resourcesItems = [];
 		foreach ($resources->items as $resourcesToolsItems)
 		{
@@ -862,7 +867,6 @@ class ResourcesManagerController extends MscController
             }
 		} 		
 		$resources = $resources->toArray();
-
 
         return response()->json(
         	[

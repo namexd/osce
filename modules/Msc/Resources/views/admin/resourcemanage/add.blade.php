@@ -183,7 +183,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>资源详情</h5>
+                <h5>新增资源</h5>
             </div>
             <div class="ibox-content">
                 <div class="row">
