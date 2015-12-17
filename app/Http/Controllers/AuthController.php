@@ -82,7 +82,7 @@ class AuthController extends BaseController
             ]);
         $data = [
             'name' => Input::get('name'),
-            'slug' => Input::get('slug'),
+            'slug' => rand(1,999999),
             'description'=>Input::get('description')
         ];
         $addNewRole = DB::connection('sys_mis')->table('sys_roles')->insert($data);
@@ -110,7 +110,7 @@ class AuthController extends BaseController
      * @author tangjun <tangjun@misrobot.com>
      * @date 2015年12月15日13:59:39
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */ 
+     */
 
     public function SetPermissions($id,SysRolePermission $SysRolePermission,SysMenus $SysMenus,SysFunctions $SysFunctions){
 
@@ -161,7 +161,6 @@ class AuthController extends BaseController
         $this->validate($Request,[
             'role_id'       => 'required|integer',
         ]);
-
         $role_id = $Request->get('role_id');
         $permissionIdArr = $Request->get('permission_id');
         $status = $SysRolePermission->where('role_id','=',$role_id)->get();
@@ -219,14 +218,13 @@ class AuthController extends BaseController
      * @date 2015-12-15 14:20
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editRole(){
-        dd(Input::get());
+    public function editRole(Request $Request){
+        //dd(Input::get());
         $this->validate($Request,[
             'name' => 'required|min:2|max:10',
             ]);
         $data = [
             'name' => Input::get('name'),
-            'slug' => Input::get('slug'),
             'description'=>Input::get('description')
         ];
         $addNewRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>Input::get('id')])->update($data);
@@ -253,5 +251,26 @@ class AuthController extends BaseController
             }
         }
         return  $arr ;
+    }
+
+    /**
+     * 添加基础权限信息
+     * @method GET /auth/sdd-auth
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return view
+     *
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2015年12月17日13:59:39
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function AddAuth(SysPermissions $SysPermissions,SysMenus $SysMenus){
+        $data = [
+
+        ];
+
+        $SysMenus->AddMenus($data);
     }
 }   

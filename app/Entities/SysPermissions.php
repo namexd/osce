@@ -16,13 +16,18 @@ class SysPermissions extends Model
     protected $connection	=	'sys_mis';
     protected $table 		= 	'sys_permissions';
 
-
+    protected $fillable 	=	['moduleid', 'type', 'itemid','name','description'];
     public function getPermissionsAll(){
         $thisBuilder = $this;
         return  $thisBuilder->get();
     }
 
     public function SysMenus(){
+
+    }
+
+    //添加基础权限信息
+    public function AddPermissions($data){
 
     }
 
