@@ -115,9 +115,11 @@ class Teacher extends CommonModel {
         $result=$connection->table('users')->update($users);
         if($result==false){
             $connection->rollBack();
+            return false;
         }
 
         $connection->commit();
+        return true;
     }
 
 
