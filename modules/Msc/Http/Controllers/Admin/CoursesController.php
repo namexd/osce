@@ -1873,13 +1873,16 @@ class CoursesController extends MscController
      *
      */
     public function getCoursesVcr(Request $request){
+        $this->validate($request,[
+            'lab_id'            =>  'required|integer',
+        ]);
         $lab_id=$request->get("lab_id");
         $vcr_id=$request->get("vcr_id");
         try{
-            $model=new ResourcesClassroom();
+            $model = new ResourcesClassroom();
             $rst=$model->getClassroomDetails($lab_id)->first();
             $plan_id=$rst->pid;
-            $vcrrst=$model->getClassroomVideo($lab_id);
+            $vcrrst = $model->getClassroomVideo($lab_id);
             foreach($vcrrst as $item){
                 $vcr=array();
                 $vcr['vcr_name']=$item->vname;
@@ -1887,9 +1890,9 @@ class CoursesController extends MscController
                 $vcrs[]=$vcr;
             }
 
-            $unabsence=ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$plan_id)->count();
-            $ResourcesClassroomPlanGroup=new ResourcesClassroomPlanGroup();
-            $total=$ResourcesClassroomPlanGroup->getTotal($plan_id);
+            $unabsence = ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$plan_id)->count();
+            $ResourcesClassroomPlanGroup = new ResourcesClassroomPlanGroup();
+            $total = $ResourcesClassroomPlanGroup->getTotal($plan_id);
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
@@ -1903,7 +1906,7 @@ class CoursesController extends MscController
 
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
-            return redirect()->back()->withErrors($ex);
+            return redirect()->route('msc.admin.courses.getClassObserve')->withErrors($ex);
         }
     }
     /**
@@ -1925,15 +1928,18 @@ class CoursesController extends MscController
      *
      */
     public function getDownloadCourse(Request $request){
+        $this->validate($request,[
+            'plan_id'            =>  'required|integer',
+        ]);
         $plan_id=$request->get("plan_id");
         try{
             $model = new ResourcesClassroom();
-            $data = $model -> getCourseVcrByPlanId($plan_id);
+            $data  = $model -> getCourseVcrByPlanId($plan_id);
             dd($data);
             return view('',$data);
         }
        catch (\Exception $ex){
-           $this->fail($ex);
+           return redirect()->back()->withErrors($ex);
        }
     }
 	/**
