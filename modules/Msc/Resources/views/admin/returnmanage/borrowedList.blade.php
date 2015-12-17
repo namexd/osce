@@ -58,7 +58,7 @@
                     </td>
                     <td>{{$item->id}}</td>
                     <td>{{$item->resourcesToolItem? $item->resourcesToolItem->resourcesTools->name:'-'}}</td>
-                    <td>{{$item->real_begindate}}-{{$item->real_enddate}}</td>
+                    <td>{{$item->begindate}}-{{$item->enddate}}</td>
                     <td>{{$item->resourcesToolItem? $item->resourcesToolItem->code:'-'}}</td>
                     <td>{{$item->lenderInfo ? $item->lenderInfo->name:'-'}}</td>
                     <td>{{$item->detail}}</td>
