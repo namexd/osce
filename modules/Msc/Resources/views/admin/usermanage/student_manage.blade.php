@@ -176,10 +176,12 @@
 			            url:'/msc/admin/user/import-student-user',
 			            fileElementId:'leading-in',//必须要是 input file标签 ID
 			            success: function (data, status){
+			            	console.log("成功");
 			            	console.log(data);
+			            	console.log(status);
 			            },
 			            error: function (data, status, e){
-			               console.log(data);
+			            	console.log("失败");
 			               layer.alert(
 			                  "上传失败！", 
 			                  {title:["温馨提示","font-size:16px;color:#408aff"]}
@@ -228,8 +230,8 @@
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-in" value="导入"/>-->
 				        	
 				        	<div class="right">
-		                        <input type="button" name="" id="" value="导出" class="btn btn-default right" />
-			                    <input type="file" name="training" id="leading-out" value="" style="display: none;"/>
+		                        <!--<input type="button" name="" id="" value="导出" class="btn btn-default right" />-->
+		                        <a href="/msc/admin/user/export-student-user" class="btn btn-default right">导出</a>
 		                    </div>
 				        	<div class="right">
 		                        <input type="button" name="" id="in" value="导入" class="btn btn-default right" />
