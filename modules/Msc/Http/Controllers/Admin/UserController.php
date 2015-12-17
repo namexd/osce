@@ -7,6 +7,7 @@
  */
 namespace Modules\Msc\Http\Controllers\Admin;
 
+use App\Repositories\Common;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
@@ -611,6 +612,297 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
+
+    /**
+     * 导入教师用户
+     * @api GET /msc/admin/User/import-Teacher-user
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        courses-plan        课程文件的excl(必须的)
+     * @return object
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function  postImportTeacherUser(Request $request)
+    {
+        try {
+            $data = Common::getExclData($request, 'teacher');
+            $teacherInfo = array_shift($data);
+            //将中文头转换翻译成英文
+            $studentInfo = Common::arrayChTOEn($teacherInfo, 'msc.importForCnToEn.teacher_group');  //teacher_group还未定义
+            dd($data);
+            //已经存在的数据
+            $dataHaven = [];
+            //添加失败的数据
+            $dataFalse = [];
+            //判断是否存在这个学生用户
+            foreach ($teacherInfo as $teacherData) {
+                if ($teacherData['teacher_code'] && $teacherData['name']) {
+                    if (Teacher::where('code', '=', $teacherData['student_code']->count() == 0)) {
+
+                        $teacher =Teacher ::create($teacherData);
+
+                        if ( $teacher == false) {
+                            $dataFalse[] = $teacherData;
+                        }
+                    } else {
+                        $dataHaven[] = $teacherData;
+                    }
+                }
+            }
+            return response()->json(
+                $this->success_data(['result' => true, 'dataFalse' => $dataFalse, 'dataHaven' => $dataHaven])
+            );
+        } catch (\Exception $e) {
+            return response()->json($this->fail($e));
+        }
+    }
+
+    /**
+     * 导入学生用户
+     * @api GET /msc/admin/User/import-Student-user
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        courses-plan        课程文件的excl(必须的)
+     *
+     * @return object
+     *
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function  postImportStudentUser(Request $request)
+    {
+        try {
+            $data = Common::getExclData($request, 'student');
+            $studentInfo = array_shift($data);
+            //将中文头转换翻译成英文
+            $studentInfo = Common::arrayChTOEn($studentInfo, 'msc.importForCnToEn.student_group');
+            dd($data);
+            //已经存在的数据
+            $dataHaven = [];
+            //添加失败的数据
+            $dataFalse = [];
+            //判断是否存在这个学生用户
+            foreach ($studentInfo as $studentData) {
+                if ($studentData['student_code'] && $studentData['name']) {
+                    if (Student::where('code', '=', $studentData['student_code']->count() == 0)) {
+
+                        $student = Student::create($studentData);
+
+                        if ($student == false) {
+                            $dataFalse[] = $studentData;
+                        }
+                    } else {
+                        $dataHaven[] = $studentData;
+                    }
+                }
+            }
+            return response()->json(
+                $this->success_data(['result' => true, 'dataFalse' => $dataFalse, 'dataHaven' => $dataHaven])
+            );
+        } catch (\Exception $e) {
+            return response()->json($this->fail($e));
+        }
+    }
+
+
+
+    /**
+     * 导出学生用户
+     * @api GET /msc/admin/User/Export-Student-User
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string       keyword         关键字
+     *
+     * @return json
+     *
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+
+    public function getExportStudentUser(Request $request)
+    {
+        $studentInfo = $this->getStudentInfo($request);
+
+        $str = iconv('utf-8', 'gb2312', '序号,姓名,学号,年级,类别,专业,手机号,证件号,性别,状态') . "\n";
+        if (empty($studentInfo)) {
+            $str .= iconv('utf-8', 'gb2312', '无,无,无,无,无,无,无,无,无,无') . "\n";
+        } else {
+            foreach ($studentInfo as $row) {
+                $ID = iconv('utf-8', 'gb2312', $row['id']); //中文转码
+                $name = iconv('utf-8', 'gb2312', $row['name']);
+                $code = iconv('utf-8', 'gb2312', $row['code']);
+                $grade = iconv('utf-8', 'gb2312', $row['grade']);
+                $student_type = iconv('utf-8', 'gb2312', $row['student_type']);
+                $profession_name = iconv('utf-8', 'gb2312', $row['profession_name']);
+                $mobile = iconv('utf-8', 'gb2312', $row['mobile']);
+                $idcard = iconv('utf-8', 'gb2312', $row['idcard']);
+                $gender = iconv('utf-8', 'gb2312', $row['gender']);
+                $status = iconv('utf-8', 'gb2312', $row['status']);
+                $str .= $ID . "," . $name . "," . $code . "," . $grade . "," . $student_type . "," . $profession_name . "," . $mobile . "," . $idcard . "," . $gender . "," . $status . "\n"; //用引文逗号分开
+            }
+        }
+        $filename = date('Ymd') . '.csv';
+        $this->export_csv($filename, $str);
+    }
+
+    private function export_csv($filename, $data)
+    {
+        header("Content-type:text/csv");
+        header("Content-Disposition:attachment;filename=" . $filename);
+        header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
+        header('Expires:0');
+        header('Pragma:public');
+        echo $data;
+    }
+
+    /**
+     * 获取学生用户信息 用于导出
+     * @method GET
+     * @url /msc/admin/user/student-list
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        order_name      排序字段名
+     * * string        order_type      排序方式(1:Desc 0:asc)
+     * * string        keyword         关键字
+     *
+     * @return           list        数组
+     *
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-12-14 18:29
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentInfo(Request $request)
+    {
+//        echo '11111';exit;
+        $this->validate($request, [
+            'order_name' => 'sometimes|string|between:2:50',
+            'order_type' => 'sometimes|in:0,1',
+            'keyword' => 'sometimes', // TODO 查询关键字约束
+        ]);
+
+        $orderName = e($request->input('order_name'));
+        $orderType = (int)$request->input('order_type');
+        $keyword = urldecode(e($request->input('keyword')));
+
+        // 排序
+        if ($orderName) {
+            if ($orderType) {
+                $order = [$orderName, 'desc'];
+            } else {
+                $order = [$orderName, 'asc'];
+            }
+        } else {
+            $order = ['id', 'desc']; // 默认按照ID降序排列
+        }
+
+        $student = new Student();
+        $pagination = $student->getFilteredPaginateList($keyword, $order);
+
+        $list = [];
+        foreach ($pagination as $item) {
+            $list[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+                'code' => $item->code,
+                'grade' => $item->grade,
+                'student_type' => $item->student_type,
+                'profession_name' => is_null($item->professionalName) ? '-' : $item->professionalName->name,
+                'mobile' => $item->userInfo->mobile,
+                'idcard' => $item->userInfo->idcard,
+                'gender' => $item->userInfo->gender,
+                'status' => $item->userInfo->status,
+            ];
+        }
+
+        return $list;
+
+    }
+
+
+    /**
+     *获取教师用户信息 用于导出
+     * @method GET
+     * @url /msc/admin/user/teacher-info
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     *
+     *string        keyword         关键字
+     * @return          list        数组
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function getTeacherInfo(Request $request)
+    {
+        $this->validate($request, [
+            'order_name' => 'sometimes|string|between:2:50',
+            'order_type' => 'sometimes|in:0,1',
+            'keyword' => 'sometimes', // TODO 查询关键字约束
+        ]);
+
+        $orderName = e($request->input('order_name'));
+        $orderType = (int)$request->input('order_type');
+        $keyword = urldecode(e($request->input('keyword')));
+
+        // 排序
+        if ($orderName) {
+            if ($orderType) {
+                $order = [$orderName, 'desc'];
+            } else {
+                $order = [$orderName, 'asc'];
+            }
+        } else {
+            $order = ['id', 'desc']; // 默认按照ID降序排列
+        }
+
+        $teacher = new Teacher();
+        $pagination = $teacher->getFilteredPaginateList($keyword, $order);
+
+        $list = [];
+        foreach ($pagination as $teacher) {
+            $list[] = [
+                'id' => $teacher->id,
+                'name' => $teacher->name,
+                'code' => $teacher->code,
+                'dept_name' => is_null($teacher->dept) ? '-' : $teacher->dept->name,
+                'mobile' => $teacher->userInfo->mobile,
+                'gender' => $teacher->userInfo->gender,
+                'status' => $teacher->userInfo->status,
+//                'role' => $teacher->userInfo->roles,
+            ];
+        }
+
+        return $list;
+
+    }
+
+
+
+
 
 
 
