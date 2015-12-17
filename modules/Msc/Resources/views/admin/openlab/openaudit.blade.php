@@ -247,15 +247,14 @@
                                 </label>
                             </td>
                             <td class="open-id">{{$item['id']}}</td>
-                            <td>{{$item['name']}}</td>
+                            <td>{{$item->lab->name}}</td>
                             <td>{{date('Y/m/d',strtotime($item['original_begin_datetime']))}}</td>
                             <td>{{date('H:i',strtotime($item['original_begin_datetime']))}}-{{date('H:i',strtotime($item['original_end_datetime']))}}</td>
-                            <td>{{$item['code']}}</td>
-                            <td>{{empty($item->applyer->name) ? '-':$item->applyer->name}}</td>
+                            <td>{{$item->lab->code}}</td>
+                            <td>{{$item->applyUser->name or '-'}}</td>
                             <td>{{$item['detail']}}</td>
                             <td>{{empty($item->labApplyGroups->first()->groups->name) ? '-' : $item->labApplyGroups->first()->groups->name}}</td>
-                            {{--<td>{{dd(empty($item->labApplyGroups))}}</td>--}}
-                            <td class="status">{{$item['status']}}</td>
+                            <td class="status">{{$statusValues[$item['status']]}}</td>
                             <td class="opera">
                                 <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
                                 <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>

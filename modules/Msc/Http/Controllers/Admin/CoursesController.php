@@ -17,6 +17,7 @@ use Modules\Msc\Entities\ResourcesClassroomApply;
 use Modules\Msc\Entities\ResourcesClassroomCourses;
 use Modules\Msc\Entities\ResourcesClassroomPlan;
 use Modules\Msc\Entities\ResourcesClassroomPlanAlter;
+use Modules\Msc\Entities\ResourcesClassroomPlanGroup;
 use Modules\Msc\Entities\ResourcesClassroomPlanTeacher;
 use Modules\Msc\Entities\ResourcesLabVcr;
 use Modules\Msc\Entities\Student;
@@ -29,7 +30,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use Modules\Msc\Repositories\Common as MscCommon;
-
+use Modules\Msc\Entities\ResourcesClassroomCourseSign;
 
 class CoursesController extends MscController
 {
@@ -1861,7 +1862,7 @@ class CoursesController extends MscController
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
      * * int           lab_id               教室
-     *
+     *   int           vcr_id               默认摄像机id
      *
      * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数  vcrs:摄像机信息
      *
@@ -1873,21 +1874,33 @@ class CoursesController extends MscController
      */
     public function getCoursesVcr(Request $request){
         $lab_id=$request->get("lab_id");
+        $vcr_id=$request->get("vcr_id");
         try{
             $model=new ResourcesClassroom();
             $rst=$model->getClassroomDetails($lab_id)->first();
+            $plan_id=$rst->pid;
+            $vcrrst=$model->getClassroomVideo($lab_id);
+            foreach($vcrrst as $item){
+                $vcr=array();
+                $vcr['vcr_name']=$item->vname;
+                $vcr['vcr_id']=$item->vid;
+                $vcrs[]=$vcr;
+            }
 
-            $vcrs=$model->getClassroomVideo($lab_id);
-
+            $unabsence=ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$plan_id)->count();
+            $ResourcesClassroomPlanGroup=new ResourcesClassroomPlanGroup();
+            $total=$ResourcesClassroomPlanGroup->getTotal($plan_id);
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
                 'lab_name'               =>    $rst->lab_name,
                 'vcrs'                   =>    $vcrs,
-                'total'                  =>    40,
-                'unabsence'              =>    39,
+                'total'                  =>    $total,
+                'unabsence'              =>    $unabsence,
+                'vcr_id'                 =>    $vcr_id,
             ];
             //PC-Admin-002-课程监管.png
+
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
             return redirect()->back()->withErrors($ex);
@@ -1918,9 +1931,10 @@ class CoursesController extends MscController
             $data = $model -> getCourseVcrByPlanId($plan_id);
             dd($data);
             return view('',$data);
-        }catch (\Exception $ex){
-            $this -> fail($ex);
         }
+       catch (\Exception $ex){
+           $this->fail($ex);
+       }
     }
 	/**
      *  下载视频前检查

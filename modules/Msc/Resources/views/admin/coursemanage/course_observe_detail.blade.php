@@ -64,7 +64,7 @@
                     <label class="col-sm-2 control-label">考勤率</label>
                     <div class="col-sm-10" style="height:98px">
                         <div class="form-control">
-                            <span>{{$unabsence/$total*100}}%</span>
+                            <span>{{round(($unabsence/$total*100),2)}}%</span>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -122,8 +122,8 @@
             </div>
             <div class="tools-bar">
                 <ul class="nav-bar">
-                    @foreach($vcrs as $index    =>$item)
-                        <li value="{{$item->vid}}"><a href="javascript:void(0)" class="{{$index==0? 'active':''}}">{{$item->vname}}</a></li>
+                    @foreach($vcrs as $index =>$item)
+                        <li value="{{$item['vcr_id']}}"><a href="javascript:void(0)" class="{{$index==0? 'active':''}}">{{$item['vcr_name']}}</a></li>
                     @endforeach
                     <div class="tools-tips">
                         <a href="javascript:void(0)" id="download">下载</a>&nbsp;&nbsp;
