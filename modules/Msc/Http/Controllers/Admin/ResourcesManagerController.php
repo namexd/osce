@@ -192,7 +192,7 @@ class ResourcesManagerController extends MscController
         $id = (int)Input::get('id');
 
         $resources = ResourcesTools::find($id);
-        
+
         if (!$resources)
         {
             return response()->json(

@@ -282,8 +282,7 @@ class UserController extends BaseController
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
-            'professional' => 'required|integer|min:0|max:11',
-            'validated' => 'required|integer|min:0|max:1',
+            'professional_name' => 'required|max:50',
             'moblie' => 'required|unique|integer|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
             'idcard' => 'required|unique|integer|min:0|max:50',
@@ -330,13 +329,13 @@ class UserController extends BaseController
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
-            'professional' => 'required|max:50',
+            'professional_name' => 'required|max:50',
             'moblie' => 'required|integer|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
             'idcard' => 'required|unique|integer|min:0|max:50',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional', 'validated', 'moblie', 'idcard_type', 'idcard']);
+        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'validated', 'moblie', 'idcard_type', 'idcard']);
         $data['status']=$status;
         $studentModel = new Student();
 
