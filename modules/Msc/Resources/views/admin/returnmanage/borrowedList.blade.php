@@ -1,5 +1,18 @@
 @extends('msc::admin.layouts.admin')
+@section('only_css')
+    <style>
 
+        select{
+            border: none;
+        }
+
+        #comment{
+            margin-top: 10px;
+            min-height: 150px;
+        }
+
+    </style>
+@stop
 @section('only_js')
     <script src="{{asset('msc/admin/js/all_checkbox.js')}}"></script>
 @stop
@@ -101,8 +114,11 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">提醒归还理由：</label>
                 <div class="col-sm-9">
-
-                    <textarea id="comment" name="comment" class="form-control" required="" aria-required="true"></textarea>
+                    <select class="form-control" id="choose">
+                        <option value="已逾期">已逾期</option>
+                        <option value="">自定义原因</option>
+                    </select>
+                    <textarea id="comment" name="comment" class="form-control" required="" aria-required="true" disabled="disabled"></textarea>
 
                 </div>
             </div>
@@ -120,13 +136,25 @@
             $('#Form2').find('textarea').val('');
             $('#Form2').attr('value',$(this).parent().parent().parent().attr('value'));
         });
-
+        //判断归还原因是否为自定义
+        $("#choose").change(function(){
+            if($("#choose").find("option:selected").text()=="自定义原因"){
+                $("#comment").removeAttr("disabled");
+            }else{
+                $("#comment").val("");
+                $("#comment").attr("disabled","disabled");
+            }
+        })
 
         /*提醒归还*/
         $('#borrow-yes').click(function(){
             var req = {};
             req['id'] = $('#Form2').attr('value');
-            req['detail'] = $('#Form2').find('textarea').val();
+            if($("#choose option:selected").text()=="自定义原因"){
+                req['detail']=$("#comment").val();
+            }else{
+                req['detail']=$("#choose option:selected").text();
+            }
             $.ajax({
                 type:"get",
                 url:"{{route('msc.admin.resourcesManager.getTipBack')}}",
