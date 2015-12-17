@@ -69,12 +69,10 @@ class LabController extends MscWeChatController
         $orderby    =   empty($orderby)?    'desc':$orderby;
         $order      =   empty($order)?      'created_at'    :   $orderby;
         $date       =   empty($date)?      date('Y-m-d')    :   $date;
-
         $order      =   [$order,$orderby];
         //$ResourcesClassroomApply    =   new ResourcesClassroomApply();
         $ResourcesOpenLabApply      =   new ResourcesOpenLabApply();
         $list       =   $ResourcesOpenLabApply    ->  getWaitExamineList($keyword,$date,$order);
-
         $data=[];
         foreach($list as $item)
         {
@@ -122,6 +120,7 @@ class LabController extends MscWeChatController
         $status =   $request    ->  get('status');
         $reject =   $request    ->  get('reject');
         $ResourcesClassroomApply    =   new ResourcesClassroomApply();
+
         try
         {
             $result=    $ResourcesClassroomApply    ->  dealApply($id,$status,$reject,3);
