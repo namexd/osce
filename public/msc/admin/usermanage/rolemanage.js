@@ -32,7 +32,6 @@ function rolemanage_detail(){
             }
         });
         $('#saveForm').click(function(){
-
             $('#authForm').submit();
         });
         $('.check_real').click(function(){
