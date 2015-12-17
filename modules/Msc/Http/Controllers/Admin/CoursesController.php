@@ -1906,7 +1906,7 @@ class CoursesController extends MscController
 
             return view('msc::admin.coursemanage.course_observe_detail',$data);
         }catch (\Exception $ex){
-            return redirect()->back()->withErrors($ex);
+            return redirect()->route('msc.admin.courses.getClassObserve')->withErrors($ex);
         }
     }
     /**

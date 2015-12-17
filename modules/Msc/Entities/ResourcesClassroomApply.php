@@ -170,6 +170,7 @@ class ResourcesClassroomApply extends  CommonModel {
             $connection->beginTransaction ();
             try {
                 $apply = $this->find ($id);
+
                 $apply->status = $status;
                 if ($status == 2) {
                     $apply->reject = $desc;
@@ -183,7 +184,7 @@ class ResourcesClassroomApply extends  CommonModel {
                         'type' => $type,
                         'groups' => $apply->groups
                     ];
-                    dd($newPlanData);
+
                     $this->createApplyPlan ($newPlanData);
                 }
 
