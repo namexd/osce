@@ -9,6 +9,8 @@
 @stop
 
 @section('only_js')
+	<script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+	<script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
 	<script type="text/javascript" src="{{asset('/msc/admin/usermanage/usermanage.js')}}" ></script>
 	
 	<script type="text/javascript">
@@ -158,9 +160,33 @@
 					}
 				});
 			}
-			
-			$("#leading-in").click(function(){
-				
+			$("#in").click(function(){
+				$("#leading-in").click();
+			})
+			$("#leading-in").change(function(){
+				var str=$("#leading-in").val().substring($("#leading-in").val().lastIndexOf(".")+1);
+				if(str!="xlsx"){
+					layer.alert(
+	                  "请上传正确的文件格式？", 
+	                  {title:["温馨提示","font-size:16px;color:#408aff"]}
+	               );
+				}else{
+					$.ajaxFileUpload({
+						type:"post",
+			            url:'/msc/admin/user/import-student-user',
+			            fileElementId:'leading-in',//必须要是 input file标签 ID
+			            success: function (data, status){
+			            	console.log(data);
+			            },
+			            error: function (data, status, e){
+			               console.log(data);
+			               layer.alert(
+			                  "上传失败！", 
+			                  {title:["温馨提示","font-size:16px;color:#408aff"]}
+			               );
+			            }
+			        });
+				}
 			})
 			$("#leading-out").click(function(){
 				
@@ -198,8 +224,17 @@
 				        </div>
 				        <div class="col-xs-6 col-md-9 user_btn">
 				        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增学生" data-toggle="modal" data-target="#myModal"/>
-				        	<input type="button" class="right btn btn-default" name="" id="leading-in" value="导出"/>
-				        	<input type="button" class="right btn btn-default" name="" id="leading-out" value="导入"/>
+				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-out" value="导出"/>-->
+				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-in" value="导入"/>-->
+				        	
+				        	<div class="right">
+		                        <input type="button" name="" id="" value="导出" class="btn btn-default right" />
+			                    <input type="file" name="training" id="leading-out" value="" style="display: none;"/>
+		                    </div>
+				        	<div class="right">
+		                        <input type="button" name="" id="in" value="导入" class="btn btn-default right" />
+			                    <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
+		                    </div>
 				        </div>
 				    </div>
 				    <form class="container-fluid ibox-content" id="list_form">
