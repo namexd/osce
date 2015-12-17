@@ -314,7 +314,7 @@
 
 @section('layer_content')
 <!--新增-->
-<form class="form-horizontal" id="Form1" novalidate="novalidate" action="" method="post" style="display: none;">
+<form class="form-horizontal" id="Form1" novalidate="novalidate" action="/msc/admin/user/student-add" method="post" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">新增学生</h4>
@@ -323,13 +323,13 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control name" value="" />
+                <input type="text" class="form-control name" name="name" value="" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">学号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control code" />
+                <input type="text" class="form-control code" name="code" />
             </div>
         </div>
         <div class="form-group">
@@ -341,7 +341,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">年级</label>
             <div class="col-sm-10">
-                <select class="form-control grade" id="">
+                <select class="form-control grade" id="" name="grade">
                     <option value="2015">2015</option>
                     <option value="14">14</option>
                 </select>
@@ -350,7 +350,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">类别</label>
             <div class="col-sm-10">
-                <select class="form-control student_type" id="">
+                <select class="form-control student_type" id="" name="student_type">
                     <option value="">本科</option>
                     <option value="">专科</option>
                 </select>
@@ -369,20 +369,20 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control mobile" />
+                <input type="text" class="form-control mobile" name="mobile" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">证件</label>
             <div class="col-sm-4" style="padding-right: 0;">
-                <select class="form-control idcard" id="">
-                    <option value="">证件类型</option>
-                    <option value="">身份证</option>
-                    <option value="">驾驶证</option>
+                <select class="form-control idcard" id="" name="idcard_type">
+                    <option value="0">证件类型</option>
+                    <option value="1" selected="selected">身份证</option>
+                    <option value="2">驾驶证</option>
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control card" />
+            	<input type="text" class="form-control card" name="idcard" />
             </div>
         </div>
         <div class="form-group">
