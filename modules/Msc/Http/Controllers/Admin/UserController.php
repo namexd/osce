@@ -330,14 +330,14 @@ class UserController extends MscController
     {
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'grade' => 'required|integer|min:0|max:11',
-            'student_type' => 'required|integer|min:0|max:3',
+            'code' => 'required|max:32',
+            'gender' => 'required|max:1',
+            'grade' => 'required|max:11',
+            'student_type' => 'required|max:3',
             'profession_name' => 'required|max:50',
             'mobile' => 'required|max:11',
-            'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|integer|min:0|max:50',
+            'idcard_type' => 'required|max:1',
+            'idcard' => 'required|max:50',
         ]);
 
         $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
