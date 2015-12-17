@@ -131,6 +131,12 @@ class Student extends CommonModel {
         ])->orderBy($studentTable.'.id')->paginate(config('msc.page_size',10));
     }
 
+    // 获取年级列表
+    public function getGradeList ()
+    {
+        return $this->distinct()->lists('grade');
+    }
+
     /**
      *
      * @method POST
