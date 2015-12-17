@@ -13,9 +13,10 @@ use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use Modules\Msc\Entities\StdProfessional;
 use Modules\Msc\Entities\TeacherDept;
+use Modules\Msc\Http\Controllers\MscController;
 
 
-class UserController extends BaseController
+class UserController extends MscController
 {
     /**
      * 学生列表
@@ -669,7 +670,7 @@ class UserController extends BaseController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        courses-plan        课程文件的excl(必须的)
+     * * string       Student      课程文件的excl(必须的)
      *
      * @return object
      *
@@ -687,7 +688,7 @@ class UserController extends BaseController
             //将中文头转换翻译成英文
             $studentInfo = Common::arrayChTOEn($studentInfo, 'msc.importForCnToEn.student_group');
             dd($data);
-            dd($studentInfo);
+//            dd($studentInfo);
             //已经存在的数据
             $dataHaven = [];
             //添加失败的数据
