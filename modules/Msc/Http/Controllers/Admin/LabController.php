@@ -171,7 +171,6 @@ class LabController extends MscController
         }
         $order = [$orderName, $orderType];
 
-        //$ResourcesClassroomApply = new ResourcesClassroomApply();
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
         $list = $ResourcesOpenLabApply->getWaitExamineList($keyword, $date, $order);
         $statusValues   =   $ResourcesOpenLabApply    ->getStatusValues();
@@ -207,9 +206,11 @@ class LabController extends MscController
         $id = $request->get('id');
         $status = $request->get('status');
         $reject = $request->get('reject');
-        $ResourcesClassroomApply = new ResourcesClassroomApply();
+        //$ResourcesClassroomApply = new ResourcesClassroomApply();
+        $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
+
         try {
-            $result = $ResourcesClassroomApply->dealApply($id, $status, $reject, 3);
+            $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject, 3);
             if ($result) {
                 return response()->json(
                     $this->success_data(['id' => $result])

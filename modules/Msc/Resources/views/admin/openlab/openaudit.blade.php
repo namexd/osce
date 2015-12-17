@@ -79,7 +79,7 @@
                         status:1
                     },
                     success: function(result) {
-                       location.reload();
+                       //location.reload();
                     }
                 });
             })

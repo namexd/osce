@@ -40,7 +40,15 @@ class ResourcesOpenLabApply extends CommonModel
     public function applyUser(){
         return $this->hasOne('App\Entities\User','id','apply_uid');
     }
-
+    public function student(){
+        return $this->hasOne('Modules\Msc\Entities\Student','apply_uid','id');
+    }
+    public function teacher(){
+        return $this->hasOne('Modules\Msc\Entities\Teacher','apply_uid','id');
+    }
+    public function calendar(){
+        return $this->belongsTo('Modules\Msc\Entities\ResourcesOpenLabCalendar','resources_lab_calendar_id','id');
+    }
     //获取突发事件使用列表
     public function getOpenLabApplyList($data){
         $thisBuilder = $this;
@@ -207,5 +215,189 @@ class ResourcesOpenLabApply extends CommonModel
                 strtotime(date('Y-m-d'))
             ]
         )->  paginate(config('msc.page_size'));
+    }
+    //处理开放实验室审核
+    public function dealApply($id, $status, $reject){
+
+    }
+    public function agreeApply($id){
+        $apply      =   $this   ->  find($id);
+        $connection =   DB::connection($this->connection);
+        $connection ->  beginTransaction();
+        try
+        {
+            $newPlan    =   '';
+            if($this        ->  checkApplyerIsTeacher($apply))
+            {
+                $newPlan    =   $this       ->  agreeTeacherApply($apply);
+            }
+            else
+            {
+                $newPlan    =   $this       ->  agreeStudentApply($apply);
+            }
+            $connection     ->  commit();
+            return  $newPlan;
+        }
+        catch(\Exception $ex)
+        {
+            $connection     ->  rollback();
+            throw $ex;
+        }
+    }
+    public function refundApply(){
+
+    }
+    public function agreeTeacherApply($apply){
+        $calendar   =   $apply  ->  calendar;
+        $planData   =   [
+            'resources_openlab_id'              =>  $apply  ->  resources_lab_id,
+            'resources_openlab_calendar_id'     =>  $apply  ->  resources_lab_calendar_id,
+            'course_id'                         =>  $apply  ->  course_id,
+            'currentdate'                       =>  date('Y-m-d',strtotime($apply  ->  apply_date)),
+            'begintime'                         =>  $calendar   ->  begintime,
+            'endtime'                           =>  $calendar   ->  endtime,
+            'type'                              =>  $apply  ->  course_id,
+            'status'                            =>  0,
+        ];
+        try
+        {
+            $newPlan    =   ResourcesOpenLabPlan::create($planData);
+            if(!$newPlan)
+            {
+                //$this   ->  addSamePlanPersonTotal($planData['resources_openlab_calendar_id'],$planData['currentdate']);
+                //取消所有 学生计划
+                return $newPlan;
+            }
+            else
+            {
+                throw new \Exception('创建计划失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw   $ex;
+        }
+    }
+
+    /**
+     * 通过学生开放实验室申请
+     * @access public
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-17 16:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function agreeStudentApply($apply){
+        $calendar   =   $apply  ->  calendar;
+        $planData   =   [
+            'resources_openlab_id'              =>  $apply  ->  resources_lab_id,
+            'resources_openlab_calendar_id'     =>  $apply  ->  resources_lab_calendar_id,
+            'course_id'                         =>  $apply  ->  course_id,
+            'currentdate'                       =>  date('Y-m-d',strtotime($apply  ->  apply_date)),
+            'begintime'                         =>  $calendar   ->  begintime,
+            'endtime'                           =>  $calendar   ->  endtime,
+            'type'                              =>  $apply  ->  course_id,
+            'status'                            =>  0,
+        ];
+        try
+        {
+            $newPlan    =   ResourcesOpenLabPlan::create($planData);
+            if(!$newPlan)
+            {
+                $this   ->  addSamePlanPersonTotal($planData['resources_openlab_calendar_id'],$planData['currentdate']);
+                return $newPlan;
+            }
+            else
+            {
+                throw new \Exception('创建计划失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw   $ex;
+        }
+    }
+    /**
+     * 判断申请的申请人是否为教师
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return booler
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-17
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function checkApplyerIsTeacher($apply){
+        $isTeacher  =   false;
+        if(is_null($apply   ->  student))
+        {
+            $isTeacher  =   false;
+        }
+        if(is_null($apply   ->  teacher))
+        {
+            $isTeacher  =   true;
+        }
+        return $isTeacher;
+    }
+
+    /**
+     * 增加相同 开放实验室 计划的总人数
+     * @access public
+     * * string        resources_openlab_calendar_id        开放实验室开放时间段(必须的)
+     * * string        currentdate                          查询的日期(必须的)
+     *
+     * @return booler
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-17 16:16
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function addSamePlanPersonTotal($resources_openlab_calendar_id,$currentdate){
+        $sameList   =   $this   ->  getSamePlanList($resources_openlab_calendar_id,$currentdate);
+        try{
+            foreach($sameList as $plan)
+            {
+                $plan   ->  resorces_lab_person_total   =   intval($plan   ->  resorces_lab_person_total)   +   1;
+                $plan   ->  save();
+            }
+            return true;
+        }
+        catch(\Exception $ex)
+        {
+            throw   $ex;
+        }
+    }
+    /**
+     * 获取指定日期，指定时间段内 相同的计划列表
+     * @access public
+     * <b>post请求字段：</b>
+     * * string        resources_openlab_calendar_id        开放实验室开放时间段(必须的)
+     * * string        currentdate                          查询的日期(必须的)
+     *
+     * @return collect
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-17 16:15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getSamePlanList($resources_openlab_calendar_id,$currentdate){
+        return ResourcesOpenLabPlan::where('resources_openlab_calendar_id','=',$resources_openlab_calendar_id)
+            ->  where('currentdate','=',$currentdate)
+            ->  get();
+    }
+
+    public function cancelStudentPlan($resources_openlab_calendar_id,$currentdate){
+        
     }
 }
