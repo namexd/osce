@@ -687,6 +687,7 @@ class UserController extends BaseController
             //将中文头转换翻译成英文
             $studentInfo = Common::arrayChTOEn($studentInfo, 'msc.importForCnToEn.student_group');
             dd($data);
+            dd($studentInfo);
             //已经存在的数据
             $dataHaven = [];
             //添加失败的数据
