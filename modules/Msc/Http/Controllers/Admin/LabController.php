@@ -209,18 +209,18 @@ class LabController extends MscController
         //$ResourcesClassroomApply = new ResourcesClassroomApply();
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
 
-        try {
-            $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject, 3);
+        //try {
+            $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject);
             if ($result) {
                 return response()->json(
-                    $this->success_data(['id' => $result])
+                    $this->success_data(['id' => $result->id])
                 );
             } else {
                 return response()->json($this->fail(new \Exception('审核失败')));
             }
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+        //} catch (\Exception $ex) {
+        //    return response()->json($this->fail($ex));
+        //}
     }
 
     /**

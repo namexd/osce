@@ -41,13 +41,16 @@ class ResourcesOpenLabApply extends CommonModel
         return $this->hasOne('App\Entities\User','id','apply_uid');
     }
     public function student(){
-        return $this->hasOne('Modules\Msc\Entities\Student','apply_uid','id');
+        return $this->hasOne('Modules\Msc\Entities\Student','id','apply_uid');
     }
     public function teacher(){
-        return $this->hasOne('Modules\Msc\Entities\Teacher','apply_uid','id');
+        return $this->hasOne('Modules\Msc\Entities\Teacher','id','apply_uid');
     }
     public function calendar(){
         return $this->belongsTo('Modules\Msc\Entities\ResourcesOpenLabCalendar','resources_lab_calendar_id','id');
+    }
+    public function plan(){
+        return $this->belongsTo('Modules\Msc\Entities\ResourcesOpenLabPlan','id','resources_openlab_apply_id');
     }
     //获取突发事件使用列表
     public function getOpenLabApplyList($data){
@@ -219,7 +222,15 @@ class ResourcesOpenLabApply extends CommonModel
     }
     //处理开放实验室审核
     public function dealApply($id, $status, $reject){
-
+        if($status==1)
+        {
+            $result =   $this   ->agreeApply($id);
+        }
+        else
+        {
+            $result =   $this   ->refundApply($id,$reject);
+        }
+        return  $result;
     }
     public function agreeApply($id){
         $apply      =   $this   ->  find($id);
@@ -235,6 +246,20 @@ class ResourcesOpenLabApply extends CommonModel
             else
             {
                 $newPlan    =   $this       ->  agreeStudentApply($apply);
+            }
+            $result =   false;
+            if($newPlan)
+            {
+                $apply  ->  status  =   1;
+                $result =   $apply  ->  save();
+            }
+            else
+            {
+                throw   new \Exception('计划创建失败');
+            }
+            if(!$result)
+            {
+                throw   new \Exception('申请状态变更失败');
             }
             $connection     ->  commit();
             return  $newPlan;
@@ -259,19 +284,61 @@ class ResourcesOpenLabApply extends CommonModel
             'endtime'                           =>  $calendar   ->  endtime,
             'type'                              =>  $apply  ->  course_id,
             'status'                            =>  0,
+            'resources_openlab_apply_id'        =>  $apply  ->  id,
         ];
         try
         {
-            $newPlan    =   ResourcesOpenLabPlan::create($planData);
-            if(!$newPlan)
+            //如果当前预约 的时间和 教室 没有冲突的突发事件（紧急预约） 以及 教师预约  则取消所有 学生计划 并且创建 新的 计划
+            if(
+                !$this   ->  checkSameUrgent($planData['resources_openlab_calendar_id'],$planData['currentdate'])&&
+                !$this   ->  checkTeacherApply($planData['resources_openlab_calendar_id'],$planData['currentdate'])
+            )
             {
-                //$this   ->  addSamePlanPersonTotal($planData['resources_openlab_calendar_id'],$planData['currentdate']);
                 //取消所有 学生计划
-                return $newPlan;
+                if($this   ->  cancelStudentPlan($planData['resources_openlab_calendar_id'],$planData['currentdate']))
+                {
+                    //创建教师预约的新计划
+                    $newPlan    =   ResourcesOpenLabPlan::create($planData);
+                    if(!$newPlan)
+                    {
+                        throw new \Exception('创建计划失败');
+                    }
+                    $teacherPlan    =   [
+                        'resources_openlab_plan_id' =>  $apply  ->  resources_lab_id,
+                        'teacher_id'                =>  $apply  ->  apply_uid,
+                    ];
+                    //创建 计划 的教师信息
+                    $teacherPlan    =   ResourcesOpenLabPlanTeacher::create($teacherPlan);
+                    if(!$teacherPlan)
+                    {
+                        throw new \Exception('计划负责老师信息保存失败');
+                    }
+                    //获取申请的分组列表
+                    $labApplyGroups =   $apply          ->  labApplyGroups;
+                    foreach($labApplyGroups as $item)
+                    {
+                        $groupData  =   [
+                            'resources_openlab_plan_id' =>  $newPlan->  id,
+                            'student_class_id'          =>  $item   ->  student_class_id,
+                            'student_group_id'          =>  $item   ->  student_group_id,
+                        ];
+                        //创建 计划 的分组信息
+                        $group      =   ResourcesOpenLabAppGroup::create($groupData);
+                        if(!$group)
+                        {
+                            throw new \Exception('计划课程分组信息保存失败');
+                        }
+                    }
+                    return $newPlan;
+                }
+                else
+                {
+                    throw new \Exception('预约计划有冲突');
+                }
             }
             else
             {
-                throw new \Exception('创建计划失败');
+                throw new \Exception('计划与已有的教师计划或突发事件有冲突');
             }
         }
         catch(\Exception $ex)
@@ -303,19 +370,33 @@ class ResourcesOpenLabApply extends CommonModel
             'begintime'                         =>  $calendar   ->  begintime,
             'endtime'                           =>  $calendar   ->  endtime,
             'type'                              =>  $apply  ->  course_id,
+            'resources_openlab_apply_id'        =>  $apply  ->  id,
             'status'                            =>  0,
         ];
         try
         {
-            $newPlan    =   ResourcesOpenLabPlan::create($planData);
-            if(!$newPlan)
+            //如果当前预约 的时间和 教室 没有冲突的突发事件（紧急预约） 并且  没有教师预约
+            if(
+                !$this   ->  checkSameUrgent($planData['resources_openlab_calendar_id'],$planData['currentdate'])&&
+                !$this   ->  checkTeacherApply($planData['resources_openlab_calendar_id'],$planData['currentdate'])
+            )
             {
-                $this   ->  addSamePlanPersonTotal($planData['resources_openlab_calendar_id'],$planData['currentdate']);
-                return $newPlan;
+                //计划人数加1
+                $totalPerson    =   $this   ->  addSamePlanPersonTotal($planData['resources_openlab_calendar_id'],$planData['currentdate']);
+                $planData['apply_person_total']     =   $totalPerson;
+                $newPlan    =   ResourcesOpenLabPlan::create($planData);
+                if(!$newPlan)
+                {
+                    throw new \Exception('创建计划失败');
+                }
+                else
+                {
+                    return $newPlan;
+                }
             }
             else
             {
-                throw new \Exception('创建计划失败');
+                throw new \Exception('申请和已有计划冲突');
             }
         }
         catch(\Exception $ex)
@@ -337,11 +418,11 @@ class ResourcesOpenLabApply extends CommonModel
      */
     public function checkApplyerIsTeacher($apply){
         $isTeacher  =   false;
-        if(is_null($apply   ->  student))
+        if(!is_null($apply   ->  student))
         {
             $isTeacher  =   false;
         }
-        if(is_null($apply   ->  teacher))
+        if(!is_null($apply   ->  teacher))
         {
             $isTeacher  =   true;
         }
@@ -365,12 +446,20 @@ class ResourcesOpenLabApply extends CommonModel
     public function addSamePlanPersonTotal($resources_openlab_calendar_id,$currentdate){
         $sameList   =   $this   ->  getSamePlanList($resources_openlab_calendar_id,$currentdate);
         try{
+            $plan   =   0;
             foreach($sameList as $plan)
             {
                 $plan   ->  resorces_lab_person_total   =   intval($plan   ->  resorces_lab_person_total)   +   1;
                 $plan   ->  save();
             }
-            return true;
+            if($plan==0)
+            {
+                return 0;
+            }
+            else
+            {
+                return $plan    ->  resorces_lab_person_total;
+            }
         }
         catch(\Exception $ex)
         {
@@ -380,7 +469,6 @@ class ResourcesOpenLabApply extends CommonModel
     /**
      * 获取指定日期，指定时间段内 相同的计划列表
      * @access public
-     * <b>post请求字段：</b>
      * * string        resources_openlab_calendar_id        开放实验室开放时间段(必须的)
      * * string        currentdate                          查询的日期(必须的)
      *
@@ -398,7 +486,79 @@ class ResourcesOpenLabApply extends CommonModel
             ->  get();
     }
 
+    /**
+     * 获取实验室时段，日期相同情况下是否有紧急预约
+     * @access public
+     *
+     * * string        resources_openlab_calendar_id        开放实验室开放时间段(必须的)
+     * * string        currentdate                          查询的日期(必须的)
+     *
+     * @return booler
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-17 17:21
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function checkSameUrgent($resources_openlab_calendar_id,$currentdate){
+        $ResourcesOpenLabPlan   =  new ResourcesOpenLabPlan();
+        if($ResourcesOpenLabPlan   ->  checkSameUrgent($resources_openlab_calendar_id,$currentdate))
+        {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 获取实验室时段，日期相同情况下是否有教师已经预约
+     * @access public
+     *
+     * * string        resources_openlab_calendar_id        开放实验室开放时间段(必须的)
+     * * string        currentdate                          查询的日期(必须的)
+     *
+     * @return booler
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-17 17:21
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function checkTeacherApply($resources_openlab_calendar_id,$currentdate){
+        $sameList   =   $this   ->  getSamePlanList($resources_openlab_calendar_id,$currentdate);
+        if(count($sameList))
+        {
+            $ids    =   array_pluck($sameList,'id');
+            $ResourcesOpenLabPlanTeacher    =   new ResourcesOpenLabPlanTeacher();
+            if(empty($ids))
+            {
+                $total   =   $ResourcesOpenLabPlanTeacher    ->  whereIn('resources_openlab_plan_id',$ids)  ->count();
+                if($total>0)
+                {
+                    return true;
+                }
+            }
+            return  false;
+        }
+        else
+        {
+            return  false;
+        }
+    }
+
     public function cancelStudentPlan($resources_openlab_calendar_id,$currentdate){
-        
+        $sameList   =   $this   ->  getSamePlanList($resources_openlab_calendar_id,$currentdate);
+        try{
+            foreach($sameList as $plan)
+            {
+                $plan   ->  status   =   -1;
+                $plan   ->  save();
+            }
+            return true;
+        }
+        catch(\Exception $ex)
+        {
+            throw   $ex;
+        }
     }
 }

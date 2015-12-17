@@ -166,7 +166,6 @@ class ResourcesClassroomApply extends  CommonModel {
 
         //审核通过或拒绝一个申请
         public function dealApply ($id, $status, $desc, $type) {
-            dd(123);
             $connection = DB::connection ('msc_mis');
             $connection->beginTransaction ();
             try {
