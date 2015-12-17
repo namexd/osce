@@ -9,12 +9,15 @@
 @stop
 
 @section('only_js')
-	<script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-	<script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
 	<script type="text/javascript" src="{{asset('/msc/admin/usermanage/usermanage.js')}}" ></script>
-	
+
 	<script type="text/javascript">
 		$(function(){
+			$("#search").click(function(){
+				var keyword=$("#keyword").val();
+			})
+
+
 			for(var i=0;i<$(".table tr").length;i++){
 				$("#false-del").parents("tr").remove();//假删除数据隐藏
 			}
@@ -62,57 +65,6 @@
 				});
 				 history.go(0);
 			})
-			$(".btn-edit,.btn-new-add").click(function(){//确认修改、新增学生验证
-				var editName=$.trim($(".edit-name").val());
-				var editCode=$.trim($(".edit-code").val());
-				var editProfessional_name=$.trim($(".edit-professional_name").val());
-				var editMobile=$.trim($(".edit-mobile").val());
-				var editCard=$.trim($(".edit-card").val());
-				var reg=/^1[3|5|8]{1}[0-9]{9}$/;
-				if(editName==""){
-					layer.tips('用户名不能为空', '.edit-name', {
-					    tips: [1, '#408AFF'],
-					    time: 4000
-					});
-					return false;
-				}
-				if(editCode==""){
-					layer.tips('学号不能为空', '.edit-code', {
-					    tips: [1, '#408AFF'],
-					    time: 4000
-					});
-					return false;
-				}
-				if(editProfessional_name==""){
-					layer.tips('专业不能为空', '.edit-professional_name', {
-					    tips: [1, '#408AFF'],
-					    time: 4000
-					});
-					return false;
-				}
-				if(editMobile==""){
-					layer.tips('手机号不能为空', '.edit-mobile', {
-					    tips: [1, '#408AFF'],
-					    time: 4000
-					});
-					return false;
-				}
-				if(!reg.test(editMobile)){
-					layer.tips('请输入正确的手机号码', '.edit-mobile', {
-					    tips: [1, '#408AFF'],
-					    time: 4000
-					});
-					return false;
-				}
-				if(editCard==""){
-					layer.tips('证件号不能为空', '.edit-card', {
-					    tips: [1, '#408AFF'],
-					    time: 4000
-					});
-					return false;
-				}
-				history.go(0);
-			})
 
 			function look(){//查看
 				$.ajax({
@@ -133,7 +85,7 @@
 						$(".look-profession_name").val(data.profession_name)//专业
 						$(".look-mobile").val(data.mobile);//手机
 						$(".look-card").val(data.idcard);//证件号码
-						
+
 					}
 				});
 			}
@@ -156,10 +108,12 @@
 						$(".edit-student_type").find("option[text='"+data.student_type+"']").attr(".edit-student_type",true);//类别
 						$(".edit-professional_name").val(data.profession_name)//专业
 						$(".edit-mobile").val(data.mobile);//手机
-						$(".edit-card").val(data.idcard);//证件号码
+						$(".edit-idcard").val(data.idcard);//证件号码
 					}
 				});
+				history.go(0);
 			}
+<<<<<<< HEAD
 			$("#in").click(function(){
 				$("#leading-in").click();
 			})
@@ -194,6 +148,9 @@
 				
 			})
 			
+=======
+
+>>>>>>> e0118e635bb30de42a9532c9d0b18687bfb7a2e4
 		})
 	</script>
 @stop
@@ -330,7 +287,7 @@
 					                    	@if($list['status']=="禁用")
 						                    	<a href="#" class="status4" id="recover">恢复</a>
 						                    @elseif($list['status']=="删除")
-						                    	<a href="#" class="status4" id="false-del">删除</a> 
+						                    	<a href="#" class="status4" id="false-del">删除</a>
 						                    @else
 						                    	<a href="#" class="status2" id="forbidden" data-toggle="modal" data-target="#myModal">禁用</a>
 						                    @endif
@@ -369,13 +326,13 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control name edit-name" value="" name="name" />
+                <input type="text" class="form-control name" value="" name="name" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">学号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control code edit-code" name="code" />
+                <input type="text" class="form-control code" name="code" />
             </div>
         </div>
         <div class="form-group">
@@ -405,7 +362,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">专业</label>
             <div class="col-sm-10">
-               <input type="text" class="form-control professional_name edit-professional_name" name="professional_name"/>
+               <input type="text" class="form-control professional_name" name="professional_name"/>
                 <!--<select class="form-control professional" name="professional">
                 	<option value="1">儿科</option>
                 	<option value="2">设计</option>
@@ -415,7 +372,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control mobile edit-mobile" name="mobile" />
+                <input type="text" class="form-control mobile" name="mobile" />
             </div>
         </div>
         <div class="form-group">
@@ -428,7 +385,7 @@
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control card edit-card" name="card" />
+            	<input type="text" class="form-control card" name="card" />
             </div>
         </div>
         <div class="form-group">
@@ -587,7 +544,7 @@
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control edit-card" name="card" />
+            	<input type="text" class="form-control edit-idcard" name="idcard" />
             </div>
         </div>
         <div class="form-group">
