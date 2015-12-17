@@ -146,13 +146,26 @@
             @forelse($pagination as $item)
                 <tr>
                     <td>{{$item->id}}</td>
-                    <td>{{is_null($item->toolItem)? '-':(is_null($item->toolItem->resourcesTools)? '-':$item->toolItem->resourcesTools->name )}}</td>
+                    <td>{{$item->tools_name}}</td>
                     <td>{{$item->real_begindate}}-{{$item->real_enddate}}</td>
-                    <td>{{is_null($item->toolItem)? '-':$item->toolItem->code}}</td>
+                    <td>{{is_null($item->resourcesToolItem)  ? '-':$item->resourcesToolItem->code}}</td>
+{{--                    <td>{{dd($item->resourcesToolItem)}}</td>--}}
                     <td>{{is_null($item->lenderInfo)? '-':$item->lenderInfo->name}}</td>
                     <td>{{$item->detail}}</td>
-                    <td>{{$item->status}}</td>
-                    <td><span class="state3">是</span></td>
+                    <td>
+                        @if($item['status'] == 1) 正常
+                        @elseif($item['status'] == -1) 作废(预约已过期)
+                        @elseif($item['status'] == -2) 作废(取消预约)
+                        @elseif($item['status'] == -3) 超期未归还
+                        @elseif($item['status'] == 4) 已归还但有损坏
+                        @elseif($item['status'] == 5) 超期归还
+                        @endif
+                    </td>
+                    <td><span class="state3">
+                            @if($item['status'] == 1 || $item['status'] == 4) 是
+                            @else 否
+                            @endif
+                        </span></td>
                     <td><a class="read  state1" href="{{route('msc.admin.resourcesManager.getRecordInfo')}}?id={{$item->id}}">查看</a></td>
                 </tr>
             @empty
