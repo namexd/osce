@@ -157,6 +157,7 @@ class UserController extends BaseController
         }
 
         dd($list);
+        return view('msc::admin.usermanage.teacher_manage', ['list'=>$list]);
     }
 
     /**
