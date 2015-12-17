@@ -82,7 +82,6 @@ class ResourcesClassroom extends  CommonModel {
         return $this->hasMany('Modules\Msc\Entities\ResourcesClassroomApply','resources_lab_id','id');
     }
 
-
     //获取实验室资源列表
     public function getLaboratoryClassroomList($data){
 
@@ -169,14 +168,69 @@ class ResourcesClassroom extends  CommonModel {
             function ($join) {
                 $join->on('teacher_courses.teacher_id','=','teacher.id');
             }
-        )   ->  where ('resources_lab_plan.begintime','<',strtotime(date('Y-m-d')))
-            ->  where('resources_lab_plan.endtime','>',strtotime(date('Y-m-d')))
+        )
+            ->  whereRaw ('unix_timestamp(resources_lab_plan.currentdate) = ?',[strtotime(date('Y-m-d'))])
+            ->  whereRaw ('unix_timestamp(resources_lab_plan.begintime) < ?',[strtotime(date('H:i:s'))])
+            ->  whereRaw ('unix_timestamp(resources_lab_plan.endtime) > ?',[strtotime(date('H:i:s'))])
             ->  where($this->table.'.id','=',$id)
             ->  select([
                 'courses.name as courses_name',
                 'teacher.name as teacher_name',
-                'resources_lab.name as lab_name',
+                $this->table.'.name as lab_name',
+                'resources_lab_plan.id as pid'
             ]);
         return $builder->get();
+    }
+
+    //根据计划id获取课程视频信息
+    public function getCourseVcrByPlanId($id){
+
+        $plan = ResourcesClassroomPlan::find($id);
+        $teachers = $plan->teachersRelation;
+        $teacher_name = $teachers->first()->teacher->name;
+        $classroom_id = $plan -> classroomCourses -> classroom -> id;
+        $resourceslab=ResourcesLabVcr::where('resources_lab_id',$classroom_id) -> get();
+        foreach($resourceslab as $item){
+            $vcr = array();
+            $vcr['vcr_id']   = Vcr::find($item -> vcr_id)->id;
+            $vcr['vcr_name'] = Vcr::find($item -> vcr_id)->name;
+            $vcrs[] = $vcr;
+        }
+        $unabsence=ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$id)->count();
+        $ResourcesClassroomPlanGroup=new ResourcesClassroomPlanGroup();
+        $total=$ResourcesClassroomPlanGroup->getTotal($id);
+        $data=[
+            "currentdate"       =>    $plan->currentdate,
+            "begintime"         =>    $plan->begintime,
+            "endtime"           =>    $plan->endtime,
+            "courses_name"      =>    $plan->course->name,
+            "lab_ame"           =>    $plan->classroomCourses->classroom->name,
+            "teacher_name"      =>    $teacher_name,
+            'vcrs'              =>    $vcrs,
+            'unabsence'         =>    $unabsence,
+            'total'             =>    $total,
+        ];
+        return $data;
+	}
+
+    public function getClassroomVideo($id) {
+        $builder = $this->leftJoin(
+            'resources_lab_vcr',
+            function ($join) {
+                $join->on('resources_lab_vcr.resources_lab_id','=',$this->table.'.id');
+            }
+        )   ->leftJoin(
+            'vcr',
+            function ($join) {
+                $join->on('vcr.id','=','resources_lab_vcr.vcr_id');
+            }
+        )   ->where($this->table.'.id','=',$id)
+            ->select([
+                'vcr.id as vid',
+                'vcr.name as vname',
+        ]);
+
+        return $builder->get();
+
     }
 }

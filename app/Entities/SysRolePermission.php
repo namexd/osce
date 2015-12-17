@@ -35,7 +35,31 @@ class SysRolePermission extends Model
         if(!empty($data['roleId'])){
             $thisBuilder = $thisBuilder->where('role_id','=',$data['roleId']);
         }
-        return $thisBuilder->with('SysPermissions')->first();
+        return $thisBuilder->select('permission_id')->get();
+    }
+
+    public function DelRolePermission($role_id){
+
+        return  $this->where('role_id','=',$role_id)->delete();
+    }
+
+    public function AddRolePermission($permissionIdArr,$role_id){
+
+        $return = true;
+        foreach($permissionIdArr as $v){
+            $data = [
+                'permission_id' => $v,
+                'role_id' => $role_id
+            ];
+            $rew = $this->forceCreate($data);
+            if(empty($rew)){
+                $return = false;
+                break;
+            }
+
+        }
+        return  $return;
+
     }
 
 }
