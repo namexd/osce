@@ -7,12 +7,16 @@
  */
 namespace Modules\Msc\Http\Controllers\Admin;
 
+use App\Repositories\Common;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
+use Modules\Msc\Entities\StdProfessional;
+use Modules\Msc\Entities\TeacherDept;
+use Modules\Msc\Http\Controllers\MscController;
 
 
-class UserController extends BaseController
+class UserController extends MscController
 {
     /**
      * 学生列表
@@ -24,7 +28,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * string        keyword         关键字
      * * int           status          学生状态(1:正常 2:禁用 3:删除)
-     * * int           grade           学生年级id
+     * * int           grade           学生年级
      * * int           student_type    学生类别(1:本科 2:专科)
      * * int           profession      学生专业id
      *
@@ -70,7 +74,26 @@ class UserController extends BaseController
             ];
         }
 
-        return view('msc::admin.usermanage.student_manage', ['list'=>$list]);
+        // 年级列表
+        $gradeList = $student->getGradeList();
+
+        // 学生类别
+        $studentTypeList = config('msc.student_type');
+
+        // 用户状态
+        $studentStatusList = config('msc.user_status');
+
+        // 专列列表
+        $professionList = StdProfessional::get();
+
+        return view('msc::admin.usermanage.student_manage', [
+            'list'              => $list,
+            'gradeList'         => $gradeList,
+            'studentTypeList'   => $studentTypeList,
+            'studentStatusList' => $studentStatusList,
+            'professionList'    => $professionList,
+            'pagination'        => $pagination,
+        ]);
     }
 
     /**
@@ -83,7 +106,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        $id        学生编号
      *
-     * @return view
+     * @return json
      *
      * @version 0.8
      * @author wangjiang <wangjiang@misrobot.com>
@@ -109,7 +132,7 @@ class UserController extends BaseController
             'status'          => $student->userInfo->status,
         ];
 
-        die($data);
+        die(json_encode($data));
     }
 
     /**
@@ -152,11 +175,22 @@ class UserController extends BaseController
                 'mobile'    => is_null($item->userInfo) ? '-' : $item->userInfo->mobile,
                 'gender'    => is_null($item->userInfo) ? '-' : $item->userInfo->gender,
                 'status'    => is_null($item->userInfo) ? '-' : $item->userInfo->status,
-                'role'      => is_null($item->userInfo) ? '-' : $item->userInfo->roles,
+                'role'      => is_null($item->userInfo) ? [] : $item->userInfo->roles,
             ];
         }
 
-        dd($list);
+        // 用户状态
+        $teacherStatusList = config('msc.user_status');
+
+        // 科室列表
+        $deptList = TeacherDept::get();
+
+        return view('msc::admin.usermanage.teacher_manage', [
+            'list'              => $list,
+            'teacherStatusList' => $teacherStatusList,
+            'deptList'          => $deptList,
+            'pagination'        => $pagination,
+        ]);
     }
 
     /**
@@ -169,7 +203,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        id        老师编号
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author wangjiang <wangjiang@misrobot.com>
@@ -183,17 +217,17 @@ class UserController extends BaseController
         $teacher = Teacher::findOrFail($teacherId);
 
         $data = [
-            'id' => $teacher->id,
-            'name' => $teacher->name,
-            'code' => $teacher->code,
+            'id'        => $teacher->id,
+            'name'      => $teacher->name,
+            'code'      => $teacher->code,
             'dept_name' => is_null($teacher->dept) ? '-' : $teacher->dept->name,
-            'mobile' => $teacher->userInfo->mobile,
-            'gender' => $teacher->userInfo->gender,
-            'status' => $teacher->userInfo->status,
-            'role' => $teacher->userInfo->roles,
+            'mobile'    => $teacher->userInfo->mobile,
+            'gender'    => $teacher->userInfo->gender,
+            'status'    => $teacher->userInfo->status,
+            'role'      => $teacher->userInfo->roles,
         ];
 
-        die($data);
+        die(json_encode($data));
     }
 
     /**
@@ -207,7 +241,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        $id        学生编号
      *
-     * @return blooean
+     * @return bloo
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -221,13 +255,13 @@ class UserController extends BaseController
 
 
         return $this->getStudentItem($studentId);
-		
+
     }
 
     /**
      * 编辑学生
      * @method GET
-     * @url /msc/admin/user/student-submit/{id}
+     * @url /msc/admin/user/student-save
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -246,18 +280,20 @@ class UserController extends BaseController
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'grade' => 'required|integer|min:0|max:11',
-            'student_type' => 'required|integer|min:0|max:3',
-            'professional' => 'required|integer|min:0|max:11',
-            'validated' => 'required|integer|min:0|max:1',
-            'moblie' => 'required|unique|integer|max:11',
-            'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|unique|integer|min:0|max:50',
+            'code' => 'required|min:0|max:32',
+            'gender' => 'required|max:1',
+            'grade' => 'required|max:11',
+            'student_type' => 'required||max:3',
+            'professional_name' => 'required|max:50',
+            'mobile' => 'required|max:11',
+            'idcard_type' => 'required|max:1',
+            'idcard' => 'required|min:0|max:50',
         ]);
 
-        $data = $request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional', 'validated', 'moblie', 'idcard_type', 'idcard']);
+
+        $data = $request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
+
+//        dd($data);
 
         $studentModel = new Student();
 
@@ -275,8 +311,8 @@ class UserController extends BaseController
 
     /**
      * 添加学生信息
-     * @method GET
-     * @url /msc/admin/user/student-add/{id}
+     * @method POST
+     * @url /msc/admin/user/student-add
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -298,14 +334,14 @@ class UserController extends BaseController
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
-            'professional' => 'required|integer|min:0|max:11',
-            'validated' => 'required|integer|min:0|max:1',
-            'moblie' => 'required|integer|max:11',
+            'profession_name' => 'required|max:50',
+            'mobile' => 'required|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
             'idcard' => 'required|unique|integer|min:0|max:50',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional', 'validated', 'moblie', 'idcard_type', 'idcard']);
+        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
+
         $data['status']=$status;
         $studentModel = new Student();
 
@@ -446,10 +482,10 @@ class UserController extends BaseController
             'code' => 'required|unique|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'teacher_dept' => 'required|integer|min:0|max:3',
-            'moblie' => 'required|unique|integer|max:11',
+            'mobile' => 'required|unique|integer|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'moblie']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
 
         $teacherModel = new Teacher();
 
@@ -490,10 +526,10 @@ class UserController extends BaseController
             'code' => 'required|unique|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'teacher_dept' => 'required|integer|min:0|max:3',
-            'moblie' => 'required|unique|integer|max:11',
+            'mobile' => 'required|unique|integer|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'moblie']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
         $data['status']=$status;
         $teacherModel = new Teacher();
 
@@ -579,4 +615,211 @@ class UserController extends BaseController
             ['success' => false]
         );
     }
+
+    /**
+     * 导入教师用户
+     * @api GET /msc/admin/User/import-Teacher-user
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        courses-plan        课程文件的excl(必须的)
+     * @return object
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function  postImportTeacherUser(Request $request)
+    {
+        try {
+            $data = Common::getExclData($request, 'teacher');
+            $teacherInfo = array_shift($data);
+            //将中文头转换翻译成英文
+            $teacherInfo = Common::arrayChTOEn($teacherInfo, 'msc.importForCnToEn.teacher_group');  //teacher_group还未定义
+            dd($data);
+            //已经存在的数据
+            $dataHaven = [];
+            //添加失败的数据
+            $dataFalse = [];
+            //判断是否存在这个学生用户
+            foreach ($teacherInfo as $teacherData) {
+                if ($teacherData['teacher_code'] && $teacherData['name']) {
+                    if (Teacher::where('code', '=', $teacherData['student_code']->count() == 0)) {
+
+                        $teacher =Teacher ::create($teacherData);
+
+                        if ( $teacher == false) {
+                            $dataFalse[] = $teacherData;
+                        }
+                    } else {
+                        $dataHaven[] = $teacherData;
+                    }
+                }
+            }
+            return response()->json(
+                $this->success_data(['result' => true, 'dataFalse' => $dataFalse, 'dataHaven' => $dataHaven])
+            );
+        } catch (\Exception $e) {
+            return response()->json($this->fail($e));
+        }
+    }
+
+    /**
+     * 导入学生用户
+     * @api GET /msc/admin/User/import-Student-user
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string       Student      课程文件的excl(必须的)
+     *
+     * @return object
+     *
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function  postImportStudentUser(Request $request)
+    {
+        try {
+            $data = Common::getExclData($request, 'student');
+            $studentInfo = array_shift($data);
+            //将中文头转换翻译成英文
+            $studentInfo = Common::arrayChTOEn($studentInfo, 'msc.importForCnToEn.student_group');
+            dd($data);
+//            dd($studentInfo);
+            //已经存在的数据
+            $dataHaven = [];
+            //添加失败的数据
+            $dataFalse = [];
+            //判断是否存在这个学生用户
+            foreach ($studentInfo as $studentData) {
+                if ($studentData['student_code'] && $studentData['name']) {
+                    if (Student::where('code', '=', $studentData['student_code']->count() == 0)) {
+
+                        $student = Student::create($studentData);
+
+                        if ($student == false) {
+                            $dataFalse[] = $studentData;
+                        }
+                    } else {
+                        $dataHaven[] = $studentData;
+                    }
+                }
+            }
+            return response()->json(
+                $this->success_data(['result' => true, 'dataFalse' => $dataFalse, 'dataHaven' => $dataHaven])
+            );
+        } catch (\Exception $e) {
+            return response()->json($this->fail($e));
+        }
+    }
+
+
+
+    /**
+     * 导出学生用户
+     * @api GET /msc/admin/user/export-student-user
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string       keyword         关键字
+     *
+     * @return json
+     *
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+
+    public function getExportStudentUser(Request $request)
+    {
+        //同步学生列表的数据
+        $studentInfo = $this->getStudentList($request);
+//        dd($studentInfo->list);
+
+        $str = iconv('utf-8', 'gb2312', '序号,姓名,学号,年级,类别,专业,手机号,证件号,性别,状态') . "\n";
+        if (empty($studentInfo->list)) {
+            $str .= iconv('utf-8', 'gb2312', '无,无,无,无,无,无,无,无,无,无') . "\n";
+        } else {
+            foreach ($studentInfo->list as $row) {
+                $ID = iconv('utf-8', 'gb2312', $row['id']); //中文转码
+                $name = iconv('utf-8', 'gb2312', $row['name']);
+                $code = iconv('utf-8', 'gb2312', $row['code']);
+                $grade = iconv('utf-8', 'gb2312', $row['grade']);
+                $student_type = iconv('utf-8', 'gb2312', $row['student_type']);
+                $profession_name = iconv('utf-8', 'gb2312', $row['profession_name']);
+                $mobile = iconv('utf-8', 'gb2312', $row['mobile']);
+                $idcard = iconv('utf-8', 'gb2312', $row['idcard']);
+                $gender = iconv('utf-8', 'gb2312', $row['gender']);
+                $status = iconv('utf-8', 'gb2312', $row['status']);
+                $str .= $ID . "," . $name . "," . $code . "," . $grade . "," . $student_type . "," . $profession_name . "," . $mobile . "," . $idcard . "," . $gender . "," . $status . "\n"; //用引文逗号分开
+            }
+        }
+        $filename = date('Ymd') . '.csv';
+        $this->export_csv($filename, $str);
+    }
+
+    private function export_csv($filename, $data)
+    {
+        header("Content-type:text/csv");
+        header("Content-Disposition:attachment;filename=" . $filename);
+        header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
+        header('Expires:0');
+        header('Pragma:public');
+        echo $data;
+    }
+
+
+
+    /**
+     * 导出教师用户
+     * @api GET /msc/admin/user/export-teacher-user
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string       keyword         关键字
+     *
+     * @return json
+     *
+     * @version 0.8
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2015-11-27 10:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getExportTeacherUser(Request $request)
+    {
+        $teacherInfo = $this->getTeacherList($request);
+//        dd($teacherInfo->list);
+//        $teacherInfo = $this->getTeacherInfo($request);
+        $str = iconv('utf-8', 'gb2312', '序号,姓名,胸牌号,科室,手机号,性别,状态,角色') . "\n";
+        if (empty($teacherInfo->list)) {
+            $str .= iconv('utf-8', 'gb2312', '无,无,无,无,无,无,无,无') . "\n";
+        } else {
+            foreach ($teacherInfo->list as $row) {
+                $ID = iconv('utf-8', 'gb2312', $row['id']); //中文转码
+                $name = iconv('utf-8', 'gb2312', $row['name']);
+                $code = iconv('utf-8', 'gb2312', $row['code']);
+                $dept_name = iconv('utf-8', 'gb2312', $row['dept_name']);
+                $mobile = iconv('utf-8', 'gb2312', $row['mobile']);
+                $gender = iconv('utf-8', 'gb2312', $row['gender']);
+                $status = iconv('utf-8', 'gb2312', $row['status']);
+                $role = iconv('utf-8', 'gb2312', $row['role']);
+                $str .= $ID . "," . $name . "," . $code . "," . $dept_name . "," . $mobile . "," . $gender .",".$role. "," . $status . "\n"; //用引文逗号分开
+            }
+        }
+//        dd($ID);
+        $filename = date('Ymd') . '.csv';
+        $this->export_csv($filename, $str);
+    }
+
 }

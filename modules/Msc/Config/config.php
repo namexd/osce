@@ -35,9 +35,33 @@ return [
 			'手机' => 'mobile',
 			'分组' => 'group',
 		],
+
+		'student_group'=>[
+			'姓名'=>'name',
+			'学号'=>'student_code',
+			'年级'=> 'grade',
+			'类别'=> 'student_type',
+			'专业'=> 'profession',
+			'手机号'=>'mobil',
+			'证件号'=>'idcard',
+			'性别'=> 'gender',
+			'状态'=>'status',
+		],
+		'teacher_group'=>[
+			'姓名'=>'name',
+			'胸牌号'=>'code',
+			'科室'=> 'dept_name',
+			'手机号'=>'mobil',
+			'性别'=> 'gender',
+			'角色'=>'role',
+			'状态'=>'status',
+		],
+
 	],
 	'idcard_type'  	=>		[	1=>'身份证',	2=>'护照'],
 	'page_size'		=>		10,
 	'video_host'	=>		'192.168.1.200',
 	'video_port'	=>		'9090',
+	'student_type'  =>      [1=>'本科', 2=>'专科'],
+	'user_status'   =>      [1=>'正常', 2=>'禁用', 3=>'删除']
 ];

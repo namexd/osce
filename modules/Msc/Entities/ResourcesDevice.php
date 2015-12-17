@@ -22,11 +22,11 @@ class ResourcesDevice extends  CommonModel {
     // 根据日期获取某一类可预约的开放设备列表
     public function getAvailableList ($cateId, $date)
     {
-        // 不能申请的开放设备ids
-        $devices = $this->leftJoin('resources_device_plan', function ($join) use($date) {
+        // 能申请的开放设备ids
+        $devices = $this->leftJoin('resources_device_plan', function ($join) use($date, $cateId) {
             $join->on('resources_device_plan.resources_device_id', '=', 'resources_device.id')
-                 //->where('resources_device.resources_device_cate_id', '=', $cateId)
-                 ->whereIn('resources_device_plan.status', [0,1]); // -3=不允许预约 ，-2=已过期(未使用)  -1=已取消 0=已预约未使用 1=使用中 2=已使用
+                 ->where('resources_device.resources_device_cate_id', '=', $cateId)
+                 ->whereNotIn('resources_device_plan.status', [0,1]); // -3=不允许预约 ，-2=已过期(未使用)  -1=已取消 0=已预约未使用 1=使用中 2=已使用
         })->whereRaw(
             'unix_timestamp(resources_device_plan.currentdate)=? ',
             [strtotime($date)]
@@ -51,8 +51,8 @@ class ResourcesDevice extends  CommonModel {
                  ->where('resources.type', '=', 'OPENDEVICE');
         })->leftJoin('resources_image', function ($join){
             $join->on('resources_image.resources_id', '=', 'resources.id');
-        })->whereNotIn('resources_device.id', $ids)
-          ->where('resources_device.resources_device_cate_id', '=', $cateId)
+        })->whereIn('resources_device.id', $ids)
+          //->where('resources_device.resources_device_cate_id', '=', $cateId)
           ->select([
               'resources_device.id as id', // 编号
               'resources_device.name as name', // 名称

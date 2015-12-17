@@ -16,6 +16,7 @@ class SysRolePermission extends Model
     protected $connection	=	'sys_mis';
     protected $table 		= 	'sys_role_permission';
 
+    protected $fillable 	=	['permission_id', 'role_id'];
 
     //定义和权限表的关系
     public function SysPermissions()
@@ -46,17 +47,19 @@ class SysRolePermission extends Model
     public function AddRolePermission($permissionIdArr,$role_id){
 
         $return = true;
-        foreach($permissionIdArr as $v){
-            $data = [
-                'permission_id' => $v,
-                'role_id' => $role_id
-            ];
-            $rew = $this->forceCreate($data);
-            if(empty($rew)){
-                $return = false;
-                break;
-            }
+        if(!empty($permissionIdArr) && is_array($permissionIdArr)){
+            foreach($permissionIdArr as $v){
+                $data = [
+                    'permission_id' => $v,
+                    'role_id' => $role_id
+                ];
+                $rew = $this->forceCreate($data);
+                if(empty($rew)){
+                    $return = false;
+                    break;
+                }
 
+            }
         }
         return  $return;
 

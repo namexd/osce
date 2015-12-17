@@ -130,6 +130,7 @@
         <input type="hidden" name="ids">
         <input type="hidden" name="id">
         <input type="hidden" name="status">
+        <input type="hidden" name="type">
     </form>
 
     <script>
@@ -137,17 +138,21 @@
         $(function(){
             //通过
             $("#list_form").delegate(".pass","click",function(){
-                var id = $(this).parents('tr').attr('list_id');
+                var id = $('.pass').parent().parent().parent().attr('list_id');
+
                 $.confirm({
                     title: '提示：',
                     content: '确定要通过该条记录么?',
                     confirmButton: '确定',
                     cancelButton:'取消',
                     confirm: function(){
+
                         var DelForm =  $('#submitSave');
-                        //DelForm.attr('action',"{{ url('/msc/admin/examine/change-user-status') }}");
+                        DelForm.attr('action',"{{ route('verify.postChangeUsersStatus') }}");
+                        console.log(DelForm.attr('action'));
                         DelForm.find('input[name="id"]').val(id);
                         DelForm.find('input[name="status"]').val(1);
+                        DelForm.find('input[name="type"]').val('student');
                         DelForm.submit();
                     }
                 });
@@ -203,8 +208,10 @@
                         cancelButton:'取消',
                         confirm: function(){
                             var DelForm =  $('#submitSave');
+                            DelForm.attr('action',"{{ url('/msc/admin/verify/change-users-status') }}");
                             DelForm.find('input[name="ids"]').val(str);
                             DelForm.find('input[name="status"]').val(1);
+                            DelForm.find('input[name="type"]').val('student');
                             DelForm.submit();
                         }
                     });
