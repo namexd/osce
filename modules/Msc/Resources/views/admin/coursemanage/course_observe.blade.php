@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="{{asset('msc/admin/coursemanage/css/course_observe.css')}}">
     <link rel="stylesheet" href="{{asset('msc/admin/css/demo.css')}}">
     <style type="text/css">
-
+        iframe{
+            margin-right: 10px;
+        }
     </style>
 @stop
 

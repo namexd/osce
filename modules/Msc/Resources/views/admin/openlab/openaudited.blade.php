@@ -1,7 +1,6 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
     <style>
-
         .modal-dialog{
             margin: 300px auto;
         }
@@ -11,13 +10,26 @@
         }
         .modal-footer{
             border-top: none;
-            text-align: center;
+        }
+        .modal-footer button{
+            margin-right: 15px;
         }
         .searchbox{
             margin-right: 20px;
         }
         .notice{
             color:#408aff;
+        }
+        #start{
+            margin-left: 30px;
+            width: 160px;
+        }
+        #lab-search{
+            width: 260px;
+        }
+        .border-none{
+            border: none!important;
+            outline: none!important;
         }
     </style>
 @stop
@@ -81,13 +93,13 @@
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-4">
+            <div class="col-xs-6 col-md-5">
                 <form method="get" action="open-lab-apply-examined-list">
-                    <div class="input-group pull-left col-md-5 searchbox">
+                    <div class="input-group pull-left col-md-4 searchbox">
                         <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="date">
                     </div>
                     <div class="input-group pull-left col-md-5 searchbox">
-                        <input type="text" placeholder="实验室名称" class="input-sm form-control" name="keyword" value="">
+                        <input type="text" placeholder="实验室名称" class="input-sm form-control" name="keyword" value="" id="lab-search">
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                             </span>
@@ -110,7 +122,7 @@
                     </th>
                     <th>
                         <div class="btn-group Examine">
-                            <button data-toggle="dropdown" class="btn-white border-white dropdown-toggle" type="button">预约人<span class="caret"></span>
+                            <button data-toggle="dropdown" class="btn-white border-white dropdown-toggle border-none" type="button">预约人<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu order-classroom">
                                 <li value="1">
@@ -127,7 +139,7 @@
                     </th>
                     <th>
                         <div class="btn-group Examine">
-                            <button data-toggle="dropdown" class="btn-white border-white dropdown-toggle" type="button">学生组<span class="caret"></span>
+                            <button data-toggle="dropdown" class="btn-white border-white dropdown-toggle border-none" type="button">学生组<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu order-classroom">
                                 <li value="1">

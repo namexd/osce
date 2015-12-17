@@ -28,7 +28,7 @@ $(function(){
 lizhiyuan*/
 function course_vcr(){
     //初始化
-    courseObserveDetail.initVideo(600,400,1,"divPlugin");
+    courseObserveDetail.initVideo(520,400,1,"divPlugin");
     //登录
     courseObserveDetail.Login({ip:pars.ip,ports:pars.port,user:pars.username,passwd:pars.password});
 }
@@ -80,12 +80,10 @@ function course_observe(){
                 id:id
             },
             success: function(result){
-                console.log(result);
                 var vcr='';
                 for(var i=0;i<result.video_count;i++){
                     var vcrUrl=pars.vcrUrl+"?id="+result.video[i].vid;
-                    vcr+='<iframe src="'+vcrUrl+'" frameborder="0" width="600px" height="440px"></iframe>';
-                    console.log(result.video[i].vname);
+                    vcr+='<iframe src="'+vcrUrl+'" frameborder="0" width="520px" height="440px"></iframe>';
                 }
                 $("#vcr-box").empty();
                 $("#vcr-box").append(vcr);
@@ -95,16 +93,17 @@ function course_observe(){
         });
     }
     //获取当前时间
+    /**
+     *检测是否大于10
+     */
+    function testTime(res){
+        return res>=10?res:'0'+res;
+    }
     function getCurrentTime(){
-        var d = new Date();
-        var year = d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
-        if(d.getSeconds()<10){
-            var hour= d.getHours()+":"+ d.getMinutes()+":"+ "0"+d.getSeconds();
-        }else{
-            var hour= d.getHours()+":"+ d.getMinutes()+":"+ d.getSeconds();
-        }
-        $("#year").html(year);
-        $("#hour").html(hour);
+        var nowDay = ((new Date()).getFullYear()) +'-'+((new Date()).getMonth()>=9?((new Date()).getMonth()+parseInt(1)):('0'+((new Date()).getMonth()+parseInt(1))))+'-'+((new Date()).getDate()>=10?(new Date()).getDate():('0'+((new Date()).getDate())));
+        var time = testTime((new Date()).getHours())+':'+testTime((new Date()).getMinutes())+':'+testTime((new Date()).getSeconds());
+        $("#year").html(nowDay);
+        $("#hour").html(time);
         setTimeout(getCurrentTime,1000);
     }
     //页面加载就执行部分
@@ -320,8 +319,8 @@ var courseObserveDetail = (function(mod){
      *当前时间写入
      */
     function nowTime(){
-        var nowDay = ((new Date()).getFullYear()) +'-'+((new Date()).getMonth()>=9?((new Date()).getMonth()+parseInt(1)):('0'+((new Date()).getMonth()+parseInt(1))))+'-'+((new Date()).getDate()>=10?(new Date()).getDate():('0'+((new Date()).getDate()+parseInt(1))));
-        var time = (new Date()).getHours()+':'+testTime((new Date()).getMinutes())+':'+testTime((new Date()).getSeconds());
+        var nowDay = ((new Date()).getFullYear()) +'-'+((new Date()).getMonth()>=9?((new Date()).getMonth()+parseInt(1)):('0'+((new Date()).getMonth()+parseInt(1))))+'-'+((new Date()).getDate()>=10?(new Date()).getDate():('0'+((new Date()).getDate()+parseInt(0))));
+        var time = testTime((new Date()).getHours())+':'+testTime((new Date()).getMinutes())+':'+testTime((new Date()).getSeconds());
         $('#nowDay').text(nowDay);
         $('#time').text(time);
     }
@@ -368,7 +367,29 @@ var courseObserveDetail = (function(mod){
             });
         });
     }
-
+    mod.download = function(downVideo,req){
+        $('#download').click(function(){
+            $.ajax({
+                type:'get',
+                async:true,
+                url:downVideo,
+                data:req,
+                success:function(res){
+                    if(res.code==1){
+                        var iframe  =$('<iframe>').attr('src',res.url);
+                        var box=    $('<div>').css('display','none');
+                        box.append(iframe);
+                        $('body').append(box);
+                    }
+                    else if(res.code==2){
+                        alert(res.message);
+                    }else{
+                        alert(res.message.split(':')[1]);
+                    }
+                }
+            });
+        });
+    }
     return mod;
 
 })(courseObserveDetail||{})
