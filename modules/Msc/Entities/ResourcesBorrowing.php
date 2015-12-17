@@ -154,11 +154,21 @@ class ResourcesBorrowing extends  CommonModel
             }
         )   ->  where($this->table.'.status','=',0)->where('apply_validated','=',1)
             ->  where($this->table.'.loan_validated','=',1)
-            ->whereRaw('unix_timestamp(real_enddate) < ?',[strtotime(date('Y-m-d H:i:s'))]);
+            ->whereRaw('unix_timestamp(enddate) > ?',[strtotime(date('Y-m-d H:i:s'))]);
 
         if ($keyword !== "") {
             $builder->where('resources_tools.name','like','%'.$keyword.'%');
         }
+        $builder->select([
+            $this->table.'.id as id',
+            'resources_tools.name as name',
+            $this->table.'.begindate as begindate',
+            $this->table.'.enddate as enddate',
+            $this->table.'.detail as detail',
+            $this->table.'.resources_tool_id as resources_tool_id',
+            $this->table.'.resources_tool_item_id as resources_tool_item_id',
+            $this->table.'.lender as lender'
+        ]);
         return $builder->paginate(20);
     }
 }
