@@ -111,7 +111,6 @@
 						$(".edit-idcard").val(data.idcard);//证件号码
 					}
 				});
-				history.go(0);
 			}
 			
 		})
