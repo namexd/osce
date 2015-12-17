@@ -77,19 +77,58 @@ class Student extends CommonModel {
     }
 
     // 获得分页列表
-    public function getFilteredPaginateList ($kwd='', $order=['id', 'desc'])
+    public function getFilteredPaginateList ($kwd='', $status='', $grade='', $studentType='', $profession='')
     {
-        $builder = $this;
+        $userDb    = config('database.connections.sys_mis.database');
+        $userTable = $userDb.'.users';
+
+        $studentDb    = config('database.connections.msc_mis.database');
+        $studentTable = $studentDb.'.student';
+
+        $builder = $this->leftJoin($userTable, function($join) use($userTable, $studentTable) {
+            $join->on($userTable.'.id', '=', $studentTable.'.id');
+        });
 
         if ($kwd)
         {
             $builder = $builder->whereRaw(
-                'locate(?, student.name)>0 or locate(?, student.code)>0 ',
-                [$kwd, $kwd]
+                'locate(?, '.$studentTable.'.name)>0 or locate(?, '.$studentTable.'.code)>0 or locate(?, '.$userTable.'.mobile)>0 or locate(?, '.$userTable.'.idcard)>0 ',
+                [$kwd, $kwd, $kwd, $kwd]
             );
         }
 
-        return $builder->orderBy($order['0'], $order['1'])->paginate(config('msc.page_size',10));
+        if ($status)
+        {
+            $builder = $builder->where($userTable.'.status', '=', $status);
+        }
+
+        if ($grade)
+        {
+            $builder = $builder->where($studentTable.'.grade', '=', $grade);
+        }
+
+        if ($studentType)
+        {
+            $builder = $builder->where($studentTable.'.student_type', '=', $studentType);
+        }
+
+        if ($profession)
+        {
+            $builder = $builder->where($studentTable.'.professional', '=', $profession);
+        }
+
+        return $builder->select([
+            $studentTable.'.id as id',
+            $studentTable.'.name as name',
+            $studentTable.'.code as code',
+            $studentTable.'.grade as grade',
+            $studentTable.'.student_type as student_type',
+            $studentTable.'.professional as professional',
+            //$userTable.'.mobile as mobile',
+            //$userTable.'.idcard as idcard',
+            //$userTable.'.gender as gender',
+            //$userTable.'.status as status',
+        ])->orderBy($studentTable.'.id')->paginate(config('msc.page_size',10));
     }
 
     /**

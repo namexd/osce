@@ -151,7 +151,6 @@ class LabController extends MscController
         $orderType    	=   empty($orderType)?    'desc':$orderType;
         $orderName      =   empty($orderName)?      '5'    :   $orderName;
         $date           =   empty($date)?      date('Y-m-d')    :   $date;
-
         //使用数组保存需要会显的数值
         $rollMsg = ['',''];
         $rollMsg[0] = $date;
@@ -175,7 +174,8 @@ class LabController extends MscController
         //$ResourcesClassroomApply = new ResourcesClassroomApply();
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
         $list = $ResourcesOpenLabApply->getWaitExamineList($keyword, $date, $order);
-        return view('msc::admin.openlab.openaudit', ['pagination' => $list,'rollmsg' => $rollMsg]);
+        $statusValues   =   $ResourcesOpenLabApply    ->getStatusValues();
+        return view('msc::admin.openlab.openaudit', ['pagination' => $list,'rollmsg' => $rollMsg,'statusValues'=>$statusValues]);
     }
 
     /**

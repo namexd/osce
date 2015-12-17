@@ -20,6 +20,7 @@ class ResourcesClassroomApply extends  CommonModel {
     public $incrementing	=	true;
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
+
     //包含查询条件的数据库对象（唐俊）
     // public $builder         =   'id,resources_lab_id,detail,status';
 

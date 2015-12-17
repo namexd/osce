@@ -17,7 +17,9 @@ use Modules\Msc\Entities\ResourcesClassroomApply;
 use Modules\Msc\Entities\ResourcesClassroomCourses;
 use Modules\Msc\Entities\ResourcesClassroomPlan;
 use Modules\Msc\Entities\ResourcesClassroomPlanAlter;
+use Modules\Msc\Entities\ResourcesClassroomPlanGroup;
 use Modules\Msc\Entities\ResourcesClassroomPlanTeacher;
+use Modules\Msc\Entities\ResourcesLabVcr;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Training;
 use Modules\Msc\Entities\TrainingCourse;
@@ -28,15 +30,15 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use Modules\Msc\Repositories\Common as MscCommon;
-
+use Modules\Msc\Entities\ResourcesClassroomCourseSign;
 
 class CoursesController extends MscController
 {
 
-    public function getTest(){
+    /*public function getTest(){
 
         return view('msc::admin.coursemanage.course_observe_detail');
-    }
+    }*/
     /**
      * 导入课程
      * @api POST /msc/admin/courses/import-courses
@@ -1859,10 +1861,10 @@ class CoursesController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * int           lab_id               教师id
-     * * int           vcr_id              摄像机id
+     * * int           lab_id               教室
+     *   int           vcr_id               默认摄像机id
      *
-     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数
+     * @return view  courses_name:课程名称 teacher_name：老师名称  lab_name：教师名称  total：应到人数   unabsence：实到人数  vcrs:摄像机信息
      *
      * @version 1.0
      * @author  gaoshichong
@@ -1871,38 +1873,81 @@ class CoursesController extends MscController
      *
      */
     public function getCoursesVcr(Request $request){
-        $this->validate($request,[
-
-        ]);
+        $lab_id=$request->get("lab_id");
+        $vcr_id=$request->get("vcr_id");
         try{
             $model=new ResourcesClassroom();
-            $rst=$model->getClassroomDetails(2)->first();
+            $rst=$model->getClassroomDetails($lab_id)->first();
+            $plan_id=$rst->pid;
+            $vcrrst=$model->getClassroomVideo($lab_id);
+            foreach($vcrrst as $item){
+                $vcr=array();
+                $vcr['vcr_name']=$item->vname;
+                $vcr['vcr_id']=$item->vid;
+                $vcrs[]=$vcr;
+            }
+
+            $unabsence=ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$plan_id)->count();
+            $ResourcesClassroomPlanGroup=new ResourcesClassroomPlanGroup();
+            $total=$ResourcesClassroomPlanGroup->getTotal($plan_id);
             $data    =      [
                 'courses_name'           =>    $rst->courses_name,
                 'teacher_name'           =>    $rst->teacher_name,
                 'lab_name'               =>    $rst->lab_name,
-                'vcr_id'                 =>    33,
-                'total'                  =>    40,
-                'unabsence'              =>    39,
+                'vcrs'                   =>    $vcrs,
+                'total'                  =>    $total,
+                'unabsence'              =>    $unabsence,
+                'vcr_id'                 =>    $vcr_id,
             ];
             //PC-Admin-002-课程监管.png
-            return view('',$data);
-        }catch (\Exception $ex){
 
+            return view('msc::admin.coursemanage.course_observe_detail',$data);
+        }catch (\Exception $ex){
+            return redirect()->back()->withErrors($ex);
         }
+    }
+    /**
+     * 获取下载课程信息
+     * @api GET /msc/admin/courses/download-course
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int           plan_id               计划id
+     *
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author  gaoshichong
+     * @date 2015-12-16 15:39:50
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getDownloadCourse(Request $request){
+        $plan_id=$request->get("plan_id");
+        try{
+            $model = new ResourcesClassroom();
+            $data = $model -> getCourseVcrByPlanId($plan_id);
+            dd($data);
+            return view('',$data);
+        }
+       catch (\Exception $ex){
+           $this->fail($ex);
+       }
     }
 	/**
      *  下载视频前检查
      * @api GET /msc/admin/courses/video-check
      * @access public
      *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
      * * string        id        摄像头ID(必须的)
-     * * string        start     视频开始时间(必须的) e.g:
-     * * string        end       视频结束时间(必须的) e.g:
+     * * string        start     视频开始时间(必须的) e.g:2015-12-16 08:00:00
+     * * string        end       视频结束时间(必须的) e.g:2015-12-16 08:00:00
      *
-     * @return json {url:下载视频文件的地址}
+     * @return json {url:下载视频文件的地址} | {msg:消息提示}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -1927,6 +1972,7 @@ class CoursesController extends MscController
             'start'     =>  $start,
             'stop'      =>  $end,
         ];
+
         try{
             $jsonData   =   $this   ->  socket($host,$port,json_encode($param),1);
             if($jsonData)
@@ -1935,19 +1981,26 @@ class CoursesController extends MscController
                 {
                     $url    =   '';
                     //请求成功
-                    if($json->code  ==  2000)
+                    switch($json->code)
                     {
-                        $url    =   $json   ->  path;
-                    }
-                    else
-                    {
-                        throw new \Exception($json    ->  msg);
+                        case 2000:
+                            $url    =   $json   ->  url;
+                            break;
+                        //如果文件正在提取
+                        case 2020:
+                            return response()->json(
+                                $this   ->  success_data(['msg' =>  '请耐心等待',2,'获取成功'])
+                            );
+                            break;
+                        default:
+                            throw new \Exception($json    ->  msg);
+                            break;
                     }
                     if(empty($url))
                     {
                         throw new \Exception('没有获取到源文件路径');
                     }
-                    response()->json(
+                    return response()->json(
                         $this   ->  success_data(['url' =>  $url,1,'获取成功'])
                     );
                 }
@@ -1963,13 +2016,13 @@ class CoursesController extends MscController
         }
         catch(\Exception $ex)
         {
-            response()->json(
+            return response()->json(
                 $this->fail($ex)
             );
         }
     }
     /**
-     * 根据ajax请求获取对应教室
+     * 根据get请求获取对应教室
      * @api GET /msc/admin/courses/class-observe
      * @access public
      * @return array
@@ -1995,7 +2048,7 @@ class CoursesController extends MscController
      * 根据ajax请求获取对应教室的详情
      * @api GET /msc/admin/courses/class-observe-video
      * @access public
-     * @return array
+     * @return json teacher_name:老师名字,courses_name:课程名字,id:教室id,video:摄像头id和名字,video_count:摄像头数量
      * @version 1.0
      * @author Jiangzhiheng <jiangzhiheng@misrobot.com>
      * @date 2015-12-15 14:50
@@ -2006,7 +2059,27 @@ class CoursesController extends MscController
         $id = $request->get('id');
         $ResourcesClassroom = new ResourcesClassroom();
         $data = $ResourcesClassroom->getClassroomDetails($id);
-        dd($data);
+        $data = $data->toArray();
+        //通过教室ID查询摄像头ID和摄像头名字
+        $video = $ResourcesClassroom->getClassroomVideo($id);
+        $videoCount = count($video);
+        $video = $video->toArray();
+        if (count($data) === 0) {
+            $data = [
+                [
+                    'teacher_name' => '目前未有老师上课',
+                    'courses_name' => '目前无课',
+                ],
+            ];
+        }
+
+        foreach ($data as $item) {
+            $item['id']         = $id;
+            $item['video']      = $video;
+            $item['video_count'] = $videoCount;
+        }
+
+        return response()->json($item);
     }
 
     /*socket收发数据
@@ -2042,11 +2115,11 @@ class CoursesController extends MscController
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return object
+     * @return view {摄像头ID：id，'教室ID':$vcrRelation->resources_lab_id,'摄像头名称'：$vcr->name,'username':$vcr->username,'password':$vcr->password,'port':$vcr->port,channel:$vcr->id,'ip':$vcr->ip}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2015-12-16 15:44
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
@@ -2056,6 +2129,31 @@ class CoursesController extends MscController
         {
             abort(404);
         }
-        //return view('',['id'=>$id]);
+        $vcrRelation    =   ResourcesLabVcr::where('vcr_id','=',$id)->first();
+        $vcr            =   $vcrRelation    ->  vcr;
+        if(empty($vcrRelation))
+        {
+            abort(404);
+        }
+        return view('msc::admin.coursemanage.course_vcr',['id'=>$id,'vcrRelation'=>$vcrRelation,'vcr'=>$vcr]);
+    }
+
+    /**
+     * 下载视频插件
+     * @api GET /msc/admin/courses/download-video-activx
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-16 19:32
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getDownloadVideoActivx(){
+        $this->downloadfile('WebComponents.exe',public_path('download').'/WebComponents.exe');
     }
 }

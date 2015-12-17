@@ -80,4 +80,6 @@ Route::group(['prefix' => "auth",'middleware' => []], function()
 
     Route::get('/set-permissions/{id}', ['uses'=>'AuthController@SetPermissions','as'=>'auth.SetPermissions']);
     Route::get('/edit-role', ['uses'=>'AuthController@editRole','as'=>'auth.editRole']);
+    Route::post('/save-permissions', ['uses'=>'AuthController@SavePermissions','as'=>'auth.SavePermissions']);
+
 });

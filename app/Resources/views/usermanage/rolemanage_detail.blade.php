@@ -8,11 +8,33 @@
             float: right;
             text-indent: 6px;
         }
+        .clear_padding{
+            padding: 0;
+        }
+        .clear_margin{
+            margin: 0;
+        }
+        .border-bottom{
+            border-bottom: none!important;
+        }
+        .display_inline{
+            display: inline-block;
+        }
     </style>
 @stop
 
 @section('only_js')
     <script src="{{asset('msc/admin/usermanage/rolemanage.js')}}"></script>
+    <script>
+        $(function(){
+            $('#saveForm').click(function(){
+                $('#authForm').submit();
+            })
+            $('.check_real').click(function(){
+                $(this).find('input').val();
+            })
+        })
+    </script>
 @stop
 
 @section('content')
@@ -40,7 +62,7 @@
                         <span style="float: right;text-indent: 6px">智能分析系统</span>
                     </label>
                     <div class="col-xs-6 col-md-2" style="float: right">
-                        <a href="#" class="btn btn-primary marl_10" style="text-decoration: none">保存</a>
+                        <a href="#" class="btn btn-primary marl_10" id="saveForm" style="text-decoration: none">保存</a>
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -52,7 +74,8 @@
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane active">
-                            <div class="panel-body">
+                            <form method="post" action="{{ route('auth.SavePermissions') }}" id="authForm" class="panel-body">
+                                <input type="hidden" value="{{ $role_id }}" name="role_id">
                                 <table class="table table-striped" id="table-striped" style="border: 1px">
                                     <thead>
                                     <tr>
@@ -63,55 +86,85 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td rowspan="2">
-                                                <label class="check_label checkbox_input">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" value="">
-                                                    <span class="check_name">资源管理</span>
-                                                </label>
+                                            <td>
+                                                <ul class="clear_padding">
+                                                    @foreach($MenusList as $val)
+                                                        <li>
+                                                            <div class="ibox float-e-margins clear_margin">
+                                                                <label class=" checkbox_input">
+                                                                    {{--<div class="check_real check_icon display_inline @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                    <input type="checkbox" @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$val['SysPermissionMenu']['permission_id'] }}">
+                                                                    <span class="check_name">{{ @$val['name'] }}</span>
+                                                                </label>
+                                                                <div class="ibox-tools">
+                                                                    <a class="collapse-link">
+                                                                        <i class="fa fa-chevron-up"></i>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="ibox-content clear_padding" style="border-top: none">
+                                                                    <div id='external-events'>
+                                                                        <div style="margin-left: 3%">
+                                                                            @if(!empty($val['child']))
+                                                                                @foreach($val['child'] as $v)
+                                                                                        <label class=" checkbox_input">
+                                                                                            {{--<div class="check_real check_icon display_inline @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                                            <input type="checkbox" @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr))  checked="checked" @endif name="permission_id[]" value="{{ @$v['SysPermissionMenu']['permission_id'] }}">
+                                                                                            <span class="check_name">{{ @$v['name'] }}</span>
+                                                                                        </label>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
                                             </td>
                                             <td>
-                                                <label class="check_label checkbox_input">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" value="">
-                                                    <span class="check_name">现有资源</span>
-                                                </label>
+                                                <ul class="clear_padding">
+                                                    @foreach($FunctionsList as $val)
+                                                        <li>
+                                                            <div class="ibox float-e-margins clear_margin">
+                                                                <label class=" checkbox_input">
+                                                                    {{--<div class="check_real check_icon display_inline @if(!empty($val['SysPermissionFunction']['permission_id']) && in_array(@$val['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                    <input type="checkbox" @if(!empty($val['SysPermissionFunction']['permission_id']) && in_array(@$val['SysPermissionFunction']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$val['SysPermissionFunction']['permission_id'] }}">
+                                                                    <span class="check_name">{{ @$val['name'] }}</span>
+                                                                </label>
+                                                                <div class="ibox-tools">
+                                                                    <a class="collapse-link">
+                                                                        <i class="fa fa-chevron-up"></i>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="ibox-content clear_padding" style="border-top: none">
+                                                                    <div id='external-events'>
+                                                                        <div style="margin-left: 3%">
+                                                                            @if(!empty($val['child']))
+                                                                                @foreach($val['child'] as $v)
+                                                                                    <label class=" checkbox_input">
+                                                                                        {{--<div class="check_real check_icon display_inline @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                                        <input type="checkbox" @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$v['SysPermissionFunction']['permission_id'] }}">
+                                                                                        <span class="check_name">{{ @$v['name'] }}</span>
+                                                                                    </label>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
                                             </td>
                                             <td>
-                                                <label class="check_label checkbox_input">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" value="">
-                                                    <span class="check_name">查看</span>
-                                                </label>
-                                                <label class="check_label checkbox_input" style="margin-left: 15px">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" value="">
-                                                    <span class="check_name">编辑</span>
-                                                </label>
-                                                <label class="check_label checkbox_input" style="margin-left: 15px">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" value="">
-                                                    <span class="check_name">报废</span>
-                                                </label>
-                                                <label class="check_label checkbox_input" style="margin-left: 15px">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" value="">
-                                                    <span class="check_name">二维码打印</span>
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <label class="check_label checkbox_input">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" value="">
-                                                    <span class="check_name">新增资源</span>
-                                                </label>
+                                                <ul class="clear_padding">
+
+                                                </ul>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </form>
                         </div>
                         <div id="tab-2" class="tab-pane">
                             <div class="panel-body">
@@ -125,50 +178,317 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td rowspan="2">
-                                            <label class="check_label checkbox_input">
-                                                <div class="check_icon" style="display: inline-block"></div>
-                                                <input type="checkbox" value="">
-                                                <span class="check_name">资源管理</span>
-                                            </label>
+                                        <td>
+                                            <ul class="clear_padding">
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">资源管理</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon display_inline"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon display_inline"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">资源管理</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">资源管理</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         </td>
                                         <td>
-                                            <label class="check_label checkbox_input">
-                                                <div class="check_icon" style="display: inline-block"></div>
-                                                <input type="checkbox" value="">
-                                                <span class="check_name">现有资源</span>
-                                            </label>
+                                            <ul class="clear_padding">
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">现有资源</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon display_inline"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon display_inline"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">现有资源</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">现有资源</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         </td>
                                         <td>
-                                            <label class="check_label checkbox_input">
-                                                <div class="check_icon" style="display: inline-block"></div>
-                                                <input type="checkbox" value="">
-                                                <span class="check_name">查看</span>
-                                            </label>
-                                            <label class="check_label checkbox_input" style="margin-left: 15px">
-                                                <div class="check_icon" style="display: inline-block"></div>
-                                                <input type="checkbox" value="">
-                                                <span class="check_name">编辑</span>
-                                            </label>
-                                            <label class="check_label checkbox_input" style="margin-left: 15px">
-                                                <div class="check_icon" style="display: inline-block"></div>
-                                                <input type="checkbox" value="">
-                                                <span class="check_name">报废</span>
-                                            </label>
-                                            <label class="check_label checkbox_input" style="margin-left: 15px">
-                                                <div class="check_icon" style="display: inline-block"></div>
-                                                <input type="checkbox" value="">
-                                                <span class="check_name">二维码打印</span>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            <label class="check_label checkbox_input">
-                                                <div class="check_icon" style="display: inline-block"></div>
-                                                <input type="checkbox" value="">
-                                                <span class="check_name">新增资源</span>
-                                            </label>
+                                            <ul class="clear_padding">
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">查看</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon display_inline"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon display_inline"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">编辑</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">报废</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="ibox float-e-margins clear_margin">
+                                                        <label class="check_label checkbox_input">
+                                                            <div class="check_icon display_inline"></div>
+                                                            <input type="checkbox" value="">
+                                                            <span class="check_name">二维码打印</span>
+                                                        </label>
+                                                        <div class="ibox-tools">
+                                                            <a class="collapse-link">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="ibox-content clear_padding" style="border-top: none">
+                                                            <div id='external-events'>
+                                                                <div style="margin-left: 3%">
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">哈哈</span>
+                                                                    </label>
+                                                                    <label class="check_label checkbox_input">
+                                                                        <div class="check_icon" style="display: inline-block"></div>
+                                                                        <input type="checkbox" value="">
+                                                                        <span class="check_name">呵呵</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         </td>
                                     </tr>
                                     </tbody>
