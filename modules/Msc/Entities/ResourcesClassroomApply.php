@@ -183,6 +183,7 @@ class ResourcesClassroomApply extends  CommonModel {
                         'type' => $type,
                         'groups' => $apply->groups
                     ];
+                    dd($newPlanData);
                     $this->createApplyPlan ($newPlanData);
                 }
 

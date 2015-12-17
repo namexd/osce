@@ -207,6 +207,6 @@ class ResourcesOpenLabApply extends CommonModel
                 $date,
               //strtotime(date('Y-m-d'))
             ]
-        ) -> paginate(config('msc.page_size'));
+        ) -> orderBy ($order[0], $order[1])-> paginate(config('msc.page_size'));
     }
 }
