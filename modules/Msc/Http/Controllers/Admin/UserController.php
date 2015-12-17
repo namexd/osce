@@ -330,14 +330,14 @@ class UserController extends MscController
     {
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
+            'code' => 'required|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
             'profession_name' => 'required|max:50',
             'mobile' => 'required|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|unique|integer|min:0|max:50',
+            'idcard' => 'required|integer|min:0|max:50',
         ]);
 
         $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
@@ -479,10 +479,10 @@ class UserController extends MscController
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
+            'code' => 'required|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'teacher_dept' => 'required|integer|min:0|max:3',
-            'mobile' => 'required|unique|integer|max:11',
+            'mobile' => 'required|integer|max:11',
         ]);
 
         $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
@@ -523,10 +523,10 @@ class UserController extends MscController
 
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
+            'code' => 'required|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'teacher_dept' => 'required|integer|min:0|max:3',
-            'mobile' => 'required|unique|integer|max:11',
+            'mobile' => 'required|integer|max:11',
         ]);
 
         $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
