@@ -685,6 +685,9 @@ class UserController extends MscController
      */
     public function  postImportStudentUser(Request $request)
     {
+        dd($_POST);
+//             dd(111111111111);
+//        echo '111111111';exit;
         try {
             $data = Common::getExclData($request, 'student');
             $studentInfo = array_shift($data);
@@ -813,8 +816,13 @@ class UserController extends MscController
                 $mobile = iconv('utf-8', 'gb2312', $row['mobile']);
                 $gender = iconv('utf-8', 'gb2312', $row['gender']);
                 $status = iconv('utf-8', 'gb2312', $row['status']);
+<<<<<<< HEAD
+//                $role = iconv('utf-8', 'gb2312', $row['role']);
+                $str .= $ID . "," . $name . "," . $code . "," . $dept_name . "," . $mobile . "," . $gender . "," . $status . "\n"; //用引文逗号分开
+=======
 //              $role = iconv('utf-8', 'gb2312', $row['role']);
                 $str .= $ID . "," . $name . "," . $code . "," . $dept_name . "," . $mobile . "," . $gender ."," . $status . "\n"; //用引文逗号分开
+>>>>>>> 6c06be5d7ace05b1f0b0cfcba0ab623553f23115
             }
         }
 //        dd($ID);
