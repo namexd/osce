@@ -115,9 +115,11 @@ class Teacher extends CommonModel {
         $result=$connection->table('users')->update($users);
         if($result==false){
             $connection->rollBack();
+            return false;
         }
 
         $connection->commit();
+        return true;
     }
 
 
@@ -159,7 +161,6 @@ class Teacher extends CommonModel {
     }
 
     /**
-     *
      * @method GET
      * @url /msc/admin/user/teacher-trashed/{id}/SoftTrashed
      * @access public

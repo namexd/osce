@@ -54,10 +54,10 @@ return [
 
         'msc_mis' => [
             'driver'    => 'mysql',
-			'host'      => env('DB_HOST', '192.168.0.254'),
-            'database'  => env('DB_DATABASE', 'msc_mis_1'),
-            'username'  => env('DB_USERNAME', 'sys_mis'),
-            'password'  => env('DB_PASSWORD', 'sys_mis'),
+			'host'      => env('DB_HOST_MSC', 'localhost'),
+            'database'  => env('DB_DATABASE_MSC', 'msc_mis'),
+            'username'  => env('DB_USERNAME_MSC', 'limingyao'),
+            'password'  => env('DB_PASSWORD_MSC', 'limingyao123'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -65,10 +65,10 @@ return [
         ],
         'sys_mis' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', '192.168.0.254'),
-            'database'  => env('DB_DATABASE', 'sys_mis'),
-			'username'  => env('DB_USERNAME', 'sys_mis'),
-			'password'  => env('DB_PASSWORD', 'sys_mis'),
+            'host'      => env('DB_HOST_SYS', 'localhost'),
+            'database'  => env('DB_DATABASE_SYS', 'sys_mis'),
+			'username'  => env('DB_USERNAME_SYS', 'limingyao'),
+			'password'  => env('DB_PASSWORD_SYS', 'limingyao123'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -128,22 +128,19 @@ return [
 
         //队列
         'queue' => [
-            'host'     => '192.168.0.254',
-//			'host'     => '127.0.0.1',
+			'host'     => '127.0.0.1',
             'port'     => 6379,
             'database' => 0,
         ],
 
         'cache' => [
-            'host'     => '192.168.0.254',
-//			'host'     => '127.0.0.1',
+			'host'     => '127.0.0.1',
             'port'     => 6379,
             'database' => 1,
         ],
 
         'session' => [
-            'host'     => '192.168.0.254',
-//			'host'     => '127.0.0.1',
+			'host'     => '127.0.0.1',
             'port'     => 6379,
             'database' => 2,
         ],
