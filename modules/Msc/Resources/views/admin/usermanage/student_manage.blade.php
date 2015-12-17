@@ -27,13 +27,12 @@
 				$("#Form1,#Form2,#Form3,#Form4,#Form5").css("display","none");
 				var className=$(this).attr("id");
 				switch(className){
-					case "new-add":
-						$("#Form1").css("display","block");
-						break;
 					case "look":
+						look();
 						$("#Form2").css("display","block");
 						break;
 					case "edit":
+						edit();
 						$("#Form3").css("display","block");
 						break;
 					case "forbidden":
@@ -45,6 +44,10 @@
 						$("#Form5").css("display","block");
 						break;
 				}
+			})
+			$("#new-add").click(function(){
+				$("#Form1,#Form2,#Form3,#Form4,#Form5").css("display","none");
+				$("#Form1").css("display","block");
 			})
 			$(".btn-del").click(function(){
 				$.ajax({
@@ -63,7 +66,7 @@
 				 history.go(0);
 			})
 
-			$("body").on('click','#look',function(){
+			function look(){
 				$.ajax({
 					type:"get",
 					url: "/msc/admin/user/student-item/"+idName,
@@ -85,8 +88,8 @@
 						
 					}
 				});
-			})
-			$("body").on('click','#edit',function(){
+			}
+			function edit(){
 				$.ajax({
 					type:"get",
 					url:"/msc/admin/user/student-edit/"+idName,
@@ -107,7 +110,7 @@
 						$(".edit-idcard").val(data.idcard);//证件号码
 					}
 				});
-			})
+			}
 			
 		})
 	</script>

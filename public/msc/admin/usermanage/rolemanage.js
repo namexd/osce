@@ -16,18 +16,27 @@ function rolemanage_detail(){
      *曾洁
      *QQ：283020075
      *2015-12-15
-     *update：zengjie（2015-12-15 18:08） （最近更新/更改 作者及时间）
+     *update：zengjie（2015-12-17 10:46） （最近更新/更改 作者及时间）
      **/
     $(function(){
         var $check_label=$(".check_label");
-        $check_label.click(function(){
+        $check_label.unbind().click(function(){
             if($(this).children(".check_icon").hasClass("check")){
                 $(this).children(".check_icon").removeClass("check");
+                $(this).children("input").attr("checked",false);
                 return false;
             }else{
                 $(this).children(".check_icon").addClass("check");
+                $(this).children("input").attr("checked",true);
                 return false;
             }
+        });
+        $('#saveForm').click(function(){
+
+            $('#authForm').submit();
+        });
+        $('.check_real').click(function(){
+            $(this).find('input').val();
         })
     })
 }
