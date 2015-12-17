@@ -220,6 +220,7 @@ class ResourcesOpenLabApply extends CommonModel
             ]
         ) -> paginate(config('msc.page_size'));
     }
+
     //处理开放实验室审核
     public function dealApply($id, $status, $reject){
         if($status==1)
@@ -546,19 +547,78 @@ class ResourcesOpenLabApply extends CommonModel
         }
     }
 
-    public function cancelStudentPlan($resources_openlab_calendar_id,$currentdate){
-        $sameList   =   $this   ->  getSamePlanList($resources_openlab_calendar_id,$currentdate);
-        try{
-            foreach($sameList as $plan)
-            {
-                $plan   ->  status   =   -1;
-                $plan   ->  save();
+    public function cancelStudentPlan($resources_openlab_calendar_id,$currentdate)
+    {
+        $sameList = $this->getSamePlanList($resources_openlab_calendar_id, $currentdate);
+        try {
+            foreach ($sameList as $plan) {
+                $plan->status = -1;
+                $plan->save();
             }
             return true;
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             throw   $ex;
         }
+    }
+
+
+    /**
+     * 已审核申请列表
+     * @param string $courseName
+     * @param string $date
+     * @param array $order
+     * @return mixed
+     */
+    public function getExaminedList ($courseName, $date, $order) {
+        $builder = $this->leftJoin (
+            'resources_lab',
+            function ($join) {
+                $join->on ($this->table.'.resources_lab_id', '=', 'resources_lab.id');
+            }
+        )->leftJoin (
+            'student',
+            function ($join) {
+                $join->on ($this->table.'.apply_uid', '=', 'student.id');
+            }
+        )->leftJoin (
+            'teacher',
+            function ($join) {
+                $join->on ($this->table.'.apply_uid', '=', 'teacher.id');
+            }
+        )   ->leftJoin (
+            'resources_openlab_calendar',
+            function ($join) {
+                $join->on ($this->table.'.resources_lab_calendar_id','=','resources_openlab_calendar.id');
+            }
+        )
+            ->where ($this->table.'.status', '<>', '0');
+        if ($courseName) {
+            $builder = $builder->where ('resources_lab.name', 'like', '%'.$courseName.'%');
+        }
+        if ($date) {
+            $builder->whereRaw ('unix_timestamp(resources_openlab_apply.apply_date)>= ? ', [strtotime ($date)]);
+        }
+        $builder->select (
+            [
+                'resources_lab.name as name',
+                $this->table.'.apply_date as apply_date',
+                'resources_openlab_calendar.begintime as begintime',
+                'resources_openlab_calendar.endtime as endtime',
+                'resources_lab.code as code',
+                'student.name as student_name',
+                $this->table.'.detail as detail',
+                'resources_lab.status as status',
+                $this->table.'.id as id',
+                $this->table.'.apply_uid as apply_uid',
+
+            ]
+        );
+
+        if($order[0]=='created_at')
+        {
+            $order[0]   =   $this->table.'.created_at';
+        }
+
+        return $builder->orderBy ($order[0][0], $order[1])->orderBy($order[0][1],$order[1])->paginate (config ('msc.page_size'));
     }
 }

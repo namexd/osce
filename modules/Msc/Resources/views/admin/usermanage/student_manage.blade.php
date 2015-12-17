@@ -9,15 +9,17 @@
 @stop
 
 @section('only_js')
+	<script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+	<script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
 	<script type="text/javascript" src="{{asset('/msc/admin/usermanage/usermanage.js')}}" ></script>
-	
+
 	<script type="text/javascript">
 		$(function(){
 			$("#search").click(function(){
 				var keyword=$("#keyword").val();
 			})
-			
-			
+
+
 			for(var i=0;i<$(".table tr").length;i++){
 				$("#false-del").parents("tr").remove();//假删除数据隐藏
 			}
@@ -65,6 +67,15 @@
 				});
 				 history.go(0);
 			})
+			$(".btn-edit").click(function(){
+				$("#Form3").submit();
+				/*$.ajax({
+					type:"post",
+					url:"/msc/admin/user/student-save",
+					async:true
+				});*/
+				
+			})
 
 			function look(){//查看
 				$.ajax({
@@ -85,7 +96,7 @@
 						$(".look-profession_name").val(data.profession_name)//专业
 						$(".look-mobile").val(data.mobile);//手机
 						$(".look-card").val(data.idcard);//证件号码
-						
+
 					}
 				});
 			}
@@ -96,7 +107,6 @@
 					async:true,
 					success:function(res){
 						var data=JSON.parse(res);
-						console.log(data);
 						$(".edit-name").val(data.name);//姓名
 						$(".edit-code").val(data.code);//学号
 						if(data.gender=="男"){
@@ -112,6 +122,37 @@
 					}
 				});
 			}
+			
+			$("#in").click(function(){
+				$("#leading-in").click();
+			})
+			$("#leading-in").change(function(){
+				var str=$("#leading-in").val().substring($("#leading-in").val().lastIndexOf(".")+1);
+				if(str!="xlsx"){
+					layer.alert(
+	                  "请上传正确的文件格式？", 
+	                  {title:["温馨提示","font-size:16px;color:#408aff"]}
+	              );
+				}else{
+					$.ajaxFileUpload({
+						type:"post",
+			            url:'/msc/admin/user/import-student-user',
+			            fileElementId:'leading-in',//必须要是 input file标签 ID
+			            success: function (data, status){
+			            	console.log("成功");
+			            	console.log(data);
+			            	console.log(status);
+			            },
+			            error: function (data, status, e){
+			            	console.log("失败");
+			               layer.alert(
+			                  "上传失败！", 
+			                  {title:["温馨提示","font-size:16px;color:#408aff"]}
+			               );
+			            }
+			        });
+				}
+			})
 			
 		})
 	</script>
@@ -145,8 +186,14 @@
 				        </div>
 				        <div class="col-xs-6 col-md-9 user_btn">
 				        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增学生" data-toggle="modal" data-target="#myModal"/>
-				        	<input type="button" class="right btn btn-default" name="" id="" value="导出"/>
-				        	<input type="button" class="right btn btn-default" name="" id="" value="导入"/>
+				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-out" value="导出"/>-->
+				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-in" value="导入"/>-->
+				        	
+		                    <a href="/msc/admin/user/export-student-user" class="btn btn-default right" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>
+				        	<div class="right">
+		                        <input type="button" name="" id="in" value="导入" class="btn btn-default right" style="background: #fff;" />
+			                    <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
+		                    </div>
 				        </div>
 				    </div>
 				    <form class="container-fluid ibox-content" id="list_form">
@@ -240,7 +287,7 @@
 					                    	@if($list['status']=="禁用")
 						                    	<a href="#" class="status4" id="recover">恢复</a>
 						                    @elseif($list['status']=="删除")
-						                    	<a href="#" class="status4" id="false-del">删除</a> 
+						                    	<a href="#" class="status4" id="false-del">删除</a>
 						                    @else
 						                    	<a href="#" class="status2" id="forbidden" data-toggle="modal" data-target="#myModal">禁用</a>
 						                    @endif
@@ -502,7 +549,7 @@
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="button" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
