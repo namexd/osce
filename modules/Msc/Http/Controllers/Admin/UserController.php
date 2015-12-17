@@ -109,7 +109,7 @@ class UserController extends BaseController
             'status'          => $student->userInfo->status,
         ];
 
-        die($data);
+        die(json_encode($data));
     }
 
     /**
@@ -183,17 +183,17 @@ class UserController extends BaseController
         $teacher = Teacher::findOrFail($teacherId);
 
         $data = [
-            'id' => $teacher->id,
-            'name' => $teacher->name,
-            'code' => $teacher->code,
+            'id'        => $teacher->id,
+            'name'      => $teacher->name,
+            'code'      => $teacher->code,
             'dept_name' => is_null($teacher->dept) ? '-' : $teacher->dept->name,
-            'mobile' => $teacher->userInfo->mobile,
-            'gender' => $teacher->userInfo->gender,
-            'status' => $teacher->userInfo->status,
-            'role' => $teacher->userInfo->roles,
+            'mobile'    => $teacher->userInfo->mobile,
+            'gender'    => $teacher->userInfo->gender,
+            'status'    => $teacher->userInfo->status,
+            'role'      => $teacher->userInfo->roles,
         ];
 
-        die($data);
+        die(json_encode($data));
     }
 
     /**
@@ -227,7 +227,7 @@ class UserController extends BaseController
     /**
      * 编辑学生
      * @method GET
-     * @url /msc/admin/user/student-submit/{id}
+     * @url /msc/admin/user/student-save
      * @access public
      *
      * @param Request $request get请求<br><br>

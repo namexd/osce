@@ -178,7 +178,7 @@ class Teacher extends CommonModel {
     public function SoftTrashed($id){
         $connection=\DB::connection('sys_mis');
 
-        return $connection->table('users')->where('id',$id)->update(['status'=>2]);
+        return $connection->table('users')->where('id',$id)->update(['status'=>3]);
 
     }
 
@@ -208,7 +208,7 @@ class Teacher extends CommonModel {
            $status=$tmp;
         };
 
-        return $connection->table('users')->where('id',$id)->update(['status'=>1-$status]);
+        return $connection->table('users')->where('id',$id)->update(['status'=>3-$status]);
 
     }
 }
