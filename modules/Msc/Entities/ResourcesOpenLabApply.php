@@ -28,7 +28,15 @@ class ResourcesOpenLabApply extends CommonModel
     public    $incrementing	=	true;
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
+    protected $statusValues =   [
+        0   =>'待审核',
+        1   =>'已通过',
+        2   =>'不通过'
+    ];
 
+    public function getStatusValues(){
+        return $this->statusValues;
+    }
     public function applyUser(){
         return $this->hasOne('App\Entities\User','id','apply_uid');
     }
@@ -45,7 +53,10 @@ class ResourcesOpenLabApply extends CommonModel
         }])->where('status','=',0)->paginate(config('msc.page_size'));
         return  $result;
     }
-
+    //获取申请的组列表
+    public function labApplyGroups(){
+        return $this->hasMany('Modules\Msc\Entities\ResourcesOpenLabAppGroup','resources_openlab_apply_id','id');
+    }
     //与教室的课程日历表的关联
     public function OpenLabCalendar(){
         return  $this->hasOne('Modules\Msc\Entities\ResourcesOpenLabCalendar','id','resources_lab_calendar_id');
@@ -175,19 +186,26 @@ class ResourcesOpenLabApply extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getWaitExamineList(){
-        $this   -> with([
-            'classroomCourses'  =>  function($qurey){
-                //罗海华 未处理完 脚本
+    public function getWaitExamineList($classroomName,$date, $order){
+        return  $this   -> with([
+            'classroomCourses'  =>  function($qurey) use ($classroomName){
+                if(!is_null($classroomName))
+                {
+                    $qurey  ->with([
+                        'classroom'=> function($qurey) use ($classroomName){
+                            if(!is_null($classroomName))
+                            {
+                                $qurey  ->  where('name','like',$classroomName);
+                            }
+                        }
+                    ]);
+                }
             }
-        ]);
-        return $this   ->  where('status','=',0)
-                ->  whereRaw(
-                    'unix_timestamp(apply_date) = ?',
-                    [
-                        strtotime(date('Y-m-d'))
-                    ]
-                )
-                ->  paginate(config('msc.page_size'));
+        ])->  whereRaw(
+            'unix_timestamp(apply_date) > ?',
+            [
+                strtotime(date('Y-m-d'))
+            ]
+        )->  paginate(config('msc.page_size'));
     }
 }

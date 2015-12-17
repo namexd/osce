@@ -16,7 +16,7 @@
 @stop
 @section('content')
     <input type="hidden" id="parameter"
-           value="{'pagename':'course_observe','lessonUrl':'{{route("msc.admin.courses.getClassObserve")}}','vcrUrl':'{{route("msc.admin.courses.getClassroomVcr")}}'}">
+           value="{'pagename':'course_observe','lessonUrl':'{{route("msc.admin.courses.getClassObserveVideo")}}','vcrUrl':'{{route("msc.admin.courses.getClassroomVcr")}}'}">
     <div class="row  main-content">
         <div class="content-left ibox-content">
             <div class="serach-box">
