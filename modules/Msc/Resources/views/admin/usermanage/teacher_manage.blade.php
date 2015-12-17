@@ -187,8 +187,8 @@
 	        </div>
 	        <div class="col-xs-6 col-md-9 user_btn">
 	        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增教职工" data-toggle="modal" data-target="#myModal" />
-	        	<input type="button" class="right btn btn-default" name="" id="leading-in" value="导出" />
-	        	<input type="button" class="right btn btn-default" name="" id="leading-out" value="导入" />
+	        	<a href="/msc/admin/user/export-teacher-user" class="btn btn-default right" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>
+	        	<input type="button" class="right btn btn-default" name="" id="leading-out" value="导入" style="background: #fff;" />
 	        </div>
 	    </div>
 	    <form class="container-fluid ibox-content" id="list_form">

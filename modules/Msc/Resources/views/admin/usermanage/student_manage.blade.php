@@ -9,6 +9,8 @@
 @stop
 
 @section('only_js')
+	<script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+	<script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
 	<script type="text/javascript" src="{{asset('/msc/admin/usermanage/usermanage.js')}}" ></script>
 
 	<script type="text/javascript">
@@ -65,13 +67,15 @@
 				});
 				 history.go(0);
 			})
-			/*$(".btn-edit").click(function(){
-				$.ajax({
+			$(".btn-edit").click(function(){
+				$("#Form3").submit();
+				/*$.ajax({
 					type:"post",
 					url:"/msc/admin/user/student-save",
 					async:true
-				});
-			})*/
+				});*/
+				
+			})
 
 			function look(){//查看
 				$.ajax({
@@ -185,9 +189,9 @@
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-out" value="导出"/>-->
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-in" value="导入"/>-->
 				        	
-		                    <a href="/msc/admin/user/export-student-user" class="btn btn-default right" style="height: 30px;margin-left: 10px;">导出</a>
+		                    <a href="/msc/admin/user/export-student-user" class="btn btn-default right" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>
 				        	<div class="right">
-		                        <input type="button" name="" id="in" value="导入" class="btn btn-default right" />
+		                        <input type="button" name="" id="in" value="导入" class="btn btn-default right" style="background: #fff;" />
 			                    <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
 		                    </div>
 				        </div>
