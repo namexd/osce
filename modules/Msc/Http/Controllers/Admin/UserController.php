@@ -10,6 +10,8 @@ namespace Modules\Msc\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
+use Modules\Msc\Entities\StdProfessional;
+use Modules\Msc\Entities\TeacherDept;
 
 
 class UserController extends BaseController
@@ -24,7 +26,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * string        keyword         关键字
      * * int           status          学生状态(1:正常 2:禁用 3:删除)
-     * * int           grade           学生年级id
+     * * int           grade           学生年级
      * * int           student_type    学生类别(1:本科 2:专科)
      * * int           profession      学生专业id
      *
@@ -70,7 +72,26 @@ class UserController extends BaseController
             ];
         }
 
-        return view('msc::admin.usermanage.student_manage', ['list'=>$list]);
+        // 年级列表
+        $gradeList = $student->getGradeList();
+
+        // 学生类别
+        $studentTypeList = config('msc.student_type');
+
+        // 用户状态
+        $studentStatusList = config('msc.user_status');
+
+        // 专列列表
+        $professionList = StdProfessional::get();
+
+        return view('msc::admin.usermanage.student_manage', [
+            'list'              => $list,
+            'gradeList'         => $gradeList,
+            'studentTypeList'   => $studentTypeList,
+            'studentStatusList' => $studentStatusList,
+            'professionList'    => $professionList,
+            'pagination'        => $pagination,
+        ]);
     }
 
     /**
@@ -83,7 +104,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        $id        学生编号
      *
-     * @return view
+     * @return json
      *
      * @version 0.8
      * @author wangjiang <wangjiang@misrobot.com>
@@ -156,7 +177,18 @@ class UserController extends BaseController
             ];
         }
 
-        dd($list);
+        // 用户状态
+        $teacherStatusList = config('msc.user_status');
+
+        // 科室列表
+        $deptList = TeacherDept::get();
+
+        return view('msc::admin.usermanage.teacher_manage', [
+            'list'              => $list,
+            'teacherStatusList' => $teacherStatusList,
+            'deptList'          => $deptList,
+            'pagination'        => $pagination,
+        ]);
     }
 
     /**
@@ -169,7 +201,7 @@ class UserController extends BaseController
      * <b>get请求字段：</b>
      * * int        id        老师编号
      *
-     * @return blooean
+     * @return json
      *
      * @version 0.8
      * @author wangjiang <wangjiang@misrobot.com>

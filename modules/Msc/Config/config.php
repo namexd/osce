@@ -40,4 +40,6 @@ return [
 	'page_size'		=>		10,
 	'video_host'	=>		'192.168.1.200',
 	'video_port'	=>		'9090',
+	'student_type'  =>      [1=>'本科', 2=>'专科'],
+	'user_status'   =>      [1=>'正常', 2=>'禁用', 3=>'删除']
 ];
