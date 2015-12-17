@@ -175,6 +175,7 @@ class LabController extends MscController
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
         $list = $ResourcesOpenLabApply->getWaitExamineList($keyword, $date, $order);
         $statusValues   =   $ResourcesOpenLabApply    ->getStatusValues();
+
         return view('msc::admin.openlab.openaudit', ['pagination' => $list,'rollmsg' => $rollMsg,'statusValues'=>$statusValues]);
     }
 
@@ -267,7 +268,7 @@ class LabController extends MscController
                 $orderName = ['resources_lab.status','resources_lab.status'];
                 break;
             default:
-                $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
+                $orderName = ['resources_openlab_apply.created_at','resources_openlab_apply.created_at'];
         }
         $order = [$orderName, $orderType];
 
@@ -282,8 +283,8 @@ class LabController extends MscController
 //        dd($groups);
 
 
-        $ResourcesClassroomApply = new ResourcesClassroomApply();
-        $list = $ResourcesClassroomApply->getExaminedList($keyword, $date, $order);
+        $ResourcesOpenLabApply = new ResourcesOpenLabApply();
+        $list = $ResourcesOpenLabApply->getExaminedList($keyword, $date, $order);
 //        foreach($list as $item)
 //        {
 //            $connection =   \DB::connection('msc_mis');
@@ -293,6 +294,7 @@ class LabController extends MscController
 //            $c= $connection ->getQueryLog();
 //            dd($c);
 //        }
+
         return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg]);
     }
 

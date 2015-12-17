@@ -65,6 +65,13 @@
 				});
 				 history.go(0);
 			})
+			/*$(".btn-edit").click(function(){
+				$.ajax({
+					type:"post",
+					url:"/msc/admin/user/student-save",
+					async:true
+				});
+			})*/
 
 			function look(){
 				$.ajax({
@@ -111,7 +118,7 @@
 					}
 				});
 			}
-<<<<<<< HEAD
+			
 			$("#in").click(function(){
 				$("#leading-in").click();
 			})
@@ -122,7 +129,7 @@
 	                  "请上传正确的文件格式？", 
 	                  {title:["温馨提示","font-size:16px;color:#408aff"]}
 	              );
-				}else{ 
+				}else{
 					$.ajaxFileUpload({
 						type:"post",
 			            url:'/msc/admin/user/import-student-user',
@@ -142,13 +149,7 @@
 			        });
 				}
 			})
-			$("#leading-out").click(function(){
-				
-			})
 			
-=======
-
->>>>>>> e0118e635bb30de42a9532c9d0b18687bfb7a2e4
 		})
 	</script>
 @stop
@@ -184,10 +185,7 @@
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-out" value="导出"/>-->
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-in" value="导入"/>-->
 				        	
-				        	<div class="right">
-		                        <!--<input type="button" name="" id="" value="导出" class="btn btn-default right" />-->
-		                        <a href="/msc/admin/user/export-student-user" class="btn btn-default right">导出</a>
-		                    </div>
+		                    <a href="/msc/admin/user/export-student-user" class="btn btn-default right" style="height: 30px;margin-left: 10px;">导出</a>
 				        	<div class="right">
 		                        <input type="button" name="" id="in" value="导入" class="btn btn-default right" />
 			                    <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
@@ -547,7 +545,7 @@
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="button" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
