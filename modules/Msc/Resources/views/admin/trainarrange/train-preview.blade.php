@@ -108,8 +108,8 @@
 			<div class="ibox-title of">
 				<h5 class="col-sm-6">培训安排</h5>
 				<div class="right_btn">
-					<button class="btn btn-primary tj" id="submit" data-toggle="modal" data-target="#myModal" flag="yes">提交</button>
-					<input type="button" class="btn btn-default marr_5 edit" id="" value="编辑" />
+					<button class="btn btn-primary right tj" id="submit" data-toggle="modal" data-target="#myModal" flag="yes">提交</button>
+					<input type="button" class="btn btn-default marr_5 right edit" id="" value="编辑" />
 					<a class="nou clo0 look_group" href="{{ route('msc.training.editTrainingGroup', ['id'=>$training->id])}}">
 						<input type="button" class="btn btn-default marr_5" id="" value="查看分组学员" />
 					</a>
