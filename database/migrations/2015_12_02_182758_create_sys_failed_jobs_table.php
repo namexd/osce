@@ -20,7 +20,7 @@ class CreateSysFailedJobsTable extends Migration {
 			$table->increments('id')->unsigned();
 			$table->text('connection');
 			$table->text('queue');
-			$table->('payload');
+			$table->time('payload');
 			$table->timestamp('failed_at')->default("0000-00-00 00:00:00");
 		});
 
