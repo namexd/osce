@@ -252,4 +252,25 @@ class AuthController extends BaseController
         }
         return  $arr ;
     }
+
+    /**
+     * 添加基础权限信息
+     * @method GET /auth/sdd-auth
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return view
+     *
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2015年12月17日13:59:39
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function AddAuth(SysPermissions $SysPermissions,SysMenus $SysMenus){
+        $data = [
+
+        ];
+
+        $SysMenus->AddMenus($data);
+    }
 }   

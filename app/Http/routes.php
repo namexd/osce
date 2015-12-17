@@ -82,4 +82,8 @@ Route::group(['prefix' => "auth",'middleware' => []], function()
     Route::get('/edit-role', ['uses'=>'AuthController@editRole','as'=>'auth.editRole']);
     Route::post('/save-permissions', ['uses'=>'AuthController@SavePermissions','as'=>'auth.SavePermissions']);
 
+    Route::get('/sdd-auth', ['uses'=>'AuthController@AddAuth','as'=>'auth.AddAuth']);
+
+
+
 });

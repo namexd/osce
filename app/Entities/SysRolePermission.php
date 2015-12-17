@@ -16,6 +16,7 @@ class SysRolePermission extends Model
     protected $connection	=	'sys_mis';
     protected $table 		= 	'sys_role_permission';
 
+    protected $fillable 	=	['permission_id', 'role_id'];
 
     //定义和权限表的关系
     public function SysPermissions()
