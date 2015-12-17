@@ -25,16 +25,6 @@
 
 @section('only_js')
     <script src="{{asset('msc/admin/usermanage/rolemanage.js')}}"></script>
-    <script>
-        $(function(){
-            $('#saveForm').click(function(){
-                $('#authForm').submit();
-            })
-            $('.check_real').click(function(){
-                $(this).find('input').val();
-            })
-        })
-    </script>
 @stop
 
 @section('content')
@@ -91,8 +81,8 @@
                                                     @foreach($MenusList as $val)
                                                         <li>
                                                             <div class="ibox float-e-margins clear_margin">
-                                                                <label class=" checkbox_input">
-                                                                    {{--<div class="check_real check_icon display_inline @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                <label class="check_label checkbox_input">
+                                                                    <div class="check_real check_icon display_inline @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>
                                                                     <input type="checkbox" @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$val['SysPermissionMenu']['permission_id'] }}">
                                                                     <span class="check_name">{{ @$val['name'] }}</span>
                                                                 </label>
@@ -106,8 +96,8 @@
                                                                         <div style="margin-left: 3%">
                                                                             @if(!empty($val['child']))
                                                                                 @foreach($val['child'] as $v)
-                                                                                        <label class=" checkbox_input">
-                                                                                            {{--<div class="check_real check_icon display_inline @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                                        <label class="check_label checkbox_input">
+                                                                                            <div class="check_real check_icon display_inline @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>
                                                                                             <input type="checkbox" @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr))  checked="checked" @endif name="permission_id[]" value="{{ @$v['SysPermissionMenu']['permission_id'] }}">
                                                                                             <span class="check_name">{{ @$v['name'] }}</span>
                                                                                         </label>
@@ -126,8 +116,8 @@
                                                     @foreach($FunctionsList as $val)
                                                         <li>
                                                             <div class="ibox float-e-margins clear_margin">
-                                                                <label class=" checkbox_input">
-                                                                    {{--<div class="check_real check_icon display_inline @if(!empty($val['SysPermissionFunction']['permission_id']) && in_array(@$val['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                <label class="check_label checkbox_input">
+                                                                    <div class="check_real check_icon display_inline @if(!empty($val['SysPermissionFunction']['permission_id']) && in_array(@$val['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>
                                                                     <input type="checkbox" @if(!empty($val['SysPermissionFunction']['permission_id']) && in_array(@$val['SysPermissionFunction']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$val['SysPermissionFunction']['permission_id'] }}">
                                                                     <span class="check_name">{{ @$val['name'] }}</span>
                                                                 </label>
@@ -141,8 +131,8 @@
                                                                         <div style="margin-left: 3%">
                                                                             @if(!empty($val['child']))
                                                                                 @foreach($val['child'] as $v)
-                                                                                    <label class=" checkbox_input">
-                                                                                        {{--<div class="check_real check_icon display_inline @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                                    <label class="check_label checkbox_input">
+                                                                                        <div class="check_real check_icon display_inline @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>
                                                                                         <input type="checkbox" @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$v['SysPermissionFunction']['permission_id'] }}">
                                                                                         <span class="check_name">{{ @$v['name'] }}</span>
                                                                                     </label>
@@ -195,7 +185,7 @@
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
                                                                 <div style="margin-left: 3%">
-                                                                    <label class="check_label checkbox_input">
+                                                                    <label class="check_label checkbox_input" for="check_id">
                                                                         <div class="check_icon display_inline"></div>
                                                                         <input type="checkbox" value="">
                                                                         <span class="check_name">哈哈</span>
