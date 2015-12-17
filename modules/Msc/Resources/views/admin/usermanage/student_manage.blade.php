@@ -169,8 +169,8 @@
 					layer.alert(
 	                  "请上传正确的文件格式？", 
 	                  {title:["温馨提示","font-size:16px;color:#408aff"]}
-	               );
-				}else{
+	              );
+				}else{ 
 					$.ajaxFileUpload({
 						type:"post",
 			            url:'/msc/admin/user/import-student-user',
