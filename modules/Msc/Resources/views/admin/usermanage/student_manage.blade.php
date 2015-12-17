@@ -351,8 +351,8 @@
             <label class="col-sm-2 control-label">类别</label>
             <div class="col-sm-10">
                 <select class="form-control student_type" id="" name="student_type">
-                    <option value="">本科</option>
-                    <option value="">专科</option>
+                    <option value="1">本科</option>
+                    <option value="2">专科</option>
                 </select>
             </div>
         </div>
@@ -360,9 +360,9 @@
             <label class="col-sm-2 control-label">专业</label>
             <div class="col-sm-10">
                 <!--<input type="text" class="form-control" />-->
-                <select class="form-control profession_name" name="professional">
-                	<option value="1">儿科</option>
-                	<option value="2">设计</option>
+                <select class="form-control profession_name" name="profession_name">
+                	<option value="儿科">儿科</option>
+                	<option value="设计">设计</option>
                 </select>
             </div>
         </div>
