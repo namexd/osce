@@ -5,49 +5,48 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "rolemanage_detail":rolemanage_detail();break; //rolemanage_detailÒ³Ãæ
-        case "rolemanage":rolemanage();break; //rolemanageÒ³Ãæ
+        case "rolemanage_detail":rolemanage_detail();break; //rolemanage_detailÒ³ï¿½ï¿½
+        case "rolemanage":rolemanage();break; //rolemanageÒ³ï¿½ï¿½
     }
+
+    $('#Form1').delegate('#sure','click',function(){
+        $('#Form1').submit();
+    });
+
+    $('#Form2').delegate('#sure-notice','click',function(){
+        $('#Form2').submit();
+    });
 });
 
 function rolemanage_detail(){
     /**
-     *½ÇÉ«È¨ÏŞ¹ÜÀí£¨ÉèÖÃÈ¨ÏŞ£©checkboxÑ¡Ôñ´¦Àí
-     *Ôø½à
-     *QQ£º283020075
+     *ï¿½ï¿½É«È¨ï¿½Ş¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨ï¿½Ş£ï¿½checkboxÑ¡ï¿½ï¿½ï¿½ï¿½
+     *ï¿½ï¿½ï¿½ï¿½
+     *QQï¿½ï¿½283020075
      *2015-12-15
-     *update£ºzengjie£¨2015-12-17 10:46£© £¨×î½ü¸üĞÂ/¸ü¸Ä ×÷Õß¼°Ê±¼ä£©
+     *updateï¿½ï¿½zengjieï¿½ï¿½2015-12-15 18:08ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¼ï¿½Ê±ï¿½ä£©
      **/
     $(function(){
         var $check_label=$(".check_label");
-        $check_label.unbind().click(function(){
+        $check_label.click(function(){
             if($(this).children(".check_icon").hasClass("check")){
                 $(this).children(".check_icon").removeClass("check");
-                $(this).children("input").attr("checked",false);
                 return false;
             }else{
                 $(this).children(".check_icon").addClass("check");
-                $(this).children("input").attr("checked",true);
                 return false;
             }
-        });
-        $('#saveForm').click(function(){
-
-            $('#authForm').submit();
-        });
-        $('.check_real').click(function(){
-            $(this).find('input').val();
         })
     })
 }
 
 function rolemanage(){
     /**
-     *½ÇÉ«È¨ÏŞ¹ÜÀíµ¯³ö¿ò´¦Àí
-     *ÎâÀäÃ¼
-     *QQ£º2632840780
+     *ï¿½ï¿½É«È¨ï¿½Ş¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     *ï¿½ï¿½ï¿½ï¿½Ã¼
+     *QQï¿½ï¿½2632840780
      *2015-12-15
-     *update£ºwulengmei£¨2015-12-15 17:25£© £¨×î½ü¸üĞÂ/¸ü¸Ä ×÷Õß¼°Ê±¼ä£©
+     *updateï¿½ï¿½wulengmeiï¿½ï¿½2015-12-15 17:25ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¼ï¿½Ê±ï¿½ä£©
      **/
     $(function(){
         function  choice_from(){
@@ -61,6 +60,7 @@ function rolemanage(){
                 $("#edit_id").val($(this).parent().siblings(".open-id").text());
                 $("#edit_name").val($(this).parent().siblings(".role_name").text());
                 $("#edit_des").val($(this).parent().siblings(".role_descrip").text())
+
                 $("#Form2").show();
                 $("#Form1").hide();
             })
@@ -68,8 +68,8 @@ function rolemanage(){
         function  delete_user(){
             $('.delete').click(function(){
                 var id = $(this).attr('data');
-                layer.confirm('ÄãÈ·¶¨É¾³ı£¿', {
-                    btn: ['ÊÇ','·ñ'] //°´Å¥
+                layer.confirm('æ‚¨ç¢ºå®šåˆªé™¤å—ï¼Ÿ', {
+                    btn: ['æ˜¯','å¦'] //ï¿½ï¿½Å¥
                 }, function(){
                     window.location.href="/auth/delete-role?id="+id;
                 });

@@ -13,9 +13,9 @@ class UserController extends MscWeChatController {
 	public function getUserLogin()
 	{
 
-		$openid = $this->getOpenId();
+		//$openid = $this->getOpenId();
 
-		Session::put('openid',$openid);
+		Session::put('openid','dfsafas');
 
 		return view('msc::wechat.user.login');
 	}
@@ -27,6 +27,8 @@ class UserController extends MscWeChatController {
 		$rew = $passwordGrantVerifier->verify($requests['username'],$requests['password']);
 		if($rew){
 			$user = Auth::user();
+			//$user->user_type = $this->checkUserType($user->id);
+
 			if(!empty($user['mobile'])){
 				return redirect()->intended('/msc/wechat/personal-center/index');
 			}else{
@@ -107,7 +109,7 @@ class UserController extends MscWeChatController {
 			'gender'=>'required'
 		]);
 
-		$request['openid'] = $this->getOpenId();
+		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
 		if($userRepository->regStudent($request))
 			return redirect()->intended('/msc/wechat/user/user-login');
 		else{
@@ -147,7 +149,7 @@ class UserController extends MscWeChatController {
 			'teacher_dept'=>'required|integer',
 			'gender'=>'required|integer'
 		]);
-		$request['openid'] = $this->getOpenId();
+		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
 		if($userRepository->regTeacher($request))
 			return redirect()->intended('/msc/wechat/user/user-login');
 		else

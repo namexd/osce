@@ -168,7 +168,7 @@
                 <td>{{is_null($item ->  lenderInfo)? '-':$item->lenderInfo->name}}</td>
                 <td>{{$item ->  detail}}</td>
                 <td style="text-align: center;"><span class="state3">{{ $item   ->pid? '是':'否' }}</span></td>
-                <td>{{$item ->  status}}</td>
+                <td>{{$item ->  apply_validated}}</td>
                 <td>
                     <div class="opera" end-time="{{$item->enddate or '未知'}}">
                         <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>

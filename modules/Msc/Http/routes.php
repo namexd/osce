@@ -16,7 +16,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		Route::controller('resources-manager', 'ResourcesManagerController');//TODO： 2015-12-11 罗海华 解决 路由被拦截的问题
 		Route::get('resources-manager/resources-list', ['uses'=>'ResourcesManagerController@getWaitExamineList','as'=>'msc.admin.resourcesManager.getWaitExamineList']);
-		Route::get('resources-manager/rejected-resources/{$id}', ['uses'=>'ResourcesManagerController@getRejectedResources','as'=>'msc.admin.resourcesManager.getRejectedResources']);
+		Route::get('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@getRejectedResources','as'=>'msc.admin.resourcesManager.getRejectedResources']);
 		Route::post('resources-manager/rejected-resources-all', ['uses'=>'ResourcesManagerController@postRejectedResourcesAll','as'=>'msc.admin.resourcesManager.postRejectedResourcesAll']);
 		Route::get('resources-manager/resources', ['uses'=>'ResourcesManagerController@getResources','as'=>'msc.admin.resourcesManager.getResources']);
 		Route::post('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@postRejectedResources','as'=>'msc.admin.resourcesManager.postRejectedResources']);
@@ -48,7 +48,6 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		//开放实验室审核
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
-		Route::get('lab/open-lab-apply-list-data',['uses'=>'LabController@getOpenLabApplyListData','as'=>'msc.admin.lab.openLabApplyListData']);
 		//Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.lab.openLabApplyList']);
 		//开放实验室已审核
 		Route::get('lab/open-lab-apply-examined-list',['uses'=>'LabController@getOpenLabApplyExaminedList','as'=>'msc.admin.lab.openLabApplyExaminedList']);
@@ -75,6 +74,11 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
 		Route::get('verify/teacher/{status?}', ['uses'=>'VerifyController@getTeacher','as'=>'msc.verify.teacher']);
+
+		Route::post('verify/change-users-status',['uses'=>'VerifyController@postChangeUsersStatus','as'=>'verify.postChangeUsersStatus']);
+
+
+
 
 		Route::controller('training', 'TrainingController');
 		Route::get('training/ajax-checkname/{name}', ['uses'=>'TrainingController@getUniqueName','as'=>'msc.training.ajaxUniqueName']);
@@ -129,29 +133,23 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('user/student-status/{id}', ['uses'=>'UserController@getStudentStatus','as'=>'msc.admin.user.StudentStatus']);
 
 		Route::post('user/student-add', ['uses'=>'UserController@postStudentAdd','as'=>'msc.admin.user.StudentAdd']);
-
-		Route::post('user/student-save', ['uses'=>'UserController@postStudentSave','as'=>'msc.admin.user.StudentSave']);
-
 		Route::post('user/student-save', ['uses'=>'UserController@postStudentSave','as'=>'msc.admin.user.StudentSaveEdit']);
 		//学生用户导入导出
 		Route::get('user/export-student-user',['uses'=>'UserController@getExportStudentUser','as'=>'msc.admin.user.ExportStudentUser']);
 		Route::post('user/import-student-user',['uses'=>'UserController@postImportStudentUser','as'=>'msc.admin.user.ImportStudentUser']);
 		Route::post('user/student-info',['uses'=>'UserController@getStudentInfo','as'=>'msc.admin.user.StudentInfo']);
 
-
-
 		Route::get('user/teacher-edit/{id}', ['uses'=>'UserController@getTeacherEdit','as'=>'msc.admin.user.TeacherEdit']);
 		Route::get('user/teacher-trashed/{id}', ['uses'=>'UserController@getTeacherTrashed','as'=>'msc.admin.user.TeacherTrashed']);
 		Route::get('user/teacher-status/{id}', ['uses'=>'UserController@getTeacherStatus','as'=>'msc.admin.user.TeacherStatus']);
 
 		Route::post('user/teacher-add', ['uses'=>'UserController@postTeacherAdd','as'=>'msc.admin.user.TeacherAdd']);
-		Route::post('user/teacher-save', ['uses'=>'UserController@postTeacherSave','as'=>'msc.admin.user.TeacherSave']);
+		Route::post('user/teacher-save', ['uses'=>'UserController@postTeacherSave','as'=>'msc.admin.user.TeacherSaveEdit']);
 
 		//教师用户导出，导入
 		Route::get('user/export-teacher-user', ['uses'=>'UserController@getExportTeacherUser','as'=>'msc.admin.user.ExportTeacherUser']);
 		Route::post('user/import-teacher-user', ['uses'=>'UserController@getImportTeacherUser','as'=>'msc.admin.user.ImportTeacherUser']);
 		Route::get('user/teacher-info', ['uses'=>'UserController@getTeacherInfo','as'=>'msc.admin.user.TeacherInfo']);
-
 
 
 	});

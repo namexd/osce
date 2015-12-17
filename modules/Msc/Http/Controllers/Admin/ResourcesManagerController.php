@@ -1475,9 +1475,11 @@ class ResourcesManagerController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getBorrowedList(){
-        $pagination=ResourcesBorrowing::where('status','=',0)->paginate(20);
-        //$paginationArray=$pagination->toArray();
+    public function getBorrowedList(Request $request){
+        $keyword = urldecode(e($request->get('keyword')));
+
+        $ResourcesBorrowing = new ResourcesBorrowing();
+        $pagination = $ResourcesBorrowing->getBorrowedList($keyword);
         return view('msc::admin.returnmanage.borrowedList',['pagination'=>$pagination]);
     }
 
@@ -1793,58 +1795,16 @@ class ResourcesManagerController extends MscController
             'real_enddate'  => 	'sometimes|date_format:Y-m-d H:i:s',
             'status'=> 	'sometimes|integer',
         ]);
+        $realBegindate = $request->get('real_begindate');
+        $realEnddate = $request->get('real_enddate');
+        $isGettime = e($request->get('is_gettime'));
+        $keyword = urldecode(e($request->get('keyword')));
+        $status = $request->get('status');
+        $ResourcesBorrowingModel = new ResourcesBorrowing();
+        $pagination=$ResourcesBorrowingModel->getBorrowRecordList($realBegindate, $realEnddate, $keyword, $isGettime, $status);
 
-        $formData=$request->only(['is_gettime','keyword','real_begindate','real_enddate','status']);
-        $where=[];
-        $whereRawArrray=[];
-        $whereRawData=[];
-        foreach($formData as $key=>$data)
-        {
-            $whereParam=[];
-            if(empty($data))
-            {
-                continue;
-            }
-            if(in_array($key,['begindate','real_begindate']))
-            {
-                $whereRawArrray[]='unix_timestamp('.$key.') > ? ';
-                $whereRawData[]=$data;
-            }
-            if(in_array($key,['enddate','real_enddate']))
-            {
-                $whereRawArrray[]='unix_timestamp('.$key.') < ? ';
-                $whereRawData[]=$data;
-            }
-            if(in_array($key,['resources_id','agent_id','loan_operator_id','return_operator_id','status']))
-            {
-                $whereParam=[$key,'=',intval($data)];
-            }
-            if(in_array($key,['code','lender','agent_name']))
-            {
-                $whereParam=[$key,'=',urldecode(e($data))];
-            }
-            if(!empty($whereParam))
-            {
-                $where[]=$whereParam;
-            }
-        }
 
-        $ResourcesBorrowingModel=App::make('Modules\Msc\Repositories\ResourcesRepository');
-        $model=$ResourcesBorrowingModel->getResourcesBorrowBuilderByWhere($where);
 
-        if($formData['is_gettime']==1)
-        {
-            $model=$model->whereIn('status',[-3,-5]);
-        }
-        if($formData['is_gettime']==2)
-        {
-            $model=$model->whereIn('status',[1]);
-        }
-        if(!empty($whereRawArrray))
-        {
-            $model=$model->whereRaw(implode(' and  ',$whereRawArrray,$whereRawData));
-        }
-        $pagination= $model->orderBy('id','desc')->paginate(20);
         return view('msc::admin.returnmanage.historyList',['pagination'=>$pagination]);
     }
 
@@ -1937,9 +1897,12 @@ class ResourcesManagerController extends MscController
                 {
                     $msgContent=$detail;
                 }
-                $msg=Common::CreateWeiXinMessage([
-                    ['title'=>$msgContent]
-                ]);
+                //修改了微信消息发送
+                $lender = $apply->user->openid;
+                $msg = $this->sendMsg($msgContent,$lender);
+                if ($msg === false) {
+                    throw new \Exception('微信消息发送失败!');
+                }
                 //Common::sendWeiXin($openid,$msg);
                 return response()->json(
                     $this->success_data(['result'=>true,'id'=>$id])
@@ -1989,5 +1952,15 @@ class ResourcesManagerController extends MscController
         return response()->json(
             $this->success_rows(1,'获取成功',$pagination->lastPage(),20,$pagination->currentPage(),$data)
         );
+    }
+
+    //向微信用户发送普通文本消息
+    private function sendMsg($msg,$openid) {
+        if (empty($openid)) {
+            throw new \Exception('没有找到用户的微信OpenID');
+        }
+
+        $userService = new \Overtrue\Wechat\Staff(config('wechat.app_id'),config('wechat.secret'));
+        return $userService->send($msg)->to($openid);
     }
 }

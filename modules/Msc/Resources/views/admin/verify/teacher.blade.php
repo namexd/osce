@@ -128,6 +128,7 @@
         <input type="hidden" name="ids">
         <input type="hidden" name="id">
         <input type="hidden" name="status">
+        <input type="hidden" name="type">
     </form>
 
     <script>
@@ -143,9 +144,10 @@
                     cancelButton:'取消',
                     confirm: function(){
                         var DelForm =  $('#submitSave');
-                        //DelForm.attr('action',"{{ url('/msc/admin/examine/change-user-status') }}");
+                        DelForm.attr('action',"{{ url('/msc/admin/examine/change-users-status') }}");
                         DelForm.find('input[name="id"]').val(id);
                         DelForm.find('input[name="status"]').val(1);
+                        DelForm.find('input[name="type"]').val('teacher');
                         DelForm.submit();
                     }
                 });
@@ -203,6 +205,8 @@
                             var DelForm =  $('#submitSave');
                             DelForm.find('input[name="ids"]').val(str);
                             DelForm.find('input[name="status"]').val(1);
+                            DelForm.attr('action',"{{ url('/msc/admin/verify/change-users-status') }}");
+                            DelForm.find('input[name="type"]').val('teacher');
                             DelForm.submit();
                         }
                     });

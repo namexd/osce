@@ -2,6 +2,7 @@
 
 namespace Modules\Msc\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use App\Entities\User;
@@ -118,7 +119,7 @@ class VerifyController extends BaseController {
 	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
 	 *
 	 */
-	public function postChangeUserStatus(Request $request){
+/*	public function postChangeUserStatus(Request $request){
 		$id=(int)$request->get('id');
 		$status=(int)$request->get('status');
 		$userModel=new User();
@@ -142,7 +143,10 @@ class VerifyController extends BaseController {
 			dd('没有找到相关用户');
 		}
 
-	}
+	}*/
+
+/*http://www.mis.hx/msc/admin/verify/change-users-status
+http://www.mis.hx/msc/admin/verify/student*/
 	/**
 	 * 批量修改用户状态
 	 * @api GET /api/1.0/private/admin/user/change-users-status
@@ -163,29 +167,54 @@ class VerifyController extends BaseController {
 	 *
 	 */
 	public function postChangeUsersStatus(Request $request){
-		$ids=e($request->get('ids'));
-		$status=e($request->get('status'));
-		$idsArray=explode(',',$ids);
-		$idData=[];
+		if(Input::get('id')){
+			if(Input::get('type') == 'student'){
+				$update = DB::connection('msc_mis')->table('student')->where('id','=',Input::get('id'))->update(['validated' =>Input::get('status')]);
+				if($update){
+					return redirect()->intended('/msc/admin/verify/student');
+				}else{
+					return view('msc::wechat.index.index_error',array('error_msg'=>'系统异常'));
+				}
+			}else{
+				$update = DB::connection('msc_mis')->table('teacher')->where('id','=',Input::get('id'))->update(['validated' =>Input::get('status')]);
+				if($update){
+					return redirect()->intended('/msc/admin/verify/teacher');
+				}else{
+					return view('msc::wechat.index.index_error',array('error_msg'=>'系统异常'));
+				}
+			}
 
-		foreach($idsArray as $id)
-		{
-			$idData[]=intval($id);
+		}else{
+			$ids=e($request->get('ids'));
+			$status=e($request->get('status'));
+			$idsArray=explode(',',$ids);
+			$idData=[];
+
+			foreach($idsArray as $id)
+			{
+				$idData[]=intval($id);
+			}
+			if(Input::get('type') == 'student'){
+				$update = DB::connection('msc_mis')->table('student')->whereIn('id',$idData)->update(['validated' =>Input::get('status')]);
+				if($update){
+					return redirect()->intended('/msc/admin/verify/student');
+				}else{
+					return view('msc::wechat.index.index_error',array('error_msg'=>'系统异常'));
+				}
+			}else {
+
+				$update = DB::connection('msc_mis')->table('teacher')->whereIn('id',$idData)->update(['validated' => Input::get('status')]);
+				//dd(Input::get());
+				if($update){
+					return redirect()->intended('/msc/admin/verify/teacher');
+				}else{
+					return view('msc::wechat.index.index_error',array('error_msg'=>'系统异常'));
+				}
+			}
 		}
 
-		$userModel=new User();
-		$datas=$userModel->getUserProfileByIds($idData);
-		$returnData=[];
-		foreach($datas as $data)
-		{
-			$data->validated=$status;
-			$result=$data->save();
-			$returnData[]=[
-				'uid'=>$data->id,
-				'result'=>$result
-			];
-		}
-		return redirect()->intended('/msc/admin/examine/examine-list');
+
 	}
+
 
 }
