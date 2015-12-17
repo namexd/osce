@@ -155,5 +155,45 @@ class BasicDataTest extends TestCase
             ->actingAs($userOb)
             ->action('post','\Modules\Msc\Http\Controllers\WeChat\ResourcesManagerController@postAddResources','',$data);
     }
+    //新增开放实验室
+    public function testAddOpenDeviceCate(){
+        $name   = '测试开放设备类别'.$this->getRandStr(6);
+        $teacher   = $this->getRandTeacher();
+        $data   =   [
+            'pid'           =>  0,
+            'name'          => $name,
+            'manager_id'    => $teacher->id,
+            'manager_name'  => $teacher->name,
+            'manager_mobile'=> $teacher->userInfo->mobile,
+            'location'      => '新八教',
+            'detail'        => '测试描述'.$this->getRandStr(6),
+        ];
+        \Modules\Msc\Entities\ResourcesDeviceCate::firstOrCreate($data);
+    }
+
+    //新增开放设备
+    public function testAddOpenDevice(){
+        $ResourcesDeviceCate   =   new \Modules\Msc\Entities\ResourcesDeviceCate();
+        $cateList   =   $ResourcesDeviceCate->get();
+
+        $cate       =   $this->getRandItem($cateList);
+        $ResourcesClassroom    =   new \Modules\Msc\Entities\ResourcesClassroom();
+
+        $labList   =     $ResourcesClassroom->where('opened','=',2)->get();
+        $lab       =   $this->getRandItem($labList);
+
+        $data   =   [
+            'resources_lab_id'  =>  $lab    ->  id,
+            'name'              =>  '测试开放设备'.$this->getRandStr(6),
+            'code'              =>  $this->getRandStr(6),
+            'resources_device_cate_id'  =>  $cate->id,
+            'max_use_time'      =>  rand(30,120),
+            'warning'           =>  '',
+            'detail'            =>  '测试描述'.$this->getRandStr(6),
+            'status'            =>   1
+        ];
+        $ResourcesDevice    =   new \Modules\Msc\Entities\ResourcesDevice();
+        $ResourcesDevice    ->firstOrCreate($data);
+    }
 
 }

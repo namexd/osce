@@ -48,6 +48,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		//开放实验室审核
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
+		Route::get('lab/open-lab-apply-list-data',['uses'=>'LabController@getOpenLabApplyListData','as'=>'msc.admin.lab.openLabApplyListData']);
 		//Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.lab.openLabApplyList']);
 		//开放实验室已审核
 		Route::get('lab/open-lab-apply-examined-list',['uses'=>'LabController@getOpenLabApplyExaminedList','as'=>'msc.admin.lab.openLabApplyExaminedList']);
