@@ -816,13 +816,8 @@ class UserController extends MscController
                 $mobile = iconv('utf-8', 'gb2312', $row['mobile']);
                 $gender = iconv('utf-8', 'gb2312', $row['gender']);
                 $status = iconv('utf-8', 'gb2312', $row['status']);
-<<<<<<< HEAD
 //                $role = iconv('utf-8', 'gb2312', $row['role']);
                 $str .= $ID . "," . $name . "," . $code . "," . $dept_name . "," . $mobile . "," . $gender . "," . $status . "\n"; //用引文逗号分开
-=======
-//              $role = iconv('utf-8', 'gb2312', $row['role']);
-                $str .= $ID . "," . $name . "," . $code . "," . $dept_name . "," . $mobile . "," . $gender ."," . $status . "\n"; //用引文逗号分开
->>>>>>> 6c06be5d7ace05b1f0b0cfcba0ab623553f23115
             }
         }
 //        dd($ID);
