@@ -58,7 +58,7 @@
 @stop{{-- 内容主体区域 --}}
 
 @section('layer_content')
-    <form class="form-horizontal" id="Form1" novalidate="novalidate">
+    <form class="form-horizontal" id="Form1" novalidate="novalidate" method="post" action="{{url('/auth/add-new-role')}}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">新增角色</h4>
@@ -67,20 +67,20 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">角色名称：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="" class="form-control" placeholder="请输入文本">
+                    <input type="text" name="name" class="form-control" placeholder="请输入文本">
 
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">角色描述：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="" class="form-control" placeholder="请输入文本">
+                    <input type="text" name="description" class="form-control" placeholder="请输入文本">
 
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-success" id='sure-notice' class="notAgree" data-dismiss="modal" aria-hidden="true">确定</button>
+            <button type="button" class="btn btn-success" id='sure' class="notAgree" data-dismiss="modal" aria-hidden="true">确定</button>
         </div>
     </form>
 
@@ -90,18 +90,18 @@
             <h4 class="modal-title" id="myModalLabel">编辑角色</h4>
         </div>
         <div class="modal-body">
-            <input id="edit_id" type="hidden" name="" class="form-control" placeholder="请输入文本" value="">
+            <input id="edit_id" type="hidden" name="id" class="form-control" placeholder="请输入文本" value="">
             <div class="form-group">
                 <label class="col-sm-3 control-label">角色名称：</label>
                 <div class="col-sm-9">
-                    <input id="edit_name" type="text" name="" class="form-control" placeholder="请输入文本" value="绑定的内容">
+                    <input id="edit_name" type="text" name="name" class="form-control" placeholder="请输入文本" value="绑定的内容">
 
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">角色描述：</label>
                 <div class="col-sm-9">
-                    <input id="edit_des" type="text" name="" class="form-control" placeholder="请输入文本" value="绑定的内容">
+                    <input id="edit_des" type="text" name="description" class="form-control" placeholder="请输入文本" value="绑定的内容">
 
                 </div>
             </div>

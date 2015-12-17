@@ -244,3 +244,11 @@ a{-webkit-touch-callout:none;}
 .img_box li .del_img{background:rgba(0,0,0,.7);color:#fff;position:absolute;right:2px;top:2px;width:20px;cursor:pointer;height:20px;line-height:18px;text-align:center;border-radius:50%;}
 /*layer-data*/
 .layer-date{max-width: 100%!important; border-radius: 4px;}
+/*Î¢ÐÅ×¢²á±ß¿òÑÕÉ«ÐÞ¸Ä*/
+.has-error .form-control-feedback{border-color: #ed5565!important;}
+.has-error .form-control{border-color: #ed5565!important;}
+small.help-block{border-color: #ed5565!important;}
+.form-control:focus{border-color: #6595e1}
+.form-control{box-shadow: none!important;}
+.help-block{color: #ed5565!important;}
+
