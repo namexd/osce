@@ -173,7 +173,7 @@ class UserController extends BaseController
                 'mobile'    => is_null($item->userInfo) ? '-' : $item->userInfo->mobile,
                 'gender'    => is_null($item->userInfo) ? '-' : $item->userInfo->gender,
                 'status'    => is_null($item->userInfo) ? '-' : $item->userInfo->status,
-                'role'      => is_null($item->userInfo) ? '-' : $item->userInfo->roles,
+                'role'      => is_null($item->userInfo) ? [] : $item->userInfo->roles,
             ];
         }
 
