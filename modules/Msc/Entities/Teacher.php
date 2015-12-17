@@ -159,7 +159,6 @@ class Teacher extends CommonModel {
     }
 
     /**
-     *
      * @method GET
      * @url /msc/admin/user/teacher-trashed/{id}/SoftTrashed
      * @access public
