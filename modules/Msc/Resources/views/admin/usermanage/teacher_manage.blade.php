@@ -97,12 +97,16 @@
 		                    <td>{{$list['mobile']}}</td>
 		                    <td>{{$list['gender']}}</td>
 		                    <td>
-			                    @foreach($list['role'] as $key=>$li)
-			                    	@if($key==0)
-			                    		{{$li}}
-			                    	@else
-			                    	@endif
-			                    @endforeach
+		                    	@if(count($list['role'])==0)
+		                    		-
+		                    	@else
+				                    @foreach($list['role'] as $key=>$li)
+				                    	@if($key==0)
+				                    		{{$li->name}}
+				                    	@else
+				                    	@endif
+				                    @endforeach
+			                    @endif
 		                    </td>
 		                    @if($list['status']=="禁用")
 		                    	 <td class="status2">{{$list['status']}}</td>
