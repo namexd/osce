@@ -68,9 +68,9 @@ class OpenDeviceController extends MscWeChatController
      */
     public function getOpenToolsOrderSearch (Request $request)
     {
-        $openDeviceCates = ResourcesDeviceCate::get();
-
-        return view('msc::wechat.opendevice.opendevice_bespoken');
+        $openDeviceCates = new ResourcesDeviceCate();
+        $cateList   =   $openDeviceCates->get();
+        return view('msc::wechat.opendevice.opendevice_bespoken',['cateList'=>$cateList]);
     }
 
     /**
@@ -167,7 +167,6 @@ class OpenDeviceController extends MscWeChatController
         $id = intval($id);
 
         $resourcesDevice = ResourcesDevice::findOrFail($id);
-
         $data = [
             'id'       => $id, // 设备id
             'name'     => $resourcesDevice->name, // 设备名字

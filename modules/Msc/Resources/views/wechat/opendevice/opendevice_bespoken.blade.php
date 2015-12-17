@@ -79,8 +79,10 @@
 </div>
 
 <div class="class-box">
-	<div class="col-xs-6"><span class="on" id="1">腹腔镜</span></div>
-	<div class="col-xs-6"><span class="" id="2">静脉刺穿</span></div>
+	@forelse($cateList	as $index=>$cate)
+		<div class="col-xs-6"><span class="{{$index==0? 'on':''}}" id="{{$cate->id}}">{{$cate->name}}</span></div>
+	@empty
+	@endforelse
 </div>
 
 <div class="history_time_select w_90">
