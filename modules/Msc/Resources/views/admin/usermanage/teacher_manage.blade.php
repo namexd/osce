@@ -19,8 +19,8 @@
     <div class="panel-heading">
         <div class="panel-options">
             <ul class="nav nav-tabs">
-                <li class=""><a href="http://www.msc.hx/msc/admin/user/student-list">学生管理</a></li>
-                <li class="active"><a href="http://www.msc.hx/msc/admin/user/teacher-list">教职工管理</a></li>
+                <li class=""><a href="/msc/admin/user/student-list">学生管理</a></li>
+                <li class="active"><a href="/msc/admin/user/teacher-list">教职工管理</a></li>
             </ul>
         </div>
     </div>
@@ -97,12 +97,16 @@
 		                    <td>{{$list['mobile']}}</td>
 		                    <td>{{$list['gender']}}</td>
 		                    <td>
-			                    @foreach($list['role'] as $key=>$li)
-			                    	@if($key==0)
-			                    		{{$li}}
-			                    	@else
-			                    	@endif
-			                    @endforeach
+		                    	@if(count($list['role'])==0)
+		                    		-
+		                    	@else
+				                    @foreach($list['role'] as $key=>$li)
+				                    	@if($key==0)
+				                    		{{$li->name}}
+				                    	@else
+				                    	@endif
+				                    @endforeach
+			                    @endif
 		                    </td>
 		                    @if($list['status']=="禁用")
 		                    	 <td class="status2">{{$list['status']}}</td>

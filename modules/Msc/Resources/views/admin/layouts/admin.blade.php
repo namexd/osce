@@ -27,7 +27,7 @@
 @section('body_attr') class="fixed-sidebar full-height-layout gray-bg"@stop
 
 @section('body')
-
+    @include('msc::admin.layouts.admin_errors_notice')
     @section('content')
     @show{{-- 内容主体区域 --}}
 
