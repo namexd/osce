@@ -13,9 +13,9 @@ class UserController extends MscWeChatController {
 	public function getUserLogin()
 	{
 
-		//$openid = $this->getOpenId();
+		$openid = $this->getOpenId();
 
-		Session::put('openid','fghfhf');
+		Session::put('openid',$openid);
 
 		return view('msc::wechat.user.login');
 	}
