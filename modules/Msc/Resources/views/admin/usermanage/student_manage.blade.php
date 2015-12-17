@@ -112,6 +112,9 @@
 					}
 				});
 			}
+			$('.modal-dialog').delegate('#form3Submit','click',function(){
+				$('#Form3').submit();
+			})
 			
 		})
 	</script>
@@ -333,8 +336,8 @@
             <div class="col-sm-4" style="padding-right: 0;">
                 <select class="form-control idcard" id="" name="idcard">
                     <option value="">证件类型</option>
-                    <option value="">身份证</option>
-                    <option value="">驾驶证</option>
+                    <option value="1">身份证</option>
+                    <option value="2">驾驶证</option>
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
@@ -370,7 +373,7 @@
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
         		<input type="radio" class="check_icon look-man" name="student_type"  value="1" disabled="disabled"/> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon look-woman" name="student_type" value="0" disabled="disabled" /> <span>女</span>
+            	<input type="radio" class="check_icon look-woman" name="student_type" value="2" disabled="disabled" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
@@ -437,7 +440,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control edit-name" value="张三" name="name" />
+                <input type="text" class="form-control edit-name" value="" name="name" />
                 <input type="hidden" value="{{$list['id']}}" name="id"/>
             </div>
         </div>
@@ -457,8 +460,8 @@
             <label class="col-sm-2 control-label">年级</label>
             <div class="col-sm-10">
                 <select class="form-control edit-grade" id="" name="grade">
-                    <option value="0">2015</option>
-                    <option value="1">2014</option>
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
                 </select>
             </div>
         </div>
@@ -502,7 +505,7 @@
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="button" class="btn btn-primary btn-edit" data-dismiss="modal" id="form3Submit" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
