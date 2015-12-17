@@ -189,16 +189,16 @@ class ResourcesClassroom extends  CommonModel {
         $teachers = $plan->teachersRelation;
         $teacher_name = $teachers->first()->teacher->name;
         $classroom_id = $plan -> classroomCourses -> classroom -> id;
-        $resourceslab=ResourcesLabVcr::where('resources_lab_id',$classroom_id) -> get();
+        $resourceslab = ResourcesLabVcr::where('resources_lab_id',$classroom_id) -> get();
         foreach($resourceslab as $item){
             $vcr = array();
             $vcr['vcr_id']   = Vcr::find($item -> vcr_id)->id;
             $vcr['vcr_name'] = Vcr::find($item -> vcr_id)->name;
             $vcrs[] = $vcr;
         }
-        $unabsence=ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$id)->count();
-        $ResourcesClassroomPlanGroup=new ResourcesClassroomPlanGroup();
-        $total=$ResourcesClassroomPlanGroup->getTotal($id);
+        $unabsence = ResourcesClassroomCourseSign::where('resources_lab_plan_id','=',$id)->count();
+        $ResourcesClassroomPlanGroup = new ResourcesClassroomPlanGroup();
+        $total = $ResourcesClassroomPlanGroup->getTotal($id);
         $data=[
             "currentdate"       =>    $plan->currentdate,
             "begintime"         =>    $plan->begintime,

@@ -158,9 +158,19 @@ class Student extends CommonModel {
 
        $connection=\DB::connection('msc_mis');
 
+        $professional=$connection->table('student_professional')->where('name',$data['professional_name'])->first();
+
+        $professional_id=$professional->id;
+
+        if(!empty($professional_id)){
+
+            $professional_id=$connection->table('student_professional')->insertGetId($data['professional_name']);
+
+        }
+
        $connection->beginTransaction();
 
-       $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$data['professional'],'student_type'=>$data['student_type']);
+       $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
 
        $result=$connection->table('student')->update($item);
 
@@ -177,9 +187,11 @@ class Student extends CommonModel {
 
         if($result==false){
             $connection->rollBack();
+            return false;
         }
 
         $connection->commit();
+        return true;
     }
 
     /**
@@ -204,8 +216,16 @@ class Student extends CommonModel {
 
         $connection=\DB::connection('msc_mis');
 
+        $professional_id=$connection->table('student_professional')->where('name',$data['professional_name'])->select('id')->first();
 
-        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$data['professional'],'student_type'=>$data['student_type']);
+        if($professional_id){
+            return $professional_id;
+        }else{
+            $professional_id=$connection->table('student_professional')->insertGetId($data['professional_name']);
+            return  $professional_id;
+        }
+
+        $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
 
         $id=$connection->table('student')->insertGetId($item);
 

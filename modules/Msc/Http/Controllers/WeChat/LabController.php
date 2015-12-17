@@ -55,6 +55,7 @@ class LabController extends MscWeChatController
      *
      */
     public function getOpenLabApplyListData(Request $request){
+
         $this->validate($request, [
             'date'      => 'sometimes|date_format:Y-m-d',
             'keyword'   => 'sometimes',
@@ -70,10 +71,10 @@ class LabController extends MscWeChatController
         $date       =   empty($date)?      date('Y-m-d')    :   $date;
 
         $order      =   [$order,$orderby];
-
         //$ResourcesClassroomApply    =   new ResourcesClassroomApply();
         $ResourcesOpenLabApply      =   new ResourcesOpenLabApply();
-        $list       =   $ResourcesOpenLabApply    ->  getWaitExamineList();
+        $list       =   $ResourcesOpenLabApply    ->  getWaitExamineList($keyword,$date,$order);
+
         $data=[];
         foreach($list as $item)
         {

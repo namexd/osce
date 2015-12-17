@@ -42,11 +42,7 @@
 	        	<li>
 					<div>
 						<span class="name">
-							@if($list['id']=="1")
-							腹腔镜
-							@elseif($list['id']=="2")
-							静脉刺穿
-							@endif
+							{{$list['name']}}
 						</span>
 					</div>
 					
