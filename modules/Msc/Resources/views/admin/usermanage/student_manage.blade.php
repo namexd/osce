@@ -69,12 +69,9 @@
 			})
 			$(".btn-edit").click(function(){
 				$("#Form3").submit();
-				/*$.ajax({
-					type:"post",
-					url:"/msc/admin/user/student-save",
-					async:true
-				});*/
-				
+			})
+			$(".btn-new-add").click(function(){
+				$("#Form1").submit();
 			})
 
 			function look(){//查看
@@ -338,7 +335,7 @@
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
         		<input type="radio" class="check_icon" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon" name="gender" value="0" /> <span>女</span>
+            	<input type="radio" class="check_icon" name="gender" value="2" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
@@ -390,7 +387,7 @@
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="button" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
