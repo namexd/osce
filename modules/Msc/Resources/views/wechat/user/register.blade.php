@@ -10,7 +10,9 @@
         border: 1px solid #ccc;}
         .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px;}
         .has-feedback label~.form-control-feedback {top: 2px;}
-
+        .form-control{
+            color: #333!important;
+        }
     </style>
 @stop
 
@@ -29,6 +31,7 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         用户注册
+        <a class="right header_btn" href="javascript:void(0)"></a>
     </div>
 <div class="form-select">
     <div class="teacher checked">
