@@ -633,7 +633,7 @@ class UserController extends BaseController
             $data = Common::getExclData($request, 'teacher');
             $teacherInfo = array_shift($data);
             //将中文头转换翻译成英文
-            $studentInfo = Common::arrayChTOEn($teacherInfo, 'msc.importForCnToEn.teacher_group');  //teacher_group还未定义
+            $teacherInfo = Common::arrayChTOEn($teacherInfo, 'msc.importForCnToEn.teacher_group');  //teacher_group还未定义
             dd($data);
             //已经存在的数据
             $dataHaven = [];
