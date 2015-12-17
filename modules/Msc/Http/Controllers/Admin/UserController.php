@@ -241,7 +241,7 @@ class UserController extends MscController
      * <b>get请求字段：</b>
      * * int        $id        学生编号
      *
-     * @return blooean
+     * @return bloo
      *
      * @version 0.8
      * @author zhouchong <zhouchong@misrobot.com>
@@ -280,17 +280,20 @@ class UserController extends MscController
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'grade' => 'required|integer|min:0|max:11',
-            'student_type' => 'required|integer|min:0|max:3',
+            'code' => 'required|min:0|max:32',
+            'gender' => 'required|max:1',
+            'grade' => 'required|max:11',
+            'student_type' => 'required||max:3',
             'professional_name' => 'required|max:50',
-            'moblie' => 'required|unique|integer|max:11',
-            'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|unique|integer|min:0|max:50',
+            'mobile' => 'required|max:11',
+            'idcard_type' => 'required|max:1',
+            'idcard' => 'required|min:0|max:50',
         ]);
 
-        $data = $request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'moblie', 'idcard_type', 'idcard']);
+
+        $data = $request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
+
+//        dd($data);
 
         $studentModel = new Student();
 
@@ -327,17 +330,17 @@ class UserController extends MscController
     {
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
+            'code' => 'required|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'grade' => 'required|integer|min:0|max:11',
             'student_type' => 'required|integer|min:0|max:3',
             'profession_name' => 'required|max:50',
-            'moblie' => 'required|integer|max:11',
+            'mobile' => 'required|max:11',
             'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|unique|integer|min:0|max:50',
+            'idcard' => 'required|integer|min:0|max:50',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'moblie', 'idcard_type', 'idcard']);
+        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
 
         $data['status']=$status;
         $studentModel = new Student();
@@ -476,13 +479,13 @@ class UserController extends MscController
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
+            'code' => 'required|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'teacher_dept' => 'required|integer|min:0|max:3',
-            'moblie' => 'required|unique|integer|max:11',
+            'mobile' => 'required|integer|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'moblie']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
 
         $teacherModel = new Teacher();
 
@@ -520,13 +523,13 @@ class UserController extends MscController
 
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|unique|integer|min:0|max:32',
+            'code' => 'required|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
             'teacher_dept' => 'required|integer|min:0|max:3',
-            'moblie' => 'required|unique|integer|max:11',
+            'mobile' => 'required|integer|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'moblie']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
         $data['status']=$status;
         $teacherModel = new Teacher();
 
@@ -813,8 +816,13 @@ class UserController extends MscController
                 $mobile = iconv('utf-8', 'gb2312', $row['mobile']);
                 $gender = iconv('utf-8', 'gb2312', $row['gender']);
                 $status = iconv('utf-8', 'gb2312', $row['status']);
+<<<<<<< HEAD
 //                $role = iconv('utf-8', 'gb2312', $row['role']);
                 $str .= $ID . "," . $name . "," . $code . "," . $dept_name . "," . $mobile . "," . $gender . "," . $status . "\n"; //用引文逗号分开
+=======
+//              $role = iconv('utf-8', 'gb2312', $row['role']);
+                $str .= $ID . "," . $name . "," . $code . "," . $dept_name . "," . $mobile . "," . $gender ."," . $status . "\n"; //用引文逗号分开
+>>>>>>> 6c06be5d7ace05b1f0b0cfcba0ab623553f23115
             }
         }
 //        dd($ID);
