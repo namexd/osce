@@ -28,7 +28,7 @@ class UploadController extends MscController
         $data=Common::getExclData($request,'teach');
         dd($data);
         $coursesList= array_shift($data);
-        //╫╚жпнд╠Мм╥ ╟╢ууеДжц ╥╜рКЁи с╒ндвж╤нцШ
+        //О©╫О©╫О©╫О©╫О©╫д╠О©╫м╥ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ с╒О©╫О©╫О©╫ж╤О©╫О©╫О©╫
         $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
 
     }
