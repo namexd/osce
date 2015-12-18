@@ -38,7 +38,7 @@ function gethistory(qj,url,getdetail,getdetail2){
 
                 var begintime=this.begintime.substring(0,5);
                 var endtime=this.endtime.substring(0,5);
-                var currentdate=this.currentdate.substring(5,10);
+                var currentdate=this.currentdate.substring(0,10);
                 $(".detail_list ul").append(
                     '<li>'
                     +'<div><span>'+this.name+'</span> </div>'
