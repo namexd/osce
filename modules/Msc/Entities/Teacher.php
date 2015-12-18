@@ -112,7 +112,7 @@ class Teacher extends CommonModel {
 
         $connection=\DB::connection('sys_mis');
 
-        $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile']);
+        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
 
         $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
@@ -142,21 +142,23 @@ class Teacher extends CommonModel {
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postAddTeacher($data){
-        $connection=\DB::connection('msc_mis');
 
+        $connection=\DB::connection('sys_mis');
 
-        $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'status'=>$data['status']);
 
-        $id=$connection->table('teacher')->insertGetId($item);
+        $id=$connection->table('users')->insertGetId($users);
 
         if(!$id){
             return false;
         }
 
-        $connection=\DB::connection('sys_mis');
-        $users=array('id'=>$id,'gender'=>$data['gender'],'mobile'=>$data['mobile'],'status'=>$data['status']);
+        $connection=\DB::connection('msc_mis');
 
-        $result=$connection->table('users')->insert($users);
+
+        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+
+        $result=$connection->table('teacher')->insert($item);
 
         return $result;
     }

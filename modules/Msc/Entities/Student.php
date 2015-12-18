@@ -156,7 +156,7 @@ class Student extends CommonModel {
      */
     public function saveEditStudent($data){
 
-       $connection=\DB::connection('msc_mis');
+        $connection=\DB::connection('msc_mis');
 
         $professional=$connection->table('student_professional')->where('name',$data['professional_name'])->first();
 
@@ -175,24 +175,24 @@ class Student extends CommonModel {
 
         if($result===false){
             return false;
-       }
+        }
 
        $connection=\DB::connection('sys_mis');
 
-        $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
+       $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
 
-//        dd($users_mobile->mobile);
         $users_mobile=$users_mobile->mobile;
+
+
         if($data['mobile']==$users_mobile){
-            $users=array('gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
-        }else{
-            $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+               $users=array('name'=>$data['name'],'gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+        } else{
+           $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
         }
 
-//       dd($users);
        $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
-//        dd($result);
+
         if($result===false){
             return false;
         }
@@ -222,26 +222,30 @@ class Student extends CommonModel {
 
         $connection=\DB::connection('msc_mis');
 
-        $professional_id=$connection->table('student_professional')->where('name',$data['professional_name'])->select('id')->first();
+        $professional=$connection->table('student_professional')->where('name',$data['profession_name'])->first();
 
-        if(!$professional_id){
+        if(!$professional){
 
-            $professional_id=$connection->table('student_professional')->insertGetId($data['professional_name']);
-        }
+            $professional_id=$connection->table('student_professional')->insertGetId(['name'=>$data['profession_name']]);
 
-        $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
-
-        $id=$connection->table('student')->insertGetId($item);
-
-        if(!$id){
-            return false;
+        }else{
+            $professional_id=$professional->id;
         }
 
         $connection=\DB::connection('sys_mis');
 
-        $users=array('id'=>$id,'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
 
-        $result=$connection->table('users')->insert($users);
+        $id=$connection->table('users')->insertGetId($users);
+
+        if(!$id){
+            return false;
+        }
+        $connection=\DB::connection('msc_mis');
+
+        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
+
+       $result=$connection->table('student')->insert($item);
 
         return $result;
     }
