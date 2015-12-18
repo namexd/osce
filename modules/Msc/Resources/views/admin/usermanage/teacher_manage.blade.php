@@ -9,6 +9,8 @@
 @stop
 
 @section('only_js')
+	<script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+	<script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
 	<script type="text/javascript" src="{{asset('/msc/admin/usermanage/usermanage.js')}}" ></script>
 	
 	<script type="text/javascript">
@@ -158,6 +160,36 @@
 					}
 				});
 			}
+			$("#in").click(function(){
+				$("#leading-in").click();
+			})
+			$("#leading-in").change(function(){
+				var str=$("#leading-in").val().substring($("#leading-in").val().lastIndexOf(".")+1);
+				if(str!="xlsx"){
+					layer.alert(
+	                  "请上传正确的文件格式？", 
+	                  {title:["温馨提示","font-size:16px;color:#408aff"]}
+	              );
+				}else{
+					$.ajaxFileUpload({
+						type:"post",
+			            url:'/msc/admin/user/import-student-user',
+			            fileElementId:'leading-in',//必须要是 input file标签 ID
+			            success: function (data, status){
+			            	console.log("成功");
+			            	console.log(data);
+			            	console.log(status);
+			            },
+			            error: function (data, status, e){
+			            	console.log("失败");
+			               layer.alert(
+			                  "上传失败！", 
+			                  {title:["温馨提示","font-size:16px;color:#408aff"]}
+			               );
+			            }
+			        });
+				}
+			})
 		})
 	</script>
 @stop
@@ -187,8 +219,11 @@
 	        </div>
 	        <div class="col-xs-6 col-md-9 user_btn">
 	        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增教职工" data-toggle="modal" data-target="#myModal" />
-	        	<a href="/msc/admin/user/export-teacher-user" class="btn btn-default right" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>
-	        	<input type="button" class="right btn btn-default" name="" id="leading-out" value="导入" style="background: #fff;" />
+	        	<a href="/msc/admin/User/import-Teacher-user" class="btn btn-default right" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>
+	        	<div class="right">
+                    <input type="button" name="" id="in" value="导入" class="btn btn-default right" style="background: #fff;" />
+                    <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
+                </div>
 	        </div>
 	    </div>
 	    <form class="container-fluid ibox-content" id="list_form">
@@ -314,7 +349,7 @@
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
         		<input type="radio" class="check_icon" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon" name="gender" value="0" /> <span>女</span>
+            	<input type="radio" class="check_icon" name="gender" value="2" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">

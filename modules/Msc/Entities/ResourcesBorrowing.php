@@ -87,8 +87,7 @@ class ResourcesBorrowing extends  CommonModel
             [
                 strtotime(date('Y-m-d'))
             ]
-        )   ->  orderBy('begindate','asc')
-            ->  where('apply_validated','=',0);
+        )   ->  orderBy('begindate','asc');
         if($pid!==false)
         {
             //如果
@@ -103,6 +102,7 @@ class ResourcesBorrowing extends  CommonModel
         }
         return    $builder->  paginate(config('msc.page_size'));
     }
+
     //查询借出设备的历史记录
     public function getBorrowRecordList($realBegindate = '', $realEnddate = '', $keyword = '', $isGettime = '', $status = '') {
         $builder = $this->leftJoin(
@@ -147,14 +147,16 @@ class ResourcesBorrowing extends  CommonModel
         return $builder->paginate(20);
     }
 
+    //已借出设备
     public function getBorrowedList($keyword) {
         $builder = $this->leftJoin(
             'resources_tools',function ($join) {
                 $join->on('resources_tools.id','=',$this->table.'.resources_tool_id');
             }
-        )   ->  where($this->table.'.status','=',0)->where('apply_validated','=',1)
+        )   ->  where($this->table.'.status','=',0)
+            ->  where($this->table.'.apply_validated','=',1)
             ->  where($this->table.'.loan_validated','=',1)
-            ->whereRaw('unix_timestamp(enddate) > ?',[strtotime(date('Y-m-d H:i:s'))]);
+            ->  whereRaw('unix_timestamp(enddate) < ?',[strtotime(date('Y-m-d H:i:s'))]);
 
         if ($keyword !== "") {
             $builder->where('resources_tools.name','like','%'.$keyword.'%');
