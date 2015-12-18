@@ -9,6 +9,8 @@
 
 namespace Modules\Msc\Http\Controllers\Admin;
 
+use App\Repositories\Common;
+use Modules\Msc\Entities\Courses;
 use Modules\Msc\Entities\ResourcesClassroom;
 use Modules\Msc\Entities\ResourcesClassroomApply;
 use Modules\Msc\Entities\ResourcesClassroomCourses;
@@ -279,24 +281,31 @@ class LabController extends MscController
         if ($keyword !== '') {
             $rollMsg[1] = $keyword;
         }
-        //$groups = ResourcesClassroomApply::find(1)->groups->first()->name;
-//        $groups = ResourcesClassroomApply::find(11)->labApplyGroups->first()->groups->name;
-//        dd($groups);
-
 
         $ResourcesOpenLabApply = new ResourcesOpenLabApply();
-        $list = $ResourcesOpenLabApply->getExaminedList($keyword, $date, $order);
-//        foreach($list as $item)
-//        {
-//            $connection =   \DB::connection('msc_mis');
-//            $connection ->enableQueryLog();
-//            dd($item->labApplyGroups->first()->groups->name);
-//            $item->labApplyGroups()->get();
-//            $c= $connection ->getQueryLog();
-//            dd($c);
-//        }
+        $list = $ResourcesOpenLabApply  ->  getExaminedList($keyword, $date, $order);
+        $statusValues   =   $ResourcesOpenLabApply         ->  getStatusValues();
+        $groupNames =[];
+        foreach($list as $item)
+        {
+            $groupList  =   $item->labApplyGroups();
+            if(count($groupList))
+            {
+                $group  =   $groupList  ->  first();
+                if(!is_null($group))
+                {
+                    $name   =   $group      ->  name;
+                }
+                $name       =   '-';
+            }
+            else
+            {
+                $name   =   '-';
+            }
+            $groupNames[$item->id]=$name;
+        }
 
-        return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg]);
+        return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg,'groupNames'=>$groupNames,'statusValues'=>$statusValues]);
     }
 
     /**
@@ -866,6 +875,47 @@ class LabController extends MscController
             return response()   ->    json(
                 $this->fail($ex)
             );
+        }
+    }
+    public function postImportLab(Request $request){
+        try{
+            $data=Common::getExclData($request,'lab');
+            $coursesList= array_shift($data);
+            //将中文表头 按照配置 翻译成 英文字段名
+            $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.lab_import');
+            //已经存在的数据
+            $dataHaven=[];
+            //添加失败的数据
+            $dataFalse=[];
+            $dataNew    =[];
+            foreach($data as $coursesData)
+            {
+                if(is_numeric($coursesData['code']))
+                {
+                    $coursesData['code']   = str_replace(',','',strval(number_format($coursesData['code']))) ;
+                }
+                $input  =   [
+                    'name'          =>  $coursesData['name'],
+                    'code'          =>  $coursesData['code'],
+                    'location'      =>  '新八教'.$coursesData['floor'],
+                    'begintime'     =>  '08:00:00',
+                    'endtime'       =>  '22:00:00',
+                    'opened'        =>  strrpos('开放',$coursesData['name'])>=1? 1:0,
+                    'manager_name'  =>  $coursesData['manager_name'],
+                    'manager_mobile'=>  '',
+                    'detail'        =>  '',
+                ];
+                $dataNew[]=$input;
+            }
+            var_export($dataNew);
+            exit();
+            return response()->json(
+                $this->success_data(['result'=>true,'dataFalse'=>$dataFalse,'dataHaven'=>$dataHaven])
+            );
+        }
+        catch(\Exception $ex)
+        {
+            return response()->json($this->fail($ex));
         }
     }
 }

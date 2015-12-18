@@ -16,4 +16,6 @@ class StdProfessional extends Model
     protected $connection	=	'msc_mis';
     protected $table 		= 	'student_professional';
     protected $fillable 	=	["id","name","code"];
+    public $incrementing	=	true;
+    public $timestamps	=	false;
 }

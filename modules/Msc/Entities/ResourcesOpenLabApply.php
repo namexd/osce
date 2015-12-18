@@ -212,11 +212,11 @@ class ResourcesOpenLabApply extends CommonModel
                     ]);
                 }
             }
-        ])->  whereRaw(
+        ])  ->  where('status','=',0)
+            ->  whereRaw(
             'unix_timestamp(apply_date) > ?',
             [
-                $date,
-              //strtotime(date('Y-m-d'))
+                strtotime($date),
             ]
         ) -> paginate(config('msc.page_size'));
     }
@@ -606,6 +606,7 @@ class ResourcesOpenLabApply extends CommonModel
                 'resources_openlab_calendar.endtime as endtime',
                 'resources_lab.code as code',
                 'student.name as student_name',
+                'teacher.name as teacher_name',
                 $this->table.'.detail as detail',
                 'resources_lab.status as status',
                 $this->table.'.id as id',

@@ -62,6 +62,16 @@ return [
 					"性别" => 'sex',
 			],
 
+
+		'lab_import'	=>	[
+			"楼层" => "floor",
+			"房号（地址）" => 'code',
+			"用房名称" => "name",
+			"使用面积" => 'area',
+			"实验室类型" => "type",
+			"管理教师" => "manager_name",
+			"实验室类型代码" => 'typeCode'
+		],
 	],
 	'idcard_type'  	=>		[	1=>'身份证',	2=>'护照'],
 	'page_size'		=>		10,

@@ -104,6 +104,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/urgent-apply-list',['uses'=>'LabController@getUrgentApplyList','as'=>'msc.admin.lab.getUrgentApplyList']);//TDDO ：luohaihua 以当前别名为准
 		Route::get('lab/openlab-history-list',['uses'=>'LabController@getOpenlabHistoryList','as'=>'msc.admin.lab.openlabHistoryList']);
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
+		Route::post('lab/import-lab',['uses'=>'LabController@postImportLab','as'=>'msc.admin.lab.postImportLab']);
 
 
 		Route::controller('lab-tools', 'LabToolsController');

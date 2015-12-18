@@ -12,6 +12,7 @@ function gethistory(qj,url,getdetail){
         cache:false,
         data:qj,
         success: function(result) {
+
             var cnt = result.data.rows.cnt;
             totalpages=result.data.rows.ClassroomApplyList.last_page;
             $(result.data.rows.ClassroomApplyList.data).each(function(){
