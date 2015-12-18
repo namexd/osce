@@ -179,25 +179,32 @@ class Student extends CommonModel {
 
        $connection=\DB::connection('sys_mis');
 
-       $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
+       $result=$connection->table('users')->find($data['id']);
 
-        $users_mobile=$users_mobile->mobile;
-
-
-        if($data['mobile']==$users_mobile){
-               $users=array('name'=>$data['name'],'gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
-        } else{
+       if(!$result){
            $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
-        }
 
-       $result=$connection->table('users')->where('id',$data['id'])->update($users);
+           return $connection->table('users')->where('id',$data['id'])->insert($users);
+       }else{
+           $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
 
+           $users_mobile=$users_mobile->mobile;
 
-        if($result===false){
-            return false;
-        }
+           if($data['mobile']==$users_mobile){
+               $users=array('name'=>$data['name'],'gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+           } else{
+               $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+           }
 
-        return $result;
+           $result=$connection->table('users')->where('id',$data['id'])->update($users);
+
+           if($result===false){
+               return false;
+           }
+
+           return $result;
+       }
+
     }
 
     /**
