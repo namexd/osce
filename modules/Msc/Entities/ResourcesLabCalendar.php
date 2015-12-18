@@ -15,7 +15,7 @@ class ResourcesLabCalendar extends Model
     protected $connection	=	'msc_mis';
 
     protected $table 		= 	'resources_lab_calendar';
-    protected $fillable 	=	['id', 'resoutces_lab_id', 'week', 'begintime','endtime'];
+    protected $fillable 	=	['id', 'resources_lab_id', 'week', 'begintime','endtime'];
 
 
     public function resourcesClassroom(){

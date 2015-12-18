@@ -348,4 +348,36 @@ class Student extends CommonModel {
          return $connection->table('users')->where('id',$id)->update(['status'=>3-$status]);
 
     }
+
+
+
+    //导入学生数据存入数据库
+    public function AddStudent($studentData){
+//        $id=$connection->table('users')->insertGetId($users);
+        $connection=\DB::connection('sys_mis');
+        $id=$connection->table('users')->insertGetId([
+            ['name' =>$studentData['name'] ,
+                'mobile' => $studentData['mobile'],
+                'idcard'=>$studentData['idcard'],
+                'gender'=>$studentData['gender'],
+                'status'=>$studentData['status'],
+
+            ],
+        ]);
+        if(!$id){
+            return false;
+        }else{
+            $this->insert([
+                [
+                    'id'=>$id,
+                    'name' =>$studentData['name'] ,
+                    'code' => $studentData['code'],
+                    'grade'=>$studentData['grade'],
+                    'student_type'=>$studentData['student_type'],
+                    'professional'=>$studentData['professional']
+                ],
+            ]);
+        }
+
+    }
 }

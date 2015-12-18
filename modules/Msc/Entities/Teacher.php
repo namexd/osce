@@ -286,4 +286,27 @@ class Teacher extends CommonModel {
         return $connection->table('users')->where('id',$id)->update(['status'=>3-$status]);
 
     }
+
+
+    //导入教师数据存入数据库
+    public function AddTeacher($teacherData){
+
+        $connection=\DB::connection('sys_mis');
+        $connection->table('users')->insert([
+            ['name' =>$teacherData['name'] ,
+                'mobile' => $teacherData['mobile'],
+                'gender'=>$teacherData['gender'],
+                'status'=>$teacherData['status'],
+//                'role'=>$teacherData['role'],
+            ],
+        ]);
+
+        $this->insert([
+            [
+                'name' =>$teacherData['name'] ,
+                'code' => $teacherData['code'],
+                'teacher_dept'=>$teacherData['teacher_dept'],
+            ],
+        ]);
+    }
 }
