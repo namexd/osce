@@ -279,24 +279,31 @@ class LabController extends MscController
         if ($keyword !== '') {
             $rollMsg[1] = $keyword;
         }
-        //$groups = ResourcesClassroomApply::find(1)->groups->first()->name;
-//        $groups = ResourcesClassroomApply::find(11)->labApplyGroups->first()->groups->name;
-//        dd($groups);
-
 
         $ResourcesOpenLabApply = new ResourcesOpenLabApply();
-        $list = $ResourcesOpenLabApply->getExaminedList($keyword, $date, $order);
-//        foreach($list as $item)
-//        {
-//            $connection =   \DB::connection('msc_mis');
-//            $connection ->enableQueryLog();
-//            dd($item->labApplyGroups->first()->groups->name);
-//            $item->labApplyGroups()->get();
-//            $c= $connection ->getQueryLog();
-//            dd($c);
-//        }
+        $list = $ResourcesOpenLabApply  ->  getExaminedList($keyword, $date, $order);
+        $statusValues   =   $ResourcesOpenLabApply         ->  getStatusValues();
+        $groupNames =[];
+        foreach($list as $item)
+        {
+            $groupList  =   $item->labApplyGroups();
+            if(count($groupList))
+            {
+                $group  =   $groupList  ->  first();
+                if(!is_null($group))
+                {
+                    $name   =   $group      ->  name;
+                }
+                $name       =   '-';
+            }
+            else
+            {
+                $name   =   '-';
+            }
+            $groupNames[$item->id]=$name;
+        }
 
-        return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg]);
+        return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg,'groupNames'=>$groupNames,'statusValues'=>$statusValues]);
     }
 
     /**
