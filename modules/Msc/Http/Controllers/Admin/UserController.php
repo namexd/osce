@@ -518,7 +518,7 @@ class UserController extends MscController
             'name' => 'required|max:50',
             'code' => 'required|max:32',
             'gender' => 'required|max:1',
-            'dept_name' => 'required|max:3',
+            'dept_name' => 'required|max:20',
             'mobile' => 'required|max:11',
         ]);
 
