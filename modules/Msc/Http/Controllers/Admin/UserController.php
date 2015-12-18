@@ -685,7 +685,7 @@ class UserController extends MscController
      */
     public function  postImportStudentUser(Request $request)
     {
-        dd($_POST);
+        dd($request);
 //             dd(111111111111);
 //        echo '111111111';exit;
         try {
