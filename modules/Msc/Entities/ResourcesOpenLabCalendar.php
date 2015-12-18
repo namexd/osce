@@ -14,7 +14,7 @@ class ResourcesOpenLabCalendar extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'resources_openlab_calendar';
-    protected $fillable 	=	['id', 'resoutces_lab_id', 'week', 'begintime'];
+    protected $fillable 	=	['id', 'resources_lab_id', 'week', 'begintime','endtime'];//TODO:罗海华 设置 endtime 字段 和 修正 resources_lab_id 字段名 2015-12-18
 
     public function resourcesClassroom(){
 
@@ -23,11 +23,8 @@ class ResourcesOpenLabCalendar extends Model
     }
 
     public function ResourcesOpenLabApply(){
-
         return $this->hasMany('Modules\Msc\Entities\ResourcesOpenLabApply','resources_lab_calendar_id','id');
-
     }
-    //
     public function getLaboratoryClassroomList($data){
         $thisBuilder = $this;
         if(!empty($data['week'])){
