@@ -56,7 +56,12 @@
     <a class="left header_btn" href="javascript:history.back(-1)">
         <i class="fa fa-angle-left clof font26 icon_return"></i>
     </a>
+    @if($apply_type == 1)
     紧急预约
+    @else
+        预约
+    @endif
+
     <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
         <i class="fa fa-home clof font26 icon_return"></i>
     </a>

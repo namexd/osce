@@ -113,7 +113,7 @@ class ResourcesClassroom extends  CommonModel {
             'manager_mobile'  =>  $input['manager_mobile'],
             'detail'  =>  $input['detail'],
             'status'  =>  1,
-            'resources_type'  =>  1,
+           // 'resources_type'  =>  1,
         ];
         return $this->create($data);
 	}
