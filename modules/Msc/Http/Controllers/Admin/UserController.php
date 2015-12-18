@@ -742,10 +742,12 @@ class UserController extends MscController
      *
      */
 
-    public function getExportStudentUser(Request $request)
+    public function getExportStudentUser(Request $keyword)
     {
+//        dd($keyword);exit;
+
         //同步学生列表的数据
-        $studentInfo = $this->getStudentList($request);
+        $studentInfo = $this->getStudentList($keyword);
 //        dd($studentInfo->list);
 
         $str = iconv('utf-8', 'gb2312', '序号,姓名,学号,年级,类别,专业,手机号,证件号,性别,状态') . "\n";
@@ -768,6 +770,8 @@ class UserController extends MscController
         }
         $filename = date('Ymd') . '.csv';
         $this->export_csv($filename, $str);
+
+        return response()->json($this->fail("1"));
     }
 
     private function export_csv($filename, $data)

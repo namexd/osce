@@ -223,7 +223,7 @@
 				}else{
 					$.ajaxFileUpload({
 						type:"post",
-			            url:'/msc/admin/User/import-Teacher-user',
+			            url:'/msc/admin/user/import-teacher-user',
 			            fileElementId:'leading-in',//必须要是 input file标签 ID
 			            success: function (data, status){
 			            	
@@ -240,14 +240,18 @@
 			})
 			$(".leading-out").click(function(){
 				var keyword=$("#keyword").val();
-				$(this).attr("href",href);
 				$.ajax({
-					type:"get",
-					url:"/msc/admin/user/export-student-user",
+					type:'get',
+					url:'/msc/admin/user/export-teacher-user',
 					data:{
-						keyword:keyword
+						keyword : keyword,
 					},
-					async:true
+					async:true,
+					success:function(res){
+						if(res=="1") {
+							window.location.href = "/msc/admin/user/export-teacher-user";
+						}
+					}
 				});
 			})
 		})
@@ -279,7 +283,8 @@
 	        </div>
 	        <div class="col-xs-6 col-md-9 user_btn">
 	        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增教职工" data-toggle="modal" data-target="#myModal" />
-	        	<a href="/msc/admin/User/import-Teacher-user" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>
+	        	{{--<a href="/msc/admin/User/import-Teacher-user" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>--}}
+				<input type="text" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;" value="导出">
 	        	<div class="right">
                     <input type="button" name="" id="in" value="导入" class="btn btn-default right" style="background: #fff;" />
                     <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
