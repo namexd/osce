@@ -173,7 +173,7 @@ class TrainingController extends MscController
             $groupInfo = array_shift($data);
             $groupInfo = Common::arrayChTOEn($groupInfo, 'msc.importForCnToEn.training_group');
 
-            var_dump($groupInfo);
+//            var_dump($groupInfo);
 
             $trainingStuffNum = count($groupInfo); // 培训人数
             $trainingGroupNum = 0; // 培训组数
