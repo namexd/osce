@@ -196,6 +196,7 @@
 						var data=JSON.parse(res);
 						console.log(data);
 						$(".edit-name").val(data.name);//姓名
+						$(".edit-hidden-name").val(idName);
 						$(".edit-code").val(data.code);//胸牌号
 						if(data.gender=="男"){
 							$(".edit-man").attr("checked","checked");
@@ -283,8 +284,8 @@
 	        </div>
 	        <div class="col-xs-6 col-md-9 user_btn">
 	        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增教职工" data-toggle="modal" data-target="#myModal" />
-	        	{{--<a href="/msc/admin/User/import-Teacher-user" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>--}}
-				<input type="text" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;" value="导出">
+	        	<!--<a href="/msc/admin/User/import-Teacher-user" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>-->
+				<input type="button" class="btn btn-default right leading-out" style="background: #fff;" value="导出">
 	        	<div class="right">
                     <input type="button" name="" id="in" value="导入" class="btn btn-default right" style="background: #fff;" />
                     <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
@@ -503,6 +504,7 @@
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control name edit-name" value="" name="name" />
+                <input type="hidden" class="edit-hidden-name" value="" name="id"/>
             </div>
         </div>
         <div class="form-group">
