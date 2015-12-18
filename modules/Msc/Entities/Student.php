@@ -183,10 +183,11 @@ class Student extends CommonModel {
 
         $users_mobile=$users_mobile->mobile;
 
+
         if($data['mobile']==$users_mobile){
-            $users=array('gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
-        }else{
-            $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+               $users=array('name'=>$data['name'],'gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+        } else{
+           $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
         }
 
        $result=$connection->table('users')->where('id',$data['id'])->update($users);
@@ -231,21 +232,20 @@ class Student extends CommonModel {
             $professional_id=$professional->id;
         }
 
-        $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
+        $connection=\DB::connection('sys_mis');
 
+        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
 
-        $id=$connection->table('student')->insertGetId($item);
-
+        $id=$connection->table('users')->insertGetId($users);
 
         if(!$id){
             return false;
         }
+        $connection=\DB::connection('msc_mis');
 
-        $connection=\DB::connection('sys_mis');
+        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
 
-        $users=array('id'=>$id,'gender'=>$data['gender'],'moblie'=>$data['moblie'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
-
-        $result=$connection->table('users')->insert($users);
+       $result=$connection->table('student')->insert($item);
 
         return $result;
     }

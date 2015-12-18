@@ -432,7 +432,7 @@ class UserController extends MscController
     /**
      * 编辑时教职工回显
      * @method GET
-     * @url /msc/admin/user/teacher-list
+     * @url /msc/admin/user/teacher-edit/{$id}
      * @access public
      *
      * @param Request $request get请求<br><br>
