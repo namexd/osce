@@ -581,6 +581,7 @@ return array(
     'StudentGroupSeeder' => $baseDir . '/database/seeds/StudentGroupSeeder.php',
     'StudentProfessionalSeeder' => $baseDir . '/database/seeds/StudentProfessionalSeeder.php',
     'TeacherDeptSeeder' => $baseDir . '/database/seeds/TeacherDeptSeeder.php',
+    'TeacherSeeder' => $baseDir . '/database/seeds/TeacherSeeder - ¸±±¾.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'database\\ResourcesLabSeeder123' => $baseDir . '/database/seeds/ResourcesLabSeeder123.php',

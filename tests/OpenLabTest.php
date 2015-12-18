@@ -53,6 +53,7 @@ class OpenLabTest  extends TestCase
             ->action('get','\Modules\Msc\Http\Controllers\WeChat\OpenLaboratoryController@getLaboratoryData','',['dateTime'=>$date]);
         $view   = $response->getContent();
         $json   =   json_decode($view);
+		dd($json);
         $timeList=$json    ->  data    ->rows   ->  ClassroomApplyList  ->data;
         $timeGet   =   $this->  getRandItem($timeList);
 
