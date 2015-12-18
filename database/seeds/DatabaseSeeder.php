@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
         $this   ->  command ->  info('ResourcesLabVcrSeeder Data Creating......');
         $this   ->  call(VcrSeeder::class);
         $this   ->  command ->  info('Vcr Data Creating......');
-
         Model::reguard();
     }
 }
