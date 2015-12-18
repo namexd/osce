@@ -13,7 +13,7 @@ class TeacherDeptSeeder extends Seeder
     {
         foreach($this->defaultData() as $input)
         {
-            \Modules\Msc\Entities\TeacherDept::create($input);
+            \Modules\Msc\Entities\TeacherDept::firstOrCreate($input);
         }
     }
     public function defaultData(){
