@@ -459,7 +459,7 @@ class UserController extends MscController
     /**
      * 提交编辑教职工
      * @method GET
-     * @url /msc/admin/user/teacher-save/{id}
+     * @url /msc/admin/user/teacher-save
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -504,7 +504,7 @@ class UserController extends MscController
     /**
      * 添加教职工信息
      * @method GET
-     * @url /msc/admin/user/teacher-add/{id}
+     * @url /msc/admin/user/teacher-add
      * @access public
      *
      * @param Request $request post请求<br><br>
