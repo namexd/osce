@@ -16,7 +16,7 @@ function gethistory(qj,url,getdetail){
             $("#totalpages").text(totalpages);//设置总页数
             $(result.data.rows.DeviceApplyList.data).each(function(){
 
-                var currenttime=this.original_begin_datetime.substring(5,10);
+                var currenttime=this.original_begin_datetime.substring(0,10);
                 var begintime=this.original_begin_datetime.substring(11,16);
                 var endtime=this.original_end_datetime.substring(11,16);
 

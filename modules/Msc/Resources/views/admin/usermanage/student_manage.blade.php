@@ -242,14 +242,18 @@
 			})
 			$(".leading-out").click(function(){
 				var keyword=$("#keyword").val();
-				$(this).attr("href",href);
 				$.ajax({
-					type:"get",
-					url:"/msc/admin/user/export-student-user",
+					type:'get',
+					url:'/msc/admin/user/export-student-user',
 					data:{
-						keyword:keyword
+						keyword : keyword,
 					},
-					async:true
+					async:true,
+					success:function(res){
+						if(res=="1") {
+							window.location.href = "/msc/admin/user/export-student-user";
+						}
+					}
 				});
 			})
 			
@@ -288,8 +292,9 @@
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-out" value="导出"/>-->
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-in" value="导入"/>-->
 				        	
-		                    <a href="/msc/admin/user/export-student-user" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>
-				        	<div class="right">
+		                    <!--<a href="/msc/admin/user/export-student-user" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>-->
+							<input type="button" class="btn btn-default right leading-out" style="background: #fff;" value="导出">
+							<div class="right">
 		                        <input type="button" name="" id="in" value="导入" class="btn btn-default right" style="background: #fff;" />
 			                    <input type="file" name="training" id="leading-in" value="" style="display: none;"/>
 		                    </div>
@@ -584,7 +589,7 @@
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control edit-name" value="张三" name="name" />
-                <input type="hidden" class="edit-hidden-name" value="{{$list['id']}}" name="id"/>
+                <input type="hidden" class="edit-hidden-name" value="" name="id"/>
             </div>
         </div>
         <div class="form-group">
