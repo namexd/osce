@@ -918,4 +918,42 @@ class LabController extends MscController
             return response()->json($this->fail($ex));
         }
     }
+    /**
+     * 添加实验室
+     * @api POST /msc/admin/lab/add-lab
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id           申请ID(必须的)
+     * * string        reject       拒绝理由(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2015-12-18
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postAddLab(Request $Request,ResourcesClassroom $ResourcesClassroom){
+
+        $data = [
+            'name'=>'测试教室',
+            'code'=>'1354562',
+            'location'=>'测试地址',
+            'begintime'=>'08:00:00',
+            'endtime'=>'18:00:00',
+            'opened'=>'0',
+            'manager_id'=>'1',
+            'manager_name'=>'唐俊',
+            'manager_mobile'=>'15928785615',
+            'detail'=>'测试',
+            'status'=>1,
+            'person_total'=>'30'
+        ];
+        $rew = $ResourcesClassroom->firstOrCreate($data);
+
+        dd($rew);
+    }
 }

@@ -15,11 +15,5 @@ class MscDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 
-		for ($i = 1;$i<=10;++$i) {
-			DB::table('student_class')->insert([
-				'code' => '100'.$i,
-				'name' => '测试班级'.$i,
-			]);
-		}
 	}
 }

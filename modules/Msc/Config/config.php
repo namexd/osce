@@ -56,6 +56,13 @@ return [
 			'角色'=>'role',
 			'状态'=>'status',
 		],
+			'user'=>[
+					'职工号'=>'code',
+					'姓名'=>'name',
+					"性别" => 'sex',
+			],
+
+
 		'lab_import'	=>	[
 			"楼层" => "floor",
 			"房号（地址）" => 'code',

@@ -11,20 +11,24 @@ namespace Modules\Msc\Http\Controllers\Admin;
 
 
 use Modules\Msc\Http\Controllers\MscController;
-use App\Repositories\Common;
 use Illuminate\Http\Request;
-
+use App\Repositories\Common;
 class UploadController extends MscController
 {
-    public function getTeachMessage() {
-        return view('msc::admin.upload.teach_message');
+    public function getImportUser(Request $request){
+        return view("msc::admin.import");
     }
-
+    public function postImportUser(Request $request){
+        $data=Common::getExclData($request,'user');
+        $coursesList= array_shift($data);
+        $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.user');
+        dd($data);
+    }
     public function postTeachMessageExcel(Request $request) {
         $data=Common::getExclData($request,'teach');
         dd($data);
         $coursesList= array_shift($data);
-        //å°†ä¸­æ–‡è¡¨å¤´ æŒ‰ç…§é…ç½® ç¿»è¯‘æˆ è‹±æ–‡å­—æ®µå
+        //½«ÖĞÎÄ±íÍ· °´ÕÕÅäÖÃ ·­Òë³É Ó¢ÎÄ×Ö¶ÎÃû
         $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
 
     }

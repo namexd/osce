@@ -539,6 +539,7 @@ return array(
     'PHP_Token_YIELD_FROM' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PingpongTestCase' => $vendorDir . '/pingpong/sky/tests/PingpongTestCase.php',
     'ResourcesLabSeeder' => $baseDir . '/database/seeds/ResourcesLabSeeder.php',
+    'ResourcesToolsCate' => $baseDir . '/database/seeds/ResourcesToolsCate.php',
     'SebastianBergmann\\Comparator\\ArrayComparator' => $vendorDir . '/sebastian/comparator/src/ArrayComparator.php',
     'SebastianBergmann\\Comparator\\Comparator' => $vendorDir . '/sebastian/comparator/src/Comparator.php',
     'SebastianBergmann\\Comparator\\ComparisonFailure' => $vendorDir . '/sebastian/comparator/src/ComparisonFailure.php',

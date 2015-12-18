@@ -106,21 +106,31 @@ class Teacher extends CommonModel {
         $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
 
         $result=$connection->table('teacher')->where('id',$data['id'])->update($item);
-        if($result===false){
-            return false;
-        }
-
-        $connection=\DB::connection('sys_mis');
-
-        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
-
-        $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
         if($result===false){
             return false;
         }
 
-        return $result;
+        $result=$connection->table('users')->find($data['id']);
+
+        if(!$result){
+            $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
+
+            return $connection->table('users')->where('id',$data['id'])->insert($users);
+        }else{
+            $connection=\DB::connection('sys_mis');
+
+            $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
+
+            $result=$connection->table('users')->where('id',$data['id'])->update($users);
+
+            if($result===false){
+                return false;
+            }
+
+            return $result;
+        }
+
     }
 
 
