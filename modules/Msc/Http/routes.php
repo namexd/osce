@@ -70,6 +70,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//课程监管详情
 		Route::get('courses/courses-vcr', ['uses'=>'CoursesController@getCoursesVcr','as'=>'msc.admin.courses.getCoursesVcr']);
 
+		//导入管理员
+		Route::get('upload/upload-user', ['uses'=>'UploadController@getImportUser','as'=>'msc.admin.upload.getImportUser']);
+		Route::post('upload/upload-user', ['uses'=>'UploadController@postImportUser','as'=>'msc.admin.upload.postImportUser']);
+
 
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
