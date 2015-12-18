@@ -14,6 +14,9 @@ class ResourcesOpenLabPlanTeacher extends Model
 {
     protected $connection = 'msc_mis';
     protected $table      = 'resources_openlab_plan_teacher';
+    public $timestamps	=	false;
+    protected $primaryKey	=	'id';
+    public $incrementing	=	true;
     protected $fillable   = ['id', 'resources_openlab_plan_id', 'teacher_id'];
     public function teacher(){
         return $this->hasOne('Modules\Msc\Entities\Teacher','id','teacher_id');
