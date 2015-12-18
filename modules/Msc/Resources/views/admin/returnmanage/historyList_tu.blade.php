@@ -37,6 +37,15 @@
         line-height: 34px;
         font-size: 14px;
     }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 34px;
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        width: 20px;
+    }
+    .select2-container--default .select2-results > .select2-results__options {overflow-y: inherit;}
+
     </style>
 @stop
 
@@ -200,8 +209,27 @@
                         }
                     },
                     cache: true
-                }
+                },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 1,
+                templateResult: formatRepo, // omitted for brevity, see the source of this page
+                templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
             });
+
+            function formatRepo (repo) {
+                if (repo.loading) return '没有相关信息';
+
+                var markup = "<div class='select2-result-repository clearfix'>" +repo.name +"</div>";
+
+                return markup;
+
+            }
+
+            function formatRepoSelection (repo) {
+
+                return repo.name;
+
+            }
 
             
             /*统计图*/
