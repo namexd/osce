@@ -27,6 +27,10 @@ class DatabaseSeeder extends Seeder
         $this   ->  command ->  info('StudentClass Data Creating......');
         $this   ->  call(TeacherSeeder::class);
         $this   ->  command ->  info('Teacher Data Creating......');
+        $this   ->  call(ResourcesLabVcrSeeder::class);
+        $this   ->  command ->  info('ResourcesLabVcrSeeder Data Creating......');
+        $this   ->  call(VcrSeeder::class);
+        $this   ->  command ->  info('Vcr Data Creating......');
 
         Model::reguard();
     }
