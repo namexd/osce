@@ -910,13 +910,13 @@ class ResourcesLabSeeder extends Seeder
                 ),
             74 =>
                 array (
-                    'name' => NULL,
+                    'name' => '',
                     'code' => 'b01020',
                     'location' => '新八教负一楼',
                     'begintime' => '08:00:00',
                     'endtime' => '22:00:00',
                     'opened' => 0,
-                    'manager_name' => NULL,
+                    'manager_name' =>  '岳中伟',
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
@@ -934,13 +934,13 @@ class ResourcesLabSeeder extends Seeder
                 ),
             76 =>
                 array (
-                    'name' => NULL,
+                    'name' => '',
                     'code' => 'b01024',
                     'location' => '新八教负一楼',
                     'begintime' => '08:00:00',
                     'endtime' => '22:00:00',
                     'opened' => 0,
-                    'manager_name' => NULL,
+                    'manager_name' =>  '岳中伟',
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
