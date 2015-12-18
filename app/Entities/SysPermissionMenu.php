@@ -15,6 +15,7 @@ class SysPermissionMenu extends Model
 {
     protected $connection	=	'sys_mis';
     protected $table 		= 	'sys_permission_menu';
+    protected $fillable 	=	['permission_id', 'menu_id'];
 
 
     public function getPermissionMenuList($PermissionMenuArr){

@@ -171,10 +171,10 @@ class LabController extends MscController
         }
         $order = [$orderName, $orderType];
 
-        //$ResourcesClassroomApply = new ResourcesClassroomApply();
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
         $list = $ResourcesOpenLabApply->getWaitExamineList($keyword, $date, $order);
         $statusValues   =   $ResourcesOpenLabApply    ->getStatusValues();
+
         return view('msc::admin.openlab.openaudit', ['pagination' => $list,'rollmsg' => $rollMsg,'statusValues'=>$statusValues]);
     }
 
@@ -207,19 +207,21 @@ class LabController extends MscController
         $id = $request->get('id');
         $status = $request->get('status');
         $reject = $request->get('reject');
-        $ResourcesClassroomApply = new ResourcesClassroomApply();
-        try {
-            $result = $ResourcesClassroomApply->dealApply($id, $status, $reject, 3);
+        //$ResourcesClassroomApply = new ResourcesClassroomApply();
+        $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
+
+        //try {
+            $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject);
             if ($result) {
                 return response()->json(
-                    $this->success_data(['id' => $result])
+                    $this->success_data(['id' => $result->id])
                 );
             } else {
                 return response()->json($this->fail(new \Exception('审核失败')));
             }
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+        //} catch (\Exception $ex) {
+        //    return response()->json($this->fail($ex));
+        //}
     }
 
     /**
@@ -267,7 +269,7 @@ class LabController extends MscController
                 $orderName = ['resources_lab.status','resources_lab.status'];
                 break;
             default:
-                $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
+                $orderName = ['resources_openlab_apply.created_at','resources_openlab_apply.created_at'];
         }
         $order = [$orderName, $orderType];
 
@@ -282,8 +284,8 @@ class LabController extends MscController
 //        dd($groups);
 
 
-        $ResourcesClassroomApply = new ResourcesClassroomApply();
-        $list = $ResourcesClassroomApply->getExaminedList($keyword, $date, $order);
+        $ResourcesOpenLabApply = new ResourcesOpenLabApply();
+        $list = $ResourcesOpenLabApply->getExaminedList($keyword, $date, $order);
 //        foreach($list as $item)
 //        {
 //            $connection =   \DB::connection('msc_mis');
@@ -293,6 +295,7 @@ class LabController extends MscController
 //            $c= $connection ->getQueryLog();
 //            dd($c);
 //        }
+
         return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg]);
     }
 

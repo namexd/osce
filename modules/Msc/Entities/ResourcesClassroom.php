@@ -133,7 +133,6 @@ class ResourcesClassroom extends  CommonModel {
     }
 
     //给教室的具体监控界面提供数据
-
     public function getClassroomDetails ($id) {
 
 //        $builder = $this->where($this->table.'.id','=',$id)->with(['courseClassroomCourses' => function ($q) {
@@ -181,7 +180,7 @@ class ResourcesClassroom extends  CommonModel {
             ]);
         return $builder->get();
     }
-
+    
     //根据计划id获取课程视频信息
     public function getCourseVcrByPlanId($id){
 
@@ -213,6 +212,7 @@ class ResourcesClassroom extends  CommonModel {
         return $data;
 	}
 
+//$id为教室ID
     public function getClassroomVideo($id) {
         $builder = $this->leftJoin(
             'resources_lab_vcr',

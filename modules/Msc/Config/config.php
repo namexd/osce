@@ -42,7 +42,7 @@ return [
 			'年级'=> 'grade',
 			'类别'=> 'student_type',
 			'专业'=> 'profession',
-			'手机号'=>'mobil',
+			'手机号'=>'mobile',
 			'证件号'=>'idcard',
 			'性别'=> 'gender',
 			'状态'=>'status',

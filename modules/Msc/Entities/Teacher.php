@@ -101,25 +101,26 @@ class Teacher extends CommonModel {
      */
     public function saveEditTeacher($data){
         $connection=\DB::connection('msc_mis');
-        $connection->beginTransaction();
 
-        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
 
-        $result=$connection->table('teacher')->update($item);
-        if($result==false){
-            $connection->rollBack();
-        }
+        $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
 
-        $connection=\DB::connection('sys_mis');
-        $users=array('id'=>$data['id'],'gender'=>$data['gender'],'moblie'=>$data['moblie']);
-        $result=$connection->table('users')->update($users);
-        if($result==false){
-            $connection->rollBack();
+        $result=$connection->table('teacher')->where('id',$data['id'])->update($item);
+        if($result===false){
             return false;
         }
 
-        $connection->commit();
-        return true;
+        $connection=\DB::connection('sys_mis');
+
+        $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile']);
+
+        $result=$connection->table('users')->where('id',$data['id'])->update($users);
+
+        if($result===false){
+            return false;
+        }
+
+        return $result;
     }
 
 
@@ -144,7 +145,7 @@ class Teacher extends CommonModel {
         $connection=\DB::connection('msc_mis');
 
 
-        $item=array('id'=>$data['id'],'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+        $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
 
         $id=$connection->table('teacher')->insertGetId($item);
 
@@ -153,7 +154,7 @@ class Teacher extends CommonModel {
         }
 
         $connection=\DB::connection('sys_mis');
-        $users=array('id'=>$id,'gender'=>$data['gender'],'moblie'=>$data['moblie'],'status'=>$data['status']);
+        $users=array('id'=>$id,'gender'=>$data['gender'],'mobile'=>$data['mobile'],'status'=>$data['status']);
 
         $result=$connection->table('users')->insert($users);
 

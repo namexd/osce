@@ -108,10 +108,23 @@
 			var group=$("#group_selected").val();
 			var num=parseInt($("#student_number").text());
 			var reg=/^1[3|5|8]{1}[0-9]{9}$/;
+			var arr=[];
+			for (var i=0;i<$("#group_box li").length;i++) {
+				var mobile=$("#group_box li").eq(i).attr("data-mobile");
+				arr.push(mobile);
+			}
+			
+			
 			if(group==""){
 				return false;		
 			}else if(name==""){
 				layer.tips('请输入姓名', '.student_name', {
+				    tips: [1, '#408AFF'],
+				    time: 2000
+				});
+				return false;
+			}else if(name.length<2){
+				layer.tips('姓名不能少于2个字符', '.student_name', {
 				    tips: [1, '#408AFF'],
 				    time: 2000
 				});
@@ -128,9 +141,38 @@
 				    time: 2000
 				});
 				return false;
+			}else if($.inArray(tel, arr)!="-1"){
+				layer.tips('此用户已存在!', '.student_tel', {
+				    tips: [1, '#408AFF'],
+				    time: 2000
+				});
+				return false;
 			}else{
-				$("#group"+group).append('<li data-name="'+name+'"  data-mobile="'+tel+'">'+name+'('+tel+')</li>');
-				$("#student_number").text(num+1);
+				$.ajax("{{url('/msc/admin/training/check-mobile-exist')}}",{
+					type: 'post',
+		            data: {mobile:tel},
+		            success:function(data) {
+		            	if(data!="undefined"){
+		            		$("#group"+group).append('<li data-name="'+name+'"  data-mobile="'+tel+'">'+name+'('+tel+')</li>');
+							$("#student_number").text(num+1);
+		            	}else{
+		            		layer.tips('此用户未注册!', '.student_tel', {
+							    tips: [1, '#408AFF'],
+							    time: 2000
+							});
+		            	}
+		            },
+		            error:function(){
+		              	$.alert({
+		                  	title: '提示：',
+		                  	content: '通讯失败!',
+		                  	confirmButton: '确定',
+		                  	confirm: function(){
+		                  	}
+		              	});
+		            },
+		            dataType: "json"
+                });
 			}
 		})
 		

@@ -171,7 +171,9 @@ class TrainingController extends MscController
             $data = Common::getExclData($request, 'training');
 
             $groupInfo = array_shift($data);
-            $groupInfo = Common::arrayChTOEn($groupInfo, 'msc.importForCnToEn.training_group');			 
+            $groupInfo = Common::arrayChTOEn($groupInfo, 'msc.importForCnToEn.training_group');
+
+//            var_dump($groupInfo);
 
             $trainingStuffNum = count($groupInfo); // 培训人数
             $trainingGroupNum = 0; // 培训组数
@@ -200,7 +202,7 @@ class TrainingController extends MscController
     /**
      * 根据手机号判断用户是否存在
      * @method POST
-     * @url /msc/admin/resources-manager/check-mobile-exist
+     * @url /msc/admin/training/check-mobile-exist
      * @access public
      *
      * @param Request $request post请求<br><br>
