@@ -221,16 +221,21 @@ class Student extends CommonModel {
 
         $connection=\DB::connection('msc_mis');
 
-        $professional_id=$connection->table('student_professional')->where('name',$data['professional_name'])->select('id')->first();
+        $professional=$connection->table('student_professional')->where('name',$data['profession_name'])->first();
 
-        if(!$professional_id){
+        if(!$professional){
 
-            $professional_id=$connection->table('student_professional')->insertGetId($data['professional_name']);
+            $professional_id=$connection->table('student_professional')->insertGetId(['name'=>$data['profession_name']]);
+
+        }else{
+            $professional_id=$professional->id;
         }
 
         $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
 
+
         $id=$connection->table('student')->insertGetId($item);
+
 
         if(!$id){
             return false;

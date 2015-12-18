@@ -340,7 +340,7 @@ class UserController extends MscController
             'idcard' => 'required|max:50',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
+        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'profession_name', 'mobile', 'idcard_type', 'idcard']);
 
         $data['status']=$status;
         $studentModel = new Student();
@@ -355,6 +355,7 @@ class UserController extends MscController
         return response()->json(
             ['success' => false]
         );
+
     }
 
     /**
@@ -400,7 +401,6 @@ class UserController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * <<<<<<< HEAD
      * * int        $id        学生编号
      *
      * @return blooean
