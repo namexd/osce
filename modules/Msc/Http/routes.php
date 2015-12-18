@@ -110,6 +110,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('upload/teach-message',['uses'=>'UploadController@getTeachMessage','as'=>'msc.upload.getTeachMessage']);
 		Route::post('upload/teach-message-excel',['uses'=>'UploadController@postTeachMessageExcel','as'=>'msc.admin.upload.postTeachMessageExcel']);
 
+		Route::post('lab/openlab-history-list',['uses'=>'UploadController@openlabHistoryList','as'=>'msc.admin.lab.openlabHistoryList']);
 		Route::get('lab/had-open-lab-list',['uses'=>'LabController@getHadOpenLabList','as'=>'msc.admin.lab.getHadOpenLabList']);
 
 		Route::controller('lab-tools', 'LabToolsController');
