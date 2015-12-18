@@ -211,7 +211,7 @@
 					}
 				});
 			}
-			
+
 			$("#in").click(function(){
 				$("#leading-in").click();
 			})
@@ -219,7 +219,7 @@
 				var str=$("#leading-in").val().substring($("#leading-in").val().lastIndexOf(".")+1);
 				if(str!="xlsx"){
 					layer.alert(
-	                  "请上传正确的文件格式？", 
+	                  "请上传正确的文件格式？",
 	                  {title:["温馨提示","font-size:16px;color:#408aff"]}
 	              );
 				}else{
@@ -228,12 +228,12 @@
 			            url:'/msc/admin/user/import-student-user',
 			            fileElementId:'leading-in',//必须要是 input file标签 ID
 			            success: function (data, status){
-			            	
+
 			            },
 			            error: function (data, status, e){
 			            	console.log("失败");
 			               layer.alert(
-			                  "上传失败！", 
+			                  "上传失败！",
 			                  {title:["温馨提示","font-size:16px;color:#408aff"]}
 			               );
 			            }
@@ -256,7 +256,7 @@
 					}
 				});
 			})
-			
+
 		})
 	</script>
 @stop
@@ -291,7 +291,7 @@
 				        	<input type="button" class="right btn btn-blue" name="" id="new-add" value="新增学生" data-toggle="modal" data-target="#myModal"/>
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-out" value="导出"/>-->
 				        	<!--<input type="button" class="right btn btn-default" name="" id="leading-in" value="导入"/>-->
-				        	
+
 		                    <!--<a href="/msc/admin/user/export-student-user" class="btn btn-default right leading-out" style="height: 30px;margin-left: 10px;background: #fff;">导出</a>-->
 							<input type="button" class="btn btn-default right leading-out" style="background: #fff;" value="导出">
 							<div class="right">
@@ -369,7 +369,7 @@
 				            </tr>
 				            </thead>
 				            <tbody>
-				            	@foreach($list as $list)
+				            	@foreach($pagination as $list)
 					            	<tr>
 					                    <td class="idName">{{$list['id']}}</td>
 					                    <td class="userName">{{$list['name']}}</td>

@@ -143,9 +143,11 @@ a{-webkit-touch-callout:none;}
 .table a .state1{ color:#408aff;}
 .table a .state2{ color:#ed5565;}
 .table a .state3{ color:#21b9bb;}
+.table a .state4{ color:#c2c2c2;}
 .table .state1{ color:#408aff;}
 .table .state2{ color:#ed5565;}
 .table .state3{ color:#21b9bb;}
+.table .state4{ color:#c2c2c2;}
 
 .control-label{ font-size: 14px;}
 

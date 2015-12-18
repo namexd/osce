@@ -380,8 +380,6 @@ class Student extends CommonModel {
                 'professional'=>$studentData['professional']
         );
         $result=$this->create($student);
-
             return $result;
-
     }
 }

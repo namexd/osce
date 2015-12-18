@@ -136,19 +136,18 @@ class OpenLaboratoryController extends MscWeChatController {
 		/**
 		 * 查找课程
 		 */
-		$openlab_id = $ResourcesOpenLabPlan->where('resources_openlab_calendar_id','=',$pid)->first();
+		//$openlab_id = $ResourcesOpenLabPlan->where('resources_openlab_calendar_id','=',$pid)->first();
 		$Course = null;
-		if($openlab_id){
-			$resources_lab_courses = $ResourcesClassroomCourses->where('resources_lab_id','=',$openlab_id->resources_openlab_id)->get();
+		if($ClassroomPlan_detai->resources_lab_id){
+			$resources_lab_courses = $ResourcesClassroomCourses->where('resources_lab_id','=',$ClassroomPlan_detai->resources_lab_id)->get();
 			$arr = array();
 			foreach ($resources_lab_courses as $key => $value) {
 				$arr[] = $value['course_id']; 
 			}
 			$Course = $Courses->whereIn('id', $arr)->get();
 		}
-		
-		
-		
+
+
 		$data = [
 			'ClassroomPlanInfo' => $ClassroomPlan_detai,
 			'username' => $username,

@@ -16,11 +16,6 @@ use App\Repositories\Common;
 class UploadController extends MscController
 {
     public function getImportUser(Request $request){
-        $vcrs=\Modules\Msc\Entities\Vcr::all();
-        foreach($vcrs as $item){
-            $data[]=$item->id;
-        }
-        dd($data[array_rand($data)]);
         return view("msc::admin.import");
     }
     public function postImportUser(Request $request){
