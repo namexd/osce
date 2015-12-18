@@ -110,10 +110,12 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('upload/teach-message',['uses'=>'UploadController@getTeachMessage','as'=>'msc.upload.getTeachMessage']);
 		Route::post('upload/teach-message-excel',['uses'=>'UploadController@postTeachMessageExcel','as'=>'msc.admin.upload.postTeachMessageExcel']);
 
-		Route::post('lab/open-lab-history-list',['uses'=>'UploadController@openlabHistoryList','as'=>'msc.admin.lab.openlabHistoryList']);
+		//Route::post('lab/open-lab-history-list',['uses'=>'UploadController@openlabHistoryList','as'=>'msc.admin.lab.openlabHistoryList']);
+		Route::post('lab/open-lab-history-list',['uses'=>'LabController@getOpenLabHistoryList','as'=>'msc.admin.lab.openLabHistoryList']);
 		Route::get('lab/had-open-lab-list',['uses'=>'LabController@getHadOpenLabList','as'=>'msc.admin.lab.getHadOpenLabList']);
 		Route::get('lab/had-open-lab-to-add',['uses'=>'LabController@postHadOpenLabToAdd','as'=>'msc.admin.lab.postHadOpenLabToAdd']);
 		Route::controller('lab-tools', 'LabToolsController');
+
 		//开放设备待审核列表
 		Route::get('lab-tools/open-lab-tools-apply-list', ['uses'=>'LabToolsController@getOpenLabToolsApplyList','as'=>'msc.admin.lab-tools.getOpenLabToolsApplyList']);
 		//Route::get('lab-tools/open-lab-tools-apply-list', ['uses'=>'LabToolsController@getOpenLabToolsApplyList','as'=>'msc.lab-tools.openLabToolsApplyList']);//路由重复，请使用上面的那个todo:luohaihua
