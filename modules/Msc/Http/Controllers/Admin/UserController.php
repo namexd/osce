@@ -94,6 +94,7 @@ class UserController extends MscController
             'professionList'    => $professionList,
             'pagination'        => $pagination,
         ]);
+
     }
 
     /**
@@ -300,13 +301,11 @@ class UserController extends MscController
         $result = $studentModel->saveEditStudent($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+            return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
+
     }
 
     /**
@@ -326,7 +325,7 @@ class UserController extends MscController
      * @date 2015-12-15 16:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postStudentAdd(Request $request,$status=0)
+    public function postStudentAdd(Request $request,$status=1)
     {
         $this->validate($request, [
             'name' => 'required|max:50',
@@ -348,13 +347,10 @@ class UserController extends MscController
         $result = $studentModel->postAddStudent($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+            return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
 
     }
 
@@ -479,26 +475,23 @@ class UserController extends MscController
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'teacher_dept' => 'required|integer|min:0|max:3',
-            'mobile' => 'required|integer|max:11',
+            'code' => 'required|max:32',
+            'gender' => 'required|max:1',
+            'dept_name' => 'required|max:20',
+            'mobile' => 'required|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
+        $data = $request->only(['id','name', 'code', 'gender', 'role',  'dept_name','mobile']);
 
         $teacherModel = new Teacher();
 
         $result = $teacherModel->saveEditTeacher($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+            return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
     }
 
     /**
@@ -518,31 +511,28 @@ class UserController extends MscController
      * @date 2015-12-15 16:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTeacherAdd(Request $request,$status=0)
+    public function postTeacherAdd(Request $request,$status=1)
     {
 
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'teacher_dept' => 'required|integer|min:0|max:3',
-            'mobile' => 'required|integer|max:11',
+            'code' => 'required|max:32',
+            'gender' => 'required|max:1',
+            'dept_name' => 'required|max:20',
+            'mobile' => 'required|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept','role','dept_name','mobile']);
         $data['status']=$status;
         $teacherModel = new Teacher();
 
         $result = $teacherModel->postAddTeacher($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+        return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
     }
 
     /**
@@ -618,12 +608,11 @@ class UserController extends MscController
 
     /**
      * 导入教师用户
-     * @api GET /msc/admin/User/import-Teacher-user
+     * @api post /msc/admin/user/import-teacher-user
      * @access public
-     *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        courses-plan        课程文件的excl(必须的)
+     * * string       training       课程文件的excl(必须的)
      * @return object
      * @version 0.8
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -633,24 +622,56 @@ class UserController extends MscController
      */
     public function  postImportTeacherUser(Request $request)
     {
+//        die(json_encode($_FILES ));
         try {
-            $data = Common::getExclData($request, 'teacher');
+            $data = Common::getExclData($request, 'training');
             $teacherInfo = array_shift($data);
             //将中文头转换翻译成英文
-            $teacherInfo = Common::arrayChTOEn($teacherInfo, 'msc.importForCnToEn.teacher_group');  //teacher_group还未定义
-            dd($data);
+            $teacherInfo = Common::arrayChTOEn($teacherInfo, 'msc.importForCnToEn.teacher_group');
+
             //已经存在的数据
             $dataHaven = [];
             //添加失败的数据
             $dataFalse = [];
-            //判断是否存在这个学生用户
+            //判断是否存在这个教师用户
             foreach ($teacherInfo as $teacherData) {
-                if ($teacherData['teacher_code'] && $teacherData['name']) {
-                    if (Teacher::where('code', '=', $teacherData['student_code']->count() == 0)) {
 
-                        $teacher =Teacher ::create($teacherData);
+                //处理性别gender
+                switch ( $teacherData['gender']){
+                    case "男":
+                        $teacherData['gender'] = 1;
+                        break;
+                    case "女":
+                        $teacherData['gender'] = 2;
+                        break;
+                };
+                //处理状态status
+                switch ( $teacherData['status']){
+                    case "正常":
+                        $teacherData['status'] = 1;
+                        break;
+                    case "禁用":
+                        $teacherData['status'] = 2;
+                        break;
+                };
+//               //处理角色role
+//                switch ( $teacherData['role']){
+//                    case "正常":
+//                        $teacherData['role'] = 1;
+//                        break;
+//                    case "禁用":
+//                        $teacherData['role'] = 2;
+//                        break;
+//                };
 
-                        if ( $teacher == false) {
+                if ($teacherData['code'] && $teacherData['name']) {
+                    if (Teacher::where('code', '=', $teacherData['code'])->count() == 0) {
+//                                die(json_encode($teacherInfo ));
+//                        $teacher =Teacher ::create($teacherData);
+                        $teacher = new Teacher();
+                        $result=$teacher->AddTeacher($teacherData);
+
+                        if ( $result== 0) {
                             $dataFalse[] = $teacherData;
                         }
                     } else {
@@ -665,7 +686,6 @@ class UserController extends MscController
             return response()->json($this->fail($e));
         }
     }
-
     /**
      * 导入学生用户
      * @api GET /msc/admin/User/import-Student-user
@@ -685,28 +705,73 @@ class UserController extends MscController
      */
     public function  postImportStudentUser(Request $request)
     {
-        dd($request);
-//             dd(111111111111);
-//        echo '111111111';exit;
+
+        //die(json_encode($_FILES));
+        //dd($request);
         try {
-            $data = Common::getExclData($request, 'student');
+            $data = Common::getExclData($request, 'training');
+
             $studentInfo = array_shift($data);
+//            die(json_encode($studentInfo ));
             //将中文头转换翻译成英文
             $studentInfo = Common::arrayChTOEn($studentInfo, 'msc.importForCnToEn.student_group');
-            dd($data);
+
+//            die(json_encode($studentInfo));
 //            dd($studentInfo);
             //已经存在的数据
             $dataHaven = [];
             //添加失败的数据
             $dataFalse = [];
-            //判断是否存在这个学生用户
+            //判断是否存在这个学生用户//
             foreach ($studentInfo as $studentData) {
-                if ($studentData['student_code'] && $studentData['name']) {
-                    if (Student::where('code', '=', $studentData['student_code']->count() == 0)) {
+                //处理类别student_type
+                switch ( $studentData['student_type']){
+                    case "专科":
+                        $studentData['student_type'] = 2;
+                        break;
+                    case "本科":
+                        $studentData['student_type'] = 1;
+                        break;
+                };
+                //处理专业professional
+                switch ( $studentData['professional']){
+                    case "儿科":
+                        $studentData['professional'] = 1;
+                        break;
+                    case "设计":
+                        $studentData['professional'] = 2;
+                        break;
+                };
+                //处理性别gender
+                switch ( $studentData['gender']){
+                    case "男":
+                        $studentData['gender'] = 1;
+                        break;
+                    case "女":
+                        $studentData['gender'] = 2;
+                        break;
+                };
+                //处理状态status
+                switch ( $studentData['status']){
+                    case "正常":
+                        $studentData['status'] = 1;
+                        break;
+                    case "禁用":
+                        $studentData['status'] = 2;
+                        break;
+                };
 
-                        $student = Student::create($studentData);
+                if ($studentData['code'] && $studentData['name']) {
 
-                        if ($student == false) {
+                    if (Student::where('code', '=', $studentData['code'])->count() == 0) {
+
+//                        $student = Student::create($studentData);
+//                        $user =User::create($studentData);
+                        $student = new Student();
+                         $result=$student->AddStudent($studentData);
+//                        die(json_encode($srt));
+
+                        if ($result== 0) {
                             $dataFalse[] = $studentData;
                         }
                     } else {
@@ -744,9 +809,12 @@ class UserController extends MscController
 
     public function getExportStudentUser(Request $request)
     {
+//        dd($request);
+//        dd($keyword);exit;
         //同步学生列表的数据
         $studentInfo = $this->getStudentList($request);
-//        dd($studentInfo->list);
+//        var_dump($studentInfo);
+        dd($studentInfo->list);
 
         $str = iconv('utf-8', 'gb2312', '序号,姓名,学号,年级,类别,专业,手机号,证件号,性别,状态') . "\n";
         if (empty($studentInfo->list)) {
@@ -768,6 +836,7 @@ class UserController extends MscController
         }
         $filename = date('Ymd') . '.csv';
         $this->export_csv($filename, $str);
+
     }
 
     private function export_csv($filename, $data)

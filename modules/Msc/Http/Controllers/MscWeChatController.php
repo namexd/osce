@@ -110,4 +110,20 @@ class MscWeChatController extends Controller {
 	public function GenerationJsSdk(){
 		return new \Overtrue\Wechat\Js(config('wechat.app_id'), config('wechat.secret'));
 	}
+	//判斷學生類別
+	public function checkUserType($user_id){
+
+		$uid = $user_id;
+		$stu = Student::where('id','=',$uid)->first();
+		if($stu){
+			return 2;
+		}else{
+			$tea = Teacher::where('id','=',$uid)->first();
+			if($tea){
+				return  1;
+			}else{
+				return '';
+			}
+		}
+	}
 }

@@ -250,9 +250,9 @@
 					},
 					async:true,
 					success:function(res){
-
+						if(res=="1") {
 							window.location.href = "/msc/admin/user/export-student-user";
-
+						}
 					}
 				});
 			})

@@ -9,13 +9,6 @@ $(function(){
         case "rolemanage":rolemanage();break; //rolemanageҳ��
     }
 
-    $('#Form1').delegate('#sure','click',function(){
-        $('#Form1').submit();
-    });
-
-    $('#Form2').delegate('#sure-notice','click',function(){
-        $('#Form2').submit();
-    });
 });
 
 function rolemanage_detail(){
@@ -24,19 +17,48 @@ function rolemanage_detail(){
      *����
      *QQ��283020075
      *2015-12-15
-     *update��zengjie��2015-12-15 18:08�� ���������/���� ���߼�ʱ�䣩
+     *update��zengjie��2015-12-18 17:30�� ���������/���� ���߼�ʱ�䣩
      **/
     $(function(){
         var $check_label=$(".check_label");
+        var $btn_padding=$(".btn_padding");
         $check_label.click(function(){
             if($(this).children(".check_icon").hasClass("check")){
                 $(this).children(".check_icon").removeClass("check");
+                $(this).children("input").attr("checked",false);
+                $(this).siblings(".ibox-content").children("button").attr("checked",false);
+                $(this).siblings(".ibox-content").children("button").removeClass("btn_focus");
+                $(this).siblings(".ibox-content").children("button").addClass("btn-default2");
                 return false;
             }else{
                 $(this).children(".check_icon").addClass("check");
+                $(this).children("input").attr("checked",true);
+                $(this).siblings(".ibox-content").children("button").attr("checked",true);
+                $(this).siblings(".ibox-content").children("button").addClass("btn_focus");
+                $(this).siblings(".ibox-content").children("button").removeClass("btn-default2");
                 return false;
             }
-        })
+        });
+        $btn_padding.click(function(){
+            if($(this).hasClass("btn_focus")){
+                $(this).removeClass("btn_focus");
+                $(this).addClass("btn-default2");
+                $(this).attr("checked",false);
+            }else{
+                $(this).addClass("btn_focus");
+                $(this).removeClass("btn-default2");
+                $(this).attr("checked",true);
+            }
+        });
+
+        //保存提交
+        $('#Form1').delegate('#sure','click',function(){
+            $('#Form1').submit();
+        });
+
+        $('#Form2').delegate('#sure-notice','click',function(){
+            $('#Form2').submit();
+        });
     })
 }
 

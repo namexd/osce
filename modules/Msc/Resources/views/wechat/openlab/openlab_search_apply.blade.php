@@ -97,9 +97,11 @@
             <p class="mart_5">课程名称</p>
             <div class="course_name">
                 <select class="select1" name="course_name"  id="course_name" placeholder="输入学生组名" style="width:100%;">
-                    @foreach($Courses as $Course)
-                    <option value="{{@$Course->id}}">{{@$Course->name}}</option>
-                    @endforeach
+                    @if(!empty($Courses) && count($Courses)>0)
+                        @foreach($Courses as $Course)
+                        <option value="{{@$Course->id}}">{{@$Course->name}}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
             
@@ -148,22 +150,26 @@
                 </div>
                 <div class="w_96">
                     <select  name="class_list[]"  id="class_list" placeholder="输入班级名" style="width:100%;">
-                        @foreach($studentClass as $class)>
-                        <option value="{{@$class->id}}">{{@$class->name}}</option>
-                        @endforeach
+                        @if(!empty($studentClass) && count($studentClass)>0)
+                            @foreach($studentClass as $class)>
+                            <option value="{{@$class->id}}">{{@$class->name}}</option>
+                            @endforeach
+                        @endif
+
                     </select>
                 </div>
             </div>
             <div id="add_group" style="display: none">
-
                 <div id="group_selected" class="marb_8">
                     <ul>
                     </ul>
                 </div>
                 <select class="" name="student_group[]"  id="group_list" placeholder="输入学生组名" style="width:100%;">
-                    @foreach($groups as $group)
-                    <option value="{{@$group->id}}">{{@$group->name}}</option>
-                    @endforeach
+                    @if(!empty($studentClass) && count($studentClass)>0)
+                        @foreach($groups as $group)
+                        <option value="{{@$group->id}}">{{@$group->name}}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
             
@@ -187,9 +193,11 @@
                 </div>
                 <div class="w_96">
                     <select  name="class_list[]"  id="class_list" placeholder="输入班级名" style="width:100%;">
-                        @foreach($studentClass as $class)>
-                        <option value="{{@$class->id}}">{{@$class->name}}</option>
-                        @endforeach
+                        @if(!empty($studentClass) && count($studentClass)>0)
+                            @foreach($studentClass as $class)>
+                            <option value="{{@$class->id}}">{{@$class->name}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
             </div>
@@ -200,9 +208,11 @@
                     </ul>
                 </div>
                 <select class="" name="student_group[]"  id="group_list" placeholder="输入学生组名" style="width:100%;">
-                    @foreach($groups as $group)
-                    <option value="{{@$group->id}}">{{@$group->name}}</option>
-                    @endforeach
+                    @if(!empty($groups) && count($groups)>0)
+                        @foreach($groups as $group)
+                        <option value="{{@$group->id}}">{{@$group->name}}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
             

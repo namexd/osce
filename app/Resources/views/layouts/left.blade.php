@@ -54,6 +54,8 @@
                             </li>
                             <li><a class="J_menuItem" href="{{route('msc.admin.lab.openlabHistoryList')}}">使用历史</a>
                             </li>
+                            <li><a class="J_menuItem" href="{{route('msc.wechat.lab.getHadOpenLabList')}}">现有实验室</a>
+                            </li>
                         </ul>
                     </li>
                     <li>

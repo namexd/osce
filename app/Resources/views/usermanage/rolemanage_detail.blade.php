@@ -1,7 +1,7 @@
 @extends('layouts.usermanage')
 
 @section('only_css')
-    <link href="{{asset('')}}" rel="stylesheet">
+
     <style>
         .check_name{
             font-weight: normal;
@@ -19,6 +19,16 @@
         }
         .display_inline{
             display: inline-block;
+        }
+        .btn-default{
+            color: #9c9c9c;
+        }
+        .btn_padding{
+            padding: 2px 5px;
+        }
+        .btn_focus{
+            background-color: #bababa;
+            color: #fff;
         }
     </style>
 @stop
@@ -91,21 +101,26 @@
                                                                         <i class="fa fa-chevron-up"></i>
                                                                     </a>
                                                                 </div>
-                                                                <div class="ibox-content clear_padding" style="border-top: none">
-                                                                    <div id='external-events'>
-                                                                        <div style="margin-left: 3%">
-                                                                            @if(!empty($val['child']))
-                                                                                @foreach($val['child'] as $v)
-                                                                                        <label class="check_label checkbox_input">
-                                                                                            <div class="check_real check_icon display_inline @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>
-                                                                                            <input type="checkbox" @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr))  checked="checked" @endif name="permission_id[]" value="{{ @$v['SysPermissionMenu']['permission_id'] }}">
-                                                                                            <span class="check_name">{{ @$v['name'] }}</span>
-                                                                                        </label>
-                                                                                @endforeach
-                                                                            @endif
-                                                                        </div>
-                                                                    </div>
+                                                                <div class="ibox-content" style="border-top:none">
+                                                                    <button type="button" class="btn btn-outline btn-default2 font10 btn_padding" value="haha">主要内容</button>
+                                                                    <button type="button" class="btn btn-outline btn-default2 font10 btn_padding" value="haha">主要内容</button>
                                                                 </div>
+
+                                                                {{--<div class="ibox-content clear_padding" style="border-top: none">--}}
+                                                                    {{--<div id='external-events'>--}}
+                                                                        {{--<div style="margin-left: 5%">--}}
+                                                                            {{--@if(!empty($val['child']))--}}
+                                                                                {{--@foreach($val['child'] as $v)--}}
+                                                                                        {{--<label class="check_label checkbox_input">--}}
+                                                                                            {{--<div class="check_real check_icon display_inline @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                                            {{--<input type="checkbox" @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr))  checked="checked" @endif name="permission_id[]" value="{{ @$v['SysPermissionMenu']['permission_id'] }}">--}}
+                                                                                            {{--<span class="check_name">{{ @$v['name'] }}</span>--}}
+                                                                                        {{--</label>--}}
+                                                                                {{--@endforeach--}}
+                                                                            {{--@endif--}}
+                                                                        {{--</div>--}}
+                                                                    {{--</div>--}}
+                                                                {{--</div>--}}
                                                             </div>
                                                         </li>
                                                     @endforeach
@@ -128,7 +143,7 @@
                                                                 </div>
                                                                 <div class="ibox-content clear_padding" style="border-top: none">
                                                                     <div id='external-events'>
-                                                                        <div style="margin-left: 3%">
+                                                                        <div style="margin-left: 5%">
                                                                             @if(!empty($val['child']))
                                                                                 @foreach($val['child'] as $v)
                                                                                     <label class="check_label checkbox_input">
@@ -184,7 +199,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input" for="check_id">
                                                                         <div class="check_icon display_inline"></div>
                                                                         <input type="checkbox" value="">
@@ -214,7 +229,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon" style="display: inline-block"></div>
                                                                         <input type="checkbox" value="">
@@ -244,7 +259,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon" style="display: inline-block"></div>
                                                                         <input type="checkbox" value="">
@@ -278,7 +293,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon display_inline"></div>
                                                                         <input type="checkbox" value="">
@@ -308,7 +323,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon" style="display: inline-block"></div>
                                                                         <input type="checkbox" value="">
@@ -338,7 +353,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon" style="display: inline-block"></div>
                                                                         <input type="checkbox" value="">
@@ -372,7 +387,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon display_inline"></div>
                                                                         <input type="checkbox" value="">
@@ -402,7 +417,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon" style="display: inline-block"></div>
                                                                         <input type="checkbox" value="">
@@ -432,7 +447,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon" style="display: inline-block"></div>
                                                                         <input type="checkbox" value="">
@@ -462,7 +477,7 @@
                                                         </div>
                                                         <div class="ibox-content clear_padding" style="border-top: none">
                                                             <div id='external-events'>
-                                                                <div style="margin-left: 3%">
+                                                                <div style="margin-left: 5%">
                                                                     <label class="check_label checkbox_input">
                                                                         <div class="check_icon" style="display: inline-block"></div>
                                                                         <input type="checkbox" value="">
