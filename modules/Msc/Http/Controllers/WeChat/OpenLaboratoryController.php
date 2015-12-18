@@ -96,7 +96,6 @@ class OpenLaboratoryController extends MscWeChatController {
 				}
 			}
 		}
-
 		return response()->json(
 			$this->success_rows(1,'获取成功',$LaboratoryList->total(),20,$LaboratoryList->currentPage(),array('ClassroomApplyList'=>$LaboratoryList->toArray()))
 		);
@@ -151,6 +150,7 @@ class OpenLaboratoryController extends MscWeChatController {
 			'Courses' => $Course,
 			'apply_type' => Input::get('apply_type'),
 			'apply_date' => Input::get('apply_date'),
+			'apply_type' => Input::get('apply_type')
 		];
 		return view('msc::wechat.openlab.openlab_search_apply',$data);
 	}
