@@ -16,6 +16,8 @@
         top: 18px;
         color: #C7D0D8;
     }
+    .add_main .form-group label{
+        left: 0%;}
 </style>
 @stop
 @section('only_head_js')
