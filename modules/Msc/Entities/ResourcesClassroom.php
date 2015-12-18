@@ -233,4 +233,17 @@ class ResourcesClassroom extends  CommonModel {
         return $builder->get();
 
     }
+
+    //获取实验室
+    // 获得pc端开放实验室使用历史记录列表
+    public function getPcList ($where)
+    {
+        $search = empty($where['keyword']) ? null : $where['keyword'];
+        $builder = $this;
+        if(!empty($seach)){
+            $builder = $builder->where('name','like',$search,'like');
+        }
+        $pagination = $builder->orderBy('id','desc')->paginate(config('msc.page_size',10));
+        return $pagination;
+    }
 }
