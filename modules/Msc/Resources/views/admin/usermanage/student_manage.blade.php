@@ -256,6 +256,14 @@
 					}
 				});
 			})
+			var message=$(".message").text();
+			if(message.length>0){
+				layer.alert(
+	              ""+message+"", 
+	              {title:["温馨提示","font-size:16px;color:#408aff"]}
+	            );
+			}
+			
 			
 		})
 	</script>
@@ -417,6 +425,16 @@
         </div>
     </div>
 </div>
+  @if (count($errors) > 0)
+  	<div style="display: none;">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li class="message">{{ $error }}</li>
+          @endforeach
+        </ul>
+    </div>
+    @endif
+
 @stop
 
 @section('layer_content')
