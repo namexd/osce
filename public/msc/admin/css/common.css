@@ -109,6 +109,10 @@ a{-webkit-touch-callout:none;}
 .btn-primary.active,.btn-primary:active,.btn-primary:hover,.open .dropdown-toggle.btn-primary{background-color:#3879E1;border-color:#3879E1;color:#FFF}
 
 .btn-default{background-color: #fff;border-color: #ccc;color: #333;}
+.btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
+.btn-default2:hover{background-color: #bababa;color: #fff;}
+
+
 
 .has-error .form-control{border-color: #ed5565!important;}
 
