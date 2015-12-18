@@ -301,10 +301,10 @@ class UserController extends MscController
         $result = $studentModel->saveEditStudent($data);
 
         if ($result) {
-            return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
         }
-        return redirect()->back()->with('message','false');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
     }
 
@@ -347,10 +347,10 @@ class UserController extends MscController
         $result = $studentModel->postAddStudent($data);
 
         if ($result) {
-            return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('新增成功');
 
         }
-        return redirect()->back()->with('message','false');
+        return redirect()->back()->withInput()->withErrors('新增失败');
 
     }
 
@@ -488,10 +488,10 @@ class UserController extends MscController
         $result = $teacherModel->saveEditTeacher($data);
 
         if ($result) {
-            return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
         }
-        return redirect()->back()->with('message','false');
+        return redirect()->back()->withInput()->withErrors('修改失败');
     }
 
     /**
@@ -529,10 +529,10 @@ class UserController extends MscController
         $result = $teacherModel->postAddTeacher($data);
 
         if ($result) {
-        return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('新增成功');
 
         }
-        return redirect()->back()->with('message','false');
+        return redirect()->back()->withInput()->withErrors('新增失败');
     }
 
     /**

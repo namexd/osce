@@ -194,7 +194,6 @@
 					async:true,
 					success:function(res){
 						var data=JSON.parse(res);
-						console.log(data);
 						$(".edit-name").val(data.name);//姓名
 						$(".edit-hidden-name").val(idName);
 						$(".edit-code").val(data.code);//胸牌号
@@ -255,6 +254,13 @@
 					}
 				});
 			})
+			var message=$(".message").text();
+			if(message.length>0){
+				layer.alert(
+	              ""+message+"", 
+	              {title:["温馨提示","font-size:16px;color:#408aff"]}
+	            );
+			}
 		})
 	</script>
 @stop
@@ -390,6 +396,15 @@
 	    </form>
 	</div>
 </div>
+@if (count($errors) > 0)
+  	<div style="display: none;">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li class="message">{{ $error }}</li>
+          @endforeach
+        </ul>
+    </div>
+    @endif
 @stop
 
 @section('layer_content')
