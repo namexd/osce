@@ -153,12 +153,12 @@
                     <td class="open-id">{{$item['id']}}</td>
                     <td>{{$item['name']}}</td>
                     <td>{{$item['apply_date']}}</td>
-                    <td>{{$item['begintime']-$item['endtime']}}</td>
+                    <td>{{$item['begintime']}}-{{$item['endtime']}}</td>
                     <td>{{$item['code']}}</td>
-                    <td>{{$item['student_name']}}</td>
+                    <td>{{$item['student_name'] or  $item['teacher_name']}}</td>
                     <td>{{$item['detail']}}</td>
-                    <td>{{empty($item->labApplyGroups->first()->groups->name) ? '-' : $item->labApplyGroups->first()->groups->name}}</td>
-                    <td class="status">{{ $item['status'] }}</td>
+                    <td>{{$groupNames[$item->id]}}</td>
+                    <td class="status">{{$statusValues[$item['status']]}}</td>
                     <td class="opera">
                         <span class="read notice modal-control" data-toggle="modal" data-target="#myModal" >紧急通知</span>
                     </td>
