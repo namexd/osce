@@ -49,7 +49,7 @@
 			$(".btn-del").click(function(){//确认删除
 				$.ajax({
 					type:"get",
-					url:"/msc/admin/user/student-trashed/"+idName,
+					url:"/msc/admin/user/teacher-trashed/"+idName,
 					async:true
 				});
 				 history.go(0);
@@ -57,34 +57,41 @@
 			$(".btn-forbidden,#recover").click(function(){//禁用恢复
 				$.ajax({
 					type:"get",
-					url:"/msc/admin/user/student-status/"+idName,
+					url:"/msc/admin/user/teacher-status/"+idName,
 					async:true
 				});
 				 history.go(0);
 			})
-			$(".btn-edit,.btn-new-add").click(function(){//确认修改、新增学生验证
+			$(".btn-edit").click(function(){//确认修改验证
 				var editName=$.trim($(".edit-name").val());
 				var editCode=$.trim($(".edit-code").val());
-				var editProfessional_name=$.trim($(".edit-professional_name").val());
+				var editDept_name=$.trim($(".edit-dept_name").val());
+				var editRole=$.trim($(".edit-role").val());
 				var editMobile=$.trim($(".edit-mobile").val());
-				var editCard=$.trim($(".edit-card").val());
 				var reg=/^1[3|5|8]{1}[0-9]{9}$/;
 				if(editName==""){
-					layer.tips('用户名不能为空', '.edit-name', {
+					layer.tips('姓名不能为空', '.edit-name', {
 					    tips: [1, '#408AFF'],
 					    time: 4000
 					});
 					return false;
 				}
 				if(editCode==""){
-					layer.tips('学号不能为空', '.edit-code', {
+					layer.tips('胸牌号不能为空', '.edit-code', {
 					    tips: [1, '#408AFF'],
 					    time: 4000
 					});
 					return false;
 				}
-				if(editProfessional_name==""){
-					layer.tips('专业不能为空', '.edit-professional_name', {
+				if(editDept_name==""){
+					layer.tips('科室不能为空', '.edit-dept_name', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(editRole==""){
+					layer.tips('角色不能为空', '.edit-role', {
 					    tips: [1, '#408AFF'],
 					    time: 4000
 					});
@@ -104,16 +111,59 @@
 					});
 					return false;
 				}
-				if(editCard==""){
-					layer.tips('证件号不能为空', '.edit-card', {
+				$("#Form3").submit();
+			})
+			$(".btn-new-add").click(function(){//新增学生验证
+				var addName=$.trim($(".add-name").val());
+				var addCode=$.trim($(".add-code").val());
+				var addDept_name=$.trim($(".add-dept_name").val());
+				var addRole=$.trim($(".add-role").val());
+				var addMobile=$.trim($(".add-mobile").val());
+				var reg=/^1[3|5|8]{1}[0-9]{9}$/;
+				if(addName==""){
+					layer.tips('姓名不能为空', '.add-name', {
 					    tips: [1, '#408AFF'],
 					    time: 4000
 					});
 					return false;
 				}
-				history.go(0);
+				if(addCode==""){
+					layer.tips('胸牌号不能为空', '.add-code', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(addDept_name==""){
+					layer.tips('科室不能为空', '.add-dept_name', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(addRole==""){
+					layer.tips('角色不能为空', '.add-role', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(addMobile==""){
+					layer.tips('手机号不能为空', '.add-mobile', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(!reg.test(addMobile)){
+					layer.tips('请输入正确的手机号码', '.add-mobile', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				$("#Form1").submit();
 			})
-
 			function look(){//查看
 				$.ajax({
 					type:"get",
@@ -140,23 +190,23 @@
 			function edit(){//修改
 				$.ajax({
 					type:"get",
-					url:"/msc/admin/user/student-edit/"+idName,
+					url:"/msc/admin/user/teacher-edit/"+idName,
 					async:true,
 					success:function(res){
 						var data=JSON.parse(res);
 						console.log(data);
 						$(".edit-name").val(data.name);//姓名
-						$(".edit-code").val(data.code);//学号
+						$(".edit-code").val(data.code);//胸牌号
 						if(data.gender=="男"){
 							$(".edit-man").attr("checked","checked");
 						}else if(data.gender=="女"){
 							$(".edit-woman").attr("checked","checked");
 						}
-						$(".edit-grade").val(data.grade);//年级
-						$(".edit-student_type").find("option[text='"+data.student_type+"']").attr(".edit-student_type",true);//类别
-						$(".edit-professional_name").val(data.profession_name)//专业
+						$(".edit-dept_name").val(data.dept_name)//科室
+						if(data.role.length>0){
+							$(".edit-role").val(data.role[0])//角色
+						}
 						$(".edit-mobile").val(data.mobile);//手机
-						$(".edit-card").val(data.idcard);//证件号码
 					}
 				});
 			}
@@ -173,12 +223,10 @@
 				}else{
 					$.ajaxFileUpload({
 						type:"post",
-			            url:'/msc/admin/user/import-student-user',
+			            url:'/msc/admin/User/import-Teacher-user',
 			            fileElementId:'leading-in',//必须要是 input file标签 ID
 			            success: function (data, status){
-			            	console.log("成功");
-			            	console.log(data);
-			            	console.log(status);
+			            	
 			            },
 			            error: function (data, status, e){
 			            	console.log("失败");
@@ -328,7 +376,7 @@
 
 @section('layer_content')
 <!--新增-->
-<form class="form-horizontal" id="Form1" novalidate="novalidate" action="" method="post" style="display: none;">
+<form class="form-horizontal" id="Form1" novalidate="novalidate" action="/msc/admin/user/teacher-add" method="post" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">新增教职工</h4>
@@ -337,13 +385,13 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control name edit-name" value="" name="name" />
+                <input type="text" class="form-control name add-name" value="" name="name" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">胸牌号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control code edit-code" name="code" />
+                <input type="text" class="form-control code add-code" name="code" />
             </div>
         </div>
         <div class="form-group">
@@ -355,30 +403,24 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">科室</label>
             <div class="col-sm-10">
-                <select class="form-control student_type" name="student_type" id="">
-                    <option value="">本科</option>
-                    <option value="">专科</option>
-                </select>
+                <input type="text" class="form-control dept_name add-dept_name" name="dept_name" id="" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">角色</label>
             <div class="col-sm-10">
-                <select class="form-control student_type" name="student_type" id="">
-                    <option value="">本科</option>
-                    <option value="">专科</option>
-                </select>
+                <input type="text" class="form-control role add-role" name="role" id=""/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control mobile edit-mobile" name="mobile" />
+                <input type="text" class="form-control mobile add-mobile" name="mobile" />
             </div>
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="button" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
@@ -428,13 +470,13 @@
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="submit" class="btn btn-primary btn-look" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
 </form>
 <!--编辑-->
-<form class="form-horizontal" id="Form3" novalidate="novalidate" action="" method="post" style="display: none;">
+<form class="form-horizontal" id="Form3" novalidate="novalidate" action="/msc/admin/user/teacher-save" method="post" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">编辑</h4>
@@ -454,26 +496,20 @@
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
-        		<input type="radio" class="check_icon" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon" name="gender" value="0" /> <span>女</span>
+        		<input type="radio" class="check_icon edit-man" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
+            	<input type="radio" class="check_icon edit-woman" name="gender" value="0" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">科室</label>
             <div class="col-sm-10">
-                <select class="form-control student_type" name="student_type" id="">
-                    <option value="">本科</option>
-                    <option value="">专科</option>
-                </select>
+                <input type="text" class="form-control edit-dept_name" name="dept_name" id=""/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">角色</label>
             <div class="col-sm-10">
-                <select class="form-control student_type" name="student_type" id="">
-                    <option value="">本科</option>
-                    <option value="">专科</option>
-                </select>
+            	<input type="text" class="form-control edit-role" name="role" id="" />
             </div>
         </div>
         <div class="form-group">
@@ -484,7 +520,7 @@
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="button" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>

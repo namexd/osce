@@ -6,7 +6,7 @@ class StudentClassSeeder extends Seeder{
     {
         foreach($this->defaultData() as $input)
         {
-            \Modules\Msc\Entities\StudentClass::create($input);
+            \Modules\Msc\Entities\StudentClass::firstOrCreate($input);
         }
     }
     public function defaultData(){

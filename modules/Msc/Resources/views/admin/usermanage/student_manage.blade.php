@@ -62,12 +62,12 @@
 				});
 				 history.go(0);
 			})
-			$(".btn-edit,.btn-new-add").click(function(){//确认修改、新增学生验证
+			$(".btn-edit").click(function(){//确认修改验证
 				var editName=$.trim($(".edit-name").val());
 				var editCode=$.trim($(".edit-code").val());
 				var editProfessional_name=$.trim($(".edit-professional_name").val());
 				var editMobile=$.trim($(".edit-mobile").val());
-				var editCard=$.trim($(".edit-card").val());
+				var editCard=$.trim($(".edit-idcard").val());
 				var reg=/^1[3|5|8]{1}[0-9]{9}$/;
 				if(editName==""){
 					layer.tips('用户名不能为空', '.edit-name', {
@@ -105,18 +105,63 @@
 					return false;
 				}
 				if(editCard==""){
-					layer.tips('证件号不能为空', '.edit-card', {
+					layer.tips('证件号不能为空', '.edit-idcard', {
 					    tips: [1, '#408AFF'],
 					    time: 4000
 					});
 					return false;
 				}
-				history.go(0);
-			})
-			$(".btn-edit").click(function(){
 				$("#Form3").submit();
 			})
-			$(".btn-new-add").click(function(){
+			$(".btn-new-add").click(function(){//新增学生验证
+				var addName=$.trim($(".add-name").val());
+				var addCode=$.trim($(".add-code").val());
+				var addProfession_name=$.trim($(".add-profession_name").val());
+				var addMobile=$.trim($(".add-mobile").val());
+				var addCard=$.trim($(".add-card").val());
+				var reg=/^1[3|5|8]{1}[0-9]{9}$/;
+				if(addName==""){
+					layer.tips('用户名不能为空', '.add-name', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(addCode==""){
+					layer.tips('学号不能为空', '.add-code', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(addProfession_name==""){
+					layer.tips('专业不能为空', '.add-profession_name', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(addMobile==""){
+					layer.tips('手机号不能为空', '.add-mobile', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(!reg.test(addMobile)){
+					layer.tips('请输入正确的手机号码', '.add-mobile', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
+				if(addCard==""){
+					layer.tips('证件号不能为空', '.add-card', {
+					    tips: [1, '#408AFF'],
+					    time: 4000
+					});
+					return false;
+				}
 				$("#Form1").submit();
 			})
 			function look(){//查看
@@ -183,9 +228,7 @@
 			            url:'/msc/admin/user/import-student-user',
 			            fileElementId:'leading-in',//必须要是 input file标签 ID
 			            success: function (data, status){
-			            	console.log("成功");
-			            	console.log(data);
-			            	console.log(status);
+			            	
 			            },
 			            error: function (data, status, e){
 			            	console.log("失败");
@@ -370,13 +413,13 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control name" name="name" value="" />
+                <input type="text" class="form-control name add-name" name="name" value="" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">学号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control code" name="code" />
+                <input type="text" class="form-control code add-code" name="code" />
             </div>
         </div>
         <div class="form-group">
@@ -406,7 +449,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">专业</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control profession_name" name="profession_name" />
+                <input type="text" class="form-control profession_name add-profession_name" name="profession_name" />
                 <!--<select class="form-control profession_name" name="profession_name">
                 	<option value="儿科">儿科</option>
                 	<option value="设计">设计</option>
@@ -416,7 +459,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control mobile" name="mobile" />
+                <input type="text" class="form-control mobile add-mobile" name="mobile" />
             </div>
         </div>
         <div class="form-group">
@@ -429,7 +472,7 @@
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control card" name="idcard" />
+            	<input type="text" class="form-control card add-card" name="idcard" />
             </div>
         </div>
         <div class="form-group">

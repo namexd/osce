@@ -33,6 +33,7 @@
 			        },
 			        async:true,
 			        success:function(res){
+			        	$(".detail_list ul li").remove();
 			            if(res.code==1){
 			                var data = res.data.rows.list.data;
 			                for(var i in data){
@@ -61,9 +62,6 @@
 				}else{
 					$(this).children().addClass("on");
 				}
-			})
-			$("#select_submit").on('click',function(){
-				
 			})
 		
 		})
