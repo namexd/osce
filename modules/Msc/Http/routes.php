@@ -70,6 +70,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//课程监管详情
 		Route::get('courses/courses-vcr', ['uses'=>'CoursesController@getCoursesVcr','as'=>'msc.admin.courses.getCoursesVcr']);
 
+		//导入管理员
+		Route::get('upload/upload-user', ['uses'=>'UploadController@getImportUser','as'=>'msc.admin.upload.getImportUser']);
+		Route::post('upload/upload-user', ['uses'=>'UploadController@postImportUser','as'=>'msc.admin.upload.postImportUser']);
+
 
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
@@ -100,6 +104,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/urgent-apply-list',['uses'=>'LabController@getUrgentApplyList','as'=>'msc.admin.lab.getUrgentApplyList']);//TDDO ：luohaihua 以当前别名为准
 		Route::get('lab/openlab-history-list',['uses'=>'LabController@getOpenlabHistoryList','as'=>'msc.admin.lab.openlabHistoryList']);
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
+		Route::post('lab/import-lab',['uses'=>'LabController@postImportLab','as'=>'msc.admin.lab.postImportLab']);
 
 
 		Route::controller('lab-tools', 'LabToolsController');
