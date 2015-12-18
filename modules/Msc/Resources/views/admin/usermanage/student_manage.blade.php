@@ -69,12 +69,9 @@
 			})
 			$(".btn-edit").click(function(){
 				$("#Form3").submit();
-				/*$.ajax({
-					type:"post",
-					url:"/msc/admin/user/student-save",
-					async:true
-				});*/
-				
+			})
+			$(".btn-new-add").click(function(){
+				$("#Form1").submit();
 			})
 
 			function look(){
@@ -108,6 +105,7 @@
 					success:function(res){
 						var data=JSON.parse(res);
 						$(".edit-name").val(data.name);//姓名
+						$(".edit-hidden-name").val(idName);
 						$(".edit-code").val(data.code);//学号
 						if(data.gender=="男"){
 							$(".edit-man").attr("checked","checked");
@@ -317,7 +315,7 @@
 
 @section('layer_content')
 <!--新增-->
-<form class="form-horizontal" id="Form1" novalidate="novalidate" action="" method="post" style="display: none;">
+<form class="form-horizontal" id="Form1" novalidate="novalidate" action="/msc/admin/user/student-add" method="post" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">新增学生</h4>
@@ -326,25 +324,25 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control name" value="" />
+                <input type="text" class="form-control name" name="name" value="" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">学号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control code" />
+                <input type="text" class="form-control code" name="code" />
             </div>
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
-        		<input type="radio" class="check_icon" name="student_type"  value="1"/> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon" name="student_type" value="0" /> <span>女</span>
+        		<input type="radio" class="check_icon" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
+            	<input type="radio" class="check_icon" name="gender" value="2" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">年级</label>
             <div class="col-sm-10">
-                <select class="form-control grade" id="">
+                <select class="form-control grade" id="" name="grade">
                     <option value="2015">2015</option>
                     <option value="14">14</option>
                 </select>
@@ -353,9 +351,9 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">类别</label>
             <div class="col-sm-10">
-                <select class="form-control student_type" id="">
-                    <option value="">本科</option>
-                    <option value="">专科</option>
+                <select class="form-control student_type" id="" name="student_type">
+                    <option value="1">本科</option>
+                    <option value="2">专科</option>
                 </select>
             </div>
         </div>
@@ -363,34 +361,34 @@
             <label class="col-sm-2 control-label">专业</label>
             <div class="col-sm-10">
                 <!--<input type="text" class="form-control" />-->
-                <select class="form-control profession_name" name="professional">
-                	<option value="1">儿科</option>
-                	<option value="2">设计</option>
+                <select class="form-control profession_name" name="profession_name">
+                	<option value="儿科">儿科</option>
+                	<option value="设计">设计</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">手机号</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control mobile" />
+                <input type="text" class="form-control mobile" name="mobile" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">证件</label>
             <div class="col-sm-4" style="padding-right: 0;">
-                <select class="form-control idcard" id="">
-                    <option value="">证件类型</option>
-                    <option value="">身份证</option>
-                    <option value="">驾驶证</option>
+                <select class="form-control idcard" id="" name="idcard_type">
+                    <option value="0">证件类型</option>
+                    <option value="1" selected="selected">身份证</option>
+                    <option value="2">驾驶证</option>
                 </select>
             </div>
             <div class="col-sm-6" style="padding-left: 0;">
-            	<input type="text" class="form-control card" />
+            	<input type="text" class="form-control card" name="idcard" />
             </div>
         </div>
         <div class="form-group">
         	<div class="col-sm-offset-2">
-        		<button type="submit" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
+        		<button type="button" class="btn btn-primary btn-new-add" data-dismiss="modal" aria-hidden="true">确定</button>
         	</div>
         </div>
     </div>
@@ -417,7 +415,7 @@
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
         		<input type="radio" class="check_icon look-man" name="student_type"  value="1" disabled="disabled"/> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon look-woman" name="student_type" value="0" disabled="disabled" /> <span>女</span>
+            	<input type="radio" class="check_icon look-woman" name="student_type" value="2" disabled="disabled" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
@@ -485,7 +483,7 @@
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control edit-name" value="张三" name="name" />
-                <input type="hidden" value="{{$list['id']}}" name="id"/>
+                <input type="hidden" class="edit-hidden-name" value="{{$list['id']}}" name="id"/>
             </div>
         </div>
         <div class="form-group">
@@ -497,7 +495,7 @@
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
         		<input type="radio" class="check_icon edit-man" name="gender" value="1" /> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon edit-woman" name="gender" value="0" /> <span>女</span>
+            	<input type="radio" class="check_icon edit-woman" name="gender" value="2" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
