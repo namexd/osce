@@ -257,7 +257,6 @@
 				});
 			})
 			var message=$(".message").text();
-			console.log(message)
 			if(message.length>0){
 				layer.alert(
 	              ""+message+"", 
@@ -276,18 +275,7 @@
     <div class="panel-heading">
         <div class="panel-options">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="/msc/admin/user/student-list">学生管理
-                  @if (count($errors) > 0)
-      <div class="alert alert-danger">
-        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-        <ul>
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif
-                </a></li>
+                <li class="active"><a href="/msc/admin/user/student-list">学生管理</a></li>
                 <li class=""><a href="/msc/admin/user/teacher-list">教职工管理</a></li>
             </ul>
         </div>
@@ -437,6 +425,15 @@
         </div>
     </div>
 </div>
+  @if (count($errors) > 0)
+  	<div style="display: none;">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li class="message">{{ $error }}</li>
+          @endforeach
+        </ul>
+    </div>
+    @endif
 
 @stop
 
