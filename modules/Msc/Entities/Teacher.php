@@ -276,21 +276,25 @@ class Teacher extends CommonModel {
     public function AddTeacher($teacherData){
 
         $connection=\DB::connection('sys_mis');
-        $connection->table('users')->insert([
-            ['name' =>$teacherData['name'] ,
-                'mobile' => $teacherData['mobile'],
-                'gender'=>$teacherData['gender'],
-                'status'=>$teacherData['status'],
-//                'role'=>$teacherData['role'],
-            ],
-        ]);
+        $item=array(
+            'name' =>$teacherData['name'] ,
+            'mobile' => $teacherData['mobile'],
+            'gender'=>$teacherData['gender'],
+            'status'=>$teacherData['status'],
+//          'role'=>$teacherData['role'],
+        );
+        $id=$connection->table('users')->insertGetId( $item);
+        if(!$id){
+            return false;
+        }
 
-        $this->insert([
-            [
-                'name' =>$teacherData['name'] ,
-                'code' => $teacherData['code'],
-                'teacher_dept'=>$teacherData['teacher_dept'],
-            ],
-        ]);
+        $teacher=array(
+            'id'=>$id,
+            'name' =>$teacherData['name'] ,
+            'code' => $teacherData['code'],
+            'teacher_dept'=>$teacherData['teacher_dept'],
+            );
+        $result=$this->create($teacher);
+        return $result;
     }
 }

@@ -94,6 +94,7 @@ class UserController extends MscController
             'professionList'    => $professionList,
             'pagination'        => $pagination,
         ]);
+
     }
 
     /**
@@ -633,15 +634,6 @@ class UserController extends MscController
             //添加失败的数据
             $dataFalse = [];
             //判断是否存在这个教师用户
-            //'teacher_group'=>[
-//'姓名'=>'name',
-//'胸牌号'=>'code',   1
-//'科室'=> 'teacher_dept',  1
-//'手机号'=>'mobile',
-//'性别'=> 'gender',
-//'角色'=>'role',
-//'状态'=>'status',
-//],
             foreach ($teacherInfo as $teacherData) {
 
                 //处理性别gender
@@ -776,7 +768,9 @@ class UserController extends MscController
 //                        $student = Student::create($studentData);
 //                        $user =User::create($studentData);
                         $student = new Student();
-                        $student->AddStudent($studentData);
+                         $student->AddStudent($studentData);
+//                        die(json_encode($a));
+
                         if ($student == false) {
                             $dataFalse[] = $studentData;
                         }
@@ -842,7 +836,7 @@ class UserController extends MscController
         $filename = date('Ymd') . '.csv';
         $this->export_csv($filename, $str);
 
-        return response()->json($this->fail("1"));
+        return 'res=1';
     }
 
     private function export_csv($filename, $data)
