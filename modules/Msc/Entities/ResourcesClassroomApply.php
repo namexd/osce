@@ -170,7 +170,6 @@ class ResourcesClassroomApply extends  CommonModel {
             $connection->beginTransaction ();
             try {
                 $apply = $this->find ($id);
-
                 $apply->status = $status;
                 if ($status == 2) {
                     $apply->reject = $desc;
@@ -182,12 +181,10 @@ class ResourcesClassroomApply extends  CommonModel {
                         'endtime' => date ('H:i', strtotime ($apply->end_datetime)),
                         'currentdate' => date ('Y-m-d', strtotime ($apply->begin_datetime)),
                         'type' => $type,
-                        'groups' => $apply->groups
+                        'groups' => $apply->labApplyGroups
                     ];
-                    
                     $this->createApplyPlan ($newPlanData);
                 }
-
                 $result = $apply->save ();
                 if ($result) {
                     $connection->commit ();

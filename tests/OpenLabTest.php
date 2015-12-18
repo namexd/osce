@@ -78,7 +78,7 @@ class OpenLabTest  extends TestCase
         $response   =   $this   ->withSession(['openid'=>$userOb->openid])
                                 ->actingAs($userOb)
                                 ->action('post','\Modules\Msc\Http\Controllers\WeChat\OpenLaboratoryController@postAddLab','',$data);
-        $this->assertRedirectedTo('/msc/wechat/open-laboratory/order-lab');
+        $this->assertRedirectedTo('/msc/wechat/open-laboratory/type-list');
     }
     public function testTeacherAddApply(){
         $user   =   $this->getRandTeacher();
@@ -124,6 +124,6 @@ class OpenLabTest  extends TestCase
         $response   =   $this   ->withSession(['openid'=>$userOb->openid])
             ->actingAs($userOb)
             ->action('post','\Modules\Msc\Http\Controllers\WeChat\OpenLaboratoryController@postAddLab','',$data);
-        $this->assertRedirectedTo('/msc/wechat/open-laboratory/order-lab');
+        $this->assertRedirectedTo('/msc/wechat/open-laboratory/type-list');
     }
 }

@@ -96,7 +96,14 @@
                         status:1
                     },
                     success: function(result) {
-                       location.reload();
+                        if(result.code==1)
+                        {
+                            location.reload();
+                        }
+                        else
+                        {
+                            layer.alert(result.msg)
+                        }
                     }
                 });
             })
@@ -123,7 +130,14 @@
                         reject:str
                     },
                     success: function(result) {
-                        location.reload();
+                        if(result.code==1)
+                        {
+                            location.reload();
+                        }
+                        else
+                        {
+                            layer.alert(result.msg)
+                        }
                     }
                 });
             })
