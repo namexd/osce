@@ -301,10 +301,10 @@ class UserController extends MscController
         $result = $studentModel->saveEditStudent($data);
 
         if ($result) {
-            return redirect()->back()->withInput()->withErrors('保存成功');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
         }
-        return redirect()->back()->withInput()->withErrors('保存失败');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
     }
 
@@ -488,10 +488,10 @@ class UserController extends MscController
         $result = $teacherModel->saveEditTeacher($data);
 
         if ($result) {
-            return redirect()->back()->withInput()->withErrors('保存成功');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
         }
-        return redirect()->back()->withInput()->withErrors('保存失败');
+        return redirect()->back()->withInput()->withErrors('修改失败');
     }
 
     /**
