@@ -7,7 +7,7 @@
     <link href="{{asset('msc/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style rel="stylesheet">
         .select2-container--default .select2-selection--single{ height: 36px;
-        border: 1px solid #ccc;}
+            border: 1px solid #ccc;}
         .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px;}
         .has-feedback label~.form-control-feedback {top: 2px;}
 
