@@ -669,9 +669,9 @@ class UserController extends MscController
 //                                die(json_encode($teacherInfo ));
 //                        $teacher =Teacher ::create($teacherData);
                         $teacher = new Teacher();
-                        $teacher->AddTeacher($teacherData);
+                        $result=$teacher->AddTeacher($teacherData);
 
-                        if ( $teacher == false) {
+                        if ( $result== 0) {
                             $dataFalse[] = $teacherData;
                         }
                     } else {
@@ -768,10 +768,10 @@ class UserController extends MscController
 //                        $student = Student::create($studentData);
 //                        $user =User::create($studentData);
                         $student = new Student();
-                         $student->AddStudent($studentData);
-//                        die(json_encode($a));
+                         $result=$student->AddStudent($studentData);
+//                        die(json_encode($srt));
 
-                        if ($student == false) {
+                        if ($result== 0) {
                             $dataFalse[] = $studentData;
                         }
                     } else {
@@ -809,6 +809,7 @@ class UserController extends MscController
 
     public function getExportStudentUser(Request $request)
     {
+//        dd($request);
 //        dd($keyword);exit;
         //同步学生列表的数据
         $studentInfo = $this->getStudentList($request);
