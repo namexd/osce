@@ -102,17 +102,21 @@ class Teacher extends CommonModel {
     public function saveEditTeacher($data){
         $connection=\DB::connection('msc_mis');
 
-        $role=$connection->table('teacher_dept')->where('name',$data['dept_name'])->first();
+        $dept=$connection->table('teacher_dept')->where('name',$data['dept_name'])->first();
 
-        if(!$role){
-          $role_id=$connection->table('teacher_dept')->insertGetId('name',$data['dept_name']);
+        if(!$dept){
+            $dept_id=$connection->table('teacher_dept')->insertGetId('name',$data['dept_name']);
         }else{
-          $role_id=$role->id;
+            $dept_id=$dept->id;
         }
 
-        $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$role_id);
+        $item=array(
+            'name'=>$data['name'],
+            'code'=>$data['code'],
+            'teacher_dept'=>$dept_id
+        );
 
-        $result=$connection->table('teacher')->where('id',$data['id'])->update($item);
+        $result=$this->update($item);
 
         if($result===false){
             return false;
@@ -120,14 +124,31 @@ class Teacher extends CommonModel {
 
         $result=$connection->table('users')->find($data['id']);
 
+        $connection=\DB::connection('sys_mis');
+
         if(!$result){
-            $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
+            $users=array(
+                'name'=>$data['name'],
+                'gender'=>$data['gender'],
+                'mobile'=>$data['mobile']
+            );
 
             return $connection->table('users')->where('id',$data['id'])->insert($users);
         }else{
-            $connection=\DB::connection('sys_mis');
 
-            $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
+            $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
+
+            $users_mobile=$users_mobile->mobile;
+
+            if($data['mobile']==$users_mobile){
+                $users=array(
+                    'name'=>$data['name'],
+                    'gender'=>$data['gender'],
+                    'mobile'=>$data['mobile']
+                );
+            } else{
+                $users=array('name'=>$data['name'],'gender'=>$data['gender']);
+            }
 
             $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
@@ -162,7 +183,12 @@ class Teacher extends CommonModel {
 
         $connection=\DB::connection('sys_mis');
 
-        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'status'=>$data['status']);
+        $users=array(
+            'name'=>$data['name'],
+            'gender'=>$data['gender'],
+            'mobile'=>$data['mobile'],
+            'status'=>$data['status']
+        );
 
         $id=$connection->table('users')->insertGetId($users);
 
@@ -172,17 +198,22 @@ class Teacher extends CommonModel {
 
         $connection=\DB::connection('msc_mis');
 
-        $role=$connection->table('teacher_dept')->where('name',$data['dept_name'])->first();
+        $dept=$connection->table('teacher_dept')->where('name',$data['dept_name'])->first();
 
-        if(!$role){
-            $role_id=$connection->table('teacher_dept')->insert('name',$data['dept_name']);
+        if(!$dept){
+            $dept_id=$connection->table('teacher_dept')->insert('name',$data['dept_name']);
         }else{
-            $role_id=$role->id;
+            $dept_id=$dept->id;
         }
 
-        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$role_id);
+        $item=array(
+            'id'=>$id,
+            'name'=>$data['name'],
+            'code'=>$data['code'],
+            'teacher_dept'=>$dept_id
+        );
 
-        $result=$connection->table('teacher')->insert($item);
+        $result=$this->create($item);
 
         return $result;
     }
