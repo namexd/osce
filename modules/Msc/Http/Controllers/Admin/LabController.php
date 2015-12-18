@@ -9,6 +9,8 @@
 
 namespace Modules\Msc\Http\Controllers\Admin;
 
+use App\Repositories\Common;
+use Modules\Msc\Entities\Courses;
 use Modules\Msc\Entities\ResourcesClassroom;
 use Modules\Msc\Entities\ResourcesClassroomApply;
 use Modules\Msc\Entities\ResourcesClassroomCourses;
@@ -873,6 +875,47 @@ class LabController extends MscController
             return response()   ->    json(
                 $this->fail($ex)
             );
+        }
+    }
+    public function postImportLab(Request $request){
+        try{
+            $data=Common::getExclData($request,'lab');
+            $coursesList= array_shift($data);
+            //将中文表头 按照配置 翻译成 英文字段名
+            $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.lab_import');
+            //已经存在的数据
+            $dataHaven=[];
+            //添加失败的数据
+            $dataFalse=[];
+            $dataNew    =[];
+            foreach($data as $coursesData)
+            {
+                if(is_numeric($coursesData['code']))
+                {
+                    $coursesData['code']   = str_replace(',','',strval(number_format($coursesData['code']))) ;
+                }
+                $input  =   [
+                    'name'          =>  $coursesData['name'],
+                    'code'          =>  $coursesData['code'],
+                    'location'      =>  '新八教'.$coursesData['floor'],
+                    'begintime'     =>  '08:00:00',
+                    'endtime'       =>  '22:00:00',
+                    'opened'        =>  strrpos('开放',$coursesData['name'])>=1? 1:0,
+                    'manager_name'  =>  $coursesData['manager_name'],
+                    'manager_mobile'=>  '',
+                    'detail'        =>  '',
+                ];
+                $dataNew[]=$input;
+            }
+            var_export($dataNew);
+            exit();
+            return response()->json(
+                $this->success_data(['result'=>true,'dataFalse'=>$dataFalse,'dataHaven'=>$dataHaven])
+            );
+        }
+        catch(\Exception $ex)
+        {
+            return response()->json($this->fail($ex));
         }
     }
 }
