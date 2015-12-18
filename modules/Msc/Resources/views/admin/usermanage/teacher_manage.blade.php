@@ -240,19 +240,7 @@
 			})
 			$(".leading-out").click(function(){
 				var keyword=$("#keyword").val();
-				$.ajax({
-					type:'get',
-					url:'/msc/admin/user/export-teacher-user',
-					data:{
-						keyword : keyword,
-					},
-					async:true,
-					success:function(res){
-						if(res=="1") {
-							window.location.href = "/msc/admin/user/export-teacher-user";
-						}
-					}
-				});
+				window.location.href = "/msc/admin/user/export-teacher-user?keyword="+keyword+"";
 			})
 			var message=$(".message").text();
 			if(message.length>0){
