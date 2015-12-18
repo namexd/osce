@@ -314,7 +314,7 @@
         <div class="form-group">
         	<div class="col-sm-offset-2" style="padding-left: 15px;">
         		<input type="radio" class="check_icon" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
-            	<input type="radio" class="check_icon" name="gender" value="0" /> <span>女</span>
+            	<input type="radio" class="check_icon" name="gender" value="2" /> <span>女</span>
         	</div>
         </div>
         <div class="form-group">
