@@ -584,7 +584,7 @@ return array(
     'StudentGroupSeeder' => $baseDir . '/database/seeds/StudentGroupSeeder.php',
     'StudentProfessionalSeeder' => $baseDir . '/database/seeds/StudentProfessionalSeeder.php',
     'TeacherDeptSeeder' => $baseDir . '/database/seeds/TeacherDeptSeeder.php',
-    'TeacherSeeder' => $baseDir . '/database/seeds/TeacherSeeder.php',
+    'TeacherSeeder' => $baseDir . '/modules/Msc/Database/Seeders/TeacherSeeder.php',
     'ResourcesToolsCateSeeder' => $baseDir . '/modules/Msc/Database/Seeders/ResourcesToolsCateSeeder.php',
 	'VcrSeeder' => $baseDir . '/modules/Msc/Database/seeders/VcrSeeder.php',
 	'ResourcesLabVcrSeeder' => $baseDir . '/modules/Msc/Database/seeders/ResourcesLabVcrSeeder.php',

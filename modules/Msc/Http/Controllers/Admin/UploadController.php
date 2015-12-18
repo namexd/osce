@@ -8,8 +8,6 @@
 
 namespace Modules\Msc\Http\Controllers\Admin;
 
-
-
 use Modules\Msc\Http\Controllers\MscController;
 use Illuminate\Http\Request;
 use App\Repositories\Common;
