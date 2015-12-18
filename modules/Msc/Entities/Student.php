@@ -156,7 +156,7 @@ class Student extends CommonModel {
      */
     public function saveEditStudent($data){
 
-       $connection=\DB::connection('msc_mis');
+        $connection=\DB::connection('msc_mis');
 
         $professional=$connection->table('student_professional')->where('name',$data['professional_name'])->first();
 
@@ -175,24 +175,23 @@ class Student extends CommonModel {
 
         if($result===false){
             return false;
-       }
+        }
 
        $connection=\DB::connection('sys_mis');
 
-        $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
+       $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
 
-//        dd($users_mobile->mobile);
         $users_mobile=$users_mobile->mobile;
+
         if($data['mobile']==$users_mobile){
             $users=array('gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
         }else{
             $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
         }
 
-//       dd($users);
        $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
-//        dd($result);
+
         if($result===false){
             return false;
         }

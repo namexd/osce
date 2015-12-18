@@ -278,7 +278,7 @@ class UserController extends MscController
     public function postStudentSave(Request $request)
     {
         $this->validate($request, [
-            'id' => 'sometimes|min:0|max:10',
+            'id' => 'required|min:0|max:10',
             'name' => 'required|max:50',
             'code' => 'required|min:0|max:32',
             'gender' => 'required|max:1',
@@ -293,7 +293,7 @@ class UserController extends MscController
 
         $data = $request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
 
-//        dd($data);
+//        dd($data['id']);
 
         $studentModel = new Student();
 
