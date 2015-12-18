@@ -194,7 +194,6 @@
 					async:true,
 					success:function(res){
 						var data=JSON.parse(res);
-						console.log(data);
 						$(".edit-name").val(data.name);//姓名
 						$(".edit-hidden-name").val(idName);
 						$(".edit-code").val(data.code);//胸牌号
