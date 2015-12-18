@@ -13,6 +13,8 @@ class TeacherSeeder extends Seeder
     {
         foreach($this->defaultData() as $input)
         {
+            $teacher    =   $this->getTeahcerId();
+            $input['id']=$teacher->id;
             \Modules\Msc\Entities\Teacher::firstOrCreate($input);
         }
     }
@@ -25,6 +27,7 @@ class TeacherSeeder extends Seeder
                 'teacher_dept' =>1,
                 'validated' => 1,
             ],
+
             [
                 'name' => '马俊荣',
                 'code' => '10069',
@@ -92,5 +95,30 @@ class TeacherSeeder extends Seeder
                 'validated' => 1,
             ],
         ];
+    }
+    public function getTeahcerId(){
+        $list   =  \App\Entities\User::get();
+        $item   =   $this->getRandItem($list);
+        $student    =   \Modules\Msc\Entities\Student::find($item->id);
+        $teacher    =   \Modules\Msc\Entities\Teacher::find($item->id);
+        if(is_null($student) && is_null($teacher))
+        {
+            return $item;
+        }
+        else
+        {
+            return $this->getTeahcerId();
+        }
+    }
+    public function getRandItem($list){
+        $num=count($list)-1;
+        foreach($list as $key=>$item)
+        {
+            if($key==rand(0,$num))
+            {
+                return $item;
+            }
+        }
+        return $item;
     }
 }

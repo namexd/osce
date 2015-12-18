@@ -219,7 +219,7 @@
             <div class="ibox-content">
                 <div class="row">
                     <div class="col-md-12">
-                        <form method="post" class="form-horizontal" id="labForm" action="{{route('msc.admin.resourcesManager.getAddResources')}}">
+                        <form method="post" class="form-horizontal" id="labForm" action="{{route('msc.admin.lab.postHadOpenLabToAdd')}}">
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
@@ -233,8 +233,11 @@
                                 <input type="hidden" name="cate_id" id="cate_id" value="-1" />
                                 <label class="col-sm-2 control-label">类别</label>
                                 <div class="col-sm-10 select_code">
-                                    <select id="select_Category"   class="form-control m-b" name="account">
+                                    <select id="select_Category"   class="form-control m-b" name="opened">
                                         <option value="-1">请选择类别</option>
+                                        <option value="0">普通实验室</option>
+                                        <option value="1">开发实验室(只能预约实验室)</option>
+                                        <option value="2">开发实验室(只能预约设备)</option>
                                         {{--@foreach ($resourcesCateList as $item)
                                             <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                         @endforeach--}}
@@ -259,8 +262,11 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
-                                    <select id="select_Category"   class="form-control m-b" name="account">
+                                    <select id="select_Category"   class="form-control m-b" name="status">
                                         <option value="-1">请选择状态</option>
+                                        <option value="0">不允许预约使用</option>
+                                        <option value="1">正常</option>
+                                        <option value="2">已预约</option>
                                     </select>
                                 </div>
                             </div>
@@ -268,7 +274,14 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">地址</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  id="address" name="address" class="form-control">
+                                    <input type="text"  id="address" name="location" class="form-control">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">门牌号</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  id="code" name="code" class="form-control">
                                 </div>
                             </div>
 
@@ -303,7 +316,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">最大预约人数</label>
                                 <div class="col-sm-10">
-                                    <input type="number" name="maxorder" id="maxorder" class="form-control">
+                                    <input type="number" name="person_total" id="maxorder" class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

@@ -57,7 +57,7 @@ class LabController extends MscController
         $data = [
             'pagination' => $pagination
         ];
-        return view('msc::admin.openlab.had-lab',$data);
+        return view('msc::admin.openlab.lab-exist-list',$data);
     }
 
 
@@ -86,7 +86,7 @@ class LabController extends MscController
         $data = [
             'openLabDetail' => $openLabDetail
         ];
-        return view('msc::admin.openlab.had-lab',$data);
+        return view('msc::admin.openlab.lab-exist-detail',$data);
     }
 
     /**
@@ -118,6 +118,28 @@ class LabController extends MscController
     }
 
     /**
+     * 现有开放实验室新增页
+     * @api get /msc/admin/lab/had-open-lab-edit
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id           申请ID(必须的)
+     * * string        reject       拒绝理由(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author whg <weihuiguo@misrobot.com>
+     * @date 2015年12月18日15:47:31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+
+    public  function getHadOpenLabAdd(ResourcesClassroom $ResourcesClassroom){
+        return view('msc::admin.openlab.lab-add');
+    }
+    /**
      * 现有开放实验室编辑和新增操作
      * @api get /msc/admin/lab/had-open-lab-edit
      * @access public
@@ -136,21 +158,21 @@ class LabController extends MscController
      *
      */
 
-    public  function getHadOpenLabAdd(){
+    public  function postHadOpenLabToAdd(Request $request){
         $id = Input::get('id');
-        $this->validate($request, [
-            'name'       => 'required|max:30',
-            'code'    => 'required',
-            'location' => 'required|max:50',
-            'begintime' => 'required',
-            'endtime' => 'required',
-            'opened' => 'sometimes|in:0,1,2',
-            'manager_name' => 'required',
-            'manager_mobile' => 'required|phone',
-            'detail' => 'required',
-            'person_total' => 'required|interger',
-            'status' => 'sometimes|in:0,1,2',
-        ]);
+//        $this->validate($request, [
+//            'name'       => 'required|max:30',
+//            'code'    => 'required',
+//            'location' => 'required|max:50',
+//            'begintime' => 'required',
+//            'endtime' => 'required',
+//            'opened' => 'sometimes|in:0,1,2',
+//            'manager_name' => 'required',
+//            'manager_mobile' => 'required',
+//            'detail' => 'required',
+//            'person_total' => 'required|interger',
+//            'status' => 'sometimes|in:0,1,2',
+//        ]);
         $data = [
             'name' => Input::get('name'),
             'code' => Input::get('code'),
@@ -158,7 +180,7 @@ class LabController extends MscController
             'begintime' => Input::get('begintime'),
             'endtime' => Input::get('endtime'),
             'opened' => Input::get('opened'),
-            'manager_id' => Input::get('manager_id'),
+            'manager_id' => Input::get('manager_id')?Input::get('manager_id'):1,
             'manager_name' => Input::get('manager_name'),
             'manager_mobile' => Input::get('manager_mobile'),
             'detail' => Input::get('detail'),
@@ -181,7 +203,7 @@ class LabController extends MscController
 
     /**
      * 获得开放实验室使用历史列表
-     * @method GET /msc/admin/lab/openlab-history-list
+     * @method GET /msc/admin/lab/open-lab-history-list
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -199,7 +221,7 @@ class LabController extends MscController
      * @date 2015-12-3 15:45
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getOpenlabHistoryList(Request $request)
+    public function getOpenLabHistoryList(Request $request)
     {
         $this->validate($request, [
             'date'       => 'sometimes|date_format:Y/m/d',

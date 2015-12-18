@@ -301,10 +301,10 @@ class UserController extends MscController
         $result = $studentModel->saveEditStudent($data);
 
         if ($result) {
-            return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
         }
-        return redirect()->back()->with('message','false');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
     }
 
@@ -347,10 +347,10 @@ class UserController extends MscController
         $result = $studentModel->postAddStudent($data);
 
         if ($result) {
-            return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('新增成功');
 
         }
-        return redirect()->back()->with('message','false');
+        return redirect()->back()->withInput()->withErrors('新增失败');
 
     }
 
@@ -488,10 +488,10 @@ class UserController extends MscController
         $result = $teacherModel->saveEditTeacher($data);
 
         if ($result) {
-            return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('修改成功');
 
         }
-        return redirect()->back()->with('message','false');
+        return redirect()->back()->withInput()->withErrors('修改失败');
     }
 
     /**
@@ -529,10 +529,10 @@ class UserController extends MscController
         $result = $teacherModel->postAddTeacher($data);
 
         if ($result) {
-        return redirect()->back()->with('message','true');
+            return redirect()->back()->withInput()->withErrors('新增成功');
 
         }
-        return redirect()->back()->with('message','false');
+        return redirect()->back()->withInput()->withErrors('新增失败');
     }
 
     /**
@@ -809,12 +809,14 @@ class UserController extends MscController
 
     public function getExportStudentUser(Request $request)
     {
-//        dd($request);
-//        dd($keyword);exit;
+//        dd($request->keyword);
+//        if($request->keyword){
+//
+//        }
         //同步学生列表的数据
         $studentInfo = $this->getStudentList($request);
-//        var_dump($studentInfo);
-        dd($studentInfo->list);
+
+//        dd($studentInfo->list);
 
         $str = iconv('utf-8', 'gb2312', '序号,姓名,学号,年级,类别,专业,手机号,证件号,性别,状态') . "\n";
         if (empty($studentInfo->list)) {
@@ -836,6 +838,8 @@ class UserController extends MscController
         }
         $filename = date('Ymd') . '.csv';
         $this->export_csv($filename, $str);
+
+//        return 'res=1';
 
     }
 
