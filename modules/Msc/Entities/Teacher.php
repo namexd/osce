@@ -118,7 +118,7 @@ class Teacher extends CommonModel {
         );
 
 
-        $result=$this->update($item);
+        $result=$connection->table('teacher')->where('id',$data['id'])->update($item);
 
         if($result===false){
             return false;
