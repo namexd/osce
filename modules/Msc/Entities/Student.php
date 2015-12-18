@@ -348,36 +348,40 @@ class Student extends CommonModel {
          return $connection->table('users')->where('id',$id)->update(['status'=>3-$status]);
 
     }
-
-
+//
+//$item=array(
+//'id'=>$id,
+//'name'=>$data['name'],
+//'code'=>$data['code'],
+//'grade'=>$data['grade'],
+//'professional'=>$professional_id,
+//'student_type'=>$data['student_type']
+//);
 
     //导入学生数据存入数据库
     public function AddStudent($studentData){
 //        $id=$connection->table('users')->insertGetId($users);
         $connection=\DB::connection('sys_mis');
-        $id=$connection->table('users')->insertGetId([
-            ['name' =>$studentData['name'] ,
-                'mobile' => $studentData['mobile'],
-                'idcard'=>$studentData['idcard'],
-                'gender'=>$studentData['gender'],
-                'status'=>$studentData['status'],
-
-            ],
-        ]);
+        $item=array('name' =>$studentData['name'] ,
+            'mobile' => $studentData['mobile'],
+            'idcard'=>$studentData['idcard'],
+            'gender'=>$studentData['gender'],
+            'status'=>$studentData['status'],);
+        $id=$connection->table('users')->insertGetId( $item);
         if(!$id){
             return false;
-        }else{
-            $this->insert([
-                [
-                    'id'=>$id,
-                    'name' =>$studentData['name'] ,
-                    'code' => $studentData['code'],
-                    'grade'=>$studentData['grade'],
-                    'student_type'=>$studentData['student_type'],
-                    'professional'=>$studentData['professional']
-                ],
-            ]);
         }
+        $student=array(
+                'id'=>$id,
+                'name' =>$studentData['name'] ,
+                'code' => $studentData['code'],
+                'grade'=>$studentData['grade'],
+                'student_type'=>$studentData['student_type'],
+                'professional'=>$studentData['professional']
+        );
+        $result=$this->create($student);
+
+            return $result;
 
     }
 }
