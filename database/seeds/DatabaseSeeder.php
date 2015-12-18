@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
         $this   ->  command ->  info('StudentGroup Data Creating......');
         $this   ->  call(StudentClassSeeder::class);
         $this   ->  command ->  info('StudentClass Data Creating......');
+        $this   ->  call(TeacherSeeder::class);
+        $this   ->  command ->  info('Teacher Data Creating......');
+
         Model::reguard();
     }
 }

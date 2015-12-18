@@ -13,7 +13,7 @@ class GroupsSeeder extends Seeder
     {
         foreach($this->defaultData() as $input)
         {
-            \Modules\Msc\Entities\Groups::create($input);
+            \Modules\Msc\Entities\Groups::firstOrCreate($input);
         }
     }
 

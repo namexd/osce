@@ -14,7 +14,7 @@ class TeacherSeeder extends Seeder
         //
         foreach($this->defaultData() as $input)
         {
-            \Modules\Msc\Entities\Teacher::create($input);
+            \Modules\Msc\Entities\Teacher::firstOrCreate($input);
         }
 
     }

@@ -8,7 +8,7 @@ class StudentProfessionalSeeder extends Seeder
     {
         foreach($this->defaultData() as $input)
         {
-            \Modules\Msc\Entities\StdProfessional::create($input);
+            \Modules\Msc\Entities\StdProfessional::firstOrCreate($input);
         }
     }
     public function defaultData(){
