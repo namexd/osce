@@ -105,6 +105,7 @@
 					success:function(res){
 						var data=JSON.parse(res);
 						$(".edit-name").val(data.name);//姓名
+						$(".edit-hidden-name").val(idName);
 						$(".edit-code").val(data.code);//学号
 						if(data.gender=="男"){
 							$(".edit-man").attr("checked","checked");
@@ -482,7 +483,7 @@
             <label class="col-sm-2 control-label">姓名</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control edit-name" value="张三" name="name" />
-                <input type="hidden" value="{{$list['id']}}" name="id"/>
+                <input type="hidden" class="edit-hidden-name" value="{{$list['id']}}" name="id"/>
             </div>
         </div>
         <div class="form-group">
