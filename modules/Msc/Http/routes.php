@@ -102,13 +102,15 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/agree-emergency-apply',['uses'=>'LabController@getAgreeEmergencyApply','as'=>'msc.admin.lab.getAgreeEmergencyApply']);
 		Route::post('lab/refund-emergency-apply',['uses'=>'LabController@postRefundEmergencyApply','as'=>'msc.admin.lab.postRefundEmergencyApply']);
 		Route::get('lab/urgent-apply-list',['uses'=>'LabController@getUrgentApplyList','as'=>'msc.admin.lab.getUrgentApplyList']);//TDDO ：luohaihua 以当前别名为准
-		Route::get('lab/openlab-history-list',['uses'=>'LabController@getOpenlabHistoryList','as'=>'msc.admin.lab.openlabHistoryList']);
+		Rote:Route::get('lab/had-open-lab-list',['uses'=>'LabController@hadOpenlabList','as'=>'msc.admin.lab.hadOpenlablist']););
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
 		Route::post('lab/import-lab',['uses'=>'LabController@postImportLab','as'=>'msc.admin.lab.postImportLab']);
 		Route::post('lab/add-lab',['uses'=>'LabController@postAddLab','as'=>'msc.admin.lab.postAddLab']);//唐俊
 		Route::controller('upload','UploadController');
 		Route::get('upload/teach-message',['uses'=>'UploadController@getTeachMessage','as'=>'msc.upload.getTeachMessage']);
 		Route::post('upload/teach-message-excel',['uses'=>'UploadController@postTeachMessageExcel','as'=>'msc.admin.upload.postTeachMessageExcel']);
+
+		Route::get('lab/had-open-lab-list',['uses'=>'LabController@getHadOpenLabList','as'=>'msc.admin.lab.getHadOpenLabList']);
 
 		Route::controller('lab-tools', 'LabToolsController');
 		//开放设备待审核列表
@@ -190,6 +192,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/open-lab-apply-list', ['uses'=>'LabController@getOpenLabApplyList','as'=>'wechat.lab.openLabApplyList']);
 		Route::post('lab/change-open-lab-apply-status', ['uses'=>'LabController@postChangeOpenLabApplyStatus','as'=>'msc.wechat.lab.changeOpenLabApplyStatus']);
 		Route::get('lab/agree-emergency-apply', ['uses'=>'LabController@getAgreeEmergencyApply','as'=>'msc.wechat.lab.agreeEmergencyApply']);
+		Route::get('lab/had-open-lab-list', ['uses'=>'LabController@getHadOpenLabList','as'=>'msc.wechat.lab.getHadOpenLabList']);
+
 
 		Route::controller('open-device', 'OpenDeviceController');
 
