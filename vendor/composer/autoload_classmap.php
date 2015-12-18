@@ -583,5 +583,4 @@ return array(
     'TeacherSeeder' => $baseDir . '/database/seeds/TeacherSeeder.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
-    'database\\ResourcesLabSeeder123' => $baseDir . '/database/seeds/ResourcesLabSeeder123.php',
 );

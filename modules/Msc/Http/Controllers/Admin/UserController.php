@@ -300,13 +300,11 @@ class UserController extends MscController
         $result = $studentModel->saveEditStudent($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+            return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
+
     }
 
     /**
@@ -348,13 +346,10 @@ class UserController extends MscController
         $result = $studentModel->postAddStudent($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+            return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
 
     }
 
@@ -479,26 +474,23 @@ class UserController extends MscController
         $this->validate($request, [
             'id' => 'sometimes|min:0|max:10',
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'teacher_dept' => 'required|integer|min:0|max:3',
-            'mobile' => 'required|integer|max:11',
+            'code' => 'required|max:32',
+            'gender' => 'required|max:1',
+            'dept_name' => 'required|max:20',
+            'mobile' => 'required|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
+        $data = $request->only(['name', 'code', 'gender', 'role',  'dept_name','mobile']);
 
         $teacherModel = new Teacher();
 
         $result = $teacherModel->saveEditTeacher($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+            return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
     }
 
     /**
@@ -523,26 +515,23 @@ class UserController extends MscController
 
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'teacher_dept' => 'required|integer|min:0|max:3',
-            'mobile' => 'required|integer|max:11',
+            'code' => 'required|max:32',
+            'gender' => 'required|max:1',
+            'dept_name' => 'required|max:3',
+            'mobile' => 'required|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept','role'.  'dept_name','mobile']);
         $data['status']=$status;
         $teacherModel = new Teacher();
 
         $result = $teacherModel->postAddTeacher($data);
 
         if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+        return redirect()->back()->with('message','true');
+
         }
-        return response()->json(
-            ['success' => false]
-        );
+        return redirect()->back()->with('message','false');
     }
 
     /**
