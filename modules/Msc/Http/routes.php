@@ -106,6 +106,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
 		Route::post('lab/import-lab',['uses'=>'LabController@postImportLab','as'=>'msc.admin.lab.postImportLab']);
 
+		Route::post('lab/add-lab',['uses'=>'LabController@postAddLab','as'=>'msc.admin.lab.postAddLab']);//唐俊
 
 		Route::controller('lab-tools', 'LabToolsController');
 		//开放设备待审核列表

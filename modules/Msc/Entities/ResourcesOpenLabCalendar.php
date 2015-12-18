@@ -33,12 +33,19 @@ class ResourcesOpenLabCalendar extends Model
         if(!empty($data['week'])){
             $thisBuilder->where('week','like', '%'.$data['week'].'%');
         }
-        $result = $thisBuilder->with(['resourcesClassroom' => function($query)
+        $result = $thisBuilder->with(['resourcesClassroom' => function($Classroom)
         {
-            $query->where('opened','=',1);
+            $Classroom->where('opened','=',1);
 
-        },'ResourcesOpenLabApply'])->paginate(7);
-
+        },'ResourcesOpenLabApply'=>function($Apply) use ($data){
+            if(!empty($data['dateTime'])){
+                $Apply->where('apply_date','=',$data['dateTime']);
+            }
+        },'get_plan'=>function($plan) use($data){
+            if(!empty($data['dateTime'])){
+                $plan->where('currentdate','=',$data['dateTime']);
+            }
+        }])->paginate(7);
 
         return $result;
     }
