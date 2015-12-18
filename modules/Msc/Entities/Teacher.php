@@ -106,21 +106,31 @@ class Teacher extends CommonModel {
         $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
 
         $result=$connection->table('teacher')->where('id',$data['id'])->update($item);
-        if($result===false){
-            return false;
-        }
-
-        $connection=\DB::connection('sys_mis');
-
-        $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile']);
-
-        $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
         if($result===false){
             return false;
         }
 
-        return $result;
+        $result=$connection->table('users')->find($data['id']);
+
+        if(!$result){
+            $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
+
+            return $connection->table('users')->where('id',$data['id'])->insert($users);
+        }else{
+            $connection=\DB::connection('sys_mis');
+
+            $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile']);
+
+            $result=$connection->table('users')->where('id',$data['id'])->update($users);
+
+            if($result===false){
+                return false;
+            }
+
+            return $result;
+        }
+
     }
 
 
@@ -142,21 +152,23 @@ class Teacher extends CommonModel {
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postAddTeacher($data){
-        $connection=\DB::connection('msc_mis');
 
+        $connection=\DB::connection('sys_mis');
 
-        $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'status'=>$data['status']);
 
-        $id=$connection->table('teacher')->insertGetId($item);
+        $id=$connection->table('users')->insertGetId($users);
 
         if(!$id){
             return false;
         }
 
-        $connection=\DB::connection('sys_mis');
-        $users=array('id'=>$id,'gender'=>$data['gender'],'mobile'=>$data['mobile'],'status'=>$data['status']);
+        $connection=\DB::connection('msc_mis');
 
-        $result=$connection->table('users')->insert($users);
+
+        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+
+        $result=$connection->table('teacher')->insert($item);
 
         return $result;
     }

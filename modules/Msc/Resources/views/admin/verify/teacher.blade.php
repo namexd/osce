@@ -144,7 +144,7 @@
                     cancelButton:'取消',
                     confirm: function(){
                         var DelForm =  $('#submitSave');
-                        DelForm.attr('action',"{{ url('/msc/admin/examine/change-users-status') }}");
+                        DelForm.attr('action',"{{ url('/msc/admin/verify/change-users-status') }}");
                         DelForm.find('input[name="id"]').val(id);
                         DelForm.find('input[name="status"]').val(1);
                         DelForm.find('input[name="type"]').val('teacher');

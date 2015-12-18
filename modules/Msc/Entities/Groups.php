@@ -13,7 +13,7 @@ class Groups extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'groups';
-    public $timestamps	=	true;
+    public $timestamps	=	false;
     protected $primaryKey	=	'id';
     public $incrementing	=	true;
     protected $guarded 		= 	[];
