@@ -173,22 +173,28 @@ class Student extends CommonModel {
 
        $result=$connection->table('student')->where('id',$data['id'])->update($item);
 
-        if($result==false){
-            return $result;
+        if($result===false){
+            return false;
        }
 
        $connection=\DB::connection('sys_mis');
 
+        $users_mobile=$connection->table('users')->where('id',$data['id'])->select('mobile')->first();
 
-       $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+//        dd($users_mobile->mobile);
+        $users_mobile=$users_mobile->mobile;
+        if($data['mobile']==$users_mobile){
+            $users=array('gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+        }else{
+            $users=array('gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+        }
 
-
+//       dd($users);
        $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
-
-
-        if($result==false){
-            return $result;
+//        dd($result);
+        if($result===false){
+            return false;
         }
 
         return $result;
