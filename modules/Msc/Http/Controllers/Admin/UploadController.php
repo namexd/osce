@@ -9,6 +9,7 @@
 namespace Modules\Msc\Http\Controllers\Admin;
 
 
+
 use Modules\Msc\Http\Controllers\MscController;
 use Illuminate\Http\Request;
 use App\Repositories\Common;
@@ -22,5 +23,13 @@ class UploadController extends MscController
         $coursesList= array_shift($data);
         $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.user');
         dd($data);
+    }
+    public function postTeachMessageExcel(Request $request) {
+        $data=Common::getExclData($request,'teach');
+        dd($data);
+        $coursesList= array_shift($data);
+        //将中文表头 按照配置 翻译成 英文字段名
+        $data=Common::arrayChTOEn($coursesList,'msc.importForCnToEn.courses');
+
     }
 }

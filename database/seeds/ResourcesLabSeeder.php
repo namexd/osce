@@ -15,6 +15,10 @@ class ResourcesLabSeeder extends Seeder
         foreach($this->defaultData() as $input)
         {
             $input['manager_id']    ='';
+            if(empty($input['name']))
+            {
+                continue;
+            }
             $ResourcesClassroom ->addLabResource($input);
         }
     }

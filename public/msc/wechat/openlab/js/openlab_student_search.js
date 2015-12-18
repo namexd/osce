@@ -23,16 +23,13 @@ function gethistory(qj,url,getdetail){
                 var total_num=this.resources_classroom.person_total;
                 status=now_num+'/'+total_num
 
-                if(this.resources_classroom.status=="0"){
-                    status='';
-                    opera='<span class="State3">不允许预约使用</span>';
-                }else if(this.resources_classroom.status=="1"){
+                if(this.status=="0"){
                     if(this.is_appointment=="1"){
                         opera='<div class="opera"><span class="State2">已预约</span></div>';
                     }else {
                         opera= '<a href="'+getdetail+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=0'+'"><div class="opera">'+'<span class="State1">预约</span>'+'</div>'
                     }
-                }else if(this.resources_classroom.status=="2"){
+                }else if(this.status=="1"){
                     status="";
                     opera='<div class="opera"><span  class="State3">已被预订</span></div>';
                 }

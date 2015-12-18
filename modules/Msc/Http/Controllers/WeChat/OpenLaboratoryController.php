@@ -81,21 +81,30 @@ class OpenLaboratoryController extends MscWeChatController {
 		$dateTime = Input::get('dateTime');
 		$data = [];
 		if(!empty($dateTime)){
+			$data['dateTime'] = $dateTime;
 			$data['week'] = date('N',strtotime($dateTime));
 		}
-
 		$LaboratoryList = $resourcesOpenLabCalendar->getLaboratoryClassroomList($data);
 		$user = Auth::user();
+
 		foreach($LaboratoryList as $k => $v){
 			$LaboratoryList[$k]['is_appointment'] = 0;
+			$LaboratoryList[$k]['status']= 0;
 			$LaboratoryList[$k]['num'] = count($v['ResourcesOpenLabApply']);
-			foreach($v['ResourcesOpenLabApply'] as $val){
-				if($val['apply_uid'] == $user->id){
-					$LaboratoryList[$k]['is_appointment'] = 1;
-					break;
+			$LaboratoryList[$k]['plan_num'] = count($v['get_plan']);
+			if(!empty($v['ResourcesOpenLabApply']) && count($v['ResourcesOpenLabApply'])>0){
+				foreach($v['ResourcesOpenLabApply'] as $val){
+					if($val['apply_uid'] == $user->id){
+						$LaboratoryList[$k]['is_appointment'] = 1;
+						break;
+					}
 				}
 			}
+			if(!empty($v['get_plan']) && count($v['get_plan'])>0){
+				$LaboratoryList[$k]['status']= 1;
+			}
 		}
+
 		return response()->json(
 			$this->success_rows(1,'获取成功',$LaboratoryList->total(),20,$LaboratoryList->currentPage(),array('ClassroomApplyList'=>$LaboratoryList->toArray()))
 		);

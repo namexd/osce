@@ -20,15 +20,20 @@ function gethistory(qj,url,getdetail,getdetail2){
                 var opera;
                 var status;
                 var getdetailall;
-                if(this.resources_classroom.status=="0"){
-                    status='<span class="State3">不允许预约使用</span>';
-                    opera='';
-                }else if(this.resources_classroom.status=="1"){
+                if(this.status=="0"){
+
                     status='<span class="State1">正常</span>';
                     opera= '<a href="'+getdetail2+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=0'+'"><div class="opera">'+'<span class="State1">使用</span>'+'</div>';
-                }else if(this.resources_classroom.status=="2"){
-                    status='<span class="State2">已预约</span>';
-                    opera= '<a href="'+getdetail2+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=2'+'"><div class="opera">'+'<span class="State1">紧急预约</span>'+'</div>';
+                }else if(this.status=="1"){
+
+                    if(this.is_appointment=="1"){
+                        status='<span class="State2">已预约</span>';
+                        opera='';
+                    }else{
+                        status='<span class="State3">已被预订</span>';
+                        opera= '<a href="'+getdetail2+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=2'+'"><div class="opera">'+'<span class="State1">紧急预约</span>'+'</div>';
+                    }
+
                 }
                 var begintime=this.begintime.substring(0,5);
                 var endtime=this.endtime.substring(0,5);

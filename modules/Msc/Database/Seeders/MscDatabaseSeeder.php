@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class MscDatabaseSeeder extends Seeder {
 
@@ -14,7 +15,5 @@ class MscDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 
-		// $this->call("OthersTableSeeder");
 	}
-
 }

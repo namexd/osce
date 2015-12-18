@@ -105,7 +105,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/openlab-history-list',['uses'=>'LabController@getOpenlabHistoryList','as'=>'msc.admin.lab.openlabHistoryList']);
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
 		Route::post('lab/import-lab',['uses'=>'LabController@postImportLab','as'=>'msc.admin.lab.postImportLab']);
-
+		Route::post('lab/add-lab',['uses'=>'LabController@postAddLab','as'=>'msc.admin.lab.postAddLab']);//唐俊
+		Route::controller('upload','UploadController');
+		Route::get('upload/teach-message',['uses'=>'UploadController@getTeachMessage','as'=>'msc.upload.getTeachMessage']);
+		Route::post('upload/teach-message-excel',['uses'=>'UploadController@postTeachMessageExcel','as'=>'msc.admin.upload.postTeachMessageExcel']);
 
 		Route::controller('lab-tools', 'LabToolsController');
 		//开放设备待审核列表

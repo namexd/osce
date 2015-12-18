@@ -31,6 +31,7 @@ input.ng-dirty.ng-invalid {
 }
 
 input[type="text"],input[type="password"],input[type="button"],input[type="submit"],textarea{box-shadow:none!important;-webkit-box-shadow:none!important;-webkit-appearance: none;}
+select{box-shadow:none!important;-webkit-box-shadow:none!important;}
 li{list-style:none}
 img,input{vertical-align:middle}
 table{border-collapse:collapse;empty-cells:show}
