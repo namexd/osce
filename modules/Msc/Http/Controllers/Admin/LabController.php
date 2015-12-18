@@ -203,7 +203,7 @@ class LabController extends MscController
 
     /**
      * 获得开放实验室使用历史列表
-     * @method GET /msc/admin/lab/openlab-history-list
+     * @method GET /msc/admin/lab/open-lab-history-list
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -221,7 +221,7 @@ class LabController extends MscController
      * @date 2015-12-3 15:45
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getOpenlabHistoryList(Request $request)
+    public function getOpenLabHistoryList(Request $request)
     {
         $this->validate($request, [
             'date'       => 'sometimes|date_format:Y/m/d',
