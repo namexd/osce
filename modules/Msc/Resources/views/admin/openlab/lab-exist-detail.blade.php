@@ -43,62 +43,7 @@
                 $(".select-floor").hide();
             }
         })
-        /*{}{
-         * 下面是进行插件初始化
-         * 你只需传入相应的键值对
-         * */
-        $('#sourceForm').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                name: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '用户名不能为空'
-                        }
-                    }
-                },
-                manager_name: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '用户名不能为空'
-                        },
-                        stringLength: {
-                            min:2,
-                            message: '用户名长度必须大于2'
-                        }
-                    }
-                },
-                manager_mobile: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '手机号码不能为空'
-                        },
-                        stringLength: {
-                            min: 11,
-                            max: 11,
-                            message: '请输入11位手机号码'
-                        },
-                        regexp: {
-                            regexp: /^1[3|5|8]{1}[0-9]{9}$/,
-                            message: '请输入正确的手机号码'
-                        }
-                    }
-                },
-                location: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '地址不能为空'
-                        }
-                    }
-                }
-            }
-        });
+
 
 
   </script>

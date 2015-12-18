@@ -480,7 +480,7 @@ class UserController extends MscController
             'mobile' => 'required|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender', 'role',  'dept_name','mobile']);
+        $data = $request->only(['id','name', 'code', 'gender', 'role',  'dept_name','mobile']);
 
         $teacherModel = new Teacher();
 
@@ -521,7 +521,7 @@ class UserController extends MscController
             'mobile' => 'required|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept','role'.  'dept_name','mobile']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept','role','dept_name','mobile']);
         $data['status']=$status;
         $teacherModel = new Teacher();
 
