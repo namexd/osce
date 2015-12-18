@@ -325,7 +325,7 @@ class UserController extends MscController
      * @date 2015-12-15 16:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postStudentAdd(Request $request,$status=0)
+    public function postStudentAdd(Request $request,$status=1)
     {
         $this->validate($request, [
             'name' => 'required|max:50',
@@ -511,7 +511,7 @@ class UserController extends MscController
      * @date 2015-12-15 16:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTeacherAdd(Request $request,$status=0)
+    public function postTeacherAdd(Request $request,$status=1)
     {
 
         $this->validate($request, [
