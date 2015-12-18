@@ -1,4 +1,5 @@
 /*信息管理页面css*/
+.container_index a:hover{text-decoration: none;}
 .container_index { padding-bottom:65px;}
 .container_index .row1  span{float: left;line-height: 60px; margin-right:20px; font-size: 16px;}
 .container_index .row1 .normal_background{
@@ -38,6 +39,7 @@
 .footer ul .check  p{ color: #0799fc;}
 
 .footer .icon1{ background-position:0 0px;}
+.footer  ul li:first-child a p{color: #ccc;}
 .footer .icon2{ background-position:0 -26px;}
 .footer .icon3{ background-position:0 -55px;}
 

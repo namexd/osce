@@ -278,7 +278,7 @@ class UserController extends MscController
     public function postStudentSave(Request $request)
     {
         $this->validate($request, [
-            'id' => 'sometimes|min:0|max:10',
+            'id' => 'required|min:0|max:10',
             'name' => 'required|max:50',
             'code' => 'required|min:0|max:32',
             'gender' => 'required|max:1',
@@ -293,7 +293,7 @@ class UserController extends MscController
 
         $data = $request->only(['id', 'name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
 
-//        dd($data);
+//        dd($data['id']);
 
         $studentModel = new Student();
 
@@ -330,17 +330,17 @@ class UserController extends MscController
     {
         $this->validate($request, [
             'name' => 'required|max:50',
-            'code' => 'required|integer|min:0|max:32',
-            'gender' => 'required|min:0|max:1',
-            'grade' => 'required|integer|min:0|max:11',
-            'student_type' => 'required|integer|min:0|max:3',
+            'code' => 'required|max:32',
+            'gender' => 'required|max:1',
+            'grade' => 'required|max:11',
+            'student_type' => 'required|max:3',
             'profession_name' => 'required|max:50',
             'mobile' => 'required|max:11',
-            'idcard_type' => 'required|integer|min:0|max:1',
-            'idcard' => 'required|integer|min:0|max:50',
+            'idcard_type' => 'required|max:1',
+            'idcard' => 'required|max:50',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'professional_name', 'mobile', 'idcard_type', 'idcard']);
+        $data = $request->only(['name', 'code', 'gender', 'grade', 'student_type', 'profession_name', 'mobile', 'idcard_type', 'idcard']);
 
         $data['status']=$status;
         $studentModel = new Student();
@@ -355,6 +355,7 @@ class UserController extends MscController
         return response()->json(
             ['success' => false]
         );
+
     }
 
     /**
@@ -400,7 +401,6 @@ class UserController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * <<<<<<< HEAD
      * * int        $id        学生编号
      *
      * @return blooean
@@ -432,7 +432,7 @@ class UserController extends MscController
     /**
      * 编辑时教职工回显
      * @method GET
-     * @url /msc/admin/user/teacher-list
+     * @url /msc/admin/user/teacher-edit/{$id}
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -459,7 +459,7 @@ class UserController extends MscController
     /**
      * 提交编辑教职工
      * @method GET
-     * @url /msc/admin/user/teacher-save/{id}
+     * @url /msc/admin/user/teacher-save
      * @access public
      *
      * @param Request $request get请求<br><br>
@@ -504,7 +504,7 @@ class UserController extends MscController
     /**
      * 添加教职工信息
      * @method GET
-     * @url /msc/admin/user/teacher-add/{id}
+     * @url /msc/admin/user/teacher-add
      * @access public
      *
      * @param Request $request post请求<br><br>

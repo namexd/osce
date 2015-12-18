@@ -16,4 +16,6 @@ class TeacherDept extends Model
     protected $connection	=	'msc_mis';
     protected $table 		= 	'teacher_dept';
     protected $fillable 	=	["id","name","code"];
+    public $incrementing	=	true;
+    public $timestamps	=	false;
 }
