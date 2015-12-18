@@ -126,7 +126,6 @@ class OpenLaboratoryController extends MscWeChatController {
 	public function getOrderLab(ResourcesOpenLabCalendar $ResourcesOpenLabCalendar,StudentClass $studentClass,Groups $groups,ResourcesOpenLabPlan $ResourcesOpenLabPlan,ResourcesClassroomCourses $ResourcesClassroomCourses,Courses $Courses){
 		$pid = Input::get('id');//clelend.id
 		$ClassroomPlan_detai = $ResourcesOpenLabCalendar->order_detail($pid);
-		dd($ClassroomPlan_detai->resources_lab_id);
 		$user = Auth::user();
 		$username = $user->name;
 		$user_type = $user->user_type;
