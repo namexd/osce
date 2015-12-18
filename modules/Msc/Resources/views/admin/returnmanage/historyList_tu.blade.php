@@ -45,7 +45,7 @@
         width: 20px;
     }
     .select2-container--default .select2-results > .select2-results__options {overflow-y: inherit;}
-
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {border-color: #000 transparent transparent;}
     </style>
 @stop
 
