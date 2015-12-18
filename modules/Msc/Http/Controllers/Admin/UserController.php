@@ -347,10 +347,10 @@ class UserController extends MscController
         $result = $studentModel->postAddStudent($data);
 
         if ($result) {
-            return redirect()->back()->withInput()->withErrors('保存成功');
+            return redirect()->back()->withInput()->withErrors('新增成功');
 
         }
-        return redirect()->back()->withInput()->withErrors('保存失败');
+        return redirect()->back()->withInput()->withErrors('新增失败');
 
     }
 
@@ -529,10 +529,10 @@ class UserController extends MscController
         $result = $teacherModel->postAddTeacher($data);
 
         if ($result) {
-            return redirect()->back()->withInput()->withErrors('保存成功');
+            return redirect()->back()->withInput()->withErrors('新增成功');
 
         }
-        return redirect()->back()->withInput()->withErrors('保存失败');
+        return redirect()->back()->withInput()->withErrors('新增失败');
     }
 
     /**
