@@ -102,8 +102,15 @@ class Teacher extends CommonModel {
     public function saveEditTeacher($data){
         $connection=\DB::connection('msc_mis');
 
+        $role=$connection->table('teacher_dept')->where('name',$data['dept_name'])->first();
 
-        $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+        if(!$role){
+          $role_id=$connection->table('teacher_dept')->insertGetId('name',$data['dept_name']);
+        }else{
+          $role_id=$role->id;
+        }
+
+        $item=array('name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$role_id);
 
         $result=$connection->table('teacher')->where('id',$data['id'])->update($item);
 
@@ -165,8 +172,15 @@ class Teacher extends CommonModel {
 
         $connection=\DB::connection('msc_mis');
 
+        $role=$connection->table('teacher_dept')->where('name',$data['dept_name'])->first();
 
-        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$data['teacher_dept']);
+        if(!$role){
+            $role_id=$connection->table('teacher_dept')->insert('name',$data['dept_name']);
+        }else{
+            $role_id=$role->id;
+        }
+
+        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'teacher_dept'=>$role_id);
 
         $result=$connection->table('teacher')->insert($item);
 

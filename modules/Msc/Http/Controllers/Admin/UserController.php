@@ -481,11 +481,12 @@ class UserController extends MscController
             'name' => 'required|max:50',
             'code' => 'required|integer|min:0|max:32',
             'gender' => 'required|min:0|max:1',
-            'teacher_dept' => 'required|integer|min:0|max:3',
+            'role' => 'required|min:0|max:1',
+            'dept_name' => 'required|integer|min:0|max:3',
             'mobile' => 'required|integer|max:11',
         ]);
 
-        $data = $request->only(['name', 'code', 'gender',  'teacher_dept',  'mobile']);
+        $data = $request->only(['name', 'code', 'gender',  'teacher_dept','role'.  'dept_name','mobile']);
 
         $teacherModel = new Teacher();
 
