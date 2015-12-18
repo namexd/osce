@@ -42,9 +42,9 @@
             /*时间选择*/
             var start = {
                 elem: "#start",
-                format: "YYYY-MM-DD hh:mm:ss",
-                min: "1970-00-00 00:00:00",
-                max: "2099-06-16 23:59:59",
+                format: "YYYY-MM-DD",
+                min: "1970-00-00",
+                max: "2099-06-16",
                 istime: true,
                 istoday: false,
                 choose: function (a) {
