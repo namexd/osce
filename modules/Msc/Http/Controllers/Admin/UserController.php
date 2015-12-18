@@ -94,6 +94,7 @@ class UserController extends MscController
             'professionList'    => $professionList,
             'pagination'        => $pagination,
         ]);
+
     }
 
     /**
@@ -517,7 +518,7 @@ class UserController extends MscController
             'name' => 'required|max:50',
             'code' => 'required|max:32',
             'gender' => 'required|max:1',
-            'dept_name' => 'required|max:3',
+            'dept_name' => 'required|max:20',
             'mobile' => 'required|max:11',
         ]);
 
@@ -633,15 +634,6 @@ class UserController extends MscController
             //添加失败的数据
             $dataFalse = [];
             //判断是否存在这个教师用户
-            //'teacher_group'=>[
-//'姓名'=>'name',
-//'胸牌号'=>'code',   1
-//'科室'=> 'teacher_dept',  1
-//'手机号'=>'mobile',
-//'性别'=> 'gender',
-//'角色'=>'role',
-//'状态'=>'status',
-//],
             foreach ($teacherInfo as $teacherData) {
 
                 //处理性别gender
@@ -776,7 +768,9 @@ class UserController extends MscController
 //                        $student = Student::create($studentData);
 //                        $user =User::create($studentData);
                         $student = new Student();
-                        $student->AddStudent($studentData);
+                         $student->AddStudent($studentData);
+//                        die(json_encode($a));
+
                         if ($student == false) {
                             $dataFalse[] = $studentData;
                         }
@@ -813,13 +807,13 @@ class UserController extends MscController
      *
      */
 
-    public function getExportStudentUser(Request $keyword)
+    public function getExportStudentUser(Request $request)
     {
 //        dd($keyword);exit;
-
         //同步学生列表的数据
-        $studentInfo = $this->getStudentList($keyword);
-//        dd($studentInfo->list);
+        $studentInfo = $this->getStudentList($request);
+//        var_dump($studentInfo);
+        dd($studentInfo->list);
 
         $str = iconv('utf-8', 'gb2312', '序号,姓名,学号,年级,类别,专业,手机号,证件号,性别,状态') . "\n";
         if (empty($studentInfo->list)) {
@@ -842,7 +836,6 @@ class UserController extends MscController
         $filename = date('Ymd') . '.csv';
         $this->export_csv($filename, $str);
 
-        return response()->json($this->fail("1"));
     }
 
     private function export_csv($filename, $data)
