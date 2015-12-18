@@ -11,13 +11,12 @@ class TeacherSeeder extends Seeder
      */
     public function run()
     {
-        //
         foreach($this->defaultData() as $input)
         {
             \Modules\Msc\Entities\Teacher::firstOrCreate($input);
         }
-
     }
+   
     public function defaultData(){
         return [
             [
