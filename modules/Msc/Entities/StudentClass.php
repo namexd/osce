@@ -15,8 +15,8 @@ class StudentClass extends Model
     protected $connection	=	'msc_mis';
     protected $table 		= 	'student_class';
     public $incrementing	=	true;
-    public $timestamps	    =	true;
-    protected $fillable 	=	['name', 'detail', 'student_class_id'];
+    public $timestamps	=	false;
+    protected $fillable 	=	['name', 'id', 'code'];
 
 
 }
