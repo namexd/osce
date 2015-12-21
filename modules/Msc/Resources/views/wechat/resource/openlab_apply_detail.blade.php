@@ -38,8 +38,8 @@
 <form id="sourceForm">
     <div class="add_main">
         <div class="form-group">
-            <label for="">设备</label>
-            <input type="text" readonly="readonly" value="{{$apply->name}}" class="form-control">
+            <label for="">教室</label>
+            <input type="text" readonly="readonly" value="{{$apply->lab->name}}" class="form-control">
         </div>
         <div class="form-group">
             <label for="">申请人</label>
