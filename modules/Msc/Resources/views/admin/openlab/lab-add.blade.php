@@ -235,7 +235,7 @@
                                 <div class="col-sm-10 select_code">
                                     <select id="select_Category"   class="form-control m-b" name="opened">
                                         <option value="-1">请选择类别</option>
-                                        <option value="0" @if(@$openLabDetail['name'] === 0)selected="selected"@endif>普通实验室</option>
+                                        <option value="0" @if(@$openLabDetail['name'] == 0)selected="selected"@endif>普通实验室</option>
                                         <option value="1" @if(@$openLabDetail['name'] == 1)selected="selected"@endif>开发实验室(只能预约实验室)</option>
                                         <option value="2" @if(@$openLabDetail['name'] == 2)selected="selected"@endif>开发实验室(只能预约设备)</option>
                                         {{--@foreach ($resourcesCateList as $item)

@@ -115,7 +115,7 @@
 									<td>
 										@if($data['opened'] == 1)
 											开发实验室
-										@elseif($data['opened'] == 1)
+										@elseif($data['opened'] == 2)
 											开发实验室设备预约
 										@else
 											普通实验室
@@ -127,7 +127,7 @@
 									<td>
 										@if($data['status'] == 1)
 											正常
-										@elseif($data['status'] == 1)
+										@elseif($data['status'] == 2)
 											已预约
 										@else
 											禁止预约
