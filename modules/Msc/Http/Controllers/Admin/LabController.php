@@ -49,13 +49,23 @@ class LabController extends MscController
     public  function getHadOpenLabList(ResourcesClassroom $ResourcesClassroom){
         // 筛选条件处理
         $where = [];
-        if (Input::get('keyword')) {
-            $where['keyword'] = Input::get('keyword');
-        }
+        $where = Input::get();
         // 获取列表
         $pagination = $ResourcesClassroom->getPcList($where);
+        //获取负责人
+        $arr = array();
+        foreach($pagination as $v){
+            if(!in_array($v['manager_name'],$arr)){
+                $arr[] = $v['manager_name'];
+            }
+        }
         $data = [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'manager_name' => $arr,
+            'keyword' => Input::get('keyword'),
+            'status' => Input::get('status'),
+            'manager' => Input::get('manager'),
+            'opened' => Input::get('opened'),
         ];
         return view('msc::admin.openlab.lab-exist-list',$data);
     }
@@ -114,12 +124,12 @@ class LabController extends MscController
         $data = [
             'openLabDetail' => $openLabDetail
         ];
-        return view('msc::admin.openlab.had-lab',$data);
+        return view('msc::admin.openlab.lab-add',$data);
     }
 
     /**
      * 现有开放实验室新增页
-     * @api get /msc/admin/lab/had-open-lab-edit
+     * @api get /msc/admin/lab/had-open-lab-add
      * @access public
      *
      * @param Request $request post请求<br><br>
