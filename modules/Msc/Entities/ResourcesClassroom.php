@@ -117,6 +117,57 @@ class ResourcesClassroom extends  CommonModel {
         ];
         return $this->create($data);
 	}
+    //新增教室
+    public function addClassRommResources($request){
+        $imagesArray = $request->get('images_path');
+
+        $formData    = $request->only(['name', 'code', 'location', 'begintime', 'endtime', 'manager_name', 'manager_mobile','detail','person_total']);
+
+        $formData['opened'] = empty($formData['opened']) ? 0 : $formData['opened'];
+        $formData['manager_id'] = empty($formData['manager_id']) ? 0 : $formData['manager_id'];
+        $connection = DB::connection('msc_mis');
+        try{
+            $connection->beginTransaction();
+            $resources =$this->create($formData);
+            if(!$resources){
+                throw new \Exception('新增教室失败！');
+            }
+
+            $_formData = [
+                'type'        => 'CLASSROOM',
+                'item_id'     => $resources->id,
+                'description' => '',
+            ];
+            $_resources = Resources::create($_formData);
+
+            if(!$_resources)
+            {
+                throw new \Exception('新增教室失败！');
+            }
+            if (!empty($imagesArray))
+            {
+                foreach($imagesArray as $item)
+                {
+                    $data=[
+                        'resources_id' => $_resources->id,
+                        'url'          => $item,
+                        'order'        => 0,
+                        'descrption'   => '',
+                    ];
+                    $result = ResourcesImage::create($data);
+                    if(!$result)
+                    {
+                        throw new \Exception('图片保存失败！');
+                    }
+                }
+            }
+            $connection->commit();
+            return true;
+        }catch (\Exception $ex){
+            $connection->rollback();
+            return $ex;
+        }
+    }
 
     //给教室选择下拉列表提供数据
     public function getClassroomName($keyword = '') {
@@ -180,7 +231,7 @@ class ResourcesClassroom extends  CommonModel {
             ]);
         return $builder->get();
     }
-    
+
     //根据计划id获取课程视频信息
     public function getCourseVcrByPlanId($id){
 
@@ -238,10 +289,21 @@ class ResourcesClassroom extends  CommonModel {
     // 获得pc端开放实验室使用历史记录列表
     public function getPcList ($where)
     {
-        $search = empty($where['keyword']) ? null : $where['keyword'];
         $builder = $this;
-        if(!empty($seach)){
-            $builder = $builder->where('name','like',$search,'like');
+        unset($where['v']);
+        if(!empty($where)) {
+            if (!empty($where['keyword'])) {
+                $builder = $builder->where('name', 'like', '%' . $where['keyword'] . '%');
+            }
+            if ($where['opened'] == 1 || $where['opened'] == 0 || $where['opened'] == 2) {
+                $builder = $builder->where('opened', '=', $where['opened']);
+            }
+            if (!empty($where['status'])) {
+                $builder = $builder->where('status', '=', $where['status']);
+            }
+            if (!empty($where['manager'])) {
+                $builder = $builder->where('manager_name', '=', $where['manager']);
+            }
         }
         $pagination = $builder->orderBy('id','desc')->paginate(config('msc.page_size',10));
         return $pagination;

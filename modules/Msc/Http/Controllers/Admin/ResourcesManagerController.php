@@ -455,6 +455,26 @@ class ResourcesManagerController extends MscController
     }
 
     /**
+     * 新增教室-表单
+     * @api GET /msc/admin/resources-manager/add-classroom
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author gaoshichong
+     * @date 2015-12-21 14:02:48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddClassroom(Request $request){
+        //return view("");
+    }
+    /**
      * 异步获取设备子分类
      * @method GET /msc/admin/resources-manager/ajax-resources-tools-cate
      * @access public
@@ -513,7 +533,7 @@ class ResourcesManagerController extends MscController
                 $view=$this->addToolsResources($request);
                 break;
             case 'CLASSROOM':
-                //$view=$this->addClassRommResources($request);
+                $view=$this->addClassRommResources($request);
                 break;
             case 'DEVICE':
                 $view = $this->addDeviceResources($request);
@@ -523,7 +543,6 @@ class ResourcesManagerController extends MscController
         }
         return $view;
     }
-
     /**
      * 新增开放设备
      * @param Request $request
@@ -550,6 +569,29 @@ class ResourcesManagerController extends MscController
         }
     }
 
+    /*
+    * 新增教室
+    */
+    private function addClassRommResources(Request $request){
+        $this->validate($request,[
+            'name'           => 'required|max:50|min:0',
+            'code'           => 'required|max:50|min:0',
+            'begintime'      => 'required',
+            'endtime'        => 'required',
+            'manager_name'   => 'required|max:50|min:0',
+            'manager_mobile' => 'required|mobile_phone',
+            'location'       => 'required|max:50|min:0',
+            'person_total'   => 'required|integer',
+            'detail'         => 'sometimes|max:255|min:0',
+        ]);
+        $resourcesClassroom=new ResourcesClassroom();
+        $rst=$resourcesClassroom->addClassRommResources($request);
+        if($rst===true){
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddClassroom');
+        }else{
+            return redirect()->back()->withErrors($rst);
+        }
+    }
     /*
     * 新增外借设备
     */
