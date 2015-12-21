@@ -235,9 +235,9 @@
                                 <div class="col-sm-10 select_code">
                                     <select id="select_Category"   class="form-control m-b" name="opened">
                                         <option value="-1">请选择类别</option>
-                                        <option value="0" @if($openLabDetail['name'] == 0)selected="selected"@endif>普通实验室</option>
-                                        <option value="1" @if($openLabDetail['name'] == 1)selected="selected"@endif>开发实验室(只能预约实验室)</option>
-                                        <option value="2" @if($openLabDetail['name'] == 2)selected="selected"@endif>开发实验室(只能预约设备)</option>
+                                        <option value="0" @if(@$openLabDetail['name'] === 0)selected="selected"@endif>普通实验室</option>
+                                        <option value="1" @if(@$openLabDetail['name'] == 1)selected="selected"@endif>开发实验室(只能预约实验室)</option>
+                                        <option value="2" @if(@$openLabDetail['name'] == 2)selected="selected"@endif>开发实验室(只能预约设备)</option>
                                         {{--@foreach ($resourcesCateList as $item)
                                             <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                         @endforeach--}}
@@ -264,9 +264,9 @@
                                 <div class="col-sm-10">
                                     <select id="select_Category"   class="form-control m-b" name="status">
                                         <option value="-1">请选择状态</option>
-                                        <option value="0" @if($openLabDetail['status'] == 0)selected="selected"@endif>不允许预约使用</option>
-                                        <option value="1" @if($openLabDetail['status'] == 1)selected="selected"@endif>正常</option>
-                                        <option value="2" @if($openLabDetail['status'] == 2)selected="selected"@endif>已预约</option>
+                                        <option value="0" @if(@$openLabDetail['status'] == 0)selected="selected"@endif>不允许预约使用</option>
+                                        <option value="1" @if(@$openLabDetail['status'] == 1)selected="selected"@endif>正常</option>
+                                        <option value="2" @if(@$openLabDetail['status'] == 2)selected="selected"@endif>已预约</option>
                                     </select>
                                 </div>
                             </div>
@@ -321,7 +321,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div id="code_list">
-
+                                <input type="hidden" name="id" value="{{$openLabDetail->id}}">
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">

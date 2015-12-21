@@ -24,7 +24,7 @@ use Modules\Msc\Entities\ResourcesLabApply;
 use Illuminate\Support\Facades\Auth;
 use Modules\Msc\Repositories\Common as MscCommon;
 use Illuminate\Support\Facades\Input;
-
+use DB;
 class LabController extends MscController
 {
     /**
@@ -170,19 +170,6 @@ class LabController extends MscController
 
     public  function postHadOpenLabToAdd(Request $request){
         $id = Input::get('id');
-//        $this->validate($request, [
-//            'name'       => 'required|max:30',
-//            'code'    => 'required',
-//            'location' => 'required|max:50',
-//            'begintime' => 'required',
-//            'endtime' => 'required',
-//            'opened' => 'sometimes|in:0,1,2',
-//            'manager_name' => 'required',
-//            'manager_mobile' => 'required',
-//            'detail' => 'required',
-//            'person_total' => 'required|interger',
-//            'status' => 'sometimes|in:0,1,2',
-//        ]);
         $data = [
             'name' => Input::get('name'),
             'code' => Input::get('code'),
@@ -198,8 +185,11 @@ class LabController extends MscController
             'person_total' => Input::get('person_total'),
         ];
         if($id){
+
+           // dd('eqq');
             //修改实验室
             $add = DB::connection('msc_mis')->table('resources_lab')->where('id','=',$id)->update($data);
+            //dd($add);
         }else{
             //新增实验室
             $add = ResourcesClassroom::create($data);
