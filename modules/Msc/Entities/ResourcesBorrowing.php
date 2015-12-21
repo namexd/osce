@@ -87,7 +87,7 @@ class ResourcesBorrowing extends  CommonModel
             [
                 strtotime(date('Y-m-d'))
             ]
-        )   ->  orderBy('begindate','asc');
+        )   ->  where('apply_validated','=',0) -> orderBy('begindate','asc');
         if($pid!==false)
         {
             //如果
@@ -156,7 +156,7 @@ class ResourcesBorrowing extends  CommonModel
         )   ->  where($this->table.'.status','=',0)
             ->  where($this->table.'.apply_validated','=',1)
             ->  where($this->table.'.loan_validated','=',1)
-            ->  whereRaw('unix_timestamp(enddate) < ?',[strtotime(date('Y-m-d H:i:s'))]);
+            ->  whereRaw('unix_timestamp(enddate) > ?',[strtotime(date('Y-m-d H:i:s'))]);
 
         if ($keyword !== "") {
             $builder->where('resources_tools.name','like','%'.$keyword.'%');

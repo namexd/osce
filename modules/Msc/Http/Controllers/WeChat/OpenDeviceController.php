@@ -99,11 +99,10 @@ class OpenDeviceController extends MscWeChatController
 
         $cateId = $request->input('cate_id');
         $date   = $request->input('date');
-
+        empty($cateId) ? 1 : $cateId;
         $resourcesDevice = new ResourcesDevice();
         $list = $resourcesDevice->getAvailableList($cateId, $date);
-
-
+//        return response()->json($list);
         if ($list)
         {
             return response()->json(

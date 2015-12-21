@@ -24,7 +24,9 @@ use Modules\Msc\Entities\ResourcesLabApply;
 use Illuminate\Support\Facades\Auth;
 use Modules\Msc\Repositories\Common as MscCommon;
 use Illuminate\Support\Facades\Input;
-
+use DB;
+use Modules\Msc\Entities\ResourcesLabCalendar;
+use Modules\Msc\Entities\ResourcesOpenLabCalendar;
 class LabController extends MscController
 {
     /**
@@ -49,13 +51,27 @@ class LabController extends MscController
     public  function getHadOpenLabList(ResourcesClassroom $ResourcesClassroom){
         // 筛选条件处理
         $where = [];
-        if (Input::get('keyword')) {
-            $where['keyword'] = Input::get('keyword');
-        }
+        //$where = Input::get();
+        $where['opened'] = Input::get('opened');
+        $where['status'] = Input::get('status');
+        $where['manager'] = Input::get('manager');
+        $where['keyword'] = Input::get('keyword');
         // 获取列表
         $pagination = $ResourcesClassroom->getPcList($where);
+        //获取负责人
+        $arr = array();
+        foreach($pagination as $v){
+            if(!in_array($v['manager_name'],$arr)){
+                $arr[] = $v['manager_name'];
+            }
+        }
         $data = [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'manager_name' => $arr,
+            'keyword' => Input::get('keyword'),
+            'status' => Input::get('status'),
+            'manager' => Input::get('manager'),
+            'opened' => Input::get('opened'),
         ];
         return view('msc::admin.openlab.lab-exist-list',$data);
     }
@@ -114,12 +130,12 @@ class LabController extends MscController
         $data = [
             'openLabDetail' => $openLabDetail
         ];
-        return view('msc::admin.openlab.had-lab',$data);
+        return view('msc::admin.openlab.lab-add',$data);
     }
 
     /**
      * 现有开放实验室新增页
-     * @api get /msc/admin/lab/had-open-lab-edit
+     * @api get /msc/admin/lab/had-open-lab-add
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -159,20 +175,8 @@ class LabController extends MscController
      */
 
     public  function postHadOpenLabToAdd(Request $request){
+        DB::connection('msc_mis')->beginTransaction();
         $id = Input::get('id');
-//        $this->validate($request, [
-//            'name'       => 'required|max:30',
-//            'code'    => 'required',
-//            'location' => 'required|max:50',
-//            'begintime' => 'required',
-//            'endtime' => 'required',
-//            'opened' => 'sometimes|in:0,1,2',
-//            'manager_name' => 'required',
-//            'manager_mobile' => 'required',
-//            'detail' => 'required',
-//            'person_total' => 'required|interger',
-//            'status' => 'sometimes|in:0,1,2',
-//        ]);
         $data = [
             'name' => Input::get('name'),
             'code' => Input::get('code'),
@@ -188,17 +192,84 @@ class LabController extends MscController
             'person_total' => Input::get('person_total'),
         ];
         if($id){
+
+           // dd('eqq');
             //修改实验室
             $add = DB::connection('msc_mis')->table('resources_lab')->where('id','=',$id)->update($data);
+            if(!$add){
+                DB::connection('msc_mis')->rollBack();
+                return redirect()->back()->withErrors('系统异常');
+            }
+            $arr = [
+                'begintime' => Input::get('begintime'),
+                'endtime' => Input::get('endtime'),
+            ];
+            $labdetail =ResourcesOpenLabCalendar::find($id);
+            if(Input::get('opened') > 0){
+
+                if($labdetail['opened'] == Input::get('opened')){
+                    $addcleader = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('resources_lab_id','=',$id)->update($arr);
+                    if(!$addcleader){
+                        DB::connection('msc_mis')->rollBack();
+                        return redirect()->back()->withErrors('系统异常');
+                    }
+                    $addcleader = ResourcesOpenLabCalendar::create($arr);
+                }else{
+                    $del = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('resources_lab_id','=',$id)->delete();
+                    if(!$del){
+                        DB::connection('msc_mis')->rollBack();
+                        return redirect()->back()->withErrors('系统异常');
+                    }
+                    $addcleader = ResourcesLabCalendar::create($arr);
+                }
+
+            }else{
+
+                if($labdetail['opened'] == Input::get('opened')){
+                    $addcleader = DB::connection('msc_mis')->table('resources_lab_calendar')->where('resources_lab_id','=',$id)->update($arr);
+                    if(!$addcleader){
+                        DB::connection('msc_mis')->rollBack();
+                        return redirect()->back()->withErrors('系统异常');
+                    }
+                    $addcleader = ResourcesLabCalendar::create($arr);
+                }else{
+                    $del = DB::connection('msc_mis')->table('resources_lab_calendar')->where('resources_lab_id','=',$id)->delete();
+                    if(!$del){
+                        DB::connection('msc_mis')->rollBack();
+                        return redirect()->back()->withErrors('系统异常');
+                    }
+                    $addcleader = ResourcesOpenLabCalendar::create($arr);
+                }
+            }
+
         }else{
             //新增实验室
             $add = ResourcesClassroom::create($data);
+            //dd($add);
+            if(!$add){
+                DB::connection('msc_mis')->rollBack();
+                return redirect()->back()->withErrors('系统异常');
+            }
+            $arr = [
+                'resources_lab_id' => $add['id'],
+                'week' => '1,2,3,4,5,6,7',
+                'begintime' => Input::get('begintime'),
+                'endtime' => Input::get('endtime'),
+                'opentype' => Input::get('opened'),
+            ];
+            if(Input::get('opened') > 0){
+                $addcleader = ResourcesOpenLabCalendar::create($arr);
+            }else{
+                $addcleader = ResourcesLabCalendar::create($arr);
+            }
+            if(!$addcleader){
+                DB::connection('msc_mis')->rollBack();
+                return redirect()->back()->withErrors('系统异常');
+            }
+
         }
-        if($add){
-            return redirect()->intended('/msc/admin/lab/had-open-lab-list');
-        }else{
-            return redirect()->back()->withErrors('系统异常');
-        }
+        DB::connection('msc_mis')->commit();
+        return redirect()->intended('/msc/admin/lab/had-open-lab-list');
     }
 
     /**
@@ -384,10 +455,9 @@ class LabController extends MscController
         $id = $request->get('id');
         $status = $request->get('status');
         $reject = $request->get('reject');
-        //$ResourcesClassroomApply = new ResourcesClassroomApply();
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
 
-        //try {
+        try {
             $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject);
             if ($result) {
                 return response()->json(
@@ -396,9 +466,9 @@ class LabController extends MscController
             } else {
                 return response()->json($this->fail(new \Exception('审核失败')));
             }
-        //} catch (\Exception $ex) {
-        //    return response()->json($this->fail($ex));
-        //}
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**

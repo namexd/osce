@@ -199,6 +199,9 @@ class ResourcesOpenLabApply extends CommonModel
      */
     public function getWaitExamineList($classroomName,$date, $order){
         return  $this   -> with([
+//        $mis    =   DB::connection($this->connection);
+//        $mis    ->  enableQueryLog();
+//        $b=  $this   -> with([
             'classroomCourses'  =>  function($qurey) use ($classroomName){
                 if(!is_null($classroomName))
                 {
@@ -213,12 +216,15 @@ class ResourcesOpenLabApply extends CommonModel
                 }
             }
         ])  ->  where('status','=',0)
+            ->  where('apply_type','=',0)
             ->  whereRaw(
-            'unix_timestamp(apply_date) > ?',
+            'unix_timestamp(apply_date) >= ?',
             [
                 strtotime($date),
             ]
         ) -> paginate(config('msc.page_size'));
+//        $b=$mis->getQueryLog();
+//        dd($b);
     }
 
     //处理开放实验室审核
@@ -271,8 +277,26 @@ class ResourcesOpenLabApply extends CommonModel
             throw $ex;
         }
     }
-    public function refundApply(){
-
+    public function refundApply($id,$reject){
+        try{
+            $apply      =   $this   ->  find($id);
+            $apply      ->  status  =   2;
+            $apply      ->  reject  =   $reject;
+            if($apply   ->  save())
+            {
+                $reject =   '你申请的开放实验室预约，因为：'.$reject.'被取消了,欢迎你下次预约。';
+                $this   ->  sendMsg($apply->applyUser,$reject);
+                return  $apply;
+            }
+            else
+            {
+                throw new \Exception('审核失败');
+            }
+        }
+        catch (\Exception $ex)
+        {
+            throw $ex;
+        }
     }
     public function agreeTeacherApply($apply){
         $calendar   =   $apply  ->  calendar;
@@ -299,6 +323,7 @@ class ResourcesOpenLabApply extends CommonModel
                 if($this   ->  cancelStudentPlan($planData['resources_openlab_calendar_id'],$planData['currentdate']))
                 {
                     //创建教师预约的新计划
+
                     $newPlan    =   ResourcesOpenLabPlan::create($planData);
                     if(!$newPlan)
                     {

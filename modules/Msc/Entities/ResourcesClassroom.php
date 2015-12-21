@@ -19,7 +19,7 @@ class ResourcesClassroom extends  CommonModel {
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
 
-    protected $fillable 	=	['name', 'code', 'location', 'begintime', 'endtime', 'manager_id', 'manager_name', 'manager_mobile', 'detail', 'status', 'opened','person_total'];
+    protected $fillable 	=	['name', 'code', 'location', 'begintime', 'endtime', 'manager_id', 'manager_name', 'manager_mobile', 'detail', 'status', 'opened'];
     public $search          =   ['manager_name','manager_mobile','detail','code'];
 
     protected $statusAttrName =   [
@@ -70,7 +70,7 @@ class ResourcesClassroom extends  CommonModel {
 
     //获取教室资源 列表 （唐俊）
     public function getClassroomList(){
-        return $this->get();
+        return $this->where('opened','=',0)->get();
     }
 
     public function resourcesLabCalendar(){
@@ -165,7 +165,7 @@ class ResourcesClassroom extends  CommonModel {
             return true;
         }catch (\Exception $ex){
             $connection->rollback();
-            return false;
+            return $ex;
         }
     }
 
@@ -231,7 +231,7 @@ class ResourcesClassroom extends  CommonModel {
             ]);
         return $builder->get();
     }
-    
+
     //根据计划id获取课程视频信息
     public function getCourseVcrByPlanId($id){
 
@@ -289,10 +289,24 @@ class ResourcesClassroom extends  CommonModel {
     // 获得pc端开放实验室使用历史记录列表
     public function getPcList ($where)
     {
-        $search = empty($where['keyword']) ? null : $where['keyword'];
         $builder = $this;
-        if(!empty($seach)){
-            $builder = $builder->where('name','like',$search,'like');
+        unset($where['v']);
+        if(!empty($where)) {
+            if (!empty($where['keyword'])) {
+                $builder = $builder->where('name', 'like', '%' . $where['keyword'] . '%');
+            }
+
+            if($where['opened'] >= 0 && !is_null($where['opened'])){
+                    $builder = $builder->where('opened', '=', $where['opened']);
+            }
+
+
+            if (!empty($where['status'])) {
+                $builder = $builder->where('status', '=', $where['status']);
+            }
+            if (!empty($where['manager'])) {
+                $builder = $builder->where('manager_name', '=', $where['manager']);
+            }
         }
         $pagination = $builder->orderBy('id','desc')->paginate(config('msc.page_size',10));
         return $pagination;

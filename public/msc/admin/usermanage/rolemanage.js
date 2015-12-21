@@ -13,11 +13,11 @@ $(function(){
 
 function rolemanage_detail(){
     /**
-     *��ɫȨ�޹�������Ȩ�ޣ�checkboxѡ����
-     *����
-     *QQ��283020075
+     *角色权限管理（设置权限）checkbox选择处理
+     *曾洁
+     *QQ：283020075
      *2015-12-15
-     *update��zengjie��2015-12-18 17:30�� ���������/���� ���߼�ʱ�䣩
+     *update：zengjie（2015-12-15 18:08） （最近更新/更改 作者及时间）
      **/
     $(function(){
         var $check_label=$(".check_label");
@@ -64,11 +64,11 @@ function rolemanage_detail(){
 
 function rolemanage(){
     /**
-     *��ɫȨ�޹���������
-     *����ü
-     *QQ��2632840780
+     *角色权限管理弹出框处理
+     *吴冷眉
+     *QQ：2632840780
      *2015-12-15
-     *update��wulengmei��2015-12-15 17:25�� ���������/���� ���߼�ʱ�䣩
+     *update：wulengmei（2015-12-15 17:25） （最近更新/更改 作者及时间）
      **/
     $(function(){
         function  choice_from(){

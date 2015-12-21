@@ -15,6 +15,7 @@ use Modules\Msc\Entities\ResourcesTools;
 use Modules\Msc\Entities\ResourcesToolsItems;
 use Modules\Msc\Entities\ResourcesImage;
 use Modules\Msc\Entities\ResourcesLocation;
+use Modules\Msc\Entities\ResourcesDevice;
 use Modules\Msc\Http\Controllers\MscController;
 use App\Repositories\Common;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class ResourcesManagerController extends MscController
 	// 二维码 http://api.mis.local/msc/wechat/resource/resource-view?id=1&code=123
 	
     public function getTest(){
+        return view('msc::admin.openlab.lab-add');
     }
 
     /**
@@ -450,8 +452,29 @@ class ResourcesManagerController extends MscController
         $resourcesCateList = ResourcesToolsCate::where('pid', '=', '0')->get();
 
         return view('msc::admin.resourcemanage.add', ['resourcesCateList'=>$resourcesCateList]);
+        //return view('msc::admin.testForm');
     }
 
+    /**
+     * 新增教室-表单
+     * @api GET /msc/admin/resources-manager/add-classroom
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author gaoshichong
+     * @date 2015-12-21 14:02:48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddClassroom(Request $request){
+        //return view("");
+    }
     /**
      * 异步获取设备子分类
      * @method GET /msc/admin/resources-manager/ajax-resources-tools-cate
@@ -513,11 +536,40 @@ class ResourcesManagerController extends MscController
             case 'CLASSROOM':
                 $view=$this->addClassRommResources($request);
                 break;
+            case 'DEVICE':
+                $view = $this->addDeviceResources($request);
+                break;
             default:
                 return redirect()->back()->withErrors(['没有选择新增资源type']);
         }
         return $view;
     }
+    /**
+     * 新增开放设备
+     * @param Request $request
+     */
+    private function addDeviceResources(Request $request) {
+        $this->validate($request,[
+            'resources_lab_id'          =>  'required|integer',
+            'name'                      =>  'required',
+            'code'                      =>  'required',
+            'resources_device_cate_id'  =>  'required',
+            'max_use_time'              =>  'required',
+            'warning'                   =>  'required',
+            'detail'                    =>  'required',
+            'status'                    =>  'required',
+        ]);
+        $formData = $request->only(['resources_lab_id','name','code','resources_device_cate_id','max_use_time','warning','detail','status']);
+        $imagesPath = $request->input('images_path');
+        $ResourcesDevice = new ResourcesDevice();
+        $result = $ResourcesDevice->addDeviceResources($formData,$imagesPath);
+        if ($result === true) {
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
+        }   else {
+            return redirect()->back()->withErrors($result);
+        }
+    }
+
     /*
     * 新增教室
     */
@@ -534,10 +586,11 @@ class ResourcesManagerController extends MscController
             'detail'         => 'sometimes|max:255|min:0',
         ]);
         $resourcesClassroom=new ResourcesClassroom();
-        if($resourcesClassroom->addClassRommResources($request)){
-            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
+        $rst=$resourcesClassroom->addClassRommResources($request);
+        if($rst===true){
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddClassroom');
         }else{
-            return redirect()->back();
+            return redirect()->back()->withErrors($rst);
         }
     }
     /*

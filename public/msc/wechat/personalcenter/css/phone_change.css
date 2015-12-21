@@ -2,11 +2,18 @@
 
 .phone_icon p{ text-align: center; line-height:50px; font-size: 16px;}
 
-.add_main .submit_box{top:60px; width: 30%;}
-.add_main .ipt_huoqu{float:right;padding:0 10px;margin-top:2px;text-align:center;
+.add_main .submit_box{width: 30%;  top: inherit; margin-bottom:5px!important; bottom: 0px;}
+.add_main .ipt_huoqu{padding:0 10px;margin-top:2px;text-align:center;
     height:36px;line-height:36px;padding:0;background:#69ccbb;color:#fff; border: none;}
 .add_main .ipt_huoqu.ipt_disabled{color:#fff;background:#C9C9C9}
 .btn-submit{width: 96%; margin:20px auto 0;}
 .btn-submit .btn{background:#6595E1; width: 100%; color: #fff;}
 #phone_number{width:100%;padding-left:3%;}
-.form-group input{padding-left: 3%;}
+.form-group input{padding-left: 3%!important; }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+.form-control-feedback{top:5px;}
