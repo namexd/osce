@@ -4,14 +4,17 @@
 <link href="{{asset('msc/wechat/resourcemanage/css/information.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('msc/wechat/resourcemanage/css/returnmanagement.css')}}" rel="stylesheet" type="text/css" />
 <style>
-   .more-width{width: 23%!important;} 
-   .less-width{width: 17%!important;}
+   .more-width{width: 25%!important;} 
+   .less-width{width: 15%!important;}
    .jconfirm .jconfirm-box div.content{text-align: center;}
    .jconfirm.white .jconfirm-box .buttons{float:none;text-align: center;}
+   .detail_list{padding: 0 0.125em 0;}
+   .attention.more-width span{display: inline-block;}
+   .attention.more-width .pass{width: 45%;float: left;}
+   .attention.more-width .unpass{width: 55%;}
 </style>
 @stop
 @section('only_head_js')
- <script src="{{asset('msc/wechat/resourcemanage/js/borrow_lishi.js')}}"></script>
  <script>
      $(function(){
 
@@ -112,8 +115,8 @@
                                      '<div class="less-width">'+data[i].applyer_name+'</div>'+
                                      '<div><span>'+data[i].detail+'</span></div>'+
                                      '<div class="attention more-width" value="'+data[i].id+'">'+
-                                     '<span class="State1 pass">通过</span>'+
-                                     '<span class="State1 unpass">不通过</span>'+
+                                     '<span class="State1 pass">通过&nbsp;</span>'+
+                                     '<span class="State1 unpass">&nbsp;不通过</span>'+
                                      '</div>'+
                                      '</a>'+
                                      '</li>';

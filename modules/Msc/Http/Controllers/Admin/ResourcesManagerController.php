@@ -511,14 +511,77 @@ class ResourcesManagerController extends MscController
                 $view=$this->addToolsResources($request);
                 break;
             case 'CLASSROOM':
-                //$view=$this->addClassRommResources($request);
+                $view=$this->addClassRommResources($request);
                 break;
             default:
                 return redirect()->back()->withErrors(['没有选择新增资源type']);
         }
         return $view;
     }
+    /*
+    * 新增教室
+    */
+    private function addClassRommResources(Request $request){
+        $this->validate($request,[
+            'name'           => 'required|max:50|min:0',
+            'code'           => 'required|max:50|min:0',
+            'begintime'      => 'required',
+            'endtime'        => 'required',
+            'manager_name'   => 'required|max:50|min:0',
+            'manager_mobile' => 'required|mobile_phone',
+            'location'       => 'required|max:50|min:0',
+            'person_total'   => 'required|integer',
+            'detail'         => 'sometimes|max:255|min:0',
+        ]);
+        $imagesArray = $request->get('images_path');
 
+        $formData    = $request->only(['name', 'code', 'location', 'begintime', 'endtime', 'manager_name', 'manager_mobile','detail','person_total']);
+
+        $formData['opened'] = empty($formData['opened']) ? 0 : $formData['opened'];
+        $formData['manager_id'] = empty($formData['manager_id']) ? 0 : $formData['manager_id'];
+        $connection = DB::connection('msc_mis');
+        try{
+            $connection->beginTransaction();
+            $resources = ResourcesClassroom::create($formData);
+            if(!$resources){
+                throw new \Exception('新增教室失败！');
+            }
+
+            $_formData = [
+                'type'        => 'CLASSROOM',
+                'item_id'     => $resources->id,
+                'description' => '',
+            ];
+            $_resources = Resources::create($_formData);
+
+            if(!$_resources)
+            {
+                throw new \Exception('新增教室失败！');
+            }
+            if (!empty($imagesArray))
+            {
+                foreach($imagesArray as $item)
+                {
+                    $data=[
+                        'resources_id' => $_resources->id,
+                        'url'          => $item,
+                        'order'        => 0,
+                        'descrption'   => '',
+                    ];
+                    $result = ResourcesImage::create($data);
+                    if(!$result)
+                    {
+                        throw new \Exception('图片保存失败！');
+                    }
+                }
+            }
+            $connection->commit();
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
+        }catch (\Exception $ex){
+            $connection->rollback();
+            return redirect()->back()->withErrors($ex);
+        }
+    }
     /*
     * 新增外借设备
     */

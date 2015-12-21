@@ -19,7 +19,7 @@ class ResourcesClassroom extends  CommonModel {
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
 
-    protected $fillable 	=	['name', 'code', 'location', 'begintime', 'endtime', 'manager_id', 'manager_name', 'manager_mobile', 'detail', 'status', 'opened'];
+    protected $fillable 	=	['name', 'code', 'location', 'begintime', 'endtime', 'manager_id', 'manager_name', 'manager_mobile', 'detail', 'status', 'opened','person_total'];
     public $search          =   ['manager_name','manager_mobile','detail','code'];
 
     protected $statusAttrName =   [
