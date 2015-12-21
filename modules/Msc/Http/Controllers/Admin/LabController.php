@@ -427,7 +427,7 @@ class LabController extends MscController
         $reject = $request->get('reject');
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
 
-        //try {
+        try {
             $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject);
             if ($result) {
                 return response()->json(
@@ -436,9 +436,9 @@ class LabController extends MscController
             } else {
                 return response()->json($this->fail(new \Exception('审核失败')));
             }
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
