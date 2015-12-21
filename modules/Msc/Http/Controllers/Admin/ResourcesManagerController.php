@@ -30,6 +30,7 @@ class ResourcesManagerController extends MscController
 	// 二维码 http://api.mis.local/msc/wechat/resource/resource-view?id=1&code=123
 	
     public function getTest(){
+        return view('msc::admin.openlab.lab-add');
     }
 
     /**
