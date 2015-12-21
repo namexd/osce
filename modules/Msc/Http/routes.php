@@ -170,6 +170,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
 
 		Route::controller('user', 'UserController');
+		Route::get('user/check-code-register',['uses'=>'UserController@getCheckCodeRegister','as'=>'msc.user.getCheckCodeRegister']);
 		Route::controller('wechat', 'WeChatController');
 		Route::controller('personal-center', 'PersonalCenterController');
 		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);

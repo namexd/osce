@@ -116,7 +116,7 @@
                                      '<div><span>'+data[i].detail+'</span></div>'+
                                      '<div class="attention more-width" value="'+data[i].id+'">'+
                                      '<span class="State1 pass">通过&nbsp;</span>'+
-                                     '<span class="State1 unpass">&nbsp;不通过</span>'+
+                                     '<span class="State1 unpass">不通过</span>'+
                                      '</div>'+
                                      '</a>'+
                                      '</li>';
