@@ -272,8 +272,26 @@ class ResourcesOpenLabApply extends CommonModel
             throw $ex;
         }
     }
-    public function refundApply(){
-
+    public function refundApply($id,$reject){
+        try{
+            $apply      =   $this   ->  find($id);
+            $apply      ->  status  =   2;
+            $apply      ->  reject  =   $reject;
+            if($apply   ->  save())
+            {
+                $reject =   '你申请的开放实验室预约，因为：'.$reject.'被取消了,欢迎你下次预约。';
+                $this   ->  sendMsg($apply->applyUser,$reject);
+                return  $apply;
+            }
+            else
+            {
+                throw new \Exception('审核失败');
+            }
+        }
+        catch (\Exception $ex)
+        {
+            throw $ex;
+        }
     }
     public function agreeTeacherApply($apply){
         $calendar   =   $apply  ->  calendar;
