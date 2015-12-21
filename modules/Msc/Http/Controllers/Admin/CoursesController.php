@@ -77,6 +77,7 @@ class CoursesController extends MscController
                         if($courses==false)
                         {
                             $dataFalse[]=$coursesData;
+
                         }
                     }
                     else
