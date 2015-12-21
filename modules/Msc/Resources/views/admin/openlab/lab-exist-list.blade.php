@@ -5,16 +5,17 @@
 @stop
 
 @section('only_js')
-	<script>
+	<script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+	<script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+	<script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>	<script>
 		$('.user_btn').delegate('.addnew','click',function(){
 			alert('qweqw');
 			window.localcation.href="/msc/admin/lab/had-open-lab-add";
 		});
-	</script>
-@stop
+	</script>@stop
 
 @section('content')
- <input type="hidden" id="parameter"/>
+ <input type="hidden" id="parameter" value="{'pagename':'lab-exist-list'}" />
 <div class="panel blank-panel">
     <div class="panel-body">
         <div class="tab-content">

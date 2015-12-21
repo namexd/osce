@@ -142,6 +142,23 @@
                     <div class="col-md-12">
                         <form method="post" class="form-horizontal" id="labForm" action="{{route('msc.admin.resourcesManager.getAddResources')}}">
 
+    <script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
+
+@stop
+
+@section('content')
+<div class="wrapper wrapper-content animated fadeInRight">
+    <input type="hidden"  id="parameter" value="{'pagename':'lab-exist-detail','ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}'}" >
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>实验室详情</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('msc.admin.resourcesManager.getAddResources')}}">
+
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">名称</label>
@@ -246,7 +263,6 @@
             </div>
         </div>
     </div>
-
-    </div>
+                    </div>
 
 @stop{{-- 内容主体区域 --}}
