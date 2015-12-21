@@ -15,6 +15,7 @@ use Modules\Msc\Entities\ResourcesTools;
 use Modules\Msc\Entities\ResourcesToolsItems;
 use Modules\Msc\Entities\ResourcesImage;
 use Modules\Msc\Entities\ResourcesLocation;
+use Modules\Msc\Entities\ResourcesDevice;
 use Modules\Msc\Http\Controllers\MscController;
 use App\Repositories\Common;
 use Illuminate\Http\Request;
@@ -449,7 +450,8 @@ class ResourcesManagerController extends MscController
     {
         $resourcesCateList = ResourcesToolsCate::where('pid', '=', '0')->get();
 
-        return view('msc::admin.resourcemanage.add', ['resourcesCateList'=>$resourcesCateList]);
+//        return view('msc::admin.resourcemanage.add', ['resourcesCateList'=>$resourcesCateList]);
+        return view('msc::admin.testForm');
     }
 
     /**
@@ -513,10 +515,39 @@ class ResourcesManagerController extends MscController
             case 'CLASSROOM':
                 //$view=$this->addClassRommResources($request);
                 break;
+            case 'DEVICE':
+                $view = $this->addDeviceResources($request);
+                break;
             default:
                 return redirect()->back()->withErrors(['没有选择新增资源type']);
         }
         return $view;
+    }
+
+    /**
+     * 新增开放设备
+     * @param Request $request
+     */
+    private function addDeviceResources(Request $request) {
+        $this->validate($request,[
+            'resources_lab_id'          =>  'required|integer',
+            'name'                      =>  'required',
+            'code'                      =>  'required',
+            'resources_device_cate_id'  =>  'required',
+            'max_use_time'              =>  'required',
+            'warning'                   =>  'required',
+            'detail'                    =>  'required',
+            'status'                    =>  'required',
+        ]);
+        $formData = $request->only(['resources_lab_id','name','code','resources_device_cate_id','max_use_time','warning','detail','status']);
+        $imagesPath = $request->input('images_path');
+        $ResourcesDevice = new ResourcesDevice();
+        $result = $ResourcesDevice->addDeviceResources($formData,$imagesPath);
+        if ($result === true) {
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
+        }   else {
+            return redirect()->back()->withErrors($result);
+        }
     }
 
     /*

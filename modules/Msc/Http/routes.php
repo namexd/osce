@@ -25,6 +25,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('resources-manager/ajax-resources-tools-cate', ['uses'=>'ResourcesManagerController@getAjaxResourcesToolsCate','as'=>'msc.admin.resourcesManager.getAjaxResourcesToolsCate']);
 		Route::get('resources-manager/add-resources', ['uses'=>'ResourcesManagerController@getAddResources','as'=>'msc.admin.resourcesManager.getAddResources']);
 		Route::get('resources-manager/resources-cate-list', ['uses'=>'ResourcesManagerController@getResourcesCateList','as'=>'msc.admin.resourcesManager.getResourcesCateList']);
+		Route::post('resources-manager/add-resources',['uses'=>'ResourcesManagerController@postAddResources','as'=>'msc.admin.resourcesManager.postAddResources']);
 
 		Route::get('resources-manager/classroom-list', ['uses'=>'ResourcesManagerController@getClassroomList','as'=>'msc.resourcesManager.classroomList']);
 		Route::get('resources-manager/record-info', ['uses'=>'ResourcesManagerController@getRecordInfo','as'=>'msc.admin.resourcesManager.getRecordInfo']);
