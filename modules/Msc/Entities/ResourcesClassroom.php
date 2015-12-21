@@ -171,16 +171,16 @@ class ResourcesClassroom extends  CommonModel {
 
     //给教室选择下拉列表提供数据
     public function getClassroomName($keyword = '') {
-
+        if ($keyword !== '') {
+            $result = $this->where($this->table.'.code','like','%'.$keyword.'%')->where($this->table.'.name','like','%'.$keyword.'%');
+        }
         $result = $this->select([
             "$this->table" . '.id as id',
             "$this->table" . '.name as name',
             "$this->table" . '.code as code'
-        ]);
-        if ($keyword !== null) {
-            $result->where($this->table.'.name','like','%'.$keyword.'%');
-        }
-        return $result->get();
+        ])->get();
+
+        return $result;
     }
 
     //给教室的具体监控界面提供数据
@@ -295,9 +295,12 @@ class ResourcesClassroom extends  CommonModel {
             if (!empty($where['keyword'])) {
                 $builder = $builder->where('name', 'like', '%' . $where['keyword'] . '%');
             }
-            if ($where['opened'] == 1 || $where['opened'] == 0 || $where['opened'] == 2) {
-                $builder = $builder->where('opened', '=', $where['opened']);
+
+            if($where['opened'] >= 0 && !is_null($where['opened'])){
+                    $builder = $builder->where('opened', '=', $where['opened']);
             }
+
+
             if (!empty($where['status'])) {
                 $builder = $builder->where('status', '=', $where['status']);
             }

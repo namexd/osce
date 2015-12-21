@@ -321,7 +321,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div id="code_list">
-                                <input type="hidden" name="id" value="{{$openLabDetail->id}}">
+                                <input type="hidden" name="id" value="{{@$openLabDetail->id}}">
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
