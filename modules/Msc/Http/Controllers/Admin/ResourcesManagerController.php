@@ -450,8 +450,8 @@ class ResourcesManagerController extends MscController
     {
         $resourcesCateList = ResourcesToolsCate::where('pid', '=', '0')->get();
 
-//        return view('msc::admin.resourcemanage.add', ['resourcesCateList'=>$resourcesCateList]);
-        return view('msc::admin.testForm');
+        return view('msc::admin.resourcemanage.add', ['resourcesCateList'=>$resourcesCateList]);
+        //return view('msc::admin.testForm');
     }
 
     /**
