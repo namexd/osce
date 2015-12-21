@@ -199,6 +199,9 @@ class ResourcesOpenLabApply extends CommonModel
      */
     public function getWaitExamineList($classroomName,$date, $order){
         return  $this   -> with([
+//        $msc_mis    =DB::connection('msc_mis');
+//        $msc_mis    ->enableQueryLog();
+//        $a=  $this   -> with([
             'classroomCourses'  =>  function($qurey) use ($classroomName){
                 if(!is_null($classroomName))
                 {
@@ -213,12 +216,15 @@ class ResourcesOpenLabApply extends CommonModel
                 }
             }
         ])  ->  where('status','=',0)
+            ->  where('apply_type','=',0)
             ->  whereRaw(
-            'unix_timestamp(apply_date) > ?',
+            'unix_timestamp(apply_date) >= ?',
             [
                 strtotime($date),
             ]
         ) -> paginate(config('msc.page_size'));
+//        $c=$msc_mis->getQueryLog();
+//        dd($c);
     }
 
     //处理开放实验室审核
