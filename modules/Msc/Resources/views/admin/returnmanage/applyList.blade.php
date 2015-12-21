@@ -163,7 +163,7 @@
                 </td>
                 <td>{{$item ->  id}}</td>
                 <td>{{$item ->  resourcesTool  ->name}}</td>
-                <td>{{date('Y-m-d',strtotime($item -> begindate))? date('Y-m-d',strtotime($item -> begindate)) : '未知'}}-{{date('Y-m-d',strtotime($item -> enddate))?date('Y-m-d',strtotime($item -> enddate)) : '未知'}}</td>
+                <td>{{date('Y/m/d',strtotime($item -> begindate))? date('Y/m/d',strtotime($item -> begindate)) : '未知'}}-{{date('Y/m/d',strtotime($item -> enddate))?date('Y/m/d',strtotime($item -> enddate)) : '未知'}}</td>
                 <td>{{$item ->  code}}</td>
                 <td>{{is_null($item ->  lenderInfo)? '-':$item->lenderInfo->name}}</td>
                 <td>{{$item ->  detail}}</td>
