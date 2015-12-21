@@ -153,7 +153,7 @@
                                 <label class="col-sm-2 control-label">最大预约人数</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" name="maxorder" id="maxorder" class="form-control" value="{{$openLabDetail->detail}}" disabled>
+                                    <input type="text" name="person_total" id="maxorder" class="form-control" value="{{$openLabDetail->person_total}}" disabled>
                                 </div>
 
                             </div>
