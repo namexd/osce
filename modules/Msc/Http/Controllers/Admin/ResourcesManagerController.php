@@ -511,14 +511,35 @@ class ResourcesManagerController extends MscController
                 $view=$this->addToolsResources($request);
                 break;
             case 'CLASSROOM':
-                //$view=$this->addClassRommResources($request);
+                $view=$this->addClassRommResources($request);
                 break;
             default:
                 return redirect()->back()->withErrors(['没有选择新增资源type']);
         }
         return $view;
     }
-
+    /*
+    * 新增教室
+    */
+    private function addClassRommResources(Request $request){
+        $this->validate($request,[
+            'name'           => 'required|max:50|min:0',
+            'code'           => 'required|max:50|min:0',
+            'begintime'      => 'required',
+            'endtime'        => 'required',
+            'manager_name'   => 'required|max:50|min:0',
+            'manager_mobile' => 'required|mobile_phone',
+            'location'       => 'required|max:50|min:0',
+            'person_total'   => 'required|integer',
+            'detail'         => 'sometimes|max:255|min:0',
+        ]);
+        $resourcesClassroom=new ResourcesClassroom();
+        if($resourcesClassroom->addClassRommResources($request)){
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
+        }else{
+            return redirect()->back();
+        }
+    }
     /*
     * 新增外借设备
     */
