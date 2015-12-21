@@ -295,9 +295,12 @@ class ResourcesClassroom extends  CommonModel {
             if (!empty($where['keyword'])) {
                 $builder = $builder->where('name', 'like', '%' . $where['keyword'] . '%');
             }
-            if ($where['opened'] == 1 || $where['opened'] == 0 || $where['opened'] == 2) {
-                $builder = $builder->where('opened', '=', $where['opened']);
+
+            if($where['opened'] >= 0 && !is_null($where['opened'])){
+                    $builder = $builder->where('opened', '=', $where['opened']);
             }
+
+
             if (!empty($where['status'])) {
                 $builder = $builder->where('status', '=', $where['status']);
             }

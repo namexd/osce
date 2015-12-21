@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="{{asset('msc/admin/coursemanage/css/course_observe.css')}}">
     <link rel="stylesheet" href="{{asset('msc/admin/css/demo.css')}}">
     <style type="text/css">
-
+        iframe{
+            margin-right: 10px;
+        }
     </style>
 @stop
 
@@ -20,7 +22,9 @@
     <div class="row  main-content">
         <div class="content-left ibox-content">
             <div class="serach-box">
-                <input type="text" placeholder="按教室编号搜索"><button type="button" class="btn btn-primary">搜索</button>
+                <form action="{{route("msc.admin.courses.getClassObserve")}}">
+                    <input type="text" placeholder="按教室编号搜索" name="keyword" id="serach-text"><input type="submit" class="btn btn-primary"  id="serach-btn" value="搜索">
+                </form>
             </div>
             <nav class="classroom-list">
                <ul>
