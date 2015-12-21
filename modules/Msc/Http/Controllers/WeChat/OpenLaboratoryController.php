@@ -439,4 +439,38 @@ class OpenLaboratoryController extends MscWeChatController {
 		);
 
 	}
+
+	/**
+	 * 开放实验室申请详情
+	 * @api GET /msc/wechat/open-laboratory/open-lab-apply
+	 * @access public
+	 *
+	 * @param Request $request get请求<br><br>
+	 * <b>get请求字段：</b>
+	 * * string        id        申请ID(必须的)
+	 *
+	 * @return view {设备名称：$apply->name,申请人：$user->name,申请开始时间：$apply->calendar->begintime ,申请结束时间：$apply->calendar->endtime,申请结束时间：$apply->calendar->endtime,申请理由：$apply->detail}
+	 *
+	 * @version 1.0
+	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @date 205-12-21 16:27
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 *
+	 */
+	public function getOpenLabApply(Request $request){
+		$this   ->  validate($request,[
+				'id' => 'required|integer',
+		]);
+		$id     =   $request    ->get('id');
+
+		$apply  =   ResourcesOpenLabApply::find($id);
+		if(!is_null($apply))
+		{
+			return redirect()->back()->withErrors(new \Exception('没有找到该申请'));
+		}
+		else
+		{
+			return view('',['lab'=>$apply->lab,'user'=>$apply->applyUser,'apply'=>$apply]);
+		}
+	}
 }
