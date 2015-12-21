@@ -4,10 +4,17 @@
 <link href="{{asset('msc/wechat/resourcemanage/css/information.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('msc/wechat/resourcemanage/css/returnmanagement.css')}}" rel="stylesheet" type="text/css" />
 <style>
-   .more-width{width: 25%!important;} 
-   .less-width{width: 15%!important;}
    .jconfirm .jconfirm-box div.content{text-align: center;}
    .jconfirm.white .jconfirm-box .buttons{float:none;text-align: center;}
+
+
+   .more-width{width: 25%!important;}
+   .detail_list .more-width{padding-top: .625em;}
+   .detail_list .more-width.Time_slot{padding-top: 0;}
+   .detail_list .more-width:first-child{
+        padding-right:0.25em;
+        padding-top: 0;
+    }
    .detail_list{padding: 0 0.125em 0;}
    .attention.more-width span{display: inline-block;}
    .attention.more-width .pass{width: 45%;float: left;}
@@ -187,19 +194,28 @@
 <div id="info_list" class="mart_5">
     <div class="main_list" id="borrow_history">
         <div class="title_nav">
-            <div class="title less-width">教室</div>
+            <div class="title more-width">教室</div>
             <div class="title more-width">时间段</div>
-            <div class="title less-width">申请人</div>
-            <div class="title">理由</div>
+            <div class="title more-width">申请人</div>
             <div class="title option more-width">操作</div>
         </div>
         <div class="detail_list" data-total="1" data-current="0">
             <ul>
+                <li>
+                     <a href="javascript:void(0)">
+                         <div class="more-width"><span>自主开放实验室2</span> </div>
+                         <div class="more-width Time_slot"><p>2015/08/12</p><p>08:00-12:00</p></div>
+                         <div class="more-width">李老师</div>
+                     </a>
+                     <div class="attention more-width" value="'+data[i].id+'">
+                         <span class="State1 pass">通过&nbsp;</span>
+                         <span class="State1 unpass">不通过</span>
+                     </div>
+                </li>
             </ul>
         </div>
     </div>
 </div>
-
 
 
 @stop
