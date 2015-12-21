@@ -308,6 +308,7 @@ class LabController extends MscWeChatController
             return redirect()->back()->withErrors($ex);
         }
     }
+
     /**
      * 获取开放实验室使用历史列表-表单
      * @method GET /msc/wechat/lab/openlab-history-list
