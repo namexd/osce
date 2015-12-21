@@ -28,9 +28,9 @@ class UserController extends MscWeChatController {
 	public function getUserLogin()
 	{
 
-		//$openid = $this->getOpenId();
+		$openid = $this->getOpenId();
 
-		Session::put('openid','dfsafas');
+		Session::put('openid',$openid);
 
 		return view('msc::wechat.user.login');
 	}
@@ -165,11 +165,17 @@ class UserController extends MscWeChatController {
 		]);
 
 		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
-		if($userRepository->regStudent($request))
-			return redirect()->intended('/msc/wechat/user/user-login');
-		else{
-			return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
+
+		if($this->CheckCodeRegister($request['code'])){
+			if($userRepository->regStudent($request))
+				return redirect()->intended('/msc/wechat/user/user-login');
+			else{
+				return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
+			}
+		}else{
+			return view('msc::wechat.index.index_error',array('error_msg'=>'（胸牌/学号）已经被注册过'));
 		}
+
 
 	}
 
@@ -205,10 +211,17 @@ class UserController extends MscWeChatController {
 			'gender'=>'required|integer'
 		]);
 		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
-		if($userRepository->regTeacher($request))
-			return redirect()->intended('/msc/wechat/user/user-login');
-		else
-			return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
+
+		if($this->CheckCodeRegister($request['code'])){
+			if($userRepository->regTeacher($request))
+				return redirect()->intended('/msc/wechat/user/user-login');
+			else{
+				return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
+			}
+		}else{
+			return view('msc::wechat.index.index_error',array('error_msg'=>'（胸牌/学号）已经被注册过'));
+		}
+
 	}
 	/**
 	 * 用户绑定(登录绑定)
@@ -273,5 +286,37 @@ class UserController extends MscWeChatController {
 		$item = $userRepository->getTeacherDeptList($keyword);
 		print_r($item[0]);
 	}
+
+	/**
+	 * 检测当前Code 有无被注册过
+	 *
+	 * @access private
+	 *
+	 * @param
+	 * * string        code     胸牌号(必须的)
+	 *
+	 * @return
+	 *
+	 * @version 1.0
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-21 10:21
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * use Modules\Msc\Entities\Student;
+	   use Modules\Msc\Entities\Teacher;
+	 */
+	//用户绑定(登录绑定)
+	private function CheckCodeRegister($code)
+	{
+		$StudentInfo = Student::where('code','=',$code)->first();
+		$TeacherInfo = Teacher::where('code','=',$code)->first();
+
+		if(!empty($StudentInfo) || !empty($TeacherInfo)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+
 
 }
