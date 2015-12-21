@@ -27,10 +27,10 @@
     <script>
         var start = {
             elem: "#start",
-            format: "YYYY/MM/DD hh:mm:ss",
-            min: "1970-00-00 00:00:00",
-            max: "2099-12-06 23:59:59",
-            istime: true,
+            format: "YYYY/MM/DD",
+            min: "1970-00-00",
+            max: "2099-12-06",
+            istime: false,
             istoday: false,
             choose: function (a) {
                 end.min = a;
@@ -40,9 +40,9 @@
         var end = {
             elem: "#end",
             format: "YYYY/MM/DD hh:mm:ss",
-            min: "1970-00-00 00:00:00",
-            max: "2099-12-16 23:59:59",
-            istime: true,
+            min: "1970-00-00",
+            max: "2099-12-16",
+            istime: false,
             istoday: false,
             choose: function (a) {
                 start.max = a
@@ -153,6 +153,32 @@
             </tr>
             </thead>
             <tbody>
+                <tr value="6">
+                <td>
+                    <label class="check_label checkbox_input">
+                        <div class="check_icon"></div>
+                        <input type="checkbox" class="check_id" value="6">
+                    </label>
+                </td>
+                <td>6</td>
+                <td>测试数据123</td>
+                <td>2015-12-21 00:00:00-2015-12-22 00:00:00</td>
+                <td>3639</td>
+                <td>123</td>
+                <td>铁路土木马路天</td>
+                <td style="text-align: center;"><span class="state3">否</span></td>
+                <td>
+                     未审核
+                                    </td>
+                <td>
+                    <div class="opera" end-time="2015-12-22 00:00:00" start-time="2015-12-21 00:00:00">
+                        <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
+                        <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>
+                    </div>
+
+                </td>
+            </tr>
+
             @forelse($pagination as $item)
             <tr value="{{$item->id}}">
                 <td>
@@ -163,7 +189,7 @@
                 </td>
                 <td>{{$item ->  id}}</td>
                 <td>{{$item ->  resourcesTool  ->name}}</td>
-                <td>{{$item ->  begindate or '未知'}}-{{$item->enddate or '未知'}}</td>
+                <td>{{date('Y-m-d',strtotime($item -> begindate)) or '未知'}}-{{date('Y-m-d',strtotime($item->enddate)) or '未知'}}</td>
                 <td>{{$item ->  code}}</td>
                 <td>{{is_null($item ->  lenderInfo)? '-':$item->lenderInfo->name}}</td>
                 <td>{{$item ->  detail}}</td>
@@ -174,7 +200,7 @@
                     @endif
                 </td>
                 <td>
-                    <div class="opera" end-time="{{$item->enddate or '未知'}}">
+                    <div class="opera" end-time="{{date('Y-m-d',strtotime($item->enddate)) or '未知'}}" start-time="{{date('Y-m-d',strtotime($item -> begindate)) or '未知'}}">
                         <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
                         <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>
                     </div>
@@ -307,7 +333,10 @@ $(function(){
             $('#Form3').hide();
         }else{
             //时间控制  只能是外借时间之前的时间  2015-12-14 mao bug
+            var start_time = $(this).parent().attr('start-time');
             var end_time = $(this).parent().attr('end-time');
+            //开始时间
+            start.min = start_time;
             start.max = end_time;
             end.max = end_time;
 
