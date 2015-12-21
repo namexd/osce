@@ -16,7 +16,7 @@ class ResourcesToolsCate extends  CommonModel {
     public $incrementing	=	true;
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
-    protected $fillable 	=	['repeat_max', 'pid', 'name', 'manager_id', 'manager_name', 'manager_mobile', 'location_id', 'detail', 'loan_days'];
+    protected $fillable 	=	['repeat_max', 'pid', 'name', 'manager_id', 'manager_name', 'manager_mobile','location' ,'location_id', 'detail', 'loan_days'];
     public $search          =   ['manager_name','detail','name'];
 
     /**

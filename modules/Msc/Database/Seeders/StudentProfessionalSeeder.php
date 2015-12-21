@@ -2,44 +2,39 @@
 
 use Illuminate\Database\Seeder;
 
-class TeacherDeptSeeder extends Seeder
+class StudentProfessionalSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         foreach($this->defaultData() as $input)
         {
-            \Modules\Msc\Entities\TeacherDept::create($input);
+            \Modules\Msc\Entities\StdProfessional::firstOrCreate($input);
         }
     }
     public function defaultData(){
         return  [
             [
-                'name'  =>  '儿科',
+                'name'  =>  '临床医学',
                 'code'   =>  '10001',
             ],
             [
-                'name'  =>  '脑外科',
+                'name'  =>  '口腔专业',
                 'code'   =>  '10002',
             ],
             [
-                'name'  =>  '血液科',
+                'name'  =>  '护理',
                 'code'   =>  '10003',
             ],
             [
-                'name'  =>  '皮肤科',
+                'name'  =>  '公共卫生',
                 'code'   =>  '10004',
             ],
             [
-                'name'  =>  '骨科',
+                'name'  =>  '防疫',
                 'code'   =>  '10005',
             ],
             [
-                'name'  =>  '牙科',
+                'name'  =>  '康复保健',
                 'code'   =>  '10006',
             ]
         ];

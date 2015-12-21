@@ -261,7 +261,7 @@
                                 </label>
                             </td>
                             <td class="open-id">{{$item['id']}}</td>
-                            <td>{{$item->lab->name}}</td>
+                            <td>{{@$item->lab->name}}</td>
                             <td>{{date('Y/m/d',strtotime($item['original_begin_datetime']))}}</td>
                             <td>{{date('H:i',strtotime($item['original_begin_datetime']))}}-{{date('H:i',strtotime($item['original_end_datetime']))}}</td>
                             <td>{{$item->lab->code}}</td>

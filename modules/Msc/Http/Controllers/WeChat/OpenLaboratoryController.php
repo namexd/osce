@@ -91,6 +91,7 @@ class OpenLaboratoryController extends MscWeChatController {
 			$LaboratoryList[$k]['is_appointment'] = 0;
 			$LaboratoryList[$k]['status']= 0;
 			$LaboratoryList[$k]['num'] = count($v['ResourcesOpenLabApply']);
+			$LaboratoryList[$k]['plan_num'] = count($v['get_plan']);
 			if(!empty($v['ResourcesOpenLabApply']) && count($v['ResourcesOpenLabApply'])>0){
 				foreach($v['ResourcesOpenLabApply'] as $val){
 					if($val['apply_uid'] == $user->id){
@@ -99,11 +100,11 @@ class OpenLaboratoryController extends MscWeChatController {
 					}
 				}
 			}
-			if(!empty($v['get_plan']) && count($v['ResourcesOpenLabApply'])>0){
+			if(!empty($v['get_plan']) && count($v['get_plan'])>0){
 				$LaboratoryList[$k]['status']= 1;
 			}
 		}
-		
+
 		return response()->json(
 			$this->success_rows(1,'获取成功',$LaboratoryList->total(),20,$LaboratoryList->currentPage(),array('ClassroomApplyList'=>$LaboratoryList->toArray()))
 		);
@@ -135,19 +136,18 @@ class OpenLaboratoryController extends MscWeChatController {
 		/**
 		 * 查找课程
 		 */
-		$openlab_id = $ResourcesOpenLabPlan->where('resources_openlab_calendar_id','=',$pid)->first();
+		//$openlab_id = $ResourcesOpenLabPlan->where('resources_openlab_calendar_id','=',$pid)->first();
 		$Course = null;
-		if($openlab_id){
-			$resources_lab_courses = $ResourcesClassroomCourses->where('resources_lab_id','=',$openlab_id->resources_openlab_id)->get();
+		if($ClassroomPlan_detai->resources_lab_id){
+			$resources_lab_courses = $ResourcesClassroomCourses->where('resources_lab_id','=',$ClassroomPlan_detai->resources_lab_id)->get();
 			$arr = array();
 			foreach ($resources_lab_courses as $key => $value) {
 				$arr[] = $value['course_id']; 
 			}
 			$Course = $Courses->whereIn('id', $arr)->get();
 		}
-		
-		
-		
+
+
 		$data = [
 			'ClassroomPlanInfo' => $ClassroomPlan_detai,
 			'username' => $username,
@@ -158,7 +158,6 @@ class OpenLaboratoryController extends MscWeChatController {
 			'Courses' => $Course,
 			'apply_type' => Input::get('apply_type'),
 			'apply_date' => Input::get('apply_date'),
-			'apply_type' => Input::get('apply_type')
 		];
 		return view('msc::wechat.openlab.openlab_search_apply',$data);
 	}

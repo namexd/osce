@@ -38,10 +38,10 @@ return [
 
 		'student_group'=>[
 			'姓名'=>'name',
-			'学号'=>'student_code',
+			'学号'=>'code',
 			'年级'=> 'grade',
+			'专业'=> 'professional',
 			'类别'=> 'student_type',
-			'专业'=> 'profession',
 			'手机号'=>'mobile',
 			'证件号'=>'idcard',
 			'性别'=> 'gender',
@@ -50,8 +50,8 @@ return [
 		'teacher_group'=>[
 			'姓名'=>'name',
 			'胸牌号'=>'code',
-			'科室'=> 'dept_name',
-			'手机号'=>'mobil',
+			'科室'=> 'teacher_dept',
+			'手机号'=>'mobile',
 			'性别'=> 'gender',
 			'角色'=>'role',
 			'状态'=>'status',

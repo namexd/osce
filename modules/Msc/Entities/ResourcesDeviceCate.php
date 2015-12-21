@@ -14,5 +14,5 @@ class ResourcesDeviceCate extends  CommonModel {
     public    $timestamps	=	true;
     protected $primaryKey	=	'id';
     public    $incrementing	=	true;
-    protected $fillable 	=	['id', 'pid', 'name', 'manager_id', 'manager_name', 'manager_mobile', 'location', 'detail'];
+    protected $fillable 	=	['id', 'pid', 'name', 'manager_id', 'manager_name', 'manager_mobile', 'location', 'detail','created.at'];
 }
