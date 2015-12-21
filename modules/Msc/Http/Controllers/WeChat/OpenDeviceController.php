@@ -102,17 +102,17 @@ class OpenDeviceController extends MscWeChatController
         empty($cateId) ? 1 : $cateId;
         $resourcesDevice = new ResourcesDevice();
         $list = $resourcesDevice->getAvailableList($cateId, $date);
-        return response()->json($list);
-//        if ($list)
-//        {
-//            return response()->json(
-//                $this->success_rows(1,'获取成功',$list->lastPage(),config('msc.page_size',10),$list->currentPage(),['list'=>$list->toArray()])
-//            );
-//        }
-//        else
-//        {
-//            return response()->json(false); // 获取数据失败
-//        }
+//        return response()->json($list);
+        if ($list)
+        {
+            return response()->json(
+                $this->success_rows(1,'获取成功',$list->lastPage(),config('msc.page_size',10),$list->currentPage(),['list'=>$list->toArray()])
+            );
+        }
+        else
+        {
+            return response()->json(false); // 获取数据失败
+        }
     }
 
     /**
