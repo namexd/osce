@@ -97,16 +97,11 @@
 
                             </div>
                             <div class="hr-line-dashed"></div>
-
-                            <!--
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-white" type="submit">取消</button>
-                                    <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
-
+                                    <a class="btn btn-primary" href="{{route('msc.admin.resourcesManager.getBorrowRecordList')}}">返&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回</a>
                                 </div>
                             </div>
-                            -->
 
 
                         </form>

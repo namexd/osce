@@ -24,6 +24,23 @@
         .searchbox{
             margin-right: 20px;
         }
+        /*ui细节调整 20151217 mao*/
+        .btn-link{color: #a6b0c3!important;}
+        .btn-link:hover{color: #fff!important;}
+        input.input-sm.form-control {
+            width: 260px;
+            height: 30px;
+        }
+        input#start {
+            width: 160px;
+            height: 30px;
+        }
+        button.btn-white.border-white.dropdown-toggle {
+            border: 0;
+            font-weight: bolder;
+        }
+        .input-group.pull-left.col-md-5.searchbox {margin-left: -60px;}
+        .col-xs-6.col-md-4 {margin-left: -20px;}
     </style>
 @stop
 

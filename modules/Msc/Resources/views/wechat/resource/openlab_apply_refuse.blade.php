@@ -21,42 +21,25 @@
             }else{
                 $(".Reason").find('textarea').val($(this).val());
             }
-            //提交理由
-            var id = (location.href).split('=')[1];
-            $('.btn2').click(function(){
-                $.ajax({
-                    url:"{{action('\Modules\Msc\Http\Controllers\WeChat\LabController@postChangeOpenLabApplyStatus')}}",
-                    type:"post",
-                    dataType:"json",
-                    cache:false,
-                    data:{id:id,reject:$(".Reason").find('textarea').val(),status:2},
-                    success: function(res) {
-                        if(res.code != 1){
-                            layer.alert((res.message).split(':')[1]);
-                            console.log(res.message);
-                        }else{
-                            //成功的操作
-                            layer.alert('预约成功！',function(){
-                                location.reload();
-                            });
-                            console.log('通过！')
-                        }
-                    }
-                });
+        });
+
+        //提交理由
+        var id = (location.href).split('=')[1];
+        $('#submit').one('click',function(){
+            var input   =   {
+                'id'    :   $('[name=id]').val(),
+                'status':   $('[name=status]').val(),
+                'reject':   $('[name=reject]').val()
+            };
+            $.post('{{action('\Modules\Msc\Http\Controllers\WeChat\LabController@postChangeOpenLabApplyStatus')}}',input,function(data){
+                if(data.code==1)
+                {
+                    window.location.href ='{{ route('wechat.lab.openLabApplyList')}}';
+                }else{
+                    layer.alert((data.message).split(':')[1]);
+                    console.log(data.message);
+                }
             });
-            $('#submit').one('click',function(){
-                var input   =   {
-                    'id'    :   $('[name=id]').val(),
-                    'status':   $('[name=status]').val(),
-                    'reject':   $('[name=reject]').val()
-                };
-                $.post('{{action('\Modules\Msc\Http\Controllers\WeChat\LabController@postChangeOpenLabApplyStatus')}}',input,function(data){
-                    if(data.code==1)
-                    {
-                        window.location.href ='{{ route('wechat.lab.openLabApplyList')}}';
-                    }
-                });
-            })
         })
     });
     </script>
