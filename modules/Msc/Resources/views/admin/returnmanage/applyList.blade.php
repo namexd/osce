@@ -153,32 +153,6 @@
             </tr>
             </thead>
             <tbody>
-                <tr value="6">
-                <td>
-                    <label class="check_label checkbox_input">
-                        <div class="check_icon"></div>
-                        <input type="checkbox" class="check_id" value="6">
-                    </label>
-                </td>
-                <td>6</td>
-                <td>测试数据123</td>
-                <td>2015-12-21 00:00:00-2015-12-22 00:00:00</td>
-                <td>3639</td>
-                <td>123</td>
-                <td>铁路土木马路天</td>
-                <td style="text-align: center;"><span class="state3">否</span></td>
-                <td>
-                     未审核
-                                    </td>
-                <td>
-                    <div class="opera" end-time="2015-12-22 00:00:00" start-time="2015-12-21 00:00:00">
-                        <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
-                        <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>
-                    </div>
-
-                </td>
-            </tr>
-
             @forelse($pagination as $item)
             <tr value="{{$item->id}}">
                 <td>
