@@ -33,19 +33,19 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">名称</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="name" id="name" value="{{@$openLabDetail->name}}"/>
+                                    <input type="text" class="form-control" name="name" id="name" />
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <input type="hidden" name="opened" id="cate_id" value="-1" />
+                                <input type="hidden" name="cate_id" id="cate_id" value="-1" />
                                 <label class="col-sm-2 control-label">类别</label>
                                 <div class="col-sm-10 select_code">
                                     <select id="select_Category"   class="form-control m-b" name="opened">
                                         <option value="-1">请选择类别</option>
-                                        <option value="0" @if(@$openLabDetail['name'] == 0)selected="selected"@endif>普通实验室</option>
-                                        <option value="1" @if(@$openLabDetail['name'] == 1)selected="selected"@endif>开发实验室(只能预约实验室)</option>
-                                        <option value="2" @if(@$openLabDetail['name'] == 2)selected="selected"@endif>开发实验室(只能预约设备)</option>
+                                        <option value="0">普通实验室</option>
+                                        <option value="1">开发实验室(只能预约实验室)</option>
+                                        <option value="2">开发实验室(只能预约设备)</option>
                                         {{--@foreach ($resourcesCateList as $item)
                                             <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                         @endforeach--}}
@@ -56,14 +56,14 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">负责人</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  id="manager_name" name="manager_name" class="form-control" value="{{@$openLabDetail->manager_name}}">
+                                    <input type="text"  id="manager_name" name="manager_name" class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" >负责人电话</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="manager_mobile" name="manager_mobile"  class="form-control" value="{{@$openLabDetail->manager_mobile}}">
+                                    <input type="text" id="manager_mobile" name="manager_mobile"  class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -72,9 +72,9 @@
                                 <div class="col-sm-10">
                                     <select id="select_Category"   class="form-control m-b" name="status">
                                         <option value="-1">请选择状态</option>
-                                        <option value="0" @if(@$openLabDetail['status'] == 0)selected="selected"@endif>不允许预约使用</option>
-                                        <option value="1" @if(@$openLabDetail['status'] == 1)selected="selected"@endif>正常</option>
-                                        <option value="2" @if(@$openLabDetail['status'] == 2)selected="selected"@endif>已预约</option>
+                                        <option value="0">不允许预约使用</option>
+                                        <option value="1">正常</option>
+                                        <option value="2">已预约</option>
                                     </select>
                                 </div>
                             </div>
@@ -82,14 +82,14 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">地址</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  id="address" name="location" class="form-control" value="{{@$openLabDetail->location}}">
+                                    <input type="text"  id="address" name="location" class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">门牌号</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  id="code" name="code" class="form-control" value="{{@$openLabDetail->code}}">
+                                    <input type="text"  id="code" name="code" class="form-control">
                                 </div>
                             </div>
 
@@ -99,7 +99,7 @@
                                 <label class="col-sm-2 control-label">开放开始时间</label>
 
                                 <div class="col-sm-10">
-                                    <input class="form-control layer-date laydate-icon" id="start" name="begintime"  value="{{@$openLabDetail->begintime}}">
+                                    <input class="form-control layer-date laydate-icon" id="start" name="begintime">
                                 </div>
 
                             </div>
@@ -107,7 +107,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">开放结束时间</label>
                                 <div class="col-sm-10">
-                                    <input  class="form-control layer-date laydate-icon" id="end" name="endtime"  value="{{@$openLabDetail->endtime}}">
+                                    <input  class="form-control layer-date laydate-icon" id="end" name="endtime">
                                 </div>
 
                             </div>
@@ -116,7 +116,7 @@
                                 <label class="col-sm-2 control-label">说明(功能描述)</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" name="detail" id="detail" class="form-control"  value="{{@$openLabDetail->detail}}">
+                                    <input type="text" name="detail" id="detail" class="form-control">
                                 </div>
 
                             </div>
@@ -124,12 +124,12 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">最大预约人数</label>
                                 <div class="col-sm-10">
-                                    <input type="number" name="person_total" id="maxorder" class="form-control"  value="{{@$openLabDetail->person_total}}">
+                                    <input type="number" name="person_total" id="maxorder" class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div id="code_list">
-                                <input type="hidden" name="id" value="{{@$openLabDetail->id}}">
+
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
