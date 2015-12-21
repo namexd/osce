@@ -196,7 +196,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/open-lab-apply-list', ['uses'=>'LabController@getOpenLabApplyList','as'=>'wechat.lab.openLabApplyList']);
 		Route::post('lab/change-open-lab-apply-status', ['uses'=>'LabController@postChangeOpenLabApplyStatus','as'=>'msc.wechat.lab.changeOpenLabApplyStatus']);
 		Route::get('lab/agree-emergency-apply', ['uses'=>'LabController@getAgreeEmergencyApply','as'=>'msc.wechat.lab.agreeEmergencyApply']);
-		Route::get('lab/had-open-lab-list', ['uses'=>'LabController@getHadOpenLabList','as'=>'msc.wechat.lab.getHadOpenLabList']);
+//		Route::get('lab/had-open-lab-list', ['uses'=>'LabController@getHadOpenLabList','as'=>'msc.admin.lab.getHadOpenLabList']);
 
 
 		Route::controller('open-device', 'OpenDeviceController');
