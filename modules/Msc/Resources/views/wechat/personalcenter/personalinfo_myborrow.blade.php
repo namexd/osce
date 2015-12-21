@@ -151,7 +151,7 @@
                 <div class="form-group">
                     <label for="">设备编号</label>
                     <div class="txt">
-                        {{ $val['resourcesToolItem']['code']}}
+                        {{ $val['code']}}
                     </div>
                 </div>
                 <div class="form-group">
