@@ -12,7 +12,6 @@
 </style>
 @stop
 @section('only_head_js')
- <script src="{{asset('msc/wechat/resourcemanage/js/borrow_lishi.js')}}"></script>
  <script>
      $(function(){
 
@@ -113,7 +112,7 @@
                                      '<div class="less-width">'+data[i].applyer_name+'</div>'+
                                      '<div><span>'+data[i].detail+'</span></div>'+
                                      '<div class="attention more-width" value="'+data[i].id+'">'+
-                                     '<span class="State1 pass">通过</span>&nbsp;&nbsp;'+
+                                     '<span class="State1 pass">通过</span>&nbsp;'+
                                      '<span class="State1 unpass">不通过</span>'+
                                      '</div>'+
                                      '</a>'+
