@@ -86,7 +86,7 @@
                     success: function(result) {
                         if(result.code!=1)
                         {
-                            var messageArry=result.message.split(':');
+                            var messageArry=result.message.split(':')[1];
                             alert('操作失败:'+messageArry[1]);
                         }
                         location.reload();
@@ -117,7 +117,7 @@
                     success: function(result) {
                         if(result.code!=1)
                         {
-                            var messageArry=result.message.split(':');
+                            var messageArry=result.message.split(':')[1];
                             alert('操作失败:'+messageArry[1]);
                         }
                         location.reload();
