@@ -7,30 +7,12 @@
 @section('only_js')
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('msc/admin/trainarrange/trainarrange.js')}}"></script>
-    <script type="text/javascript">
-    	var start = {
-		    elem: "#start",
-		    format: "YYYY/MM/DD hh:mm:ss",
-		    min: laydate.now(),
-		    max: "2099-06-16 23:59:59",
-		    istime: true,
-		    istoday: false,
-		    choose: function (a) {
-		        /*end.min = a;
-		        end.start = a*/
-		    }
-		};
-		
-		$(function(){
-			laydate(start);
-			$(".date").text($(".date").text().substring(0,10));
-			$(".time").text($(".time").text().substring(11,19));
-		})
-    </script>
+	<script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
 @stop
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
+	<input type="hidden"  id="parameter" value="{'pagename':'lab-history'}" >
 	<div class="ibox float-e-margins ibox-content pad0">
 		<div class="row table-head-style1 ">
 	        <div class="col-xs-2 col-md-2 head-opera">

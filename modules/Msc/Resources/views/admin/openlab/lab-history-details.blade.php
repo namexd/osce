@@ -6,9 +6,7 @@
 
 @section('only_js')
     <script src="{{asset('msc/admin/trainarrange/trainarrange.js')}}"></script>
-    <script type="text/javascript">
-  		
-    </script>
+	<script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
 @stop
 
 @section('content')

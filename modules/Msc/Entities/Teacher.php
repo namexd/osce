@@ -287,7 +287,6 @@ class Teacher extends CommonModel {
 
     }
 
-
     //导入教师数据存入数据库
     public function AddTeacher($teacherData){
 
