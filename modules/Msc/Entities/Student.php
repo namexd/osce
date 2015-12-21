@@ -169,7 +169,13 @@ class Student extends CommonModel {
         }
 
 
-       $item=array('name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
+       $item=array(
+           'name'=>$data['name'],
+           'code'=>$data['code'],
+           'grade'=>$data['grade'],
+           'professional'=>$professional_id,
+           'student_type'=>$data['student_type']
+       );
 
        $result=$connection->table('student')->where('id',$data['id'])->update($item);
 
@@ -182,7 +188,13 @@ class Student extends CommonModel {
        $result=$connection->table('users')->find($data['id']);
 
        if(!$result){
-           $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+           $users=array(
+               'name'=>$data['name'],
+               'gender'=>$data['gender'],
+               'mobile'=>$data['mobile'],
+               'idcard_type'=>$data['idcard_type'],
+               'idcard'=>$data['idcard']
+           );
 
            return $connection->table('users')->where('id',$data['id'])->insert($users);
        }else{
@@ -191,10 +203,21 @@ class Student extends CommonModel {
            $users_mobile=$users_mobile->mobile;
 
            if($data['mobile']==$users_mobile){
-               $users=array('name'=>$data['name'],'gender'=>$data['gender'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+               $users=array(
+                   'name'=>$data['name'],
+                   'gender'=>$data['gender'],
+                   'idcard_type'=>$data['idcard_type'],
+                   'idcard'=>$data['idcard']
+               );
            } else{
-               $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+               $users=array(
+                   'name'=>$data['name'],
+                   'gender'=>$data['gender'],
+                   'mobile'=>$data['mobile'],
+                   'idcard_type'=>$data['idcard_type'],
+                   'idcard'=>$data['idcard']);
            }
+
 
            $result=$connection->table('users')->where('id',$data['id'])->update($users);
 
@@ -241,18 +264,39 @@ class Student extends CommonModel {
 
         $connection=\DB::connection('sys_mis');
 
-        $users=array('name'=>$data['name'],'gender'=>$data['gender'],'mobile'=>$data['mobile'],'idcard_type'=>$data['idcard_type'],'idcard'=>$data['idcard']);
+        $users=array(
+            'name'=>$data['name'],
+            'gender'=>$data['gender'],
+            'mobile'=>$data['mobile'],
+            'idcard_type'=>$data['idcard_type'],
+            'idcard'=>$data['idcard']
+        );
+
+        $users_mobile=$connection->table('users')->where('mobile',$data['mobile'])->select('mobile')->first();
+
+        $users_mobile=$users_mobile->mobile;
+        
+        if($users_mobile==$data['mobile']){
+            return false;
+        }
+
 
         $id=$connection->table('users')->insertGetId($users);
 
         if(!$id){
             return false;
         }
-        $connection=\DB::connection('msc_mis');
 
-        $item=array('id'=>$id,'name'=>$data['name'],'code'=>$data['code'],'grade'=>$data['grade'],'professional'=>$professional_id,'student_type'=>$data['student_type']);
+        $item=array(
+            'id'=>$id,
+            'name'=>$data['name'],
+            'code'=>$data['code'],
+            'grade'=>$data['grade'],
+            'professional'=>$professional_id,
+            'student_type'=>$data['student_type']
+        );
 
-       $result=$connection->table('student')->insert($item);
+       $result=$this->create($item);
 
         return $result;
     }
@@ -312,5 +356,39 @@ class Student extends CommonModel {
 
          return $connection->table('users')->where('id',$id)->update(['status'=>3-$status]);
 
+    }
+//
+//$item=array(
+//'id'=>$id,
+//'name'=>$data['name'],
+//'code'=>$data['code'],
+//'grade'=>$data['grade'],
+//'professional'=>$professional_id,
+//'student_type'=>$data['student_type']
+//);
+
+    //导入学生数据存入数据库
+    public function AddStudent($studentData){
+//        $id=$connection->table('users')->insertGetId($users);
+        $connection=\DB::connection('sys_mis');
+        $item=array('name' =>$studentData['name'] ,
+            'mobile' => $studentData['mobile'],
+            'idcard'=>$studentData['idcard'],
+            'gender'=>$studentData['gender'],
+            'status'=>$studentData['status'],);
+        $id=$connection->table('users')->insertGetId( $item);
+        if(!$id){
+            return false;
+        }
+        $student=array(
+                'id'=>$id,
+                'name' =>$studentData['name'] ,
+                'code' => $studentData['code'],
+                'grade'=>$studentData['grade'],
+                'student_type'=>$studentData['student_type'],
+                'professional'=>$studentData['professional']
+        );
+        $result=$this->create($student);
+            return $result;
     }
 }

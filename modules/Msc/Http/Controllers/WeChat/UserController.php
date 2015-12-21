@@ -7,9 +7,24 @@ use Illuminate\Http\Request;
 use App\Extensions\OAuth\PasswordGrantVerifier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Modules\Msc\Entities\Student;
+use Modules\Msc\Entities\Teacher;
 class UserController extends MscWeChatController {
 
-	//用户登录
+	/**
+	 * 用户登录
+	 * @method get /msc/wechat/user/user-login
+	 * @access public
+	 *
+	 * @param Request $request post请求<br><br>
+	 * <b>get请求字段：</b>
+	 * @return view
+	 *
+	 * @version 0.1
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-8 16:20
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
 	public function getUserLogin()
 	{
 
@@ -20,19 +35,46 @@ class UserController extends MscWeChatController {
 		return view('msc::wechat.user.login');
 	}
 
-	//处理用户登录
+	/**
+	 * 处理用户登录
+	 * @method post /msc/wechat/user/user-login-op
+	 * @access public
+	 *
+	 * @param Request $request post请求<br><br>
+	 * <b>get请求字段：</b>
+	 * @return view
+	 *
+	 * @version 0.1
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-8 16:20
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
 	public function postUserLoginOp(Request $request,PasswordGrantVerifier $passwordGrantVerifier)
 	{
 		$requests = $request->all();
 		$rew = $passwordGrantVerifier->verify($requests['username'],$requests['password']);
 		if($rew){
 			$user = Auth::user();
-			//$user->user_type = $this->checkUserType($user->id);
-
-			if(!empty($user['mobile'])){
-				return redirect()->intended('/msc/wechat/personal-center/index');
+			$user->user_type = $this->checkUserType($user->id);
+			if(!empty($user->user_type)){
+				$userInfo = [];
+				if($user->user_type == 1){
+					$userInfo = Teacher::where('id','=',$user->id)->first();
+				}elseif($user->user_type == 2){
+					$userInfo = Student::where('id','=',$user->id)->first();
+				}
+				if($userInfo->validated == 1){
+					if(!empty($user['mobile'])){
+						return redirect()->intended('/msc/wechat/personal-center/index');
+					}else{
+						return redirect()->intended('/msc/wechat/user/user-binding');
+					}
+				}else{
+					return view('msc::wechat.index.index_waiting');
+				}
 			}else{
-				return redirect()->intended('/msc/wechat/user/user-binding');
+				Session::put('openid','');
+				return redirect()->intended('/msc/wechat/user/user-login');
 			}
 		}else{
 			Session::put('openid','');
@@ -41,7 +83,20 @@ class UserController extends MscWeChatController {
 
 	}
 
-	//用户注册
+	/**
+	 * 用户注册
+	 * @method post /msc/wechat/user/user-register
+	 * @access public
+	 *
+	 * @param Request $request post请求<br><br>
+	 * <b>get请求字段：</b>
+	 * @return view
+	 *
+	 * @version 0.1
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-8 16:20
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
 	public function getUserRegister(UserRepository $userRepository)
 	{
 		//获取专业  关键字搜索  keyword  关键字(必须的) page
@@ -155,7 +210,20 @@ class UserController extends MscWeChatController {
 		else
 			return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
 	}
-	//用户绑定(登录绑定)
+	/**
+	 * 用户绑定(登录绑定)
+	 * @method get /msc/wechat/user/user-binding
+	 * @access public
+	 *
+	 * @param Request $request post请求<br><br>
+	 * <b>get请求字段：</b>
+	 * @return view
+	 *
+	 * @version 0.1
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-8 16:20
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
 	public function getUserBinding()
 	{
 		$user = Auth::user();
@@ -177,7 +245,7 @@ class UserController extends MscWeChatController {
 	 * @return json ['data'=>{'id':用户id,username:用户名,mobile：用户修改后的手机号码}]
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author tangjun <tangjun@misrobot.com>
 	 * @date 2015-11-06 16:41
 	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
 	 *

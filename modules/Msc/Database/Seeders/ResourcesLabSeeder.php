@@ -1,10 +1,8 @@
 <?php
-namespace database;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
-class ResourcesLabSeeder123 extends Seeder
+class ResourcesLabSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,928 +14,113 @@ class ResourcesLabSeeder123 extends Seeder
         $ResourcesClassroom =   new  \Modules\Msc\Entities\ResourcesClassroom();
         foreach($this->defaultData() as $input)
         {
-                $ResourcesClassroom ->addLabResource($input);
+            $input['manager_id']    ='';
+            if(empty($input['name']))
+            {
+                continue;
+            }
+            $ResourcesClassroom ->addLabResource($input);
         }
     }
     public function defaultData(){
         return array (
             0 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--13',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--13',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '代码',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             1 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--15',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--15',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '1',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             2 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--17',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--17',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '2',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             3 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--19',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--19',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             4 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--22',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--22',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             5 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--24',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--24',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             6 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--26',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--26',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             7 =>
                 array (
-                    'floor' => '3楼',
-                    'code' => '3--28',
                     'name' => '临床技能室',
-                    'area' => 30,
-                    'type' => '1',
+                    'code' => '3--28',
+                    'location' => '新八教3楼',
+                    'begintime' => '08:00:00',
+                    'endtime' => '22:00:00',
+                    'opened' => 0,
                     'manager_name' => '何霄',
-                    'typeCode' => '',
+                    'manager_mobile' => '',
+                    'detail' => '',
                 ),
             8 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4001,
-                    'name' => '模拟手术室',
-                    'area' => 35,
-                    'type' => '1',
-                    'manager_name' => '赵蓉',
-                    'typeCode' => '',
-                ),
-            9 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4002,
-                    'name' => '模拟手术室',
-                    'area' => 45,
-                    'type' => '1',
-                    'manager_name' => '赵蓉',
-                    'typeCode' => '',
-                ),
-            10 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4003,
-                    'name' => '基本生命支持训练室',
-                    'area' => 100,
-                    'type' => '1',
-                    'manager_name' => '赵蓉',
-                    'typeCode' => '',
-                ),
-            11 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4004,
-                    'name' => '监控室',
-                    'area' => 5,
-                    'type' => '2',
-                    'manager_name' => '赵蓉',
-                    'typeCode' => '',
-                ),
-            12 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4005,
-                    'name' => '气道控制训练室',
-                    'area' => 35,
-                    'type' => '1',
-                    'manager_name' => '赵蓉',
-                    'typeCode' => '',
-                ),
-            13 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4006,
-                    'name' => '创伤急救训练室',
-                    'area' => 50,
-                    'type' => '1',
-                    'manager_name' => '赵蓉',
-                    'typeCode' => '',
-                ),
-            14 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4017,
-                    'name' => '数字化综合训练室',
-                    'area' => 75,
-                    'type' => '1',
-                    'manager_name' => '赵蓉',
-                    'typeCode' => '',
-                ),
-            15 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4018,
-                    'name' => '全科医学综合训练室',
-                    'area' => 75,
-                    'type' => 1,
-                    'manager_name' => '马俊荣',
-                    'typeCode' => '',
-                ),
-            16 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4019,
-                    'name' => '内镜诊疗技术训练室',
-                    'area' => 185,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            17 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4022,
-                    'name' => '眼科手术技能训练室',
-                    'area' => 105,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            18 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4036,
-                    'name' => '基本技能训练室3',
-                    'area' => 64,
-                    'type' => '1',
-                    'manager_name' => '马俊荣',
-                    'typeCode' => '',
-                ),
-            19 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4038,
-                    'name' => '基本技能训练室2',
-                    'area' => 71,
-                    'type' => '1',
-                    'manager_name' => '马俊荣',
-                    'typeCode' => '',
-                ),
-            20 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4040,
-                    'name' => '心肺腹听诊触诊实验室',
-                    'area' => 60,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            21 =>
-                array (
-                    'floor' => '4楼',
-                    'code' => 4041,
-                    'name' => '心肺听诊实验室',
-                    'area' => 20,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            22 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5001,
-                    'name' => '模拟病房1',
-                    'area' => 100,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            23 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5002,
-                    'name' => '无菌技术训练室',
-                    'area' => 100,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            24 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5004,
-                    'name' => '模拟病房2',
-                    'area' => 25,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            25 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5013,
-                    'name' => '准备间',
-                    'area' => 40,
-                    'type' => '2',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            26 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5014,
-                    'name' => '示教室1',
-                    'area' => 40,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            27 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5015,
-                    'name' => '示教室2',
-                    'area' => 50,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            28 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5016,
-                    'name' => '生物力学研究室',
-                    'area' => 150,
-                    'type' => '1',
-                    'manager_name' => '骨科',
-                    'typeCode' => '',
-                ),
-            29 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5017,
-                    'name' => '伤口技能实验室',
-                    'area' => 50,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            30 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5018,
-                    'name' => '护理学实验室',
-                    'area' => 50,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            31 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5032,
-                    'name' => '儿科技能训练室',
-                    'area' => 20,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            32 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5033,
-                    'name' => '老年护理实验室',
-                    'area' => 40,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            33 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5034,
-                    'name' => '形体训练室',
-                    'area' => 60,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            34 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5035,
-                    'name' => '妇产科技能训练室',
-                    'area' => 30,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            35 =>
-                array (
-                    'floor' => '5楼',
-                    'code' => 5036,
-                    'name' => '妇儿综合训练室',
-                    'area' => 30,
-                    'type' => '1',
-                    'manager_name' => '张超',
-                    'typeCode' => '',
-                ),
-            36 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6001,
-                    'name' => 'OT 康复实验室',
-                    'area' => 63,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            37 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6002,
-                    'name' => 'OT康复实验室',
-                    'area' => 63,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            38 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6003,
-                    'name' => 'PT康复实验室',
-                    'area' => 134,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            39 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6015,
-                    'name' => '眼视光学实验室',
-                    'area' => 73,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            40 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6017,
-                    'name' => '眼视光学实验室',
-                    'area' => 37,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            41 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6019,
-                    'name' => '眼视光学实验室',
-                    'area' => 73,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            42 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6022,
-                    'name' => '眼视光学实验室',
-                    'area' => 70,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            43 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6024,
-                    'name' => '营养膳食实验室',
-                    'area' => 77,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            44 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6037,
-                    'name' => '自主开放实验室2',
-                    'area' => 40,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            45 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6038,
-                    'name' => '自主开放实验室1',
-                    'area' => 40,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            46 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6039,
-                    'name' => '呼吸治疗实验室',
-                    'area' => 92,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            47 =>
-                array (
-                    'floor' => '6楼',
-                    'code' => 6040,
-                    'name' => '医技影像超声检查学',
-                    'area' => 69,
-                    'type' => '1',
-                    'manager_name' => '何霄',
-                    'typeCode' => '',
-                ),
-            48 =>
-                array (
-                    'floor' => '7楼',
-                    'code' => 7024,
-                    'name' => '教学准备室',
-                    'area' => 55,
-                    'type' => '2',
-                    'manager_name' => '赵清江',
-                    'typeCode' => '',
-                ),
-            49 =>
-                array (
-                    'floor' => '7楼',
-                    'code' => 7007,
-                    'name' => '功能实验室',
-                    'area' => 85,
-                    'type' => '1',
-                    'manager_name' => '赵清江',
-                    'typeCode' => '',
-                ),
-            50 =>
-                array (
-                    'floor' => '7楼',
-                    'code' => 7008,
-                    'name' => '功能实验室',
-                    'area' => 85,
-                    'type' => '1',
-                    'manager_name' => '赵清江',
-                    'typeCode' => '',
-                ),
-            51 =>
-                array (
-                    'floor' => '7楼',
-                    'code' => 7006,
-                    'name' => '综合实验室',
-                    'area' => 35,
-                    'type' => '1',
-                    'manager_name' => '赵清江',
-                    'typeCode' => '',
-                ),
-            52 =>
-                array (
-                    'floor' => '7楼',
-                    'code' => 7023,
-                    'name' => '仪器室1',
-                    'area' => 55,
-                    'type' => '1',
-                    'manager_name' => '赵清江',
-                    'typeCode' => '',
-                ),
-            53 =>
-                array (
-                    'floor' => '7楼',
-                    'code' => 7021,
-                    'name' => '仪器室2',
-                    'area' => 55,
-                    'type' => '1',
-                    'manager_name' => '赵清江',
-                    'typeCode' => '',
-                ),
-            54 =>
-                array (
-                    'floor' => '7楼',
-                    'code' => 7020,
-                    'name' => '仪器室3',
-                    'area' => 55,
-                    'type' => '1',
-                    'manager_name' => '赵清江',
-                    'typeCode' => '',
-                ),
-            55 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8022,
-                    'name' => '第一形态学实验室',
-                    'area' => 50,
-                    'type' => 1,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            56 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8021,
-                    'name' => '第二形态学实验室',
-                    'area' => 50,
-                    'type' => 1,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            57 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8020,
-                    'name' => '第三形态学实验室',
-                    'area' => 50,
-                    'type' => 1,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            58 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8018,
-                    'name' => '第四形态学实验室',
-                    'area' => 50,
-                    'type' => 1,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            59 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8017,
-                    'name' => '标本陈列馆',
-                    'area' => 100,
-                    'type' => 1,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            60 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8007,
-                    'name' => '标本示教室',
-                    'area' => 70,
-                    'type' => 1,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            61 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8008,
-                    'name' => '标本制作室',
-                    'area' => 50,
-                    'type' => 2,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            62 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8006,
-                    'name' => '教学准备室',
-                    'area' => 50,
-                    'type' => 2,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            63 =>
-                array (
-                    'floor' => '8楼',
-                    'code' => 8019,
-                    'name' => '多人共览显微镜室',
-                    'area' => 15,
-                    'type' => 1,
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            64 =>
-                array (
-                    'floor' => '10楼',
-                    'code' => 10003,
-                    'name' => '虚拟仿真实验室',
-                    'area' => 120,
-                    'type' => '1',
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            65 =>
-                array (
-                    'floor' => '10楼',
-                    'code' => 10002,
-                    'name' => '示教室',
-                    'area' => 50,
-                    'type' => '1',
-                    'manager_name' => '熊茂琦',
-                    'typeCode' => '',
-                ),
-            66 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01027',
-                    'name' => '手术准备实验室',
-                    'area' => 28,
-                    'type' => '2',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            67 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01025',
-                    'name' => '手术实验室1',
-                    'area' => 28,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            68 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01023',
-                    'name' => '手术实验室2',
-                    'area' => 28,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            69 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01021',
-                    'name' => '手术实验室3',
-                    'area' => 36,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            70 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01019',
-                    'name' => '手术实验室4',
-                    'area' => 36,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            71 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01017',
-                    'name' => '手术实验室5',
-                    'area' => 36,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            72 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01016',
-                    'name' => '动物准备间',
-                    'area' => 32,
-                    'type' => '2',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            73 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01018',
-                    'name' => '强生微创实验室1',
-                    'area' => 60,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            74 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01020',
-                    'name' => '',
-                    'area' => '',
-                    'type' => '',
-                    'manager_name' => '',
-                    'typeCode' => '',
-                ),
-            75 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01022',
-                    'name' => '奥林巴斯微创、内镜实验室',
-                    'area' => 50,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            76 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01024',
-                    'name' => '',
-                    'area' => '',
-                    'type' => '',
-                    'manager_name' => '',
-                    'typeCode' => '',
-                ),
-            77 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01026',
-                    'name' => '奥林巴斯模拟实验室',
-                    'area' => 28,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            78 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01040',
-                    'name' => '男更衣间',
-                    'area' => 20,
-                    'type' => '2',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            79 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01041',
-                    'name' => '女更衣间',
-                    'area' => 20,
-                    'type' => '2',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            80 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01038',
-                    'name' => '办公室',
-                    'area' => 32,
-                    'type' => '2',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            81 =>
-                array (
-                    'floor' => '负一楼',
-                    'code' => 'b01039',
-                    'name' => '视教室',
-                    'area' => 80,
-                    'type' => '1',
-                    'manager_name' => '岳中伟',
-                    'typeCode' => '',
-                ),
-            82 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--13',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            83 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--15',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            84 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--17',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            85 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--19',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            86 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--22',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            87 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--24',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            88 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--26',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            89 =>
-                array (
-                    'name' => '临床技能室',
-                    'code' => '3--28',
-                    'location' => '新八教3楼',
-                    'begintime' => '08:00:00',
-                    'endtime' => '22:00:00',
-                    'opened' => 0,
-                    'manager_name' => '何霄',
-                    'manager_mobile' => '',
-                    'detail' => '',
-                ),
-            90 =>
                 array (
                     'name' => '模拟手术室',
                     'code' => '4001',
@@ -949,7 +132,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            91 =>
+            9 =>
                 array (
                     'name' => '模拟手术室',
                     'code' => '4002',
@@ -961,7 +144,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            92 =>
+            10 =>
                 array (
                     'name' => '基本生命支持训练室',
                     'code' => '4003',
@@ -973,7 +156,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            93 =>
+            11 =>
                 array (
                     'name' => '监控室',
                     'code' => '4004',
@@ -985,7 +168,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            94 =>
+            12 =>
                 array (
                     'name' => '气道控制训练室',
                     'code' => '4005',
@@ -997,7 +180,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            95 =>
+            13 =>
                 array (
                     'name' => '创伤急救训练室',
                     'code' => '4006',
@@ -1009,7 +192,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            96 =>
+            14 =>
                 array (
                     'name' => '数字化综合训练室',
                     'code' => '4017',
@@ -1021,7 +204,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            97 =>
+            15 =>
                 array (
                     'name' => '全科医学综合训练室',
                     'code' => '4018',
@@ -1033,7 +216,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            98 =>
+            16 =>
                 array (
                     'name' => '内镜诊疗技术训练室',
                     'code' => '4019',
@@ -1045,7 +228,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            99 =>
+            17 =>
                 array (
                     'name' => '眼科手术技能训练室',
                     'code' => '4022',
@@ -1057,7 +240,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            100 =>
+            18 =>
                 array (
                     'name' => '基本技能训练室3',
                     'code' => '4036',
@@ -1069,7 +252,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            101 =>
+            19 =>
                 array (
                     'name' => '基本技能训练室2',
                     'code' => '4038',
@@ -1081,7 +264,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            102 =>
+            20 =>
                 array (
                     'name' => '心肺腹听诊触诊实验室',
                     'code' => '4040',
@@ -1093,7 +276,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            103 =>
+            21 =>
                 array (
                     'name' => '心肺听诊实验室',
                     'code' => '4041',
@@ -1105,7 +288,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            104 =>
+            22 =>
                 array (
                     'name' => '模拟病房1',
                     'code' => '5001',
@@ -1117,7 +300,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            105 =>
+            23 =>
                 array (
                     'name' => '无菌技术训练室',
                     'code' => '5002',
@@ -1129,7 +312,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            106 =>
+            24 =>
                 array (
                     'name' => '模拟病房2',
                     'code' => '5004',
@@ -1141,7 +324,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            107 =>
+            25 =>
                 array (
                     'name' => '准备间',
                     'code' => '5013',
@@ -1153,7 +336,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            108 =>
+            26 =>
                 array (
                     'name' => '示教室1',
                     'code' => '5014',
@@ -1165,7 +348,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            109 =>
+            27 =>
                 array (
                     'name' => '示教室2',
                     'code' => '5015',
@@ -1177,7 +360,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            110 =>
+            28 =>
                 array (
                     'name' => '生物力学研究室',
                     'code' => '5016',
@@ -1189,7 +372,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            111 =>
+            29 =>
                 array (
                     'name' => '伤口技能实验室',
                     'code' => '5017',
@@ -1201,7 +384,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            112 =>
+            30 =>
                 array (
                     'name' => '护理学实验室',
                     'code' => '5018',
@@ -1213,7 +396,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            113 =>
+            31 =>
                 array (
                     'name' => '儿科技能训练室',
                     'code' => '5032',
@@ -1225,7 +408,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            114 =>
+            32 =>
                 array (
                     'name' => '老年护理实验室',
                     'code' => '5033',
@@ -1237,7 +420,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            115 =>
+            33 =>
                 array (
                     'name' => '形体训练室',
                     'code' => '5034',
@@ -1249,7 +432,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            116 =>
+            34 =>
                 array (
                     'name' => '妇产科技能训练室',
                     'code' => '5035',
@@ -1261,7 +444,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            117 =>
+            35 =>
                 array (
                     'name' => '妇儿综合训练室',
                     'code' => '5036',
@@ -1273,7 +456,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            118 =>
+            36 =>
                 array (
                     'name' => 'OT 康复实验室',
                     'code' => '6001',
@@ -1285,7 +468,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            119 =>
+            37 =>
                 array (
                     'name' => 'OT康复实验室',
                     'code' => '6002',
@@ -1297,7 +480,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            120 =>
+            38 =>
                 array (
                     'name' => 'PT康复实验室',
                     'code' => '6003',
@@ -1309,7 +492,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            121 =>
+            39 =>
                 array (
                     'name' => '眼视光学实验室',
                     'code' => '6015',
@@ -1321,7 +504,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            122 =>
+            40 =>
                 array (
                     'name' => '眼视光学实验室',
                     'code' => '6017',
@@ -1333,7 +516,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            123 =>
+            41 =>
                 array (
                     'name' => '眼视光学实验室',
                     'code' => '6019',
@@ -1345,7 +528,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            124 =>
+            42 =>
                 array (
                     'name' => '眼视光学实验室',
                     'code' => '6022',
@@ -1357,7 +540,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            125 =>
+            43 =>
                 array (
                     'name' => '营养膳食实验室',
                     'code' => '6024',
@@ -1369,31 +552,31 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            126 =>
+            44 =>
                 array (
                     'name' => '自主开放实验室2',
                     'code' => '6037',
                     'location' => '新八教6楼',
                     'begintime' => '08:00:00',
                     'endtime' => '22:00:00',
-                    'opened' => 0,
+                    'opened' => 1,
                     'manager_name' => '何霄',
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            127 =>
+            45 =>
                 array (
                     'name' => '自主开放实验室1',
                     'code' => '6038',
                     'location' => '新八教6楼',
                     'begintime' => '08:00:00',
                     'endtime' => '22:00:00',
-                    'opened' => 0,
+                    'opened' => 1,
                     'manager_name' => '何霄',
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            128 =>
+            46 =>
                 array (
                     'name' => '呼吸治疗实验室',
                     'code' => '6039',
@@ -1405,7 +588,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            129 =>
+            47 =>
                 array (
                     'name' => '医技影像超声检查学',
                     'code' => '6040',
@@ -1417,7 +600,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            130 =>
+            48 =>
                 array (
                     'name' => '教学准备室',
                     'code' => '7024',
@@ -1429,7 +612,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            131 =>
+            49 =>
                 array (
                     'name' => '功能实验室',
                     'code' => '7007',
@@ -1441,7 +624,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            132 =>
+            50 =>
                 array (
                     'name' => '功能实验室',
                     'code' => '7008',
@@ -1453,7 +636,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            133 =>
+            51 =>
                 array (
                     'name' => '综合实验室',
                     'code' => '7006',
@@ -1465,7 +648,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            134 =>
+            52 =>
                 array (
                     'name' => '仪器室1',
                     'code' => '7023',
@@ -1477,7 +660,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            135 =>
+            53 =>
                 array (
                     'name' => '仪器室2',
                     'code' => '7021',
@@ -1489,7 +672,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            136 =>
+            54 =>
                 array (
                     'name' => '仪器室3',
                     'code' => '7020',
@@ -1501,7 +684,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            137 =>
+            55 =>
                 array (
                     'name' => '第一形态学实验室',
                     'code' => '8022',
@@ -1513,7 +696,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            138 =>
+            56 =>
                 array (
                     'name' => '第二形态学实验室',
                     'code' => '8021',
@@ -1525,7 +708,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            139 =>
+            57 =>
                 array (
                     'name' => '第三形态学实验室',
                     'code' => '8020',
@@ -1537,7 +720,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            140 =>
+            58 =>
                 array (
                     'name' => '第四形态学实验室',
                     'code' => '8018',
@@ -1549,7 +732,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            141 =>
+            59 =>
                 array (
                     'name' => '标本陈列馆',
                     'code' => '8017',
@@ -1561,7 +744,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            142 =>
+            60 =>
                 array (
                     'name' => '标本示教室',
                     'code' => '8007',
@@ -1573,7 +756,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            143 =>
+            61 =>
                 array (
                     'name' => '标本制作室',
                     'code' => '8008',
@@ -1585,7 +768,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            144 =>
+            62 =>
                 array (
                     'name' => '教学准备室',
                     'code' => '8006',
@@ -1597,7 +780,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            145 =>
+            63 =>
                 array (
                     'name' => '多人共览显微镜室',
                     'code' => '8019',
@@ -1609,7 +792,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            146 =>
+            64 =>
                 array (
                     'name' => '虚拟仿真实验室',
                     'code' => '10003',
@@ -1621,7 +804,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            147 =>
+            65 =>
                 array (
                     'name' => '示教室',
                     'code' => '10002',
@@ -1633,7 +816,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            148 =>
+            66 =>
                 array (
                     'name' => '手术准备实验室',
                     'code' => 'b01027',
@@ -1645,7 +828,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            149 =>
+            67 =>
                 array (
                     'name' => '手术实验室1',
                     'code' => 'b01025',
@@ -1657,7 +840,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            150 =>
+            68 =>
                 array (
                     'name' => '手术实验室2',
                     'code' => 'b01023',
@@ -1669,7 +852,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            151 =>
+            69 =>
                 array (
                     'name' => '手术实验室3',
                     'code' => 'b01021',
@@ -1681,7 +864,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            152 =>
+            70 =>
                 array (
                     'name' => '手术实验室4',
                     'code' => 'b01019',
@@ -1693,7 +876,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            153 =>
+            71 =>
                 array (
                     'name' => '手术实验室5',
                     'code' => 'b01017',
@@ -1705,7 +888,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            154 =>
+            72 =>
                 array (
                     'name' => '动物准备间',
                     'code' => 'b01016',
@@ -1717,7 +900,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            155 =>
+            73 =>
                 array (
                     'name' => '强生微创实验室1',
                     'code' => 'b01018',
@@ -1729,7 +912,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            156 =>
+            74 =>
                 array (
                     'name' => '',
                     'code' => 'b01020',
@@ -1737,11 +920,11 @@ class ResourcesLabSeeder123 extends Seeder
                     'begintime' => '08:00:00',
                     'endtime' => '22:00:00',
                     'opened' => 0,
-                    'manager_name' => '',
+                    'manager_name' =>  '岳中伟',
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            157 =>
+            75 =>
                 array (
                     'name' => '奥林巴斯微创、内镜实验室',
                     'code' => 'b01022',
@@ -1753,7 +936,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            158 =>
+            76 =>
                 array (
                     'name' => '',
                     'code' => 'b01024',
@@ -1761,11 +944,11 @@ class ResourcesLabSeeder123 extends Seeder
                     'begintime' => '08:00:00',
                     'endtime' => '22:00:00',
                     'opened' => 0,
-                    'manager_name' => '',
+                    'manager_name' =>  '岳中伟',
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            159 =>
+            77 =>
                 array (
                     'name' => '奥林巴斯模拟实验室',
                     'code' => 'b01026',
@@ -1777,7 +960,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            160 =>
+            78 =>
                 array (
                     'name' => '男更衣间',
                     'code' => 'b01040',
@@ -1789,7 +972,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            161 =>
+            79 =>
                 array (
                     'name' => '女更衣间',
                     'code' => 'b01041',
@@ -1801,7 +984,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            162 =>
+            80 =>
                 array (
                     'name' => '办公室',
                     'code' => 'b01038',
@@ -1813,7 +996,7 @@ class ResourcesLabSeeder123 extends Seeder
                     'manager_mobile' => '',
                     'detail' => '',
                 ),
-            163 =>
+            81 =>
                 array (
                     'name' => '视教室',
                     'code' => 'b01039',
