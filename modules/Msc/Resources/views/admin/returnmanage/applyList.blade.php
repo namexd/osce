@@ -92,7 +92,7 @@
 	       </div>
 
             <div class="input-group apply-sousuo">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" placeholder="请输入关键字" class="input-sm form-control" style="color: #222">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                     </span>
