@@ -25,6 +25,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('resources-manager/ajax-resources-tools-cate', ['uses'=>'ResourcesManagerController@getAjaxResourcesToolsCate','as'=>'msc.admin.resourcesManager.getAjaxResourcesToolsCate']);
 		Route::get('resources-manager/add-resources', ['uses'=>'ResourcesManagerController@getAddResources','as'=>'msc.admin.resourcesManager.getAddResources']);
 		Route::get('resources-manager/resources-cate-list', ['uses'=>'ResourcesManagerController@getResourcesCateList','as'=>'msc.admin.resourcesManager.getResourcesCateList']);
+		Route::post('resources-manager/add-resources',['uses'=>'ResourcesManagerController@postAddResources','as'=>'msc.admin.resourcesManager.postAddResources']);
 
 		Route::get('resources-manager/classroom-list', ['uses'=>'ResourcesManagerController@getClassroomList','as'=>'msc.resourcesManager.classroomList']);
 		Route::get('resources-manager/record-info', ['uses'=>'ResourcesManagerController@getRecordInfo','as'=>'msc.admin.resourcesManager.getRecordInfo']);
@@ -196,7 +197,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/open-lab-apply-list', ['uses'=>'LabController@getOpenLabApplyList','as'=>'wechat.lab.openLabApplyList']);
 		Route::post('lab/change-open-lab-apply-status', ['uses'=>'LabController@postChangeOpenLabApplyStatus','as'=>'msc.wechat.lab.changeOpenLabApplyStatus']);
 		Route::get('lab/agree-emergency-apply', ['uses'=>'LabController@getAgreeEmergencyApply','as'=>'msc.wechat.lab.agreeEmergencyApply']);
-		Route::get('lab/had-open-lab-list', ['uses'=>'LabController@getHadOpenLabList','as'=>'msc.admin.lab.getHadOpenLabList']);
+//		Route::get('lab/had-open-lab-list', ['uses'=>'LabController@getHadOpenLabList','as'=>'msc.admin.lab.getHadOpenLabList']);
 
 
 		Route::controller('open-device', 'OpenDeviceController');

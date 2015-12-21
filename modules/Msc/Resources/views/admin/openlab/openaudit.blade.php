@@ -102,7 +102,7 @@
                         }
                         else
                         {
-                            layer.alert(result.msg)
+                            layer.alert((result.message).split(":")[1])
                         }
                     }
                 });
@@ -136,7 +136,7 @@
                         }
                         else
                         {
-                            layer.alert(result.msg)
+                            layer.alert((result.message).split(":")[1])
                         }
                     }
                 });
