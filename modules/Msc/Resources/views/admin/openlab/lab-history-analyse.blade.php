@@ -7,7 +7,7 @@
 @section('only_js')
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('msc/admin/trainarrange/trainarrange.js')}}"></script>
-    
+	<script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
 @stop
 
 @section('content')

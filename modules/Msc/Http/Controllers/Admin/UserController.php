@@ -765,17 +765,16 @@ class UserController extends MscController
 
                     if (Student::where('code', '=', $studentData['code'])->count() == 0) {
 
-//                        $student = Student::create($studentData);
-//                        $user =User::create($studentData);
                         $student = new Student();
                          $result=$student->AddStudent($studentData);
-//                        die(json_encode($srt));
-
-                        if ($result== 0) {
-                            $dataFalse[] = $studentData;
+                        if (!$result) {
+//                            $dataFalse[] = $studentData;
+                            return redirect()->back()->withInput()->withErrors('导入失败');
                         }
+
                     } else {
-                        $dataHaven[] = $studentData;
+//                        $dataHaven[] = $studentData;
+                        return redirect()->back()->withInput()->withErrors('导入成功');
                     }
                 }
             }
@@ -813,7 +812,6 @@ class UserController extends MscController
             'keyword'            =>  'required',
         ],[ 'required' => '请输入关键字搜索导出']);
 //        $keyword=$request->get('keyword');
-//        dd($request->keyword);
         //同步学生列表的数据
         $studentInfo = $this->getStudentList($request);
 

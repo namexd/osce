@@ -190,6 +190,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::controller('course-order', 'CourseOrderController');
 		Route::controller('open-laboratory', 'OpenLaboratoryController');
 		Route::get('open-laboratory/emergency-manage',['uses'=>'OpenLaboratoryController@getEmergencyManage','as'=>'msc.wechat.openLaboratory.emergencyManage']);
+		Route::get('open-laboratory/open-lab-apply', ['uses'=>'OpenLaboratoryController@getOpenLabApply','as'=>'msc.wechat.openLaboratory.getOpenLabApply']);
+
 		Route::controller('lab', 'LabController');
 		Route::get('lab/refund-emergency-apply', ['uses'=>'LabController@getRefundEmergencyApply','as'=>'mswechat.lab.getRefundEmergencyApply']);
 

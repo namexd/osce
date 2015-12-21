@@ -158,9 +158,12 @@ class AuthController extends BaseController
      */
 
     public function SavePermissions(Request $Request,SysRolePermission $SysRolePermission){
+
         $this->validate($Request,[
             'role_id'       => 'required|integer',
         ]);
+
+
         $role_id = $Request->get('role_id');
         $permissionIdArr = $Request->get('permission_id');
         $status = $SysRolePermission->where('role_id','=',$role_id)->get();
