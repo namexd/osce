@@ -198,7 +198,7 @@ class ResourceController extends MscWeChatController {
 				$image=count($imagesList)? $imagesList->first():'';
 				$path=empty($image)? '':$image->url;
 				$data=[
-					'image'=>$path,
+					'img'=>$path,
 					'name'=>$item->name,
 					'id'=>$item->id,
 					'type'=>$type,

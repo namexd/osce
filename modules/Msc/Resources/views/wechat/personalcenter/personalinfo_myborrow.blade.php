@@ -1,95 +1,21 @@
 @extends('msc::wechat.layouts.admin')
 
 @section('only_head_css')
+
 <link href="{{asset('msc/wechat/personalcenter/css/personalcenter.css')}}" rel="stylesheet" type="text/css" />
 
 @stop
 @section('only_head_js')
-    <script src="{{asset('msc/wechat/personalcenter/js/personalinfo_myborrow.js')}}"></script>
 
-    <script>
-        now_index="0";
-        $(document).ready(function(){
-
-            initcard();//表单切换
-
-            $(".cancle").click(function(){
-                var $this = $(this);
-                var id = $this.attr('BorrowingId');
-                $.confirm({
-                    title: '提示：',
-                    content: '是否取消此次外借申请？',
-                    confirmButton: '　　　是　　　 ' ,
-                    cancelButton: '　　　否　　　',
-                    confirmButtonClass: 'btn-info',
-                    cancelButtonClass: 'btn-danger',
-                    confirm:function(){
-                        $.ajax({
-                            url:"{{ url('/msc/wechat/personal-center/cancel-borrowing') }}",
-                            type:"post",
-                            dataType:"json",
-                            cache:false,
-                            data:{id:id},
-                            success: function(result) {
-                                if(result.code == 1){
-                                    $this.parents('.add_main').remove();
-                                }else{
-                                    alert(result.message);
-                                }
-                            },
-
-                        });
-                    }
-                })
-
-            });
-            var now_page=1;
-            var qj={page:now_page};//设置页码
-            var url = "{{ url('/msc/wechat/personal-center/borrow-history-data') }}";
-            var getdetail = "{{ url('/msc/wechat/resources-manager/borrow-history-detail') }}";
-            gethistory(qj,url,getdetail);
-            //判定到底底部
-                $(window).scroll(function(e){
-                    //判定是历史列表时执行翻页
-                    if(away_top >= (page_height - window_height)&&now_page<totalpages&&now_index=="2"){
-                        now_page++;
-                        var qj={page:now_page};//设置页码
-                        gethistory(qj,url,getdetail)
-                        /*加载显示*/
-                    }
-                })
-
-            function initcard(){//表单切换
-                $("#thelist2 li").unbind("click").click(function(){
-                    $(this).addClass("check").siblings().removeClass("check");
-                    now_index=$(this).index();
-                    $("#info_list>div").eq(now_index).show().siblings("div").hide();
-                    //判定是历史列表时执行翻页
-                });
-            }
-
-        })
-        $(function(){
-            $(".more_txt").click(function(){
-                var h=parseInt($(".gn_txt").height());
-                var height=parseInt($(".gn_txt span").height()+6);
-                if(h==18){
-                    $(".more_txt").css({transform:"rotate(90deg)"});
-                    $(".gn_txt").animate({height:height},300);
-                }else{
-                    $(".more_txt").css({transform:"rotate(0deg)"});
-                    $(".gn_txt").animate({height:"30px"},300);
-                }
-            })
-        })
-
-
-    </script>
+    <script src="{{asset('msc/wechat/personalcenter/js/personalinfo.js')}}"></script>
 
 @stop
 
 
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'myborrow','cancel_borrow':'{{ url('/msc/wechat/personal-center/cancel-borrowing') }}'
+    ,'url':'{{ url('/msc/wechat/personal-center/borrow-history-data') }}'
+    ,'getdetail':'{{ url('/msc/wechat/resources-manager/borrow-history-detail') }}'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
@@ -151,7 +77,7 @@
                 <div class="form-group">
                     <label for="">设备编号</label>
                     <div class="txt">
-                        {{ $val['code']}}
+                        {{ $val['resourcesToolItem']['code']}}
                     </div>
                 </div>
                 <div class="form-group">

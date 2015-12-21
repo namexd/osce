@@ -63,7 +63,7 @@
                 var selectType = $('#thelist').find('.check').attr('value');
                 var req = {type:selectType,keyword:$('#search').val(),page:1};
                 //数据请求结果
-                ajaxRequest(req,url);
+                ajaxReset(req,url);
             })
 
             /*跳转到详情页*/
