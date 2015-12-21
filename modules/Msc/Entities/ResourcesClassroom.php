@@ -117,6 +117,57 @@ class ResourcesClassroom extends  CommonModel {
         ];
         return $this->create($data);
 	}
+    //新增教室
+    public function addClassRommResources($request){
+        $imagesArray = $request->get('images_path');
+
+        $formData    = $request->only(['name', 'code', 'location', 'begintime', 'endtime', 'manager_name', 'manager_mobile','detail','person_total']);
+
+        $formData['opened'] = empty($formData['opened']) ? 0 : $formData['opened'];
+        $formData['manager_id'] = empty($formData['manager_id']) ? 0 : $formData['manager_id'];
+        $connection = DB::connection('msc_mis');
+        try{
+            $connection->beginTransaction();
+            $resources =$this->create($formData);
+            if(!$resources){
+                throw new \Exception('新增教室失败！');
+            }
+
+            $_formData = [
+                'type'        => 'CLASSROOM',
+                'item_id'     => $resources->id,
+                'description' => '',
+            ];
+            $_resources = Resources::create($_formData);
+
+            if(!$_resources)
+            {
+                throw new \Exception('新增教室失败！');
+            }
+            if (!empty($imagesArray))
+            {
+                foreach($imagesArray as $item)
+                {
+                    $data=[
+                        'resources_id' => $_resources->id,
+                        'url'          => $item,
+                        'order'        => 0,
+                        'descrption'   => '',
+                    ];
+                    $result = ResourcesImage::create($data);
+                    if(!$result)
+                    {
+                        throw new \Exception('图片保存失败！');
+                    }
+                }
+            }
+            $connection->commit();
+            return true;
+        }catch (\Exception $ex){
+            $connection->rollback();
+            return $ex;
+        }
+    }
 
     //给教室选择下拉列表提供数据
     public function getClassroomName($keyword = '') {

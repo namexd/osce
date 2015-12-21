@@ -25,7 +25,7 @@
 
         //提交理由
         var id = (location.href).split('=')[1];
-        $('#submit').one('click',function(){
+        $('#submit').on('click',function(){
             var input   =   {
                 'id'    :   $('[name=id]').val(),
                 'status':   $('[name=status]').val(),

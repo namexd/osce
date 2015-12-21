@@ -589,6 +589,7 @@ return array(
 	'VcrSeeder' => $baseDir . '/modules/Msc/Database/seeders/VcrSeeder.php',
 	'ResourcesLabVcrSeeder' => $baseDir . '/modules/Msc/Database/seeders/ResourcesLabVcrSeeder.php',
 	'ResourcesDeviceSeeder' => $baseDir . '/modules/Msc/Database/seeders/ResourcesDeviceSeeder.php',
+	'LabCoursesSeeder' => $baseDir . '/modules/Msc/Database/seeders/LabCoursesSeeder.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
 );

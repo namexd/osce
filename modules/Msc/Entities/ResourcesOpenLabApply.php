@@ -213,8 +213,9 @@ class ResourcesOpenLabApply extends CommonModel
                 }
             }
         ])  ->  where('status','=',0)
+            ->  where('apply_type','=',0)
             ->  whereRaw(
-            'unix_timestamp(apply_date) > ?',
+            'unix_timestamp(apply_date) >= ?',
             [
                 strtotime($date),
             ]

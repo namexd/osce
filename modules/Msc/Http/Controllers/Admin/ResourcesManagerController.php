@@ -453,6 +453,26 @@ class ResourcesManagerController extends MscController
     }
 
     /**
+     * 新增教室-表单
+     * @api GET /msc/admin/resources-manager/add-classroom
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author gaoshichong
+     * @date 2015-12-21 14:02:48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddClassroom(Request $request){
+        //return view("");
+    }
+    /**
      * 异步获取设备子分类
      * @method GET /msc/admin/resources-manager/ajax-resources-tools-cate
      * @access public
@@ -533,53 +553,12 @@ class ResourcesManagerController extends MscController
             'person_total'   => 'required|integer',
             'detail'         => 'sometimes|max:255|min:0',
         ]);
-        $imagesArray = $request->get('images_path');
-
-        $formData    = $request->only(['name', 'code', 'location', 'begintime', 'endtime', 'manager_name', 'manager_mobile','detail','person_total']);
-
-        $formData['opened'] = empty($formData['opened']) ? 0 : $formData['opened'];
-        $formData['manager_id'] = empty($formData['manager_id']) ? 0 : $formData['manager_id'];
-        $connection = DB::connection('msc_mis');
-        try{
-            $connection->beginTransaction();
-            $resources = ResourcesClassroom::create($formData);
-            if(!$resources){
-                throw new \Exception('新增教室失败！');
-            }
-
-            $_formData = [
-                'type'        => 'CLASSROOM',
-                'item_id'     => $resources->id,
-                'description' => '',
-            ];
-            $_resources = Resources::create($_formData);
-
-            if(!$_resources)
-            {
-                throw new \Exception('新增教室失败！');
-            }
-            if (!empty($imagesArray))
-            {
-                foreach($imagesArray as $item)
-                {
-                    $data=[
-                        'resources_id' => $_resources->id,
-                        'url'          => $item,
-                        'order'        => 0,
-                        'descrption'   => '',
-                    ];
-                    $result = ResourcesImage::create($data);
-                    if(!$result)
-                    {
-                        throw new \Exception('图片保存失败！');
-                    }
-                }
-            }
-            $connection->commit();
-            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
-        }catch (\Exception $ex){
-            $connection->rollback();
-            return redirect()->back()->withErrors($ex);
+        $resourcesClassroom=new ResourcesClassroom();
+        $rst=$resourcesClassroom->addClassRommResources($request);
+        if($rst===true){
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddClassroom');
+        }else{
+            return redirect()->back()->withErrors($rst);
         }
     }
     /*
