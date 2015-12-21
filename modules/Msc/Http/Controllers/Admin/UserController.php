@@ -809,10 +809,11 @@ class UserController extends MscController
 
     public function getExportStudentUser(Request $request)
     {
+        $this->validate($request,[
+            'keyword'            =>  'required',
+        ],[ 'required' => '请输入关键字搜索导出']);
+//        $keyword=$request->get('keyword');
 //        dd($request->keyword);
-//        if($request->keyword){
-//
-//        }
         //同步学生列表的数据
         $studentInfo = $this->getStudentList($request);
 
@@ -874,6 +875,9 @@ class UserController extends MscController
      */
     public function getExportTeacherUser(Request $request)
     {
+        $this->validate($request,[
+            'keyword'            =>  'required',
+        ],[ 'required' => '请输入关键字搜索导出']);
         $teacherInfo = $this->getTeacherList($request);
 //        dd($teacherInfo->list);
 //        $teacherInfo = $this->getTeacherInfo($request);

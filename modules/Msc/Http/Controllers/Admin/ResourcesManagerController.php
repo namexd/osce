@@ -533,53 +533,11 @@ class ResourcesManagerController extends MscController
             'person_total'   => 'required|integer',
             'detail'         => 'sometimes|max:255|min:0',
         ]);
-        $imagesArray = $request->get('images_path');
-
-        $formData    = $request->only(['name', 'code', 'location', 'begintime', 'endtime', 'manager_name', 'manager_mobile','detail','person_total']);
-
-        $formData['opened'] = empty($formData['opened']) ? 0 : $formData['opened'];
-        $formData['manager_id'] = empty($formData['manager_id']) ? 0 : $formData['manager_id'];
-        $connection = DB::connection('msc_mis');
-        try{
-            $connection->beginTransaction();
-            $resources = ResourcesClassroom::create($formData);
-            if(!$resources){
-                throw new \Exception('新增教室失败！');
-            }
-
-            $_formData = [
-                'type'        => 'CLASSROOM',
-                'item_id'     => $resources->id,
-                'description' => '',
-            ];
-            $_resources = Resources::create($_formData);
-
-            if(!$_resources)
-            {
-                throw new \Exception('新增教室失败！');
-            }
-            if (!empty($imagesArray))
-            {
-                foreach($imagesArray as $item)
-                {
-                    $data=[
-                        'resources_id' => $_resources->id,
-                        'url'          => $item,
-                        'order'        => 0,
-                        'descrption'   => '',
-                    ];
-                    $result = ResourcesImage::create($data);
-                    if(!$result)
-                    {
-                        throw new \Exception('图片保存失败！');
-                    }
-                }
-            }
-            $connection->commit();
+        $resourcesClassroom=new ResourcesClassroom();
+        if($resourcesClassroom->addClassRommResources($request)){
             return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
-        }catch (\Exception $ex){
-            $connection->rollback();
-            return redirect()->back()->withErrors($ex);
+        }else{
+            return redirect()->back();
         }
     }
     /*
