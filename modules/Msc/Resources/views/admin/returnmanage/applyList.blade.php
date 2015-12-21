@@ -163,7 +163,7 @@
                 </td>
                 <td>{{$item ->  id}}</td>
                 <td>{{$item ->  resourcesTool  ->name}}</td>
-                <td>{{date('Y-m-d',strtotime($item -> begindate)) or '未知'}}-{{date('Y-m-d',strtotime($item->enddate)) or '未知'}}</td>
+                <td>{{date('Y-m-d',strtotime($item -> begindate))? date('Y-m-d',strtotime($item -> begindate)) : '未知'}}-{{date('Y-m-d',strtotime($item -> enddate))?date('Y-m-d',strtotime($item -> enddate)) : '未知'}}</td>
                 <td>{{$item ->  code}}</td>
                 <td>{{is_null($item ->  lenderInfo)? '-':$item->lenderInfo->name}}</td>
                 <td>{{$item ->  detail}}</td>
@@ -174,7 +174,7 @@
                     @endif
                 </td>
                 <td>
-                    <div class="opera" end-time="{{date('Y-m-d',strtotime($item->enddate)) or '未知'}}" start-time="{{date('Y-m-d',strtotime($item -> begindate)) or '未知'}}">
+                    <div class="opera" end-time="{{date('Y-m-d',strtotime($item -> enddate))?date('Y-m-d',strtotime($item -> enddate)) : '未知'}}" start-time="{{date('Y-m-d',strtotime($item -> begindate))? date('Y-m-d',strtotime($item -> begindate)) : '未知'}}">
                         <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
                         <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>
                     </div>
