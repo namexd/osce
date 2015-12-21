@@ -23,16 +23,17 @@ class ResourcesDevice extends  CommonModel {
     public function getAvailableList ($cateId, $date)
     {
         // 能申请的开放设备ids
-        $devices = $this->leftJoin('resources_device_plan', function ($join) use($date, $cateId) {
-            $join->on('resources_device_plan.resources_device_id', '=', 'resources_device.id')
-                 ->where('resources_device.resources_device_cate_id', '=', $cateId)
-                 ->whereNotIn('resources_device_plan.status', [0,1]); // -3=不允许预约 ，-2=已过期(未使用)  -1=已取消 0=已预约未使用 1=使用中 2=已使用
+        $devices = $this->leftJoin('resources_device_plan', function ($join) {
+            $join->on('resources_device_plan.resources_device_id', '=', 'resources_device.id');
         })->whereRaw(
             'unix_timestamp(resources_device_plan.currentdate)=? ',
             [strtotime($date)]
-        )->select([
+        )   ->where('resources_device.resources_device_cate_id', '=', $cateId)
+//            ->whereNotIn('resources_device_plan.status', [0,1]) // -3=不允许预约 ，-2=已过期(未使用)  -1=已取消 0=已预约未使用 1=使用中 2=已使用
+            ->select([
             'resources_device.id as id',
         ])->get();
+
 
 
         $ids = [];
