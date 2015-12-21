@@ -111,32 +111,26 @@ class LabController extends MscWeChatController
      *
      */
     public function postChangeOpenLabApplyStatus(Request $request){
-        $this->validate($request,[
-            'id'        => 'required|integer',
-            'status'    => 'required|in:1,2',
-            'reject'    => 'sometimes',
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'status' => 'required|in:1,2',
+            'reject' => 'sometimes',
         ]);
-        $id     =   $request    ->  get('id');
-        $status =   $request    ->  get('status');
-        $reject =   $request    ->  get('reject');
-        $ResourcesClassroomApply    =   new ResourcesClassroomApply();
+        $id = $request->get('id');
+        $status = $request->get('status');
+        $reject = $request->get('reject');
+        $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
 
-        try
-        {
-            $result=    $ResourcesClassroomApply    ->  dealApply($id,$status,$reject,3);
-            if($result)
-            {
+        try {
+            $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject);
+            if ($result) {
                 return response()->json(
-                    $this->success_data(['id'=>$result])
+                    $this->success_data(['id' => $result->id])
                 );
-            }
-            else
-            {
+            } else {
                 return response()->json($this->fail(new \Exception('审核失败')));
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
     }

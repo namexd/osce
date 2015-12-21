@@ -78,7 +78,7 @@
     <div></div>
    <div class="w_94 ">
        <div class="w_45 left marb_5 ">
-           <input type="button" class="btn5 href"  data-url="{{route('msc.wechat.lab.refundEmergencyApply',['id'=>$OpenLabApply->id])}}"  value="审核不通过"/>
+           <input type="button" class="btn5 href"  data-url="{{route('mswechat.lab.getRefundEmergencyApply',['id'=>$OpenLabApply->id])}}"  value="审核不通过"/>
        </div>
        <div class="w_45 right marb_5 ">
            <input type="button" class="btn2 href" data-url="{{route('msc.wechat.lab.agreeEmergencyApply',['id'=>$OpenLabApply->id])}}"  value="审核通过"/>
