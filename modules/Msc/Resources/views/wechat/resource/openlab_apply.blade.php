@@ -116,17 +116,16 @@
                              var start = (data[i].original_begin_datetime).split(' ')[1];
                              var end = data[i].original_end_datetime;
                              html += '<li>'+
-                                     '<a href="javascript:void(0)">'+
-                                     '<div class="less-width"><span>'+data[i].name+'</span> </div>'+
-                                     '<div class="more-width Time_slot"><p>'+(data[i].original_begin_datetime).split(' ')[0]+'</p><p>'+start.split(':')[0]+':'+start.split(':')[1]+'-'+end.split(':')[0]+':'+end.split(':')[1]+'</p></div>'+
-                                     '<div class="less-width">'+data[i].applyer_name+'</div>'+
-                                     '<div><span>'+data[i].detail+'</span></div>'+
-                                     '<div class="attention more-width" value="'+data[i].id+'">'+
-                                     '<span class="State1 pass">通过&nbsp;</span>'+
-                                     '<span class="State1 unpass">不通过</span>'+
-                                     '</div>'+
-                                     '</a>'+
-                                     '</li>';
+                                         '<a href="javascript:void(0)">'+
+                                             '<div class="more-width"><span>'+data[i].name+'</span> </div>'+
+                                             '<div class="more-width Time_slot"><p>'+(data[i].original_begin_datetime).split(' ')[0]+'</p><p>'+start.split(':')[0]+':'+start.split(':')[1]+'-'+end.split(':')[0]+':'+end.split(':')[1]+'</p></div>'+
+                                             '<div class="more-width">'+data[i].applyer_name+'</div>'+
+                                         '</a>'+
+                                        '<div class="attention more-width" value="'+data[i].id+'">'+
+                                             '<span class="State1 pass">通过&nbsp;</span>'+
+                                             '<span class="State1 unpass">不通过</span>'+
+                                         '</div>'+
+                                    '</li>';
                          }
                          $('.detail_list').find('ul').append(html);
                          $('#totalpages').attr({'data-current':res.data.page,'data-total':res.data.total});

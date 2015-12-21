@@ -39,7 +39,7 @@
         };
         var end = {
             elem: "#end",
-            format: "YYYY/MM/DD hh:mm:ss",
+            format: "YYYY/MM/DD",
             min: "1970-00-00",
             max: "2099-12-16",
             istime: false,
