@@ -470,7 +470,7 @@ class OpenLaboratoryController extends MscWeChatController {
 		}
 		else
 		{
-			return view('',['lab'=>$apply->lab,'user'=>$apply->applyUser,'apply'=>$apply]);
+			return view('msc::wechat.resource.openlab_apply_detail',['lab'=>$apply->lab,'user'=>$apply->applyUser,'apply'=>$apply]);
 		}
 	}
 }
