@@ -453,6 +453,26 @@ class ResourcesManagerController extends MscController
     }
 
     /**
+     * 新增教室-表单
+     * @api GET /msc/admin/resources-manager/add-classroom
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author gaoshichong
+     * @date 2015-12-21 14:02:48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddClassroom(Request $request){
+        //return view("");
+    }
+    /**
      * 异步获取设备子分类
      * @method GET /msc/admin/resources-manager/ajax-resources-tools-cate
      * @access public
@@ -534,10 +554,11 @@ class ResourcesManagerController extends MscController
             'detail'         => 'sometimes|max:255|min:0',
         ]);
         $resourcesClassroom=new ResourcesClassroom();
-        if($resourcesClassroom->addClassRommResources($request)){
-            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
+        $rst=$resourcesClassroom->addClassRommResources($request);
+        if($rst===true){
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddClassroom');
         }else{
-            return redirect()->back();
+            return redirect()->back()->withErrors($rst);
         }
     }
     /*

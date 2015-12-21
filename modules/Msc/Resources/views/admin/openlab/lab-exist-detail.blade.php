@@ -14,16 +14,17 @@
     <script>
         $(function(){
             $('.btn-primary').click(function () {
-                history.go(-1);
+                var url = '/msc/admin/lab/had-open-lab-list';
+                window.location.href = url;
             });
             //时间选择
             laydate(start);
             laydate(end);
-            $('.cancel').click(function (){
-                //history.go(-1);
-                var url = '{{ route("msc.admin.resourcesManager.getResourcesList") }}';
-                window.location.href = url;
-            });
+            {{--$('.cancel').click(function (){--}}
+                {{--//history.go(-1);--}}
+                {{--var url = '{{ route("msc.admin.resourcesManager.getResourcesList") }}';--}}
+                {{--window.location.href = url;--}}
+            {{--});--}}
         })
         var start = {
             elem: "#start",

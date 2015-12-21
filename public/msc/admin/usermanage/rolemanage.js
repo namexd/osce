@@ -8,6 +8,8 @@ $(function(){
         case "rolemanage_detail":rolemanage_detail();break; //rolemanage_detailҳ��
         case "rolemanage":rolemanage();break; //rolemanageҳ��
     }
+    //保存提交
+
 
 });
 
@@ -51,14 +53,7 @@ function rolemanage_detail(){
             }
         });
 
-        //保存提交
-        $('#Form1').delegate('#sure','click',function(){
-            $('#Form1').submit();
-        });
 
-        $('#Form2').delegate('#sure-notice','click',function(){
-            $('#Form2').submit();
-        });
     })
 }
 
@@ -99,5 +94,14 @@ function rolemanage(){
         }
         choice_from();
         delete_user();
+
+        //表单提交
+        $('#Form1').delegate('#sure','click',function(){
+            $('#Form1').submit();
+        });
+
+        $('#Form2').delegate('#sure-notice','click',function(){
+            $('#Form2').submit();
+        });
     });
 }
