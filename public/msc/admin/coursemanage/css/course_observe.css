@@ -10,11 +10,11 @@
     width: 68%;
     height: 800px;
 }
-.serach-box input{
+#serach-text{
     height: 34px;
     width: 85%;
 }
-.serach-box button{
+#serach-btn{
     width: 15%;
 }
 .ibox-content{

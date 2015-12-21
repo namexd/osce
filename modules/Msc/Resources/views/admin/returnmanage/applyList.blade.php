@@ -27,10 +27,10 @@
     <script>
         var start = {
             elem: "#start",
-            format: "YYYY/MM/DD hh:mm:ss",
-            min: "1970-00-00 00:00:00",
-            max: "2099-12-06 23:59:59",
-            istime: true,
+            format: "YYYY/MM/DD",
+            min: "1970-00-00",
+            max: "2099-12-06",
+            istime: false,
             istoday: false,
             choose: function (a) {
                 end.min = a;
@@ -40,9 +40,9 @@
         var end = {
             elem: "#end",
             format: "YYYY/MM/DD hh:mm:ss",
-            min: "1970-00-00 00:00:00",
-            max: "2099-12-16 23:59:59",
-            istime: true,
+            min: "1970-00-00",
+            max: "2099-12-16",
+            istime: false,
             istoday: false,
             choose: function (a) {
                 start.max = a
@@ -92,7 +92,7 @@
 	       </div>
 
             <div class="input-group apply-sousuo">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" placeholder="请输入关键字" class="input-sm form-control" style="color: #222">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                     </span>
@@ -163,7 +163,7 @@
                 </td>
                 <td>{{$item ->  id}}</td>
                 <td>{{$item ->  resourcesTool  ->name}}</td>
-                <td>{{$item ->  begindate or '未知'}}-{{$item->enddate or '未知'}}</td>
+                <td>{{date('Y-m-d',strtotime($item -> begindate)) or '未知'}}-{{date('Y-m-d',strtotime($item->enddate)) or '未知'}}</td>
                 <td>{{$item ->  code}}</td>
                 <td>{{is_null($item ->  lenderInfo)? '-':$item->lenderInfo->name}}</td>
                 <td>{{$item ->  detail}}</td>
@@ -174,7 +174,7 @@
                     @endif
                 </td>
                 <td>
-                    <div class="opera" end-time="{{$item->enddate or '未知'}}">
+                    <div class="opera" end-time="{{date('Y-m-d',strtotime($item->enddate)) or '未知'}}" start-time="{{date('Y-m-d',strtotime($item -> begindate)) or '未知'}}">
                         <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
                         <span class="Scrap state2 modal-control" data-toggle="modal" data-target="#myModal" flag="no">审核不通过</span>
                     </div>
@@ -307,7 +307,10 @@ $(function(){
             $('#Form3').hide();
         }else{
             //时间控制  只能是外借时间之前的时间  2015-12-14 mao bug
+            var start_time = $(this).parent().attr('start-time');
             var end_time = $(this).parent().attr('end-time');
+            //开始时间
+            start.min = start_time;
             start.max = end_time;
             end.max = end_time;
 
