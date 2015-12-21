@@ -42,7 +42,10 @@
             })
             /*类目点击*/
             $('#thelist').on('click','li',function(){
-                var now_page="1";
+
+                //重置当前页
+                now_page= 1;
+
                 var thisElement = $(this);
                 $('#thelist').find('li').removeClass('check');
                 thisElement.addClass('check');
@@ -51,7 +54,7 @@
                 var selectType = thisElement.attr('value');
                 var req = {type:selectType,keyword:'',page:1};
                 //数据请求结果
-                ajaxRequest(req,url);
+                ajaxReset(req,url);
             });
 
             /*搜索*/
@@ -60,7 +63,7 @@
                 var selectType = $('#thelist').find('.check').attr('value');
                 var req = {type:selectType,keyword:$('#search').val(),page:1};
                 //数据请求结果
-                ajaxRequest(req,url);
+                ajaxReset(req,url);
             })
 
             /*跳转到详情页*/

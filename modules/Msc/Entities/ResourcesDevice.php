@@ -17,7 +17,7 @@ class ResourcesDevice extends  CommonModel {
     public    $timestamps	=	true;
     protected $primaryKey	=	'id';
     public    $incrementing	=	true;
-    protected $fillable 	=	['id', 'resources_lab_id', 'name', 'code', 'resources_device_cate_id', 'max_use_time'];
+    protected $fillable 	=	['id', 'resources_lab_id', 'name', 'code', 'resources_device_cate_id', 'max_use_time','warning','detail','status'];
 
     // 根据日期获取某一类可预约的开放设备列表
     public function getAvailableList ($cateId, $date)
@@ -124,5 +124,54 @@ class ResourcesDevice extends  CommonModel {
     //设备表和实验室的关系
     public function ResourcesClassroom(){
         return $this->hasOne('Modules\Msc\Entities\ResourcesClassroom','id','resources_lab_id');
+    }
+
+    /**
+     * 新增加开放设备的方法
+     * 传入参数为两个：1为本表字段的数组，2为图片URL的地址
+     */
+    public function addDeviceResources($formData,$imagesPath) {
+        try{
+            $this->beginTransaction();
+            $resources = $this->create($formData);
+            if (!$resources) {
+                throw new \Exception('新增开放设备失败！');
+            }
+
+            //创建一个数组，为resources表准备数据
+            $_formData = [
+                'type'        => 'DEVICE',
+                'item_id'     => $resources->id,
+                'description' => '',
+            ];
+
+            //将该数据插入到resources表
+            $_resources = Resources::create($_formData);
+            if (!$_resources) {
+                throw new \Exception('新增开放设备失败！');
+            }
+
+            //将图片地址插入资源图片表中
+            if (!empty($imagesPath)) {
+                foreach ($imagesPath as $item) {
+                    $data = [
+                        'resources_id'      =>      $_resources->id,
+                        'url'               =>      $item,
+                        'order'             =>      0,
+                        'descrption'        =>      '',
+                    ];
+                    $result = ResourcesImage::create($data);
+                    if (!$result) {
+                        throw new \Exception('开放设备图片保存失败');
+                    }
+                }
+            }
+
+            $this->commit();
+            return true;
+        } catch (\Exception $ex) {
+            $this->rollback();
+            return $ex;
+        }
     }
 }
