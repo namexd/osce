@@ -387,7 +387,7 @@
                         if(res.code!=1){
                             layer.alert(res.message);
                         }else{
-                            location.reload();
+                            //location.reload();
                         }
                     }
                 });

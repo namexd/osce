@@ -1054,7 +1054,7 @@ class LabController extends MscController
         $notice =   $request    ->  get('notice');
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
-        try{
+//        try{
             $result =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id,$notice);
             if($result)
             {
@@ -1067,13 +1067,13 @@ class LabController extends MscController
             {
                 throw new \Exception('操作失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return response()   ->    json(
-                $this->fail($ex)
-            );
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            return response()   ->    json(
+//                $this->fail($ex)
+//            );
+//        }
 
     }
     /**
