@@ -459,6 +459,7 @@ class ResourcesManagerController extends MscController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
      *
      * @return view
      *
@@ -469,7 +470,7 @@ class ResourcesManagerController extends MscController
      *
      */
     public function getAddClassroom(Request $request){
-        return view("msc::admin.resourcemanage.addrommresources");
+        //return view("");
     }
     /**
      * 异步获取设备子分类
@@ -553,10 +554,11 @@ class ResourcesManagerController extends MscController
             'detail'         => 'sometimes|max:255|min:0',
         ]);
         $resourcesClassroom=new ResourcesClassroom();
-        if($resourcesClassroom->addClassRommResources($request)){
+        $rst=$resourcesClassroom->addClassRommResources($request);
+        if($rst===true){
             return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddClassroom');
         }else{
-            return redirect()->back();
+            return redirect()->back()->withErrors($rst);
         }
     }
     /*

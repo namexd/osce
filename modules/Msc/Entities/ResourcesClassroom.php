@@ -165,7 +165,7 @@ class ResourcesClassroom extends  CommonModel {
             return true;
         }catch (\Exception $ex){
             $connection->rollback();
-            return false;
+            return $ex;
         }
     }
 
