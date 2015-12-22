@@ -851,8 +851,8 @@ class LabController extends MscController
         $reject = e($request->get('reject'));
         try {
             //获取openid
-            $apply=ResourcesClassroomApply::find($id);
-            $openID = $apply    ->    applyer    ->    openid;
+            $apply=ResourcesOpenLabApply::find($id);
+            $openID = $apply    ->    applyUser    ->    openid;
             //发送微信消息
             $result = $this->sendMsg2($reject,$openID);
             //判断是否成功
