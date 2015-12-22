@@ -169,6 +169,50 @@ class ResourcesClassroom extends  CommonModel {
         }
     }
 
+    public function addOpenlabResources($formData,$imagesPath) {
+        try{
+            $this->beginTransaction();
+            $resources =$this->create($formData);
+            if(!$resources){
+                throw new \Exception('新增教室失败！');
+            }
+
+            $_formData = [
+                'type'        => 'OPENLAB',
+                'item_id'     => $resources->id,
+                'description' => '',
+            ];
+            $_resources = Resources::create($_formData);
+
+            if(!$_resources)
+            {
+                throw new \Exception('新增教室失败！');
+            }
+            if (!empty($imagesPath))
+            {
+                foreach($imagesPath as $item)
+                {
+                    $data=[
+                        'resources_id' => $_resources->id,
+                        'url'          => $item,
+                        'order'        => 0,
+                        'descrption'   => '',
+                    ];
+                    $result = ResourcesImage::create($data);
+                    if(!$result)
+                    {
+                        throw new \Exception('图片保存失败！');
+                    }
+                }
+            }
+            $this->commit();
+            return true;
+        } catch (\Exception $ex) {
+            $this->rollback();
+            return $ex;
+        }
+    }
+
     //给教室选择下拉列表提供数据
     public function getClassroomName($keyword = '') {
         if ($keyword !== '') {
