@@ -174,7 +174,8 @@ class UserController extends MscWeChatController {
 
 		if($this->CheckCodeRegister($request['code'])){
 			if($userRepository->regStudent($request))
-				return redirect()->intended('/msc/wechat/user/user-login');
+				return view('msc::wechat.index.index_waiting');
+				//return redirect()->intended('/msc/wechat/user/user-login');
 			else{
 				return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
 			}

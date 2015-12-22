@@ -17,22 +17,32 @@ function rolemanage_detail(){
      *曾洁
      *QQ：283020075
      *2015-12-15
-     *update：zengjie（2015-12-15 18:08） （最近更新/更改 作者及时间）
-     **/
+	update：zengjie（2015-12-22 10:56） （最近更新/更改 作者及时间）     **/
     $(function(){
         var $check_label=$(".check_label");
         var $btn_padding=$(".btn_padding");
         $check_label.click(function(){
+            var hidevalue;
+            var thisvalue=$(this).attr("hidevalue");
+            $(this).siblings(".ibox-content").children("button").each(function(){
+                hidevalue= $(this).attr("hidevalue");
+                if($(this).next("input").size()=="0"){
+                    $(this).after("<input type='hidden' name='permission_id[]' value=''>");
+                    $(this).next("input").attr("value",hidevalue);
+                }
+            });
             if($(this).children(".check_icon").hasClass("check")){
                 $(this).children(".check_icon").removeClass("check");
-                $(this).children("input").attr("checked",false);
+                $(this).children(".check_icon").next("input").remove();
                 $(this).siblings(".ibox-content").children("button").attr("checked",false);
                 $(this).siblings(".ibox-content").children("button").removeClass("btn_focus");
                 $(this).siblings(".ibox-content").children("button").addClass("btn-default2");
+                $(this).siblings(".ibox-content").children("input").remove();
                 return false;
             }else{
                 $(this).children(".check_icon").addClass("check");
-                $(this).children("input").attr("checked",true);
+                $(this).children(".check_icon").after("<input type='hidden' name='permission_id[]' value=''>");
+                $(this).children(".check_icon").next("input").attr("value",thisvalue);
                 $(this).siblings(".ibox-content").children("button").attr("checked",true);
                 $(this).siblings(".ibox-content").children("button").addClass("btn_focus");
                 $(this).siblings(".ibox-content").children("button").removeClass("btn-default2");
@@ -40,25 +50,35 @@ function rolemanage_detail(){
             }
         });
         $btn_padding.click(function(){
+            var hidevalue= $(this).attr("hidevalue");
+            var thisvalue=$(this).parent(".ibox-content").siblings(".check_label").attr("hidevalue");
             if($(this).hasClass("btn_focus")){
                 $(this).removeClass("btn_focus");
                 $(this).addClass("btn-default2");
                 $(this).attr("checked",false);
+                $(this).next("input").remove();
+                if($(this).parent(".ibox-content").children("button").hasClass("btn_focus")){
+                    return false;
+                }else{
+                    $(this).parent(".ibox-content").siblings(".check_label").children(".check_icon").removeClass("check").next("input").remove();
+                }
             }else{
                 $(this).addClass("btn_focus");
                 $(this).removeClass("btn-default2");
                 $(this).attr("checked",true);
+                $(this).after("<input type='hidden' name='permission_id[]' value=''>");
+                $(this).next("input").attr("value",hidevalue);
+                if($(this).parent(".ibox-content").siblings(".check_label").children(".check_icon").next("input").size() == "0"){
+                    $(this).parent(".ibox-content").siblings(".check_label").children(".check_icon").addClass("check").after("<input type='hidden' name='permission_id[]' value=''>");
+                    $(this).parent(".ibox-content").siblings(".check_label").children(".check_icon").next("input").attr("value",thisvalue);
+                }
             }
         });
-
         //保存提交
-        $('#Form1').delegate('#sure','click',function(){
-            $('#Form1').submit();
+        $("#saveForm").click(function(){
+            $("#authForm").submit();
         });
 
-        $('#Form2').delegate('#sure-notice','click',function(){
-            $('#Form2').submit();
-        });
     })
 }
 
