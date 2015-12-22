@@ -340,7 +340,7 @@ class UserController extends MscWeChatController {
 	 * @access private
 	 *
 	 * @param
-	 * * string        $moblie     手机号码(必须的)
+	 * * string        $mobile     手机号码(必须的)
 	 *
 	 * @return
 	 *
@@ -349,9 +349,9 @@ class UserController extends MscWeChatController {
 	 * @date 2015-12-21 10:21
 	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
 	 */
-	private function CheckPhoneRegister($moblie)
+	private function CheckPhoneRegister($mobile)
 	{
-		$UserInfo = User::where('moblie','=',$moblie)->first();
+		$UserInfo = User::where('mobile','=',$mobile)->first();
 
 		if(!empty($UserInfo)){
 			return false;

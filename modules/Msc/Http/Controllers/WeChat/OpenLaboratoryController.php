@@ -88,6 +88,12 @@ class OpenLaboratoryController extends MscWeChatController {
 		$user = Auth::user();
 
 		foreach($LaboratoryList as $k => $v){
+
+			if(empty($v['resourcesClassroom'])){
+				unset($LaboratoryList[$k]);
+				continue;
+			}
+
 			$LaboratoryList[$k]['is_appointment'] = 0;
 			$LaboratoryList[$k]['status']= 0;
 			$LaboratoryList[$k]['num'] = count($v['ResourcesOpenLabApply']);
