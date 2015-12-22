@@ -19,47 +19,123 @@ class ResourcesDevice extends  CommonModel {
     public    $incrementing	=	true;
     protected $fillable 	=	['id', 'resources_lab_id', 'name', 'code', 'resources_device_cate_id', 'max_use_time','warning','detail','status'];
 
+    public function classroom() {
+        return $this->belongsTo('Modules\Msc\Entities\ResourcesClassroom','id','resources_lab_id');
+    }
+
+    public function device_cate() {
+        return $this->hasMany('Modules\Msc\Entities\ResourcesDeviceCate','id','resources_device_cate_id');
+    }
+
+
     // 根据日期获取某一类可预约的开放设备列表
     public function getAvailableList ($cateId, $date)
     {
-        // 能申请的开放设备ids
-        $devices = $this->leftJoin('resources_device_plan', function ($join) {
-            $join->on('resources_device_plan.resources_device_id', '=', 'resources_device.id');
-        })->whereRaw(
-            'unix_timestamp(resources_device_plan.currentdate)=? ',
-            [strtotime($date)]
-        )   ->where('resources_device.resources_device_cate_id', '=', $cateId)
-//            ->whereNotIn('resources_device_plan.status', [0,1]) // -3=不允许预约 ，-2=已过期(未使用)  -1=已取消 0=已预约未使用 1=使用中 2=已使用
-            ->select([
-            'resources_device.id as id',
-        ])->get();
-
-
-
-        $ids = [];
-        if ($devices)
-        {
-            foreach ($devices as $device)
-            {
-                $ids[] = $device->id;
+        //根据$cateId查到对应的实验室
+        //resources_lab的opened为2的均为开放实验室
+        //根据实验室找到对应的开放时间
+        $builder = $this    ->  leftJoin (
+            'resources_lab',
+            function ($join) use ($cateId) {
+                $join   ->  on('resources_lab.id' ,'=' ,$this->table.'.resources_lab_id');
+            }
+        )   ->  leftJoin (
+            'resources_openlab_calendar',
+            function ($join) {
+                $join   ->  on('resources_openlab_calendar.resources_lab_id' ,'=' ,'resources_lab.id');
+            }
+        )   ->where ($this->table.'.resources_device_cate_id' ,'=' , $cateId)
+            ->where ('resources_lab.opened' ,'=' ,2);
+        //将此时查询到的数据转化为数组
+        $array = $builder->select([
+            'resources_lab.name as name',
+            'resources_openlab_calendar.week as week',
+        ])    -> get()    ->toArray();
+        //循环该数组，得到当天是否开放
+        $result = [];
+        foreach ($array as $item) {
+            $weekend = date('N',strtotime($date));
+            //实验室在星期几开放
+            $weekOpen = $item['week'];
+            $weekOpen = explode(',',$weekOpen);
+            if (in_array($weekend,$weekOpen)) {
+                //说明实验室当天开放
+                //查询有哪些设备可以被选择
+                $judgment = $this -> leftJoin (
+                    'resources_device_plan',
+                    function ($join) {
+                        $join -> on('resources_device_plan.resources_device_id','=',$this->table.'.id');
+                    }
+                )   ->  whereRaw(
+                    'unix_timestamp(resources_device_plan.currentdate) = ? ',
+                    [strtotime($date)]
+                )   ->  select([
+                        'resources_device_plan.currentdate as currentdate',
+                    ])  -> first();
+                //如果$judgment是NULL，就说明当前没有被占用
+                if ($judgment['currentdate'] == null) {
+                    //链表查询开放设备图片
+                    $result = $this   ->    leftJoin(
+                        'resources',
+                        function($join) {
+                            $join   ->  on ('resources.item_id' ,'=' , $this->table.'.id');
+                        }
+                    )   ->  leftJoin (
+                        'resources_image',
+                        function ($join) {
+                            $join -> on ('resources_image.resources_id','=','resources.id');
+                        }
+                    )   -> where('resources.type','=','OPENDEVICE')
+                        -> select([
+                        $this->table.'.name as name',
+                        $this->table.'.code as code',
+                        $this->table.'.id as id',
+                        'resources_image.url as url', // 图片
+                    ]);
+                }
             }
         }
+        return $result   ->   paginate(config('msc.page_size',10));
 
 
-        // 可以申请的开放设备
-        return $this->leftJoin('resources', function ($join) use($ids) {
-            $join->on('resources.item_id', '=', 'resources_device.id')
-                 ->where('resources.type', '=', 'OPENDEVICE');
-        })->leftJoin('resources_image', function ($join){
-            $join->on('resources_image.resources_id', '=', 'resources.id');
-        })->whereIn('resources_device.id', $ids)
-          //->where('resources_device.resources_device_cate_id', '=', $cateId)
-          ->select([
-              'resources_device.id as id', // 编号
-              'resources_device.name as name', // 名称
-              'resources_device.code as code', // 编码
-              'resources_image.url as url', // 图片
-          ])->paginate(config('msc.page_size',10));
+//        // 能申请的开放设备ids
+//        $devices = $this->leftJoin('resources_device_plan', function ($join) {
+//            $join->on('resources_device_plan.resources_device_id', '=', 'resources_device.id');
+//        })->whereRaw(
+//            'unix_timestamp(resources_device_plan.currentdate)=? ',
+//            [strtotime($date)]
+//        )   ->where('resources_device.resources_device_cate_id', '=', $cateId)
+////            ->whereNotIn('resources_device_plan.status', [0,1]) // -3=不允许预约 ，-2=已过期(未使用)  -1=已取消 0=已预约未使用 1=使用中 2=已使用
+//            ->select([
+//            'resources_device.id as id',
+//        ])->get();
+//
+//
+//
+//        $ids = [];
+//        if ($devices)
+//        {
+//            foreach ($devices as $device)
+//            {
+//                $ids[] = $device->id;
+//            }
+//        }
+//
+//
+//        // 可以申请的开放设备
+//        return $this->leftJoin('resources', function ($join) use($ids) {
+//            $join->on('resources.item_id', '=', 'resources_device.id')
+//                 ->where('resources.type', '=', 'OPENDEVICE');
+//        })->leftJoin('resources_image', function ($join){
+//            $join->on('resources_image.resources_id', '=', 'resources.id');
+//        })->whereIn('resources_device.id', $ids)
+//          //->where('resources_device.resources_device_cate_id', '=', $cateId)
+//          ->select([
+//              'resources_device.id as id', // 编号
+//              'resources_device.name as name', // 名称
+//              'resources_device.code as code', // 编码
+//              'resources_image.url as url', // 图片
+//          ])->paginate(config('msc.page_size',10));
     }
 
     // 根据开放设备id和日期获得可预约时段及其状态
