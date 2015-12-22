@@ -142,8 +142,8 @@
                     <tr>
                         <td>{{$item['id']}}</td>
                         <td>{{$item['name']}}</td>
-                        <td>{{ date('Y-m-d',strtotime($item['original_begin_datetime'])) }}</td>
-                        <td>{{ date('H:i' , strtotime($item['original_begin_datetime'])) }}-{{date('H:i' , strtotime($item['original_end_datetime'])) }}</td>
+                        <td>{{ date('Y-m-d',strtotime($item['begin_datetime'])) }}</td>
+                        <td>{{ date('H:i' , strtotime($item['begin_datetime'])) }}-{{date('H:i' , strtotime($item['end_datetime'])) }}</td>
                         <td>{{$item['code']}}</td>
                         <td>{{$item['student_name']}}</td>
                         <td>{{$item['detail']}}</td>

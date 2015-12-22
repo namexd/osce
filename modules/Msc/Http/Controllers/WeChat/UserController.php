@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
+use App\Entities\User;
 class UserController extends MscWeChatController {
 
 	/**
@@ -169,18 +170,24 @@ class UserController extends MscWeChatController {
 			'professional'=>'required',
 			'gender'=>'required'
 		]);
-
-		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
-
-		if($this->CheckCodeRegister($request['code'])){
-			if($userRepository->regStudent($request))
-				return redirect()->intended('/msc/wechat/user/user-login');
-			else{
-				return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
+		//判断手机号码 有无注册
+		if($this->CheckPhoneRegister($request['mobile'])){
+			$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
+			if($this->CheckCodeRegister($request['code'])){
+				if($userRepository->regStudent($request))
+					return view('msc::wechat.index.index_waiting');
+				//return redirect()->intended('/msc/wechat/user/user-login');
+				else{
+					return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
+				}
+			}else{
+				return view('msc::wechat.index.index_error',array('error_msg'=>'（胸牌/学号）已经被注册过'));
 			}
 		}else{
-			return view('msc::wechat.index.index_error',array('error_msg'=>'（胸牌/学号）已经被注册过'));
+			return view('msc::wechat.index.index_error',array('error_msg'=>'该手机已经被注册'));
 		}
+
+
 
 
 	}
@@ -217,15 +224,19 @@ class UserController extends MscWeChatController {
 			'gender'=>'required|integer'
 		]);
 		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
-
-		if($this->CheckCodeRegister($request['code'])){
-			if($userRepository->regTeacher($request))
-				return redirect()->intended('/msc/wechat/user/user-login');
-			else{
-				return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
+		//判断手机号码 有无注册
+		if ($this->CheckPhoneRegister($request['mobile'])) {
+			if ($this->CheckCodeRegister($request['code'])) {
+				if ($userRepository->regTeacher($request))
+					return redirect()->intended('/msc/wechat/user/user-login');
+				else {
+					return view('msc::wechat.index.index_error', array('error_msg' => '注册失败'));
+				}
+			} else {
+				return view('msc::wechat.index.index_error', array('error_msg' => '（胸牌/学号）已经被注册过'));
 			}
-		}else{
-			return view('msc::wechat.index.index_error',array('error_msg'=>'（胸牌/学号）已经被注册过'));
+		} else {
+			return view('msc::wechat.index.index_error', array('error_msg' => '该手机已经被注册'));
 		}
 
 	}
@@ -310,7 +321,6 @@ class UserController extends MscWeChatController {
 	 * use Modules\Msc\Entities\Student;
 	   use Modules\Msc\Entities\Teacher;
 	 */
-	//用户绑定(登录绑定)
 	private function CheckCodeRegister($code)
 	{
 		$StudentInfo = Student::where('code','=',$code)->first();
@@ -322,6 +332,35 @@ class UserController extends MscWeChatController {
 			return true;
 		}
 	}
+
+
+	/**
+	 * 检测当前Code 有无被注册过
+	 *
+	 * @access private
+	 *
+	 * @param
+	 * * string        $moblie     手机号码(必须的)
+	 *
+	 * @return
+	 *
+	 * @version 1.0
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-21 10:21
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
+	private function CheckPhoneRegister($moblie)
+	{
+		$UserInfo = User::where('moblie','=',$moblie)->first();
+
+		if(!empty($UserInfo)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+
 
 
 

@@ -11,13 +11,51 @@
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
-    <script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
+    <script>
+        $(function(){
+            $('.btn-primary').click(function () {
+                var url = '/msc/admin/lab/had-open-lab-list';
+                window.location.href = url;
+            });
+            //时间选择
+            laydate(start);
+            laydate(end);
+            {{--$('.cancel').click(function (){--}}
+                {{--//history.go(-1);--}}
+                {{--var url = '{{ route("msc.admin.resourcesManager.getResourcesList") }}';--}}
+                {{--window.location.href = url;--}}
+            {{--});--}}
+        })
+        var start = {
+            elem: "#start",
+            format: "YYYY-MM-DD",
+            max: "2099-06-16 23:59:59",
+            istime: true,
+            istoday: false,
+        };
+        var end = {
+            elem: "#end",
+            format: "YYYY-MM-DD",
+            max: "2099-06-16 23:59:59",
+            istime: true,
+            istoday: false,
+        };
+        $("#select_Category").change( function(){
+            if($(this).val()=="Classroom") {
+                $(".select-floor").show();
+            }else{
+                $(".select-floor").hide();
+            }
+        })
 
+
+
+  </script>
 @stop
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
-    <input type="hidden"  id="parameter" value="{'pagename':'lab-exist-detail','ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}'}" >
+
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>实验室详情</h5>
@@ -115,7 +153,7 @@
                                 <label class="col-sm-2 control-label">最大预约人数</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" name="maxorder" id="maxorder" class="form-control" value="{{$openLabDetail->detail}}" disabled>
+                                    <input type="text" name="person_total" id="maxorder" class="form-control" value="{{$openLabDetail->person_total}}" disabled>
                                 </div>
 
                             </div>
