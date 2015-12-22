@@ -990,6 +990,7 @@ class LabController extends MscController
         $pagination             =   $resourcesOpenlabApply  -> getUrgentApplyList($date,$keyword,$order);
         $resourcesClassroomModel=   new ResourcesClassroom();
         $statusAttrNames        =   $resourcesClassroomModel->  getstatusAttrName();
+
         return view('msc::admin.emergencymanage.emergencybase',['pagination'=>$pagination,'statusAttrNames'=>$statusAttrNames]);
     }
     /**

@@ -95,6 +95,7 @@ class PersonalCenterController extends MscWeChatController {
 			'nowBorrowingList'=>$nowBorrowingList,
 			'applyBorrowingList'=>$applyBorrowingList
 		];
+
 		return view('msc::wechat.personalcenter.personalinfo_myborrow',$data);
 	}
 
