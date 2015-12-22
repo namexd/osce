@@ -31,7 +31,6 @@ function gethistory(qj,url,getdetail){
                     }
                 }else if(this.status=="1"){
                     status="";
-                    alert();
                     opera='<div class="opera"><span  class="State3">已被预订</span></div>';
                 }
 
