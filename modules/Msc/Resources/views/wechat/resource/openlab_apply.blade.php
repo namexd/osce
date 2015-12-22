@@ -30,6 +30,28 @@
           */
          $('.detail_list').on('click','.pass',function(){
              var id = $(this).parent().attr('value');
+             if(confirm('确定通过申请?')){
+                 $.ajax({
+                     url:"{{action('\Modules\Msc\Http\Controllers\WeChat\LabController@postChangeOpenLabApplyStatus')}}",
+                     type:"post",
+                     dataType:"json",
+                     cache:false,
+                     data:{id:id,status:1},
+                     success: function(res) {
+                         if(res.code != 1){
+                             alert((res.message).split(':')[1]);
+                             console.log(res.message);
+                         }else{
+                             //成功的操作
+                             alert('预约成功！');
+                             console.log('通过！')
+                             window.location.reload();
+                         }
+                     },
+
+                 });
+             }
+            /**
              $.confirm({
                  title: ' ',
                  content: '确定通过该申请？',
@@ -60,6 +82,7 @@
                      });
                  }
              });
+             */
          })
 
          /**
