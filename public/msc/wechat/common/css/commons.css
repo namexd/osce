@@ -252,4 +252,7 @@ small.help-block{border-color: #ed5565!important;}
 .form-control:focus{border-color: #6595e1}
 .form-control{box-shadow: none!important;}
 .help-block{color: #ed5565!important;}
+/*输入框错误提示叉颜色修改*/
+.has-error .form-control-feedback{color: #ed5565;}
+
 

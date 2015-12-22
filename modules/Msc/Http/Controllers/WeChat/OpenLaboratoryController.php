@@ -464,7 +464,7 @@ class OpenLaboratoryController extends MscWeChatController {
 		$id     =   $request    ->get('id');
 
 		$apply  =   ResourcesOpenLabApply::find($id);
-		if(!is_null($apply))
+		if(is_null($apply))
 		{
 			return redirect()->back()->withErrors(new \Exception('没有找到该申请'));
 		}

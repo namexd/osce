@@ -33,8 +33,10 @@ class ResourcesOpenLabPlan extends Model
         return $this->hasMany('\Modules\Msc\Entities\ResourcesOpenLabPlanTeacher','resources_openlab_plan_id','id');
     }
     public function apply(){
-        return $this->belongsTo('\Modules\Msc\Entities\ResourcesOpenLab','resources_openlab_plan_id','id');
+        return $this->belongsTo('\Modules\Msc\Entities\ResourcesOpenLabApply','resources_openlab_apply_id','id');
+        //return $this->hasOne('\Modules\Msc\Entities\ResourcesOpenLabApply','id','resources_openlab_apply_id');
     }
+
     public function getConflicts($labId, $date, $beginTime, $endTime){
         $Conflicts  =   $this   ->  with(
             [
@@ -185,15 +187,25 @@ class ResourcesOpenLabPlan extends Model
                 }
                 else
                 {
-                    $teahcers       =  $oldPlan    ->  teachers    ->first();
+                    $teahcers       =  $oldPlan    ->  teachers;
                     $openid         =   '';
-                    if($teahcers    ->  user        ->  id)
+                    if(count($teahcers)>0)
                     {
-                        $openid     =   $teahcers   ->  user    ->openid;
+                        $teacher    =   $teahcers   ->  first();
+                        $teacher    =   $teacher    ->  userInfo();
+                    }
+                    else
+                    {
+                        $teacher    =   $oldPlan    ->  apply   ->  applyUser;
+                    }
+                    if($teacher     ->  id)
+                    {
+                        $openid     =   $teacher    ->  openid;
                     }
                     if($openid)
                     {
-                        Common::sendMsg($openid,$notice);
+                        //测试期间注释 TODO:罗海华 2015-12-21
+                        //Common::sendMsg($openid,$notice);
                     }
                     else
                     {

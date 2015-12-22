@@ -70,7 +70,7 @@ class ResourcesClassroom extends  CommonModel {
 
     //获取教室资源 列表 （唐俊）
     public function getClassroomList(){
-        return $this->get();
+        return $this->where('opened','=',0)->get();
     }
 
     public function resourcesLabCalendar(){

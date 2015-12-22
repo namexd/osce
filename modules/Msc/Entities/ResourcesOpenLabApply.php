@@ -199,6 +199,9 @@ class ResourcesOpenLabApply extends CommonModel
      */
     public function getWaitExamineList($classroomName,$date, $order){
         return  $this   -> with([
+//        $mis    =   DB::connection($this->connection);
+//        $mis    ->  enableQueryLog();
+//        $b=  $this   -> with([
             'classroomCourses'  =>  function($qurey) use ($classroomName){
                 if(!is_null($classroomName))
                 {
@@ -220,6 +223,8 @@ class ResourcesOpenLabApply extends CommonModel
                 strtotime($date),
             ]
         ) -> paginate(config('msc.page_size'));
+//        $b=$mis->getQueryLog();
+//        dd($b);
     }
 
     //处理开放实验室审核
@@ -318,6 +323,7 @@ class ResourcesOpenLabApply extends CommonModel
                 if($this   ->  cancelStudentPlan($planData['resources_openlab_calendar_id'],$planData['currentdate']))
                 {
                     //创建教师预约的新计划
+
                     $newPlan    =   ResourcesOpenLabPlan::create($planData);
                     if(!$newPlan)
                     {

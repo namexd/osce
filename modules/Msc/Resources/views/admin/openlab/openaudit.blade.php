@@ -262,8 +262,8 @@
                             </td>
                             <td class="open-id">{{$item['id']}}</td>
                             <td>{{@$item->lab->name}}</td>
-                            <td>{{date('Y/m/d',strtotime($item['original_begin_datetime']))}}</td>
-                            <td>{{date('H:i',strtotime($item['original_begin_datetime']))}}-{{date('H:i',strtotime($item['original_end_datetime']))}}</td>
+                            <td>{{date('Y/m/d',strtotime($item['apply_date']))}}</td>
+                            <td>{{date('H:i',strtotime($item->OpenLabCalendar->begintime))}}-{{date('H:i',strtotime($item->OpenLabCalendar->endtime))}}</td>
                             <td>{{$item->lab->code}}</td>
                             <td>{{$item->applyUser->name or '-'}}</td>
                             <td>{{$item['detail']}}</td>

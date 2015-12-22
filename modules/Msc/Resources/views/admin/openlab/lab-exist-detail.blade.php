@@ -4,9 +4,6 @@
     <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
     <style>
         .layer-date{max-width: 100%!important;}
-        .has-error .form-control{border-color: #ed5565!important;}
-        .code_add,.code_del{position:absolute;right:15px;top:0;}
-        .add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
     </style>
 @stop
 
@@ -14,192 +11,85 @@
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
-    <script>
-        $(function(){
-            //时间选择
-            laydate(start);
-            laydate(end);
-            $('.cancel').click(function (){
-                //history.go(-1);
-                var url = '{{ route("msc.admin.resourcesManager.getResourcesList") }}';
-                window.location.href = url;
-            });
-        })
-        var start = {
-            elem: "#start",
-            format: "YYYY-MM-DD",
-            max: "2099-06-16",
-            istime: true,
-            istoday: false,
-        };
-        var end = {
-            elem: "#end",
-            format: "YYYY-MM-DD",
-            max: "2099-06-16",
-            istime: true,
-            istoday: false,
-        };
-        $("#select_Category").change( function(){
-            if($(this).val()=="Classroom") {
-                $(".select-floor").show();
-            }else{
-                $(".select-floor").hide();
-            }
-        })
-        /*{}{
-         * 下面是进行插件初始化
-         * 你只需传入相应的键值对
-         * */
-        $('#labForm').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                name: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '用户名不能为空'
-                        }
-                    }
-                },
-                manager_name: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '用户名不能为空'
-                        },
-                        stringLength: {
-                            min:2,
-                            message: '用户名长度必须大于2'
-                        }
-                    }
-                },
-                manager_mobile: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '手机号码不能为空'
-                        },
-                        stringLength: {
-                            min: 11,
-                            max: 11,
-                            message: '请输入11位手机号码'
-                        },
-                        regexp: {
-                            regexp: /^1[3|5|8]{1}[0-9]{9}$/,
-                            message: '请输入正确的手机号码'
-                        }
-                    }
-                },
-                address: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '地址不能为空'
-                        }
-                    }
-                },
-                type: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '类型不能为空'
-                        }
-                    }
-                },
-                maxorder: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '最大预约人数不能为空'
-                        }
-                    }
-                },
-                detail: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '描述不能为空'
-                        }
-                    }
-                }
+    <script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
 
-
-            }
-        });
-
-
-    </script>
 @stop
 
 @section('content')
-    <div class="wrapper wrapper-content animated fadeInRight">
-
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>新增实验室</h5>
-            </div>
-            <div class="ibox-content">
-                <div class="row">
-                    <div class="col-md-12">
-                        <form method="post" class="form-horizontal" id="labForm" action="{{route('msc.admin.resourcesManager.getAddResources')}}">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <input type="hidden"  id="parameter" value="{'pagename':'lab-exist-detail','ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}'}" >
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>实验室详情</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('msc.admin.resourcesManager.getAddResources')}}">
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">名称</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="name" id="name" />
+                                    <input type="text" class="form-control" name="name" id="name" value="{{$openLabDetail->name}}" disabled/>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <input type="hidden" name="cate_id" id="cate_id" value="-1" />
                                 <label class="col-sm-2 control-label">类别</label>
-                                <div class="col-sm-10 select_code">
-                                    <select id="select_Category"   class="form-control m-b" name="account">
-                                        <option value="-1">请选择类别</option>
-                                        {{--@foreach ($resourcesCateList as $item)
-                                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
-                                        @endforeach--}}
-                                    </select>
+
+                                <div class="col-sm-10">
+                                    @if($openLabDetail['name'] == 1)
+                                        <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约实验室)" disabled>
+                                    @elseif($openLabDetail['name'] == 2)
+                                        <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约设备)" disabled>
+                                        @else
+                                        <input type="text"  id="detail" name="type" class="form-control" value="普通实验室" disabled>
+                                        @endif
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">负责人</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  id="manager_name" name="manager_name" class="form-control">
+                                    <input type="text"  id="manager_name" name="manager_name" class="form-control" value="{{$openLabDetail->manager_name}}" disabled>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" >负责人电话</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="manager_mobile" name="manager_mobile"  class="form-control">
+                                    <input type="text" id="manager_mobile" name="manager_mobile"  class="form-control"  value="{{$openLabDetail->manager_mobile}}" disabled>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">状态</label>
+
                                 <div class="col-sm-10">
-                                    <select id="select_Category"   class="form-control m-b" name="account">
-                                        <option value="-1">请选择状态</option>
-                                    </select>
+                                    @if($openLabDetail['status'] == 1)
+                                        <input type="text"  id="detail" name="type" class="form-control" value="正常" disabled>
+                                    @elseif($openLabDetail['name'] == 2)
+                                        <input type="text"  id="detail" name="type" class="form-control" value="已预约" disabled>
+                                    @else
+                                        <input type="text"  id="detail" name="type" class="form-control" value="不允许使用" disabled>
+                                    @endif
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">地址</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  id="address" name="address" class="form-control">
+                                    <input type="text" id="location" name="location" class="form-control"  value="{{$openLabDetail->location}}" disabled>
                                 </div>
                             </div>
-
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">开放开始时间</label>
 
                                 <div class="col-sm-10">
-                                    <input class="form-control layer-date laydate-icon" id="start" name="begintime">
+                                    <input class="form-control layer-date laydate-icon" id="start" name="begintime" value="{{$openLabDetail->begintime}}" disabled>
                                 </div>
 
                             </div>
@@ -207,7 +97,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">开放结束时间</label>
                                 <div class="col-sm-10">
-                                    <input  class="form-control layer-date laydate-icon" id="end" name="endtime">
+                                    <input  class="form-control layer-date laydate-icon" id="end" name="endtime" value="{{$openLabDetail->endtime}}" disabled>
                                 </div>
 
                             </div>
@@ -216,16 +106,18 @@
                                 <label class="col-sm-2 control-label">说明(功能描述)</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" name="detail" id="detail" class="form-control">
+                                    <input type="text" name="detail" id="detail" class="form-control"  value="{{$openLabDetail->detail}}" disabled>
                                 </div>
 
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">最大预约人数</label>
+
                                 <div class="col-sm-10">
-                                    <input type="number" name="maxorder" id="maxorder" class="form-control">
+                                    <input type="text" name="maxorder" id="maxorder" class="form-control" value="{{$openLabDetail->detail}}" disabled>
                                 </div>
+
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div id="code_list">
@@ -234,19 +126,18 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-white cancel" type="button">取消</button>
-                                    <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                                    <button class="btn btn-primary" type="button">返&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回</button>
                                 </div>
                             </div>
 
-                        </form>
-                    </div>
+                    </form>
                 </div>
-
             </div>
+
+        </div>
         </div>
     </div>
 
-    </div>
+</div>
 
 @stop{{-- 内容主体区域 --}}

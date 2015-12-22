@@ -116,7 +116,7 @@
                              var start = (data[i].original_begin_datetime).split(' ')[1];
                              var end = data[i].original_end_datetime;
                              html += '<li>'+
-                                         '<a href="javascript:void(0)">'+
+                                         '<a href="{{route('msc.wechat.openLaboratory.getOpenLabApply')}}?id='+data[i].id+'">'+
                                              '<div class="more-width"><span>'+data[i].name+'</span> </div>'+
                                              '<div class="more-width Time_slot"><p>'+(data[i].original_begin_datetime).split(' ')[0]+'</p><p>'+start.split(':')[0]+':'+start.split(':')[1]+'-'+end.split(':')[0]+':'+end.split(':')[1]+'</p></div>'+
                                              '<div class="more-width">'+data[i].applyer_name+'</div>'+
@@ -185,7 +185,7 @@
         <i class="fa fa-angle-left clof font26 icon_return"></i>
     </a>
         预约申请管理
-    <a class="right header_btn" href="">
+    <a class="right header_btn" href="{{route('msc.personalCenter.infoManage')}}">
         <i class="fa fa-home clof font26 icon_return"></i>
     </a>
 </div>
@@ -200,17 +200,6 @@
         </div>
         <div class="detail_list" data-total="1" data-current="0">
             <ul>
-                <li>
-                     <a href="javascript:void(0)">
-                         <div class="more-width"><span>自主开放实验室2</span> </div>
-                         <div class="more-width Time_slot"><p>2015/08/12</p><p>08:00-12:00</p></div>
-                         <div class="more-width">李老师</div>
-                     </a>
-                     <div class="attention more-width" value="'+data[i].id+'">
-                         <span class="State1 pass">通过&nbsp;</span>
-                         <span class="State1 unpass">不通过</span>
-                     </div>
-                </li>
             </ul>
         </div>
     </div>

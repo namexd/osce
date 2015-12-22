@@ -12,7 +12,9 @@
     .form-group p{
         font-size: 16px!important;
         margin-left: 5.75em!important;
+        padding-top: 8px;
     }
+    .form-group:last-child{min-height: 50px;}
     .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {background-color: #fff;}
 
    .jconfirm .jconfirm-box div.content{text-align: center;}
@@ -27,7 +29,7 @@
         <i class="fa fa-angle-left clof font26 icon_return"></i>
     </a>
         预约申请管理
-    <a class="right header_btn" href="">
+    <a class="right header_btn" href="{{route('msc.personalCenter.infoManage')}}">
         <i class="fa fa-home clof font26 icon_return"></i>
     </a>
 </div>
@@ -36,23 +38,23 @@
 <form id="sourceForm">
     <div class="add_main">
         <div class="form-group">
-            <label for="">设备</label>
-            <input type="text" readonly="readonly" value="开发实验室A" class="form-control">
+            <label for="">教室</label>
+            <input type="text" readonly="readonly" value="{{$apply->lab->name}}" class="form-control">
         </div>
         <div class="form-group">
             <label for="">申请人</label>
-            <input type="text" readonly="readonly" value="李老师" class="form-control">
+            <input type="text" readonly="readonly" value="{{$user->name}}" class="form-control">
         </div>
         <div class="form-group">
             <label for="">时间段</label>
-            <input type="text" readonly="readonly" value="2014/12/14 08:12-12:23" class="form-control">
+            <input type="text" readonly="readonly" value="{{$apply->apply_date}} {{date('H:i',strtotime($apply->calendar->begintime))}}-{{date('H:i',strtotime($apply->calendar->endtime))}}" class="form-control">
         </div>
         <div class="form-group">
             <label for="">理由</label>
-            <p>微信端：信息管理>资源管理>开放实验室管理>预约申请管理>点击待申请信息，无法跳转到详情界面</p>
+            <p>{{empty($apply->detail) ? '' : $apply->detail}}</p>
         </div>
     </div>
-    <div class="w_94 submit_box" value="1">
+    <div class="w_94 submit_box" value="{{$apply->id}}">
         <div><input type="button" class="btn5" value="审核不通过"/></div>
         <div><input type="button" class="btn1" value="审核通过"/></div>
     </div>
