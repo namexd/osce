@@ -14,7 +14,7 @@ class ResourcesOpenLabCalendar extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'resources_openlab_calendar';
-    protected $fillable 	=	['id', 'resources_lab_id', 'week', 'begintime','endtime'];//TODO:罗海华 设置 endtime 字段 和 修正 resources_lab_id 字段名 2015-12-18
+    protected $fillable 	=	['id', 'resources_lab_id', 'week', 'begintime','endtime','opentype'];//TODO:罗海华 设置 endtime 字段 和 修正 resources_lab_id 字段名 2015-12-18
 
     public function resourcesClassroom(){
 
