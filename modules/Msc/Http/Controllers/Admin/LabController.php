@@ -1055,8 +1055,8 @@ class LabController extends MscController
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
 //        try{
-            $result =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id,$notice);
-            if($result)
+            $list   =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
+            if(!empty($list))
             {
                 //成功回跳到列表
                 return response()   ->    json(
