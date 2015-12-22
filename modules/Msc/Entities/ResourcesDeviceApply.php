@@ -50,11 +50,6 @@
                     $join->on ('resources_device_apply.apply_uid' , '=' , 'student.id');
                 }
             )->leftJoin (
-                'teacher' ,
-                function ($join) {
-                    $join->on ('resources_device_apply.apply_uid' , '=' , 'teacher.id');
-                }
-            )->leftJoin (
                 'resources_device_history' , function ($join) {
                 $join->on ('resources_device_history.resources_device_apply_id' , '=' , 'resources_device_apply.id');
             }
@@ -76,7 +71,7 @@
             //根据日期查询,默认是当前日期,如果有传参,就是传参之后的日期
             $builder = $builder->whereRaw ('unix_timestamp(resources_device_apply.original_begin_datetime)>= ? ' , [ strtotime ($date) ]);
             //设置关键字查询
-            if ($keyword !== '') {
+            if ($keyword !== null) {
                 $builder = $builder->where ('resources_device.name' , 'like' , '%'.$keyword.'%');
             }
 
