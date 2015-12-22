@@ -19,6 +19,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@getRejectedResources','as'=>'msc.admin.resourcesManager.getRejectedResources']);
 		Route::post('resources-manager/rejected-resources-all', ['uses'=>'ResourcesManagerController@postRejectedResourcesAll','as'=>'msc.admin.resourcesManager.postRejectedResourcesAll']);
 		Route::get('resources-manager/resources', ['uses'=>'ResourcesManagerController@getResources','as'=>'msc.admin.resourcesManager.getResources']);
+		Route::get('resources-manager/edit-resources', ['uses'=>'ResourcesManagerController@getEditResources','as'=>'msc.admin.resourcesManager.getEditResources']);
 		Route::post('resources-manager/rejected-resources', ['uses'=>'ResourcesManagerController@postRejectedResources','as'=>'msc.admin.resourcesManager.postRejectedResources']);
 		Route::post('resources-manager/edit-resources', ['uses'=>'ResourcesManagerController@postEditResources','as'=>'msc.admin.resourcesManager.postEditResources']);
 		Route::get('resources-manager/resources-list', ['uses'=>'ResourcesManagerController@getResourcesList','as'=>'msc.admin.resourcesManager.getResourcesList']);

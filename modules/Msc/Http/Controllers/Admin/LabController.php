@@ -458,8 +458,24 @@ class LabController extends MscController
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
 
         try {
-            $result = $ResourcesOpenLabApply->dealApply($id, $status, $reject);
+            $result =   $ResourcesOpenLabApply->dealApply($id, $status, $reject);
+            $apply  =   $ResourcesOpenLabApply  ->find($id);
             if ($result) {
+                $user   =   $apply->applyUser;
+                if(!is_null($user))
+                {
+                    $courseName =   is_null($apply  ->  course)? '-':$apply ->  course  ->  name;
+                    $noticeArray    =[
+                        '恭喜你，开放实验室预约审核通过。',
+                        '开放实验室名称：'.$apply   ->  lab ->name.',',
+                        '预约时间：'.$apply  ->  apply_date.' '.$apply   ->  calendar    ->  begintime.'-'.$apply   ->  calendar    ->  endtime .',',
+                        '课程名称：'.$courseName.',',
+                        '开放实验室名称：'.$apply   ->  lab ->  location.'.',
+                    ];
+                    $notice =   implode('',$noticeArray);
+                    $openid  =  $user   ->  openid;
+                    Common::sendMsg($openid,$notice);
+                }
                 return response()->json(
                     $this->success_data(['id' => $result->id])
                 );
@@ -851,8 +867,8 @@ class LabController extends MscController
         $reject = e($request->get('reject'));
         try {
             //获取openid
-            $apply=ResourcesClassroomApply::find($id);
-            $openID = $apply    ->    applyer    ->    openid;
+            $apply=ResourcesOpenLabApply::find($id);
+            $openID = $apply    ->    applyUser    ->    openid;
             //发送微信消息
             $result = $this->sendMsg2($reject,$openID);
             //判断是否成功
@@ -1055,8 +1071,8 @@ class LabController extends MscController
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
 //        try{
-            $result =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id,$notice);
-            if($result)
+            $list   =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
+            if(!empty($list))
             {
                 //成功回跳到列表
                 return response()   ->    json(

@@ -210,7 +210,7 @@
                         <td>
                             <div class="opera">
                                 <a href="{{ route('msc.admin.resourcesManager.getResources') }}?id={{ $v['id'] }}"><span class="read  state1">查看</span></a>
-                                <a href="{{ route('msc.admin.resourcesManager.getResources') }}?id={{ $v['id'] }}"><span class="edit state1">编辑</span></a>
+                                <a href="{{ route('msc.admin.resourcesManager.getEditResources') }}?id={{ $v['id'] }}"><span class="edit state1">编辑</span></a>
                                 <span class="Scrap state2" data-toggle="modal" data-target="#myModal" data-id="{{ $v['id'] }}" data-name="{{ $v['name'] }}">报废</span>
                                 <span class="Print state1" data-toggle="modal" data-target="#myModal" data-resource-id="{{ $v['resourcesId'] }}">二维码打印</span>
                                 {{-- 编号列表 --}}

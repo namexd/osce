@@ -322,7 +322,7 @@ class CoursesController extends MscController
             throw new \Exception('开始时间不能小于结束时间');
         }
 
-        $begindate=$request->get('begindate');
+        $begindate=$request->get('bagindate');
         $enddate=$request->get('enddate');
         $field=e($request->get('field'));
         $keyword=e($request->get('keyword'));
@@ -332,9 +332,14 @@ class CoursesController extends MscController
         $where=[];
         $whereIn=[];
         //如果不传日期参数 默认查询当日往后的数据
-        if(empty($begindate))
+        if(is_null($begindate))
         {
             $begindate=date('Y-m-d');
+        }
+        else
+        {
+            $begindate  =   date('Y-m-d',strtotime($begindate));
+            $enddate    =   date('Y-m-d',strtotime($enddate));
         }
         //如果搜索字段为教室名称
         if($field=='classroom')
@@ -386,15 +391,16 @@ class CoursesController extends MscController
                 $builder=$builder->whereIn($param[0],$param[1]);
             }
         }
-       // $a=DB::connection('msc_mis');
-       // $a->enableQueryLog();
+//        $a=DB::connection('msc_mis');
+//        $a->enableQueryLog();
         if(empty($enddate))
         {
             $builder=$builder->whereRaw('unix_timestamp(resources_lab_plan.currentdate)>= ? ',[strtotime($begindate)]);
         }
         else
         {
-            $builder=$builder->whereRaw('unix_timestamp(resources_lab_plan.currentdate)<= ? and unix_timestamp(resources_lab_plan.currentdate)>= ?',[strtotime($enddate),strtotime($begindate)]);
+            //$builder=$builder->whereRaw('unix_timestamp(resources_lab_plan.currentdate)< ? and unix_timestamp(resources_lab_plan.currentdate)>= ?',[strtotime($enddate)+1,strtotime($begindate)]);
+            $builder=$builder->whereRaw('unix_timestamp(resources_lab_plan.currentdate) between  ? and ? ',[strtotime($begindate),strtotime($enddate)+86400]);
         }
 
         if(empty($order))
@@ -417,9 +423,9 @@ class CoursesController extends MscController
             }
             $pagination=$builder->orderBy($order,$order_type)->paginate(config('msc.page_size'));
         }
-        //$c=$a->getQueryLog();
-       //dd($c);
-        //dd($pagination);
+//        $c=$a->getQueryLog();
+//       dd($c);
+//        dd($pagination);
         return $pagination;
     }
     /**

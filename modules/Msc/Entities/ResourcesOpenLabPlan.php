@@ -33,8 +33,8 @@ class ResourcesOpenLabPlan extends Model
         return $this->hasMany('\Modules\Msc\Entities\ResourcesOpenLabPlanTeacher','resources_openlab_plan_id','id');
     }
     public function apply(){
-        return $this->belongsTo('\Modules\Msc\Entities\ResourcesOpenLabApply','resources_openlab_apply_id','id');
-        //return $this->hasOne('\Modules\Msc\Entities\ResourcesOpenLabApply','id','resources_openlab_apply_id');
+        //return $this->belongsTo('\Modules\Msc\Entities\ResourcesOpenLabApply','resources_openlab_apply_id','id');
+        return $this->hasOne('\Modules\Msc\Entities\ResourcesOpenLabApply','id','resources_openlab_apply_id');
     }
 
     public function getConflicts($labId, $date, $beginTime, $endTime){
@@ -166,7 +166,8 @@ class ResourcesOpenLabPlan extends Model
         return true;
     }
     
-    public function cancelOldPlan($id,$notice){
+    public function cancelOldPlan($id){
+        $opendIdList    =   [];
         $connection =   DB::connection('msc_mis');
         $connection ->beginTransaction();
         $apply  =   ResourcesOpenLabApply::find($id);
@@ -196,22 +197,33 @@ class ResourcesOpenLabPlan extends Model
                     }
                     else
                     {
-                        $teacher    =   $oldPlan    ->  apply   ->  applyUser;
-                    }
-                    if($teacher     ->  id)
-                    {
-                        $openid     =   $teacher    ->  openid;
-                    }
-                    if($openid)
-                    {
-                        //测试期间注释 TODO:罗海华 2015-12-21
-                        //Common::sendMsg($openid,$notice);
-                    }
-                    else
-                    {
-                        \Log::notice('id:'.$oldPlan ->  id.'旧计划,找不到相应老师发送报告\r\n');
+                        $apply      =   $teacher    =   $oldPlan    ->  apply;
+                        //如果 有申请
+                        if(!is_null($apply))
+                        {
+                            $teacher    =   $apply      ->  applyUser;
+                            if($teacher     ->  id)
+                            {
+                                $openid     =   $teacher    ->  openid;
+                            }
+                            if($openid)
+                            {
+                                //测试期间注释 TODO:罗海华 2015-12-21
+                                //Common::sendMsg($openid,$notice);
+                                $opendIdList[]  =   $openid;
+                            }
+                            else
+                            {
+                                \Log::notice('id:'.$oldPlan ->  id.'旧计划,找不到相应老师发送报告\r\n');
+                            }
+                        }
+                        else
+                        {
+                            \Log::notice('申请:'.$oldPlan ->  id.',找不到相应申请\r\n');
+                        }
                     }
                 }
+
             }
             $newPlan    =   $this   ->  createPlanByApply($id);
             if(!$newPlan)
@@ -249,12 +261,14 @@ class ResourcesOpenLabPlan extends Model
         return $this->create($data);
     }
     public function checkSameUrgent($resources_openlab_calendar_id,$currentdate){
-        return $this->with([
-            'apply' =>  function($qurey){
-                $qurey  ->  where('apply_type','=',2);
+        return $this   ->  leftJoin(
+            'resources_openlab_apply',
+            function($join){
+                $join   ->  on($this->table.'.resources_openlab_apply_id','=','resources_openlab_apply.id');
             }
-        ])  ->  where('resources_openlab_calendar_id','=',$resources_openlab_calendar_id)
-            ->  where('currentdate','=',$currentdate)
+        )   ->  where('resources_openlab_apply.apply_type','=',2)
+            ->  where($this->table.'.resources_openlab_calendar_id','=',$resources_openlab_calendar_id)
+            ->  where($this->table.'.currentdate','=',$currentdate)
             ->  count();
     }
 }

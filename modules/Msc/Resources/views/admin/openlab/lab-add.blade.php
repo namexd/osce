@@ -2,6 +2,8 @@
 @section('only_css')
     <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
     <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+    <link href="{{asset('msc/admin/plugins/css/plugins/ionRangeSlider/ion.rangeSlider.css')}}" rel="stylesheet">
+    <link href="{{asset('msc/admin/plugins/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css')}}" rel="stylesheet">
     <style>
         .layer-date{max-width: 100%!important;}
         .has-error .form-control{border-color: #ed5565!important;}
@@ -11,207 +13,15 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
-    <script>
-        $(function(){
-            //时间选择
-            laydate(start);
-            laydate(end);
-            $('.cancel').click(function (){
-                //history.go(-1);
-                var url = '{{ route("msc.admin.resourcesManager.getResourcesList") }}';
-                window.location.href = url;
-            });
-            /*{}{
-             * 下面是进行插件初始化
-             * 你只需传入相应的键值对
-             * */
-            $('#labForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    name: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '用户名不能为空'
-                            }
-                        }
-                    },
-                    manager_name: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '负责人不能为空'
-                            },
-                            stringLength: {
-                                min:2,
-                                message: '用户名长度必须大于2'
-                            }
-                        }
-                    },
-                    manager_mobile: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '手机号码不能为空'
-                            },
-                            stringLength: {
-                                min: 11,
-                                max: 11,
-                                message: '请输入11位手机号码'
-                            },
-                            regexp: {
-                                regexp: /^1[3|5|8]{1}[0-9]{9}$/,
-                                message: '请输入正确的手机号码'
-                            }
-                        }
-                    },
-                    address: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '地址不能为空'
-                            }
-                        }
-                    },
-                    type: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '类型不能为空'
-                            }
-                        }
-                    },
-                    maxorder: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '最大预约人数不能为空'
-                            }
-                        }
-                    },
-                    detail: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '描述不能为空'
-                            }
-                        }
-                    },  begindate: {
-                        validators: {
-                            notEmpty: {
-                                message: '开始时间不能为空'
-                            },
-                        }
-                    },
-                    enddate: {
-                        validators: {
-                            notEmpty: {
-                                /*非空提示*/
-                                message: '结束时间不能为空'
-                            },
-                            callback: {
-                                message: '结束日期不能小于开始日期',
-                                callback: function (value, validator, $field) {
-                                    var begin = $('#star').val();
-                                    $('#star').keypress();
-                                    var b_date = begin.replace(/-/g,"");
-                                    var e_date = value.replace(/-/g,"");
-                                    return parseInt(e_date) >= parseInt(b_date);
-                                }
-                            }
-                        }
-                    },
-
-                }
-            });
-        })
-        var start = {
-            elem: "#start",
-            format: "YYYY-MM-DD",
-            max: "2099-06-16",
-            istoday: true,
-            istime: true,
-            istoday: false,
-            choose: function(dates){ //选择好日期的回调
-                $("#start").val(dates);
-                $('#labForm').bootstrapValidator({
-                    message: 'This value is not valid',
-                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
-                    },
-                    fields: {/*验证*/
-                        begindate: {
-                            validators: {
-                                notEmpty: {
-                                    message: '开始时间不能为空'
-                                },
-                            }
-                        }
-
-                    }
-                });
-            }
-        };
-        var end = {
-            elem: "#end",
-            format: "YYYY-MM-DD",
-            max: "2099-06-16",
-            istoday: true,
-            istime: true,
-            istoday: false,
-            choose: function(dates){ //选择好日期的回调
-                $("#end").val(dates);
-                $('#labForm').bootstrapValidator({
-                    message: 'This value is not valid',
-                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
-                    },
-                    fields: {/*验证*/
-                        enddate: {
-                            validators: {
-                                notEmpty: {
-                                    /*非空提示*/
-                                    message: '结束时间不能为空'
-                                },
-                                callback: {
-                                    message: '结束日期不能小于开始日期',
-                                    callback: function (value, validator, $field) {
-                                        var begin = $('#star').val();
-                                        $('#star').keypress();
-                                        var b_date = begin.replace(/-/g,"");
-                                        var e_date = value.replace(/-/g,"");
-                                        return parseInt(e_date) >= parseInt(b_date);
-                                    }
-                                }
-                            }
-                        },
-
-                    }
-                });
-            }
-        };
-        $("#select_Category").change( function(){
-            if($(this).val()=="Classroom") {
-                $(".select-floor").show();
-            }else{
-                $(".select-floor").hide();
-            }
-        })
-
-
-
-    </script>
+    <script src="{{asset('msc/admin/plugins/js/plugins/ionRangeSlider/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
 @stop
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
-
+        <input type="hidden"  id="parameter" value="{'pagename':'lab-add','ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}'}" />
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>新增实验室</h5>
@@ -288,21 +98,17 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">开放开始时间</label>
+                                <label class="col-sm-2 control-label">开放时间段</label>
 
                                 <div class="col-sm-10">
-                                    <input class="form-control layer-date laydate-icon" id="start" name="begintime"  value="{{@$openLabDetail->begintime}}">
+
+                                    <input type="text" id="ionrange_4" name="example_name" value="" />
+                                    <input type="hidden" id="start" name="begintime"  value="{{@$openLabDetail->begintime}}">
+                                    <input type="hidden" id="end" name="endtime"  value="{{@$openLabDetail->endtime}}">
                                 </div>
 
                             </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">开放结束时间</label>
-                                <div class="col-sm-10">
-                                    <input  class="form-control layer-date laydate-icon" id="end" name="endtime"  value="{{@$openLabDetail->endtime}}">
-                                </div>
 
-                            </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">说明(功能描述)</label>
@@ -327,7 +133,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-white cancel" type="button">取消</button>
-                                    <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                                    <button class="btn btn-primary" type="submit" id="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
                                 </div>
                             </div>
 
@@ -340,5 +146,4 @@
     </div>
 
     </div>
-
 @stop{{-- 内容主体区域 --}}

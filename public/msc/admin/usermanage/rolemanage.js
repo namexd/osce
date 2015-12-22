@@ -79,6 +79,9 @@ function rolemanage_detail(){
             $("#authForm").submit();
         });
 
+
+
+
     })
 }
 
@@ -119,5 +122,11 @@ function rolemanage(){
         }
         choice_from();
         delete_user();
+        $('#Form1').delegate('#sure','click', function () {
+            $("#Form1").submit();
+        });
+        $('#Form2').delegate('#sure-notice','click', function () {
+            $("#Form2").submit();
+        });
     });
 }
