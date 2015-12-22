@@ -539,14 +539,49 @@ class ResourcesManagerController extends MscController
             case 'DEVICE':
                 $view = $this->addDeviceResources($request);
                 break;
+            case 'OPENLAB':
+                $view = $this->addOpenlabResources($request);
+                break;
             default:
                 return redirect()->back()->withErrors(['没有选择新增资源type']);
         }
         return $view;
     }
+
+    /**
+     * 添加Openlab的控制器方法
+     * @param Request $request
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
+    private function addOpenlabResources (Request $request) {
+        $this->validate($request,[
+            'name'           => 'required|max:50|min:0',
+            'code'           => 'required|max:50|min:0',
+            'begintime'      => 'required',
+            'endtime'        => 'required',
+            'manager_name'   => 'required|max:50|min:0',
+            'manager_mobile' => 'required|mobile_phone',
+            'location'       => 'required|max:50|min:0',
+            'person_total'   => 'required|integer',
+            'detail'         => 'sometimes|max:255|min:0',
+            'status'         => 'required|integer',
+        ]);
+
+        $formData    = $request->only(['name', 'code', 'location', 'begintime', 'endtime', 'manager_name', 'manager_mobile','detail','person_total']);
+        $imagesPath   = $request->input('images_path');
+        $ResourcesClassroom = new ResourcesClassroom();
+        $result = $ResourcesClassroom->addOpenlabResources($formData,$imagesPath);
+        if ($result === true) {
+            return redirect()->action('\Modules\Msc\Http\Controllers\Admin\ResourcesManagerController@getAddResources');
+        }   else {
+            return redirect()->back()->withErrors($result);
+        }
+    }
+
     /**
      * 新增开放设备
      * @param Request $request
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     private function addDeviceResources(Request $request) {
         $this->validate($request,[
@@ -584,6 +619,7 @@ class ResourcesManagerController extends MscController
             'location'       => 'required|max:50|min:0',
             'person_total'   => 'required|integer',
             'detail'         => 'sometimes|max:255|min:0',
+            'status'         => 'required|integer',
         ]);
         $resourcesClassroom=new ResourcesClassroom();
         $rst=$resourcesClassroom->addClassRommResources($request);
