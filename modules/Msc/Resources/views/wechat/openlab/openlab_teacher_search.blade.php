@@ -15,7 +15,7 @@
     <script src="{{asset('msc/wechat/openlab/js/openlab_teacher_search.js')}}"></script>
 
 
-<script>
+<script> 
 
     $(document).ready(function(){
             if($('#get_type').html() == 'success'){

@@ -73,6 +73,10 @@ class ResourcesClassroom extends  CommonModel {
         return $this->where('opened','=',0)->get();
     }
 
+    public function openLabCalendar() {
+        return $this->hasMany('Modules\Msc\Entities\ResourcesOpenLabCalendar','resources_lab_id','id');
+    }
+
     public function resourcesLabCalendar(){
         return $this->hasMany('Modules\Msc\Entities\ResourcesLabCalendar','resources_lab_id','id');
     }
