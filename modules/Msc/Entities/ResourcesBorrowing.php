@@ -87,7 +87,7 @@ class ResourcesBorrowing extends  CommonModel
             [
                 strtotime(date('Y-m-d'))
             ]
-        )   ->  where('apply_validated','=',0) -> orderBy('begindate','asc');
+        )   -> orderBy('begindate','asc');
         if($pid!==false)
         {
             //如果
