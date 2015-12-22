@@ -5,119 +5,110 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "lab-add":lab_add();break; //lab-addÒ³Ãæ
-        case "lab-exist-detail":lab_exist_detail();break; //lab-exist-detailÒ³Ãæ
-        case "lab-exist-list":lab_exist_list();break;//lab-exist-listÒ³Ãæ
-        case "lab-history":lab_history();break;//lab-historyÒ³Ãæ
+        case "lab-add":lab_add();break; //lab-addé¡µé¢
+        case "lab-exist-detail":lab_exist_detail();break; //lab-exist-detailé¡µé¢
+        case "lab-exist-list":lab_exist_list();break;//lab-exist-listé¡µé¢
+        case "lab-history":lab_history();break;//lab-historyé¡µé¢
     }
 });
 
 function lab_add(){
     $(function(){
         var url = pars.ajaxurl;
-        //Ê±¼äÑ¡Ôñ
-        laydate(start);
-        laydate(end);
+        //æ—¶é—´é€‰æ‹©
+        var start = $('#start').val().substring(0,2);
+        var end = $('#end').val().substring(0,2);
+
+        $("#ionrange_4").ionRangeSlider({
+            values: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","24:00"],
+            type: "double",
+            from:start,
+            to:start,
+            hasGrid: true,
+            onChange: function(obj){        // function-callback, is called on every change
+
+                $('#start').val(obj.fromValue);
+                $('#end').val(obj.toValue);
+            },
+
+        });
+
         $('.cancel').click(function (){
             //history.go(-1);
             window.location.href = url;
         });
         /*{}{
-         * ÏÂÃæÊÇ½øÐÐ²å¼þ³õÊ¼»¯
-         * ÄãÖ»Ðè´«ÈëÏàÓ¦µÄ¼üÖµ¶Ô
+         * ä¸‹é¢æ˜¯è¿›è¡Œæ’ä»¶åˆå§‹åŒ–
+         * ä½ åªéœ€ä¼ å…¥ç›¸åº”çš„é”®å€¼å¯¹
          * */
         $('#labForm').bootstrapValidator({
             message: 'This value is not valid',
-            feedbackIcons: {/*ÊäÈë¿ò²»Í¬×´Ì¬£¬ÏÔÊ¾Í¼Æ¬µÄÑùÊ½*/
+            feedbackIcons: {/*è¾“å…¥æ¡†ä¸åŒçŠ¶æ€ï¼Œæ˜¾ç¤ºå›¾ç‰‡çš„æ ·å¼*/
                 valid: 'glyphicon glyphicon-ok',
                 invalid: 'glyphicon glyphicon-remove',
                 validating: 'glyphicon glyphicon-refresh'
             },
-            fields: {/*ÑéÖ¤*/
-                name: {/*¼üÃûusernameºÍinput nameÖµ¶ÔÓ¦*/
+            fields: {/*éªŒè¯*/
+                name: {/*é”®åusernameå’Œinput nameå€¼å¯¹åº”*/
                     message: 'The username is not valid',
                     validators: {
-                        notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                            message: 'ÓÃ»§Ãû²»ÄÜÎª¿Õ'
+                        notEmpty: {/*éžç©ºæç¤º*/
+                            message: 'ç”¨æˆ·åä¸èƒ½ä¸ºç©º'
                         }
                     }
                 },
                 manager_name: {
                     validators: {
-                        notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                            message: '¸ºÔðÈË²»ÄÜÎª¿Õ'
+                        notEmpty: {/*éžç©ºæç¤º*/
+                            message: 'è´Ÿè´£äººä¸èƒ½ä¸ºç©º'
                         },
                         stringLength: {
                             min:2,
-                            message: 'ÓÃ»§Ãû³¤¶È±ØÐë´óÓÚ2'
+                            message: 'ç”¨æˆ·åé•¿åº¦å¿…é¡»å¤§äºŽ2'
                         }
                     }
                 },
                 manager_mobile: {
                     validators: {
-                        notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                            message: 'ÊÖ»úºÅÂë²»ÄÜÎª¿Õ'
+                        notEmpty: {/*éžç©ºæç¤º*/
+                            message: 'æ‰‹æœºå·ç ä¸èƒ½ä¸ºç©º'
                         },
                         stringLength: {
                             min: 11,
                             max: 11,
-                            message: 'ÇëÊäÈë11Î»ÊÖ»úºÅÂë'
+                            message: 'è¯·è¾“å…¥11ä½æ‰‹æœºå·ç '
                         },
                         regexp: {
                             regexp: /^1[3|5|8]{1}[0-9]{9}$/,
-                            message: 'ÇëÊäÈëÕýÈ·µÄÊÖ»úºÅÂë'
+                            message: 'è¯·è¾“å…¥æ­£ç¡®çš„æ‰‹æœºå·ç '
                         }
                     }
                 },
                 address: {
                     validators: {
-                        notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                            message: 'µØÖ·²»ÄÜÎª¿Õ'
+                        notEmpty: {/*éžç©ºæç¤º*/
+                            message: 'åœ°å€ä¸èƒ½ä¸ºç©º'
                         }
                     }
                 },
                 type: {
                     validators: {
-                        notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                            message: 'ÀàÐÍ²»ÄÜÎª¿Õ'
+                        notEmpty: {/*éžç©ºæç¤º*/
+                            message: 'ç±»åž‹ä¸èƒ½ä¸ºç©º'
                         }
                     }
                 },
                 maxorder: {
                     validators: {
-                        notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                            message: '×î´óÔ¤Ô¼ÈËÊý²»ÄÜÎª¿Õ'
+                        notEmpty: {/*éžç©ºæç¤º*/
+                            message: 'æœ€å¤§é¢„çº¦äººæ•°ä¸èƒ½ä¸ºç©º'
                         }
                     }
                 },
                 detail: {
                     validators: {
-                        notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                            message: 'ÃèÊö²»ÄÜÎª¿Õ'
-                        }
-                    }
-                },  begindate: {
-                    validators: {
-                        notEmpty: {
-                            message: '¿ªÊ¼Ê±¼ä²»ÄÜÎª¿Õ'
-                        },
-                    }
-                },
-                enddate: {
-                    validators: {
-                        notEmpty: {
-                            /*·Ç¿ÕÌáÊ¾*/
-                            message: '½áÊøÊ±¼ä²»ÄÜÎª¿Õ'
-                        },
-                        callback: {
-                            message: '½áÊøÈÕÆÚ²»ÄÜÐ¡ÓÚ¿ªÊ¼ÈÕÆÚ',
-                            callback: function (value, validator, $field) {
-                                var begin = $('#star').val();
-                                $('#star').keypress();
-                                var b_date = begin.replace(/-/g,"");
-                                var e_date = value.replace(/-/g,"");
-                                return parseInt(e_date) >= parseInt(b_date);
-                            }
+                        notEmpty: {/*éžç©ºæç¤º*/
+                            message: 'æè¿°ä¸èƒ½ä¸ºç©º'
                         }
                     }
                 },
@@ -125,75 +116,7 @@ function lab_add(){
             }
         });
     })
-    var start = {
-        elem: "#start",
-        format: "YYYY-MM-DD",
-        max: "2099-06-16",
-        istoday: true,
-        istime: true,
-        istoday: false,
-        choose: function(dates){ //Ñ¡ÔñºÃÈÕÆÚµÄ»Øµ÷
-            $("#start").val(dates);
-            $('#labForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*ÊäÈë¿ò²»Í¬×´Ì¬£¬ÏÔÊ¾Í¼Æ¬µÄÑùÊ½*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*ÑéÖ¤*/
-                    begindate: {
-                        validators: {
-                            notEmpty: {
-                                message: '¿ªÊ¼Ê±¼ä²»ÄÜÎª¿Õ'
-                            },
-                        }
-                    }
 
-                }
-            });
-        }
-    };
-    var end = {
-        elem: "#end",
-        format: "YYYY-MM-DD",
-        max: "2099-06-16",
-        istoday: true,
-        istime: true,
-        istoday: false,
-        choose: function(dates){ //Ñ¡ÔñºÃÈÕÆÚµÄ»Øµ÷
-            $("#end").val(dates);
-            $('#labForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*ÊäÈë¿ò²»Í¬×´Ì¬£¬ÏÔÊ¾Í¼Æ¬µÄÑùÊ½*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*ÑéÖ¤*/
-                    enddate: {
-                        validators: {
-                            notEmpty: {
-                                /*·Ç¿ÕÌáÊ¾*/
-                                message: '½áÊøÊ±¼ä²»ÄÜÎª¿Õ'
-                            },
-                            callback: {
-                                message: '½áÊøÈÕÆÚ²»ÄÜÐ¡ÓÚ¿ªÊ¼ÈÕÆÚ',
-                                callback: function (value, validator, $field) {
-                                    var begin = $('#star').val();
-                                    $('#star').keypress();
-                                    var b_date = begin.replace(/-/g,"");
-                                    var e_date = value.replace(/-/g,"");
-                                    return parseInt(e_date) >= parseInt(b_date);
-                                }
-                            }
-                        }
-                    },
-
-                }
-            });
-        }
-    };
     $("#select_Category").change( function(){
         if($(this).val()=="Classroom") {
             $(".select-floor").show();
@@ -209,7 +132,7 @@ function lab_exist_detail(){
         $('.btn-primary').click(function () {
             history.go(-1);
         });
-        //Ê±¼äÑ¡Ôñ
+        //æ—¶é—´é€‰æ‹©
         laydate(start);
         laydate(end);
         $('.cancel').click(function (){
@@ -243,7 +166,7 @@ function lab_exist_detail(){
 function lab_exist_list(){
     $(function(){
         for(var i=0;i<$(".table tr").length;i++){
-            $("#false-del").parents("tr").remove();//¼ÙÉ¾³ýÊý¾ÝÒþ²Ø
+            $("#false-del").parents("tr").remove();//å‡åˆ é™¤æ•°æ®éšè—
         }
         var idName;
         $(".table a").click(function(){
@@ -260,20 +183,20 @@ function lab_exist_list(){
                     $("#Form3").css("display","block");
                     break;
                 case "forbidden":
-                    $("#Form4 .modal-body").text("È·ÈÏ½ûÓÃ"+$(this).parents("tr").children(".userName").text()+"ÓÃ»§£¿")
+                    $("#Form4 .modal-body").text("ç¡®è®¤ç¦ç”¨"+$(this).parents("tr").children(".userName").text()+"ç”¨æˆ·ï¼Ÿ")
                     $("#Form4").css("display","block");
                     break;
                 case "del":
-                    $("#Form5 .modal-body").text("È·ÈÏÉ¾³ý"+$(this).parents("tr").children(".userName").text()+"ÓÃ»§£¿");
+                    $("#Form5 .modal-body").text("ç¡®è®¤åˆ é™¤"+$(this).parents("tr").children(".userName").text()+"ç”¨æˆ·ï¼Ÿ");
                     $("#Form5").css("display","block");
                     break;
             }
         });
-        $("#new-add").click(function(){//ÐÂÔö
+        $("#new-add").click(function(){//æ–°å¢ž
             $("#Form1,#Form2,#Form3,#Form4,#Form5").css("display","none");
             $("#Form1").css("display","block");
         });
-        $(".btn-del").click(function(){//È·ÈÏÉ¾³ý
+        $(".btn-del").click(function(){//ç¡®è®¤åˆ é™¤
             $.ajax({
                 type:"get",
                 url:"/msc/admin/user/student-trashed/"+idName,
@@ -281,7 +204,7 @@ function lab_exist_list(){
             });
             history.go(0);
         });
-        $(".btn-forbidden,#recover").click(function(){//½ûÓÃ»Ö¸´
+        $(".btn-forbidden,#recover").click(function(){//ç¦ç”¨æ¢å¤
             $.ajax({
                 type:"get",
                 url:"/msc/admin/user/student-status/"+idName,
@@ -289,7 +212,7 @@ function lab_exist_list(){
             });
             history.go(0);
         })
-        $(".btn-edit").click(function(){//È·ÈÏÐÞ¸ÄÑéÖ¤
+        $(".btn-edit").click(function(){//ç¡®è®¤ä¿®æ”¹éªŒè¯
             var editName=$.trim($(".edit-name").val());
             var editCode=$.trim($(".edit-code").val());
             var editProfessional_name=$.trim($(".edit-professional_name").val());
@@ -297,42 +220,42 @@ function lab_exist_list(){
             var editCard=$.trim($(".edit-idcard").val());
             var reg=/^1[3|5|8]{1}[0-9]{9}$/;
             if(editName==""){
-                layer.tips('ÓÃ»§Ãû²»ÄÜÎª¿Õ', '.edit-name', {
+                layer.tips('ç”¨æˆ·åä¸èƒ½ä¸ºç©º', '.edit-name', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(editCode==""){
-                layer.tips('Ñ§ºÅ²»ÄÜÎª¿Õ', '.edit-code', {
+                layer.tips('å­¦å·ä¸èƒ½ä¸ºç©º', '.edit-code', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(editProfessional_name==""){
-                layer.tips('×¨Òµ²»ÄÜÎª¿Õ', '.edit-professional_name', {
+                layer.tips('ä¸“ä¸šä¸èƒ½ä¸ºç©º', '.edit-professional_name', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(editMobile==""){
-                layer.tips('ÊÖ»úºÅ²»ÄÜÎª¿Õ', '.edit-mobile', {
+                layer.tips('æ‰‹æœºå·ä¸èƒ½ä¸ºç©º', '.edit-mobile', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(!reg.test(editMobile)){
-                layer.tips('ÇëÊäÈëÕýÈ·µÄÊÖ»úºÅÂë', '.edit-mobile', {
+                layer.tips('è¯·è¾“å…¥æ­£ç¡®çš„æ‰‹æœºå·ç ', '.edit-mobile', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(editCard==""){
-                layer.tips('Ö¤¼þºÅ²»ÄÜÎª¿Õ', '.edit-idcard', {
+                layer.tips('è¯ä»¶å·ä¸èƒ½ä¸ºç©º', '.edit-idcard', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
@@ -340,7 +263,7 @@ function lab_exist_list(){
             }
             $("#Form3").submit();
         });
-        $(".btn-new-add").click(function(){//ÐÂÔöÑ§ÉúÑéÖ¤
+        $(".btn-new-add").click(function(){//æ–°å¢žå­¦ç”ŸéªŒè¯
             var addName=$.trim($(".add-name").val());
             var addCode=$.trim($(".add-code").val());
             var addProfession_name=$.trim($(".add-profession_name").val());
@@ -348,42 +271,42 @@ function lab_exist_list(){
             var addCard=$.trim($(".add-card").val());
             var reg=/^1[3|5|8]{1}[0-9]{9}$/;
             if(addName==""){
-                layer.tips('ÓÃ»§Ãû²»ÄÜÎª¿Õ', '.add-name', {
+                layer.tips('ç”¨æˆ·åä¸èƒ½ä¸ºç©º', '.add-name', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(addCode==""){
-                layer.tips('Ñ§ºÅ²»ÄÜÎª¿Õ', '.add-code', {
+                layer.tips('å­¦å·ä¸èƒ½ä¸ºç©º', '.add-code', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(addProfession_name==""){
-                layer.tips('×¨Òµ²»ÄÜÎª¿Õ', '.add-profession_name', {
+                layer.tips('ä¸“ä¸šä¸èƒ½ä¸ºç©º', '.add-profession_name', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(addMobile==""){
-                layer.tips('ÊÖ»úºÅ²»ÄÜÎª¿Õ', '.add-mobile', {
+                layer.tips('æ‰‹æœºå·ä¸èƒ½ä¸ºç©º', '.add-mobile', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(!reg.test(addMobile)){
-                layer.tips('ÇëÊäÈëÕýÈ·µÄÊÖ»úºÅÂë', '.add-mobile', {
+                layer.tips('è¯·è¾“å…¥æ­£ç¡®çš„æ‰‹æœºå·ç ', '.add-mobile', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
                 return false;
             }
             if(addCard==""){
-                layer.tips('Ö¤¼þºÅ²»ÄÜÎª¿Õ', '.add-card', {
+                layer.tips('è¯ä»¶å·ä¸èƒ½ä¸ºç©º', '.add-card', {
                     tips: [1, '#408AFF'],
                     time: 4000
                 });
@@ -391,7 +314,7 @@ function lab_exist_list(){
             }
             $("#Form1").submit();
         })
-        function look(){//²é¿´
+        function look(){//æŸ¥çœ‹
             $.ajax({
                 type:"get",
                 url: "/msc/admin/user/student-item/"+idName,
@@ -399,42 +322,42 @@ function lab_exist_list(){
                 success:function(res){
                     var data=JSON.parse(res);
                     console.log(data);
-                    $(".look-name").val(data.name);//ÐÕÃû
-                    $(".look-code").val(data.code);//Ñ§ºÅ
-                    if(data.gender=="ÄÐ"){
+                    $(".look-name").val(data.name);//å§“å
+                    $(".look-code").val(data.code);//å­¦å·
+                    if(data.gender=="ç”·"){
                         $(".look-man").attr("checked","checked");
-                    }else if(data.gender=="Å®"){
+                    }else if(data.gender=="å¥³"){
                         $(".look-woman").attr("checked","checked");
                     }
-                    $(".look-grade").val(data.grade);//Äê¼¶
-                    $(".look-student_type").find("option[text='"+data.student_type+"']").attr(".look-student_type",true);//Àà±ð
-                    $(".look-profession_name").val(data.profession_name);//×¨Òµ
-                    $(".look-mobile").val(data.mobile);//ÊÖ»ú
-                    $(".look-card").val(data.idcard);//Ö¤¼þºÅÂë
+                    $(".look-grade").val(data.grade);//å¹´çº§
+                    $(".look-student_type").find("option[text='"+data.student_type+"']").attr(".look-student_type",true);//ç±»åˆ«
+                    $(".look-profession_name").val(data.profession_name);//ä¸“ä¸š
+                    $(".look-mobile").val(data.mobile);//æ‰‹æœº
+                    $(".look-card").val(data.idcard);//è¯ä»¶å·ç 
 
                 }
             });
         }
-        function edit(){//ÐÞ¸Ä
+        function edit(){//ä¿®æ”¹
             $.ajax({
                 type:"get",
                 url:"/msc/admin/user/student-edit/"+idName,
                 async:true,
                 success:function(res){
                     var data=JSON.parse(res);
-                    $(".edit-name").val(data.name);//ÐÕÃû
+                    $(".edit-name").val(data.name);//å§“å
                     $(".edit-hidden-name").val(idName);
-                    $(".edit-code").val(data.code);//Ñ§ºÅ
-                    if(data.gender=="ÄÐ"){
+                    $(".edit-code").val(data.code);//å­¦å·
+                    if(data.gender=="ç”·"){
                         $(".edit-man").attr("checked","checked");
-                    }else if(data.gender=="Å®"){
+                    }else if(data.gender=="å¥³"){
                         $(".edit-woman").attr("checked","checked");
                     }
-                    $(".edit-grade").val(data.grade);//Äê¼¶
-                    $(".edit-student_type").find("option[text='"+data.student_type+"']").attr(".edit-student_type",true);//Àà±ð
-                    $(".edit-professional_name").val(data.profession_name)//×¨Òµ
-                    $(".edit-mobile").val(data.mobile);//ÊÖ»ú
-                    $(".edit-card").val(data.idcard);//Ö¤¼þºÅÂë
+                    $(".edit-grade").val(data.grade);//å¹´çº§
+                    $(".edit-student_type").find("option[text='"+data.student_type+"']").attr(".edit-student_type",true);//ç±»åˆ«
+                    $(".edit-professional_name").val(data.profession_name)//ä¸“ä¸š
+                    $(".edit-mobile").val(data.mobile);//æ‰‹æœº
+                    $(".edit-card").val(data.idcard);//è¯ä»¶å·ç 
                 }
             });
         }
@@ -446,22 +369,22 @@ function lab_exist_list(){
             var str=$("#leading-in").val().substring($("#leading-in").val().lastIndexOf(".")+1);
             if(str!="xlsx"){
                 layer.alert(
-                    "ÇëÉÏ´«ÕýÈ·µÄÎÄ¼þ¸ñÊ½£¿",
-                    {title:["ÎÂÜ°ÌáÊ¾","font-size:16px;color:#408aff"]}
+                    "è¯·ä¸Šä¼ æ­£ç¡®çš„æ–‡ä»¶æ ¼å¼ï¼Ÿ",
+                    {title:["æ¸©é¦¨æç¤º","font-size:16px;color:#408aff"]}
                 );
             }else{
                 $.ajaxFileUpload({
                     type:"post",
                     url:'/msc/admin/user/import-student-user',
-                    fileElementId:'leading-in',//±ØÐëÒªÊÇ input file±êÇ© ID
+                    fileElementId:'leading-in',//å¿…é¡»è¦æ˜¯ input fileæ ‡ç­¾ ID
                     success: function (data, status){
 
                     },
                     error: function (data, status, e){
-                        console.log("Ê§°Ü");
+                        console.log("å¤±è´¥");
                         layer.alert(
-                            "ÉÏ´«Ê§°Ü£¡",
-                            {title:["ÎÂÜ°ÌáÊ¾","font-size:16px;color:#408aff"]}
+                            "ä¸Šä¼ å¤±è´¥ï¼",
+                            {title:["æ¸©é¦¨æç¤º","font-size:16px;color:#408aff"]}
                         );
                     }
                 });

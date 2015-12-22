@@ -14,6 +14,7 @@ use Modules\Msc\Entities\Teacher;
 use Modules\Msc\Entities\StdProfessional;
 use Modules\Msc\Entities\TeacherDept;
 use Modules\Msc\Http\Controllers\MscController;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class UserController extends MscController
@@ -767,17 +768,21 @@ class UserController extends MscController
 
                         $student = new Student();
                          $result=$student->AddStudent($studentData);
+//                        die(json_encode($request));
                         if (!$result) {
-//                            $dataFalse[] = $studentData;
-                            return redirect()->back()->withInput()->withErrors('导入失败');
+//                                 Response::generate();
+                            $dataFalse[] = $studentData;
+//                            return redirect()->back()->withInput()->withErrors('导入成功');
                         }
-
                     } else {
-//                        $dataHaven[] = $studentData;
-                        return redirect()->back()->withInput()->withErrors('导入成功');
+//                        return redirect()->back()->withInput()->withErrors('已存在');
+                        $dataHaven[] = $studentData;
+
+
                     }
                 }
             }
+//            die(json_encode($request));
             return response()->json(
                 $this->success_data(['result' => true, 'dataFalse' => $dataFalse, 'dataHaven' => $dataHaven])
             );
