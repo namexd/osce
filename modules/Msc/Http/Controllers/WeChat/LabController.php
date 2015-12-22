@@ -16,6 +16,7 @@ use Modules\Msc\Entities\ResourcesClassroomApply;
 use Modules\Msc\Entities\ResourcesOpenLabApply;
 use Modules\Msc\Entities\ResourcesOpenLabPlan;
 use Modules\Msc\Http\Controllers\MscWeChatController;
+use Modules\Msc\Repositories\Common;
 
 class LabController extends MscWeChatController
 {
@@ -199,7 +200,7 @@ class LabController extends MscWeChatController
 
     /**
      * 处理突发事件申请 通过 数据
-     * @api POST /msc/wechat/lab/agree-emergency-apply
+     * @api POST /msc/wechat/lab/f5
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -225,9 +226,13 @@ class LabController extends MscWeChatController
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
         try{
-            $result =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id,$notice);
-            if($result)
+            $opendIdList        =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
+            if(!empty($result))
             {
+                foreach($opendIdList as $opendid)
+                {
+                    Common::sendMsg($opendid,$notice);
+                }
                 //成功回跳到列表
                 return redirect()->route('msc.wechat.openLaboratory.emergencyManage');
             }
@@ -240,7 +245,6 @@ class LabController extends MscWeChatController
         {
             return redirect()->back()->withErrors($ex);
         }
-
     }
 
     /**
