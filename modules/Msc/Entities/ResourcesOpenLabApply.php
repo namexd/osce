@@ -469,13 +469,13 @@ class ResourcesOpenLabApply extends CommonModel
     public function addSamePlanPersonTotal($resources_openlab_calendar_id,$currentdate){
         $sameList   =   $this   ->  getSamePlanList($resources_openlab_calendar_id,$currentdate);
         try{
-            $plan   =   0;
+            $plan   =   '';
             foreach($sameList as $plan)
             {
                 $plan   ->  resorces_lab_person_total   =   intval($plan   ->  resorces_lab_person_total)   +   1;
                 $plan   ->  save();
             }
-            if($plan==0)
+            if(empty($plan))
             {
                 return 0;
             }
