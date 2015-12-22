@@ -10,14 +10,18 @@
         margin-left: 95px;
     }
     .has-feedback label~.form-control-feedback {top: 0;}
-    .multi-control{
+    .multi-control {
         position: absolute;
-        right: 12px;
-        top: 18px;
+        right: 0;
+        top: 0;
         color: #C7D0D8;
+        height: 47px;
+        width: 62px;
+        text-align: right;
+        line-height: 47px;
     }
-    .add_main .form-group label{
-        left: 0%;}
+    .multi-control i{padding-right: 8px;}
+    .add_main .form-group label{left: 0%;}
 </style>
 @stop
 @section('only_head_js')
@@ -93,7 +97,7 @@
         <div class="form-group has-feedback">
             <label for="">编号</label>
             <input type="text"  name="code[]" placeholder="请输入编号" class="form-control">
-            <i class="fa fa-plus fa-lg multi-control"></i>
+            <div class=" multi-control"><i class="fa fa-plus fa-lg"></i></div>
         </div>
         <div class="hacker-hidden"></div>
     </div>
@@ -200,21 +204,34 @@ $(function(){
     });
 
     /*新增编号*/
-    $('.add_main').on('click','.fa-plus',function(){
-        $(this).removeClass('fa-plus');
-        $(this).addClass('fa-close');
-        var html = '<div class="form-group has-feedback">'+
-                     '<label for="">编号</label>'+
-                     '<input type="text"  name="code[]" placeholder="请输入编号" class="form-control">'+
-                     '<i class="fa fa-plus fa-lg multi-control"></i>'+
-                   '</div>';
-        $('.hacker-hidden').before(html);
+    $('.add_main').on('click','.multi-control',function(){
+        var thisFa = $(this).find('i');
+        if(thisFa.hasClass('fa-plus')){
+
+            //改变状态
+            thisFa.removeClass('fa-plus');
+            thisFa.addClass('fa-close');
+            $(this).addClass('multi-del');//区分标志
+
+            var html = '<div class="form-group has-feedback">'+
+                         '<label for="">编号</label>'+
+                         '<input type="text"  name="code[]" placeholder="请输入编号" class="form-control">'+
+                         '<div class="multi-control"><i class="fa fa-plus fa-lg"></i></div>'+
+                       '</div>';
+            $('.hacker-hidden').before(html);
+        }else{
+            return;
+        }
+        
     });
 
     /*删除新增*/
-    $('.add_main').on('click','.fa-close',function(){
-        console.log($(this).parent().html())
-        $(this).parent().remove();
+    $('.add_main').on('click','.multi-del',function(){
+        if($(this).find('i').hasClass('fa-close')){
+            $(this).parent().remove();
+        }else{
+            return;
+        }
     });
 
     /*图片上传*/

@@ -199,9 +199,6 @@ class ResourcesOpenLabApply extends CommonModel
      */
     public function getWaitExamineList($classroomName,$date, $order){
         return  $this   -> with([
-//        $mis    =   DB::connection($this->connection);
-//        $mis    ->  enableQueryLog();
-//        $b=  $this   -> with([
             'classroomCourses'  =>  function($qurey) use ($classroomName){
                 if(!is_null($classroomName))
                 {

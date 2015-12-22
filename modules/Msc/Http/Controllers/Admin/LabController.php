@@ -851,8 +851,8 @@ class LabController extends MscController
         $reject = e($request->get('reject'));
         try {
             //获取openid
-            $apply=ResourcesClassroomApply::find($id);
-            $openID = $apply    ->    applyer    ->    openid;
+            $apply=ResourcesOpenLabApply::find($id);
+            $openID = $apply    ->    applyUser    ->    openid;
             //发送微信消息
             $result = $this->sendMsg2($reject,$openID);
             //判断是否成功
@@ -1055,8 +1055,8 @@ class LabController extends MscController
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
 //        try{
-            $result =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id,$notice);
-            if($result)
+            $list   =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
+            if(!empty($list))
             {
                 //成功回跳到列表
                 return response()   ->    json(

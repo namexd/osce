@@ -671,15 +671,17 @@
         function nomalCourse(req){
             //状态
             var state_status = {
-                '1':'<span>已结束</span>',
-                '-1':'<span class="state-before">未开始</span>',
-                '0':'<span class="state-ing">进行中</span>'
+                '-2':'<span>已过期</span>',
+                '-1':'<span>已结束</span>',
+                '1':'<span>使用中</span>',
+                '0':'<span>未使用</span>',
+                '2':'<span>已使用</span>'
             };
             //操作
             var option = {
-                '1':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
-                '0':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
-                '-1':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a>'
+                '2':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
+                '1':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
+                '0':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a>'
             }
             $.ajax({
                 type:"get",
@@ -724,13 +726,15 @@
         function emergencyCourse(req){
             //状态
             var state_status = {
-                '1':'<span>已结束</span>',
-                '-1':'<span class="state-before">未开始</span>',
-                '0':'<span class="state-ing">进行中</span>'
+                '-2':'<span>已过期</span>',
+                '-1':'<span>已结束</span>',
+                '1':'<span>使用中</span>',
+                '0':'<span>未使用</span>',
+                '2':'<span>已使用</span>'
             };
             //操作
             var option = {
-                '1':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
+                '2':'<a href="javascript:void(0)"><span class="read  state1">课件</span></a><a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">视频</span></a><a href="javascript:void(0)"><span class="read  state1">报告</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
                 '0':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
                 '-1':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a><a href="javascript:void(0)"><span class="read  state2">取消</span></a>'
             }
@@ -777,14 +781,16 @@
         function stuffTrain(req){
             //状态
             var state_status = {
-                '1':'<span>已结束</span>',
-                '-1':'<span class="state-before">未开始</span>',
-                '0':'<span class="state-ing">进行中</span>'
+                '-2':'<span>已过期</span>',
+                '-1':'<span>已结束</span>',
+                '1':'<span>使用中</span>',
+                '0':'<span>未使用</span>',
+                '2':'<span>已使用</span>'
             }
             var option = {
-                '1':'<a href="javascript:void(0)"><span class="read  state1">记录</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
-                '0':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
-                '-1':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a><a href="javascript:void(0)"><span class="read  state2">取消</span></a>'
+                '2':'<a href="javascript:void(0)"><span class="read  state1">记录</span></a><a href="javascript:void(0)"><span class="read  state1 detail">详情</span></a>',
+                '1':'<a href="javascript:void(0)"><span class="read  state1" value="{{route('msc.admin.courses.getCoursesVcr')}}">监控</span></a>',
+                '0':'<a href="javascript:void(0)"><span class="read  state1 edit-item">编辑</span></a><a href="javascript:void(0)"><span class="read  state2">取消</span></a>'
             }
             $.ajax({
                 type:"get",

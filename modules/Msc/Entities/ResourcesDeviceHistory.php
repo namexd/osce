@@ -98,10 +98,10 @@
             );
 
             //日期搜索
-            $builder = $builder->whereRaw ('unix_timestamp(resources_device_apply.original_begin_datetime)>= ? ' , [ strtotime (date('Y-m-d',strtotime($date)))]);
+            $builder = $builder->whereRaw ('unix_timestamp(resources_device_history.end_datetime)<= ? ' , [ strtotime ($date)]);
 
             //关键字搜索
-            if ($keyword !== '') {
+            if ($keyword !== null) {
                 $builder = $builder->where ('resources_device.name' , 'like' , '%' . $keyword . '%');
             }
 
@@ -110,8 +110,8 @@
                 [
                     'resources_device_history.id as id' ,
                     'resources_device.name as name' ,
-                    'resources_device_apply.original_begin_datetime as original_begin_datetime' ,
-                    'resources_device_apply.original_end_datetime as original_end_datetime' ,
+                    'resources_device_history.begin_datetime as begin_datetime' ,
+                    'resources_device_history.end_datetime as end_datetime' ,
                     'resources_device.code as code' ,
                     'resources_device_apply.detail as detail' ,
                     'student.name as student_name' ,

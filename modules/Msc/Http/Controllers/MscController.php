@@ -1,7 +1,7 @@
 <?php namespace Modules\Msc\Http\Controllers;
 
 use Pingpong\Modules\Routing\Controller;
-
+use DB;
 class MscController extends Controller {
 
 	//构造函数
@@ -71,5 +71,29 @@ class MscController extends Controller {
 				'code'			=>	-999,
 				'message'		=>	'未知异常:'.$ex->getMessage(),
 		];
+	}
+
+	/**
+	 * 打印当前语句SQL语句
+	 * weihuiguo
+	 * 2015年12月22日10:37:44
+	 */
+
+	public function start_sql($type){
+		if($type == 1){
+			return DB::connection("msc_mis")->enableQueryLog();
+		}else{
+			return DB::connection("sys_mis")->enableQueryLog();
+		}
+
+	}
+
+	public function end_sql($type){
+		if($type == 1){
+			dd(DB::connection("msc_mis")->getQueryLog());
+		}else{
+			dd(DB::connection("sys_mis")->getQueryLog());
+		}
+
 	}
 }

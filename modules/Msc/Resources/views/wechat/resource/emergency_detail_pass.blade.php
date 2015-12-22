@@ -87,7 +87,7 @@
             <div class="form-group red">
                 <label for="">预约{{$key+1}}</label>
                 <div class="txt red">
-                    {{ is_object($item->teachers)? $item->teachers->first()->teacher->name:'未知教师'}} {{is_null($item->course)? '临时安排':$item->course->name}} <br/>
+                    {{count($item->teachers)>0? @$item->teachers->first()->teacher->name:'未知教师'}} {{is_null($item->course)? '临时安排':$item->course->name}} <br/>
                     {{date('Y/m/d',strtotime($item->currentdate))}} {{date('H:i',strtotime($item->begintime))}}-{{date('H:i',strtotime($item->endtime))}}
                 </div>
             </div>
