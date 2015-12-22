@@ -12,16 +12,16 @@
     .has-feedback label~.form-control-feedback {top: 0;}
     .multi-control {
         position: absolute;
-        right: 4px;
+        padding-right: 8px;
+        right: 1px;
         top: 8px;
         color: #C7D0D8;
         height: 30px;
-        width: 30px;
-        text-align: center;
+        width: 62px;
+        text-align: right;
         line-height: 30px;
     }
-    .add_main .form-group label{
-        left: 0%;}
+    .add_main .form-group label{left: 0%;}
 </style>
 @stop
 @section('only_head_js')
