@@ -101,7 +101,6 @@ class MscWeChatController extends Controller {
 
 	//像微信用户发送普通文本消息
 	public function sendMsg($msg,$openid){
-
 		$userService = new \Overtrue\Wechat\Staff(config('wechat.app_id'), config('wechat.secret'));
 		return $userService->send($msg)->to($openid);
 
