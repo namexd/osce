@@ -174,10 +174,10 @@ class UserController extends MscWeChatController {
 		if($this->CheckPhoneRegister($request['mobile'])){
 			$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
 			if($this->CheckCodeRegister($request['code'])){
-				if($userRepository->regStudent($request))
+				if($userRepository->regStudent($request)){
+					Session::put('openid','');
 					return view('msc::wechat.index.index_waiting');
-				//return redirect()->intended('/msc/wechat/user/user-login');
-				else{
+				}else{
 					return view('msc::wechat.index.index_error',array('error_msg'=>'注册失败'));
 				}
 			}else{
