@@ -27,8 +27,16 @@
             padding: 2px 5px;
         }
         .btn_focus{
-            background-color: #bababa;
+            background-color: #bababa!important;
+            color: #fff!important;
+        }
+        .btn:hover{
             color: #fff;
+            background-color: #bababa;
+        }
+        .btn:focus{
+            background-color: #fff;
+            color: #9c9c9c;
         }
     </style>
 @stop
@@ -91,9 +99,9 @@
                                                     @foreach($MenusList as $val)
                                                         <li>
                                                             <div class="ibox float-e-margins clear_margin">
-                                                                <label class="check_label checkbox_input">
-                                                                    <div class="check_real check_icon display_inline @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>
-                                                                    <input type="checkbox" @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$val['SysPermissionMenu']['permission_id'] }}">
+                                                                <label class="check_label checkbox_input" hidevalue="{{ @$val['SysPermissionMenu']['permission_id'] }}">
+                                                                    <div  class="check_real check_icon display_inline @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>
+                                                                    @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr))<input type="hidden"  name="permission_id[]" value="{{ @$val['SysPermissionMenu']['permission_id'] }}"> @endif
                                                                     <span class="check_name">{{ @$val['name'] }}</span>
                                                                 </label>
                                                                 <div class="ibox-tools">
@@ -102,25 +110,15 @@
                                                                     </a>
                                                                 </div>
                                                                 <div class="ibox-content" style="border-top:none">
-                                                                    <button type="button" class="btn btn-outline btn-default2 font10 btn_padding" value="haha">主要内容</button>
-                                                                    <button type="button" class="btn btn-outline btn-default2 font10 btn_padding" value="haha">主要内容</button>
+                                                                    @if(!empty($val['child']))
+                                                                        @foreach($val['child'] as $v)
+                                                                            <button type="button" hidevalue="{{ @$v['SysPermissionMenu']['permission_id'] }}" class="btn btn-outline @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr)) btn_focus @else btn-default2 @endif  font10 btn_padding" permission_id="{{ @$v['SysPermissionMenu']['permission_id'] }}" >{{ @$v['name'] }}</button>
+                                                                            @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr))
+                                                                                <input type="hidden"  name="permission_id[]" value="{{ @$v['SysPermissionMenu']['permission_id'] }}">
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
                                                                 </div>
-
-                                                                {{--<div class="ibox-content clear_padding" style="border-top: none">--}}
-                                                                    {{--<div id='external-events'>--}}
-                                                                        {{--<div style="margin-left: 5%">--}}
-                                                                            {{--@if(!empty($val['child']))--}}
-                                                                                {{--@foreach($val['child'] as $v)--}}
-                                                                                        {{--<label class="check_label checkbox_input">--}}
-                                                                                            {{--<div class="check_real check_icon display_inline @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
-                                                                                            {{--<input type="checkbox" @if(!empty($v['SysPermissionMenu']['permission_id']) && in_array(@$v['SysPermissionMenu']['permission_id'],$PermissionIdArr))  checked="checked" @endif name="permission_id[]" value="{{ @$v['SysPermissionMenu']['permission_id'] }}">--}}
-                                                                                            {{--<span class="check_name">{{ @$v['name'] }}</span>--}}
-                                                                                        {{--</label>--}}
-                                                                                {{--@endforeach--}}
-                                                                            {{--@endif--}}
-                                                                        {{--</div>--}}
-                                                                    {{--</div>--}}
-                                                                {{--</div>--}}
                                                             </div>
                                                         </li>
                                                     @endforeach
@@ -141,21 +139,29 @@
                                                                         <i class="fa fa-chevron-up"></i>
                                                                     </a>
                                                                 </div>
-                                                                <div class="ibox-content clear_padding" style="border-top: none">
-                                                                    <div id='external-events'>
-                                                                        <div style="margin-left: 5%">
-                                                                            @if(!empty($val['child']))
-                                                                                @foreach($val['child'] as $v)
-                                                                                    <label class="check_label checkbox_input">
-                                                                                        <div class="check_real check_icon display_inline @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>
-                                                                                        <input type="checkbox" @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$v['SysPermissionFunction']['permission_id'] }}">
-                                                                                        <span class="check_name">{{ @$v['name'] }}</span>
-                                                                                    </label>
-                                                                                @endforeach
-                                                                            @endif
-                                                                        </div>
-                                                                    </div>
+                                                                <div class="ibox-content" style="border-top:none">
+                                                                    @if(!empty($val['child']))
+                                                                        @foreach($val['child'] as $v)
+                                                                            <button type="button" class="btn btn-outline @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) btn_focus @else btn-default2 @endif  font10 btn_padding" value="{{ @$v['SysPermissionFunction']['permission_id'] }}">{{ @$v['name'] }}</button>
+                                                                        @endforeach
+                                                                    @endif
                                                                 </div>
+
+                                                                {{--<div class="ibox-content clear_padding" style="border-top: none">--}}
+                                                                    {{--<div id='external-events'>--}}
+                                                                        {{--<div style="margin-left: 5%">--}}
+                                                                            {{--@if(!empty($val['child']))--}}
+                                                                                {{--@foreach($val['child'] as $v)--}}
+                                                                                    {{--<label class="check_label checkbox_input">--}}
+                                                                                        {{--<div class="check_real check_icon display_inline @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) check @endif"></div>--}}
+                                                                                        {{--<input type="checkbox" @if(!empty($v['SysPermissionFunction']['permission_id']) && in_array(@$v['SysPermissionFunction']['permission_id'],$PermissionIdArr)) checked="checked" @endif  name="permission_id[]" value="{{ @$v['SysPermissionFunction']['permission_id'] }}">--}}
+                                                                                        {{--<span class="check_name">{{ @$v['name'] }}</span>--}}
+                                                                                    {{--</label>--}}
+                                                                                {{--@endforeach--}}
+                                                                            {{--@endif--}}
+                                                                        {{--</div>--}}
+                                                                    {{--</div>--}}
+                                                                {{--</div>--}}
                                                             </div>
                                                         </li>
                                                     @endforeach
