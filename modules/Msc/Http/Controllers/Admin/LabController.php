@@ -586,7 +586,7 @@ class LabController extends MscController
      */
     public function getOpenlabHistoryAnalyzeForm(Request $request)
     {
-        return view('msc::admin.openlab.lab-analyse');
+        return view('msc::admin.openlab.lab-history-analyse');
     }
 
     /**
