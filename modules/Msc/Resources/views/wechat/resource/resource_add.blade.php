@@ -10,11 +10,15 @@
         margin-left: 95px;
     }
     .has-feedback label~.form-control-feedback {top: 0;}
-    .multi-control{
+    .multi-control {
         position: absolute;
-        right: 12px;
-        top: 18px;
+        right: 4px;
+        top: 8px;
         color: #C7D0D8;
+        height: 30px;
+        width: 30px;
+        text-align: center;
+        line-height: 30px;
     }
     .add_main .form-group label{
         left: 0%;}
