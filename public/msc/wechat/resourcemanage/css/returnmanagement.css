@@ -4,6 +4,7 @@
 .detail_list .Time_slot p{
     line-height: 20px; height:18px;
 }
+.Time_slot p{height: auto!important;}
 .detail_list .Time_slot p span{color:#6595e1; }
 .attention  a{color:#6595e1;}
 

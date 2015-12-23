@@ -299,7 +299,7 @@ class LabController extends MscController
      * * string        order_type      排序方式 枚举 e.g:desc,asc
      * * int           page            页码
      *
-     * @return view
+     * @return view {开放实验室：$item->lab->name,编号：$item->lab->code,预约人：$item->apply->applyUser->name}
      *
      * @version 0.6
      * @author wangjiang <wangjiang@misrobot.com>
@@ -309,16 +309,23 @@ class LabController extends MscController
     public function getOpenLabHistoryList(Request $request)
     {
         $this->validate($request, [
-            'date'       => 'sometimes|date_format:Y/m/d',
-            'keyword'    => 'sometimes', // TODO 搜索关键字长度限制
-            'order_name' => 'sometimes|max:50',
-            'order_type' => 'sometimes|in:0,1',
+            'date'              => 'sometimes|date_format:Y-m-d',
+            'keyword'           => 'sometimes', // TODO 搜索关键字长度限制
+            'result_poweroff'   => 'sometimes',
+            'result_init'       => 'sometimes',
+            'order_name'        => 'sometimes|max:50',
+            'order_type'        => 'sometimes|in:0,1',
         ]);
 
-        $searchDate = $request->input('date');
-        $keyword    = urldecode(e($request->input('keyword')));
-        $orderName  = e($request->input('order_name'));
-        $orderType  = $request->input('order_type');
+        $searchDate         = $request->input('date');
+        $keyword            = urldecode(e($request->input('keyword')));
+        $orderName          = e($request->input('order_name'));
+        $orderType          = $request->input('order_type');
+        $result_poweroff    = $request->input('result_poweroff');
+        $result_init        = $request->input('result_init');
+        $result_poweroff    =   is_null($result_poweroff)?  false:$result_poweroff;
+        $result_init        =   is_null($result_init)?      false:$result_init;
+        $searchDate         =   empty($searchDate)?       date('Y-m-d'):$searchDate;
 
         // 排序处理
         if (!empty($orderName)) {
@@ -330,24 +337,12 @@ class LabController extends MscController
         } else {
             $order = ['id', 'desc']; // 默认按照ID降序排列
         }
-
-        // 筛选条件处理
-        $where = [];
-        if ($searchDate) {
-            $where['date'] = $searchDate;
-        }
-        if ($keyword) {
-            $where['keyword'] = $keyword;
-        }
-
         // 获取列表
-        $labHis     = new ResourcesLabHistory();
-        $pagination = $labHis->getPcList($where, $order);
-
+        $ResourcesOpenlabHistory    =   new ResourcesOpenlabHistory();
+        $pagination =   $ResourcesOpenlabHistory    ->  getOpenlabHistory($searchDate,$keyword,$result_poweroff,$result_init);
         foreach ($pagination as $key => $item) {
             $pagination[$key]['user'] = $item->applyUserInfo ? $item->applyUserInfo->name : ''; // 预约人名字
         }
-
         return view('msc::admin.openlab.lab-history', ['pagination' => $pagination]);
     }
 
