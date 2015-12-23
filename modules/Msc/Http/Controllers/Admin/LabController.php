@@ -235,7 +235,6 @@ class LabController extends MscController
                         }
                     }else{
                         $resourcesLabCalendar  =   ResourcesLabCalendar::where('resources_lab_id','=',$id)->first();
-                        dd($resourcesLabCalendar);
                         if($resourcesLabCalendar)
                         {
                             $del = DB::connection('msc_mis')->table('resources_lab_calendar')->where('id','=',$resourcesLabCalendar->id)->delete();
@@ -259,7 +258,7 @@ class LabController extends MscController
                     }else{
                         $addcleader = ResourcesLabCalendar::create($arr);
                     }
-                    //dd($addcleader);
+
                 }
 
             }else{
@@ -301,13 +300,12 @@ class LabController extends MscController
                     }else{
                         $addcleader = ResourcesLabCalendar::create($arr);
                     }
-                    //dd($addcleader);
+
                 }
             }
         }else{
             //新增实验室
             $add = ResourcesClassroom::create($data);
-            //dd($add);
             if(!$add){
                 DB::connection('msc_mis')->rollBack();
                 return redirect()->back()->withErrors('系统异常');
@@ -703,7 +701,6 @@ class LabController extends MscController
         $data = $labHis->getPcAnalyze($where);
 	
         return response()->json($data);
-        //dd($data);
         //return view('msc::admin.openlab.lab-analyse', ['pagination'=>$data]);
     }
 
