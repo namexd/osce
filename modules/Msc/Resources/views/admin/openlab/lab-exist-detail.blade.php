@@ -14,8 +14,8 @@
     <script>
         $(function(){
             $('.btn-primary').click(function () {
-                var url = '/msc/admin/lab/had-open-lab-list';
-                window.location.href = url;
+                    $(".detail").hide();
+                    $('#myModal').click();
             });
             //时间选择
             laydate(start);
@@ -54,7 +54,7 @@
 @stop
 
 @section('content')
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight detail">
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
