@@ -21,6 +21,7 @@
         font-weight: bolder;
     }
     .tab-content{margin-top: 15px;}
+    .nav.nav-tabs{font-size: 14px}
     .state-ing{color: #72CFBC;}
     .state-before{color: #F9BB77;}
     .item-info{margin: 5px 0;}
