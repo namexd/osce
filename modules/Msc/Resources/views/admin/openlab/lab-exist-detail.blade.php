@@ -14,6 +14,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h5>实验室详情</h5>
         </div>
         <div class="ibox-content">
