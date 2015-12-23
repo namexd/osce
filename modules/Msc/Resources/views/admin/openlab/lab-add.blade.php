@@ -1,6 +1,7 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
-
+    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
+    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
     <link href="{{asset('msc/admin/plugins/css/plugins/ionRangeSlider/ion.rangeSlider.css')}}" rel="stylesheet">
     <link href="{{asset('msc/admin/plugins/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css')}}" rel="stylesheet">
     <style>
@@ -12,6 +13,7 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/ionRangeSlider/ion.rangeSlider.min.js')}}"></script>
     <script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
@@ -22,7 +24,7 @@
         <input type="hidden"  id="parameter" value="{'pagename':'lab-add','ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}'}" />
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>新增实验室</h5>
+                <h5>{{$title or "新增"}}实验室</h5>
             </div>
             <div class="ibox-content">
                 <div class="row">
@@ -131,7 +133,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-white cancel" type="button">取消</button>
-                                    <input class="btn btn-primary" type="submit" value="保存" />
+                                    <input class="btn btn-primary" type="submit" value="保存">
                                 </div>
                             </div>
 

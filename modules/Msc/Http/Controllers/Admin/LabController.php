@@ -128,7 +128,8 @@ class LabController extends MscController
         $id = Input::get('id');
         $openLabDetail = ResourcesClassroom::find($id);
         $data = [
-            'openLabDetail' => $openLabDetail
+            'openLabDetail' => $openLabDetail,
+            'title'         => "编辑"
         ];
         return view('msc::admin.openlab.lab-add',$data);
     }
