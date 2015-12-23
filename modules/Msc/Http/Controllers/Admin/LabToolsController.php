@@ -57,6 +57,7 @@ class LabToolsController extends MscController
         ]);
         //处理各个字段的值
         $keyword = e(urldecode($request->get('keyword')));
+        $keyword = empty($keyword) ? '' : $keyword;
         $date = $request->get('date');
         $date = empty($date) ? date('Y-m-d') : $date;
         $orderName = e(urldecode($request->get('order_name')));
@@ -66,9 +67,7 @@ class LabToolsController extends MscController
         //设置回显信息
         $rollMsg = [];
         $rollMsg[0] = $date; //日期的回显
-        if ($keyword !== '') {
-            $rollMsg[1] = $keyword;  //关键词的回显
-        }
+        $rollMsg[1] = $keyword;  //关键词的回显
         //处理$orderName
         switch ($orderName) {
             case 1:
@@ -118,6 +117,7 @@ class LabToolsController extends MscController
         ]);
         //处理数据
         $keyword = e(urldecode($request->get('keyword')));
+        $keyword = empty($keyword) ? '' : $keyword;
         $date = $request->get('date');
         $date = empty($date) ? date('Y-m-d') : $date;
         $orderName = e(urldecode($request->get('order_name')));
@@ -128,9 +128,8 @@ class LabToolsController extends MscController
         //设置回显信息
         $rollMsg = [];
         $rollMsg[0] = $date; //日期的回显
-        if ($keyword !== '') {
-            $rollMsg[1] = $keyword;  //关键词的回显
-        }
+        $rollMsg[1] = $keyword;  //关键词的回显
+
         //处理$orderName字段
         switch ($orderName) {
             case 1:
@@ -217,6 +216,7 @@ class LabToolsController extends MscController
 
         //处理数据
         $keyword = e(urldecode($request->get('keyword')));
+        $keyword = empty($keyword) ? '' : $keyword;
         $date = $request->get('date');
         $date = empty($date) ? date('Y-m-d') : $date;
         $orderName = e(urldecode($request->get('order_name')));
@@ -227,9 +227,7 @@ class LabToolsController extends MscController
         //设置回显信息
         $rollMsg = ['',''];
         $rollMsg[0] = $date; //日期的回显
-        if ($keyword !== '') {
-            $rollMsg[1] = $keyword;  //关键词的回显
-        }
+        $rollMsg[1] = $keyword;  //关键词的回显
 
         //处理$orderName字段
         switch ($orderName) {
