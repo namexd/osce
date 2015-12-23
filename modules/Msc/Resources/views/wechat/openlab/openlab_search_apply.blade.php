@@ -130,7 +130,7 @@
             <input type="hidden" name="apply_date" value="{{@$apply_date}}">
             <input type="hidden" name="apply_type" value="{{@$apply_type}}">
             <input type="hidden" name="user_type" value="{{@$user_type}}">
-            <input type="hidden" name="c_id" value="{{@$ClassroomPlanInfo->id}}">
+            <input type="hidden" name="c_id" value="{{@$ClassroomPlanInfo->resources_lab_id}}">
             <input type="hidden"  name="timestamp" value="{{@$ClassroomPlanInfo['get_plan'][0]['currentdate']}} {{@$ClassroomPlanInfo['get_plan'][0]['begintime']}}~{{@$ClassroomPlanInfo['get_plan'][0]['currentdate']}} {{@$ClassroomPlanInfo['get_plan'][0]['endtime']}}">
             <input class="btn2 mart_10 marb_10" type="submit"  value="提交申请" />
             
