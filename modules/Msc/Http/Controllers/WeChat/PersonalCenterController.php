@@ -323,7 +323,6 @@ class PersonalCenterController extends MscWeChatController {
 		}
 		$OpenLabApply = $ResourcesOpenLabApply->getMyOpenLabApply($data);
 
-
 		return view('msc::wechat.personalcenter.mylabreservation',['list'=>$OpenLabApply]);
 
 
