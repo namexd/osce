@@ -33,7 +33,7 @@ function lab_add(){
     });
 
     $('.cancel').click(function (){
-        //history.go(-1);
+        var url = pars.returnUrl;
         window.location.href = url;
     });
     /*{}{

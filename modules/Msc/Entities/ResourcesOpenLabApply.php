@@ -52,6 +52,9 @@ class ResourcesOpenLabApply extends CommonModel
     public function plan(){
         return $this->belongsTo('Modules\Msc\Entities\ResourcesOpenLabPlan','id','resources_openlab_apply_id');
     }
+    public function groups(){
+        return $this->hasMany('Modules\Msc\Entities\ResourcesOpenLabAppGroup','resources_openlab_apply_id','id');
+    }
     //获取突发事件使用列表
     public function getOpenLabApplyList($data){
         $thisBuilder = $this;
@@ -205,7 +208,7 @@ class ResourcesOpenLabApply extends CommonModel
         )   ->  where($this->table.'.status','=',0)
             ->  where($this->table.'.apply_type','=',0)
             ->  whereRaw(
-            'unix_timestamp('.$this->table.'.apply_date) >= ?',
+            'unix_timestamp('.$this->table.'.apply_date) = ?',
             [
                 strtotime($date),
             ]
@@ -258,6 +261,10 @@ class ResourcesOpenLabApply extends CommonModel
             {
                 $newPlan    =   $this       ->  agreeStudentApply($apply);
             }
+
+            //当前版本临时将 开放实验室
+            $this->addHistory($apply);
+
             $result =   false;
             if($newPlan)
             {
@@ -317,6 +324,7 @@ class ResourcesOpenLabApply extends CommonModel
         ];
         try
         {
+
             //如果当前预约 的时间和 教室 没有冲突的突发事件（紧急预约） 以及 教师预约  则取消所有 学生计划 并且创建 新的 计划
             if(
                 !$this   ->  checkSameUrgent($planData['resources_openlab_calendar_id'],$planData['currentdate'])&&
@@ -334,7 +342,7 @@ class ResourcesOpenLabApply extends CommonModel
                         throw new \Exception('创建计划失败');
                     }
                     $teacherPlan    =   [
-                        'resources_openlab_plan_id' =>  $apply  ->  resources_lab_id,
+                        'resources_openlab_plan_id' =>  $newPlan  ->  id,
                         'teacher_id'                =>  $apply  ->  apply_uid,
                     ];
                     //创建 计划 的教师信息
@@ -560,7 +568,7 @@ class ResourcesOpenLabApply extends CommonModel
         {
             $ids    =   array_pluck($sameList,'id');
             $ResourcesOpenLabPlanTeacher    =   new ResourcesOpenLabPlanTeacher();
-            if(empty($ids))
+            if(!empty($ids))
             {
                 $total   =   $ResourcesOpenLabPlanTeacher    ->  whereIn('resources_openlab_plan_id',$ids)  ->count();
                 if($total>0)
@@ -625,7 +633,7 @@ class ResourcesOpenLabApply extends CommonModel
             $builder = $builder->where ('resources_lab.name', 'like', '%'.$courseName.'%');
         }
         if ($date) {
-            $builder->whereRaw ('unix_timestamp(resources_openlab_apply.apply_date)>= ? ', [strtotime ($date)]);
+            $builder->whereRaw ('unix_timestamp(resources_openlab_apply.apply_date)= ? ', [strtotime ($date)]);
         }
         $builder->select (
             [
@@ -658,12 +666,57 @@ class ResourcesOpenLabApply extends CommonModel
         return $builder->orderBy ($order[0][0], $order[1])->orderBy($order[0][1],$order[1])->paginate (config ('msc.page_size'));
     }
 
+    /**
+     * 根据申请生成历史记录
+     * * object        apply        申请数据对象(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-23 11:44
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function addHistory($apply){
+        $list   =   $this   ->  getSamePlanList($apply  ->  resources_lab_calendar_id,date('Y-m-d',strtotime($apply  ->  apply_date)));
+        $ResourcesOpenlabHistory =   new ResourcesOpenlabHistory();
+        try
+        {
+            $groups     =   $apply  ->  groups;
+            $groupsIds  =   array_pluck($groups,'id');
+            $history =   [
+                'resources_openlab_apply_id'    =>  $apply  ->  id,
+                'resources_lab_id'              =>  $apply  ->  resources_lab_id,
+                'begin_datetime'                =>  $apply  ->  calendar    ->  begintime,
+                'end_datetime'                  =>  $apply  ->  calendar    ->  endtime,
+                'group_id'                      =>  implode(',',$groupsIds),
+                'teacher_uid'                   =>  0,
+                'result_poweroff'               =>  1,
+                'result_init'                   =>  1,
+            ];
+            $history    =   $ResourcesOpenlabHistory->firstOrCreate($history);
+            if(!$history)
+            {
+                throw new \Exception('历史记录新增失败');
+            }
+            //删除作废历史
+            foreach($list as $item)
+            {
+                $ResourcesOpenlabHistory    ->  delHistoryByApplyId($item->resources_openlab_apply_id);
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
     public function getMyOpenLabApply($data){
         $thisBuilder = $this;
         if(!empty($data['uid'])){
             $thisBuilder = $thisBuilder->where('apply_uid','=',$data['uid']);
         }
-        return $thisBuilder = $thisBuilder->where('status','=',0)->with('lab','calendar')->get();
+        return $thisBuilder = $thisBuilder->whereIn('status',[0,1])->with('lab','calendar')->get();
 
     }
 }
