@@ -70,7 +70,10 @@ class LabController extends MscWeChatController
         $orderby    =   empty($orderby)?    'desc':$orderby;
         $order      =   empty($order)?      'created_at'    :   $orderby;
         $date       =   empty($date)?      date('Y-m-d')    :   $date;
-        $order      =   [$order,$orderby];
+//        $order      =   [$order,$orderby];
+        $orderName = ['resources_openlab_apply.created_at','resources_openlab_apply.created_at'];
+        $order = $order = [$orderName, $orderby];
+
         //$ResourcesClassroomApply    =   new ResourcesClassroomApply();
         $ResourcesOpenLabApply      =   new ResourcesOpenLabApply();
         $list       =   $ResourcesOpenLabApply    ->  getWaitExamineList($keyword,$date,$order);
