@@ -210,11 +210,13 @@ class LabController extends MscController
                 if($labdetail['opened'] == Input::get('opened')){
                     $addcleader = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('resources_lab_id','=',$id)->update($arr);
                     if(!$addcleader){
+
                         DB::connection('msc_mis')->rollBack();
                         return redirect()->back()->withErrors('系统异常');
                     }
                     $addcleader = ResourcesOpenLabCalendar::create($arr);
                 }else{
+
                     $del = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('resources_lab_id','=',$id)->delete();
                     if(!$del){
                         DB::connection('msc_mis')->rollBack();
@@ -233,7 +235,13 @@ class LabController extends MscController
                     }
                     $addcleader = ResourcesLabCalendar::create($arr);
                 }else{
-                    $del = DB::connection('msc_mis')->table('resources_lab_calendar')->where('resources_lab_id','=',$id)->delete();
+                    $resourcesLabCalendar  =   ResourcesLabCalendar::where('resources_lab_id','=',$id)->first();
+                    $del=true;
+                    if($resourcesLabCalendar)
+                    {
+                        $del=$resourcesLabCalendar->delete();
+                    }
+                    //$del = DB::connection('msc_mis')->table('resources_lab_calendar')->where('resources_lab_id','=',$id)->delete();
                     if(!$del){
                         DB::connection('msc_mis')->rollBack();
                         return redirect()->back()->withErrors('系统异常');
@@ -241,7 +249,6 @@ class LabController extends MscController
                     $addcleader = ResourcesOpenLabCalendar::create($arr);
                 }
             }
-
         }else{
             //新增实验室
             $add = ResourcesClassroom::create($data);
@@ -257,6 +264,7 @@ class LabController extends MscController
                 'endtime' => Input::get('endtime'),
                 'opentype' => Input::get('opened'),
             ];
+
             if(Input::get('opened') > 0){
                 $addcleader = ResourcesOpenLabCalendar::create($arr);
             }else{
@@ -420,9 +428,8 @@ class LabController extends MscController
         $order = [$orderName, $orderType];
 
         $ResourcesOpenLabApply  =   new ResourcesOpenLabApply();
-        $list = $ResourcesOpenLabApply->getWaitExamineList($keyword, $date, $order);
-        $statusValues   =   $ResourcesOpenLabApply    ->getStatusValues();
-
+        $list = $ResourcesOpenLabApply  ->  getWaitExamineList($keyword, $date, $order);
+        $statusValues   =   $ResourcesOpenLabApply    ->    getStatusValues();
         return view('msc::admin.openlab.openaudit', ['pagination' => $list,'rollmsg' => $rollMsg,'statusValues'=>$statusValues]);
     }
 
@@ -586,7 +593,7 @@ class LabController extends MscController
      */
     public function getOpenlabHistoryAnalyzeForm(Request $request)
     {
-        return view('msc::admin.openlab.lab-analyse');
+        return view('msc::admin.openlab.lab-history-analyse');
     }
 
     /**
@@ -990,6 +997,7 @@ class LabController extends MscController
         $pagination             =   $resourcesOpenlabApply  -> getUrgentApplyList($date,$keyword,$order);
         $resourcesClassroomModel=   new ResourcesClassroom();
         $statusAttrNames        =   $resourcesClassroomModel->  getstatusAttrName();
+
         return view('msc::admin.emergencymanage.emergencybase',['pagination'=>$pagination,'statusAttrNames'=>$statusAttrNames]);
     }
     /**

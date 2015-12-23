@@ -198,30 +198,37 @@ class ResourcesOpenLabApply extends CommonModel
      *
      */
     public function getWaitExamineList($classroomName,$date, $order){
-        return  $this   -> with([
-            'classroomCourses'  =>  function($qurey) use ($classroomName){
-                if(!is_null($classroomName))
-                {
-                    $qurey  ->with([
-                        'classroom'=> function($qurey) use ($classroomName){
-                            if(!is_null($classroomName))
-                            {
-                                $qurey  ->  where('name','like',$classroomName);
-                            }
-                        }
-                    ]);
-                }
+        $builder    =   $this   -> leftJoin(
+            'resources_lab',function($join){
+                $join   ->  on($this->table.'.resources_lab_id','=','resources_lab.id');
             }
-        ])  ->  where('status','=',0)
-            ->  where('apply_type','=',0)
+        )   ->  where($this->table.'.status','=',0)
+            ->  where($this->table.'.apply_type','=',0)
             ->  whereRaw(
-            'unix_timestamp(apply_date) >= ?',
+            'unix_timestamp('.$this->table.'.apply_date) >= ?',
             [
                 strtotime($date),
             ]
-        ) -> paginate(config('msc.page_size'));
-//        $b=$mis->getQueryLog();
-//        dd($b);
+        )
+            ->select([
+                $this->table.'.id as id',
+                $this->table.'.apply_type as apply_type',
+                $this->table.'.apply_date as apply_date',
+                $this->table.'.apply_uid as apply_uid',
+                $this->table.'.resources_lab_id as resources_lab_id',
+                $this->table.'.resources_lab_calendar_id as resources_lab_calendar_id',
+                $this->table.'.detail as detail',
+                $this->table.'.status as status',
+                $this->table.'.reject as reject',
+                $this->table.'.course_id as course_id',
+                $this->table.'.opeation_uid as opeation_uid',
+                'resources_lab.name as resources_lab_name',
+            ]);
+        if($classroomName!='')
+        {
+            $builder    =   $builder    ->  where('resources_lab.name','like','%'.$classroomName.'%');
+        }
+        return $builder  -> paginate(config('msc.page_size'));
     }
 
     //处理开放实验室审核
@@ -623,17 +630,23 @@ class ResourcesOpenLabApply extends CommonModel
         $builder->select (
             [
                 'resources_lab.name as name',
-                $this->table.'.apply_date as apply_date',
                 'resources_openlab_calendar.begintime as begintime',
                 'resources_openlab_calendar.endtime as endtime',
                 'resources_lab.code as code',
                 'student.name as student_name',
                 'teacher.name as teacher_name',
-                $this->table.'.detail as detail',
                 'resources_lab.status as status',
                 $this->table.'.id as id',
+                $this->table.'.apply_type as apply_type',
+                $this->table.'.apply_date as apply_date',
                 $this->table.'.apply_uid as apply_uid',
-
+                $this->table.'.resources_lab_id as resources_lab_id',
+                $this->table.'.resources_lab_calendar_id as resources_lab_calendar_id',
+                $this->table.'.detail as detail',
+                $this->table.'.status as status',
+                $this->table.'.reject as reject',
+                $this->table.'.course_id as course_id',
+                $this->table.'.opeation_uid as opeation_uid',
             ]
         );
 

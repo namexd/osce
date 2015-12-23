@@ -49,7 +49,7 @@ class CourseOrderController extends MscWeChatController {
 		$resources_lab_plan_builder = $resources_lab_plan_builder
 			->join('resources_lab_courses', 'resources_lab_plan.resources_lab_course_id', '=', 'resources_lab_courses.id')
 			->join('resources_lab', 'resources_lab_courses.resources_lab_id', '=', 'resources_lab.id')
-			->select('resources_lab_plan.id','resources_lab_plan.currentdate','resources_lab_plan.begintime', 'resources_lab_plan.endtime','resources_lab_plan.status','resources_lab.name');
+			->select('resources_lab_plan.id','resources_lab_plan.currentdate','resources_lab_plan.begintime', 'resources_lab_plan.endtime','resources_lab.status','resources_lab.name');
 
 
 
