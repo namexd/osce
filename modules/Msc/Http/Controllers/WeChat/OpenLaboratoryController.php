@@ -159,7 +159,6 @@ class OpenLaboratoryController extends MscWeChatController {
 			$Course = $Courses->whereIn('id', $arr)->get();
 		}
 
-
 		$data = [
 			'ClassroomPlanInfo' => $ClassroomPlan_detai,
 			'username' => $username,
@@ -446,6 +445,7 @@ class OpenLaboratoryController extends MscWeChatController {
 		}
 
 		$OpenLabApplyList = $ResourcesOpenLabApply->getOpenLabApplyList($data);
+
 		return response()->json(
 			$this->success_rows(1,'获取成功',$OpenLabApplyList->total(),20,$OpenLabApplyList->currentPage(),array('ClassroomApplyList'=>$OpenLabApplyList->toArray()))
 		);

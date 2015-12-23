@@ -23,7 +23,7 @@ function gethistory(qj,url,getdetail,getdetail2){
                 if(this.status=="0"){
                     if(this.is_appointment=="1"){
                         status='<span class="State2">已预约</span>';
-                        opera='';
+                        opera= '<a href="'+getdetail2+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=2'+'"><div class="opera">'+'<span class="State1">紧急预约</span>'+'</div>';
                     }
                     else
                     {
