@@ -19,7 +19,7 @@
             $(".cancel").click(function(){
                 var $this = $(this);
                 var id = $this.attr('auditid');
-                var url="{{ route('msc.personalCenter.cancelOpenDeviceApply')}}";
+                var url="{{ route('msc.personalCenter.getCancelLaboratory')}}";
                 $.confirm({
                     title:'提示',
                     content: '是否取消预约设备？',
@@ -127,8 +127,11 @@
                             {{ $item['apply_date'] }} {{ substr($item['calendar']['begintime'],0,5) }}-{{ substr($item['calendar']['endtime'],0,5) }}
                         </div>
                         <div class="submit_box">
-                            <button class="btn2 cancel"  type="button" auditid="{{ $item['id'] }}">取消
-                            </button>
+                            @if($item['status']=="0")
+                                <button class="btn2 cancel"  type="button" auditid="{{ $item['id'] }}">取消</button>
+                            @else
+                                <button class="btn2 cancel"  type="button" auditid="{{ $item['id'] }}" style="display: none;">取消</button>
+                            @endif
                         </div>
                     </div>
                 </div>

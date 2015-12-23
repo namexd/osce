@@ -16,6 +16,12 @@
         color: #555;
         cursor: default;
     }
+    button.btn-white.border-white.dropdown-toggle {
+        border: none;
+        font-weight: bolder;
+    }
+    .tab-content{margin-top: 15px;}
+    .nav.nav-tabs{font-size: 14px}
     .state-ing{color: #72CFBC;}
     .state-before{color: #F9BB77;}
     .item-info{margin: 5px 0;}
@@ -49,6 +55,9 @@
         height:100%;
         opacity:0;
     }
+
+    .col-sm-4{padding-left: 0}
+    .col-sm-8{padding-right: 0}
 
     /*屏幕宽度*/
     @media (max-width:1366px){

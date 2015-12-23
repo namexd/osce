@@ -87,13 +87,13 @@ class OpenLaboratoryController extends MscWeChatController {
 		$LaboratoryList = $resourcesOpenLabCalendar->getLaboratoryClassroomList($data);
 		$user = Auth::user();
 
+		$list = [] ;
 		foreach($LaboratoryList as $k => $v){
 
 			if(empty($v['resourcesClassroom'])){
 				unset($LaboratoryList[$k]);
 				continue;
 			}
-
 			$LaboratoryList[$k]['is_appointment'] = 0;
 			$LaboratoryList[$k]['status']= 0;
 			$LaboratoryList[$k]['num'] = count($v['ResourcesOpenLabApply']);
@@ -110,15 +110,16 @@ class OpenLaboratoryController extends MscWeChatController {
 			//TODO:在开放实验室被预约时段不满员的情况下依然可以申请
 			//TODO:2015-12-22 19:54
 			if(!empty($v['get_plan']) && count($v['get_plan'])>0){
-				if($v->resourcesClassroom->person_total<=$v['get_plan']->first()->resorces_lab_person_total)
-				{
+				//if($v->resourcesClassroom->person_total<=$v['get_plan']->first()->resorces_lab_person_total)
+				//{
 					$LaboratoryList[$k]['status']= 1;
-				}
+				//}
 			}
+			$list[] = $LaboratoryList[$k];
 		}
 
 		return response()->json(
-			$this->success_rows(1,'获取成功',$LaboratoryList->total(),20,$LaboratoryList->currentPage(),array('ClassroomApplyList'=>$LaboratoryList->toArray()))
+			$this->success_rows(1,'获取成功',$LaboratoryList->total(),20,$LaboratoryList->currentPage(),array('ClassroomApplyList'=>$list))
 		);
 	}
 
@@ -158,6 +159,7 @@ class OpenLaboratoryController extends MscWeChatController {
 			}
 			$Course = $Courses->whereIn('id', $arr)->get();
 		}
+		$Course = $Courses->get();
 
 		$data = [
 			'ClassroomPlanInfo' => $ClassroomPlan_detai,

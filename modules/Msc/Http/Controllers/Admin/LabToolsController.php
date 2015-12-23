@@ -91,7 +91,7 @@ class LabToolsController extends MscController
     }
 
     /**
-     * 开放实验室设备使用历史
+     * 开放设备使用历史
      * @api       GET /msc/admin/lab-tools/open-lab-tools-use-history
      * @access    public
      * @param Request $request get请求<br><br>
@@ -157,13 +157,12 @@ class LabToolsController extends MscController
         //实例化模型,进行方法调用
             $ResourcesDeviceHistory = new ResourcesDeviceHistory();
             $data = $ResourcesDeviceHistory->getDeviceReserveHistoryList($keyword, $date, $order);
-//        dd($data->get(1));
             return view('msc::admin.open_equipment_manage.openequip_order_history', ['pagination' => $data , 'rollmsg'=>$rollMsg]);
 
     }
 
     /**
-     * 查看开放实验室设备使用历史
+     * 查看开放设备使用历史
      * @api       GET /msc/admin/lab/open-lab-tools-use-history-view
      * @access    public
      * @param $id

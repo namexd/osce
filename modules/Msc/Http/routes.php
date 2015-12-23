@@ -104,7 +104,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('lab/agree-emergency-apply',['uses'=>'LabController@getAgreeEmergencyApply','as'=>'msc.admin.lab.getAgreeEmergencyApply']);
 		Route::post('lab/refund-emergency-apply',['uses'=>'LabController@postRefundEmergencyApply','as'=>'msc.admin.lab.postRefundEmergencyApply']);
 		Route::get('lab/urgent-apply-list',['uses'=>'LabController@getUrgentApplyList','as'=>'msc.admin.lab.getUrgentApplyList']);//TDDO ：luohaihua 以当前别名为准
-		Rote:Route::get('lab/had-open-lab-list',['uses'=>'LabController@hadOpenlabList','as'=>'msc.admin.lab.hadOpenlablist']);
+//		Rote:Route::get('lab/had-open-lab-list',['uses'=>'LabController@hadOpenlabList','as'=>'msc.admin.lab.hadOpenlablist']);
 		Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.admin.lab.openLabApplyList']);
 		Route::post('lab/import-lab',['uses'=>'LabController@postImportLab','as'=>'msc.admin.lab.postImportLab']);
 		Route::post('lab/add-lab',['uses'=>'LabController@postAddLab','as'=>'msc.admin.lab.postAddLab']);//唐俊
@@ -189,6 +189,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		//我的开放实验室预约
 		Route::get('/personal-center/my-opening-laboratory',['uses'=>'PersonalCenterController@getMyOpeningLaboratory','as'=>'msc.personalCenter.getMyOpeningLaboratory']);
+
+		//取消预约
+		Route::get('/personal-center/cancel-laboratory/{$id}',['uses'=>'PersonalCenterController@getCancelLaboratory','as'=>'msc.personalCenter.getCancelLaboratory']);
 
 
 		Route::controller('resource', 'ResourceController');
