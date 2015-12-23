@@ -73,6 +73,8 @@ class UserController extends MscWeChatController {
 				}
 				if($userInfo->validated == 1){
 					if(!empty($user['mobile'])){
+						$openid = \Illuminate\Support\Facades\Session::get('openid','');
+						User::where('id','=',$user->id)->update(['openid'=>$openid]);
 						return redirect()->intended('/msc/wechat/personal-center/index');
 					}else{
 						return redirect()->intended('/msc/wechat/user/user-binding');

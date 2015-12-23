@@ -35,9 +35,9 @@
                                 <label class="col-sm-2 control-label">类别</label>
 
                                 <div class="col-sm-10">
-                                    @if($openLabDetail['name'] == 1)
+                                    @if($openLabDetail['opened'] == 1)
                                         <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约实验室)" disabled>
-                                    @elseif($openLabDetail['name'] == 2)
+                                    @elseif($openLabDetail['opened'] == 2)
                                         <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约设备)" disabled>
                                         @else
                                         <input type="text"  id="detail" name="type" class="form-control" value="普通实验室" disabled>
