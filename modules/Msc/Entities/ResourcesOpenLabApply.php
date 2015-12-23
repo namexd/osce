@@ -225,6 +225,8 @@ class ResourcesOpenLabApply extends CommonModel
                 $this->table.'.reject as reject',
                 $this->table.'.course_id as course_id',
                 $this->table.'.opeation_uid as opeation_uid',
+                $this->table.'.created_at as created_at',
+                $this->table.'.updated_at as updated_at',
                 'resources_lab.name as resources_lab_name',
             ]);
         if($classroomName!='')
@@ -332,10 +334,10 @@ class ResourcesOpenLabApply extends CommonModel
             )
             {
                 //取消所有 学生计划
+
                 if($this   ->  cancelStudentPlan($planData['resources_openlab_calendar_id'],$planData['currentdate']))
                 {
                     //创建教师预约的新计划
-
                     $newPlan    =   ResourcesOpenLabPlan::create($planData);
                     if(!$newPlan)
                     {
@@ -590,14 +592,17 @@ class ResourcesOpenLabApply extends CommonModel
         try {
             foreach ($sameList as $plan) {
                 $plan->status = -1;
-                $plan->save();
+                $result =   $plan->save();
+                if(!$result)
+                {
+                    throw new \Exception('取消学生失败');
+                }
             }
             return true;
         } catch (\Exception $ex) {
             throw   $ex;
         }
     }
-
 
     /**
      * 已审核申请列表
