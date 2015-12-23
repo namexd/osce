@@ -11,7 +11,7 @@
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
-	<input type="hidden"  id="parameter" value="{'pagename':'lab-history'}" >
+	<input type="hidden"  id="parameter" value="{'pagename':'lab-exist-detail'}" >
 	<div class="ibox float-e-margins ibox-content pad0">
 		<div class="row table-head-style1 ">
 	        <div class="col-xs-2 col-md-2 head-opera">
