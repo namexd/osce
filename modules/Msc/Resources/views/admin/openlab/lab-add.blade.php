@@ -133,7 +133,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-white cancel" type="button">取消</button>
+                                    <a class="btn btn-white cancel" type="button" href="javascript:history.back(-1)">取 消</a>
                                     <input class="btn btn-primary" type="submit" value="保存">
                                 </div>
                             </div>
