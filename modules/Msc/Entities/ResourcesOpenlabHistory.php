@@ -118,4 +118,59 @@ class ResourcesOpenlabHistory extends Model
         }
         return $bulider    ->  paginate(config('msc.page_size'));
     }
+    // 获得pc端开放实验室使用历史记录分析数据
+    public function getPcAnalyze ($where)
+    {
+        $searchDate  = empty($where['date']) ? null : $where['date'];
+        $result_init = empty($where['result_init']) ? null : $where['result_init'];
+
+        // 筛选所有符合条件的开放实验室
+        $builder = $this->leftJoin('resources_lab',function($join){
+            $join->on('resources_lab.id','=','resources_openlab_history.resources_lab_id');
+        });
+
+        // 是否进行了日期筛选
+        if($searchDate)
+        {
+            $builder = $builder->whereRaw(
+                'date_format('.$this->table.'.begin_datetime,"%Y-%m-%d") = ?',
+                [
+                    $searchDate
+                ]
+            );
+        }
+
+        $builder = $builder->leftJoin('resources_openlab_apply',function($join){
+            $join->on('resources_openlab_apply.id','=','resources_openlab_history.resources_openlab_apply_id');
+        });
+
+        // 是否筛选了复位状态
+        if ($result_init)
+        {
+            $builder = $builder->where('resources_openlab_history.result_init', $result_init);
+        }
+
+        // 进行筛选
+
+
+
+        $temp = $builder->select(DB::raw(
+            implode(
+                ',',
+                [
+                    'resources_lab.name as name',
+                    'count('.$this->table.'.id) as total',
+                ]
+            )
+        ))->get();
+        dd($temp);
+        $data = [];
+        foreach ($temp as $item)
+        {
+            $data[] = $item->name;
+        }
+
+
+        return array_count_values(array_values($data));
+    }
 }
