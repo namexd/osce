@@ -604,9 +604,11 @@ class LabController extends MscController
             $rollMsg[1] = $keyword;
         }
 
-        $ResourcesOpenLabApply = new ResourcesOpenLabApply();
+        $ResourcesOpenLabApply  = new ResourcesOpenLabApply();
+        $ResourcesOpenLabPlan   = new ResourcesOpenLabPlan();
         $list = $ResourcesOpenLabApply  ->  getExaminedList($keyword, $date, $order);
-        $statusValues   =   $ResourcesOpenLabApply         ->  getStatusValues();
+        $statusValues   =   $ResourcesOpenLabPlan         ->  getStatusValues();
+
         $groupNames =[];
         foreach($list as $item)
         {
@@ -626,7 +628,6 @@ class LabController extends MscController
             }
             $groupNames[$item->id]=$name;
         }
-
         return view('msc::admin.openlab.openaudited', ['pagination' => $list , 'rollmsg'=>$rollMsg,'groupNames'=>$groupNames,'statusValues'=>$statusValues]);
     }
 

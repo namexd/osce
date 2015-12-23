@@ -176,7 +176,7 @@
                     <td>{{$item['student_name'] or  $item['teacher_name']}}</td>
                     <td>{{$item['detail']}}</td>
                     <td>{{$groupNames[$item->id]}}</td>
-                    <td class="status">{{$statusValues[$item['status']]}}</td>
+                    <td class="status">{{@$statusValues[$item->plan_status]}}</td>
                     <td class="opera">
                         <span class="read notice modal-control" data-toggle="modal" data-target="#myModal" >紧急通知</span>
                     </td>

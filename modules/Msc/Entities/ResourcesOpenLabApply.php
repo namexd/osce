@@ -31,7 +31,7 @@ class ResourcesOpenLabApply extends CommonModel
     protected $statusValues =   [
         0   =>'待审核',
         1   =>'已通过',
-        2   =>'不通过'
+        2   =>'不通过',
     ];
 
     public function getStatusValues(){
@@ -639,6 +639,11 @@ class ResourcesOpenLabApply extends CommonModel
             function ($join) {
                 $join->on ($this->table.'.resources_lab_calendar_id','=','resources_openlab_calendar.id');
             }
+        )   ->leftJoin (
+            'resources_openlab_plan',
+            function ($join) {
+                $join->on ($this->table.'.id','=','resources_openlab_plan.resources_openlab_apply_id');
+            }
         )
             ->where ($this->table.'.status', '<>', '0');
         if ($courseName) {
@@ -656,6 +661,7 @@ class ResourcesOpenLabApply extends CommonModel
                 'student.name as student_name',
                 'teacher.name as teacher_name',
                 'resources_lab.status as status',
+                'resources_openlab_plan.status as plan_status',
                 $this->table.'.id as id',
                 $this->table.'.apply_type as apply_type',
                 $this->table.'.apply_date as apply_date',
