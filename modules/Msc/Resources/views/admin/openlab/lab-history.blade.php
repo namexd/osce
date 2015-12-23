@@ -2,6 +2,14 @@
 
 @section('only_css')
 	<link rel="stylesheet" href="{{asset('msc/admin/trainarrange/trainarrange.css')}}">
+	<style>
+		.ibox .open>.dropdown-menu{
+			left:0;
+		}
+		.btn-white{
+			border: 1px solid #fff;
+		}
+	</style>
 @stop
 
 @section('only_js')
@@ -15,12 +23,12 @@
 	<div class="ibox float-e-margins ibox-content pad0">
 		<div class="row table-head-style1 ">
 	        <div class="col-xs-2 col-md-2 head-opera">
-	            <input placeholder="日期" class="form-control layer-date laydate-icon" id="start" name="begindate">
+	            <input placeholder="日期" class="form-control layer-date laydate-icon" id="start" name="date">
 	        </div>
 	        <div class="col-xs-6 col-md-2">
-	            <form method="get">
+	            <form method="get" action="{{route("msc.admin.lab.openLabHistoryList")}}">
 	                <div class="input-group">
-	                    <input type="text" placeholder="搜索" class="input-sm form-control" name="" value="">
+	                    <input type="text" placeholder="搜索" class="input-sm form-control" name="keyword" value="">
 	                <span class="input-group-btn">
 	                    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
 	                </span>
@@ -38,40 +46,60 @@
 	                <th>时间</th>
 	                <th>编号</th>
 	                <th>
-	                	<select class="bor0 cur">
-	                		<option>预约人</option>
-	                		<option value="1">李老师</option>
-	                		<option value="2">王同学</option>
-	                	</select>
+						<div class="btn-group Examine">
+							<button data-toggle="dropdown" class="btn-white border-white dropdown-toggle" type="button">预约人<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu order-classroom">
+								<li value="1">
+									<a href="">升序</a>
+								</li>
+								<li value="-1">
+									<a href="">降序</a>
+								</li>
+							</ul>
+						</div>
 					</th>
 					<th>
 						预约理由
 					</th>
 	                <th>
-	                    <select class="bor0 cur">
-	                		<option>教室复位状态自检</option>
-	                		<option value="1">良好</option>
-	                		<option value="2">有损坏</option>
-	                		<option value="3">严重损坏</option>
-	                	</select>
-	                </th>
+						<div class="btn-group Examine">
+							<button data-toggle="dropdown" class="btn-white border-white dropdown-toggle" type="button">教室复位状态自检<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu order-classroom">
+								<li value="1">
+									<a href="">升序</a>
+								</li>
+								<li value="-1">
+									<a href="">降序</a>
+								</li>
+							</ul>
+						</div>
+					</th>
 	                <th>
-	                    <select class="bor0 cur">
-	                		<option>是否按时关机</option>
-	                		<option value="1">是</option>
-	                		<option value="2">否</option>
-	                	</select>
+						<div class="btn-group Examine">
+							<button data-toggle="dropdown" class="btn-white border-white dropdown-toggle" type="button">是否按时关机<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu order-classroom">
+								<li value="1">
+									<a href="">升序</a>
+								</li>
+								<li value="-1">
+									<a href="">降序</a>
+								</li>
+							</ul>
+						</div>
 	                </th>
 	                <th>操作</th>
 	    		</tr> 
 	    		<tr>
 	    			@foreach($pagination as $list)
 	    				<td>{{$list->id}}</td>
-		                <td>{{$list->name}}</td>
-		                <td class="date">{{$list->begin_datetime}}</td>
-		                <td class="time">{{$list->begin_datetime}}</td>
-		                <td>{{$list->code}}</td>
-		                <td>{{$list->user}}</td>
+		                <td>{{$list->lab->name}}</td>
+		                <td>{{date('Y/m/d',strtotime($list->begin_datetime))}}</td>
+		                <td>{{date('H:i',strtotime($list->begin_datetime))}}-{{date('H:i',strtotime($list->end_datetime))}}</td>
+		                <td>{{$list->lab->code}}</td>
+		                <td>{{$list->apply->applyUser->name}}</td>
 		                <td>{{$list->detail}}</td>
 		                <td>
 		                	@if($list->result_init==1)
@@ -93,6 +121,9 @@
 	    			@endforeach
 	            </tr>
 	    	</table>
+			<div class="pull-right">
+				{!! $pagination->render() !!}
+			</div>
 	    </form>
 	</div>
 </div>

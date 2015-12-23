@@ -235,7 +235,6 @@ class LabController extends MscController
                         }
                     }else{
                         $resourcesLabCalendar  =   ResourcesLabCalendar::where('resources_lab_id','=',$id)->first();
-                        dd($resourcesLabCalendar);
                         if($resourcesLabCalendar)
                         {
                             $del = DB::connection('msc_mis')->table('resources_lab_calendar')->where('id','=',$resourcesLabCalendar->id)->delete();
@@ -259,7 +258,7 @@ class LabController extends MscController
                     }else{
                         $addcleader = ResourcesLabCalendar::create($arr);
                     }
-                    //dd($addcleader);
+
                 }
 
             }else{
@@ -301,13 +300,12 @@ class LabController extends MscController
                     }else{
                         $addcleader = ResourcesLabCalendar::create($arr);
                     }
-                    //dd($addcleader);
+
                 }
             }
         }else{
             //新增实验室
             $add = ResourcesClassroom::create($data);
-            //dd($add);
             if(!$add){
                 DB::connection('msc_mis')->rollBack();
                 return redirect()->back()->withErrors('系统异常');
@@ -536,7 +534,7 @@ class LabController extends MscController
                     ];
                     $notice =   implode('',$noticeArray);
                     $openid  =  $user   ->  openid;
-                    $openid  =  'oI7UquOGL3QxBGWmW3PMA1Sz9sKM';
+                    //$openid  =  'oI7UquOGL3QxBGWmW3PMA1Sz9sKM';
                     Common::sendMsg($openid,$notice);
                 }
                 return response()->json(
@@ -660,8 +658,6 @@ class LabController extends MscController
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
      * * date        $date         筛选日期(若不筛序-传'')
-     * * int         $grade        年级(对学生而言,若不筛选-传0)
-     * * int         $profession   专业编号(对学生而言,若不筛选-传0)
      * * int         $result_init  复位状态(1-良好 2-损坏 3-严重损坏,若不筛选-传0)
      *
      * @return view
@@ -675,35 +671,35 @@ class LabController extends MscController
     {
         $this->validate($request, [
             'date' 			=> 	'sometimes|date_format:Y/m/d',
-            'grade' 		=> 	'sometimes|integer',  // TODO 学生年级都是如 2015 2011 ....
-            'profession'    =>  'sometimes|integer',
+//            'grade' 		=> 	'sometimes|integer',  // TODO 学生年级都是如 2015 2011 ....
+//            'profession'    =>  'sometimes|integer',
             'result_init'   =>  'sometimes|in:0,1,2,3',
         ]);
 
         $searchDate  = $request->input('date');
-        $grade       = $request->input('grade');
-        $profession  = $request->input('profession');
+//        $grade       = $request->input('grade');
+//        $profession  = $request->input('profession');
         $result_init = $request->input('result_init');
 
         $where = [];
         if ($searchDate) {
             $where['date'] = $searchDate;
         }
-        if ($grade) {
-            $where['grade'] = $grade;
-        }
-        if ($profession) {
-            $where['profession'] = $profession;
-        }
+//        if ($grade) {
+//            $where['grade'] = $grade;
+//        }
+//        if ($profession) {
+//            $where['profession'] = $profession;
+//        }
         if ($result_init) {
             $where['result_init'] = $result_init;
         }
 
-        $labHis = new ResourcesLabHistory();
+        //$labHis = new ResourcesLabHistory();
+        $labHis = new ResourcesOpenlabHistory();
         $data = $labHis->getPcAnalyze($where);
-	
+
         return response()->json($data);
-        //dd($data);
         //return view('msc::admin.openlab.lab-analyse', ['pagination'=>$data]);
     }
 
