@@ -208,7 +208,7 @@ class ResourcesOpenLabApply extends CommonModel
         )   ->  where($this->table.'.status','=',0)
             ->  where($this->table.'.apply_type','=',0)
             ->  whereRaw(
-            'unix_timestamp('.$this->table.'.apply_date) >= ?',
+            'unix_timestamp('.$this->table.'.apply_date) = ?',
             [
                 strtotime($date),
             ]
@@ -633,7 +633,7 @@ class ResourcesOpenLabApply extends CommonModel
             $builder = $builder->where ('resources_lab.name', 'like', '%'.$courseName.'%');
         }
         if ($date) {
-            $builder->whereRaw ('unix_timestamp(resources_openlab_apply.apply_date)>= ? ', [strtotime ($date)]);
+            $builder->whereRaw ('unix_timestamp(resources_openlab_apply.apply_date)= ? ', [strtotime ($date)]);
         }
         $builder->select (
             [
@@ -716,6 +716,7 @@ class ResourcesOpenLabApply extends CommonModel
         if(!empty($data['uid'])){
             $thisBuilder = $thisBuilder->where('apply_uid','=',$data['uid']);
         }
-        return $thisBuilder = $thisBuilder->where('status','=',0)->with('lab','calendar')->get();
+        return $thisBuilder = $thisBuilder->whereIn('status',[0,1])->with('lab','calendar')->get();
+
     }
 }

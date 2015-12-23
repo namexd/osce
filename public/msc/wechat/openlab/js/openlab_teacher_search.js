@@ -15,7 +15,7 @@ function gethistory(qj,url,getdetail,getdetail2){
         success: function(result) {
             totalpages=result.data.rows.ClassroomApplyList.last_page;
 
-            $(result.data.rows.ClassroomApplyList.data).each(function(){
+            $(result.data.rows.ClassroomApplyList).each(function(){
 
                 var opera;
                 var status;
