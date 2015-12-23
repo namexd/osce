@@ -78,6 +78,7 @@ function lab_add(){
                         message: '请输入11位手机号码'
                     },
                     regexp: {
+
                         regexp: /^1[3|5|8]{1}[0-9]{9}$/,
                         message: '请输入正确的手机号码'
                     }
@@ -109,11 +110,17 @@ function lab_add(){
 
             person_total: {
                 validators: {
-                    notEmpty: {/*非空提示*/
+                    notEmpty: {
+                        /*非空提示*/
                         message: '最大预约人数不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(?:[1-9]\d?|[1234]\d{2}|500)$/,
+                        message: '最大预约人数为1~500'
                     }
                 }
             },
+
             detail: {
                 validators: {
                     notEmpty: {/*非空提示*/

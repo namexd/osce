@@ -2,6 +2,7 @@
 
 @section('only_head_css')
 <link href="{{asset('msc/wechat/courseorder/css/course_search.css')}}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{asset('msc/common/css/bootstrapValidator.css')}}">
 <link href="{{asset('msc/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
 
 <style rel="stylesheet">
@@ -12,6 +13,7 @@
 </style>
 @stop
 @section('only_head_js')
+    <script type="text/javascript" src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
  <script src="{{asset('msc/wechat/courseorder/js/course_search_apply.js')}}"></script>
  <script src="{{asset('msc/common/select2-4.0.0/js/select2.full.js')}}"></script>
  <Script type="text/javascript">
