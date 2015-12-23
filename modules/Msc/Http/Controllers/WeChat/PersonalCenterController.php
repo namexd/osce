@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\ResourcesDeviceApply;
 use Modules\Msc\Entities\ResourcesDevicePlan;
+use Modules\Msc\Entities\ResourcesOpenLabApply;
 use Modules\Msc\Entities\ResourcesOpenLabPlan;
 use Modules\Msc\Http\Controllers\MscWeChatController;
 use Illuminate\Http\Request;
@@ -95,6 +96,7 @@ class PersonalCenterController extends MscWeChatController {
 			'nowBorrowingList'=>$nowBorrowingList,
 			'applyBorrowingList'=>$applyBorrowingList
 		];
+
 		return view('msc::wechat.personalcenter.personalinfo_myborrow',$data);
 	}
 
@@ -183,11 +185,13 @@ class PersonalCenterController extends MscWeChatController {
 	 *
 	 */
 	public function getMyApply(Request $request){
+
 		$user 					=	Auth::user();
 		$resourcesDeviceApply	=	new ResourcesDeviceApply();
 		$list				=	$resourcesDeviceApply	->	getMyApply($user->id);
 		// 无翻页
-		return view('msc::wechat.personalcenter.myreservation',['list'=>$list]);
+
+		return view('msc::wechat.personalcenter.mydevicereservation',['list'=>$list]);
 	}
 
 	/**
@@ -295,6 +299,34 @@ class PersonalCenterController extends MscWeChatController {
 	 */
 	public function getMyCourse(){
 		return view('msc::wechat.personalcenter.mycourse');
+	}
+
+	/**
+	 * 我的开放实验室预约
+	 * @method GET /msc/wechat/personal-center/my-opening-laboratory
+	 * @access public
+	 *
+	 * @param Request $request get请求<br><br>
+	 * <b>get请求字段：</b>
+	 * @return view
+	 *
+	 * @version 0.6
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-23 14:20
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
+	public function getMyOpeningLaboratory(ResourcesOpenLabApply $ResourcesOpenLabApply){
+		$user = Auth::user();
+		$data = [];
+		if(!empty($user->id)){
+			$data['uid'] = $user->id;
+		}
+		$OpenLabApply = $ResourcesOpenLabApply->getMyOpenLabApply($data);
+
+
+		return view('msc::wechat.personalcenter.mylabreservation',['list'=>$OpenLabApply]);
+
+
 	}
 
 

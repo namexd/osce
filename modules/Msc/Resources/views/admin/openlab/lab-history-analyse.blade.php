@@ -12,6 +12,7 @@
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
+<input type="hidden"  id="parameter" value="{'pagename':'lab-history'}" >
 	<div class="ibox float-e-margins">
 		<div class="ibox-title">
 			<h5>
@@ -76,10 +77,10 @@
 <script type="text/javascript">
     	var start = {
 		    elem: "#start",
-		    format: "YYYY/MM/DD hh:mm:ss",
-		    min: laydate.now(),
-		    max: "2099-06-16 23:59:59",
-		    istime: true,
+		    format: "YYYY/MM/DD",
+		    min: '1970-01-01',
+		    max: "2099-06-16",
+		    istime: false,
 		    istoday: false,
 		    choose: function (a) {
 		        /*end.min = a;

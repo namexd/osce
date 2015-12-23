@@ -711,4 +711,11 @@ class ResourcesOpenLabApply extends CommonModel
             throw $ex;
         }
     }
+    public function getMyOpenLabApply($data){
+        $thisBuilder = $this;
+        if(!empty($data['uid'])){
+            $thisBuilder = $thisBuilder->where('apply_uid','=',$data['uid']);
+        }
+        return $thisBuilder = $thisBuilder->where('status','=',0)->with('lab','calendar')->get();
+    }
 }

@@ -129,7 +129,8 @@ class LabController extends MscController
         $id = Input::get('id');
         $openLabDetail = ResourcesClassroom::find($id);
         $data = [
-            'openLabDetail' => $openLabDetail
+            'openLabDetail' => $openLabDetail,
+            'title'         => "编辑"
         ];
         return view('msc::admin.openlab.lab-add',$data);
     }
@@ -217,13 +218,17 @@ class LabController extends MscController
                     }
                     $addcleader = ResourcesOpenLabCalendar::create($arr);
                 }else{
-
-                    $del = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('resources_lab_id','=',$id)->delete();
+                    $resourcesLabCalendar  =   ResourcesLabCalendar::where('resources_lab_id','=',$id)->first();
+                    $del=true;
+                    if($resourcesLabCalendar)
+                    {
+                        $del=$resourcesLabCalendar->delete();
+                    }
                     if(!$del){
                         DB::connection('msc_mis')->rollBack();
                         return redirect()->back()->withErrors('系统异常');
                     }
-                    $addcleader = ResourcesLabCalendar::create($arr);
+                    $addcleader = ResourcesOpenLabCalendar::create($arr);
                 }
 
             }else{
@@ -1000,6 +1005,7 @@ class LabController extends MscController
         $pagination             =   $resourcesOpenlabApply  -> getUrgentApplyList($date,$keyword,$order);
         $resourcesClassroomModel=   new ResourcesClassroom();
         $statusAttrNames        =   $resourcesClassroomModel->  getstatusAttrName();
+
         return view('msc::admin.emergencymanage.emergencybase',['pagination'=>$pagination,'statusAttrNames'=>$statusAttrNames]);
     }
     /**
