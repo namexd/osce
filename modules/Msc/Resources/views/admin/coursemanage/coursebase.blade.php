@@ -50,6 +50,9 @@
         opacity:0;
     }
 
+    .col-sm-4{padding-left: 0}
+    .col-sm-8{padding-right: 0}
+
     /*屏幕宽度*/
     @media (max-width:1366px){
         .res-control{height: 60px;}
