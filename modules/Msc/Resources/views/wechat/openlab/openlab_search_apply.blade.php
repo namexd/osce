@@ -1,6 +1,7 @@
 @extends('msc::wechat.layouts.admin')
 
 @section('only_head_css')
+    <link rel="stylesheet" href="{{asset('msc/common/css/bootstrapValidator.css')}}">
 <link href="{{asset('msc/wechat/courseorder/css/course_search.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('msc/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
 
@@ -12,6 +13,7 @@
 </style>
 @stop
 @section('only_head_js')
+    <script type="text/javascript" src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('msc/wechat/openlab/js/openlab_search_apply.js')}}"></script>
  <script src="{{asset('msc/common/select2-4.0.0/js/select2.full.js')}}"></script>
  <Script type="text/javascript">
@@ -41,6 +43,36 @@
              }
                 get_list();//将左边弹出
          });
+         $("#submit").click(function(){
+             var size= $(this).next("input").size();
+             if(size=="0"){
+
+                 $.alert({
+                     title: '提示：',
+                     content: '您尚未选择上课的学生!',
+                     confirmButton: '确定',
+                     confirm: function(){
+                         return false;
+                     }
+                 });
+
+             }else{
+                 if(!$(this).next("input").val()){
+                     $.alert({
+                         title: '提示：',
+                         content: '您尚未选择上课的学生!',
+                         confirmButton: '确定',
+                         confirm: function(){
+                             return false;
+                         }
+                     });
+                     return false;
+                 }
+
+             }
+
+         })
+
 
          
      })
@@ -97,7 +129,7 @@
         <form name="form"   id="frmTeacher" action="{{action('\Modules\Msc\Http\Controllers\WeChat\OpenLaboratoryController@postAddLab')}}" method="post" >
         @if($user_type == 1)
             <p class="mart_5">课程名称</p>
-            <div class="course_name">
+            <div class="course_name form-group ">
                 <select class="select1" name="course_name"  id="course_name" placeholder="输入学生组名" style="width:100%;">
                     @if(!empty($Courses) && count($Courses)>0)
                         @foreach($Courses as $Course)
@@ -108,7 +140,7 @@
             </div>
             
             <p class="mart_5">请选择上课学生</p>
-            <div class="course_student_type">
+            <div class="course_student_type form-group ">
                 <div class="radio_box" ng-init="user.sex2 = 1">
                     <label class="left radio_label" for="radio_3">
                         <div class="left radio_icon"></div>
@@ -123,8 +155,8 @@
                 </div>
             </div>
             
-            <p class="">理由</p>
-            <div class="Reason">
+            <p class="">申请理由</p>
+           <div class="Reason">
                 <textarea id="Reason_detail" name="detail" type="" placeholder="请输入理由"/></textarea>
             </div>
            @endif
@@ -134,7 +166,7 @@
             <input type="hidden" name="user_type" value="{{@$user_type}}">
             <input type="hidden" name="c_id" value="{{@$ClassroomPlanInfo->resources_lab_id}}">
             <input type="hidden"  name="timestamp" value="{{@$ClassroomPlanInfo['get_plan'][0]['currentdate']}} {{@$ClassroomPlanInfo['get_plan'][0]['begintime']}}~{{@$ClassroomPlanInfo['get_plan'][0]['currentdate']}} {{@$ClassroomPlanInfo['get_plan'][0]['endtime']}}">
-            <input class="btn2 mart_10 marb_10" type="submit"  value="提交申请" />
+            <input class="btn2 mart_10 marb_10" type="submit" id="submit"  value="提交申请" />
             
         </form>
     </div><!-- 类别列表-->
@@ -152,6 +184,7 @@
                 </div>
                 <div class="w_96">
                     <select  name="class_list[]"  id="class_list" placeholder="输入班级名" style="width:100%;">
+                        <option value="0">请选择上课班级</option>
                         @if(!empty($studentClass) && count($studentClass)>0)
                             @foreach($studentClass as $class)>
                             <option value="{{@$class->id}}">{{@$class->name}}</option>
@@ -167,6 +200,7 @@
                     </ul>
                 </div>
                 <select class="" name="student_group[]"  id="group_list" placeholder="输入学生组名" style="width:100%;">
+                    <option value="0">请选择上课学生组</option>
                     @if(!empty($studentClass) && count($studentClass)>0)
                         @foreach($groups as $group)
                         <option value="{{@$group->id}}">{{@$group->name}}</option>
@@ -195,6 +229,7 @@
                 </div>
                 <div class="w_96">
                     <select  name="class_list[]"  id="class_list" placeholder="输入班级名" style="width:100%;">
+                        <option value="0">请选择上课班级</option>
                         @if(!empty($studentClass) && count($studentClass)>0)
                             @foreach($studentClass as $class)>
                             <option value="{{@$class->id}}">{{@$class->name}}</option>
@@ -210,6 +245,7 @@
                     </ul>
                 </div>
                 <select class="" name="student_group[]"  id="group_list" placeholder="输入学生组名" style="width:100%;">
+                    <option value="0">请选择上课学生组</option>
                     @if(!empty($groups) && count($groups)>0)
                         @foreach($groups as $group)
                         <option value="{{@$group->id}}">{{@$group->name}}</option>
@@ -217,7 +253,7 @@
                     @endif
                 </select>
             </div>
-            
+
             <div class="w_96">
                 <button id="comfirm_student" type="button" class="btn1">确定</button>
             </div>

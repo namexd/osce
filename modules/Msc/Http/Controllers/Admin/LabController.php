@@ -475,7 +475,7 @@ class LabController extends MscController
                 $orderName = ['resources_lab.status','resources_lab.status'];
                 break;
             default:
-                $orderName = ['resources_lab_apply.created_at','resources_lab_apply.created_at'];
+                $orderName = ['resources_openlab_apply.created_at','resources_openlab_apply.created_at'];
         }
         $order = [$orderName, $orderType];
 

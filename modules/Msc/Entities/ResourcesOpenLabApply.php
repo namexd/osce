@@ -201,19 +201,28 @@ class ResourcesOpenLabApply extends CommonModel
      *
      */
     public function getWaitExamineList($classroomName,$date, $order){
+
         $builder    =   $this   -> leftJoin(
             'resources_lab',function($join){
                 $join   ->  on($this->table.'.resources_lab_id','=','resources_lab.id');
             }
-        )   ->  where($this->table.'.status','=',0)
+        )   -> leftJoin(
+            'student',function($join){
+            $join   ->  on($this->table.'.apply_uid','=','student.id');
+        }
+        )   -> leftJoin(
+            'teacher',function($join){
+            $join   ->  on($this->table.'.apply_uid','=','teacher.id');
+        }
+        )
+            ->  where($this->table.'.status','=',0)
             ->  where($this->table.'.apply_type','=',0)
             ->  whereRaw(
             'unix_timestamp('.$this->table.'.apply_date) = ?',
             [
                 strtotime($date),
             ]
-        )
-            ->select([
+        )    ->select([
                 $this->table.'.id as id',
                 $this->table.'.apply_type as apply_type',
                 $this->table.'.apply_date as apply_date',
@@ -231,7 +240,7 @@ class ResourcesOpenLabApply extends CommonModel
         {
             $builder    =   $builder    ->  where('resources_lab.name','like','%'.$classroomName.'%');
         }
-        return $builder  -> paginate(config('msc.page_size'));
+        return $builder  ->   orderBy($order[0][0],$order[1])   ->orderBy($order[0][1],$order[1])  -> paginate(config('msc.page_size'));
     }
 
     //处理开放实验室审核
@@ -332,10 +341,10 @@ class ResourcesOpenLabApply extends CommonModel
             )
             {
                 //取消所有 学生计划
+
                 if($this   ->  cancelStudentPlan($planData['resources_openlab_calendar_id'],$planData['currentdate']))
                 {
                     //创建教师预约的新计划
-
                     $newPlan    =   ResourcesOpenLabPlan::create($planData);
                     if(!$newPlan)
                     {
@@ -590,14 +599,17 @@ class ResourcesOpenLabApply extends CommonModel
         try {
             foreach ($sameList as $plan) {
                 $plan->status = -1;
-                $plan->save();
+                $result =   $plan->save();
+                if(!$result)
+                {
+                    throw new \Exception('取消学生失败');
+                }
             }
             return true;
         } catch (\Exception $ex) {
             throw   $ex;
         }
     }
-
 
     /**
      * 已审核申请列表

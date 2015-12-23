@@ -2,13 +2,12 @@
 
 @section('only_head_css')
     <link rel="stylesheet" href="{{asset('msc/common/css/bootstrapValidator.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
+
 <link href="{{asset('msc/wechat/personalcenter/css/personalcenter.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('msc/wechat/personalcenter/css/phone_change.css')}}" rel="stylesheet" type="text/css" />
 @stop
 @section('only_head_js')
     <script type="text/javascript" src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/personalcenter/js/personalinfo.js')}}"></script>
     <script src="{{asset('msc/wechat/user/js/commons.js')}}"></script>
 @stop
