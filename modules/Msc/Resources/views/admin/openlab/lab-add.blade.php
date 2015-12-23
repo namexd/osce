@@ -21,7 +21,8 @@
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
-        <input type="hidden"  id="parameter" value="{'pagename':'lab-add','ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}'}" />
+        <input type="hidden"  id="parameter" value="{'pagename':'lab-add',
+        'ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}','returnUrl':'{{route("msc.admin.lab.getHadOpenLabList")}}'}" />
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>{{$title or "新增"}}实验室</h5>
