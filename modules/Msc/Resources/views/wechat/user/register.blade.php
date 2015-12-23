@@ -1,8 +1,7 @@
 @extends('msc::wechat.layouts.user')
 @section('only_head_css')
     <link rel="stylesheet" href="{{asset('msc/common/css/bootstrapValidator.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+
     {{--select输入效果--}}
     <link href="{{asset('msc/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style rel="stylesheet">
@@ -18,7 +17,6 @@
 
 @section('only_head_js')
     <script type="text/javascript" src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/user/js/commons.js')}}"></script>
     <script src="{{asset('msc/wechat/user/js/register.js')}}"></script>
     <script src="{{asset('msc/common/select2-4.0.0/js/select2.full.js')}}"></script>
