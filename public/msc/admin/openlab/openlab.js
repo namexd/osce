@@ -41,7 +41,7 @@ function lab_history_analyse(){
     $('.inquiry').click(function(){
         var req = {};
         req['date'] = $('#start').val();
-        req['date'] = $('#start').val();
+        req['date'] = $('#status').val();
 
         //检测图标类型
         chartType = $('#chart-type').val();
@@ -49,7 +49,7 @@ function lab_history_analyse(){
         $.ajax({
             type:"get",
             async:true,
-            url:"{{route('msc.lab-tools.getHistoryStatisticsData')}}",
+            url:"/msc/admin/lab/openlab-history-analyze",
             data:JSON.stringify(req),
             success:function(res){
                 /*统计折线图*/
@@ -63,7 +63,7 @@ function lab_history_analyse(){
                         for(var i in res.data.rows){
 
                             xAxis.push(res.data.rows[i].name);
-                            yAxis.push(res.data.rows[i].borrowCount);
+                            yAxis.push(res.data.rows[i].total);
                         }
                         data['xAxis'] = xAxis;
                         data['yAxis'] = yAxis;
@@ -84,7 +84,7 @@ function lab_history_analyse(){
                         var legendS = [];
                         for(var i in res.data.rows){
 
-                            dataS.push({value:res.data.rows[i].borrowCount, name:res.data.rows[i].name});
+                            dataS.push({value:res.data.rows[i].total, name:res.data.rows[i].name});
                             legendS.push(res.data.rows[i].name);
                         }
                         data['dataS'] = dataS;

@@ -64,7 +64,7 @@
 				</div>
 	        </div>
 	        <button class="btn btn-primary marr_15 inquiry">查询</button>
-	        <a href="javascript:void(0)" class="btn btn-default">导出Excel文件</a>
+	        <a href="javascript:void(0)" class="btn btn-w-m btn-white marl_10">导出Excel文件</a>
 	        
 	        <div id="main" style="height:400px"></div>
 	        
