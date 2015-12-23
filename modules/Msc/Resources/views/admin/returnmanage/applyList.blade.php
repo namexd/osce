@@ -119,7 +119,7 @@
                 <th>借用理由</th>
                 <th>
                     <div class="btn-group Examine">
-                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">是否续借 <span class="caret"></span>
+                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">是否续借<span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             <li>

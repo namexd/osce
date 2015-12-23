@@ -21,10 +21,11 @@
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
-        <input type="hidden"  id="parameter" value="{'pagename':'lab-add','ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}'}" />
+        <input type="hidden"  id="parameter" value="{'pagename':'lab-add',
+        'ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}','returnUrl':'{{route("msc.admin.lab.getHadOpenLabList")}}'}" />
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>新增实验室</h5>
+                <h5>{{$title or "新增"}}实验室</h5>
             </div>
             <div class="ibox-content">
                 <div class="row">
@@ -133,7 +134,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-white cancel" type="button">取消</button>
-                                    <button class="btn btn-primary" type="submit" id="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                                    <input class="btn btn-primary" type="submit" value="保存">
                                 </div>
                             </div>
 

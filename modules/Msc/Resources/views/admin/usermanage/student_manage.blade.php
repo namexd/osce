@@ -398,12 +398,7 @@
 				            </tbody>
 				        </table>
 				        <div class="btn-group pull-right">
-				            <ul class="pagination">
-				            	<li><a href="#" rel="prev">«</a></li>
-								<li><a href="#">1</a></li>
-								<li class="active"><span>2</span></li>
-								<li class="disabled"><span>»</span></li>
-							</ul>
+				           <?php echo $pagination->render();?>
 				        </div>
 				    </form>
 				</div>

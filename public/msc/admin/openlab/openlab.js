@@ -13,109 +13,117 @@ $(function(){
 });
 
 function lab_add(){
-    $(function(){
-        var url = pars.ajaxurl;
-        //时间选择
-        var start = $('#start').val().substring(0,2);
-        var end = $('#end').val().substring(0,2);
+    // var url = pars.ajaxurl;
+    //时间选择
+    var start = $('#start').val().substring(0,2);
+    var end = $('#end').val().substring(0,2);
 
-        $("#ionrange_4").ionRangeSlider({
-            values: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","24:00"],
-            type: "double",
-            from:start,
-            to:start,
-            hasGrid: true,
-            onChange: function(obj){        // function-callback, is called on every change
+    $("#ionrange_4").ionRangeSlider({
+        values: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","24:00"],
+        type: "double",
+        from:start,
+        to:end,
+        hasGrid: true,
+        onChange: function(obj){        // function-callback, is called on every change
 
-                $('#start').val(obj.fromValue);
-                $('#end').val(obj.toValue);
+            $('#start').val(obj.fromValue);
+            $('#end').val(obj.toValue);
+        },
+
+    });
+
+    $('.cancel').click(function (){
+        var url = pars.returnUrl;
+        window.location.href = url;
+    });
+    /*{}{
+     * 下面是进行插件初始化
+     * 你只需传入相应的键值对
+     * */
+    $('#labForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {/*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '用户名不能为空'
+                    }
+                }
+            },
+            manager_name: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '负责人不能为空'
+                    },
+                    stringLength: {
+                        min:2,
+                        message: '用户名长度必须大于2'
+                    }
+                }
+            },
+            manager_mobile: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            location: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '地址不能为空'
+                    }
+                }
+            },
+            opened: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '请选择实验室类别'
+                    },
+
+                }
+            },
+            status: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '请选择实验室状态'
+                    },
+
+                }
             },
 
-        });
-
-        $('.cancel').click(function (){
-            //history.go(-1);
-            window.location.href = url;
-        });
-        /*{}{
-         * 下面是进行插件初始化
-         * 你只需传入相应的键值对
-         * */
-        $('#labForm').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
+            person_total: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '最大预约人数不能为空'
+                    }
+                }
             },
-            fields: {/*验证*/
-                name: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '用户名不能为空'
-                        }
+            detail: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '描述不能为空'
                     }
-                },
-                manager_name: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '负责人不能为空'
-                        },
-                        stringLength: {
-                            min:2,
-                            message: '用户名长度必须大于2'
-                        }
-                    }
-                },
-                manager_mobile: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '手机号码不能为空'
-                        },
-                        stringLength: {
-                            min: 11,
-                            max: 11,
-                            message: '请输入11位手机号码'
-                        },
-                        regexp: {
-                            regexp: /^1[3|5|8]{1}[0-9]{9}$/,
-                            message: '请输入正确的手机号码'
-                        }
-                    }
-                },
-                address: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '地址不能为空'
-                        }
-                    }
-                },
-                type: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '类型不能为空'
-                        }
-                    }
-                },
-                maxorder: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '最大预约人数不能为空'
-                        }
-                    }
-                },
-                detail: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '描述不能为空'
-                        }
-                    }
-                },
+                }
+            },
 
-            }
-        });
-    })
+        }
+    });
 
     $("#select_Category").change( function(){
         if($(this).val()=="Classroom") {
@@ -413,10 +421,10 @@ function lab_exist_list(){
 function lab_history(){
     var start = {
         elem: "#start",
-        format: "YYYY/MM/DD hh:mm:ss",
-        min: laydate.now(),
-        max: "2099-06-16 23:59:59",
-        istime: true,
+        format: "YYYY/MM/DD",
+        min: '1970-01-01',
+        max: "2099-12-31",
+        istime: false,
         istoday: false,
         choose: function (a) {
             /*end.min = a;
