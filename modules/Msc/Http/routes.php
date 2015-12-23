@@ -190,6 +190,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//我的开放实验室预约
 		Route::get('/personal-center/my-opening-laboratory',['uses'=>'PersonalCenterController@getMyOpeningLaboratory','as'=>'msc.personalCenter.getMyOpeningLaboratory']);
 
+		//取消预约
+		Route::get('/personal-center/cancel-laboratory/{$id}',['uses'=>'PersonalCenterController@getCancelLaboratory','as'=>'msc.personalCenter.getCancelLaboratory']);
+
 
 		Route::controller('resource', 'ResourceController');
 		Route::controller('resources-manager', 'ResourcesManagerController');

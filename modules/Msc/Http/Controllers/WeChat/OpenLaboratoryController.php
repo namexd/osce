@@ -110,10 +110,10 @@ class OpenLaboratoryController extends MscWeChatController {
 			//TODO:在开放实验室被预约时段不满员的情况下依然可以申请
 			//TODO:2015-12-22 19:54
 			if(!empty($v['get_plan']) && count($v['get_plan'])>0){
-				if($v->resourcesClassroom->person_total<=$v['get_plan']->first()->resorces_lab_person_total)
-				{
+				//if($v->resourcesClassroom->person_total<=$v['get_plan']->first()->resorces_lab_person_total)
+				//{
 					$LaboratoryList[$k]['status']= 1;
-				}
+				//}
 			}
 			$list[] = $LaboratoryList[$k];
 		}
@@ -159,6 +159,7 @@ class OpenLaboratoryController extends MscWeChatController {
 			}
 			$Course = $Courses->whereIn('id', $arr)->get();
 		}
+		$Course = $Courses->get();
 
 		$data = [
 			'ClassroomPlanInfo' => $ClassroomPlan_detai,

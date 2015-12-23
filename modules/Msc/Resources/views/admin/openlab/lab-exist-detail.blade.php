@@ -1,63 +1,22 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
     <style>
         .layer-date{max-width: 100%!important;}
     </style>
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
-    <script>
-        $(function(){
-            $('.btn-primary').click(function () {
-                var url = '/msc/admin/lab/had-open-lab-list';
-                window.location.href = url;
-            });
-            //时间选择
-            laydate(start);
-            laydate(end);
-            {{--$('.cancel').click(function (){--}}
-                {{--//history.go(-1);--}}
-                {{--var url = '{{ route("msc.admin.resourcesManager.getResourcesList") }}';--}}
-                {{--window.location.href = url;--}}
-            {{--});--}}
-        })
-        var start = {
-            elem: "#start",
-            format: "YYYY-MM-DD",
-            max: "2099-06-16 23:59:59",
-            istime: true,
-            istoday: false,
-        };
-        var end = {
-            elem: "#end",
-            format: "YYYY-MM-DD",
-            max: "2099-06-16 23:59:59",
-            istime: true,
-            istoday: false,
-        };
-        $("#select_Category").change( function(){
-            if($(this).val()=="Classroom") {
-                $(".select-floor").show();
-            }else{
-                $(".select-floor").hide();
-            }
-        })
+  
 
-
-
-  </script>
 @stop
 
 @section('content')
-<div class="wrapper wrapper-content animated fadeInRight">
+
+<div class="wrapper wrapper-content animated fadeInRight detail">
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h5>实验室详情</h5>
         </div>
         <div class="ibox-content">
@@ -65,7 +24,6 @@
                 <div class="col-md-12">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('msc.admin.resourcesManager.getAddResources')}}">
 
-                            <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">名称</label>
                                 <div class="col-sm-10">
@@ -77,9 +35,9 @@
                                 <label class="col-sm-2 control-label">类别</label>
 
                                 <div class="col-sm-10">
-                                    @if($openLabDetail['name'] == 1)
+                                    @if($openLabDetail['opened'] == 1)
                                         <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约实验室)" disabled>
-                                    @elseif($openLabDetail['name'] == 2)
+                                    @elseif($openLabDetail['opened'] == 2)
                                         <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约设备)" disabled>
                                         @else
                                         <input type="text"  id="detail" name="type" class="form-control" value="普通实验室" disabled>
@@ -157,14 +115,12 @@
                                 </div>
 
                             </div>
-                            <div class="hr-line-dashed"></div>
-                            <div id="code_list">
 
-                            </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button">返&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回</button>
+                                
+                                <div class="col-sm-4 col-sm-offset-2 right">
+                                    <button class="btn btn-primary right" type="button" data-dismiss="modal">关&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;闭</button>
                                 </div>
                             </div>
 

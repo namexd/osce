@@ -719,4 +719,7 @@ class ResourcesOpenLabApply extends CommonModel
         return $thisBuilder = $thisBuilder->whereIn('status',[0,1])->with('lab','calendar')->get();
 
     }
+    public function DelOpenLabApply($id){
+       return $this->where('id','=',$id)->delete();
+    }
 }
