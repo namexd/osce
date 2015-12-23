@@ -121,9 +121,9 @@
                                             <td class="userName">{{@$data->name}}</td>
                                             <td>
                                                 @if($data['opened'] == 1)
-                                                    开发实验室
+                                                    开放实验室
                                                 @elseif($data['opened'] == 2)
-                                                    开发实验室设备预约
+                                                    开放实验室设备预约
                                                 @else
                                                     普通实验室
                                                 @endif
