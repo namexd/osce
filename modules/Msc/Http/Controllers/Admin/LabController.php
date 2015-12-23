@@ -216,13 +216,17 @@ class LabController extends MscController
                     }
                     $addcleader = ResourcesOpenLabCalendar::create($arr);
                 }else{
-
-                    $del = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('resources_lab_id','=',$id)->delete();
+                    $resourcesLabCalendar  =   ResourcesLabCalendar::where('resources_lab_id','=',$id)->first();
+                    $del=true;
+                    if($resourcesLabCalendar)
+                    {
+                        $del=$resourcesLabCalendar->delete();
+                    }
                     if(!$del){
                         DB::connection('msc_mis')->rollBack();
                         return redirect()->back()->withErrors('系统异常');
                     }
-                    $addcleader = ResourcesLabCalendar::create($arr);
+                    $addcleader = ResourcesOpenLabCalendar::create($arr);
                 }
 
             }else{
