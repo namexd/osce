@@ -234,8 +234,6 @@ class ResourcesOpenLabApply extends CommonModel
                 $this->table.'.reject as reject',
                 $this->table.'.course_id as course_id',
                 $this->table.'.opeation_uid as opeation_uid',
-                $this->table.'.created_at as created_at',
-                $this->table.'.updated_at as updated_at',
                 'resources_lab.name as resources_lab_name',
             ]);
         if($classroomName!='')
