@@ -187,6 +187,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//我的課程
 		Route::get('personal-center/my-course',['uses'=>'PersonalCenterController@getMyCourse','as'=>'msc.personalCenter.MyCourse']);
 
+		//我的开放实验室预约
+		Route::get('/personal-center/my-opening-laboratory',['uses'=>'PersonalCenterController@getMyOpeningLaboratory','as'=>'msc.personalCenter.getMyOpeningLaboratory']);
+
+
 		Route::controller('resource', 'ResourceController');
 		Route::controller('resources-manager', 'ResourcesManagerController');
 		Route::controller('course-order', 'CourseOrderController');
