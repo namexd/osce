@@ -22,6 +22,12 @@ class ResourcesOpenlabHistory extends Model
     protected $primaryKey	=	'id';
     public    $incrementing	=	true;
 
+    public function lab(){
+        return $this    ->  hasOne('Modules\Msc\Entities\ResourcesClassroom','id','resources_lab_id');
+    }
+    public function apply(){
+        return $this->hasOne('Modules\Msc\Entities\ResourcesOpenLabApply','id','resources_openlab_apply_id');
+    }
     /**
      * 根据申请ID 删除历史记录
      * @access public
@@ -53,5 +59,63 @@ class ResourcesOpenlabHistory extends Model
         {
             throw $ex;
         }
+    }
+    public function getOpenlabHistory($date,$name='',$result_poweroff=false,$result_init=false){
+        $bulider    =   $this   ->  leftJoin(
+            'resources_openlab_apply',function($join){
+                $join   ->  on($this    ->  table.'.resources_openlab_apply_id','=','resources_openlab_apply.id');
+            }
+        )   ->  leftJoin(
+            'resources_lab',function($join){
+                $join   ->  on($this    ->  table.'.resources_lab_id','=','resources_lab.id');
+            }
+        )->  leftJoin(
+            'teacher',function($join){
+                $join   ->  on('resources_openlab_apply.apply_uid','=','teacher.id');
+            }
+        )       ->  leftJoin(
+            'student',function($join){
+                $join   ->  on('resources_openlab_apply.apply_uid','=','student.id');
+            }
+        )   ->select(
+            DB::raw(
+                implode(
+                    ',',
+                    [
+                        $this->table.'.id as id',
+                        $this->table.'.resources_openlab_apply_id as resources_openlab_apply_id',
+                        $this->table.'.resources_lab_id as resources_lab_id',
+                        $this->table.'.begin_datetime as begin_datetime',
+                        $this->table.'.end_datetime as end_datetime',
+                        $this->table.'.group_id as group_id',
+                        $this->table.'.teacher_uid as teacher_uid',
+                        $this->table.'.result_poweroff as result_poweroff',
+                        $this->table.'.result_init as result_init',
+                        'resources_lab.name as resources_lab_name',
+                        //'date_format('.$this->table.'.begin_datetime,"%Y-%m-%d") as begin_datetime',
+                    ]
+                )
+            )
+        );
+        $date   =   date('Y-m-d',strtotime($date));
+        $bulider    =   $bulider    ->  whereRaw(
+            'date_format('.$this->table.'.begin_datetime,"%Y-%m-%d") = ?',
+            [
+                $date
+            ]
+        );
+        if($result_poweroff!==false)
+        {
+            $bulider    =   $bulider    ->  where($this->table.'.result_poweroff','=',$result_poweroff);
+        }
+        if($name!='')
+        {
+            $bulider    =   $bulider    ->  where('resources_lab.name','like','%'.$name.'%');
+        }
+        if($result_init!==false)
+        {
+            $bulider    =   $bulider    ->  where('result_poweroff','=',$result_poweroff);
+        }
+        return $bulider    ->  paginate(config('msc.page_size'));
     }
 }

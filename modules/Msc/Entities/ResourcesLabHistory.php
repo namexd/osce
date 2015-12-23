@@ -104,6 +104,7 @@ class ResourcesLabHistory extends Model
     }
 
     // 获得pc端开放实验室使用历史记录列表
+    //TODO：罗海华(此方法，由于数据库表更换，已经弃用)2015-12-23 14:18
     public function getPcList ($where, $order)
     {
         $searchDate = empty($where['date']) ? null : $where['date'];

@@ -342,23 +342,6 @@ class LabToolsController extends MscController
      */
     public function getHistoryStatisticsData(Request $request)
     {
-        $total = [
-            [
-                'borrowCount' => 3,
-                'name' => '开放设备a',
-                'status' => '损坏',
-            ],
-            [
-                'borrowCount' => 3,
-                'name' => '开放设备a',
-                'status' => '损坏',
-            ],
-            [
-                'borrowCount' => 3,
-                'name' => '开放设备a',
-                'status' => '损坏',
-            ],
-        ];
         $resourcesDevicePlan    =   new ResourcesDevicePlan();
         $total  =   $resourcesDevicePlan    ->  historyStatistics();
         $totalData  =[];
