@@ -483,7 +483,7 @@ class LabController extends MscController
                     ];
                     $notice =   implode('',$noticeArray);
                     $openid  =  $user   ->  openid;
-                    $openid  =  'oI7UquOGL3QxBGWmW3PMA1Sz9sKM';
+                    //$openid  =  'oI7UquOGL3QxBGWmW3PMA1Sz9sKM';
                     Common::sendMsg($openid,$notice);
                 }
                 return response()->json(
