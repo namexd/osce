@@ -71,7 +71,7 @@
             //根据日期查询,默认是当前日期,如果有传参,就是传参之后的日期
             $builder = $builder->whereRaw ('unix_timestamp(resources_device_apply.original_begin_datetime)>= ? ' , [ strtotime ($date) ]);
             //设置关键字查询
-            if ($keyword !== null) {
+            if ($keyword !== '') {
                 $builder = $builder->where ('resources_device.name' , 'like' , '%'.$keyword.'%');
             }
 
@@ -112,9 +112,9 @@
                     'resources_device_apply.apply_uid as apply_id' ,
                 ]
             );
-
-            $builder = $builder->whereRaw ('unix_timestamp(resources_device_apply.original_begin_datetime)>= ? ' , [ strtotime ($date) ]);
-
+            //如果有传入参数，就搜索传入参数之后的
+            $builder = $builder->whereRaw ('unix_timestamp(resources_device_apply.original_begin_datetime) >= ? ' , [ strtotime ($date) ]);
+            //如果有传入参数，就搜索传入参数之后的
             if ($keyword !== '') {
                 $builder = $builder->where ('resources_device.name' , 'like' , '%'.$keyword.'%');
             }
