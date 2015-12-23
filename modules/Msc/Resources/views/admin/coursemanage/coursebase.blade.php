@@ -1135,6 +1135,7 @@
                 {
                     data    =   data.replace('<pre>','').replace('</pre>','');
                     data    =   eval('('+data+')');
+
                     if(data.code == 1){
                         layer.alert('导入成功！');
                     }

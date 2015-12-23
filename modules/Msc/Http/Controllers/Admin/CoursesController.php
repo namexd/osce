@@ -86,9 +86,10 @@ class CoursesController extends MscController
                     }
                 }
             }
-            return response()->json(
-                $this->success_data(['result'=>true,'dataFalse'=>$dataFalse,'dataHaven'=>$dataHaven])
-            );
+            echo json_encode($this->success_data(['result'=>true,'dataFalse'=>$dataFalse,'dataHaven'=>$dataHaven]));
+//            return response()->json(
+//                $this->success_data(['result'=>true,'dataFalse'=>$dataFalse,'dataHaven'=>$dataHaven])
+//            );
         }
         catch(\Exception $ex)
         {
@@ -185,9 +186,10 @@ class CoursesController extends MscController
                 }
                 $connection->commit();
             }
-            return response()->json(
-                $this->success_data(['result'=>true,'falseInfo'=>$falseInfo,'dataConflict'=>$dataConflict])
-            );
+            echo json_encode($this->success_data(['result'=>true,'falseInfo'=>$falseInfo,'dataConflict'=>$dataConflict]));
+//            return response()->json(
+//                $this->success_data(['result'=>true,'falseInfo'=>$falseInfo,'dataConflict'=>$dataConflict])
+//            );
         }
         catch(\Exception $ex)
         {
