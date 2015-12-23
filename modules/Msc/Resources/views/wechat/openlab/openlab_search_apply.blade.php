@@ -52,30 +52,31 @@
                      content: '您尚未选择上课的学生!',
                      confirmButton: '确定',
                      confirm: function(){
-                         return false;
+
                      }
                  });
+                 return false;
 
              }else{
                  if(!$(this).next("input").val()){
+
                      $.alert({
                          title: '提示：',
                          content: '您尚未选择上课的学生!',
                          confirmButton: '确定',
                          confirm: function(){
-                             return false;
+
                          }
                      });
                      return false;
                  }
-
              }
 
          })
 
 
          
-     })
+    })
 
 
      
