@@ -657,4 +657,13 @@ class ResourcesOpenLabApply extends CommonModel
 
         return $builder->orderBy ($order[0][0], $order[1])->orderBy($order[0][1],$order[1])->paginate (config ('msc.page_size'));
     }
+
+    public function getMyOpenLabApply($data){
+        $thisBuilder = $this;
+        if(!empty($data['uid'])){
+            $thisBuilder = $thisBuilder->where('apply_uid','=',$data['uid']);
+        }
+        return $thisBuilder = $thisBuilder->where('status','=',0)->get();
+
+    }
 }
