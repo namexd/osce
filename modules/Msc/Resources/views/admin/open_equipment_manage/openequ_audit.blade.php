@@ -153,10 +153,10 @@
             <div class="col-xs-6 col-md-4">
                 <form method="get" action="{{route('msc.admin.lab-tools.getOpenLabToolsApplyList')}}">
                     <div class="input-group pull-left col-md-5 searchbox">
-                        <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="date">
+                        <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="date" value="{{$rollmsg[0]}}">
                     </div>
                     <div class="input-group pull-left col-md-5 searchbox">
-                        <input type="text" placeholder="搜索" class="input-sm form-control" name="keyword" value="">
+                        <input type="text" placeholder="搜索" class="input-sm form-control" name="keyword" value="{{$rollmsg[1]}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
                         </span>

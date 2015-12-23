@@ -131,7 +131,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-white cancel" type="button">取消</button>
-                                    <button class="btn btn-primary" type="submit" id="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                                    <input class="btn btn-primary" type="submit" value="保存" />
                                 </div>
                             </div>
 
