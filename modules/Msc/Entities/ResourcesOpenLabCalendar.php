@@ -26,13 +26,13 @@ class ResourcesOpenLabCalendar extends Model
         return $this->hasMany('Modules\Msc\Entities\ResourcesOpenLabApply','resources_lab_calendar_id','id');
     }
     public function getLaboratoryClassroomList($data){
-        $thisBuilder = $this;
+        $thisBuilder = $this->where('opentype','=',1);
         if(!empty($data['week'])){
             $thisBuilder->where('week','like', '%'.$data['week'].'%');
         }
         $result = $thisBuilder->with(['resourcesClassroom' => function($Classroom)
         {
-            $Classroom->where('opened','=',1);
+            $Classroom->where('opened','=',1)->whereIn('status',[1,2]);
 
         },'ResourcesOpenLabApply'=>function($Apply) use ($data){
             if(!empty($data['dateTime'])){
