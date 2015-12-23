@@ -43,37 +43,36 @@
              }
                 get_list();//将左边弹出
          });
-         /*mao 2015-11-26
-          *表单验证 老师
-          */
-         $('#frmTeacher').bootstrapValidator({
-             message: 'This value is not valid',
-             feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                 valid: 'glyphicon glyphicon-ok',
-                 invalid: 'glyphicon glyphicon-remove',
-                 validating: 'glyphicon glyphicon-refresh'
-             },
-             fields: {/*验证*/
-                 course_name: {/*键名username和input name值对应*/
-                     message: 'The username is not valid',
-                     validators: {
-                         notEmpty: {/*非空提示*/
-                             message: '请选择课程'
-                         },
-                     }
-                 },
-                 type1: {/*键名username和input name值对应*/
-                     message: 'The username is not valid',
-                     validators: {
-                         notEmpty: {/*非空提示*/
-                             message: '请选择班级或者学生组'
-                         },
-                     }
-                 },
+         $("#submit").click(function(){
+             var size= $(this).next("input").size();
+             if(size=="0"){
 
+                 $.alert({
+                     title: '提示：',
+                     content: '您尚未选择上课的学生!',
+                     confirmButton: '确定',
+                     confirm: function(){
+                         return false;
+                     }
+                 });
+
+             }else{
+                 if(!$(this).next("input").val()){
+                     $.alert({
+                         title: '提示：',
+                         content: '您尚未选择上课的学生!',
+                         confirmButton: '确定',
+                         confirm: function(){
+                             return false;
+                         }
+                     });
+                     return false;
+                 }
 
              }
-         });
+
+         })
+
 
          
      })
@@ -167,7 +166,7 @@
             <input type="hidden" name="user_type" value="{{@$user_type}}">
             <input type="hidden" name="c_id" value="{{@$ClassroomPlanInfo->resources_lab_id}}">
             <input type="hidden"  name="timestamp" value="{{@$ClassroomPlanInfo['get_plan'][0]['currentdate']}} {{@$ClassroomPlanInfo['get_plan'][0]['begintime']}}~{{@$ClassroomPlanInfo['get_plan'][0]['currentdate']}} {{@$ClassroomPlanInfo['get_plan'][0]['endtime']}}">
-            <input class="btn2 mart_10 marb_10" type="submit"  value="提交申请" />
+            <input class="btn2 mart_10 marb_10" type="submit" id="submit"  value="提交申请" />
             
         </form>
     </div><!-- 类别列表-->
@@ -185,6 +184,7 @@
                 </div>
                 <div class="w_96">
                     <select  name="class_list[]"  id="class_list" placeholder="输入班级名" style="width:100%;">
+                        <option value="0">请选择上课班级</option>
                         @if(!empty($studentClass) && count($studentClass)>0)
                             @foreach($studentClass as $class)>
                             <option value="{{@$class->id}}">{{@$class->name}}</option>
@@ -200,6 +200,7 @@
                     </ul>
                 </div>
                 <select class="" name="student_group[]"  id="group_list" placeholder="输入学生组名" style="width:100%;">
+                    <option value="0">请选择上课学生组</option>
                     @if(!empty($studentClass) && count($studentClass)>0)
                         @foreach($groups as $group)
                         <option value="{{@$group->id}}">{{@$group->name}}</option>
@@ -228,6 +229,7 @@
                 </div>
                 <div class="w_96">
                     <select  name="class_list[]"  id="class_list" placeholder="输入班级名" style="width:100%;">
+                        <option value="0">请选择上课班级</option>
                         @if(!empty($studentClass) && count($studentClass)>0)
                             @foreach($studentClass as $class)>
                             <option value="{{@$class->id}}">{{@$class->name}}</option>
@@ -243,6 +245,7 @@
                     </ul>
                 </div>
                 <select class="" name="student_group[]"  id="group_list" placeholder="输入学生组名" style="width:100%;">
+                    <option value="0">请选择上课学生组</option>
                     @if(!empty($groups) && count($groups)>0)
                         @foreach($groups as $group)
                         <option value="{{@$group->id}}">{{@$group->name}}</option>
@@ -250,7 +253,7 @@
                     @endif
                 </select>
             </div>
-            
+
             <div class="w_96">
                 <button id="comfirm_student" type="button" class="btn1">确定</button>
             </div>
