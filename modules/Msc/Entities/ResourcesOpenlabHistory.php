@@ -151,10 +151,7 @@ class ResourcesOpenlabHistory extends Model
         }
 
         // 进行筛选
-
-
-
-        $temp = $builder->select(DB::raw(
+        return $builder->groupBy($this->table.'.resources_lab_id')->select(DB::raw(
             implode(
                 ',',
                 [
@@ -163,14 +160,5 @@ class ResourcesOpenlabHistory extends Model
                 ]
             )
         ))->get();
-        dd($temp);
-        $data = [];
-        foreach ($temp as $item)
-        {
-            $data[] = $item->name;
-        }
-
-
-        return array_count_values(array_values($data));
     }
 }
