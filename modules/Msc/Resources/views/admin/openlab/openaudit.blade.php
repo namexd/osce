@@ -102,7 +102,9 @@
                         }
                         else
                         {
-                            layer.alert((result.message).split(":")[1])
+                            layer.alert((result.message).split(":")[1],function(){
+                                location.reload();
+                            })
                         }
                     }
                 });
@@ -136,7 +138,9 @@
                         }
                         else
                         {
-                            layer.alert((result.message).split(":")[1])
+                            layer.alert((result.message).split(":")[1],function(){
+                                location.reload();
+                            });
                         }
                     }
                 });
