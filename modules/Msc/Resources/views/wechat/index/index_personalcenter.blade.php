@@ -23,7 +23,7 @@
 <div class="nav_list">
     <ul class="manage_list">
         <li><a class="ablock nou" href="{{route('msc.personalCenter.myApply')}}"><i class="icon icon1"></i><span>我的设备预约 <i class="fa fa-angle-right i_right"></i></span></a></li>
-        <li><a class="ablock nou" href="{{route('msc.personalCenter.myApply')}}"><i class="icon icon1"></i><span>我的实验室预约 <i class="fa fa-angle-right i_right"></i></span></a></li>
+        <li><a class="ablock nou" href="{{route('msc.personalCenter.getMyOpeningLaboratory')}}"><i class="icon icon1"></i><span>我的实验室预约 <i class="fa fa-angle-right i_right"></i></span></a></li>
         <li><a class="ablock nou" href="{{ url('/msc/wechat/personal-center/personal-my-borrow') }}"><i class="icon icon2"></i><span>我的外借 <i class="fa fa-angle-right i_right"></i></span></a></li>
         <li><a class="ablock nou" href="{{ route('msc.personalCenter.MyCourse') }}"><i class="icon icon3"></i><span>我的课程<i class="fa fa-angle-right i_right"></i></span></a></li>
     </ul>
