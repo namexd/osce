@@ -29,6 +29,7 @@ class UserController extends MscWeChatController {
 	public function getUserLogin()
 	{
 		$getOpenid = env('OPENID', true);
+
 		if($getOpenid){
 			$openid = \Illuminate\Support\Facades\Session::get('openid','');
 			if(empty($openid)){

@@ -1,7 +1,6 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+
     <link href="{{asset('msc/admin/plugins/css/plugins/ionRangeSlider/ion.rangeSlider.css')}}" rel="stylesheet">
     <link href="{{asset('msc/admin/plugins/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css')}}" rel="stylesheet">
     <style>
@@ -13,7 +12,6 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/ionRangeSlider/ion.rangeSlider.min.js')}}"></script>
     <script src="{{asset('msc/admin/openlab/openlab.js')}}"></script>
@@ -133,7 +131,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-white cancel" type="button">取消</button>
-                                    <button class="btn btn-primary" type="submit" id="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                                    <input class="btn btn-primary" type="submit" value="保存" />
                                 </div>
                             </div>
 

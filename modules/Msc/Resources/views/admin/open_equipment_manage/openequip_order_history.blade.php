@@ -47,7 +47,7 @@
         <div class="col-xs-6 col-md-6" style="width: 280px;">
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <input type="text" placeholder="请选择日期" class="form-control layer-date laydate-icon" id="start" name="date">
+                        <input type="text" placeholder="请选择日期" class="form-control layer-date laydate-icon" id="start" name="date" value="{{$rollmsg[0]}}">
                     </div>
                 </div>
             <!--<button type="button" class="btn btn_pl btn-link" ng-click="examine_reject()">批量未通过</button>-->
@@ -55,7 +55,7 @@
         <div class="col-xs-6 col-md-2">
 
             <div class="input-group">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword">
+                <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword" value="{{$rollmsg[1]}}">
             <span class="input-group-btn">
                 <button type="submit" class="btn btn-sm btn-primary" id="search" /><i class="fa fa-search"></i></button>
             </span>

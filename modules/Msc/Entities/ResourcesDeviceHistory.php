@@ -101,7 +101,7 @@
             $builder = $builder->whereRaw ('unix_timestamp(resources_device_history.end_datetime)<= ? ' , [ strtotime ($date)]);
 
             //关键字搜索
-            if ($keyword !== null) {
+            if ($keyword !== '') {
                 $builder = $builder->where ('resources_device.name' , 'like' , '%' . $keyword . '%');
             }
 
