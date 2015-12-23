@@ -21,8 +21,15 @@ function gethistory(qj,url,getdetail,getdetail2){
                 var status;
                 var getdetailall;
                 if(this.status=="0"){
-                    status='<span class="State1">正常</span>';
-                    opera= '<a href="'+getdetail2+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=0'+'"><div class="opera">'+'<span class="State1">使用</span>'+'</div>';
+                    if(this.is_appointment=="1"){
+                        status='<span class="State2">已预约</span>';
+                        opera= '';
+                    }
+                    else
+                    {
+                        status='<span class="State1">正常</span>';
+                        opera= '<a href="'+getdetail2+'?id='+this.id+'&apply_date='+qj.dateTime+'&apply_type=0'+'"><div class="opera">'+'<span class="State1">使用</span>'+'</div>';
+                    }
                 }else if(this.status=="1"){
                     if(this.is_appointment=="1"){
                         status='<span class="State2">已预约</span>';
