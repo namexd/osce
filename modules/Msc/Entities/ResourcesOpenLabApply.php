@@ -630,17 +630,23 @@ class ResourcesOpenLabApply extends CommonModel
         $builder->select (
             [
                 'resources_lab.name as name',
-                $this->table.'.apply_date as apply_date',
                 'resources_openlab_calendar.begintime as begintime',
                 'resources_openlab_calendar.endtime as endtime',
                 'resources_lab.code as code',
                 'student.name as student_name',
                 'teacher.name as teacher_name',
-                $this->table.'.detail as detail',
                 'resources_lab.status as status',
                 $this->table.'.id as id',
+                $this->table.'.apply_type as apply_type',
+                $this->table.'.apply_date as apply_date',
                 $this->table.'.apply_uid as apply_uid',
-
+                $this->table.'.resources_lab_id as resources_lab_id',
+                $this->table.'.resources_lab_calendar_id as resources_lab_calendar_id',
+                $this->table.'.detail as detail',
+                $this->table.'.status as status',
+                $this->table.'.reject as reject',
+                $this->table.'.course_id as course_id',
+                $this->table.'.opeation_uid as opeation_uid',
             ]
         );
 

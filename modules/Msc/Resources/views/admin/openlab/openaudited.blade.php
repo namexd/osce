@@ -73,7 +73,7 @@
                         reject:str
                     },
                     success: function(result) {
-                        //location.reload();
+                        location.reload();
                     }
                 });
             })
@@ -180,7 +180,7 @@
                 </tbody>
             </table>
             <div class="pull-right">
-                {!! $pagination->render() !!}
+                {!! $pagination->appends($_GET)->render() !!}
                 
             </div>
         </div>

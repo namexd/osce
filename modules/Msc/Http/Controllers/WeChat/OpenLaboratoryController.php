@@ -106,8 +106,14 @@ class OpenLaboratoryController extends MscWeChatController {
 					}
 				}
 			}
+			//TODO:罗海华 修改bug 用于 学生申请开放实验室 审核通过后，学生在此提交申请
+			//TODO:在开放实验室被预约时段不满员的情况下依然可以申请
+			//TODO:2015-12-22 19:54
 			if(!empty($v['get_plan']) && count($v['get_plan'])>0){
-				$LaboratoryList[$k]['status']= 1;
+				if($v->resourcesClassroom->person_total<=$v['get_plan']->first()->resorces_lab_person_total)
+				{
+					$LaboratoryList[$k]['status']= 1;
+				}
 			}
 		}
 
@@ -152,7 +158,6 @@ class OpenLaboratoryController extends MscWeChatController {
 			}
 			$Course = $Courses->whereIn('id', $arr)->get();
 		}
-
 
 		$data = [
 			'ClassroomPlanInfo' => $ClassroomPlan_detai,

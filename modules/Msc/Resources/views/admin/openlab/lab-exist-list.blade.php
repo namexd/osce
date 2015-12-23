@@ -134,7 +134,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="/msc/admin/lab/had-open-lab-detail?id={{@$data->id}}" class="status1" id="look" data-toggle="modal" data-target="#myModal">详情</a>
+                                                <a href="/msc/admin/lab/had-open-lab-detail?id={{@$data->id}}"  class="status1" id="look" data-toggle="modal" data-target="#myModal">详情</a>
                                                 <a href="/msc/admin/lab/had-open-lab-edit?id={{@$data->id}}" class="status1" id="edit" data-toggle="modal" data-target="#myModal">编辑</a>
                                             </td>
                                         </tr>
