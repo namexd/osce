@@ -1,7 +1,14 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
     <link rel="stylesheet" type="text/css" href="{{asset('/msc/admin/usermanage/usermanage.css')}}"/>
+    <style>
+        @media (min-width: 768px){
+            .modal-dialog{
+                width: 850px!important;
+            }
+        }
 
+    </style>
 @stop
 
 @section('only_js')
