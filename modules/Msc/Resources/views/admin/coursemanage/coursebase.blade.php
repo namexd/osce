@@ -16,6 +16,11 @@
         color: #555;
         cursor: default;
     }
+    button.btn-white.border-white.dropdown-toggle {
+        border: none;
+        font-weight: bolder;
+    }
+    .tab-content{margin-top: 15px;}
     .state-ing{color: #72CFBC;}
     .state-before{color: #F9BB77;}
     .item-info{margin: 5px 0;}
