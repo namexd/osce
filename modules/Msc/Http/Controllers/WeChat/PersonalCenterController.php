@@ -325,8 +325,41 @@ class PersonalCenterController extends MscWeChatController {
 
 		return view('msc::wechat.personalcenter.mylabreservation',['list'=>$OpenLabApply]);
 
+	}
+
+	/**
+	 * 我的开放实验室预约
+	 * @method GET /msc/wechat/personal-center/cancel-laboratory/{$id}
+	 * @access public
+	 *
+	 * @param Request $request get请求<br><br>
+	 * <b>get请求字段：</b>
+	 * @return view
+	 * int $id 必须
+	 * @version 0.6
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date 2015-12-23 14:20
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 */
+	public function getCancelLaboratory($id){
+
+		$ResourcesOpenLabApply = new ResourcesOpenLabApply;
+
+		$rew = $ResourcesOpenLabApply->DelOpenLabApply($id);
+		if($rew){
+			return response()->json(
+				$this->success_rows(1,'取消成功')
+			);
+		}else{
+			return response()->json(
+				$this->success_rows(2,'取消失败')
+			);
+		}
+
 
 	}
+
+
 
 
 }
