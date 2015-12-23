@@ -29,8 +29,8 @@ function lab_history_analyse(){
         istime: false,
         istoday: false,
         choose: function (a) {
-            end.min = a;
-            end.start = a
+            /*end.min = a;
+            end.start = a*/
         }
     };
     laydate(start);
@@ -54,46 +54,41 @@ function lab_history_analyse(){
             success:function(res){
                 /*统计折线图*/
                 var data = {};
-                if(res.code==1){
-                    if(chartType == 'bar'){
+                if(chartType == 'bar'){
 
-                        //柱状图
-                        var xAxis = [];
-                        var yAxis = [];
-                        for(var i in res.data.rows){
+                    //柱状图
+                    var xAxis = [];
+                    var yAxis = [];
+                    for(var i in res){
 
-                            xAxis.push(res.data.rows[i].name);
-                            yAxis.push(res.data.rows[i].total);
-                        }
-                        data['xAxis'] = xAxis;
-                        data['yAxis'] = yAxis;
-
-                        //用户体验操作 数据少导致太宽
-                        if(data.xAxis.length<8){
-                            var len = data.xAxis.length;
-                            for(var i = len;i<=8;i++){
-                                (data.xAxis).push('');
-                            }
-                        }
-                        Analyse.chart(data);
-
-                    }else{
-
-                        //饼图
-                        var dataS = [];
-                        var legendS = [];
-                        for(var i in res.data.rows){
-
-                            dataS.push({value:res.data.rows[i].total, name:res.data.rows[i].name});
-                            legendS.push(res.data.rows[i].name);
-                        }
-                        data['dataS'] = dataS;
-                        data['legendS'] = legendS;
-                        Analyse.chartPie(data);
+                        xAxis.push(res[i].name);
+                        yAxis.push(res[i].total);
                     }
-                    
+                    data['xAxis'] = xAxis;
+                    data['yAxis'] = yAxis;
+
+                    //用户体验操作 数据少导致太宽
+                    if(data.xAxis.length<8){
+                        var len = data.xAxis.length;
+                        for(var i = len;i<=8;i++){
+                            (data.xAxis).push('');
+                        }
+                    }
+                    Analyse.chart(data);
+
                 }else{
-                    console.log(res.message)
+
+                    //饼图
+                    var dataS = [];
+                    var legendS = [];
+                    for(var i in res){
+
+                        dataS.push({value:res[i].total, name:res[i].name});
+                        legendS.push(res[i].name);
+                    }
+                    data['dataS'] = dataS;
+                    data['legendS'] = legendS;
+                    Analyse.chartPie(data);
                 }
             }
         });
@@ -101,7 +96,7 @@ function lab_history_analyse(){
     });
     
     //测试
-    Analyse.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
+    //Analyse.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
 }
 
 /**
