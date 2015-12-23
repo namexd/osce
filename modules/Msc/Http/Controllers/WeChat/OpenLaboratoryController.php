@@ -159,6 +159,7 @@ class OpenLaboratoryController extends MscWeChatController {
 			}
 			$Course = $Courses->whereIn('id', $arr)->get();
 		}
+		$Course = $Courses->get();
 
 		$data = [
 			'ClassroomPlanInfo' => $ClassroomPlan_detai,

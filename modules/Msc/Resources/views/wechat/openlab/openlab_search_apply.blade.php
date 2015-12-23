@@ -21,6 +21,7 @@
      $(document).ready(function(){
          $("#class_list").select2({});
          $("#group_list").select2({});
+         $('#course_name').select2({});
          $(".radio_label").click(function(){
              if($(this).children("input").checked=="true"){
                  $(this).children(".radio_icon").removeClass("check");
@@ -43,6 +44,7 @@
 
          
      })
+
 
      
 
