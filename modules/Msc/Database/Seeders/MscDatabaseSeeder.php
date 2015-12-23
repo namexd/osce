@@ -33,6 +33,8 @@ class MscDatabaseSeeder extends Seeder {
 		$this   ->  command ->  info('ResourcesOpenLabCalendar Data Creating......');
 		$this   ->  call(ResourcesLabCalendar::class);
 		$this   ->  command ->  info('ResourcesLabCalendar Data Creating......');
+		$this   ->  call(ResourcesDeviceCateSeeder::class);
+		$this   ->  command ->  info('ResourcesDeviceCateSeeder Data Creating......');
 
 
 		Model::reguard();
