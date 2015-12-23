@@ -64,18 +64,24 @@
                 }else{
                     str=$("#choose option:selected").text();
                 }
-                $.ajax({
-                    url:"{{url('/msc/admin/lab/open-lab-urgent-notice')}}",
-                    type:"post",
-                    dataType:"json",
-                    data:{
-                        id:$("#Form2").attr("openid"),
-                        reject:str
-                    },
-                    success: function(result) {
-                        location.reload();
-                    }
-                });
+                if(str==""){
+                    $(this).attr("data-dismiss","");
+                }else{
+                    $(this).attr("data-dismiss","modal");
+                    $.ajax({
+                        url:"{{url('/msc/admin/lab/open-lab-urgent-notice')}}",
+                        type:"post",
+                        dataType:"json",
+                        data:{
+                            id:$("#Form2").attr("openid"),
+                            reject:str
+                        },
+                        success: function(result) {
+                            location.reload();
+                        }
+                    });
+                }
+
             })
             //判断原因是否为自定义
             $("#choose").change(function(){
@@ -170,7 +176,7 @@
                     <td>{{$item['student_name'] or  $item['teacher_name']}}</td>
                     <td>{{$item['detail']}}</td>
                     <td>{{$groupNames[$item->id]}}</td>
-                    <td class="status">{{$statusValues[$item['status']]}}</td>
+                    <td class="status">{{@$statusValues[$item->plan_status]}}</td>
                     <td class="opera">
                         <span class="read notice modal-control" data-toggle="modal" data-target="#myModal" >紧急通知</span>
                     </td>

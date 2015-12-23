@@ -36,7 +36,17 @@ class ResourcesOpenLabPlan extends Model
         //return $this->belongsTo('\Modules\Msc\Entities\ResourcesOpenLabApply','resources_openlab_apply_id','id');
         return $this->hasOne('\Modules\Msc\Entities\ResourcesOpenLabApply','id','resources_openlab_apply_id');
     }
-
+    protected $statusValues =[
+        '-3'=>'不允许预约',
+        '-2'=>'已过期',
+        '-1'=>'已取消',
+        '0'=>'已预约未使用',
+        '1'=>'使用中',
+        '2'=>'已使用'
+    ];
+    public function getStatusValues(){
+        return $this    ->  statusValues;
+    }
     public function getConflicts($labId, $date, $beginTime, $endTime){
         $Conflicts  =   $this   ->  with(
             [

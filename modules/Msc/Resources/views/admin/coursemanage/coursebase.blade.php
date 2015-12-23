@@ -22,6 +22,8 @@
     }
     .tab-content{margin-top: 15px;}
     .nav.nav-tabs{font-size: 14px}
+    .col-sm-8 .wrapper-content {padding: 20px 0 20px 20px;}
+
     .state-ing{color: #72CFBC;}
     .state-before{color: #F9BB77;}
     .item-info{margin: 5px 0;}

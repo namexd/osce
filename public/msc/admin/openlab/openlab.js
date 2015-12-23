@@ -9,8 +9,191 @@ $(function(){
         case "lab-exist-detail":lab_exist_detail();break; //lab-exist-detail页面
         case "lab-exist-list":lab_exist_list();break;//lab-exist-list页面
         case "lab-history":lab_history();break;//lab-history页面
+        case "lab_history_analyse":lab_history_analyse();break;//lab-history页面
     }
 });
+
+/**
+ *使用历史统计
+ *20151223 mao
+ */
+function lab_history_analyse(){
+    /**
+     *日期初始化
+     */
+    var start = {
+        elem: "#start",
+        format: "YYYY-MM-DD",
+        min: '1970-01-01',
+        max: "2099-06-16",
+        istime: false,
+        istoday: false,
+        choose: function (a) {
+            /*end.min = a;
+            end.start = a*/
+        }
+    };
+    laydate(start);
+
+    /**
+     *查询
+     */
+    $('.inquiry').click(function(){
+        var req = {};
+        req['date'] = $('#start').val();
+        req['date'] = $('#status').val();
+
+        //检测图标类型
+        chartType = $('#chart-type').val();
+        //ajax请求
+        $.ajax({
+            type:"get",
+            async:true,
+            url:"/msc/admin/lab/openlab-history-analyze",
+            data:JSON.stringify(req),
+            success:function(res){
+                /*统计折线图*/
+                var data = {};
+                if(chartType == 'bar'){
+
+                    //柱状图
+                    var xAxis = [];
+                    var yAxis = [];
+                    for(var i in res){
+
+                        xAxis.push(res[i].name);
+                        yAxis.push(res[i].total);
+                    }
+                    data['xAxis'] = xAxis;
+                    data['yAxis'] = yAxis;
+
+                    //用户体验操作 数据少导致太宽
+                    if(data.xAxis.length<8){
+                        var len = data.xAxis.length;
+                        for(var i = len;i<=8;i++){
+                            (data.xAxis).push('');
+                        }
+                    }
+                    Analyse.chart(data);
+
+                }else{
+
+                    //饼图
+                    var dataS = [];
+                    var legendS = [];
+                    for(var i in res){
+
+                        dataS.push({value:res[i].total, name:res[i].name});
+                        legendS.push(res[i].name);
+                    }
+                    data['dataS'] = dataS;
+                    data['legendS'] = legendS;
+                    Analyse.chartPie(data);
+                }
+            }
+        });
+
+    });
+    
+    //测试
+    //Analyse.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
+}
+
+/**
+ *统计分析
+ *20151223 mao
+ */
+var Analyse = (function(mod){
+    /**
+     *统计图
+     */
+    mod.chart = function (res){
+        var myChart = echarts.init(document.getElementById('main')); 
+        var option = {
+            tooltip: {
+                show: true
+            },
+            xAxis : [
+                {   
+                    type : 'category',
+                    data : res.xAxis//["1","2","3","4","5","6"]
+                }
+            ],
+            yAxis : [
+                {   name : '数量/次',
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    
+                    type:"bar",
+                    smooth:true,
+                    itemStyle: {
+                        normal: {
+                            color:"#74A9FF",
+                            lineStyle: {
+                                width:3
+
+                            }
+                        }
+                    },
+                    data:res.yAxis//[5, 20, 40, 10, 10, 20]
+                }
+            ]
+        }; 
+        // 为echarts对象加载数据 
+        myChart.setOption(option);
+    }
+    //测试
+    //chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});       
+
+
+    /**
+     *饼图
+     */
+    mod.chartPie = function (res){
+        var myChart = echarts.init(document.getElementById('main'));
+        var option = {
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:res.legendS//['实验室A','实验室B','实验室C','实验室D','实验室E']
+            },
+            toolbox: {
+                show : false
+            },
+            series : [
+                {
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:res.dataS/*[
+                        {value:335, name:'实验室A'},
+                        {value:310, name:'实验室B'},
+                        {value:234, name:'实验室C'},
+                        {value:135, name:'实验室D'},
+                        {value:1548, name:'实验室E'}
+                    ]*/
+                }
+            ]
+        };
+        // 为echarts对象加载数据 
+        myChart.setOption(option);
+
+    }
+    //chartPie({legendS:['实验室A','实验室B','实验室C','实验室D','实验室E'],dataS:[{value:335, name:'实验室A'},{value:310, name:'实验室B'},{value:234, name:'实验室C'},{value:135, name:'实验室D'},{value:1548, name:'实验室E'}]})
+
+
+
+    return mod;
+
+})(Analyse||{})
+
 
 function lab_add(){
     // var url = pars.ajaxurl;
