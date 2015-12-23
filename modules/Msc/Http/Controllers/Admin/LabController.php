@@ -1133,7 +1133,7 @@ class LabController extends MscController
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
         try{
             $list   =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
-            if(!empty($list))
+            if(count($list))
             {
                 //成功回跳到列表
                 foreach($list as $openid)

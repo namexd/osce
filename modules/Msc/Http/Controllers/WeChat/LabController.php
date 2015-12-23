@@ -17,6 +17,7 @@ use Modules\Msc\Entities\ResourcesOpenLabApply;
 use Modules\Msc\Entities\ResourcesOpenLabPlan;
 use Modules\Msc\Http\Controllers\MscWeChatController;
 use Modules\Msc\Repositories\Common;
+use App\Repositories\Common as AppCommon;
 
 class LabController extends MscWeChatController
 {
@@ -223,18 +224,23 @@ class LabController extends MscWeChatController
         $this->validate($request,[
             'id'        => 'required|integer'
         ]);
-
         $id     =   $request    ->  get('id');
         $notice =   $request    ->  get('notice');
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
         try{
             $opendIdList        =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
-            if(!empty($result))
+            if(count($opendIdList))
             {
-                foreach($opendIdList as $opendid)
+                try{
+                    foreach($opendIdList as $opendid)
+                    {
+                        AppCommon::sendMsg($opendid,$notice);
+                    }
+                }
+                catch(\Exception $msgEx)
                 {
-                    Common::sendMsg($opendid,$notice);
+                    //抓取不报错
                 }
                 //成功回跳到列表
                 return redirect()->route('msc.wechat.openLaboratory.emergencyManage');
