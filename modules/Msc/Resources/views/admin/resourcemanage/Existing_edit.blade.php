@@ -258,7 +258,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">编码</label>
+                                <label class="col-sm-2 control-label">编号</label>
                                 <div class="col-sm-10 add_box">
                                 	<input  type="text" id="" name="code[]" class=" left form-control" value="{{$resource['items'][0]['code']}}">
                             		<input type="button" id="" name="" class="code_add left btn btn-info" value="添 加">
@@ -281,6 +281,7 @@
                             		@endif
                             	@endforeach
                             </div>
+
 	                        <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">

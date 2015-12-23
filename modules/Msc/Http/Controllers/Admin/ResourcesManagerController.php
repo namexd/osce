@@ -772,7 +772,6 @@ class ResourcesManagerController extends MscController
         {
             $imagesArray = [];
         }
-
         $data = [
             'id'             => $resources->id, // 设备单品id
             'name'           => $resources->name, // 设备名称
@@ -833,19 +832,19 @@ class ResourcesManagerController extends MscController
             'manager_mobile' => 'required|mobile_phone',
             'location'       => 'required|max:50|min:0',
             'detail'         => 'sometimes|max:255|min:0',
-            'items'          => 'required|array',
+//            'items'          => 'required',
+            'code'           => 'required|array'
         ]);
 
         $formData         = $request->only(['id', 'images_path']);
         $id               = (int)$formData['id'];
-        $itemCodeArray    = $request->input('items');
-
+        $itemCodeArray    = $request->input('code');
         $resourcesRepository = App::make('\Modules\Msc\Repositories\ResourcesRepository');
 
         $connection = DB::connection('msc_mis');
         $connection->beginTransaction();
-
         // 更新单品code
+//
         foreach ($itemCodeArray as $itemCode)
         {
             if ('' == $itemCode)
@@ -853,15 +852,12 @@ class ResourcesManagerController extends MscController
                 continue;
             }
 
-            $tempItemCodeArray = explode(',', $itemCode);
-            $itemIdArray       = explode(':', $tempItemCodeArray['0']);
-            $itemCodeArray     = explode(':', $tempItemCodeArray['1']);
-
-            $result = ResourcesToolsItems::where('id', '=', $itemIdArray['1'])->update(['code'=>$itemCodeArray['1']]);
+            $itemIdArray = $id;
+            $itemCodeArray = $itemCode;
+            $result = ResourcesToolsItems::where('id', '=', $itemIdArray)->update(['code'=>$itemCodeArray]);
             if (!$result)
             {
-                DB::rollback();
-                //throw new \Exception('修改编号失败');
+                $connection->rollback();
                 return redirect()->back()->withErrors(new \Exception('修改编号失败'));
             }
         }
@@ -923,7 +919,7 @@ class ResourcesManagerController extends MscController
         if($resourcesTools->update($resourcesData))
         {
             $connection->commit();
-            return back();
+            return back()->withInput();
         }
         else
         {
