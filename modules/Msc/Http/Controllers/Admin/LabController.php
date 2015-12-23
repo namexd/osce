@@ -16,6 +16,7 @@ use Modules\Msc\Entities\ResourcesClassroomApply;
 use Modules\Msc\Entities\ResourcesClassroomCourses;
 use Modules\Msc\Entities\ResourcesClassroomPlan;
 use Modules\Msc\Entities\ResourcesOpenLabApply;
+use Modules\Msc\Entities\ResourcesOpenlabHistory;
 use Modules\Msc\Entities\ResourcesOpenLabPlan;
 use Modules\Msc\Http\Controllers\MscController;
 use Illuminate\Http\Request;
@@ -469,6 +470,7 @@ class LabController extends MscController
             $apply  =   $ResourcesOpenLabApply  ->find($id);
             if ($result) {
                 $user   =   $apply->applyUser;
+
                 if(!is_null($user))
                 {
                     $courseName =   is_null($apply  ->  course)? '-':$apply ->  course  ->  name;
@@ -481,6 +483,7 @@ class LabController extends MscController
                     ];
                     $notice =   implode('',$noticeArray);
                     $openid  =  $user   ->  openid;
+                    $openid  =  'oI7UquOGL3QxBGWmW3PMA1Sz9sKM';
                     Common::sendMsg($openid,$notice);
                 }
                 return response()->json(
