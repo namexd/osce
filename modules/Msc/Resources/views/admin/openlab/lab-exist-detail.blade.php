@@ -6,11 +6,13 @@
 @stop
 
 @section('only_js')
+  
 
 @stop
 
 @section('content')
-<div class="wrapper wrapper-content animated fadeInRight">
+
+<div class="wrapper wrapper-content animated fadeInRight detail">
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -33,9 +35,9 @@
                                 <label class="col-sm-2 control-label">类别</label>
 
                                 <div class="col-sm-10">
-                                    @if($openLabDetail['name'] == 1)
+                                    @if($openLabDetail['opened'] == 1)
                                         <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约实验室)" disabled>
-                                    @elseif($openLabDetail['name'] == 2)
+                                    @elseif($openLabDetail['opened'] == 2)
                                         <input type="text"  id="detail" name="type" class="form-control" value="开放实验室(只能预约设备)" disabled>
                                         @else
                                         <input type="text"  id="detail" name="type" class="form-control" value="普通实验室" disabled>
@@ -116,6 +118,7 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                
                                 <div class="col-sm-4 col-sm-offset-2 right">
                                     <button class="btn btn-primary right" type="button" data-dismiss="modal">关&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;闭</button>
                                 </div>

@@ -434,7 +434,7 @@ function lab_history(){
 
     $(function(){
         laydate(start);
-        $(".date").text($(".date").text().substring(0,10));
-        $(".time").text($(".time").text().substring(11,19));
+       /* $(".date").text($(".date").text().substring(0,10));
+        $(".time").text($(".time").text().substring(11,19));*/
     })
 }
