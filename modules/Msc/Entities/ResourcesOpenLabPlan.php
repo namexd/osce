@@ -241,7 +241,7 @@ class ResourcesOpenLabPlan extends Model
                 throw new \Exception('新建计划失败');
             }
             $connection ->  commit();
-            return $newPlan;
+            return $opendIdList;
         }
         catch(\Exception $ex)
         {

@@ -1131,11 +1131,15 @@ class LabController extends MscController
         $notice =   $request    ->  get('notice');
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
-//        try{
+        try{
             $list   =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
             if(!empty($list))
             {
                 //成功回跳到列表
+                foreach($list as $openid)
+                {
+                    Common::sendMsg($openid,$notice);
+                }
                 return response()   ->    json(
                     $this->success_data(['id'=>$id])
                 );
@@ -1144,13 +1148,13 @@ class LabController extends MscController
             {
                 throw new \Exception('操作失败');
             }
-//        }
-//        catch(\Exception $ex)
-//        {
-//            return response()   ->    json(
-//                $this->fail($ex)
-//            );
-//        }
+        }
+        catch(\Exception $ex)
+        {
+            return response()   ->    json(
+                $this->fail($ex)
+            );
+        }
 
     }
     /**
