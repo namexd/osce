@@ -190,6 +190,7 @@ class PersonalCenterController extends MscWeChatController {
 		$resourcesDeviceApply	=	new ResourcesDeviceApply();
 		$list				=	$resourcesDeviceApply	->	getMyApply($user->id);
 		// 无翻页
+
 		return view('msc::wechat.personalcenter.mydevicereservation',['list'=>$list]);
 	}
 
@@ -321,6 +322,7 @@ class PersonalCenterController extends MscWeChatController {
 			$data['uid'] = $user->id;
 		}
 		$OpenLabApply = $ResourcesOpenLabApply->getMyOpenLabApply($data);
+
 
 		return view('msc::wechat.personalcenter.mylabreservation',['list'=>$OpenLabApply]);
 

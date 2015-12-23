@@ -81,7 +81,7 @@
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-        我的实验室预约
+        我的设备预约
         <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
@@ -96,31 +96,34 @@
 
     <div id="info_list" class="mart_5">
         <div id="now_borrow">
-                <input type="hidden" value="">
+                @forelse($list as $item)
+                <input type="hidden" value="{{$item["id"]}}">
                 <div class="add_main">
                     <div class="form-group">
-                        <label for="">教室名称</label>
+                        <label for="">设备名称</label>
                         <div class="txt">
-
+                            {{$item->resourcesLabDevices->name}}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="">教室编号</label>
+                        <label for="">设备编号</label>
                         <div class="txt">
-
+                            {{$item->resourcesLabDevices->code}}
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="">预约时段</label>
                         <div class="txt">
-
+                            {{date('m.d',strtotime($item['original_begin_datetime']))}}-{{date('m.d',strtotime($item['original_end_datetime']))}}
                         </div>
                         <div class="submit_box">
-                            <button class="btn2 cancel"  type="button" auditid="">取消
+                            <button class="btn2 cancel"  type="button" auditid="{{$item["id"]}}">取消
                             </button>
                         </div>
                     </div>
                 </div>
+                @empty
+                @endforelse
         </div>
 
         <div class="main_list"  style="display: none;">
