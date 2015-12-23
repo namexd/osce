@@ -50,6 +50,9 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         不通过
+        <a class="right header_btn" href="{{route('msc.personalCenter.infoManage')}}">
+            <i class="fa fa-home clof font26 icon_return"></i>
+        </a>
     </div>
     <div id="info_list">
         <div id="Equipment_info" class="w_94" style="">
