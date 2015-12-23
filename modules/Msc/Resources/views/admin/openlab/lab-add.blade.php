@@ -21,8 +21,8 @@
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
-        <input type="hidden"  id="parameter" value="{'pagename':'lab-add',
-        'ajaxurl':'{{ route("msc.admin.resourcesManager.getResourcesList") }}','returnUrl':'{{route("msc.admin.lab.getHadOpenLabList")}}'}" />
+        
+        <input type="hidden"  id="parameter" value="{'pagename':'lab-add','ajaxurl':'{{ route("msc.admin.lab.getHadOpenLabList") }}'}" />
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>{{$title or "新增"}}实验室</h5>
@@ -46,9 +46,9 @@
                                 <div class="col-sm-10 select_code">
                                     <select id="select_Category"   class="form-control m-b" name="opened">
                                         <option value="-1">请选择类别</option>
-                                        <option value="0" @if(@$openLabDetail['name'] == 0)selected="selected"@endif>普通实验室</option>
-                                        <option value="1" @if(@$openLabDetail['name'] == 1)selected="selected"@endif>开发实验室(只能预约实验室)</option>
-                                        <option value="2" @if(@$openLabDetail['name'] == 2)selected="selected"@endif>开发实验室(只能预约设备)</option>
+                                        <option value="0" @if(@$openLabDetail['opened'] == 0)selected="selected"@endif>普通实验室</option>
+                                        <option value="1" @if(@$openLabDetail['opened'] == 1)selected="selected"@endif>开发实验室(只能预约实验室)</option>
+                                        <option value="2" @if(@$openLabDetail['opened'] == 2)selected="selected"@endif>开发实验室(只能预约设备)</option>
                                         {{--@foreach ($resourcesCateList as $item)
                                             <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                         @endforeach--}}

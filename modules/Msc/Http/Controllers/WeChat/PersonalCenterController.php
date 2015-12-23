@@ -341,8 +341,9 @@ class PersonalCenterController extends MscWeChatController {
 	 * @date 2015-12-23 14:20
 	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
 	 */
-	public function getCancelLaboratory($id){
+	public function getCancelLaboratory(){
 
+		$id = Input::get('id');
 		$ResourcesOpenLabApply = new ResourcesOpenLabApply;
 
 		$rew = $ResourcesOpenLabApply->DelOpenLabApply($id);

@@ -18,17 +18,30 @@
         $(document).ready(function(){
             $(".cancel").click(function(){
                 var $this = $(this);
-                var id = $this.attr('auditid');
+                var id = $this.attr("auditid");
                 var url="{{ route('msc.personalCenter.getCancelLaboratory')}}";
                 $.confirm({
                     title:'提示',
-                    content: '是否取消预约设备？',
+                    content: '是否取消预约实验室？',
                     confirmButton: '　　　是　　　 ' ,
                     cancelButton: '　　　否　　　',
                     confirmButtonClass: 'btn-info',
                     cancelButtonClass: 'btn-danger',
                     confirm:function(){
-                        location.href = url+"?id="+id;
+                        $.ajax({
+                            type:"get",
+                            async:true,
+                            url:url+"?id="+id,
+                            success:function($data){
+                                console.log($data);
+                                if($data.code == 1){
+                                    $this.parent(".submit_box").parent(".form-group").parent(".add_main").remove();
+                                }
+                            },
+                            error:function(){
+                                console.log("error");
+                            }
+                        })
                     }
                 })
 
@@ -97,7 +110,6 @@
     <div id="info_list" class="mart_5">
         <div id="now_borrow">
             @foreach($list as $item)
-                <input type="hidden" value="{{ $item['id'] }}">
                 <div class="add_main">
                     <div class="form-group">
                         <label for="">教室名称</label>
@@ -130,7 +142,6 @@
                             @if($item['status']=="0")
                                 <button class="btn2 cancel"  type="button" auditid="{{ $item['id'] }}">取消</button>
                             @else
-                                <button class="btn2 cancel"  type="button" auditid="{{ $item['id'] }}" style="display: none;">取消</button>
                             @endif
                         </div>
                     </div>
