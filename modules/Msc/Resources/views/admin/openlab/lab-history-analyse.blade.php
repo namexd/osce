@@ -20,6 +20,7 @@
 		</div>
 		
 		<div class="ibox-content form-horizontal">
+		<form method="get" action="{{route('msc.admin.lab.getOpenLabHistoryExcl')}}">
 			<div class="btn-group marr_25">
 				<button type="button" class="btn btn-white">图表类型</button>
 				<div class="btn-group" role="group">
@@ -29,7 +30,7 @@
 					</select>
 				</div>
 	        </div>
-	        <input placeholder="日期" class="form-control layer-date laydate-icon marr_5 mart2_7 date" id="start" name="begindate">
+	        <input placeholder="日期" class="form-control layer-date laydate-icon marr_5 mart2_7 date" id="start" name="date">
 	        <div class="btn-group marr_5" style="display:none">
 				<button type="button" class="btn btn-white">年级</button>
 				<div class="btn-group" role="group">
@@ -55,16 +56,16 @@
 	        <div class="btn-group marr_5">
 				<button type="button" class="btn btn-white">复位状态</button>
 				<div class="btn-group" role="group">
-					<select class="form-control" id="status">
+					<select class="form-control" id="status" name="result_init">
                         <option value="0">良好</option>
                         <option value="1">损坏</option>
                         <option value="2">严重损坏</option>
                     </select>
 				</div>
 	        </div>
-	        <button class="btn btn-primary marr_15 inquiry">查询</button>
-	        <a href="javascript:void(0)" class="btn btn-w-m btn-white marl_10">导出Excel文件</a>
-	        
+	        <a href="javascript:void(0)" class="btn btn-primary marr_15 inquiry">查询</a>
+	        <input type="submit" class="btn btn-w-m btn-white marl_10" value="导出Excel文件">
+	        </form>
 	        <div id="main" style="height:400px"></div>
 	        
 		</div>

@@ -53,7 +53,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//Route::get('lab/open-lab-apply-list',['uses'=>'LabController@getOpenLabApplyList','as'=>'msc.lab.openLabApplyList']);
 		//开放实验室已审核
 		Route::get('lab/open-lab-apply-examined-list',['uses'=>'LabController@getOpenLabApplyExaminedList','as'=>'msc.admin.lab.openLabApplyExaminedList']);
-
+		Route::get('lab/open-lab-history-excl',['uses'=>'LabController@getOpenLabHistoryExcl','as'=>'msc.admin.lab.getOpenLabHistoryExcl']);
+		
+		
 		Route::get('courses/provisional-courses-plan', ['uses'=>'CoursesController@getProvisionalCoursesPlan','as'=>'msc.courses.ProvisionalCoursesPlan']);
 		Route::get('courses/best-time', ['uses'=>'CoursesController@getBestTime','as'=>'msc.courses.BestTime']);
 		Route::get('courses/classroom-time', ['uses'=>'CoursesController@getClassroomTime','as'=>'msc.courses.ClassroomTime']);
