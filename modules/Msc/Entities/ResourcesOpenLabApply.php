@@ -706,22 +706,22 @@ class ResourcesOpenLabApply extends CommonModel
             $history =   [
                 'resources_openlab_apply_id'    =>  $apply  ->  id,
                 'resources_lab_id'              =>  $apply  ->  resources_lab_id,
-                'begin_datetime'                =>  $apply  ->  calendar    ->  begintime,
-                'end_datetime'                  =>  $apply  ->  calendar    ->  endtime,
+                'begin_datetime'                =>  $apply  ->  apply_date.' '.$apply  ->  calendar    ->  begintime,
+                'end_datetime'                  =>  $apply  ->  apply_date.' '.$apply  ->  calendar    ->  endtime,
                 'group_id'                      =>  implode(',',$groupsIds),
                 'teacher_uid'                   =>  0,
                 'result_poweroff'               =>  1,
                 'result_init'                   =>  1,
             ];
-            $history    =   $ResourcesOpenlabHistory->firstOrCreate($history);
-            if(!$history)
-            {
-                throw new \Exception('历史记录新增失败');
-            }
             //删除作废历史
             foreach($list as $item)
             {
                 $ResourcesOpenlabHistory    ->  delHistoryByApplyId($item->resources_openlab_apply_id);
+            }
+            $history    =   $ResourcesOpenlabHistory->firstOrCreate($history);
+            if(!$history)
+            {
+                throw new \Exception('历史记录新增失败');
             }
         }
         catch(\Exception $ex)
