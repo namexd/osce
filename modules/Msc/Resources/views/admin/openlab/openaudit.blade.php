@@ -173,7 +173,7 @@
                 </div>
 
                 <div class="col-xs-6 col-md-4">
-                    <form method="get" action="/msc/admin/lab/open-lab-apply-list">
+                    <form method="get" action="{{url('msc/admin/lab/open-lab-apply-list')}}">
                         <div class="input-group pull-left col-md-5 searchbox">
                             <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="date" value="{{$rollmsg[0]}}">
                         </div>
