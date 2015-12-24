@@ -22,19 +22,19 @@
 	<input type="hidden"  id="parameter" value="{'pagename':'lab-exist-detail'}" >
 	<div class="ibox float-e-margins ibox-content pad0">
 		<div class="row table-head-style1 ">
-	        <div class="col-xs-2 col-md-2 head-opera">
-	            <input placeholder="日期" class="form-control layer-date laydate-icon" id="start" name="date">
-	        </div>
-	        <div class="col-xs-6 col-md-2">
-	            <form method="get" action="{{route("msc.admin.lab.openLabHistoryList")}}">
-	                <div class="input-group">
-	                    <input type="text" placeholder="搜索" class="input-sm form-control" name="keyword" value="">
-	                <span class="input-group-btn">
-	                    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
-	                </span>
-	                </div>
-	            </form>
-	        </div>
+			<form method="get" action="{{route("msc.admin.lab.openLabHistoryList")}}">
+				<div class="col-xs-2 col-md-2 head-opera">
+					<input placeholder="日期" class="form-control layer-date laydate-icon" id="start" name="date">
+				</div>
+				<div class="col-xs-6 col-md-2">
+						<div class="input-group">
+							<input type="text" placeholder="搜索" class="input-sm form-control" name="keyword" value="">
+						<span class="input-group-btn">
+							<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+						</span>
+						</div>
+				</div>
+			</form>
 	        <a href="/msc/admin/lab/openlab-history-analyze-form" class="btn btn-primary right_marr20">使用历史统计分析</a>
 	    </div>
 	    <form class="container-fluid ibox-content">
