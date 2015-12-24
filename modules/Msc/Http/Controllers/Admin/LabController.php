@@ -535,7 +535,14 @@ class LabController extends MscController
                     $notice =   implode('',$noticeArray);
                     $openid  =  $user   ->  openid;
                     //$openid  =  'oI7UquOGL3QxBGWmW3PMA1Sz9sKM';
-                    Common::sendMsg($openid,$notice);
+                    try
+                    {
+                        Common::sendMsg($openid,$notice);
+                    }
+                    catch(\Exception $msvEx)
+                    {
+                        \Log::notice('opendid:'.$openid.',发送失败'.json_encode($msvEx));
+                    }
                 }
                 return response()->json(
                     $this->success_data(['id' => $result->id])
@@ -930,7 +937,14 @@ class LabController extends MscController
             $apply=ResourcesOpenLabApply::find($id);
             $openID = $apply    ->    applyUser    ->    openid;
             //发送微信消息
-            $result = $this->sendMsg2($reject,$openID);
+            try
+            {
+                $result = $this->sendMsg2($reject,$openID);
+            }
+            catch(\Exception $msvEx)
+            {
+                \Log::notice('opendid:'.$openID.',发送失败'.json_encode($msvEx));
+            }
             //判断是否成功
             if ($result === false) {
                 throw new \Exception('消息发送失败!');
