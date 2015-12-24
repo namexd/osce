@@ -710,7 +710,44 @@ class LabController extends MscController
         return response()->json($data);
         //return view('msc::admin.openlab.lab-analyse', ['pagination'=>$data]);
     }
+    public function getOpenLabHistoryExcl(Request $request){
+        $this->validate($request, [
+            'date' 			=> 	'sometimes|date_format:Y-m-d',
+            'result_init'   =>  'sometimes|in:0,1,2,3',
+        ]);
+        $searchDate  = $request->input('date');
+        $result_init = $request->input('result_init');
 
+        $where = [];
+        if ($searchDate) {
+            $where['date'] = $searchDate;
+        }
+        if ($result_init) {
+            $where['result_init'] = $result_init;
+        }
+
+        //$labHis = new ResourcesLabHistory();
+        $labHis = new ResourcesOpenlabHistory();
+        $total = $labHis->getPcAnalyze($where);
+        $str=iconv('utf-8','gb2312','名称,数量,是否关机,是否复位')."\n";
+        if(empty(count($total)))
+        {
+            $str .=iconv('utf-8','gb2312','无,无,无,无')."\n";
+        }
+        else
+        {
+            foreach($total as $row)
+            {
+                $count  = iconv('utf-8','gb2312',$row['total']); //中文转码
+                $name   = iconv('utf-8','gb2312',$row->name);
+                $result_poweroff = iconv('utf-8','gb2312',$row->result_poweroff==1? '是':'否');
+                $result_init = iconv('utf-8','gb2312',$row->result_init==1? '是':'否');
+                $str .= $name.",".$count.",".$result_poweroff.",".$result_init."\n"; //用引文逗号分开
+            }
+        }
+        $filename = date('Ymd').'.csv'; //设置文件名
+        $this   ->export_csv($filename,$str);
+    }
     /**
      * 拒绝开放实验室的突发预约
      * @method POST /msc/admin/lab/reject-urgent-apply
@@ -1295,5 +1332,14 @@ class LabController extends MscController
         $rew = $ResourcesClassroom->firstOrCreate($data);
 
         dd($rew);
+    }
+    //到处csv
+    private function export_csv($filename,$data){
+        header("Content-type:text/csv");
+        header("Content-Disposition:attachment;filename=".$filename);
+        header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
+        header('Expires:0');
+        header('Pragma:public');
+        echo $data;
     }
 }

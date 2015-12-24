@@ -156,6 +156,8 @@ class ResourcesOpenlabHistory extends Model
                 ',',
                 [
                     'resources_lab.name as name',
+                    $this->table. '.result_poweroff',
+                    $this->table. '.result_init',
                     'count('.$this->table.'.id) as total',
                 ]
             )
