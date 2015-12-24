@@ -356,12 +356,11 @@ class LabController extends MscController
     public function getOpenLabHistoryList(Request $request)
     {
         $this->validate($request, [
-            'date'       => 'sometimes|date_format:Y/m/d',
+            'date'       => 'sometimes|date_format:Y-m-d',
             'keyword'    => 'sometimes', // TODO 搜索关键字长度限制
             'order_name' => 'sometimes|max:50',
             'order_type' => 'sometimes|in:0,1',
         ]);
-
         $searchDate = $request->input('date');
         $keyword    = urldecode(e($request->input('keyword')));
         $orderName  = e($request->input('order_name'));
@@ -380,17 +379,17 @@ class LabController extends MscController
 
         // 筛选条件处理
         $where = [];
-        if ($searchDate) {
-            $where['date'] = $searchDate;
-        }
-        if ($keyword) {
-            $where['keyword'] = $keyword;
-        }
+//        if ($searchDate) {
+//            $where['date'] = $searchDate;
+//        }
+//        if ($keyword) {
+//            $where['keyword'] = $keyword;
+//        }
 
         // 获取列表
-        $labHis     = new ResourcesLabHistory();
-        $pagination = $labHis->getPcList($where, $order);
-
+        //$labHis     = new ResourcesLabHistory();
+        $labHis     = new ResourcesOpenlabHistory();
+        $pagination = $labHis->getOpenlabHistory($searchDate,$keyword);
         foreach ($pagination as $key => $item) {
             $pagination[$key]['user'] = $item->applyUserInfo ? $item->applyUserInfo->name : ''; // 预约人名字
         }
