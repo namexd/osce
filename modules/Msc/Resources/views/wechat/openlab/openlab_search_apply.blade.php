@@ -43,22 +43,10 @@
              }
                 get_list();//将左边弹出
          });
-         $("#submit").click(function(){
-             var size= $(this).next("input").size();
-             if(size=="0"){
-
-                 $.alert({
-                     title: '提示：',
-                     content: '您尚未选择上课的学生!',
-                     confirmButton: '确定',
-                     confirm: function(){
-
-                     }
-                 });
-                 return false;
-
-             }else{
-                 if(!$(this).next("input").val()){
+         if($("#course_name").size()=="1"){
+             $("#submit").click(function(){
+                 var size= $(this).next("input").size();
+                 if(size=="0"){
 
                      $.alert({
                          title: '提示：',
@@ -69,10 +57,24 @@
                          }
                      });
                      return false;
-                 }
-             }
 
-         })
+                 }else{
+                     if(!$(this).next("input").val()){
+
+                         $.alert({
+                             title: '提示：',
+                             content: '您尚未选择上课的学生!',
+                             confirmButton: '确定',
+                             confirm: function(){
+
+                             }
+                         });
+                         return false;
+                     }
+                 }
+
+             })
+         }
          
          
     })
