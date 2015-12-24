@@ -42,7 +42,7 @@ class ResourcesOpenLabCalendar extends Model
             if(!empty($data['dateTime'])){
                 $plan->where('currentdate','=',$data['dateTime']);
             }
-        }])->paginate(7);
+        }])->paginate(100);
 
         return $result;
     }
