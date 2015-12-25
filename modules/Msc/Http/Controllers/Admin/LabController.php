@@ -204,7 +204,7 @@ class LabController extends MscController
             $add = DB::connection('msc_mis')->table('resources_lab')->where('id','=',$id)->update($data);
             //$this->end_sql(1);
             //dd($add);
-            if($add == false){
+            if($add === false){
                 DB::connection('msc_mis')->rollBack();
                 return redirect()->back()->withErrors('系统异常');
             }
@@ -243,7 +243,7 @@ class LabController extends MscController
                         {
                             $del = DB::connection('msc_mis')->table('resources_lab_calendar')->where('id','=',$resourcesLabCalendar->id)->delete();
                         }
-                        if($del == false){
+                        if($del === false){
                             DB::connection('msc_mis')->rollBack();
                             return redirect()->back()->withErrors('系统异常');
                         }
