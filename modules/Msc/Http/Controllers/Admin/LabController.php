@@ -216,7 +216,9 @@ class LabController extends MscController
             if(Input::get('opened') > 0){
                 if($labdetail['opened'] == Input::get('opened')){
                     $addcleader = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('resources_lab_id','=',$id)->update($arr);
-                    if($addcleader == false){
+                    //dd($addcleader);
+                    if($addcleader === false){
+                        dd('qq');
                         DB::connection('msc_mis')->rollBack();
                         return redirect()->back()->withErrors('系统异常');
                     }
@@ -231,7 +233,7 @@ class LabController extends MscController
                         {
                             $del = DB::connection('msc_mis')->table('resources_openlab_calendar')->where('id','=',$resourcesLabCalendar->id)->delete();
                         }
-                        if($del == false){
+                        if($del === false){
                             DB::connection('msc_mis')->rollBack();
                             return redirect()->back()->withErrors('系统异常');
                         }
@@ -322,7 +324,7 @@ class LabController extends MscController
 
             if(Input::get('opened') > 0){
                 $addcleader = ResourcesOpenLabCalendar::create($arr);
-            }else{
+             }else{
                 $addcleader = ResourcesLabCalendar::create($arr);
             }
             if(!$addcleader){
