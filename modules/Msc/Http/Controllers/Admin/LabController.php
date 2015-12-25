@@ -433,8 +433,8 @@ class LabController extends MscController
      * <b>get请求字段：</b>
      * * date           date        查询起始日期(必须的)
      * * string         keyword     搜索关键字(必须的)
-     * * string         order       排序字段(必须的)
-     * * string         orderby     排序方式(必须的) 枚举 asc 、desc
+     * * string         orderName       排序字段(必须的)
+     * * string         orderType     排序方式(必须的) 枚举 asc 、desc
      *
      * @return view  字段说明{ 'id':'申请ID'  1,'name' :  '实验室名称', 'original_begin_datetime' :  '预约开始使用日期时间', 'original_end_datetime'     :  '预约结束使用日期时间','code' :  教室编码,'group':  '-','applyer_name':  '申请人','detail':  '申请说明','status':  '教室状态',}
      *
@@ -574,8 +574,8 @@ class LabController extends MscController
         $this->validate($request, [
             'date' => 'sometimes|date_format:Y-m-d',
             'keyword' => 'sometimes',
-            'orderName' => 'sometimes',
-            'orderType' => 'sometimes',
+            'order_name' => 'sometimes',
+            'order_type' => 'sometimes',
         ]);
         $keyword = e(urldecode($request->get('keyword')));
         $date = $request->get('date');

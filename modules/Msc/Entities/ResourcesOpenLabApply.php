@@ -214,9 +214,25 @@ class ResourcesOpenLabApply extends CommonModel
             'teacher',function($join){
             $join   ->  on($this->table.'.apply_uid','=','teacher.id');
         }
+        )   -> leftJoin(
+            'resources_openlab_apply_group',function($join){
+            $join   -> on($this->table.'.id','=','resources_openlab_apply_group.resources_openlab_apply_id');
+        }
+        )   -> leftJoin(
+            'student_group',function($join){
+            $join   -> on('student_group.id','=','resources_openlab_apply_group.student_group_id');
+        }
+        )   -> leftJoin(
+            'groups',function($join){
+            $join   -> on('groups.id','=','student_group.group_id');
+        }
+        )   -> leftJoin(
+            'student_class',function($join){
+            $join   -> on('student_class.id','=','resources_openlab_apply_group.student_class_id');
+        }
         )
-            ->  where($this->table.'.status','=',0)
-            ->  where($this->table.'.apply_type','=',0)
+            ->  where($this->table.'.status','=',0)         //'0=待审核 1=已通过 2=不通过'
+            ->  where($this->table.'.apply_type','=',0)  //'0=正常申请，1=紧急预约，2=突发事件'
             ->  whereRaw(
             'unix_timestamp('.$this->table.'.apply_date) = ?',
             [
@@ -235,6 +251,8 @@ class ResourcesOpenLabApply extends CommonModel
                 $this->table.'.course_id as course_id',
                 $this->table.'.opeation_uid as opeation_uid',
                 'resources_lab.name as resources_lab_name',
+                'groups.name as groups_name',
+                'student_class.name as student_class_name'
             ]);
         if($classroomName!='')
         {

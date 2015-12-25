@@ -271,7 +271,7 @@
                             <td>{{$item->lab->code}}</td>
                             <td>{{$item->applyUser->name or '-'}}</td>
                             <td>{{$item['detail']}}</td>
-                            <td>{{empty($item->labApplyGroups->first()->groups->name) ? '-' : $item->labApplyGroups->first()->groups->name}}</td>
+                            <td>{{is_null($item['groups_name']) ? (is_null($item['student_class_name']) ? '-' : $item['student_class_name']) : $item['groups_name']}}</td>
                             <td class="status">{{$statusValues[$item['status']]}}</td>
                             <td class="opera">
                                 <span class="read  state1 modal-control" data-toggle="modal" data-target="#myModal" flag="yes">审核通过</span>
