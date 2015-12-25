@@ -100,7 +100,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-5">
-                <form method="get" action="open-lab-apply-examined-list">
+                <form method="get" action="{{url('open-lab-apply-examined-list')}}">
                     <div class="input-group pull-left col-md-4 searchbox">
                         <input placeholder="开始日期" class="form-control layer-date laydate-icon" id="start" name="date">
                     </div>

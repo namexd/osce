@@ -97,6 +97,7 @@ class ResourcesOpenlabHistory extends Model
                 )
             )
         );
+
         $date   =   date('Y-m-d',strtotime($date));
         $bulider    =   $bulider    ->  whereRaw(
             'date_format('.$this->table.'.begin_datetime,"%Y-%m-%d") = ?',
@@ -116,6 +117,7 @@ class ResourcesOpenlabHistory extends Model
         {
             $bulider    =   $bulider    ->  where('result_poweroff','=',$result_poweroff);
         }
+
         return $bulider    ->  paginate(config('msc.page_size'));
     }
     // 获得pc端开放实验室使用历史记录分析数据
@@ -156,6 +158,8 @@ class ResourcesOpenlabHistory extends Model
                 ',',
                 [
                     'resources_lab.name as name',
+                    $this->table. '.result_poweroff',
+                    $this->table. '.result_init',
                     'count('.$this->table.'.id) as total',
                 ]
             )

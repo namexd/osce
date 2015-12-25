@@ -22,7 +22,7 @@
     <div class="row  main-content">
         <div class="content-left ibox-content">
             <div class="serach-box">
-                <form action="{{route("msc.admin.courses.getClassObserve")}}">
+                <form action="{{route("msc.admin.courses.getClassObserve")}}" method="get">
                     <input type="text" placeholder="按教室编号搜索" name="keyword" id="serach-text"><input type="submit" class="btn btn-primary"  id="serach-btn" value="搜索">
                 </form>
             </div>

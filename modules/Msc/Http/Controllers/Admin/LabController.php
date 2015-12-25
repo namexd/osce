@@ -356,12 +356,11 @@ class LabController extends MscController
     public function getOpenLabHistoryList(Request $request)
     {
         $this->validate($request, [
-            'date'       => 'sometimes|date_format:Y/m/d',
+            'date'       => 'sometimes|date_format:Y-m-d',
             'keyword'    => 'sometimes', // TODO 搜索关键字长度限制
             'order_name' => 'sometimes|max:50',
             'order_type' => 'sometimes|in:0,1',
         ]);
-
         $searchDate = $request->input('date');
         $keyword    = urldecode(e($request->input('keyword')));
         $orderName  = e($request->input('order_name'));
@@ -380,17 +379,17 @@ class LabController extends MscController
 
         // 筛选条件处理
         $where = [];
-        if ($searchDate) {
-            $where['date'] = $searchDate;
-        }
-        if ($keyword) {
-            $where['keyword'] = $keyword;
-        }
+//        if ($searchDate) {
+//            $where['date'] = $searchDate;
+//        }
+//        if ($keyword) {
+//            $where['keyword'] = $keyword;
+//        }
 
         // 获取列表
-        $labHis     = new ResourcesLabHistory();
-        $pagination = $labHis->getPcList($where, $order);
-
+        //$labHis     = new ResourcesLabHistory();
+        $labHis     = new ResourcesOpenlabHistory();
+        $pagination = $labHis->getOpenlabHistory($searchDate,$keyword);
         foreach ($pagination as $key => $item) {
             $pagination[$key]['user'] = $item->applyUserInfo ? $item->applyUserInfo->name : ''; // 预约人名字
         }
@@ -535,7 +534,14 @@ class LabController extends MscController
                     $notice =   implode('',$noticeArray);
                     $openid  =  $user   ->  openid;
                     //$openid  =  'oI7UquOGL3QxBGWmW3PMA1Sz9sKM';
-                    Common::sendMsg($openid,$notice);
+                    try
+                    {
+                        Common::sendMsg($openid,$notice);
+                    }
+                    catch(\Exception $msvEx)
+                    {
+                        \Log::notice('opendid:'.$openid.',发送失败'.json_encode($msvEx));
+                    }
                 }
                 return response()->json(
                     $this->success_data(['id' => $result->id])
@@ -703,7 +709,44 @@ class LabController extends MscController
         return response()->json($data);
         //return view('msc::admin.openlab.lab-analyse', ['pagination'=>$data]);
     }
+    public function getOpenLabHistoryExcl(Request $request){
+        $this->validate($request, [
+            'date' 			=> 	'sometimes|date_format:Y-m-d',
+            'result_init'   =>  'sometimes|in:0,1,2,3',
+        ]);
+        $searchDate  = $request->input('date');
+        $result_init = $request->input('result_init');
 
+        $where = [];
+        if ($searchDate) {
+            $where['date'] = $searchDate;
+        }
+        if ($result_init) {
+            $where['result_init'] = $result_init;
+        }
+
+        //$labHis = new ResourcesLabHistory();
+        $labHis = new ResourcesOpenlabHistory();
+        $total = $labHis->getPcAnalyze($where);
+        $str=iconv('utf-8','gb2312','名称,数量,是否关机,是否复位')."\n";
+        if(empty(count($total)))
+        {
+            $str .=iconv('utf-8','gb2312','无,无,无,无')."\n";
+        }
+        else
+        {
+            foreach($total as $row)
+            {
+                $count  = iconv('utf-8','gb2312',$row['total']); //中文转码
+                $name   = iconv('utf-8','gb2312',$row->name);
+                $result_poweroff = iconv('utf-8','gb2312',$row->result_poweroff==1? '是':'否');
+                $result_init = iconv('utf-8','gb2312',$row->result_init==1? '是':'否');
+                $str .= $name.",".$count.",".$result_poweroff.",".$result_init."\n"; //用引文逗号分开
+            }
+        }
+        $filename = date('Ymd').'.csv'; //设置文件名
+        $this   ->export_csv($filename,$str);
+    }
     /**
      * 拒绝开放实验室的突发预约
      * @method POST /msc/admin/lab/reject-urgent-apply
@@ -930,7 +973,14 @@ class LabController extends MscController
             $apply=ResourcesOpenLabApply::find($id);
             $openID = $apply    ->    applyUser    ->    openid;
             //发送微信消息
-            $result = $this->sendMsg2($reject,$openID);
+            try
+            {
+                $result = $this->sendMsg2($reject,$openID);
+            }
+            catch(\Exception $msvEx)
+            {
+                \Log::notice('opendid:'.$openID.',发送失败'.json_encode($msvEx));
+            }
             //判断是否成功
             if ($result === false) {
                 throw new \Exception('消息发送失败!');
@@ -1131,11 +1181,15 @@ class LabController extends MscController
         $notice =   $request    ->  get('notice');
         //已有的 冲突课程记录
         $ResourcesOpenLabPlan   =   new ResourcesOpenLabPlan();
-//        try{
+        try{
             $list   =   $ResourcesOpenLabPlan   ->  cancelOldPlan($id);
-            if(!empty($list))
+            if(count($list))
             {
                 //成功回跳到列表
+                foreach($list as $openid)
+                {
+                    Common::sendMsg($openid,$notice);
+                }
                 return response()   ->    json(
                     $this->success_data(['id'=>$id])
                 );
@@ -1144,13 +1198,13 @@ class LabController extends MscController
             {
                 throw new \Exception('操作失败');
             }
-//        }
-//        catch(\Exception $ex)
-//        {
-//            return response()   ->    json(
-//                $this->fail($ex)
-//            );
-//        }
+        }
+        catch(\Exception $ex)
+        {
+            return response()   ->    json(
+                $this->fail($ex)
+            );
+        }
 
     }
     /**
@@ -1277,5 +1331,14 @@ class LabController extends MscController
         $rew = $ResourcesClassroom->firstOrCreate($data);
 
         dd($rew);
+    }
+    //到处csv
+    private function export_csv($filename,$data){
+        header("Content-type:text/csv");
+        header("Content-Disposition:attachment;filename=".$filename);
+        header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
+        header('Expires:0');
+        header('Pragma:public');
+        echo $data;
     }
 }

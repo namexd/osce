@@ -203,7 +203,12 @@ class ResourcesOpenLabPlan extends Model
                     if(count($teahcers)>0)
                     {
                         $teacher    =   $teahcers   ->  first();
-                        $teacher    =   $teacher    ->  userInfo();
+                        $teacher    =   $teacher    ->  teacher;
+                        if(!empty($teacher))
+                        {
+                            $teacher    =   $teacher    ->  userInfo;
+                        }
+                        $opendIdList[]  =   $teacher    ->  openid;
                     }
                     else
                     {
@@ -241,7 +246,7 @@ class ResourcesOpenLabPlan extends Model
                 throw new \Exception('新建计划失败');
             }
             $connection ->  commit();
-            return $newPlan;
+            return $opendIdList;
         }
         catch(\Exception $ex)
         {
