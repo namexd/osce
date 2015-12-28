@@ -28,6 +28,7 @@ class UserController extends MscWeChatController {
 	 */
 	public function getUserLogin()
 	{
+
 		$getOpenid = env('OPENID', true);
 
 		if($getOpenid){
