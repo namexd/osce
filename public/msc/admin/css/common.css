@@ -111,6 +111,11 @@ a{-webkit-touch-callout:none;}
 .btn-default{background-color: #fff;border-color: #ccc;color: #333;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
 
+/*覆盖.btn-white*/
+.btn-white3{background: #fff;}
+.btn-white3:focus, .btn-white3:hover,.btn-white3, .open .dropdown-toggle.btn-white3 {border: none;font-weight: 700;}
+.float-e-margins .btn{margin-bottom: 0;}
+.button_margin{margin-right: 10px;}
 
 
 

@@ -22,69 +22,89 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn-w-m btn_pl btn-success right">导入专业</button>
-                <button class="btn btn-w-m btn_pl btn-success right button_margin">新增专业</button>
+                <button class="btn btn-w-m btn_pl btn-success right">添加</button>
             </div>
 		</div>
         <div class="ibox float-e-margins">
-            <div class="container-fluid ibox-content">
-                <form action="" class="container-fluid" id="list_form">
-                    <table class="table table-striped" id="table-striped">
-                        <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>专业代码</th>
-                            <th>专业名称</th>
-                            <th>
-                                <div class="btn-group Examine">
-                                    <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
-                                        状态
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#">全部</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">正常</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">停用</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>0001</td>
-                            <td>临床医学</td>
-                            <td>正常</td>
-                            <td>
-                                <a class="state1 edit_role modal-control">编辑</a>
-                                <a class="state2 modal-control">停用</a>
-                                <a class="state2 edit_role modal-control">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>0002</td>
-                            <td>临床医学</td>
-                            <td class="state2">停用</td>
-                            <td>
-                                <a class="state1 edit_role modal-control">编辑</a>
-                                <a class="state2 modal-control">停用</a>
-                                <a class="state2 edit_role modal-control">删除</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-
-            </div>
+            <form action="" class="container-fluid ibox-content" id="list_form">
+                <table class="table table-striped" id="table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>资源名称</th>
+                        <th>
+                            <div class="btn-group Examine">
+                                <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
+                                    资源类型
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#">耗材</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">设备</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">模型</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">虚拟设备</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>设备说明</th>
+                        <th>
+                            <div class="btn-group Examine">
+                                <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button" aria-expanded="false">
+                                    状态
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#">全部</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">正常</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">停用</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>听诊器</td>
+                        <td>耗材</td>
+                        <td></td>
+                        <td>正常</td>
+                        <td>
+                            <a class="state1 edit_role modal-control">编辑</a>
+                            <a class="state2 modal-control">停用</a>
+                            <a class="state2 edit_role modal-control">删除</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>听诊器</td>
+                        <td>耗材</td>
+                        <td></td>
+                        <td class="state2">停用</td>
+                        <td>
+                            <a class="state1 edit_role modal-control">编辑</a>
+                            <a class="state2 modal-control">停用</a>
+                            <a class="state2 edit_role modal-control">删除</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">

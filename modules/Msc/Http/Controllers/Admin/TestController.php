@@ -17,8 +17,8 @@ class TestController extends Controller {
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function Index(){
-        dd('测试控制器');
-        return view('msc::admin.');
+
+        return view('msc::admin.systemtable.major_table');
     }
 
 
