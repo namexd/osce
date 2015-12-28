@@ -117,11 +117,12 @@ a{-webkit-touch-callout:none;}
 .has-error .form-control{border-color: #ed5565!important;}
 
 .btn-primary[disabled]{background:#eee;color:#aaa;border:1px solid #aaa;}
-/*�����޸�layerЧ��*/
+/*覆盖޸layer 效果*/
 .modal-title{color: #408aff; font-size: 16px;}
 .btn-success{background-color: #408aff;}
 .modal-header .close { background-color: #9bc1fd; width: 20px;height: 20px; border-radius:10px;}
-
+body .layer-ext-moon .layui-layer-btn{background:inherit;border-top: none;}
+body .layer-ext-moon .layui-layer-btn .layui-layer-btn0{background:#408aff; border: 1px solid ##408aff; }
 /*�����޸�layer_dateЧ��*/
 
 .laydate-icon,
@@ -137,9 +138,8 @@ a{-webkit-touch-callout:none;}
 .input-group-btn{ height: 30px;}
 .test1{ background: #fff;color: #1b7a8b;}
 .table thead th{ font-size: 14px;}
-.btn-link{height:30px;min-width:80px;line-height: 16px; color: #fff;}
-.opera  span{ padding: 0 5px; cursor: pointer;}
-
+.table .btn-link{height:30px;min-width:80px;line-height: 16px; color: #fff;}
+.table .describe{word-wrap: break-word;}
 .table a .state1{ color:#408aff;}
 .table a .state2{ color:#ed5565;}
 .table a .state3{ color:#21b9bb;}
@@ -149,10 +149,12 @@ a{-webkit-touch-callout:none;}
 .table .state3{ color:#21b9bb;}
 .table .state4{ color:#c2c2c2;}
 
-.control-label{ font-size: 14px;}
+.modal-body .control-label{ font-size: 14px;}
+.modal-body .control-label .dot{ color:#ed5565;}
+.modal-body .form-group:last-child{margin-bottom:0;}
 
 
-/*轮播图效果*/
+    /*轮播图效果*/
 .scroll_image{ width: 100%; position: relative;}
 .swiper-container{width:100%;height:100%;}
 .swiper-slide{text-align:center;font-size:18px;background:#fff;
