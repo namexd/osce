@@ -11,6 +11,7 @@ namespace Modules\Msc\Http\Controllers\Admin;
 use Modules\Msc\Entities\TeacherDept;
 use Illuminate\Http\Request;
 use Modules\Msc\Http\Controllers\MscController;
+use Illuminate\Support\Facades\Input;
 /**
  * Class DeptController
  * @package Modules\Msc\Http\Controllers\Admin
@@ -138,7 +139,8 @@ class DeptController extends MscController
      * @date    2015年12月29日16:41:20
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function PidGetDept($pid){
+    public function PidGetDept(){
+        $pid = Input::get('pid');
         $Depts = [];
         if($pid > 0 || $pid == '0'){
             $Depts = $this->TeacherDept->PidSelectDept($pid);
