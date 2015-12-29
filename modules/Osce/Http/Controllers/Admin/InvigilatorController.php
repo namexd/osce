@@ -209,7 +209,7 @@ class InvigilatorController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view
+     * @return redirect
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -220,9 +220,34 @@ class InvigilatorController extends CommonController
     public function postEditInvigilator(Request $request){
         $this   ->  validate($request,[
             'id'    =>  'required',
+            'name'  =>  'required',
+            'is_sp' =>  'required',
         ]);
-
-
+        $id             =   (int)$request    ->  get('id');
+        try
+        {
+            $invigilator    =   Invigilator::find($id);
+            $data   =   [
+                'name'  =>  e($request->get('name')),
+                'is_sp' =>  intval($request->get('name')),
+            ];
+            foreach($data as $feild =>$item)
+            {
+                $invigilator    ->  $feild  =   $item;
+            }
+            if($invigilator    ->  save())
+            {
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList');
+            }
+            else
+            {
+                throw new \Exception('编辑失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex);
+        }
     }
 
     /**
@@ -232,10 +257,9 @@ class InvigilatorController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        id               监考老师ID(必须的)
+     * * string        osce_id          考试ID(必须的)
+     * * string        site_id          考站ID(必须的)
      *
      * @return view
      *
@@ -246,7 +270,13 @@ class InvigilatorController extends CommonController
      *
      */
     public function postSendInvitation(Request $request){
-
+        $this   ->  validate($request,[
+            'id'        =>  'required',
+            'osce_id'   =>  'required',
+            'site_id'   =>  'required',
+        ]);
+        //TODO:罗海华 2015-12-29 18:23 预留 功能方法
+        throw new \Exception('等待考场建好之后才能具体实现');
     }
 
     /**
@@ -268,7 +298,8 @@ class InvigilatorController extends CommonController
      *
      */
     public function getInvitation(Request $request){
-
+        //TODO:罗海华 2015-12-29 18:23 预留 功能方法
+        throw new \Exception('等待考场建好之后才能具体实现');
     }
 
     /**
@@ -292,6 +323,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function postDealInvitation(Request $request){
-
+        //TODO:罗海华 2015-12-29 18:23 预留 功能方法
+        throw new \Exception('等待考场建好之后才能具体实现');
     }
 }
