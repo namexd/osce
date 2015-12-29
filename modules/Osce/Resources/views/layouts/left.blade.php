@@ -15,26 +15,26 @@
                     <li class="active">
                         <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">考试安排</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a class="active J_menuItem" href="{{route('msc.admin.resourcesManager.getResourcesList')}}">考站管理</a>
+                            <li><a class="active J_menuItem" href="">考站管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{route('msc.admin.resourcesManager.getAddResources')}}">考场安排</a>
+                            <li><a  class="J_menuItem" href="">考场安排</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{route('msc.admin.resourcesManager.getResourcesCateList')}}">题库管理</a>
+                            <li><a  class="J_menuItem" href="">题库管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{route('msc.admin.resourcesManager.getResourcesCateList')}}">腕表管理</a>
+                            <li><a  class="J_menuItem" href="">腕表管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{route('msc.admin.resourcesManager.getResourcesCateList')}}">监考设备管理</a>
+                            <li><a  class="J_menuItem" href="">监考设备管理</a>
                             </li>
                         </ul>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a class="active J_menuItem" href="{{route('msc.courses.NormalCoursesPlan')}}">候考</a>
+                            <li><a class="active J_menuItem" href="">候考</a>
                             </li>
-                            <li><a class="active J_menuItem" href="{{url('/msc/admin/training/add-training')}}">监考</a>
+                            <li><a class="active J_menuItem" href="">监考</a>
                             </li>
-                            <li><a class="active J_menuItem" href="{{route('msc.admin.courses.getClassObserve')}}">巡考</a>
+                            <li><a class="active J_menuItem" href="">巡考</a>
                             </li>
                         </ul>
                     </li>
