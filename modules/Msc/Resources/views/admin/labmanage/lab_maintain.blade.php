@@ -96,6 +96,44 @@
 
                 }
             });
+
+            $('.school').change(function(){
+                var id = $(this).val();
+                var opstr = '<option value="-1">请选择教学楼</option>';
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('msc.admin.laboratory.getLocal')}}",
+                    data: {id:id},
+                    success: function(msg){
+                        if(msg){
+                            $(msg).each(function(i,k){
+
+                                opstr += '<option value="'+k.id+'">'+k.name+'</option>';
+                            });
+                            $('.local').html(opstr);
+                        }
+                    }
+                });
+            });
+
+            $('#add_from').delegate('.local','change',function(){
+                var id = $(this).val();
+                var opstr = '<option value="-1">请选择楼层</option>';
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('msc.admin.laboratory.getFloor')}}",
+                    data: {id:id},
+                    success: function(msg){
+                        if(msg){
+                            $(msg).each(function(i,k){
+
+                                opstr += '<option value="'+i+'">'+k+'</option>';
+                            });
+                            $('.floor').html(opstr);
+                        }
+                    }
+                });
+            });
         })
     </script>
 @stop
@@ -115,7 +153,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn_pl btn-success right">
+                <button class="btn btn-w-m btn_pl btn-success right">
                     <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                         <span style="color: #fff;">新增实验室</span>
                     </a>
@@ -263,29 +301,29 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="hospital">
+                    <select id="select_Category" class="form-control m-b school" name="hospital">
                         <option value="-1">请选择所属分院</option>
-                        <option value="0">华西</option>
-                        <option value="1">上锦分院</option>
-                        <option value="2">温江分院</option>
+                        @if(!empty($school))
+                            @foreach($school as $ss)
+                                <option value={{$ss->id}}">{{$ss->name}}</option>
+                            @endforeach
+                                @endif
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="building">
+                    <select id="select_Category" class="form-control m-b local" name="building">
                         <option value="-1">请选择教学楼</option>
-                        <option value="0">新八教</option>
-                        <option value="1">上锦分院</option>
-                        <option value="2">温江分院</option>
+
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="floor">
+                    <select id="select_Category" class="form-control m-b floor" name="floor">
                         <option value="-1">请选择楼层</option>
                         <option value="0">-1楼</option>
                         <option value="1">1楼</option>
