@@ -15,7 +15,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 class InvigilatorController extends CommonController
 {
     /**
-     * 获取可监考教师列表
+     * 获取SP考教师列表
      * @url GET /osce/admin/invigilator/invigilator-list
      * @access public
      *
@@ -34,7 +34,7 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getInvigilatorList(Request $request){
+    public function getSpInvigilatorList(Request $request){
         $Invigilator    =   new Invigilator();
 
         $list       =   $Invigilator    ->getSpInvigilatorList();
@@ -43,6 +43,33 @@ class InvigilatorController extends CommonController
         //return view('',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
 
+    /**
+     * 获取普通监考老师列表
+     * @api GET /osce/admin/invigilator/invigilator-list
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:01
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getInvigilatorList(){
+        $Invigilator    =   new Invigilator();
+
+        $list       =   $Invigilator    ->  getInvigilatorList();
+        $isSpValues =   $Invigilator    ->  getIsSpValues();
+        //return view('',['list'=>$list,'isSpValues'=>$isSpValues]);
+    }
     /**
      *  新增监考老师 表单显示页面
      * @api GET /osce/admin/invigilator/add-invigilator
@@ -117,7 +144,7 @@ class InvigilatorController extends CommonController
     }
 
     /**
-     *  关联老师
+     *  关联老师（将用户注册的账号和管理员导入的单个监考教师信息进行关联）
      * @url GET /osce/admin/invigilator/relative-invigilator
      * @access public
      *
@@ -141,6 +168,36 @@ class InvigilatorController extends CommonController
     }
 
     /**
+     *
+     * @url GET /osce/admin/invigilator/edit-invigilator
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getEditInvigilator(Request $request){
+        $this   ->  validate($request,[
+            'id'    =>  'required',
+        ]);
+        $id             =   intval($request    ->  get('id'));
+
+        $InvigilatorModel    =   new Invigilator();
+        $invigilator    =   $InvigilatorModel    ->  find($id);
+        //return view('',['item'=>$invigilator]);
+    }
+    /**
      * 编辑监考老师信息
      * @url GET /osce/admin/invigilator/edit-invigilator
      * @access public
@@ -161,6 +218,10 @@ class InvigilatorController extends CommonController
      *
      */
     public function postEditInvigilator(Request $request){
+        $this   ->  validate($request,[
+            'id'    =>  'required',
+        ]);
+
 
     }
 

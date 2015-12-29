@@ -24,6 +24,22 @@ class Invigilator extends CommonModel
     ];
 
     /**
+     * 获取是否为SP老师的值
+     * @access public
+     *
+     * @return array
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 16:56
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getIsSpValues(){
+        return $this    ->  is_spValues;
+    }
+
+    /**
      * 获取sp老师列表
      * @access public
      *
@@ -42,9 +58,30 @@ class Invigilator extends CommonModel
      *
      */
     public function getSpInvigilatorList(){
-        return  $this   ->  paginate();
+        return  $this   ->  where('is_sp','=',1)
+                        ->  paginate();
     }
-    public function getIsSpValues(){
-        return $this    ->  is_spValues;
+
+    /**
+     * 获取非SP监考老师列表
+     * @access public
+     *
+     * @param
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return pagination
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 16:58
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getInvigilatorList(){
+        return  $this   ->  where('is_sp','=',2)
+            ->  paginate();
     }
 }
