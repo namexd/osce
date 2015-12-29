@@ -1,74 +1,87 @@
 @extends('layouts.base')
+@section('meta')
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+@stop
+@section('head_css')
+    <link href="{{asset('msc/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
+    <link href="{{asset('msc/admin/plugins/css/font-awesome.min.css?v=4.3.0')}}" rel="stylesheet">
+    <link href="{{asset('msc/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('app/index/style.min.css')}}" rel="stylesheet">
+    <style>
+        body{
+            font-family: 微软雅黑;
+            font-size: 14px;
+        }
 
+    </style>
+@stop
 
-@section('header')
+@section('head_js')
 
-    <link href="{{ url('lib/Font-Awesome-4.4.0/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ url('lib/ionicons/2.0.1/css/ionicons.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ url('lib/AdminLTE-2.3.0/dist/css/AdminLTE.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ url('lib/AdminLTE-2.3.0/dist/css/skins/_all-skins.min.css') }}" rel="stylesheet" type="text/css" />
+@stop
 
-    <link href="{{ url('lib/iCheck/flat/blue.css') }}" rel="stylesheet" type="text/css" />
+@section('body_attr') class="fixed-sidebar full-height-layout gray-bg"@stop
 
-    <!--[if lt IE 9]>
-    <script src="{{ url('js/html5shiv.js') }}"></script>
-    <script src="{{ url('js/respond.min.js') }}"></script>
-    <![endif]-->
+@section('body')
+    <div id="wrapper">
 
-    <!-- AdminLTE App -->
-    <script src="{{ url('lib/slimScroll/jquery.slimscroll.min.js') }}" type="text/javascript"></script>
-    <script src="{{ url('lib/AdminLTE-2.3.0/dist/js/app.min.js') }}" type="text/javascript"></script>
-    @yield('header_context')
-  {{--  <script src="{{ url('lib/AdminLTE-2.3.0/dist/js/pages/dashboard2.js') }}" type="text/javascript"></script>--}}
+        @include('osce::layouts.left')
 
-    @stop
+                <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
 
+            <div class="row content-tabs">
+                <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs J_menuTabs">
+                    <div class="page-tabs-content">
+                        <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">首页</a>
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                </button>
 
-    @section('body')
+                <button class="roll-nav roll-right J_tabClose">
+                    <i class="fa fa-envelope"> 通知</i>
+                    <i class="fa fa-bell"> 消息</i>
+                    <i class="fa fa-gear"> 设置</i>
+                </button>
 
-            <!--wrapper start-->
-    <div class="wrapper">
+                <a href="login.html" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+            </div>
+            <div class="row J_mainContent" id="content-main">
 
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="{{ url('osce/test') }}" frameborder="0" data-id="index_v1.html" seamless></iframe>
 
-
-
-
-        <div class="content-wrapper">
-
-            <section class="content-header">
-
-
-
-            </section>
-
-
-            <section class="content" >
-
-@yield('body_content')
-
-            </section>
+            </div>
+            <div class="footer">
+                <div class="pull-right">&copy; 2015-2018 <a href="/" target="_blank">misrobot.com</a>
+                </div>
+            </div>
         </div>
-
+        <!--右侧部分结束-->
 
 
     </div>
+    @show
+
+    @section('footer_js')
+            <!-- 全局js -->
+
+    <script src="{{asset('msc/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
+    <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
+    <script src="{{asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
+    <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+    <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+
+    <!-- 自定义js -->
+    <script src="{{asset('msc/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
+    <script type="text/javascript" src="{{asset('msc/admin/plugins/js/contabs.min.js')}}"></script>
+    <!-- 第三方插件 -->
+    <script src="{{asset('msc/admin/plugins/js/plugins/pace/pace.min.js')}}"></script>
+@show{{-- footer区域javscript脚本 --}}
 
 
-    <footer class="main-footer">
-
-        <div class="pull-right hidden-xs">
-
-        </div>
-
-        <strong>Copyright &copy; Copyright 2015-2018 <a href=""></a></strong>华西临床技能中心业务管理系统(<code>MscMis</code>)  版本: v1.0
-    </footer>
-
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('ul.treeview-menu>li').find('a[href="{{Route::currentRouteName()}}"]').closest('li').addClass('active');  //二级链接高亮
-            $('ul.treeview-menu>li').find('a[href=""]').closest('li.treeview').addClass('active');  //一级栏目[含二级链接]高亮
-            $('.sidebar-menu>li').find('a[href=""]').closest('li').addClass('active');  //一级栏目[不含二级链接]高亮
-        });
-    </script>
-    <script src="{{ url('lib/AdminLTE-2.3.0/dist/js/demo.js') }}" type="text/javascript"></script>
+@section('extraSection')
+@show{{-- 补充额外的一些东东，不一定是JS，可能是HTML --}}
 @stop
