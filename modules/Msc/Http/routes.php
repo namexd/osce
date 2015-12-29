@@ -16,6 +16,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//测试路由
 		Route::get('test/index', ['uses'=>'TestController@Index','as'=>'msc.Test.Index']);
 
+
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
 		Route::get('verify/teacher/{status?}', ['uses'=>'VerifyController@getTeacher','as'=>'msc.verify.teacher']);

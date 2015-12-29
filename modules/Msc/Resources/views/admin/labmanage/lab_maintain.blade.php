@@ -15,7 +15,7 @@
             $(".delete").click(function(){
                 var this_id = $(this).siblings(".setid").val();
                 //询问框
-                layer.confirm('您确定要删除该专业？', {
+                layer.confirm('您确定要删除该实验室？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     layer.msg('删除成功', {icon: 1,time: 1000});
@@ -26,7 +26,7 @@
                 var this_id = $(this).siblings(".setid").val();
 
                 //询问框
-                layer.confirm('您确定要停用该专业？', {
+                layer.confirm('您确定要停用实验室？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     layer.msg('停用成功', {icon: 1,time: 1000});
@@ -41,19 +41,46 @@
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {/*验证*/
-                    number: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
+                    hospital: {
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '专业代码不能为空'
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择所属分院'
                             }
+
+                        }
+                    },
+                    building: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择教学楼'
+                            }
+
+                        }
+                    },
+                    floor: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择楼层'
+                            }
+
                         }
                     },
                     name: {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
-                                message: '专业名称不能为空'
+                                message: '实验室名称不能为空'
+                            }
+                        }
+                    },
+                    number: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '房号不能为空'
                             }
                         }
                     },
@@ -65,7 +92,7 @@
                             }
 
                         }
-                    },
+                    }
 
                 }
             });
@@ -88,10 +115,9 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn-w-m btn_pl btn-success right">导入专业</button>
-                <button class="btn btn-w-m btn_pl btn-success right button_margin">
+                <button class="btn btn-w-m btn_pl btn-success right">
                     <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
-                        <span style="color: #fff;">新增专业</span>
+                        <span style="color: #fff;">新增实验室</span>
                     </a>
                 </button>
             </div>
@@ -103,8 +129,31 @@
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>专业代码</th>
-                            <th>专业名称</th>
+                            <th>实验室名称</th>
+                            <th>房号</th>
+                            <th>教学楼</th>
+                            <th>楼层</th>
+                            <th>容量</th>
+                            <th>
+                                <div class="btn-group Examine">
+                                    <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
+                                        类型
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="#">教室</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">实验室</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">准备间</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>管理员</th>
                             <th>
                                 <div class="btn-group Examine">
                                     <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
@@ -130,8 +179,13 @@
                         <tbody>
                         <tr>
                             <td>1</td>
-                            <td>0001</td>
-                            <td>临床医学</td>
+                            <td>眼视光学实验室</td>
+                            <td>6015</td>
+                            <td>新八教</td>
+                            <td>6</td>
+                            <td>37</td>
+                            <td>实验室</td>
+                            <td>何宵（14277）</td>
                             <td>正常</td>
                             <td>
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
@@ -141,9 +195,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>2</td>
-                            <td>0002</td>
-                            <td>临床医学</td>
+                            <td>1</td>
+                            <td>眼视光学实验室</td>
+                            <td>6014</td>
+                            <td>新八教</td>
+                            <td>6</td>
+                            <td>70</td>
+                            <td>实验室</td>
+                            <td>何宵（14277）</td>
                             <td class="state2">停用</td>
                             <td>
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
@@ -198,19 +257,86 @@
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="/msc/admin/user/student-add" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增专业/编辑专业</h4>
+            <h4 class="modal-title" id="myModalLabel">新增实验室/编辑实验室</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>专业代码</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
+                <div class="col-sm-9">
+                    <select id="select_Category" class="form-control m-b" name="hospital">
+                        <option value="-1">请选择所属分院</option>
+                        <option value="0">华西</option>
+                        <option value="1">上锦分院</option>
+                        <option value="2">温江分院</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label>
+                <div class="col-sm-9">
+                    <select id="select_Category" class="form-control m-b" name="building">
+                        <option value="-1">请选择教学楼</option>
+                        <option value="0">新八教</option>
+                        <option value="1">上锦分院</option>
+                        <option value="2">温江分院</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
+                <div class="col-sm-9">
+                    <select id="select_Category" class="form-control m-b" name="floor">
+                        <option value="-1">请选择楼层</option>
+                        <option value="0">-1楼</option>
+                        <option value="1">1楼</option>
+                        <option value="2">2楼</option>
+                        <option value="3">3楼</option>
+                        <option value="4">4楼</option>
+                        <option value="5">5楼</option>
+                        <option value="6">6楼</option>
+                        <option value="7">7楼</option>
+                        <option value="8">8楼</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="name" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control name add-name" name="number" value="" />
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>专业名称</label>
+                <label class="col-sm-3 control-label">容量</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control describe add-describe" name="name" />
+                    <input type="text" class="form-control describe add-describe" name="capacity" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">管理员</label>
+                <div class="col-sm-9">
+                    <select id="select_Category" class="form-control m-b" name="manager">
+                        <option value="-1">点击选择</option>
+                        <option value="0">何宵（14277）</option>
+                        <option value="1">何宵（14277）</option>
+                        <option value="2">何宵（14277）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">实验室性质</label>
+                <div class="col-sm-9">
+                    <select id="select_Category" class="form-control m-b" name="nature">
+                        <option value="-1">点击选择</option>
+                        <option value="0">实验室</option>
+                        <option value="1">准备间</option>
+                        <option value="2">教室</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
