@@ -15,7 +15,7 @@
             $(".delete").click(function(){
                 var this_id = $(this).siblings(".setid").val();
                 //询问框
-                layer.confirm('您确定要删除该职称？', {
+                layer.confirm('您确定要删除该楼栋？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     layer.msg('删除成功', {icon: 1,time: 1000});
@@ -26,7 +26,7 @@
                 var this_id = $(this).siblings(".setid").val();
 
                 //询问框
-                layer.confirm('您确定要停用该职称？', {
+                layer.confirm('您确定要停用该楼栋？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     layer.msg('停用成功', {icon: 1,time: 1000});
