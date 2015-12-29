@@ -34,7 +34,22 @@
                             </li>
                         </ul>
                     </li>
-
+                    <li>
+                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label">楼栋信息管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.floor.index')}}">楼栋列表</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label">实验室管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.laboratory.index')}}">实验室列表</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="#"><i class="fa fa-user"></i> <span class="nav-label">用户权限管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
