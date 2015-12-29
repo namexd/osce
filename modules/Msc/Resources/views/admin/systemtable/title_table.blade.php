@@ -48,10 +48,10 @@
                 },
                 type: {
                     validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '请选择实验室状态'
-                        },
-
+                        regexp: {
+                            regexp: /^(?!-1).*$/,
+                            message: '请选择状态'
+                        }
                     }
                 },
 
