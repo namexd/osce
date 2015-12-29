@@ -18,7 +18,11 @@ class TestController extends Controller {
      */
     public function Index(){
 
+<<<<<<< remotes/origin/develop
         return view('msc::admin.systemtable.major_table');
+=======
+        return view('msc::admin.systemtable.title_table');
+>>>>>>> local
     }
 
 
