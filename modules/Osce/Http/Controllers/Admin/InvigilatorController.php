@@ -6,8 +6,9 @@
  * Time: 15:52
  */
 
-namespace Modules\Osce\Http\Controllers;
+namespace Modules\Osce\Http\Controllers\Admin;
 
+use Modules\Osce\Http\Controllers\CommonController;
 
 class InvigilatorController extends CommonController
 {

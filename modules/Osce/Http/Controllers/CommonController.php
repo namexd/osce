@@ -8,6 +8,6 @@ namespace Modules\Osce\Http\Controllers;
 
 use Pingpong\Modules\Routing\Controller;
 
-class CommonController extends Controller {
+abstract class CommonController extends Controller {
 
 }
