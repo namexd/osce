@@ -15,7 +15,7 @@
             $(".delete").click(function(){
                 var this_id = $(this).siblings(".setid").val();
                 //询问框
-                layer.confirm('您确定要删除该专业？', {
+                layer.confirm('您确定要删除该楼栋？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     layer.msg('删除成功', {icon: 1,time: 1000});
@@ -26,7 +26,7 @@
                 var this_id = $(this).siblings(".setid").val();
 
                 //询问框
-                layer.confirm('您确定要停用该专业？', {
+                layer.confirm('您确定要停用该楼栋？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     layer.msg('停用成功', {icon: 1,time: 1000});
@@ -41,19 +41,27 @@
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {/*验证*/
-                    number: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '专业代码不能为空'
-                            }
-                        }
-                    },
                     name: {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
-                                message: '专业名称不能为空'
+                                message: '楼栋名称不能为空'
+                            }
+                        }
+                    },
+                    up: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '地上层数不能为空'
+                            }
+                        }
+                    },
+                    down: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '地下层数不能为空'
                             }
                         }
                     },
@@ -65,7 +73,7 @@
                             }
 
                         }
-                    },
+                    }
 
                 }
             });
@@ -88,10 +96,9 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn-w-m btn_pl btn-success right">导入专业</button>
-                <button class="btn btn-w-m btn_pl btn-success right button_margin">
+                <button class="btn btn-w-m btn_pl btn-success right">
                     <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
-                        <span style="color: #fff;">新增专业</span>
+                        <span style="color: #fff;">新增楼栋</span>
                     </a>
                 </button>
             </div>
@@ -103,8 +110,22 @@
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>专业代码</th>
-                            <th>专业名称</th>
+                            <th>楼栋名称</th>
+                            <th>楼层数</th>
+                            <th>
+                                <div class="btn-group Examine">
+                                    <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
+                                        所属分院
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="#">华西</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>地址</th>
                             <th>
                                 <div class="btn-group Examine">
                                     <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
@@ -130,8 +151,10 @@
                         <tbody>
                         <tr>
                             <td>1</td>
-                            <td>0001</td>
-                            <td>临床医学</td>
+                            <td>新八教</td>
+                            <td>11</td>
+                            <td>华西</td>
+                            <td>国学巷37号</td>
                             <td>正常</td>
                             <td>
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
@@ -141,9 +164,11 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>2</td>
-                            <td>0002</td>
-                            <td>临床医学</td>
+                            <td>1</td>
+                            <td>新八教</td>
+                            <td>11</td>
+                            <td>华西</td>
+                            <td>国学巷37号</td>
                             <td class="state2">停用</td>
                             <td>
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
@@ -198,19 +223,39 @@
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="/msc/admin/user/student-add" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增专业/编辑专业</h4>
+            <h4 class="modal-title" id="myModalLabel">新增楼栋/编辑楼栋</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>专业代码</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼栋名称</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="number" value="" />
+                    <input type="text" class="form-control name add-name" name="name" value="" />
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>专业名称</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地上)</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control describe add-describe" name="name" />
+                    <input type="number" class="form-control name add-name" name="up" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control name add-name" name="down" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">地址</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control describe add-describe" name="address" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">所属分院</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b" name="hospital">
+                        <option value="0">华西</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
