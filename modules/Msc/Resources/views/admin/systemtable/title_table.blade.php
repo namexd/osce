@@ -64,97 +64,87 @@
 
 @section('content')
 	<input type="hidden" id="parameter" value="" />
-    <div class="panel blank-panel">
-        <div class="panel-body">
-            <div class="tab-content">
-                <div id="tab-4" class="tab-pane active">
-                    <div class="wrapper wrapper-content animated fadeInRight">
-                        <div class="row table-head-style1 ">
-                            <div class="col-xs-6 col-md-3">
-                                <form action="" method="get">
-                                    <div class="input-group">
-                                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="">
-                                        <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-sm btn-default" id="search"><i class="fa fa-search"></i></button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-xs-6 col-md-9 user_btn">
-                                <button href="/msc/admin/lab/had-open-lab-add" class="right btn btn-success">新增职称</button>
-                            </div>
-                        </div>
-                        <form class="container-fluid ibox-content" id="list_form">
-                            <table class="table table-striped" id="table-striped">
-                                <thead>
-                                <tr>
-                                    <th>序号</th>
-                                    <th>名称</th>
-                                    <th>描述</th>
-                                    <th>
-                                        {{--<input type="hidden" name="status" value="{{$status}}">--}}
-                                        {{--<input type="hidden" name="manager_name" value="{{manager_name}}">--}}
-                                        {{--<input type="hidden" name="opened" value="{{opened}}">--}}
-
-                                        <div class="btn-group Examine">
-                                            <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button">状态<span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a href="">正常</a>
-                                                </li>
-                                                <li>
-                                                    <a href="">停用</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </th>
-                                    <th>操作</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="number">1</td>
-                                        <td class="name">主任医师</td>
-                                        <td class="describe">
-                                            主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述
-                                        </td>
-                                        <td class="type">
-                                                <span class="state2">停用</span>
-                                        </td>
-                                        <td class="opera">
-                                            <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>
-                                            <span class="state1 stop">停用</span>
-                                            <span class="state1 delete">删除</span>
-                                            <input type="hidden" class="setid" value="1"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="number" setid="2">2</td>
-                                        <td class="name">医师</td>
-                                        <td class="describe">
-                                            主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述
-                                        </td>
-                                        <td class="type">
-                                            <span>正常</span>
-                                        </td>
-                                        <td class="opera">
-                                            <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>
-                                            <span class="state1 stop">停用</span>
-                                            <span class="state1 delete">删除</span>
-                                            <input type="hidden" class="setid" value="2"/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </form>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1 ">
+            <div class="col-xs-6 col-md-3">
+                <form action="" method="get">
+                    <div class="input-group">
+                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-sm btn-default" id="search"><i class="fa fa-search"></i></button>
+                        </span>
                     </div>
-                </div>
-                <div id="tab-5" class="tab-pane">
-                </div>
+                </form>
+            </div>
+            <div class="col-xs-6 col-md-9 user_btn">
+                <button href="/msc/admin/lab/had-open-lab-add" class="right btn btn-success">新增职称</button>
             </div>
         </div>
+        <form class="container-fluid ibox-content" id="list_form">
+            <table class="table table-striped" id="table-striped">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>名称</th>
+                    <th>描述</th>
+                    <th>
+                        {{--<input type="hidden" name="status" value="{{$status}}">--}}
+                        {{--<input type="hidden" name="manager_name" value="{{manager_name}}">--}}
+                        {{--<input type="hidden" name="opened" value="{{opened}}">--}}
+
+                        <div class="btn-group Examine">
+                            <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button">状态<span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="">正常</a>
+                                </li>
+                                <li>
+                                    <a href="">停用</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>操作</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="number">1</td>
+                    <td class="name">主任医师</td>
+                    <td class="describe">
+                        主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述
+                    </td>
+                    <td class="type">
+                        <span class="state2">停用</span>
+                    </td>
+                    <td class="opera">
+                        <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>
+                        <span class="state1 stop">停用</span>
+                        <span class="state1 delete">删除</span>
+                        <input type="hidden" class="setid" value="1"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="number" setid="2">2</td>
+                    <td class="name">医师</td>
+                    <td class="describe">
+                        主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述
+                    </td>
+                    <td class="type">
+                        <span>正常</span>
+                    </td>
+                    <td class="opera">
+                        <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>
+                        <span class="state1 stop">停用</span>
+                        <span class="state1 delete">删除</span>
+                        <input type="hidden" class="setid" value="2"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </form>
     </div>
 @stop
 
