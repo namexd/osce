@@ -18,6 +18,11 @@ class Invigilator extends CommonModel
     public $timestamps	    =	true;
     protected $fillable 	=	['name', 'is_sp'];
 
+    protected $is_spValues  =   [
+        '1' =>  '是',
+        '2' =>  '不是',
+    ];
+
     /**
      * 获取sp老师列表
      * @access public
@@ -28,7 +33,7 @@ class Invigilator extends CommonModel
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return pagenetion
+     * @return pagination
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -36,7 +41,10 @@ class Invigilator extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getSpInvigilator(){
-        
+    public function getSpInvigilatorList(){
+        return  $this   ->  paginate();
+    }
+    public function getIsSpValues(){
+        return $this    ->  is_spValues;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
 return [
-	'name' => 'Osce'
+	'name' => 'Osce',
+	'page_size'=>10,
 ];

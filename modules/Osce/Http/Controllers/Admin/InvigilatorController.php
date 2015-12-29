@@ -8,6 +8,8 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
+use Modules\Osce\Entities\Invigilator;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class InvigilatorController extends CommonController
@@ -24,7 +26,7 @@ class InvigilatorController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view
+     * @return view {姓名：$item->name,是否为sp老师：$isSpValues[$item->is_sp]}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -32,14 +34,39 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getInvigilatorList(){
+    public function getInvigilatorList(Request $request){
+        $Invigilator    =   new Invigilator();
 
-        //return view('',['list'=>]);
+        $list       =   $Invigilator    ->getSpInvigilatorList();
+        $isSpValues =   $Invigilator    ->  getIsSpValues();
+
+        //return view('',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
 
     /**
-     * 新增监考老师
-     * @url GET /osce/admin/invigilator/add-invigilator
+     *  新增监考老师 表单显示页面
+     * @api GET /osce/admin/invigilator/add-invigilator
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 15:14
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddInvigilator(Request $request){
+        //return view();
+    }
+
+    /**
+     * 新增监考老师 提交表单
+     * @url POST /osce/admin/invigilator/add-invigilator
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -49,21 +76,49 @@ class InvigilatorController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view
+     * @return redirect
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2015-12-29 15:12
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postAddInvigilator(){
-        
+    public function postAddInvigilator(Request $request){
+        $this   ->  validate($request,[
+            'name'      =>  'required',
+            'is_sp'     =>  'required|in:1,2',
+        ],[
+            'name.required'     =>  '监考教师姓名必填',
+            'is_sp.required'    =>  '监考教师类型必填'
+        ]);
+
+        $data   =   [
+            'name'  =>  e($request->get('name')),
+            'is_sp' =>  intval($request->get('is_sp')),
+        ];
+
+        $Invigilator    =   new Invigilator();
+        try
+        {
+            if($Invigilator    ->  create($data))
+            {
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList');
+            }
+            else
+            {
+                throw new \Exception('新增失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex);
+        }
     }
 
     /**
      *  关联老师
-     * @api GET /osce/admin/invigilator/relative-invigilator
+     * @url GET /osce/admin/invigilator/relative-invigilator
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -77,13 +132,14 @@ class InvigilatorController extends CommonController
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2015-12-29 15:59
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postRelativeInvigilator(){
+    public function postRelativeInvigilator(Request $request){
 
     }
+
     /**
      * 编辑监考老师信息
      * @url GET /osce/admin/invigilator/edit-invigilator
@@ -104,7 +160,7 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditInvigilator(){
+    public function postEditInvigilator(Request $request){
 
     }
 
@@ -128,7 +184,7 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postSendInvitation(){
+    public function postSendInvitation(Request $request){
 
     }
 
@@ -150,7 +206,7 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getInvitation(){
+    public function getInvitation(Request $request){
 
     }
 
@@ -174,7 +230,7 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postDealInvitation(){
+    public function postDealInvitation(Request $request){
 
     }
 }
