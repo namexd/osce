@@ -43,6 +43,10 @@
 
 <script type="text/javascript">
     $(function(){
+
+        var url = "{{ route('msc.Dept.PidGetDept') }}?pid=";
+        console.log(url+0);
+
         $(".radio_label").click(function(){
             if($(this).children("input").checked=="true"){
                 $(this).children(".radio_icon").removeClass("check");

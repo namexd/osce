@@ -96,7 +96,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn-w-m btn_pl btn-success right">
+                <button class="btn btn_pl btn-success right">
                     <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                         <span style="color: #fff;">新增楼栋</span>
                     </a>
