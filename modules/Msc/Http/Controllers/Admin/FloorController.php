@@ -30,7 +30,7 @@ class FloorController extends Controller {
         $where['keyword'] = $keyword;
         $datalist = $Floor->getFilteredPaginateList($where);
         //dd($datalist);
-        $school =
+
         return view('msc::admin.labmanage.ban_maintain',['data'=>$datalist,'keyword'=>Input::get('keyword')]);
     }
 
