@@ -61,7 +61,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
 		Route::get('floor/stop-floor', ['uses'=>'FloorController@getStopFloor','as'=>'msc.admin.floor.getStopFloor']);
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
-  		Route::controller('profession','ProfessionController');		Route::get('profession/profession-list',['uses'=>'ProfessionController@getProfessionList','as'=>'msc.admin.profession.ProfessionList']);
+
+  		Route::controller('profession','ProfessionController');
+		Route::get('profession/profession-list',['uses'=>'ProfessionController@getProfessionList','as'=>'msc.admin.profession.ProfessionList']);
 		Route::post('profession/profession-add',['uses'=>'ProfessionController@postProfessionAdd','as'=>'msc.admin.profession.ProfessionAdd']);		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);
 		 Route::post('profession/profession-save',['uses'=>'ProfessionController@postProfessionSave','as'=>'msc.admin.profession.ProfessionSave']);
 		 Route::get('profession/profession-status/{id}',['uses'=>'ProfessionController@getProfessionStatus','as'=>'msc.admin.profession.ProfessionStatus']);
@@ -72,15 +74,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//实验室路由
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
-		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);<<<<<<< .mine
-
-
-
-=======
+		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
->>>>>>> .theirs
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
