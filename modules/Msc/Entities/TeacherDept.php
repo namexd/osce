@@ -20,7 +20,7 @@ class TeacherDept extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'teacher_dept';
-    protected $fillable 	=	["id","name","code","pid","level","created_user_id"];
+    protected $fillable 	=	["id","name","code","pid","level","created_user_id","description"];
     public $incrementing	=	true;
     public $timestamps	=	false;
 
@@ -69,7 +69,19 @@ class TeacherDept extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function SelectDept(){
-        return  $this->select(["id","name","code","pid"])->get();
+        return  $this->select(["id","name","code","pid","level","description"])->get();
+    }
+
+
+    /**
+     * @param int $pid
+     * @return array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2015年12月29日16:27:39
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function PidSelectDept($pid=0){
+        return  $this->where('pid','=',$pid)->get();
     }
 
 

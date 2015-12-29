@@ -127,4 +127,25 @@ class DeptController extends MscController
         return  $arr ;
     }
 
+
+    /**
+     * @method
+     * @url /msc/admin/dept/pid-get-dept
+     * @access public
+     * @param int $pid
+     * @return json
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2015年12月29日16:41:20
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function PidGetDept($pid){
+        $Depts = [];
+        if($pid > 0 || $pid == '0'){
+            $Depts = $this->TeacherDept->PidSelectDept($pid);
+        }
+        return response()->json(
+            $this->success_rows(1,'获取成功',$Depts)
+        );
+    }
+
 }
