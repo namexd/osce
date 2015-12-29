@@ -119,13 +119,13 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn-w-m btn_pl btn-success right" id="in">导入专业</button>
-                <input type="file" name="training" id="load_in" style="display: none" value="">
-                <button class="btn btn-w-m btn_pl btn-success right button_margin">
+                <button class="btn btn_pl btn-success right">
                     <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                         <span style="color: #fff;">新增专业</span>
                     </a>
                 </button>
+                <button class="btn btn_pl btn-white right button_margin" id="in">导入专业</button>
+                <input type="file" name="training" id="load_in" style="display: none" value="">
             </div>
 		</div>
         <div class="ibox float-e-margins">
