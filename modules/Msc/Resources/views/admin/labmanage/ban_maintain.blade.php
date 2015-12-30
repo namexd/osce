@@ -257,7 +257,7 @@
 
                         @if(!empty($school))
                             @foreach($school as $ss)
-                                <option value={{$ss->id}}">{{$ss->name}}</option>
+                                <option value="{{$ss->id}}">{{$ss->name}}</option>
                             @endforeach
                         @endif
                     </select>
