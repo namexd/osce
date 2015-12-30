@@ -47,6 +47,11 @@ class FloorController extends Controller {
             'status'=>Input::get('status'),
             'schools'=>Input::get('schools'),
         ]);
+
+
+
+
+
     }
 
 

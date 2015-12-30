@@ -174,7 +174,7 @@
                                 <td>停用</td>
                             @endif
                             <td>
-                                <a href="" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
+                                <a href="{{ route('msc.admin.profession.ProfessionEdit',[$list['id']]) }}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                                 <a class="state2 modal-control stop">停用</a>
                                 <a class="state2 edit_role modal-control delete">删除</a>
                                 <input type="hidden" class="setid" value="1"/>
@@ -225,7 +225,7 @@
 
 @section('layer_content')
 {{--编辑--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="/msc/admin/user/student-add" method="post">
+    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.profession.ProfessionAdd')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">新增专业/编辑专业</h4>
@@ -234,7 +234,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>专业代码</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="number" value="" />
+                    <input type="text" class="form-control name add-name" name="code"/>
                 </div>
             </div>
             <div class="form-group">
@@ -246,10 +246,10 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
                 <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="type">
+                    <select id="select_Category"   class="form-control m-b" name="status">
                         <option value="-1">请选择状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">停用</option>
+                        <option value="1">正常</option>
+                        <option value="2">停用</option>
                     </select>
                 </div>
             </div>

@@ -49,10 +49,14 @@ class StdProfessional extends Model
     //新增专业
     public  function postAddProfession($data){
 
-         $profession  = $this->where('name',$data['name']&&'code',$data['code'])->frist();
-        if($profession){
-            throw new \Exception('该专业已存在');
-        }
+//         $profession  = $this->where('code',$data['code'])->select('code')->frist();
+//        if($profession){
+//            $profession_code=$profession->code;
+//
+//            if($profession_code==$data['mobile']){
+//                return false;
+//            }
+//        }
         $item=array(
             'name'=>$data['name'],
             'code'=>$data['code'],
