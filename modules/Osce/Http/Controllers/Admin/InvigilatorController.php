@@ -87,7 +87,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function getAddInvigilator(Request $request){
-        //return view();
+        return view('osce::admin.resourcemanage.invigilator_add');
     }
 
     /**

@@ -9,7 +9,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::controller('place','PlaceController');
         Route::get('place/place-list',['uses'=>'PlaceController@getPlaceList','as'=>'osce.admin.place.getPlaceList']);
     });
-	//TODO:请前端开发尽早删除这个测试的/test路由。蒋志恒  2015-12-30 10：00
+
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
 		Route::get('invigilator/sp-invigilator-list', 	['uses'=>'InvigilatorController@getSpInvigilatorList','as'=>'osce.admin.invigilator.getSpInvigilatorList']);
 		Route::get('invigilator/invigilator-list', 	['uses'=>'InvigilatorController@getInvigilatorList','as'=>'osce.admin.invigilator.getInvigilatorList']);
