@@ -25,7 +25,8 @@
 //            停用
             $(".stop").click(function(){
                 var this_id = $(this).attr('data');
-                var url = "/msc/admin/laboratory/stop-lab?id="+this_id;
+                var type = $(this).attr('data-type');
+                var url = "/msc/admin/laboratory/stop-lab?id="+this_id+"&type="+type;
                 //询问框
                 layer.confirm('您确定要停用实验室？', {
                     btn: ['确定','取消'] //按钮
@@ -288,7 +289,11 @@
                                         <a href=""  data="{{$v['id']}}"  class="state1 edit update" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                                             <span>编辑</span>
                                         </a>
-                                        <a  data="{{$v['id']}}" class="state2 modal-control stop">停用</a>
+                                        @if($v->status == 0)
+                                            <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">停用</a>
+                                        @else
+                                            <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">启用</a>
+                                        @endif
                                         <a data="{{$v['id']}}" class="state2 edit_role modal-control delete">删除</a>
                                         <input type="hidden" class="setid" value="1"/>
                                     </td>
