@@ -62,7 +62,7 @@ class ResourcesController extends MscController
                 'status' => is_null($itme->status) ? '-' : $itme->status,
             ];
         }
-        dd($list);
+//        dd($list);
         return view('msc::admin.systemtable.resource_table',[
             'list'         =>       $list,
         ]);
@@ -130,8 +130,6 @@ class ResourcesController extends MscController
      */
 
        public  function getResourcesEdit($id){
-
-
            $ResourcesId = intval($id);
            $Resources= Devices::findOrFail($ResourcesId);
            $data=[
