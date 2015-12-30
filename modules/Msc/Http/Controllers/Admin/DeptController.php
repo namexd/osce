@@ -12,6 +12,7 @@ use Modules\Msc\Entities\TeacherDept;
 use Illuminate\Http\Request;
 use Modules\Msc\Http\Controllers\MscController;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Auth;
 /**
  * Class DeptController
  * @package Modules\Msc\Http\Controllers\Admin
@@ -31,21 +32,43 @@ class DeptController extends MscController
      * @method POST
      * @url /msc/admin/dept/add-dept
      * @access public
-     * @param $data
+     * @param $request
+     * name     科室名称
+     * pid      父级id
+     * level    等级
+     * description  介绍
      * @return json
      * @author tangjun <tangjun@misrobot.com>
      * @date 2015年12月29日14:58:24
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function AddDept(Request $request){
-        $this->validate($request,[]);
-        $data = [
 
+        $this->validate($request,[
+            'name'   => 'required|max:50',
+            'pid'   => 'required|integer',
+            'level'  => 'required|integer',
+            'description' => 'required|max:255'
+        ]);
+        $user = Auth::user();
+        $data = [
+            'name'   =>  $request['name'],
+            'pid'   => $request['pid'],
+            'level'  => $request['level'],
+            'description' => $request['description'],
+            'created_user_id' => empty($user->id)?1:$user->id
         ];
         $DeptInfo = $this->TeacherDept->AddDept($data);
-        return response()->json(
-            $this->success_rows(1,'添加成功',$DeptInfo)
-        );
+        if($DeptInfo){
+            return response()->json(
+                $this->success_rows(1,'添加成功',$DeptInfo)
+            );
+        }else{
+            return response()->json(
+                $this->success_rows(2,'添加失败')
+            );
+        }
+
     }
 
     /**
