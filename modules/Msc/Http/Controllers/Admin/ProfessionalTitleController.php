@@ -59,7 +59,7 @@ class ProfessionalTitleController extends Controller
             ];
         }
         dd($list);
-        return view('msc::admin.systemtable.resource_table',[
+        return view('msc::admin.systemtable.title_table',[
             'list'         =>       $list,
         ]);
     }
@@ -184,7 +184,7 @@ class ProfessionalTitleController extends Controller
         );
     }
     /**
-     *×¨ÒµÉ¾³ý
+     *Ö°³ÆÉ¾³ý
      * @method get
      * @url /msc/admin/professionaltitle/holder-remove/{id}
      * @access public
