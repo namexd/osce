@@ -1,4 +1,4 @@
-@extends('osce::layouts.base')
+@extends('osce::admin.layouts.base')
 @section('meta')
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 @stop
@@ -33,7 +33,7 @@
 @section('body_attr') class="fixed-sidebar full-height-layout gray-bg"@stop
 
 @section('body')
-    @include('osce::layouts.admin_errors_notice')
+    @include('osce::admin.layouts.admin_errors_notice')
 @section('content')
 @show{{-- 内容主体区域 --}}
 
