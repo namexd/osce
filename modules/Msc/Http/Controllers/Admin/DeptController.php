@@ -44,11 +44,6 @@ class DeptController extends MscController
      */
     public function AddDept(Request $request){
 
-        $request['name'] = '测试科室15';
-        $request['pid'] = 2;
-        $request['level'] = 2;
-        $request['description'] = '测试';
-
         $this->validate($request,[
             'name'   => 'required|max:50',
             'pid'   => 'required|integer',
