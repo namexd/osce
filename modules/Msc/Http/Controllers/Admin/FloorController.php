@@ -139,10 +139,11 @@ class FloorController extends Controller {
         $id = urlencode(e(Input::get('id')));
         //dd($id);
         $data = [
-            'status'=>0
+            'status'=>Input::get('type')
         ];
         if($id){
             $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->update($data);
+
             if($data != false){
                 return redirect()->back()->withInput()->withErrors('停用成功');
             }else{

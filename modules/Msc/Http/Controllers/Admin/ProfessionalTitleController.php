@@ -88,12 +88,12 @@ class ProfessionalTitleController extends Controller
     public function postHolderAdd(Request $request){
         $this->validate($request,[
             'name'   => 'required|max:20',
-            'detail'   =>  'required|max:50',
+            'description'   =>  'required|max:50',
             'status' =>   'required|in:1,2'
         ]);
         $data=[
             'name'=>Input::get('name'),
-            'detail'=>Input::get('detail'),
+            'description'=>Input::get('description'),
             'status'=>Input::get('status'),
         ];
         $ResourcesAdd= ProfessionalTitle::create($data);

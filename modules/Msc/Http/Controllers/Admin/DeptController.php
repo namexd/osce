@@ -27,6 +27,19 @@ class DeptController extends MscController
         $this->TeacherDept = new TeacherDept;
     }
 
+    /**
+     * @method get
+     * @url /msc/admin/dept/dept-list
+     * @access public
+     * @return
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2015年12月30日18:09:15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function DeptList(){
+        dd('ddd');
+        return view();
+    }
 
     /**
      * @method POST

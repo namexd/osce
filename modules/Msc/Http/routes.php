@@ -22,6 +22,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::post('dept/del-dept', ['uses'=>'DeptController@DelDept','as'=>'msc.Dept.DelDept']);
 		Route::get('dept/select-dept', ['uses'=>'DeptController@SelectDept','as'=>'msc.Dept.SelectDept']);
 		Route::get('dept/pid-get-dept', ['uses'=>'DeptController@PidGetDept','as'=>'msc.Dept.PidGetDept']);
+		Route::get('dept/dept-list', ['uses'=>'DeptController@DeptList','as'=>'msc.Dept.DeptList']);
 
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
