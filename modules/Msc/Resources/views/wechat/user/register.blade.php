@@ -104,15 +104,16 @@
 
             <div class="form-group">
                 <label for="teacher_dept">科 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室<span>*</span></label>
-                <select name="professional" id="department1" class="form-control normal_select select_indent">
+                <select name="department" id="department1" class="form-control normal_select select_indent">
                     <option value="">请选择科室</option>
                 </select>
-                <select name="professional" id="department2" class="form-control normal_select select_indent" style="display: none;margin: 10px 0 5px;">
+                <select name="department" id="department2" class="form-control normal_select select_indent" style="display: none;margin: 10px 0 5px;">
                     <option value="">请选择科室</option>
                 </select>
-                <select name="professional" id="department3" class="form-control normal_select select_indent" style="display: none;margin: 5px 0;">
+                <select name="department" id="department3" class="form-control normal_select select_indent" style="display: none;margin: 5px 0;">
                     <option value="">请选择科室</option>
                 </select>
+                <input type="hidden" name="professional" value="" id="input_hidden">
             </div>
 
             <div class="form-group">
@@ -282,6 +283,7 @@
             });
             if($("#department2").children().length == 1){
                 $("#department2").hide();
+                $("#input_hidden").attr("value",$thisId);
             }else{
                 $("#department2").show();
             }
@@ -308,6 +310,7 @@
             });
             if($("#department3").children().length == 1){
                 $("#department3").hide();
+                $("#input_hidden").attr("value",$thisId);
             }else{
                 $("#department3").show();
             }
@@ -357,11 +360,19 @@
                     }
                }
             },
+            department: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '科室不能为空'
+                    }
+                }
+            },
             professional: {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '不能为空'
-                    }                }
+                    }
+                }
             },
             mobile: {
                 validators: {
