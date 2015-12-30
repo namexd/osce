@@ -22,7 +22,7 @@ class TeacherDept extends Model
     protected $table 		= 	'teacher_dept';
     protected $fillable 	=	["id","name","code","pid","level","created_user_id","description"];
     public $incrementing	=	true;
-    public $timestamps	=	false;
+    public $timestamps	=	true;
 
 
     /**
