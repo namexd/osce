@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use App\Entities\User;
+use Modules\Msc\Entities\ProfessionalTitle;
 class UserController extends MscWeChatController {
 
 	/**
@@ -114,14 +115,15 @@ class UserController extends MscWeChatController {
 		//$userRepository->getProfessionalList();
 		//获取科室列表 关键字搜索 keyword  关键字(必须的) page
 		//$userRepository->getTeacherDeptList();
-
+		$ProfessionalTitle = new ProfessionalTitle;
 		$data = [
+			//职称
+			'ProfessionalTitleList'=>$ProfessionalTitle->getProfessionalTitleList(),
 			//年级列表
 			'GreadeList'=>$userRepository->getGreadeList(),
 			//学生类型列表
 			'StudentTypeList'=>$userRepository->getStudentTypeList()
 		];
-
 
 		return view('msc::wechat.user.register',$data);
 		//$GreadeList
@@ -219,6 +221,7 @@ class UserController extends MscWeChatController {
 	//处理老师注册
 	public function postRegTeacherOp(Request $request,UserRepository $userRepository)
 	{
+		dd($request->all());
 		$this->validate($request,[
 			'name'=>'required',
 			'code'=>'required|integer',

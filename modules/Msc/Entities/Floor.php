@@ -13,7 +13,7 @@ class Floor extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'location';
-    public $timestamps	=	false;
+    public $timestamps	=	true;
     protected $primaryKey	=	'id';
     public $incrementing	=	true;
     protected $guarded 		= 	[];
@@ -26,11 +26,20 @@ class Floor extends Model
     {
 
         $builder = $this;
-
+        //dd($where);
         if ($where['keyword'])
         {
             $builder = $builder->where($this->table.'.name','like','%'.$where['keyword'].'%');
         }
+        if ($where['status'] !== null && $where['status'] !== '')
+        {
+            $builder = $builder->where($this->table.'.status','=',$where['status']);
+        }
+        if ($where['schools'] !== null && $where['schools'] !== '')
+        {
+            $builder = $builder->where($this->table.'.school_id','=',$where['schools']);
+        }
+        //dd($builder);
         $builder = $builder->leftJoin(
             'school',
             function($join){

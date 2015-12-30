@@ -91,17 +91,31 @@
                 <input type="text"  id="code" name="code" class="form-control" />
             </div>
             <div class="form-group">
-                <label for="teacher_dept">科 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室<span>*</span></label>
-                <select name="professional" id="department1" class="form-control normal_select select_indent">
-                    <option value="">请选择科室</option>
-                </select>
-                <select name="professional" id="department2" class="form-control normal_select select_indent" style="display: none;margin: 10px 0 5px;">
-                    <option value="">请选择科室</option>
-                </select>
-                <select name="professional" id="department3" class="form-control normal_select select_indent" style="display: none;margin: 5px 0;">
-                    <option value="">请选择科室</option>
+                <label for="teacher_dept">职 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span>*</span></label>
+                <select name="professionalTitle"  class="form-control normal_select select_indent">
+                    <option value="">请选择职称</option>
+                    @if(!empty($ProfessionalTitleList))
+                        @foreach($ProfessionalTitleList as $v)
+                            <option value="{{ $v['id'] }}">{{ $v['name'] }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
+
+            <div class="form-group">
+                <label for="teacher_dept">科 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室<span>*</span></label>
+                <select name="department" id="department1" class="form-control normal_select select_indent">
+                    <option value="">请选择科室</option>
+                </select>
+                <select name="department" id="department2" class="form-control normal_select select_indent" style="display: none;margin: 10px 0 5px;">
+                    <option value="">请选择科室</option>
+                </select>
+                <select name="department" id="department3" class="form-control normal_select select_indent" style="display: none;margin: 5px 0;">
+                    <option value="">请选择科室</option>
+                </select>
+                <input type="hidden" name="professional" value="" id="input_hidden">
+            </div>
+
             <div class="form-group">
                 <label for="mobile">手机号码<span>*</span></label>
                 <input type="number" class="form-control" id="mobile" name="mobile" />
@@ -269,6 +283,7 @@
             });
             if($("#department2").children().length == 1){
                 $("#department2").hide();
+                $("#input_hidden").attr("value",$thisId);
             }else{
                 $("#department2").show();
             }
@@ -295,6 +310,7 @@
             });
             if($("#department3").children().length == 1){
                 $("#department3").hide();
+                $("#input_hidden").attr("value",$thisId);
             }else{
                 $("#department3").show();
             }
@@ -330,6 +346,13 @@
                     }
                 }
             },
+            professionalTitle: {
+                validators: {
+                    notEmpty: {
+                        message: '职称不能为空'
+                    }
+                }
+            },
             code: {
                 validators: {
                     notEmpty: {/*非空提示*/
@@ -337,11 +360,19 @@
                     }
                }
             },
+            department: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '科室不能为空'
+                    }
+                }
+            },
             professional: {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '不能为空'
-                    }                }
+                    }
+                }
             },
             mobile: {
                 validators: {

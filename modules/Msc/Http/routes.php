@@ -79,9 +79,12 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
-		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
+		Route::post('laboratory/add-lab-insert', ['uses'=>'LaboratoryController@getAddLabInsert','as'=>'msc.admin.laboratory.getAddLabInsert']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
+		Route::get('laboratory/delete-lab', ['uses'=>'LaboratoryController@getDeleteLab','as'=>'msc.admin.laboratory.getDeleteLab']);
+		Route::get('laboratory/stop-lab', ['uses'=>'LaboratoryController@getStopLab','as'=>'msc.admin.laboratory.getStopLab']);
+		Route::post('laboratory/edit-lab-insert', ['uses'=>'LaboratoryController@getEditLabInsert','as'=>'msc.admin.laboratory.getEditLabInsert']);
 		//资源路由
 		Route::controller('resources','resourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);

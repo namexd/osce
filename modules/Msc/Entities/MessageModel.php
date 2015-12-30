@@ -16,14 +16,14 @@ use App\Entities\SysRoles;
 class MessageModel extends  Model
 {
     /**
-     * ÏñÎ¢ĞÅÓÃ»§·¢ËÍÆÕÍ¨ÎÄ±¾ÏûÏ¢
+     * åƒå¾®ä¿¡ç”¨æˆ·å‘é€æ™®é€šæ–‡æœ¬æ¶ˆæ¯
      * @param $msg
      * @param $openid
      * @return bool
      * @throws \Exception
      * @throws \Overtrue\Wechat\Exception
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2015Äê12ÔÂ30ÈÕ11:32:13
+     * @date    2015å¹´12æœˆ30æ—¥11:32:13
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function SendWeChatMsg($msg,$openid){
@@ -33,12 +33,12 @@ class MessageModel extends  Model
 
 
     /**
-     * ¸ù¾İ²»Í¬µÄ½ÇÉ«»ñÈ¡Ïà¹ØµÄ´ú°ìÊÂÏî
+     * æ ¹æ®ä¸åŒçš„è§’è‰²è·å–ç›¸å…³çš„ä»£åŠäº‹é¡¹
      * @param $role
      * @param $uid
      * @return array
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2015Äê12ÔÂ30ÈÕ11:43:30
+     * @date    2015å¹´12æœˆ30æ—¥11:43:30
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function AdjPending($role,$uid){
