@@ -305,7 +305,7 @@
                         <option value="-1">请选择所属分院</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
-                                <option value={{$ss->id}}">{{$ss->name}}</option>
+                                <option value="{{$ss->id}}">{{$ss->name}}</option>
                             @endforeach
                                 @endif
                     </select>
