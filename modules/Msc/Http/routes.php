@@ -93,7 +93,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('resources/resources-edit/{id}',['uses'=>'ResourcesController@postResourcesEdit','as'=>'msc.admin.resources.ResourcesEdit']);
 		Route::post('resources/resources-save',['uses'=>'ResourcesController@postResourcesSave','as'=>'msc.admin.resources.ResourcesSave']);
 		Route::get('resources/resources-status/{id}',['uses'=>'ResourcesController@postResourcesStatus','as'=>'msc.admin.resources.ResourcesStatus']);
-		Route::get('resources/resources-remove/{id}',['uses'=>'ResourcesController@postResourcesRemove','as'=>'msc.admin.resources.ResourcesRemove']);
+		Route::get('resources/resources-remove/{id}',['uses'=>'ResourcesController@getResourcesRemove','as'=>'msc.admin.resources.ResourcesRemove']);
 
 		//职称路由
 		Route::controller('professionaltitle','ProfessionalTitleController');
@@ -102,7 +102,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('professionaltitle/holder-edit/{id}',['uses'=>'ProfessionalTitleController@getHolderEdit','as'=>'msc.admin.professionaltitle.HolderEdit']);
 		Route::post('professionaltitle/holder-save',['uses'=>'ProfessionalTitleController@postHolderSave','as'=>'msc.admin.professionaltitle.HolderSave']);
 		Route::get('professionaltitle/holder-status/{id}',['uses'=>'ProfessionalTitleController@getHolderStatus','as'=>'msc.admin.professionaltitle.HolderStatus']);
-		Route::get('professionaltitle/holder-remove/{id}',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
+		Route::get('professionaltitle/holder-remove',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
 
 	});
 

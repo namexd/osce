@@ -186,7 +186,7 @@ class ProfessionalTitleController extends Controller
     /**
      *Ö°³ÆÉ¾³ý
      * @method get
-     * @url /msc/admin/professionaltitle/holder-remove/{id}
+     * @url /msc/admin/professionaltitle/holder-remove
      * @access public
      *
      * @param Request $request getÇëÇó<br><br>
@@ -201,7 +201,7 @@ class ProfessionalTitleController extends Controller
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public  function getHolderRemove(){
-
+//        echo'22222';exit;
         $id = urlencode(e(Input::get('id')));
         if($id){
             $data = DB::connection('msc_mis')->table('professional_title')->where('id','=',$id)->delete();

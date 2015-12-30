@@ -12,7 +12,8 @@
 <script>
     $(function(){
         $(".delete").click(function(){
-            var this_id = $(this).siblings(".setid").val();
+            var this_id = $(this).attr('data');
+            var url = "/msc/admin/professionaltitle/holder-remove?id="+this_id;
             //询问框
             layer.confirm('您确定要删除该职称？', {
                 btn: ['确定','取消'] //按钮
@@ -123,7 +124,7 @@
                             <td class="opera">
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" data="{{ @$val['status'] }}"><span>编辑</span></a>
                                 <span class="state2 stop" data="{{ @$val['status'] }}">停用</span>
-                                <span class="state2 delete" data="{{ @$val['status'] }}">删除</span>
+                                <span class="state2 delete" data="{{ @$val['id'] }}">删除</span>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>

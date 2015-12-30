@@ -134,7 +134,8 @@ class ProfessionController extends MscController
               'code'   =>     $Profession['code'],
               'status' =>    $Profession['status']
         ];
-          die(json_encode($data));
+//          die(json_encode($data));
+        return $data;
     }
 
     /**
@@ -237,15 +238,11 @@ class ProfessionController extends MscController
         $professionModel = new StdProfessional();
 
         $result = $professionModel->SoftTrashed($id);
-
-        if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+        if($result != false){
+            return redirect()->back()->withInput()->withErrors('删除成功');
+        }else{
+            return redirect()->back()->withInput()->withErrors('系统异常');
         }
-        return response()->json(
-            ['success' => false]
-        );
     }
 
     /**

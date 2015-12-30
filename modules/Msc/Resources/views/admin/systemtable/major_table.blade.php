@@ -176,7 +176,7 @@
                             <td>
                                 <a href="{{ route('msc.admin.profession.ProfessionEdit',[$list['id']]) }}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                                 <a class="state2 modal-control stop">停用</a>
-                                <a class="state2 edit_role modal-control delete">删除</a>
+                                <a  class="state2 edit_role modal-control delete">删除</a>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>
@@ -234,7 +234,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>专业代码</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="code"/>
+                    <input type="text" class="form-control name add-name" name="code" value="" />
                 </div>
             </div>
             <div class="form-group">
