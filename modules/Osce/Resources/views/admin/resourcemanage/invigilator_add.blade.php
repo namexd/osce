@@ -1,13 +1,11 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+    
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-    <script src="msc/admin/plugins/js/plugins/validate/jquery.validate.min.js"></script>
-    <script src="msc/admin/plugins/js/plugins/messages_zh.min.js"></script>
+    <script src="{{asset('osce/plugins/js/plugins/validate/jquery.validate.min.js')}}"></script>
+    <script src="{{asset('osce/plugins/js/plugins/messages_zh.min.js')}}"></script>
     <script>
         $("#select_Category").change( function(){
             if($(this).val()=="Classroom") {
@@ -76,19 +74,12 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>资源详情</h5>
+            <h5>人员管理</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
-                <div class="col-md-5">
-                    <div id="uploader-demo">
-                        <!--用来存放item-->
-                        <div id="fileList" class="uploader-list"></div>
-                        <div id="filePicker">选择图片</div>
-                    </div>
-                </div>
 
-                <div class="col-md-7 ">
+                <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm">
 
                         <div class="hr-line-dashed"></div>
@@ -179,6 +170,7 @@
                     </form>
 
                 </div>
+
             </div>
         </div>
     </div>
