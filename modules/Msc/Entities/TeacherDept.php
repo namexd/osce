@@ -86,6 +86,7 @@ class TeacherDept extends Model
     }
 
     /**
+     * 根据当前id递归出所有子级id
      * @param $id
      * @return array
      * @author tangjun <tangjun@misrobot.com>
