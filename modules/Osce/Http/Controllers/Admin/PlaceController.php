@@ -114,7 +114,7 @@ class PlaceController extends CommonController
         $data = Place::findOrFail($id);
 
         //将数据展示到页面
-//        return view('',['data' => $data]);
+        return view('osce::admin.resourcemanage.examroom_edit',['data' => $data]);
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
