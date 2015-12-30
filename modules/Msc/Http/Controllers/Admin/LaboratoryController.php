@@ -161,7 +161,7 @@ class LaboratoryController extends Controller {
     public function getStopLab(Laboratory $laboratory){
         $id = urlencode(e(Input::get('id')));
         if($id){
-            $data = $laboratory->where('id','=',$id)->update(['status'=>1]);
+            $data = $laboratory->where('id','=',$id)->update(['status'=>Input::get('type')]);
             if($data != false){
                 return redirect()->back()->withInput()->withErrors('停用成功');
             }else{
