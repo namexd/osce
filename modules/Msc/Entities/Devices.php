@@ -44,13 +44,12 @@ class Devices  extends Model
             'device_cate',
             function($join){
                 $join   ->  on(
-                    $this->table. '.created_user_id',
+                    $this->table. '.devices_cate_id',
                     '=',
                     'device_cate.id'
                 );
             }
-        )->select($this->table.'.*','device_cate.name as dname');
+        )->select($this->table.'.*','device_cate.name as catename');
         return $builder->orderBy( $this->table.'.id')->paginate(config('msc.page_size',10));
     }
-
 }
