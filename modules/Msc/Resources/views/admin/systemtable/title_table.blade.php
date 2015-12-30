@@ -77,7 +77,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button href="/msc/admin/lab/had-open-lab-add" class="right btn btn-success">新增职称</button>
+                <button href="/msc/admin/lab/had-open-lab-add" class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增职称</button>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -109,38 +109,42 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td class="number">1</td>
-                    <td class="name">主任医师</td>
-                    <td class="describe">
-                        主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述
-                    </td>
-                    <td class="type">
-                        <span class="state2">停用</span>
-                    </td>
-                    <td class="opera">
-                        <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>
-                        <span class="state1 stop">停用</span>
-                        <span class="state1 delete">删除</span>
-                        <input type="hidden" class="setid" value="1"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="number" setid="2">2</td>
-                    <td class="name">医师</td>
-                    <td class="describe">
-                        主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述
-                    </td>
-                    <td class="type">
-                        <span>正常</span>
-                    </td>
-                    <td class="opera">
-                        <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>
-                        <span class="state1 stop">停用</span>
-                        <span class="state1 delete">删除</span>
-                        <input type="hidden" class="setid" value="2"/>
-                    </td>
-                </tr>
+                @if(!empty($list))
+                    @foreach($list as $val)
+                        <tr>
+                            <td class="number">{{ @$val['id'] }}</td>
+                            <td class="name">{{ @$val['name'] }}</td>
+                            <td class="describe">
+                                {{ @$val['description'] }}
+                            </td>
+                            <td class="type" data="{{ @$val['status'] }}">
+                                @if(@$val['status'] == 1)<span>正常</span>@else<span class="state2">停用</span>@endif
+                            </td>
+                            <td class="opera">
+                                <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" data="{{ @$val['status'] }}"><span>编辑</span></a>
+                                <span class="state2 stop" data="{{ @$val['status'] }}">停用</span>
+                                <span class="state2 delete" data="{{ @$val['status'] }}">删除</span>
+                                <input type="hidden" class="setid" value="1"/>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+                {{--<tr>--}}
+                    {{--<td class="number">2</td>--}}
+                    {{--<td class="name">医师</td>--}}
+                    {{--<td class="describe">--}}
+                        {{--主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述--}}
+                    {{--</td>--}}
+                    {{--<td class="type">--}}
+                        {{--<span>正常</span>--}}
+                    {{--</td>--}}
+                    {{--<td class="opera">--}}
+                        {{--<a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>--}}
+                        {{--<span class="state1 stop">停用</span>--}}
+                        {{--<span class="state1 delete">删除</span>--}}
+                        {{--<input type="hidden" class="setid" value="2"/>--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
                 </tbody>
             </table>
 
@@ -150,7 +154,7 @@
 
 @section('layer_content')
 <!--新增-->
-<form class="form-horizontal" id="add_from" novalidate="novalidate" action="/msc/admin/user/student-add" method="post">
+<form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{ route('msc.admin.professionaltitle.HolderAdd') }}" method="post">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">新增职称/编辑职称</h4>
@@ -165,16 +169,16 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">职称描述</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control describe add-describe" name="describe" />
+                <input type="text" class="form-control describe add-describe" name="description" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
             <div class="col-sm-9">
-                <select id="select_Category"   class="form-control m-b" name="type">
+                <select id="select_Category"   class="form-control m-b" name="status">
                     <option value="-1">请选择状态</option>
-                    <option value="0">正常</option>
-                    <option value="1">停用</option>
+                    <option value="1">正常</option>
+                    <option value="2">停用</option>
                 </select>
             </div>
         </div>
