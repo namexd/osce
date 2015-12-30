@@ -59,26 +59,4 @@ class Place extends CommonModel
 
     }
 
-    public function change($formData)
-    {
-        //如果传入了id，就按照传入的id和status改变实验室的状态
-        if ($formData['id'] !== null) {
-            $changeStatus = [
-                'id' => $formData['id'],
-                'status' => $formData['status']
-            ];
-
-            $result = $this->changeStatus($changeStatus);
-            if (!$result) {
-                $array = [
-                    'code' => -999,
-                    'message' => '状态修改有错误！'
-                ];
-                return $array;
-            } else {
-                return $result;
-            }
-
-        }
-    }
 }
