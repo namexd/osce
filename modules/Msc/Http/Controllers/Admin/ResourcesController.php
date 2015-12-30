@@ -225,7 +225,7 @@ class ResourcesController extends MscController
             return redirect()->back()->withInput()->withErrors('ϵͳ�쳣');
         }
     }
-    
+
 }
 
 

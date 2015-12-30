@@ -83,12 +83,17 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
 		//资源路由
 		Route::controller('resources','resourcesController');
-		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.profession.ResourcesIndex']);
-		Route::post('resources/resources-add',['uses'=>'ResourcesController@postResourcesAdd','as'=>'msc.admin.profession.ResourcesAdd']);
-		Route::get('resources/resources-edit/{id}',['uses'=>'ResourcesController@postResourcesEdit','as'=>'msc.admin.profession.ResourcesEdit']);
-		Route::post('resources/resources-save',['uses'=>'ResourcesController@postResourcesSave','as'=>'msc.admin.profession.ResourcesSave']);
-		Route::get('resources/resources-status/{id}',['uses'=>'ResourcesController@postResourcesStatus','as'=>'msc.admin.profession.ResourcesStatus']);
-		Route::get('resources/resources-remove/{id}',['uses'=>'ResourcesController@postResourcesRemove','as'=>'msc.admin.profession.ResourcesRemove']);
+		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
+		Route::post('resources/resources-add',['uses'=>'ResourcesController@postResourcesAdd','as'=>'msc.admin.resources.ResourcesAdd']);
+		Route::get('resources/resources-edit/{id}',['uses'=>'ResourcesController@postResourcesEdit','as'=>'msc.admin.resources.ResourcesEdit']);
+		Route::post('resources/resources-save',['uses'=>'ResourcesController@postResourcesSave','as'=>'msc.admin.resources.ResourcesSave']);
+		Route::get('resources/resources-status/{id}',['uses'=>'ResourcesController@postResourcesStatus','as'=>'msc.admin.resources.ResourcesStatus']);
+		Route::get('resources/resources-remove/{id}',['uses'=>'ResourcesController@postResourcesRemove','as'=>'msc.admin.resources.ResourcesRemove']);
+
+		//职称路由
+		Route::controller('professionaltitle','ProfessionalTitleController');
+		Route::get('professionaltitle/job-title-index',['uses'=>'ProfessionalTitleController@getJobTitleIndex','as'=>'msc.admin.professionaltitle.JobTitleIndex']);
+
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){

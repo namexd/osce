@@ -50,6 +50,22 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label">系统表管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.profession.ProfessionList')}}">专业列表</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.professionaltitle.JobTitleIndex')}}">职称列表</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.resources.ResourcesIndex')}}">资源列表</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li>
                         <a href="#"><i class="fa fa-user"></i> <span class="nav-label">用户权限管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
