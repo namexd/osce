@@ -59,7 +59,7 @@ class Invigilator extends CommonModel
      */
     public function getSpInvigilatorList(){
         return  $this   ->  where('is_sp','=',1)
-                        ->  paginate();
+                        ->  paginate('osce.page_size');
     }
 
     /**
@@ -82,6 +82,6 @@ class Invigilator extends CommonModel
      */
     public function getInvigilatorList(){
         return  $this   ->  where('is_sp','=',2)
-            ->  paginate();
+            ->  paginate('osce.page_size');
     }
 }
