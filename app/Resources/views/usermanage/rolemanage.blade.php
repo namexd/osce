@@ -16,7 +16,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title overflow">
                 <h5>角色权限管理</h5>
-                <button type="button" class="btn btn-w-m btn-primary right" id="add_role" data-toggle="modal" data-target="#myModal">新增角色</button>
+                <button type="button" class="btn btn-primary right" id="add_role" data-toggle="modal" data-target="#myModal">新增角色</button>
             </div>
             <div class="container-fluid ibox-content">
                 <table class="table table-striped" id="table-striped">
