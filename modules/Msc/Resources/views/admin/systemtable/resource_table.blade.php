@@ -149,12 +149,18 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @if(!empty($list))
+                        @foreach($list as $val)
                     <tr>
-                        <td>1</td>
-                        <td>听诊器</td>
-                        <td>耗材</td>
-                        <td></td>
-                        <td>正常</td>
+                        <td>{{$val['id']}}</td>
+                        <td>{{$val['name']}}</td>
+                        <td>{{$val['catename']}}</td>
+                        <td>{{$val['detail']}}</td>
+                        @if($val['status']==1)
+                            <td class="status2">正常</td>
+                        @else
+                            <td>停用</td>
+                        @endif
                         <td>
                             <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                             <a class="state2 modal-control stop">停用</a>
@@ -162,19 +168,8 @@
                             <input type="hidden" class="setid" value="1"/>
                         </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>听诊器</td>
-                        <td>耗材</td>
-                        <td></td>
-                        <td class="state2">停用</td>
-                        <td>
-                            <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
-                            <a class="state2 modal-control stop">停用</a>
-                            <a class="state2 edit_role modal-control delete">删除</a>
-                            <input type="hidden" class="setid" value="1"/>
-                        </td>
-                    </tr>
+                    @endforeach
+                    @endif
                     </tbody>
                 </table>
             </form>

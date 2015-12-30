@@ -124,7 +124,7 @@
                             <td class="opera">
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" data="{{ @$val['status'] }}"><span>编辑</span></a>
                                 <span class="state2 stop" data="{{ @$val['status'] }}">停用</span>
-                                <span class="state2 delete" data="{{$val['id']}} ">删除</span>
+                                <span class="state2 delete" data="$val['id']">删除</span>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>
