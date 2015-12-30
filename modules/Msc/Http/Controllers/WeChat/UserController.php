@@ -221,20 +221,23 @@ class UserController extends MscWeChatController {
 	//处理老师注册
 	public function postRegTeacherOp(Request $request,UserRepository $userRepository)
 	{
-		dd($request->all());
+
 		$this->validate($request,[
 			'name'=>'required',
 			'code'=>'required|integer',
 			'password'=>'required',
 			'mobile'=>'required|mobile_phone',
-			'teacher_dept'=>'required|integer',
-			'gender'=>'required|integer'
+			'gender'=>'required|integer',
+			'professionalTitle'=>'required|integer',
+			'professional'=>'required|integer'
 		]);
 		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
 		//判断手机号码 有无注册
 		if ($this->CheckPhoneRegister($request['mobile'])) {
 			if ($this->CheckCodeRegister($request['code'])) {
+
 				if ($userRepository->regTeacher($request))
+
 					return redirect()->intended('/msc/wechat/user/user-login');
 				else {
 					return view('msc::wechat.index.index_error', array('error_msg' => '注册失败'));

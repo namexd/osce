@@ -111,9 +111,10 @@ class UserRepository extends BaseRepository
 
             $form_teacher=[
                 'name'=>$data['name'],
-                'teacher_dept'=>$data['teacher_dept'],
+                'teacher_dept'=>$data['professional'],
                 'code'=>$data['code'],
-                'validated'=>1
+                'validated'=>1,
+                'professionalTitle'=>$data['professionalTitle'],
             ];
             $form_teacher['id']=$user->id;
             Teacher::create($form_teacher);

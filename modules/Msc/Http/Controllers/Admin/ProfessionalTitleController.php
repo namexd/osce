@@ -56,7 +56,9 @@ class ProfessionalTitleController extends Controller
                 'status' => is_null($itme->status) ? '-' : $itme->status,
             ];
         }
-        dd($list);
+
+//        dd($list);
+
         return view('msc::admin.systemtable.title_table',[
             'list'         =>       $list,
         ]);
