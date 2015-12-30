@@ -91,6 +91,18 @@
                 <input type="text"  id="code" name="code" class="form-control" />
             </div>
             <div class="form-group">
+                <label for="teacher_dept">职 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span>*</span></label>
+                <select name="professionalTitle"  class="form-control normal_select select_indent">
+                    <option value="">请选择职称</option>
+                    @if(!empty($ProfessionalTitleList))
+                        @foreach($ProfessionalTitleList as $v)
+                            <option value="{{ $v['id'] }}">{{ $v['name'] }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="teacher_dept">科 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室<span>*</span></label>
                 <select name="professional" id="department1" class="form-control normal_select select_indent">
                     <option value="">请选择科室</option>
@@ -102,6 +114,7 @@
                     <option value="">请选择科室</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="mobile">手机号码<span>*</span></label>
                 <input type="number" class="form-control" id="mobile" name="mobile" />
@@ -327,6 +340,13 @@
                 validators: {
                     notEmpty: {
                         message: '性别不能为空'
+                    }
+                }
+            },
+            professionalTitle: {
+                validators: {
+                    notEmpty: {
+                        message: '职称不能为空'
                     }
                 }
             },

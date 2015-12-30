@@ -16,7 +16,7 @@ class ProfessionalTitle extends Model
 
     protected $connection	=	'msc_mis';
     protected $table 		= 	'professional_title';
-    public $timestamps	=	false;
+    public $timestamps	=	true;
     protected $primaryKey	=	'id';
     public $incrementing	=	true;
     protected $guarded 		= 	[];
@@ -49,5 +49,9 @@ class ProfessionalTitle extends Model
 
         return $this->where('id',$professionId)->update(['status'=>3-$status]);
 
+    }
+
+    public function getProfessionalTitleList(){
+        return  $this->where('status','=',1)->get();
     }
 }
