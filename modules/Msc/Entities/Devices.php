@@ -52,4 +52,17 @@ class Devices  extends Model
         )->select($this->table.'.*','device_cate.name as catename');
         return $builder->orderBy( $this->table.'.id')->paginate(config('msc.page_size',10));
     }
+
+
+    //改变专业状态
+    public  function changeStatus($professionId){
+        $data=$this->where('id',$professionId)->select('status')->first();
+
+        foreach($data as $tmp){
+            $status=$tmp;
+        };
+
+        return $this->where('id',$professionId)->update(['status'=>3-$status]);
+
+    }
 }

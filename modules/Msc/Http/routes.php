@@ -85,8 +85,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::controller('resources','resourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.profession.ResourcesIndex']);
 		Route::post('resources/resources-add',['uses'=>'ResourcesController@postResourcesAdd','as'=>'msc.admin.profession.ResourcesAdd']);
-
-
+		Route::get('resources/resources-edit/{id}',['uses'=>'ResourcesController@postResourcesEdit','as'=>'msc.admin.profession.ResourcesEdit']);
+		Route::post('resources/resources-save',['uses'=>'ResourcesController@postResourcesSave','as'=>'msc.admin.profession.ResourcesSave']);
+		Route::get('resources/resources-status/{id}',['uses'=>'ResourcesController@postResourcesStatus','as'=>'msc.admin.profession.ResourcesStatus']);
+		Route::get('resources/resources-remove/{id}',['uses'=>'ResourcesController@postResourcesRemove','as'=>'msc.admin.profession.ResourcesRemove']);
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){

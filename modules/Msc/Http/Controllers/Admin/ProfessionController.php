@@ -51,7 +51,7 @@ class ProfessionController extends MscController
              'id' => $itme->id,
              'name'  => $itme->name,
              'code'  => $itme->code,
-//            'status' =>$itme->status,
+
               'status'    => is_null($itme->status) ? '-' : $itme->status,
          ];
       }
