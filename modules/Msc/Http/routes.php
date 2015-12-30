@@ -75,6 +75,11 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
+		//资源路由
+		Route::controller('Resources','ResourcesController');
+		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.profession.ResourcesIndex']);
+
+
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
