@@ -43,7 +43,7 @@ class CaseHistory extends CommonModel
         return $builder;
     }
 
-    public function addCaseHistory($formData)
+    public function CaseHistory($formData)
     {
 
     }

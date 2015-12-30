@@ -68,17 +68,13 @@ class PlaceController extends CommonController
             'type' => 'required'
         ]);
         //将其传入具体修改的方法
-        try {
-            $type = $request->input('type');
-            if ($type == 'place') {
-                $model = new Place();
-            } elseif ($type == 'place_cate') {
-                $model = new PlaceCate();
-            } else {
-                throw new \Exception('出现了错误，请检查');
-            }
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
+        $type = $request->input('type');
+        if ($type == 'place') {
+            $model = new Place();
+        } elseif ($type == 'place_cate') {
+            $model = new PlaceCate();
+        } else {
+            abort(404,'该页面不存在，请联系管理员');
         }
 
         $result = $model->changeStatus($request);
@@ -106,15 +102,15 @@ class PlaceController extends CommonController
 
         //取出id的值
         try {
-        $id = $request->input('id');
-        if (!$id) {
-            throw new \Exception('并没有传入id!');
-        }
-        //根据id查询出数据,如果查不出来就抛出一个异常
-        $data = Place::findOrFail($id);
+            $id = $request->input('id');
+            if (!$id) {
+                throw new \Exception('并没有传入id!');
+            }
+            //根据id查询出数据,如果查不出来就抛出一个异常
+            $data = Place::findOrFail($id);
 
-        //将数据展示到页面
-//        return view('',['data' => $data]);
+            //将数据展示到页面
+//          return view('',['data' => $data]);
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -154,11 +150,7 @@ class PlaceController extends CommonController
             if (!$result) {
                 throw new Exception('数据插入失败！请重试');
             } else {
-                $array = [
-                    'code' => 1,
-                    'message' => $result,
-                ];
-                return response()->json($array);
+                $this->success_data($this->toArray($result));
             }
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -195,7 +187,7 @@ class PlaceController extends CommonController
     }
 
     /**
-     * 获取场所类别列表,根据场所类来查找
+     * 插入一条数据
      * @api       POST /osce/admin/place/create-place-cate
      * @access    public
      * @param Request $request get请求<br><br>
