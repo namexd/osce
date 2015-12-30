@@ -5,6 +5,7 @@
         .has-error .form-control{border-color: #ed5565!important;}
         .code_add,.code_del{position:absolute;right:15px;top:0;}
         .add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
+        .button_margin{margin-right: 10px}
     </style>
 @stop
 

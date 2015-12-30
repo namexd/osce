@@ -70,6 +70,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		 Route::controller('profession','ProfessionController');
 		 Route::get('profession/profession-list',['uses'=>'ProfessionController@getProfessionList','as'=>'msc.admin.profession.ProfessionList']);
 		 Route::post('profession/profession-add',['uses'=>'ProfessionController@postProfessionAdd','as'=>'msc.admin.profession.ProfessionAdd']);		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);
+		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);
 		 Route::post('profession/profession-save',['uses'=>'ProfessionController@postProfessionSave','as'=>'msc.admin.profession.ProfessionSave']);
 		 Route::get('profession/profession-status/{id}',['uses'=>'ProfessionController@getProfessionStatus','as'=>'msc.admin.profession.ProfessionStatus']);
 		 Route::get('profession/profession-deletion/{id}',['uses'=>'ProfessionController@getProfessionDeletion','as'=>'msc.admin.profession.ProfessionDeletion']);
@@ -78,9 +79,12 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
-		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
+		Route::post('laboratory/add-lab-insert', ['uses'=>'LaboratoryController@getAddLabInsert','as'=>'msc.admin.laboratory.getAddLabInsert']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
+		Route::get('laboratory/delete-lab', ['uses'=>'LaboratoryController@getDeleteLab','as'=>'msc.admin.laboratory.getDeleteLab']);
+		Route::get('laboratory/stop-lab', ['uses'=>'LaboratoryController@getStopLab','as'=>'msc.admin.laboratory.getStopLab']);
+		Route::post('laboratory/edit-lab-insert', ['uses'=>'LaboratoryController@getEditLabInsert','as'=>'msc.admin.laboratory.getEditLabInsert']);
 		//资源路由
 		Route::controller('resources','resourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
@@ -93,6 +97,11 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//职称路由
 		Route::controller('professionaltitle','ProfessionalTitleController');
 		Route::get('professionaltitle/job-title-index',['uses'=>'ProfessionalTitleController@getJobTitleIndex','as'=>'msc.admin.professionaltitle.JobTitleIndex']);
+		Route::post('professionaltitle/holder-add',['uses'=>'ProfessionalTitleController@postHolderAdd','as'=>'msc.admin.professionaltitle.HolderAdd']);
+		Route::get('professionaltitle/holder-edit/{id}',['uses'=>'ProfessionalTitleController@getHolderEdit','as'=>'msc.admin.professionaltitle.HolderEdit']);
+		Route::post('professionaltitle/holder-save',['uses'=>'ProfessionalTitleController@postHolderSave','as'=>'msc.admin.professionaltitle.HolderSave']);
+		Route::get('professionaltitle/holder-status/{id}',['uses'=>'ProfessionalTitleController@getHolderStatus','as'=>'msc.admin.professionaltitle.HolderStatus']);
+		Route::get('professionaltitle/holder-remove/{id}',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
 
 	});
 

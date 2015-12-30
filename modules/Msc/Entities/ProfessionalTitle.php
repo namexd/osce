@@ -37,8 +37,17 @@ class ProfessionalTitle extends Model
             $builder = $builder->where('name','like','%'.$keyword.'%');
         }
         return $builder->orderBy('id')->paginate(config('msc.page_size',10));
-
-
     }
 
+    //¸Ä±äÖ°³Æ×´Ì¬
+    public  function changeStatus($professionId){
+        $data=$this->where('id',$professionId)->select('status')->first();
+
+        foreach($data as $tmp){
+            $status=$tmp;
+        };
+
+        return $this->where('id',$professionId)->update(['status'=>3-$status]);
+
+    }
 }

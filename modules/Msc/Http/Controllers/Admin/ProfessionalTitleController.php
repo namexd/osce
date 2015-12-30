@@ -108,7 +108,7 @@ class ProfessionalTitleController extends Controller
      * 编辑回显职称
      *
      * @method post
-     * @url /msc/admin/professionaltitle/holder-add
+     * @url /msc/admin/professionaltitle/holder-edit
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -160,8 +160,62 @@ class ProfessionalTitleController extends Controller
             return redirect()->back()->withInput()->withErrors('系统异常');
         }
     }
+    /**
+     * Created by PhpStorm.
+     * User: zhouqiang
+     * Date: 2015/12/30 0028
+     * Time: 13:01
+     * 修改职称状态
+     */
+
+    public function getHolderStatus($id){
+        $holderId = intval($id);
+
+        $holderModel = new ProfessionalTitle();
+
+        $result =  $holderModel->changeStatus($holderId);
+        if ($result) {
+            return response()->json(
+                ['success' => true]
+            );
+        }
+        return response()->json(
+            ['success' => false]
+        );
+    }
+    /**
+     *专业删除
+     * @method get
+     * @url /msc/admin/professionaltitle/holder-remove/{id}
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>post请求字段：</b>
+     * *int   ID    (必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public  function getHolderRemove(){
+
+        $id = urlencode(e(Input::get('id')));
+        if($id){
+            $data = DB::connection('msc_mis')->table('professional_title')->where('id','=',$id)->delete();
+            if($data != false){
+                return redirect()->back()->withInput()->withErrors('删除成功');
+            }else{
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+        }else{
+            return redirect()->back()->withInput()->withErrors('系统异常');
+        }
+    }
 
 
 
-    
+
 }
