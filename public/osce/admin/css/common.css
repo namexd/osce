@@ -99,16 +99,14 @@ a{-webkit-touch-callout:none;}
 .check_label:hover .check_icon.check{background-position:-32px 0}
 .check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
 
-/**
- * 按钮颜色
- */
+/*�����޸�buttonĬ����ɫЧ��*/
 .btn-primary{
-    background-color: #1ab394;
-    border-color: #1ab394;
+    background-color:#408AFF;
+    border-color:#408AFF;
 }
-.btn-primary:focus{background-color:#1ab394;border-color:#1ab394;}
-.btn-primary:hover{background-color: #42b2b1;border-color: #42b2b1}
-.btn-primary.active,.btn-primary:active,.btn-primary:hover,.open .dropdown-toggle.btn-primary{background-color:#42b2b1;border-color:#42b2b1;color:#FFF}
+.btn-primary:focus{background-color:#408AFF;border-color:#408AFF;}
+.btn-primary:hover{background-color: #3879E1;border-color: #3879E1}
+.btn-primary.active,.btn-primary:active,.btn-primary:hover,.open .dropdown-toggle.btn-primary{background-color:#3879E1;border-color:#3879E1;color:#FFF}
 
 .btn-default{background-color: #fff;border-color: #ccc;color: #333;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
@@ -142,20 +140,14 @@ a{-webkit-touch-callout:none;}
 .btn-link{height:30px;min-width:80px;line-height: 16px; color: #fff;}
 .opera  span{ padding: 0 5px; cursor: pointer;}
 
-/**
- * 表格状态
- */
-.table a .state1{ color:#1ab394;}
+.table a .state1{ color:#408aff;}
 .table a .state2{ color:#ed5565;}
 .table a .state3{ color:#21b9bb;}
 .table a .state4{ color:#c2c2c2;}
-.table .state1{ color:#1ab394;}
+.table .state1{ color:#408aff;}
 .table .state2{ color:#ed5565;}
 .table .state3{ color:#21b9bb;}
 .table .state4{ color:#c2c2c2;}
-
-
-
 
 .control-label{ font-size: 14px;}
 
