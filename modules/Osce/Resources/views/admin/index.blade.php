@@ -1,4 +1,4 @@
-@extends('osce::layouts.admin_index')
+@extends('osce::admin.layouts.admin_index')
 
 @section('content')
 

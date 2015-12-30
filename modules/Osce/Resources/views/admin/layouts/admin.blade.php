@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('osce::admin.layouts.base')
 @section('meta')
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 @stop
@@ -25,7 +25,7 @@
 @section('body')
     <div id="wrapper">
 
-        @include('osce::layouts.left')
+        @include('osce::admin.layouts.left')
 
                 <!--右侧部分开始-->
         <div id="page-wrapper" class="gray-bg dashbard-1">
