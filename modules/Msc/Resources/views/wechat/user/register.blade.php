@@ -12,6 +12,7 @@
         .form-control{
             color: #333!important;
         }
+        .select_indent{text-indent: 65px}
     </style>
 @stop
 
@@ -19,7 +20,6 @@
     <script type="text/javascript" src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('msc/wechat/user/js/commons.js')}}"></script>
     <script src="{{asset('msc/wechat/user/js/register.js')}}"></script>
-    <script src="{{asset('msc/common/select2-4.0.0/js/select2.full.js')}}"></script>
 
 @stop
     
@@ -92,17 +92,15 @@
             </div>
             <div class="form-group">
                 <label for="teacher_dept">科 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室<span>*</span></label>
-                <!--<label for="project">科室<span>*</span></label>-->
-                <!--<select name="teacher_dept" ng-model="selected" ng-options="m.id as m.name for m in Department" id="teacher_dept" required  class="form-control" ng-init="user.teacher_dept = 1" ng-change="shuaxin()" ng-model="user.teacher_dept" >
-                   &lt;!&ndash; <option value="0">&#45;&#45; 输入关键字选择 &#45;&#45;</option>&ndash;&gt;
-                </select>-->
-                <select name="teacher_dept" id="teacher_dept" placeholder="选择科室" style="width:100%;"></select>
-
-                <!--            <select name="teacher_dept" id="teacher_dept"  required  class="form-control" ng-init="user.teacher_dept = 1" ng-model="user.teacher_dept" >
-                <option value="1" ng-selected="true">妇产科</option>
-                <option value="2" >内科</option>
-                <option value="3" >儿科</option>
-            </select>-->
+                <select name="professional" id="department1" class="form-control normal_select select_indent">
+                    <option value="">请选择科室</option>
+                </select>
+                <select name="professional" id="department2" class="form-control normal_select select_indent" style="display: none;margin: 10px 0 5px;">
+                    <option value="">请选择科室</option>
+                </select>
+                <select name="professional" id="department3" class="form-control normal_select select_indent" style="display: none;margin: 5px 0;">
+                    <option value="">请选择科室</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="mobile">手机号码<span>*</span></label>
@@ -235,55 +233,72 @@
 <script>
     $(document).ready(function(){
         initcard();//表单切换
-        var url = "{{ url('api/1.0/public/msc/user/teacher-dept-list') }}";
-        $("#teacher_dept").select2({
-            ajax: {
-                url: "{{ url('api/1.0/public/msc/user/teacher-dept-list') }}",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        keyword: params.term, // search term
-                        page: 1
-                    };
-                },
-                processResults: function (data, page) {
-                    return {
-                        results: data.data.rows
-                    }
-                },
-                cache: true
-            },
-            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-            minimumInputLength: 1,
-            templateResult: formatRepo, // omitted for brevity, see the source of this page
-            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+        var url="{{ route('msc.Dept.PidGetDept') }}?pid=";
+        console.log(url+0);
+        $.ajax({
+            type:"get",
+            url:url+0,
+            dataType:"json",
+            cache:false,
+            success:function(result){
+                $(result.data.total).each(function(){
+                    $("#department1").append(
+                            " <option value="+this.id+">"+this.name+"</option>"
+                    )
+                })
+            }
         });
-        $("#Professional").select2({
-            ajax: {
-                url: "{{ url('/api/1.0/public/msc/user/professional-list') }}",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        keyword: params.term, // search term
-                        page: 1
-                    };
-                },
-                processResults: function (data, page) {
-                    return {
-                        results: data.data.rows
-                    }
-                },
-                cache: true
-            },
-            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-            minimumInputLength: 1,
-            templateResult: formatRepo, // omitted for brevity, see the source of this page
-            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+        $("#department1").change(function(){
+            $("#department2").empty().append(
+                    "<option value=''>请选择科室</option>"
+            );
+            var $thisId=$(this).val();
+            $.ajax({
+                type:"get",
+                url:url+$thisId,
+                dataType:"json",
+                cache:false,
+                async:false,
+                success:function(result){
+                    $(result.data.total).each(function(){
+                        $("#department2").append(
+                                " <option value="+this.id+">"+this.name+"</option>"
+                        )
+                    })
+                }
+            });
+            if($("#department2").children().length == 1){
+                $("#department2").hide();
+            }else{
+                $("#department2").show();
+            }
         });
 
-
+        $("#department2").change(function(){
+            $("#department3").empty().append(
+                    "<option value=''>请选择科室</option>"
+            );
+            var $thisId=$(this).val();
+            $.ajax({
+                type:"get",
+                url:url+$thisId,
+                dataType:"json",
+                cache:false,
+                async:false,
+                success:function(result){
+                    $(result.data.total).each(function(){
+                        $("#department3").append(
+                                " <option value="+this.id+">"+this.name+"</option>"
+                        )
+                    })
+                }
+            });
+            if($("#department3").children().length == 1){
+                $("#department3").hide();
+            }else{
+                $("#department3").show();
+            }
+        });
     /*mao 2015-11-26
      *表单验证 老师
      */
