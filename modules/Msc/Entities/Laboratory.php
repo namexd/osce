@@ -54,11 +54,11 @@ class Laboratory extends Model
         {
             $builder = $builder->where($lab.'.name','like','%'.$where['keyword'].'%');
         }
-        if ($where['status'] !== null)
+        if ($where['status'] !== null && $where['status'] !== '')
         {
             $builder = $builder->where($lab.'.status','=',$where['status']);
         }
-        if ($where['open_type'] !== null)
+        if ($where['open_type'] !== null && $where['open_type'] !== '')
         {
             $builder = $builder->where($lab.'.open_type','=',$where['open_type']);
         }

@@ -31,11 +31,11 @@ class Floor extends Model
         {
             $builder = $builder->where($this->table.'.name','like','%'.$where['keyword'].'%');
         }
-        if ($where['status'] !== null )
+        if ($where['status'] !== null && $where['status'] !== '')
         {
             $builder = $builder->where($this->table.'.status','=',$where['status']);
         }
-        if ($where['schools'] !== null )
+        if ($where['schools'] !== null && $where['schools'] !== '')
         {
             $builder = $builder->where($this->table.'.school_id','=',$where['schools']);
         }
