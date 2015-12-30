@@ -28,14 +28,25 @@ class FloorController extends Controller {
      */
     public function index(Floor $Floor){
         $keyword = !empty(Input::get('keyword'))?Input::get('keyword'):'';
-        $status = Input::get('status');
+        if(Input::get('status') >= 0){
+
+            $where['status'] = Input::get('status');
+        }
+        if(Input::get('schools') >= 0){
+            $where['schools'] = Input::get('schools');
+        }
         $where['keyword'] = $keyword;
-        $where['status'] = $status;
         $datalist = $Floor->getFilteredPaginateList($where);
         //dd($datalist);
         $school = DB::connection('msc_mis')->table('school')->get();
         $keyword = Input::get('keyword')?Input::get('keyword'):'';
-        return view('msc::admin.labmanage.ban_maintain',['data'=>$datalist,'school'=>$school,'keyword'=>$keyword,'status'=>Input::get('status')]);
+        return view('msc::admin.labmanage.ban_maintain',[
+            'data'=>$datalist,
+            'school'=>$school,
+            'keyword'=>$keyword,
+            'status'=>Input::get('status'),
+            'schools'=>Input::get('schools'),
+        ]);
     }
 
 

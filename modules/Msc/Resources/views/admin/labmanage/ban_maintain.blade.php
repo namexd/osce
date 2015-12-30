@@ -120,6 +120,7 @@
                     <div class="input-group">
                         <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{$keyword}}">
                         <input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">
+                        <input type="hidden" name="schools" class="input-sm form-control" value="{{@$schools}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -153,7 +154,7 @@
                                         @if(!empty($school))
                                             @foreach($school as $sch)
                                                 <li>
-                                                    <a href="/msc/admin/floor/index?keyword={{$keyword}}&status={{@$status}}">{{@$sch->name}}</a>
+                                                    <a href="/msc/admin/floor/index?keyword={{$keyword}}&status={{@$status}}&schools={{$sch->id}}">{{@$sch->name}}</a>
                                                 </li>
                                             @endforeach
                                         @endif
@@ -169,13 +170,13 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}">全部</a>
+                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=&schools={{@$schools}}">全部</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=1">正常</a>
+                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=1&schools={{@$schools}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=0">停用</a>
+                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=0&schools={{@$schools}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -187,7 +188,7 @@
                         @if(!empty($data))
                             @foreach($data as $k=>$v)
                             <tr>
-                                <td>{{@$k}}</td>
+                                <td>{{@$k+1}}</td>
                                 <td class="name">{{@$v->name}}</td>
                                 <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_buttom}}">{{intval(@$v->floor_top) + intval(@$v->floor_buttom)}}</td>
                                 <td class="sname">{{@$v->sname}}</td>
