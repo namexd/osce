@@ -68,6 +68,7 @@ class PlaceController extends CommonController
             'type' => 'required'
         ]);
         //将其传入具体修改的方法
+
         $type = $request->input('type');
         if ($type == 'place') {
             $model = new Place();
@@ -102,15 +103,11 @@ class PlaceController extends CommonController
 
         //取出id的值
         try {
-            $id = $request->input('id');
-            if (!$id) {
-                throw new \Exception('并没有传入id!');
-            }
-            //根据id查询出数据,如果查不出来就抛出一个异常
-            $data = Place::findOrFail($id);
 
-            //将数据展示到页面
-//          return view('',['data' => $data]);
+
+
+        //将数据展示到页面
+        return view('osce::admin.resourcemanage.examroom_edit',['data' => $data]);
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -150,6 +147,7 @@ class PlaceController extends CommonController
             if (!$result) {
                 throw new Exception('数据插入失败！请重试');
             } else {
+
                 $this->success_data($this->toArray($result));
             }
         } catch (\Exception $ex) {
@@ -187,6 +185,7 @@ class PlaceController extends CommonController
     }
 
     /**
+
      * 插入一条数据
      * @api       POST /osce/admin/place/create-place-cate
      * @access    public
