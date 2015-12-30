@@ -35,7 +35,7 @@ class Place extends CommonModel
         $builder = $this->where($this->table . '.status', '<>', 0);
 
         //根据pid进行查询
-        $builder = $builder->where($this->table . 'pid', '=', $pid);
+        $builder = $builder->where($this->table . '.pid', '=', $pid);
 
         //如果order不为空的话，就使用order的数据，否则就指定，暂时不考虑排序
 //        $orderName = empty($formData['order_name']) ? 1 : $formData['order_name'];
@@ -59,26 +59,4 @@ class Place extends CommonModel
 
     }
 
-    public function change($formData)
-    {
-        //如果传入了id，就按照传入的id和status改变实验室的状态
-        if ($formData['id'] !== null) {
-            $changeStatus = [
-                'id' => $formData['id'],
-                'status' => $formData['status']
-            ];
-
-            $result = $this->changeStatus($changeStatus);
-            if (!$result) {
-                $array = [
-                    'code' => -999,
-                    'message' => '状态修改有错误！'
-                ];
-                return $array;
-            } else {
-                return $result;
-            }
-
-        }
-    }
 }
