@@ -51,11 +51,12 @@ class DeptController extends MscController
             'description' => 'required|max:255'
         ]);
         $user = Auth::user();
+        $requests = $request->all();
         $data = [
-            'name'   =>  $request['name'],
-            'pid'   => $request['pid'],
-            'level'  => $request['level'],
-            'description' => $request['description'],
+            'name'   =>  $requests['name'],
+            'pid'   => $requests['pid'],
+            'level'  => $requests['level'],
+            'description' => $requests['description'],
             'created_user_id' => empty($user->id)?1:$user->id
         ];
         $DeptInfo = $this->TeacherDept->AddDept($data);
@@ -73,7 +74,7 @@ class DeptController extends MscController
 
     /**
      * @method POST
-     * @url /msc/admin/dept/add-dept
+     * @url /msc/admin/dept/update-dept
      * @access public
      * @param $data
      * @return json
@@ -82,7 +83,10 @@ class DeptController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function UpdateDept(Request $request){
-        $this->validate($request,[]);
+        dd('ddd');
+        $this->validate($request,[
+
+        ]);
         $data = [
 
         ];
