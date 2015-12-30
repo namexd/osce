@@ -50,7 +50,7 @@
 
 @section('footer_js')
         <!--全局Css自定义部分-->
-<link href="{{asset('msc/admin/css/common.css')}}" rel="stylesheet">
+<link href="{{asset('osce/admin/css/common.css')}}" rel="stylesheet">
 <!-- 全局js -->
 
 <script src="{{asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>

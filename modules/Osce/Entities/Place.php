@@ -35,7 +35,7 @@ class Place extends CommonModel
         $builder = $this->where($this->table . '.status', '<>', 0);
 
         //根据pid进行查询
-        $builder = $builder->where($this->table . 'pid', '=', $pid);
+        $builder = $builder->where($this->table . '.pid', '=', $pid);
 
         //如果order不为空的话，就使用order的数据，否则就指定，暂时不考虑排序
 //        $orderName = empty($formData['order_name']) ? 1 : $formData['order_name'];

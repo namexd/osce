@@ -44,7 +44,8 @@ class PlaceController extends CommonController
         //展示页面
         $place = Factory::place();
         $data = $place->showPlaceList($formData,$pid);
-        dd($data);
+        // dd($data);
+        return view('osce::admin.resourcemanage.examroom',['data'=>$data]);
     }
 
     /**
