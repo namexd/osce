@@ -56,8 +56,9 @@ class TeacherDept extends Model
      * @date    2015年12月29日14:47:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function DelDept($id){
-        return  $this->where('id','=',$id)->delete();
+    public function DelDept($IdRrr){
+
+        return  $this->whereIn('id',$IdRrr)->delete();
     }
 
 
@@ -82,6 +83,26 @@ class TeacherDept extends Model
      */
     public function PidSelectDept($pid=0){
         return  $this->where('pid','=',$pid)->get();
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2015年12月30日15:44:05
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetChildIdArr($id){
+        $IdArr = [];
+        $ChildInfo = $this->where('pid','=',$id)->select(["id"])->get();
+        if(is_array($ChildInfo->toArray())){
+            foreach($ChildInfo as $v){
+                $IdArr[] = $v['id'];
+                $Child = $this->GetChildIdArr($v['id']);
+                $IdArr = array_merge($IdArr,$Child);
+            }
+        }
+        return  $IdArr;
     }
 
 
