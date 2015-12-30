@@ -15,7 +15,13 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
 		//测试路由
 		Route::get('test/index', ['uses'=>'TestController@Index','as'=>'msc.Test.Index']);
-
+		
+		//科室路由组
+		Route::post('dept/add-dept', ['uses'=>'DeptController@AddDept','as'=>'msc.Dept.AddDept']);
+		Route::post('dept/update-dept', ['uses'=>'DeptController@UpdateDept','as'=>'msc.Dept.UpdateDept']);
+		Route::post('dept/del-dept', ['uses'=>'DeptController@DelDept','as'=>'msc.Dept.DelDept']);
+		Route::get('dept/select-dept', ['uses'=>'DeptController@SelectDept','as'=>'msc.Dept.SelectDept']);
+		Route::get('dept/pid-get-dept/{pid}', ['uses'=>'DeptController@PidGetDept','as'=>'msc.Dept.PidGetDept']);
 
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
