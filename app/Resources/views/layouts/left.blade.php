@@ -58,6 +58,9 @@
                                 <a class="J_menuItem" href="{{route('msc.admin.profession.ProfessionList')}}">专业列表</a>
                             </li>
                             <li>
+                                <a class="J_menuItem" href="{{route('msc.Dept.DeptList')}}">科室列表</a>
+                            </li>
+                            <li>
                                 <a class="J_menuItem" href="{{route('msc.admin.professionaltitle.JobTitleIndex')}}">职称列表</a>
                             </li>
                             <li>
