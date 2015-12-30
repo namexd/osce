@@ -9,8 +9,10 @@
 
 namespace Modules\Msc\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Auth;
 use Pingpong\Modules\Routing\Controller;
 use Modules\Msc\Entities\Laboratory;
+use Modules\Msc\Entities\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Floor;
@@ -26,14 +28,39 @@ class LaboratoryController extends Controller {
      * 实验室列表
      */
     public function index(Laboratory $Laboratory){
-        $keyword = !empty(Input::get('keyword'))?Input::get('keyword'):'';
+        $keyword = !empty(Input::get('keyword'))?Input::get('keyword'):null;
+        if(Input::get('status') >= 0){
+
+            $where['status'] = Input::get('status');
+        }
+        if(Input::get('open_type') >= 0){
+            $where['open_type'] = Input::get('open_type');
+        }
         $where['keyword'] = $keyword;
         $datalist = $Laboratory->getFilteredPaginateList($where);
+        //$datalist = $datalist->toArray();
+       // dd($datalist);
+        foreach($datalist as $v){
+            $v->opentype = $v->open_type;
+            $v->open_type = $Laboratory->getType($v->open_type);
+
+        }
         //学院
         $school = DB::connection('msc_mis')->table('school')->get();
         //教学楼
         $floor = DB::connection('msc_mis')->table('location')->where('status','=',1)->get();
-        return view('msc::admin.labmanage.lab_maintain',['school'=>$school,'floor'=>$floor]);
+        $teacher = new Teacher();
+        $teacher =  $teacher->where('validated','=',1)->get();
+        //dd($teacher);
+        return view('msc::admin.labmanage.lab_maintain',[
+            'datalist'=>$datalist,
+            'school'=>$school,
+            'floor'=>$floor,
+            'teacher'=>$teacher,
+            'keyword'=>Input::get('keyword')?Input::get('keyword'):'',
+            'status'=>Input::get('status')?Input::get('status'):'',
+            'open_type'=>Input::get('open_type')?Input::get('open_type'):'',
+        ]);
 
     }
 
@@ -48,33 +75,32 @@ class LaboratoryController extends Controller {
     public function getAddLabInsert(Request $Request){
         $this->validate($Request, [
             'name'      => 'required',
-            'short_name'       => 'sometimes|in:1,2,3',
-            'enname'        => 'sometimes|integer',
-            'short_enname' => 'sometimes|in:1,2',
-            'location_id'   => 'sometimes|integer',
+            'short_name'       => 'required',
+            'enname'        => 'required',
+            'short_enname' => 'required',
             'open_type' =>'required',
-            'manager_user_id' => 'required',
+            'manager_user_id' => 'required|integer',
             'status' => 'required',
-            'created_user_id' => 'required',
             'floor' => 'required',
             'code' => 'required',
         ]);
+        $user = Auth::user();
         $data = [
             'name'=>Input::get('name'),
             'short_name'=>Input::get('short_name'),
             'enname'=>Input::get('enname'),
             'short_enname'=>Input::get('short_enname'),
-            'location_id'=>Input::get('location_id'),
+            'location_id'=>Input::get('building'),
             'open_type'=>Input::get('open_type'),
             'manager_user_id'=>Input::get('manager_user_id'),
             'floor'=>Input::get('floor'),
             'status'=>Input::get('status'),
-            'created_user_id'=>Input::get('created_user_id'),
+            'created_user_id'=>$user->id,
             'floor'=>Input::get('floor'),
             'code'=>Input::get('code'),
         ];
         $add = Laboratory::create($data);
-        if($data != fasle){
+        if($data != false){
             return redirect()->back()->withInput()->withErrors('添加成功');
         }else{
             return redirect()->back()->withInput()->withErrors('系统异常');
@@ -82,25 +108,6 @@ class LaboratoryController extends Controller {
     }
 
 
-    /**
-     * Created by PhpStorm.
-     * User: weihuiguo
-     * Date: 2015/12/28 0028
-     * Time: 17:01
-     * 修改实验室
-     */
-    public function getEditLab(){
-        $id = urlencode(e(Input::get('id')));
-        if($id){
-            $floorDetail = Laboratory::find($id);
-        }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
-        }
-        $data = [
-            'floorDetail' => $floorDetail,
-        ];
-        //return view('msc::admin.',$data);
-    }
 
     /**
      * Created by PhpStorm.
@@ -109,36 +116,35 @@ class LaboratoryController extends Controller {
      * Time: 17:01
      * 修改实验室操作
      */
-    public function getEditLabInsert(Request $Request){
+    public function getEditLabInsert(Request $Request,Laboratory $laboratory){
         $this->validate($Request, [
             'name'      => 'required',
-            'short_name'       => 'sometimes|in:1,2,3',
-            'enname'        => 'sometimes|integer',
-            'short_enname' => 'sometimes|in:1,2',
-            'location_id'   => 'sometimes|integer',
+            'short_name'       => 'required',
+            'enname'        => 'required',
+            'short_enname' => 'required',
             'open_type' =>'required',
-            'manager_user_id' => 'required',
+            'manager_user_id' => 'required|integer',
             'status' => 'required',
-            'created_user_id' => 'required',
             'floor' => 'required',
             'code' => 'required',
         ]);
+        $user = Auth::user();
         $data = [
             'name'=>Input::get('name'),
             'short_name'=>Input::get('short_name'),
             'enname'=>Input::get('enname'),
             'short_enname'=>Input::get('short_enname'),
-            'location_id'=>Input::get('location_id'),
+            'location_id'=>Input::get('building'),
             'open_type'=>Input::get('open_type'),
             'manager_user_id'=>Input::get('manager_user_id'),
             'floor'=>Input::get('floor'),
             'status'=>Input::get('status'),
-            'created_user_id'=>Input::get('created_user_id'),
+            'created_user_id'=>$user->id,
             'floor'=>Input::get('floor'),
             'code'=>Input::get('code'),
         ];
-        $add = DB::connection('msc_mis')->table('lab')->where('id','=',urlencode(e(Input::get('id'))))->update($data);
-        if($data != fasle){
+        $add = $laboratory->where('id','=',urlencode(e(Input::get('id'))))->update($data);
+        if($data != false){
             return redirect()->back()->withInput()->withErrors('修改成功');
         }else{
             return redirect()->back()->withInput()->withErrors('系统异常');
@@ -152,11 +158,11 @@ class LaboratoryController extends Controller {
      * Time: 17:01
      * 实验室停用
      */
-    public function getStopLab(){
+    public function getStopLab(Laboratory $laboratory){
         $id = urlencode(e(Input::get('id')));
         if($id){
-            $data = DB::connection('msc_mis')->table('lab')->where('id','=',$id)->update(['status'=>Input::get('status')]);
-            if($data != fasle){
+            $data = $laboratory->where('id','=',$id)->update(['status'=>1]);
+            if($data != false){
                 return redirect()->back()->withInput()->withErrors('停用成功');
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
@@ -177,9 +183,12 @@ class LaboratoryController extends Controller {
      */
     public function getDeleteLab(){
         $id = urlencode(e(Input::get('id')));
+        //dd($id);
         if($id){
-            $data = DB::connection('msc_mis')->table('lab')->where('id','=',$id)->delete();
-            if($data != fasle){
+            $data = Laboratory::find($id);
+            $del = $data->delete();
+            //dd($del);
+            if($del != false){
                 return redirect()->back()->withInput()->withErrors('删除成功');
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
@@ -197,11 +206,11 @@ class LaboratoryController extends Controller {
      */
     function get_float($ground,$underground){
         //地下-2楼
-        for($i=$ground;$i > 0;$i--){
+        for($i=$underground;$i > 0;$i--){
             $arr[$i] = '-'.$i.'楼';
         }
         //地上
-        for ($i=1; $i <= $underground; $i++) {
+        for ($i=1; $i <= $ground; $i++) {
             $brr[$i] = $i.'楼';
         }
         $data = array_merge($arr,$brr);
@@ -216,9 +225,9 @@ class LaboratoryController extends Controller {
      * Time: 17:01
      * 联动查找楼栋
      */
-    public function getLocal(){
+    public function getLocal(Floor $floor){
         $id = Input::get('id');
-        $local = DB::connection('msc_mis')->table('location')->where('school_id','=',$id)->where('status','=',1)->get();
+        $local = $floor->where('school_id','=',$id)->where('status','=',1)->get();
         if($local != false){
             return $local;exit;
         }else{

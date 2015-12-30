@@ -13,7 +13,7 @@ class Floor extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'location';
-    public $timestamps	=	false;
+    public $timestamps	=	true;
     protected $primaryKey	=	'id';
     public $incrementing	=	true;
     protected $guarded 		= 	[];
