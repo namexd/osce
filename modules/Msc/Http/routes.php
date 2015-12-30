@@ -18,8 +18,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		//科室路由组
 		Route::post('dept/add-dept', ['uses'=>'DeptController@AddDept','as'=>'msc.Dept.AddDept']);
-		Route::post('dept/update-dept', ['uses'=>'DeptController@UpdateDept','as'=>'msc.Dept.UpdateDept']);
-		Route::post('dept/del-dept', ['uses'=>'DeptController@DelDept','as'=>'msc.Dept.DelDept']);
+		Route::get('dept/update-dept', ['uses'=>'DeptController@UpdateDept','as'=>'msc.Dept.UpdateDept']);
+		Route::get('dept/del-dept', ['uses'=>'DeptController@DelDept','as'=>'msc.Dept.DelDept']);
 		Route::get('dept/select-dept', ['uses'=>'DeptController@SelectDept','as'=>'msc.Dept.SelectDept']);
 		Route::get('dept/pid-get-dept', ['uses'=>'DeptController@PidGetDept','as'=>'msc.Dept.PidGetDept']);
 

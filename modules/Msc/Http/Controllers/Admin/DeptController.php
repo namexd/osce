@@ -76,24 +76,36 @@ class DeptController extends MscController
      * @method POST
      * @url /msc/admin/dept/update-dept
      * @access public
-     * @param $data
+     * @param $request
+     * name     科室名称
+     * description  介绍
      * @return json
      * @author tangjun <tangjun@misrobot.com>
      * @date 2015年12月29日14:58:24
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function UpdateDept(Request $request){
-        dd('ddd');
         $this->validate($request,[
-
+            'id'   => 'required|integer',
+            'name'   => 'required|max:50',
+            'description' => 'required|max:255'
         ]);
+        $requests = $request->all();
         $data = [
-
+            'name'   =>  $requests['name'],
+            'description' => $requests['description'],
         ];
-        $DeptInfo = $this->TeacherDept->AddDept($data);
-        return response()->json(
-            $this->success_rows(1,'添加成功',$DeptInfo)
-        );
+        $DeptInfo = $this->TeacherDept->UpdateDept($requests['id'],$data);
+        if($DeptInfo){
+            return response()->json(
+                $this->success_rows(1,'更新成功',$DeptInfo)
+            );
+        }else{
+            return response()->json(
+                $this->success_rows(2,'更新失败')
+            );
+        }
+
     }
 
     /**
@@ -107,14 +119,26 @@ class DeptController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function DelDept(Request $request){
-        $this->validate($request,[]);
-        $data = [
+        $this->validate($request,[
+            'id'   => 'required|integer',
+        ]);
 
-        ];
-        $DeptInfo = $this->TeacherDept->AddDept($data);
-        return response()->json(
-            $this->success_rows(1,'添加成功',$DeptInfo)
-        );
+        $requests = $request->all();
+        $DeptIdArr[] = $requests['id'];
+        //递归找出所有子级
+        $IdArr = $this->TeacherDept->GetChildIdArr($requests['id']);
+
+        $DeptInfo = $this->TeacherDept->DelDept($IdArr);
+        if($DeptInfo){
+            return response()->json(
+                $this->success_rows(1,'删除成功',$IdArr)
+            );
+        }else{
+            return response()->json(
+                $this->success_rows(2,'删除失败')
+            );
+        }
+
     }
 
     /**
