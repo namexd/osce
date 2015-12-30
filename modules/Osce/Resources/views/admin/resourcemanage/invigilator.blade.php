@@ -31,8 +31,8 @@
     </div>
     <div class="container-fluid ibox-content">
         <ul class="nav nav-tabs">
-            <li role="presentation"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监巡考老师</a></li>
-            <li role="presentation" class="active"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
+            <li role="presentation" class="active"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监巡考老师</a></li>
+            <li role="presentation"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
         </ul>
         <table class="table table-striped" id="table-striped">
             <thead>

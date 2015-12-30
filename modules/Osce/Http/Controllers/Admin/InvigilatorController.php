@@ -63,11 +63,11 @@ class InvigilatorController extends CommonController
      *
      */
     public function getInvigilatorList(){
-        $Invigilator    =   new Invigilator();
+       /* $Invigilator    =   new Invigilator();
 
         $list       =   $Invigilator    ->  getInvigilatorList();
-        $isSpValues =   $Invigilator    ->  getIsSpValues();
-        //return view('',['list'=>$list,'isSpValues'=>$isSpValues]);
+        $isSpValues =   $Invigilator    ->  getIsSpValues();*/
+        return view('osce::admin.resourcemanage.invigilator');
     }
     /**
      *  新增监考老师 表单显示页面
