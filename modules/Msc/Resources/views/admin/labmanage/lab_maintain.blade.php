@@ -13,23 +13,24 @@
         $(function(){
 //            删除
             $(".delete").click(function(){
-                var this_id = $(this).siblings(".setid").val();
+                var this_id = $(this).attr('data');
+                var url = "/msc/admin/laboratory/delete-lab?id="+this_id;
                 //询问框
                 layer.confirm('您确定要删除该实验室？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    layer.msg('删除成功', {icon: 1,time: 1000});
+                    window.location.href=url;
                 });
             });
 //            停用
             $(".stop").click(function(){
-                var this_id = $(this).siblings(".setid").val();
-
+                var this_id = $(this).attr('data');
+                var url = "/msc/admin/laboratory/stop-lab?id="+this_id;
                 //询问框
                 layer.confirm('您确定要停用实验室？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    layer.msg('停用成功', {icon: 1,time: 1000});
+                    window.location.href=url;
                 });
             });
 //            编辑
@@ -134,6 +135,50 @@
                     }
                 });
             });
+
+            $('.update').click(function () {
+                $('input[name=code]').val($(this).parent().parent().find('.code').html());
+                //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
+                $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
+               // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
+                $('input[name=name]').val($(this).parent().parent().find('.name').html());
+                $('input[name=short_name]').val($(this).parent().parent().find('.short_name').val());
+                $('input[name=enname]').val($(this).parent().parent().find('.enname').val());
+                $('input[name=short_enname]').val($(this).parent().parent().find('.short_enname').val());
+
+                $('.school option').each(function(){
+                    if($(this).val() == $('.lname').attr('data')){
+                        $(this).attr('selected','selected');
+                    }
+                });
+
+                var floor_op = '<option value="'+$('.floors').html()+'">'+$('.floors').html()+'</option>';
+                $('.floor').html(floor_op);
+                var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
+                $('.local').html(str);
+                var status = $(this).parent().parent().find('.status').attr('data');
+                $('.sta option').each(function(){
+                    if($(this).val() == status){
+                        $(this).attr('selected','selected');
+                    }
+                });
+
+                var teach = $(this).parent().parent().find('.tname').attr('data');
+                $('.teacher option').each(function(){
+                    if($(this).val() == teach){
+                        $(this).attr('selected','selected');
+                    }
+                });
+                var open_type = $(this).parent().parent().find('.open_type').attr('data');
+                $('.opentype option').each(function(){
+                    if($(this).val() == open_type){
+                        $(this).attr('selected','selected');
+                    }
+                });
+                $('#add_from').attr('action','{{route("msc.admin.laboratory.getEditLabInsert")}}');
+                var id = $(this).attr("data");
+                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+            });
         })
     </script>
 @stop
@@ -145,7 +190,9 @@
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
-                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="">
+                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
+                        <input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">
+                        <input type="hidden" name="open_type" class="input-sm form-control" value="{{@$open_type}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -153,7 +200,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn-w-m btn_pl btn-success right">
+                <button class="btn btn_pl btn-success right">
                     <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                         <span style="color: #fff;">新增实验室</span>
                     </a>
@@ -171,7 +218,7 @@
                             <th>房号</th>
                             <th>教学楼</th>
                             <th>楼层</th>
-                            <th>容量</th>
+                            {{--<th>容量</th>--}}
                             <th>
                                 <div class="btn-group Examine">
                                     <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
@@ -179,14 +226,22 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+
+
                                         <li>
-                                            <a href="#">教室</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=0">不开放</a>
                                         </li>
                                         <li>
-                                            <a href="#">实验室</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=1">只对学生开放</a>
                                         </li>
                                         <li>
-                                            <a href="#">准备间</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=2">只对老师开放</a>
+                                        </li>
+                                        <li>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=3">对所有人开放</a>
+                                        </li>
+                                        <li>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=4">对指定用户开放</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -200,13 +255,13 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&open_type={{@$open_type}}&status=">全部</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&open_type={{@$open_type}}&status=-1">全部</a>
                                         </li>
                                         <li>
-                                            <a href="#">正常</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=0&open_type={{@$open_type}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="#">停用</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=1&open_type={{@$open_type}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -215,40 +270,32 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>眼视光学实验室</td>
-                            <td>6015</td>
-                            <td>新八教</td>
-                            <td>6</td>
-                            <td>37</td>
-                            <td>实验室</td>
-                            <td>何宵（14277）</td>
-                            <td>正常</td>
-                            <td>
-                                <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
-                                <a class="state2 modal-control stop">停用</a>
-                                <a class="state2 edit_role modal-control delete">删除</a>
-                                <input type="hidden" class="setid" value="1"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>眼视光学实验室</td>
-                            <td>6014</td>
-                            <td>新八教</td>
-                            <td>6</td>
-                            <td>70</td>
-                            <td>实验室</td>
-                            <td>何宵（14277）</td>
-                            <td class="state2">停用</td>
-                            <td>
-                                <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
-                                <a class="state2 modal-control stop">停用</a>
-                                <a class="state2 edit_role modal-control delete">删除</a>
-                                <input type="hidden" class="setid" value="1"/>
-                            </td>
-                        </tr>
+                        @if(!empty($datalist))
+                            @foreach($datalist as $k=>$v)
+                                <tr>
+                                    <td>{{@$k}}</td>
+                                    <td class="name">{{@$v['name']}}</td>
+                                    <td class="code">{{@$v['code']}}</td>
+                                    <td class="lname" data="{{@$v->school_id}}" data-local="{{@$v->location_id}}">{{@$v['lname']}}</td>
+                                    <td class="floors">{{@$v['floor']}}</td>
+                                    <td class="open_type" data="{{@$v->opentype}}">{{@$v['open_type']}}</td>
+                                    <td class="tname" data="{{@$v['tid']}}">{{@$v['tname']}}</td>
+                                    <td class="status" data="{{@$v['status']}}">@if($v['status'] == 0)正常@else停用@endif</td>
+                                    <input type="hidden" class="short_name" value="{{@$v->short_name}}">
+                                    <input type="hidden" class="enname" value="{{@$v->enname}}">
+                                    <input type="hidden" class="short_enname" value="{{@$v->short_enname}}">
+                                    <td>
+                                        <a href=""  data="{{$v['id']}}"  class="state1 edit update" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                                            <span>编辑</span>
+                                        </a>
+                                        <a  data="{{$v['id']}}" class="state2 modal-control stop">停用</a>
+                                        <a data="{{$v['id']}}" class="state2 edit_role modal-control delete">删除</a>
+                                        <input type="hidden" class="setid" value="1"/>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+
                         </tbody>
                     </table>
                 </form>
@@ -257,42 +304,14 @@
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
-            <ul class="pagination">
-                <li>
-                    <span>«</span>
-                </li>
-                <li class="active">
-                    <span>1</span>
-                </li>
-                <li>
-                    <a>2</a>
-                </li>
-                <li>
-                    <a>3</a>
-                </li>
-                <li>
-                    <a>4</a>
-                </li>
-                <li>
-                    <a>5</a>
-                </li><li>
-                    <a>6</a>
-                </li>
-                <li>
-                    <a>7</a>
-                </li>
-                <li>
-                    <a>»</a>
-                </li>
-
-            </ul>
+            <?php echo $datalist->render();?>
         </div>
 	</div>
 @stop
 
 @section('layer_content')
-{{--编辑--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="/msc/admin/user/student-add" method="post">
+
+    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">新增实验室/编辑实验室</h4>
@@ -338,19 +357,19 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>简称</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="name" value="" />
+                    <input type="text" class="form-control name add-name" name="short_name" value="" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>英文全称</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="name" value="" />
+                    <input type="text" class="form-control name add-name" name="enname" value="" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>引文缩写</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="name" value="" />
+                    <input type="text" class="form-control name add-name" name="short_enname" value="" />
                 </div>
             </div>
             <div class="form-group">
@@ -368,29 +387,33 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">管理员</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="manager_user_id">
+                    <select id="select_Category" class="form-control m-b teacher" name="manager_user_id">
                         <option value="-1">点击选择</option>
-                        <option value="0">何宵（14277）</option>
-                        <option value="1">何宵（14277）</option>
-                        <option value="2">何宵（14277）</option>
+                        @if(!empty($teacher))
+                            @foreach($teacher as $tch)
+                                <option value="{{$tch->id}}">{{$tch->name}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">实验室性质</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="open_type">
+                    <select id="select_Category" class="form-control m-b opentype" name="open_type">
                         <option value="-1">点击选择</option>
-                        <option value="0">实验室</option>
-                        <option value="1">准备间</option>
-                        <option value="2">教室</option>
+                        <option value="0">不开放</option>
+                        <option value="1">只对学生开放</option>
+                        <option value="2">只对老师开放</option>
+                        <option value="3">对所有人开放</option>
+                        <option value="4">对指定用户开放</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
                 <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="status">
+                    <select id="select_Category"   class="form-control m-b sta" name="status">
                         <option value="-1">请选择状态</option>
                         <option value="0">正常</option>
                         <option value="1">停用</option>
