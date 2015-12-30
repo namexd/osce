@@ -10,6 +10,7 @@ namespace Modules\Msc\Http\Controllers\Admin;
 
 
 use App\Repositories\Common;
+use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\StdProfessional;
 use Modules\Msc\Http\Controllers\MscController;
 use Illuminate\Http\Request;
@@ -51,13 +52,20 @@ class ProfessionController extends MscController
              'id' => $itme->id,
              'name'  => $itme->name,
              'code'  => $itme->code,
-
-              'status'    => is_null($itme->status) ? '-' : $itme->status,
+             'status'    => is_null($itme->status) ? '-' : $itme->status,
          ];
       }
+//       רҵ״̬
+
 //       dd($list);
+       $ProfessionStatus =  config('msc.profession_status');
+
+       $keyword = Input::get('keyword')?Input::get('keyword'):'';
+
     return view('msc::admin.systemtable.major_table',[
         'list'         =>       $list,
+        'keyword'=>$keyword,
+        'ProfessionStatus'=>$ProfessionStatus
     ]);
    }
 

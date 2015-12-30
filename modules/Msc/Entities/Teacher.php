@@ -14,7 +14,7 @@ class Teacher extends CommonModel {
     protected $primaryKey	=	'id';
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
-    protected $fillable 	=	['name','code','teacher_dept','validated','id'];
+    protected $fillable 	=	['name','code','teacher_dept','validated','id','professionalTitle'];
 
 
     /**
