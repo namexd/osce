@@ -111,7 +111,7 @@ a{-webkit-touch-callout:none;}
 .btn-default{background-color: #fff;border-color: #ccc;color: #333;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
 
-.btn-white3{font-weight: 700;background-color: #fff;}
+.btn-white3{font-weight: 700;background-color: #fff;margin-bottom: 0!important;}
 
 
 
