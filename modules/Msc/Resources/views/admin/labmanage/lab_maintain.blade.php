@@ -273,7 +273,7 @@
                         @if(!empty($datalist))
                             @foreach($datalist as $k=>$v)
                                 <tr>
-                                    <td>{{@$k}}</td>
+                                    <td>{{@$k+1}}</td>
                                     <td class="name">{{@$v['name']}}</td>
                                     <td class="code">{{@$v['code']}}</td>
                                     <td class="lname" data="{{@$v->school_id}}" data-local="{{@$v->location_id}}">{{@$v['lname']}}</td>

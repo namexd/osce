@@ -26,11 +26,20 @@ class Floor extends Model
     {
 
         $builder = $this;
-
+        //dd($where);
         if ($where['keyword'])
         {
             $builder = $builder->where($this->table.'.name','like','%'.$where['keyword'].'%');
         }
+        if ($where['status'] !== null )
+        {
+            $builder = $builder->where($this->table.'.status','=',$where['status']);
+        }
+        if ($where['schools'] !== null )
+        {
+            $builder = $builder->where($this->table.'.school_id','=',$where['schools']);
+        }
+        //dd($builder);
         $builder = $builder->leftJoin(
             'school',
             function($join){
