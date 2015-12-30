@@ -1,17 +1,28 @@
 <?php
 /**
- * Osce公共模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
- * Date: 2015/12/29
- * Time: 10:43
+ * User: j5110
+ * Date: 2015/12/28
+ * Time: 14:35
  */
 
 namespace Modules\Osce\Entities;
 
+
 use Illuminate\Database\Eloquent\Model;
 
-abstract class CommonModel   extends Model
+class CommonModel extends Model
 {
-
+    public function changeStatus($formData)
+    {
+        try {
+            $id = $formData['id'];
+            $status = $formData['status'];
+            $place = $this->firstOrFail($id);
+            $place->status = $status;
+            return $place->save();
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
 }

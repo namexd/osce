@@ -35,12 +35,11 @@ class InvigilatorController extends CommonController
      *
      */
     public function getSpInvigilatorList(Request $request){
-        $Invigilator    =   new Invigilator();
+       /* $Invigilator    =   new Invigilator();
 
         $list       =   $Invigilator    ->getSpInvigilatorList();
-        $isSpValues =   $Invigilator    ->  getIsSpValues();
-
-        //return view('',['list'=>$list,'isSpValues'=>$isSpValues]);
+        $isSpValues =   $Invigilator    ->  getIsSpValues();*/
+        return view('osce::admin.resourcemanage.sp_invigilator');
     }
 
     /**
@@ -64,11 +63,11 @@ class InvigilatorController extends CommonController
      *
      */
     public function getInvigilatorList(){
-        $Invigilator    =   new Invigilator();
+       /* $Invigilator    =   new Invigilator();
 
         $list       =   $Invigilator    ->  getInvigilatorList();
-        $isSpValues =   $Invigilator    ->  getIsSpValues();
-        //return view('',['list'=>$list,'isSpValues'=>$isSpValues]);
+        $isSpValues =   $Invigilator    ->  getIsSpValues();*/
+        return view('osce::admin.resourcemanage.invigilator');
     }
     /**
      *  新增监考老师 表单显示页面
@@ -88,7 +87,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function getAddInvigilator(Request $request){
-        //return view();
+        return view('osce::admin.resourcemanage.invigilator_add');
     }
 
     /**
