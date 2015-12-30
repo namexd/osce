@@ -52,9 +52,7 @@ class ProfessionalTitleController extends Controller
             $list[] = [
                 'id' => $itme->id,
                 'name' => $itme->name,
-                'detail' => $itme->detail,
-                'catename'=>$itme->catename,
-                'devices_cate_id'=>$itme->devices_cate_id,
+                'description' => $itme->description,
                 'status' => is_null($itme->status) ? '-' : $itme->status,
             ];
         }
