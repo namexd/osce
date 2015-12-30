@@ -5,12 +5,8 @@ use Modules\Osce\Repositories\Factory;
 use Illuminate\Support\Facades\DB;
 class OsceController extends Controller {
 
-	//构造函数
-	public function  __construct(){
-
-	}
 	/**
-	 * 接口调用成功返回json数据结构
+	 * 返回成功的json数据
 	 *
 	 * @return string
 	 *
@@ -30,7 +26,7 @@ class OsceController extends Controller {
 	}
 
 	/**
-	 * 接口调用成功返回json数据结构(多行记录)
+	 * 返回多行成功后的json数据
 	 *
 	 * @return string
 	 * [
@@ -59,7 +55,7 @@ class OsceController extends Controller {
 	}
 
 	/**
-	 * 接口调用失败返回json数据结构
+	 * 返回失败的json数据
 	 *
 	 * @return string
 	 * [
@@ -70,39 +66,14 @@ class OsceController extends Controller {
 	public function fail(\Exception $ex){
 		return [
 			'code'			=>	-999,
-			'message'		=>	'未知异常:'.$ex->getMessage(),
+			'message'		=>	'δ֪???:'.$ex->getMessage(),
 		];
 	}
 
-	/**
-	 * 打印当前语句SQL语句
-	 * @author jiangzhiheng
-	 * 2015.12.28 13:43
-	 */
-	public function start_sql($type){
-		if($type == 1){
-			return DB::connection("msc_mis_1")->enableQueryLog();
-		} elseif ($type == 2) {
-			return DB::connection("osce_mis")->enableQueryLog();
-		} else{
-			return DB::connection("sys_mis")->enableQueryLog();
-		}
 
-	}
-
-	public function end_sql($type){
-		if($type == 1){
-			dd(DB::connection("msc_mis_1")->getQueryLog());
-		} elseif ($type == 2) {
-			dd(DB::connection("osce_mis")->getQueryLog());
-		} else{
-			dd(DB::connection("sys_mis")->getQueryLog());
-		}
-
-	}
 
 	/**
-	 * 基础的插入方法
+	 * 通用的create方法
 	 * @param $request
 	 * @param $model
 	 * @return bool
@@ -118,5 +89,4 @@ class OsceController extends Controller {
 		DB::commit();
 		return $result;
 	}
-	
 }

@@ -74,7 +74,17 @@ return [
             'prefix'    => '',
             'strict'    => false,
         ],
-
+        'osce_mis' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST_OSCE', 'localhost'),
+            'database'  => env('DB_DATABASE_OSCE', 'osce_mis'),
+            'username'  => env('DB_USERNAME_OSCE', 'limingyao'),
+            'password'  => env('DB_PASSWORD_OSCE', 'limingyao123'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => env('DB_HOST', 'localhost'),

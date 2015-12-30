@@ -13,10 +13,10 @@ use Illuminate\Http\Request;
 use Mockery\CountValidator\Exception;
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\PlaceCate as PlaceCate;
-use Modules\Osce\Http\Controllers\OsceController;
+use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Factory;
 
-class PlaceController extends OsceController
+class PlaceController extends CommonController
 {
     /**
      * 获取场所列表

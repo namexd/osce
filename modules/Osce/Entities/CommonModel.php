@@ -31,21 +31,6 @@ class CommonModel extends Model
         return $result;
     }
 
-    /**
-     * 封装的排序方法，所有模型都能使用此方法
-     * @param $orderName  e.g:1,2,3
-     * @param $orderBy    e.g:desc,asc
-     * @param array $paramArray
-     */
-    protected function order($builder,$orderName = 1,$orderBy,array $paramArray = ['created_at'])
-    {
-        foreach ($paramArray as $key => $item) {
-            if ($orderName == ($key+1)) {
-                $orderName = $item;
-            }
-        }
-        return $builder->orderBy($orderName,$orderBy);
-    }
 
 
 }
