@@ -325,15 +325,7 @@
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b floor" name="floor">
                         <option value="-1">请选择楼层</option>
-                        <option value="0">-1楼</option>
-                        <option value="1">1楼</option>
-                        <option value="2">2楼</option>
-                        <option value="3">3楼</option>
-                        <option value="4">4楼</option>
-                        <option value="5">5楼</option>
-                        <option value="6">6楼</option>
-                        <option value="7">7楼</option>
-                        <option value="8">8楼</option>
+
                     </select>
                 </div>
             </div>
@@ -344,21 +336,39 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>简称</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="number" value="" />
+                    <input type="text" class="form-control name add-name" name="name" value="" />
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>英文全称</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control describe add-describe" name="capacity" />
+                    <input type="text" class="form-control name add-name" name="name" value="" />
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>引文缩写</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="name" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="code" value="" />
+                </div>
+            </div>
+            {{--<div class="form-group">--}}
+                {{--<label class="col-sm-3 control-label">容量</label>--}}
+                {{--<div class="col-sm-9">--}}
+                    {{--<input type="text" class="form-control describe add-describe" name="capacity" />--}}
+                {{--</div>--}}
+            {{--</div>--}}
             <div class="form-group">
                 <label class="col-sm-3 control-label">管理员</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="manager">
+                    <select id="select_Category" class="form-control m-b" name="manager_user_id">
                         <option value="-1">点击选择</option>
                         <option value="0">何宵（14277）</option>
                         <option value="1">何宵（14277）</option>
@@ -369,7 +379,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">实验室性质</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="nature">
+                    <select id="select_Category" class="form-control m-b" name="open_type">
                         <option value="-1">点击选择</option>
                         <option value="0">实验室</option>
                         <option value="1">准备间</option>
@@ -380,7 +390,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
                 <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="type">
+                    <select id="select_Category"   class="form-control m-b" name="status">
                         <option value="-1">请选择状态</option>
                         <option value="0">正常</option>
                         <option value="1">停用</option>
