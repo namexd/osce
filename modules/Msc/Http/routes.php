@@ -13,7 +13,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 	//http://www.mis.hx/msc/admin/resources-manager/user-register
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
-
+		//测试路由
+		Route::get('test/index', ['uses'=>'TestController@Index','as'=>'msc.Test.Index']);
 
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
@@ -50,7 +51,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('user/export-teacher-user', ['uses'=>'UserController@getExportTeacherUser','as'=>'msc.admin.user.ExportTeacherUser']);
 		Route::post('user/import-teacher-user', ['uses'=>'UserController@getImportTeacherUser','as'=>'msc.admin.user.ImportTeacherUser']);
 		Route::get('user/teacher-info', ['uses'=>'UserController@getTeacherInfo','as'=>'msc.admin.user.TeacherInfo']);
-
+		//楼栋路由
+		Route::get('floor/index', ['uses'=>'FloorController@index','as'=>'msc.admin.floor.index']);
 
 	});
 
