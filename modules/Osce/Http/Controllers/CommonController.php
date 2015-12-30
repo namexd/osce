@@ -87,7 +87,7 @@ abstract class CommonController extends Controller {
     public function create($request,$model)
     {
         DB::beginTransaction;
-        $result =  DB::table($model) -> create($request);
+        $result =  DB::table($model) ->create($request);
         if (!$result) {
             DB::rollback();
             return false;

@@ -3,9 +3,9 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 @stop
 @section('head_css')
-    <link href="{{asset('msc/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
-    <link href="{{asset('msc/admin/plugins/css/font-awesome.min.css?v=4.3.0')}}" rel="stylesheet">
-    <link href="{{asset('msc/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/css/font-awesome.min.css?v=4.3.0')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('app/index/style.min.css')}}" rel="stylesheet">
     <style>
         body{
@@ -68,17 +68,17 @@
     @section('footer_js')
             <!-- 全局js -->
 
-    <script src="{{asset('msc/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/sliosceroll/jquery.sliosceroll.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 
     <!-- 自定义js -->
-    <script src="{{asset('msc/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
-    <script type="text/javascript" src="{{asset('msc/admin/plugins/js/contabs.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
+    <script type="text/javascript" src="{{asset('osce/admin/plugins/js/contabs.min.js')}}"></script>
     <!-- 第三方插件 -->
-    <script src="{{asset('msc/admin/plugins/js/plugins/pace/pace.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/pace/pace.min.js')}}"></script>
 @show{{-- footer区域javscript脚本 --}}
 
 

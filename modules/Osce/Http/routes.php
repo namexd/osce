@@ -1,7 +1,7 @@
 <?php
 
 Route::group(['prefix' => 'osce', 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
-    Route::get('/', 'OsceController@index');
+    Route::get('admin/index', 'OsceController@index');
 });
 
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
@@ -17,5 +17,5 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('invigilator/add-invigilator', 	['uses'=>'InvigilatorController@postAddInvigilator','as'=>'osce.admin.invigilator.postAddInvigilator']);
 	});
 	//TODO:请前端开发尽早删除这个测试的/test路由。罗海华  2015-12-29 18:31
-	Route::get('/test','OsceController@test');
+	Route::get('/test','TestController@test');
 });
