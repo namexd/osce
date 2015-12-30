@@ -112,7 +112,8 @@
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
-                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="">
+                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{$keyword}}">
+                        <input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -146,13 +147,13 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="#">全部</a>
+                                            <a href="{{ route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword]) }}">全部</a>
                                         </li>
                                         <li>
-                                            <a href="#">正常</a>
+                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="#">停用</a>
+                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'2'])}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -161,30 +162,26 @@
                         </tr>
                         </thead>
                         <tbody>
+                       @if(!empty($list))
+                           @foreach($list as $list)
                         <tr>
-                            <td>1</td>
-                            <td>0001</td>
-                            <td>临床医学</td>
-                            <td>正常</td>
+                            <td>{{$list['id']}}</td>
+                            <td class="code">{{$list['code']}}</td>
+                            <td class="name">{{$list['name']}}</td>
+                            @if($list['status']==1)
+                                <td class="status2">正常</td>
+                            @else
+                                <td>停用</td>
+                            @endif
                             <td>
-                                <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
+                                <a href="" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                                 <a class="state2 modal-control stop">停用</a>
                                 <a class="state2 edit_role modal-control delete">删除</a>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>0002</td>
-                            <td>临床医学</td>
-                            <td class="state2">停用</td>
-                            <td>
-                                <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
-                                <a class="state2 modal-control stop">停用</a>
-                                <a class="state2 edit_role modal-control delete">删除</a>
-                                <input type="hidden" class="setid" value="1"/>
-                            </td>
-                        </tr>
+                        @endforeach
+                          @endif
                         </tbody>
                     </table>
                 </form>
