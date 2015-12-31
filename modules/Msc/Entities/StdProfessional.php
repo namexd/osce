@@ -74,7 +74,7 @@ class StdProfessional extends Model
             'code'=>$data['code'],
             'status'=>$data['status']
         ];
-        return $this->create($input);
+        return $this->where('id','=',$data['id'])->update($input);
     }
 
 //改变专业状态

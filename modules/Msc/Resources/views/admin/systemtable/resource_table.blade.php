@@ -159,9 +159,9 @@
                         <td>{{$val['catename']}}</td>
                         <td>{{$val['detail']}}</td>
                         @if($val['status']==1)
-                            <td class="status2">正常</td>
+                            <span>正常</span>
                         @else
-                            <td>停用</td>
+                            <span class="state2">停用</span>
                         @endif
                         <td>
                             <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>

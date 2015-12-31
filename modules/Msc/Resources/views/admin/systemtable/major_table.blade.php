@@ -106,22 +106,22 @@
                     })
                 }
             })
-            {{--$('.edit').click(function () {--}}
-                {{--$('input[name=name]').val($(this).parent().parent().find('.name').html());--}}
-                {{--$('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));--}}
-                {{--$('input[name=floor_buttom]').val($(this).parent().parent().find('.floor').attr('data-b'));--}}
-                {{--$('input[name=address]').val($(this).parent().parent().find('.address').html());--}}
-                {{--var sname = $(this).parent().parent().find('.sname').html();--}}
-                {{--var status = '';--}}
-                {{--if($(this).parent().parent().find('.status').html() == '正常'){--}}
-                    {{--status = 1;--}}
-                {{--}else{--}}
-                    {{--status = 0;--}}
-                {{--}--}}
-                {{--$('#add_from').attr('action','{{route("msc.admin.floor.getEditFloorInsert")}}');--}}
-                {{--var id = $(this).attr("data");--}}
-                {{--$('#add_from').append('<input type="hidden" name="id" value="'+id+'">');--}}
-            {{--});--}}
+            $('.edit').click(function () {
+                $('input[name=name]').val($(this).parent().parent().find('.code').html());
+//                $('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));
+//                $('input[name=floor_buttom]').val($(this).parent().parent().find('.floor').attr('data-b'));
+                $('input[name=address]').val($(this).parent().parent().find('.name').html());
+//                var sname = $(this).parent().parent().find('.sname').html();
+                var status = '';
+                if($(this).parent().parent().find('.status').html() == '正常'){
+                    status = 1;
+                }else{
+                    status = 0;
+                }
+                $('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');
+                var id = $(this).attr("data");
+                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+            });
 
         })
 
@@ -193,13 +193,14 @@
                             <td>{{$list['id']}}</td>
                             <td class="code">{{$list['code']}}</td>
                             <td class="name">{{$list['name']}}</td>
-                            @if($list['status']==1)
-                                <td class="status2">正常</td>
-                            @else
-                                <td>停用</td>
-                            @endif
+                            <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">停用</span>@endif</td>
+                            {{--@if($list['status']==1)--}}
+                                {{--<td class="status2">正常</td>--}}
+                            {{--@else--}}
+                                {{--<td>停用</td>--}}
+                            {{--@endif--}}
                             <td>
-                                <a href="{{ route('msc.admin.profession.ProfessionEdit',[$list['id']]) }}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
+                                <a href=""  data="{{$list['id']}}"  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                                @if($list['status']==1)
                                 <a   data="{{$list['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
                                 @else

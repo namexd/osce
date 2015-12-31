@@ -160,13 +160,14 @@ class ProfessionController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public  function postProfessionSave(Request $request){
+//        dd($request);
         $this->validate($request,[
             'id' => 'sometimes|min:0|max:10',
             'name'   => 'required|max:50',
             'code'   =>  'required|max:32',
-            'status' =>   'required|in:1,2'
+            'status' =>   'required|in:0,1'
         ]);
-        $data = $request->only(['name','code','status']);
+        $data = $request->only(['name','code','status','id']);
         $profession = new StdProfessional();
         $result =$profession->postSaveProfession($data);
         if ($result) {
