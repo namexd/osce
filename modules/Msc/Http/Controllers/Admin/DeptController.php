@@ -144,7 +144,7 @@ class DeptController extends MscController
         $DeptInfo = $this->TeacherDept->DelDept($IdArr);
         if($DeptInfo){
             return response()->json(
-                $this->success_rows(1,'删除成功',count($IdArr),$IdArr)
+                $this->success_rows(1,'删除成功',count($IdArr),10,0,$IdArr)
             );
         }else{
             return response()->json(
