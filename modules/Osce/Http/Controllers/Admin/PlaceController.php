@@ -21,7 +21,7 @@ class PlaceController extends CommonController
      * /osce/admin/place/test
      */
     public function getTest(){
-        return view('osce::admin.resourcemanage.clinicalcase');
+        return view('osce::admin.resourcemanage.central_control');
     }
 
     /**
