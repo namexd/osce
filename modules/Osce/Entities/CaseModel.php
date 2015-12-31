@@ -8,17 +8,18 @@
 
 namespace Modules\Osce\Entities;
 
+use DB;
 
-class CaseHistory extends CommonModel
+class CaseModel extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'case_history';
+    protected $table = 'case';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'detail','status'];
+    protected $fillable = ['name', 'detail', 'status'];
     public $search = [];
 
     /**
@@ -38,13 +39,33 @@ class CaseHistory extends CommonModel
             'name',
             'status',
             'detail'
-        ])  ->  paginate(config('osce.page_size'));
+        ])->paginate(config('osce.page_size'));
 
         return $builder;
     }
 
-    public function CaseHistory($formData)
+    /**
+     * 插入数据
+     * @param $formData
+     */
+    public function insertData($formData)
     {
+        DB::transaction(function () use ($formData) {
+            $this->insert($formData);
+            return true;
+        });
+    }
 
+    /**
+     * 修改一条数据
+     * @param $id
+     * @param $formData
+     */
+    public function updateData($id, $formData)
+    {
+        DB::transaction(function () use ($id, $formData) {
+            $this->where($this->table . '.id', $id)->update($formData);
+            return true;
+        });
     }
 }

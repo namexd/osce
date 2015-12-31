@@ -13,15 +13,15 @@
                         </div>
                     </li>
                     <li class="active">
-                        <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">考试安排</span><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a class="active J_menuItem" href="">考站管理</a>
+                            <li><a class="active J_menuItem" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">考站管理</a>
                             </li>
                             <li><a  class="J_menuItem" href="">考场安排</a>
                             </li>
                             <li><a  class="J_menuItem" href="">题库管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="">腕表管理</a>
+                            <li><a  class="J_menuItem" href="{{route('osce.admin.Place.getPlaceList')}}">场所管理</a>
                             </li>
                             <li><a  class="J_menuItem" href="">监考设备管理</a>
                             </li>

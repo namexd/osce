@@ -8,16 +8,17 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\DB;
+use DB;
 use Illuminate\Http\Request;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Factory;
-use Modules\Osce\Entities\CaseHistory as CaseHistory;
-class CaseHistoryController extends CommonController
+use Modules\Osce\Entities\CaseModel as CaseModel;
+
+class CaseController extends CommonController
 {
     /**
      * 获取病历列表
-     * @api       GET /osce/admin/place/case-history-list
+     * @api       GET /osce/admin/place/case-list
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -29,21 +30,21 @@ class CaseHistoryController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getCaseHistoryList(Request $request)
+    public function getCaseList(Request $request)
     {
         //验证暂时空置
 
         //获得提交的各个值
-        $formData = $request->only('keyword','order_name','order_by');
+        $formData = $request->only('keyword', 'order_name', 'order_by');
         //在模型中拿到数据
-        $caseHistory = new CaseHistory();
-        $data = $caseHistory->getList($formData);
+        $CaseModel = new CaseModel();
+        $data = $CaseModel->getList($formData);
         dd($data);
     }
 
     /**
      * 往数据库里插入一条数据
-     * @api       POST /osce/admin/place/edit-case-history
+     * @api       POST /osce/admin/place/edit-case
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -53,27 +54,31 @@ class CaseHistoryController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postAddCaseHistory(Request $request)
+    public function postAddCase(Request $request)
     {
         //验证略过
-
-        //将传入的数据放入create方法中
-        $model = 'CaseHistory';
-        $result = $this->create($request,$model);
+        $this->validate($request, [
+            'name' => 'required',
+            'status' => 'required|integer',
+            'detail' => 'required'
+        ]);
+        //获得提交的字段
+        $formData = $request->only('name', 'status', 'detail');
         try {
-            if (!$result) {
-                throw new \Exception('数据插入失败，请重试');
-            } else {
-                $this->success_data($this->toArray($result));
+            $caseModel = new CaseModel();
+            $result = $caseModel->insertData($formData);
+            if ($result !== true) {
+                throw new \Exception('数据插入时发生了错误，请重试！');
             }
+            return redirect()->route();
         } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
+            return redirect()->back()->withErrors($ex);
         }
     }
 
     /**
-     * 根据id修改病历
-     * @api       GET /osce/admin/place/edit-case-history
+     * 根据id修改病历 着陆页面
+     * @api       GET /osce/admin/place/edit-case
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -83,10 +88,10 @@ class CaseHistoryController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getEditCaseHistory(Request $request)
+    public function getEditCase(Request $request)
     {
         //验证
-        $this->validate($request,[
+        $this->validate($request, [
             'id' => 'required|integer'
         ]);
 
@@ -95,32 +100,47 @@ class CaseHistoryController extends CommonController
 
         //通过id查到该条信息
         try {
-            $data = CaseHistory::findOrFail($id);
+            $data = CaseModel::findOrFail($id);
 
 //            return view('',['data'=>$data]);
         } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
+            return redirect()->back()->withErrors($ex);
         }
     }
 
     /**
      * 根据id修改病历
-     * @api       POST /osce/admin/place/edit-case-history
+     * @api       POST /osce/admin/place/edit-case
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
-     *                         string        keyword         关键字
-     *                         string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
-     *                         string        order_by        排序方式 枚举 e.g:desc,asc
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postEditCaseHistory(Request $request)
+    public function postEditCase(Request $request)
     {
-        //验证略过
+        //验证
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'name' => 'required',
+            'status' => 'required|integer',
+            'detail' => 'required'
+        ]);
+        $id = $request->input('id');
+        $formData = $request->only('id', 'name', 'status', 'detail');
 
-        //
+        try {
+            $caseModel = new CaseModel();
+            $result = $caseModel->updateData($id, $formData);
+            if ($result !== true) {
+                throw new \Exception('数据未能成功修改，请重试!');
+            }
+            return redirect()->route();
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex);
+        }
+
     }
 }

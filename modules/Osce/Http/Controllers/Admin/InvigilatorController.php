@@ -14,6 +14,10 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class InvigilatorController extends CommonController
 {
+    public function getTest()
+    {
+        return view('osce::admin.resourcemanage.test_station_edit');
+    }
     /**
      * 获取SP考教师列表
      * @url GET /osce/admin/invigilator/invigilator-list

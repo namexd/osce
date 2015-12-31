@@ -74,7 +74,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增</h5>
+            <h5>考场信息编辑</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -85,22 +85,18 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">名称</label>
+                            <label class="col-sm-2 control-label">场所名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name">
+                                <input type="text" required class="form-control" id="name" value="{{$data->name}}">
                             </div>
                         </div>
 
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">类别</label>
+                            <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <select id="select_Category" required  class="form-control m-b" name="account">
-                                    <option value="0">请选择类别</option>
-                                    <option value="Classroom">教室</option>
-                                    <option>开放设备</option>
-                                </select>
+                                <input id="select_Category" required  class="form-control m-b" name="account" value="{{$data->status}}" />
                             </div>
                             <div class="select-floor" style="display: none;">
                                 <label class="col-sm-2 control-label">楼层</label>
@@ -161,7 +157,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-white" type="submit">取消</button>
-                                <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                                <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;存</button>
 
                             </div>
                         </div>
