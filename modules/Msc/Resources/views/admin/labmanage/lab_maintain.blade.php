@@ -283,10 +283,10 @@
                                     <td>{{@$k+1}}</td>
                                     <td class="name">{{@$v['name']}}</td>
                                     <td class="code">{{@$v['code']}}</td>
-                                    <td class="lname" data="{{@$v->school_id}}" data-local="{{@$v->location_id}}">{{@$v['lname']}}</td>
+                                    <td class="lname" data="{{@$v->floors->school_id}}" data-local="{{@$v->location_id}}">{{@$v->floors->name}}</td>
                                     <td class="floors">{{@$v['floor']}}</td>
                                     <td class="open_type" data="{{@$v->opentype}}">{{@$v['open_type']}}</td>
-                                    <td class="tname" data="{{@$v['tid']}}">{{@$v['tname']}}</td>
+                                    <td class="tname" data="{{@$v->user->id}}">{{@$v->user->name}}</td>
                                     <td class="status" data="{{@$v['status']}}">@if($v['status'] == 0)正常@else<span class="state2">停用</span>@endif</td>
                                     <input type="hidden" class="short_name" value="{{@$v->short_name}}">
                                     <input type="hidden" class="enname" value="{{@$v->enname}}">

@@ -42,6 +42,19 @@ class Laboratory extends Model
         }
         return $name;
     }
+
+
+    //楼栋
+    public function floors(){
+
+        return $this->hasOne('Modules\Msc\Entities\Floor','id','location_id');
+    }
+    //用户管理员
+    public function user(){
+
+        return $this->hasOne('App\Entities\User','id','manager_user_id');
+    }
+
     // 获得分页列表
     public function getFilteredPaginateList ($where)
     {
@@ -49,7 +62,7 @@ class Laboratory extends Model
         $builder = $this;
         $local = 'location';
         $lab = 'lab';
-        $teacher = 'teacher';
+        $user = 'user';
         if ($where['keyword'])
         {
             $builder = $builder->where($lab.'.name','like','%'.$where['keyword'].'%');
@@ -62,13 +75,14 @@ class Laboratory extends Model
         {
             $builder = $builder->where($lab.'.open_type','=',$where['open_type']);
         }
-        //dd($builder);
-        $builder = $builder->leftJoin('location', function($join) use($local, $lab) {
-            $join->on($local.'.id', '=', $lab.'.location_id');
-        })->leftJoin('teacher', function($join) use($teacher, $lab) {
-            $join->on($teacher.'.id', '=', $lab.'.manager_user_id');
-        })->select($lab.'.*',$local.'.name as lname',$local.'.school_id',$teacher.'.name as tname',$teacher.'.id as tid');
-        return $builder->orderBy($lab.'.id')->paginate(config('msc.page_size',10));
+        $builder = $builder->with(['floors','user']);
+//        dd($builder);
+//        $builder = $builder->leftJoin('location', function($join) use($local, $lab) {
+//            $join->on($local.'.id', '=', $lab.'.location_id');
+//        })->leftJoin('user', function($join) use($user, $lab) {
+//            $join->on($user.'.id', '=', $lab.'.manager_user_id');
+//        })->select($lab.'.*',$local.'.name as lname',$local.'.school_id',$user.'.name as tname',$user.'.id as tid');
+        return $builder->orderBy('id')->paginate(config('msc.page_size',10));
     }
 
 }
