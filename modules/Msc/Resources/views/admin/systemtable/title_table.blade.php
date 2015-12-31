@@ -18,7 +18,7 @@
             layer.confirm('您确定要删除该职称？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                layer.msg('删除成功', {icon: 1,time: 1000});
+                window.location.href=url;
             });
         })
         $(".stop").click(function(){
@@ -124,7 +124,7 @@
                             <td class="opera">
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" data="{{ @$val['status'] }}"><span>编辑</span></a>
                                 <span class="state2 stop" data="{{ @$val['status'] }}">停用</span>
-                                <span class="state2 delete" data="$val['id']">删除</span>
+                                <span class="state2 delete" data="{{ @$val['id'] }}">删除</span>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>
@@ -179,7 +179,7 @@
                 <select id="select_Category"   class="form-control m-b" name="status">
                     <option value="-1">请选择状态</option>
                     <option value="1">正常</option>
-                    <option value="2">停用</option>
+                    <option value="0">停用</option>
                 </select>
             </div>
         </div>

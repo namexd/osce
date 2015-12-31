@@ -15,23 +15,28 @@
         $(function(){
 //            删除
             $(".delete").click(function(){
-                var this_id = $(this).siblings(".setid").val();
+                var this_id = $(this).attr('data');
+//                alert(this_id);
+                var url = "/msc/admin/profession/profession-deletion?id="+this_id;
                 //询问框
                 layer.confirm('您确定要删除该专业？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    layer.msg('删除成功', {icon: 1,time: 1000});
+                    window.location.href=url;
                 });
             });
 //            停用
             $(".stop").click(function(){
-                var this_id = $(this).siblings(".setid").val();
+                var this_id = $(this).attr('data');
+                var type = $(this).attr('data-type');
+//                alert(this_id);
+                var url = "/msc/admin/profession/profession-status?id="+this_id+"&type="+type;
 
                 //询问框
                 layer.confirm('您确定要停用该专业？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    layer.msg('停用成功', {icon: 1,time: 1000});
+                   window.location.href=url;
                 });
             });
 //            编辑
@@ -101,7 +106,27 @@
                     })
                 }
             })
+            {{--$('.edit').click(function () {--}}
+                {{--$('input[name=name]').val($(this).parent().parent().find('.name').html());--}}
+                {{--$('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));--}}
+                {{--$('input[name=floor_buttom]').val($(this).parent().parent().find('.floor').attr('data-b'));--}}
+                {{--$('input[name=address]').val($(this).parent().parent().find('.address').html());--}}
+                {{--var sname = $(this).parent().parent().find('.sname').html();--}}
+                {{--var status = '';--}}
+                {{--if($(this).parent().parent().find('.status').html() == '正常'){--}}
+                    {{--status = 1;--}}
+                {{--}else{--}}
+                    {{--status = 0;--}}
+                {{--}--}}
+                {{--$('#add_from').attr('action','{{route("msc.admin.floor.getEditFloorInsert")}}');--}}
+                {{--var id = $(this).attr("data");--}}
+                {{--$('#add_from').append('<input type="hidden" name="id" value="'+id+'">');--}}
+            {{--});--}}
+
         })
+
+
+
     </script>
 @stop
 
@@ -175,8 +200,12 @@
                             @endif
                             <td>
                                 <a href="{{ route('msc.admin.profession.ProfessionEdit',[$list['id']]) }}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
-                                <a class="state2 modal-control stop">停用</a>
-                                <a  class="state2 edit_role modal-control delete">删除</a>
+                               @if($list['status']==1)
+                                <a   data="{{$list['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
+                                @else
+                                    <a   data="{{$list['id']}}" data-type="1" class="state2 modal-control stop">正常</a>
+                                @endif
+                                <span  data="{{$list['id']}}"  class="state2 edit_role modal-control delete">删除</span>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>
@@ -188,39 +217,7 @@
 
             </div>
         </div>
-        {{--分页--}}
-        <div class="btn-group pull-right">
-            <ul class="pagination">
-                <li>
-                    <span>«</span>
-                </li>
-                <li class="active">
-                    <span>1</span>
-                </li>
-                <li>
-                    <a>2</a>
-                </li>
-                <li>
-                    <a>3</a>
-                </li>
-                <li>
-                    <a>4</a>
-                </li>
-                <li>
-                    <a>5</a>
-                </li><li>
-                    <a>6</a>
-                </li>
-                <li>
-                    <a>7</a>
-                </li>
-                <li>
-                    <a>»</a>
-                </li>
 
-            </ul>
-        </div>
-	</div>
 @stop
 
 @section('layer_content')
@@ -249,7 +246,7 @@
                     <select id="select_Category"   class="form-control m-b" name="status">
                         <option value="-1">请选择状态</option>
                         <option value="1">正常</option>
-                        <option value="2">停用</option>
+                        <option value="0">停用</option>
                     </select>
                 </div>
             </div>

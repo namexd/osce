@@ -13,12 +13,14 @@
         $(function(){
 //            删除
             $(".delete").click(function(){
-                var this_id = $(this).siblings(".setid").val();
+                var this_id = $(this).attr('data');
+//                alert(this_id);
+                var url = "/msc/admin/resources/resources-remove?id="+this_id;
                 //询问框
                 layer.confirm('您确定要删除该资源？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    layer.msg('删除成功', {icon: 1,time: 1000});
+                    window.location.href=url;
                 });
             });
 //            停用
@@ -164,7 +166,7 @@
                         <td>
                             <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                             <a class="state2 modal-control stop">停用</a>
-                            <a class="state2 edit_role modal-control delete">删除</a>
+                            <a   data="{{$val['id']}}" class="state2 edit_role modal-control delete">删除</a>
                             <input type="hidden" class="setid" value="1"/>
                         </td>
                     </tr>
@@ -211,7 +213,7 @@
 
 @section('layer_content')
     {{--编辑--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="/msc/admin/user/student-add" method="post">
+    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.resources.ResourcesAdd')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">新增资源/编辑资源</h4>
@@ -226,28 +228,28 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
                 <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="kinds">
+                    <select id="select_Category"   class="form-control m-b" name="devices_cate_id">
                         <option value="-1">请选择类型</option>
-                        <option value="0">模型</option>
-                        <option value="1">设备</option>
-                        <option value="2">耗材</option>
-                        <option value="3">虚拟设备</option>
+                        <option value="1">模型</option>
+                        <option value="2">设备</option>
+                        <option value="3">耗材</option>
+                        <option value="4">虚拟设备</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">说明</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="explain" value="" />
+                    <input type="text" class="form-control name add-name" name="detail" value="" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
                 <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="type">
+                    <select id="select_Category"   class="form-control m-b" name="status">
                         <option value="-1">请选择状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">停用</option>
+                        <option value="1">正常</option>
+                        <option value="2">停用</option>
                     </select>
                 </div>
             </div>
