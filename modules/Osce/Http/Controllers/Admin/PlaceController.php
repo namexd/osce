@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+
 use DB;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Place as Place;
@@ -16,6 +17,14 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class PlaceController extends CommonController
 {
+    /**
+     * 测试
+     * /osce/admin/place/test
+     */
+    public function getTest(){
+        return view('osce::admin.sysmanage.system');
+    }
+
     /**
      * 获取场所列表,根据场所类来查找
      * @api       GET /osce/admin/place/place-list
@@ -41,12 +50,15 @@ class PlaceController extends CommonController
         $pid = empty($pid) ? 1 : $pid;
         //展示页面
         $place = new Place();
+
         $data = $place->showPlaceList($formData, $pid);
         // dd($data);
+
         return view('osce::admin.resourcemanage.examroom', ['data' => $data]);
     }
 
     /**
+
      * 修改页面的着陆页
      * @api       GET /osce/admin/place/edit-place
      * @access    public
@@ -58,20 +70,21 @@ class PlaceController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
+
     public function getEditPlace(Request $request)
     {
         //验证ID
         $this->validate($request, [
+
             'id' => 'required|integer'
         ]);
 
         //取出id的值
         try {
             $formData = $request->input('id');
-            //根据主键找出数据
-//            $data = Place::findOrFail($id);
-            $place = new Place();
-            $data = $place->showPlaceList($formData);
+
+
+            $data = $model->showPlaceList($formData);
             //将数据展示到页面
             return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data]);
 
@@ -81,6 +94,7 @@ class PlaceController extends CommonController
     }
 
     /**
+
      * 修改页面 业务处理
      * @api       POST /osce/admin/place/edit-place
      * @access    public
@@ -92,6 +106,7 @@ class PlaceController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
+
     public function postEditPlace(Request $request)
     {
         //验证数据，暂时省略
@@ -102,6 +117,7 @@ class PlaceController extends CommonController
         $place = new Place();
         $result = $place->updateData($id, $formData);
 
+
         try {
             if (!$result) {
                 throw new Exception('数据修改失败！请重试');
@@ -109,11 +125,27 @@ class PlaceController extends CommonController
                 return redirect()->route('osce.admin.place.getPlaceList');
             }
         } catch (\Exception $ex) {
+
             return redirect()->back()->withErrors($ex);
         }
 
     }
 
+
+    /**
+     * 考场新增
+     */
+    public function getAddPlace(Request $request)
+    {
+        return view('osce::admin.resourcemanage.examroom_add');
+    }
+
+    public function postEditPlace(Request $request)
+    {
+        //验证数据，暂时省略
+
+
+    }
     /**
      * 往place表新插入一行数据
      * @api       POST /osce/admin/place/change-status
@@ -131,7 +163,7 @@ class PlaceController extends CommonController
     {
         $this->validate($request, [
             'name' => 'required|unique:place,name|max:20|min:4',
-            'pid' => 'required|integer',
+
             'status' => 'required|integer'
         ]);
 
@@ -142,9 +174,11 @@ class PlaceController extends CommonController
             if (!$result) {
                 throw new Exception('数据插入失败！请重试');
             } else {
+
                 return redirect()->route('osce.admin.place.getPlaceList');
             }
         } catch (\Exception $ex) {
+
             return redirect()->back()->withErrors($ex);
         }
     }
@@ -195,25 +229,30 @@ class PlaceController extends CommonController
      */
     public function postCreatePlaceCate(Request $request)
     {
+
         $this->validate($request, [
             'name' => 'required|unique:place,name|max:20|min:4',
+
             'pid' => 'required|integer',
             'status' => 'required|integer',
             'cid' => 'required|integer'
         ]);
 
+
         $formData = $request->only('name', 'pid', 'status', 'cid');
 
-        //insertGetId可获得返回的自增id
+
         $placeCate = new PlaceCate();
         $result = $placeCate->insertData($formData);
         try {
             if (!$result) {
                 throw new Exception('数据插入失败！请重试');
             } else {
+
                 return redirect()->route('osce.admin.place.getPlaceCateList');
             }
         } catch (\Exception $ex) {
+
             return redirect()->back()->withErrors($ex);
         }
     }
