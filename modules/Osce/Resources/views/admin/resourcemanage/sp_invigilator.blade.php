@@ -58,7 +58,10 @@
                     <td>高老叟</td>
                     <td>1111111111</td>
                     <td>2015/12/11</td>
-                    <td><span class="glyphicon glyphicon-trash"></span></td>
+                    <td>
+                        <a href=""><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
+                        <a href=""><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                    </td>
                 </tr>
                 <tr>
                     <td>1</td>
@@ -66,7 +69,10 @@
                     <td>高老叟</td>
                     <td>1111111111</td>
                     <td>2015/12/11</td>
-                    <td><span class="glyphicon glyphicon-trash"></span></td>
+                    <td>
+                        <a href=""><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
+                        <a href=""><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                    </td>
                 </tr>
             </tbody>
         </table>
