@@ -19,7 +19,7 @@ class Place extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'pid'];
+    protected $fillable = ['name', 'pid', 'address'];
     public $search = [];
 
     /**
@@ -28,35 +28,64 @@ class Place extends CommonModel
      * @param $pid
      * @return
      */
-    public function showPlaceList($formData,$pid)
+    public function showPlaceList($formData, $pid = 1)
     {
 
-        //默认查询status不为0（已删除）的场所
-        $builder = $this->where($this->table . '.status', '<>', 0);
+        if ($formData['id'] !== null) {
+            $builder = $this->where($this->table . '.id', $formData['id']);
 
-        //根据pid进行查询
-        $builder = $builder->where($this->table . '.pid', '=', $pid);
+            return $builder->first();
+        } else {
+            //默认查询status不为0（已删除）的场所
+            $builder = $this->where($this->table . '.status', '<>', 0);
 
-        //如果order不为空的话，就使用order的数据，否则就指定，暂时不考虑排序
+            //根据pid进行查询
+            $builder = $builder->where($this->table . '.pid', '=', $pid);
+
+            //如果order不为空的话，就使用order的数据，否则就指定，暂时不考虑排序
 //        $orderName = empty($formData['order_name']) ? 1 : $formData['order_name'];
 //        $orderBy = empty($formData['order_by']) ? 'desc' : $formData['order_by'];
 //        $paramArray = ['created_at'];
 //        $builder = $this->order($builder, $orderName, $orderBy, $paramArray);
 
-        //如果keyword不为空，那么就进行模糊查询
-        if ($formData['keyword'] !== null) {
-            $builder = $builder->where($this->table . '.created_at', '=', '%' . $formData['keyword'] . '%');
+            //如果keyword不为空，那么就进行模糊查询
+            if ($formData['keyword'] !== null) {
+                $builder = $builder->where($this->table . '.created_at', '=', '%' . $formData['keyword'] . '%');
+            }
+
+            //选择查询的字段
+            $builder = $builder->select([
+                'id',
+                'name',
+                'status'
+            ]);
+
+            return $builder->paginate(config('osce.page_size'));
         }
-
-        //选择查询的字段
-        $builder = $builder->select([
-            'id',
-            'name',
-            'status'
-        ]);
-
-        return $builder->paginate(config('osce.page_size'));
-
     }
 
+    /**
+     * 修改数据
+     * @param $id
+     * @param $formData
+     */
+    public function updateData($id, $formData)
+    {
+        DB::transaction(function () use ($id, $formData) {
+            $this->where($this->table .'.id', $id)->update($formData);
+            return true;
+        });
+    }
+
+    /**
+     * 插入数据
+     * @param $formData
+     */
+    public function insertData($formData)
+    {
+        DB::transaction(function () use ($formData) {
+            $this->insert($formData);
+            return true;
+        });
+    }
 }

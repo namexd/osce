@@ -8,7 +8,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::controller('place','PlaceController');
         Route::get('place/place-list',['uses'=>'PlaceController@getPlaceList','as'=>'osce.admin.place.getPlaceList']);
-    });
+		Route::get('place/edit-place',['uses'=>'PlaceController@getEditPlace','as'=>'osce.admin.place.getEditPlace']);
+		Route::get('place/place-cate-list',['uses'=>'PlaceController@getPlaceCateList','as'=>'osce.admin.place.getPlaceCateList']);
+		Route::get('place/edit-place-cate',['uses'=>'PlaceController@getEditPlaceCate','as'=>'osce.admin.place.getEditPlaceCate']);
+
+	});
 
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
 		Route::get('invigilator/sp-invigilator-list', 	['uses'=>'InvigilatorController@getSpInvigilatorList','as'=>'osce.admin.invigilator.getSpInvigilatorList']);
