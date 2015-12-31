@@ -21,6 +21,7 @@
 
             $(document).ajaxSuccess(function(event, request, settings) {
                 listclick();//dom之后添加事件
+                togget();
                 editall();//更改当前栏目内容
                 deleteall();//删除科室
             });
@@ -104,7 +105,6 @@
 
         function   listclick(){//dom之后添加事件
             $(".list-group-item").unbind().click(function(){
-
                 var listId = $(this).attr("id");//获取点击时该栏目的ID
                 var thispid=$(this).attr("pid");
                 var level=$(this).attr("level");
@@ -117,20 +117,28 @@
                     $(".add-parent").val(parent_name);//上级科室
                 }
                 $(this).addClass("checked").siblings().removeClass("checked");//表单切换
-
-                $(this).nextAll(".children1").each(function(){//展开关闭子科室功能
-                    thispid=$(this).attr("pid");//获取需要展开的子ID
-                    if(thispid==listId){
-                        $(this).toggle();
-                    }
-                })
-                getChild();//展开关闭功能
                 addChild(listId,level,thisneme);//添加子科室功能
             });
         }
-        function   getChild(){
+        function  togget(){//dom之后添加事件
+            $(".glyphicon-plus").unbind().click(function(){
+                var fatherid= $(this).parent().parent().attr("id");
+                var fatherlevel= $(this).parent().parent().attr("level");
+                if(fatherlevel=="1"){
+                    $(this).parent().parent().nextUntil(".parent").toggle();
+                }else if(fatherlevel=="2"){
+                    $(this).parent().parent().nextUntil(".children1").toggle();
+                }
+
+
+            })
+
+
             $(this).children().children(".glyphicon").toggleClass("glyphicon-minus");
             $(this).children().children(".glyphicon").toggleClass("glyphicon-plus");
+        }
+        function   getChild(){
+
         }
         function  addChild(listId,level,thisneme){
             $("#new-add-child").unbind().click(function(){
@@ -149,7 +157,6 @@
                         cache: false,
                         data:qj,
                         success: function (result) {
-                            console.log(result.data.total.level.name);
                             if(result.data.total.level=="2"){
 
 
@@ -176,9 +183,8 @@
                                 )
                             }
                             if($("#"+listId+" .glyphicon-plus").size()=="0"){
-                                alert(1);
-                                $("#"+listId+" .description").after(
-                                        +'<span class="icon"><i class="glyphicon glyphicon-plus "></i></span>'
+                                $("#"+listId+" .icon").before(
+                                        +'<span class="icon"><i class="glyphicon glyphicon-plus"></i></span>'
                                 );
                             }
                         }
