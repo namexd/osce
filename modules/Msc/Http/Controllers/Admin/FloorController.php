@@ -81,8 +81,6 @@ class FloorController extends Controller {
             'status'=>Input::get('status'),
             'school_id'=>Input::get('school_id'),
             'created_user_id'=>$user->id,
-            'created_at'=>time(),
-            'updated_at'=>time(),
         ];
         //dd($data);
         $add = Floor::create($data);
@@ -117,7 +115,6 @@ class FloorController extends Controller {
             'address'=>Input::get('address'),
             'status'=>Input::get('status'),
             'school_id'=>Input::get('school_id'),
-            'updated_at'=>time(),
         ];
         //dd(Input::get('id'));
         $add = DB::connection('msc_mis')->table('location')->where('id','=',urlencode(e(Input::get('id'))))->update($data);

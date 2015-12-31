@@ -27,8 +27,14 @@
                 var this_id = $(this).attr('data');
                 var type = $(this).attr('data-type');
                 var url = "/msc/admin/laboratory/stop-lab?id="+this_id+"&type="+type;
+                var str = '';
+                if(type == 1){
+                    str = '您确定要停用实验室？';
+                }else{
+                    str = '您确定要启用实验室？';
+                }
                 //询问框
-                layer.confirm('您确定要停用实验室？', {
+                layer.confirm(str, {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     window.location.href=url;
@@ -281,7 +287,7 @@
                                     <td class="floors">{{@$v['floor']}}</td>
                                     <td class="open_type" data="{{@$v->opentype}}">{{@$v['open_type']}}</td>
                                     <td class="tname" data="{{@$v['tid']}}">{{@$v['tname']}}</td>
-                                    <td class="status" data="{{@$v['status']}}">@if($v['status'] == 0)正常@else停用@endif</td>
+                                    <td class="status" data="{{@$v['status']}}">@if($v['status'] == 0)正常@else<span class="state2">停用</span>@endif</td>
                                     <input type="hidden" class="short_name" value="{{@$v->short_name}}">
                                     <input type="hidden" class="enname" value="{{@$v->enname}}">
                                     <input type="hidden" class="short_enname" value="{{@$v->short_enname}}">
@@ -396,7 +402,9 @@
                         <option value="-1">点击选择</option>
                         @if(!empty($teacher))
                             @foreach($teacher as $tch)
-                                <option value="{{$tch->id}}">{{$tch->name}}</option>
+                                @if($tch->aboutUser)
+                                 <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
+                                @endif
                             @endforeach
                         @endif
                     </select>

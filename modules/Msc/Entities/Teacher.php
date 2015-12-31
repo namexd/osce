@@ -3,6 +3,7 @@
 namespace Modules\Msc\Entities;
 
 use Modules\Msc\Entities\CommonModel;
+use App\Entities\User;
 
 class Teacher extends CommonModel {
 
@@ -311,5 +312,16 @@ class Teacher extends CommonModel {
             );
         $result=$this->create($teacher);
         return $result;
+    }
+
+    //user表关联
+    public function aboutUser(){
+        return $this->hasOne('App\Entities\User','id','id');
+    }
+    ////获取和老师管理的用户数据
+    public  function getdata(){
+        $builder = $this;
+        $builder = $builder->with('aboutUser')->get();
+        return $builder;
     }
 }
