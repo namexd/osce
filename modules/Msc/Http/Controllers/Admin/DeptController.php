@@ -37,8 +37,7 @@ class DeptController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function DeptList(){
-        dd('ddd');
-        return view();
+        return view('msc::admin.systemtable.departments_table');
     }
 
     /**
