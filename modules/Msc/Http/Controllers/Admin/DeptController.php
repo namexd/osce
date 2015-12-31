@@ -137,14 +137,15 @@ class DeptController extends MscController
         ]);
 
         $requests = $request->all();
-        $DeptIdArr[] = $requests['id'];
+        $DeptIdArr[] = intval($requests['id']);
         //递归找出所有子级
         $IdArr = $this->TeacherDept->GetChildIdArr($requests['id']);
+
         $IdArr = array_merge($DeptIdArr,$IdArr);
         $DeptInfo = $this->TeacherDept->DelDept($IdArr);
         if($DeptInfo){
             return response()->json(
-                $this->success_rows(1,'删除成功',$IdArr)
+                $this->success_rows(1,'删除成功',count($IdArr),$IdArr)
             );
         }else{
             return response()->json(
