@@ -16,7 +16,7 @@ class InvigilatorController extends CommonController
 {
     public function getTest()
     {
-        return view('osce::admin.resourcemanage.test_station');
+        return view('osce::admin.resourcemanage.test_station_edit');
     }
     /**
      * 获取SP考教师列表
@@ -39,10 +39,10 @@ class InvigilatorController extends CommonController
      *
      */
     public function getSpInvigilatorList(Request $request){
-       /* $Invigilator    =   new Invigilator();
+       $Invigilator    =   new Invigilator();
 
         $list       =   $Invigilator    ->getSpInvigilatorList();
-        $isSpValues =   $Invigilator    ->  getIsSpValues();*/
+        $isSpValues =   $Invigilator    ->  getIsSpValues();
         return view('osce::admin.resourcemanage.sp_invigilator');
     }
 

@@ -20,13 +20,13 @@
     <div class="ibox-title route-nav">
         <ol class="breadcrumb">
             <li><a href="#">资源管理</a></li>
-            <li class="route-active">场所管理</li>
+            <li class="route-active">设备管理</li>
         </ol>
     </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">场所管理</h5>
+                <h5 class="title-label">设备管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
                 <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
@@ -37,29 +37,40 @@
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            <li class=""><a href="#">考场</a></li>
-                            <li class=""><a href="#">中控室</a></li>
-                            <li class="active"><a href="#">走廊</a></li>
-                            <li class=""><a href="#">候考室</a></li>
+                            <li class=""><a href="#">摄像机</a></li>
+                            <li class=""><a href="#">Pad</a></li>
+                            <li class="active"><a href="#">腕表</a></li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="input-group" style="width: 290px;margin:20px 0;">
-                    <input type="text" placeholder="请输入关键字" class="input-sm form-control">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
-                </span>
+                <div class="input-group" style="margin: 20px 0">
+                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;">
+                    <div class="btn-group" style="margin-right: 10px;">
+                        <button type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
+                            状态<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn  btn-default" id="search">&nbsp;搜索&nbsp;</button>
+
                 </div>
 
                 <table class="table table-striped" id="table-striped">
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>场所名称</th>
-                        <th>描述</th>
+                        <th>设备名称</th>
+                        <th>设备ID</th>
+                        <th>状态</th>
                         <th>操作</th>
-
                     </tr>
                     </thead>
                     <tbody>
