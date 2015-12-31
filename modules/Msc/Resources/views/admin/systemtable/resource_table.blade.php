@@ -31,14 +31,14 @@
                 var url = "/msc/admin/resources/resources-status?id="+this_id+"&type="+type;
                 var str = '';
                 if(type == 1){
-                    str = '您确定要启用实验室？';
+                    str = '您确定要恢复资源？';
                 }else{
 
-                    str = '您确定要停用实验室？';
+                    str = '您确定要禁用资源？';
                 }
 
                 //询问框
-                layer.confirm('您确定要停用该资源？', {
+                layer.confirm( str, {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     window.location.href=url;
@@ -174,7 +174,7 @@
                                         <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">禁用</a>
                                     </li>
                                 </ul>
                             </div>
@@ -282,10 +282,10 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
                 <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="status">
+                    <select id="select_Category"   class="form-control m-b state" name="status">
                         <option value="-1">请选择状态</option>
                         <option value="1">正常</option>
-                        <option value="0">停用</option>
+                        <option value="0">禁用</option>
                     </select>
                 </div>
             </div>

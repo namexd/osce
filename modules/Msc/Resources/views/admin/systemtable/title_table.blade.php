@@ -73,16 +73,19 @@
             $('input[name=description]').val($(this).parent().parent().find('.describe').html());
 //                var sname = $(this).parent().parent().find('.sname').html();
             var status = '';
-            if($(this).parent().parent().find('.status').html() == '正常'){
+            if($(this).parent().parent().find('.status').html() ==='正常'){
                 status = 1;
             }else{
                 status = 0;
             }
-
+//            alert(status);
+//            var status = $(this).parent().parent().find('.status').attr('data');
             $('.state option').each(function(){
+//                alert(status);
                 if($(this).val() == status){
                     $(this).attr('selected','selected');
                 }
+
             });
             $('#add_from').attr('action','{{route("msc.admin.professionaltitle.HolderSave")}}');
             var id = $(this).attr("data");
@@ -207,7 +210,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
             <div class="col-sm-9">
-                <select id="select_Category"   class="form-control m-b" name="status">
+                <select id="select_Category"   class="form-control m-b state" name="status">
                     <option value="-1">请选择状态</option>
                     <option value="1">正常</option>
                     <option value="0">禁用</option>
