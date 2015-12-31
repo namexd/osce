@@ -27,8 +27,15 @@
                 var this_id = $(this).attr('data');
                 var type = $(this).attr('data-type');
                 var url = "/msc/admin/floor/stop-floor?id="+this_id+"&type="+type;
+                var str = '';
+                if(type == 1){
+                    str = '您确定要启用实验室？';
+                }else{
+
+                    str = '您确定要停用实验室？';
+                }
                 //询问框
-                layer.confirm('您确定要停用该楼栋？', {
+                layer.confirm(str, {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     window.location.href=url;
@@ -194,7 +201,7 @@
                                 <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_buttom}}">{{intval(@$v->floor_top) + intval(@$v->floor_buttom)}}</td>
                                 <td class="sname">{{@$v->sname}}</td>
                                 <td class="address">{{@$v->address}}</td>
-                                <td class="status" data="{{@$v->status}}">@if($v->status)正常@else停用@endif</td>
+                                <td class="status" data="{{@$v->status}}">@if($v->status)正常@else<span class="state2">停用</span>@endif</td>
                                 <td>
                                     <a href=""  data="{{$v->id}}"  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                                         <span>编辑</span>

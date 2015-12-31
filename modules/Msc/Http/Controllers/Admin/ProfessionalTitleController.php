@@ -105,7 +105,7 @@ class ProfessionalTitleController extends Controller
     }
 
     /**
-     * 编辑回显职称
+     * 编辑回显职称暂时没有用
      *
      * @method post
      * @url /msc/admin/professionaltitle/holder-edit
@@ -134,7 +134,7 @@ class ProfessionalTitleController extends Controller
         die(json_encode($data));
     }
 
-    /**
+    /** @url /msc/admin/professionaltitle/holder-save
      * Created by PhpStorm.
      * User: zhouqiang
      * Date: 2015/12/30 0028
@@ -168,20 +168,18 @@ class ProfessionalTitleController extends Controller
      * 修改职称状态
      */
 
-    public function getHolderStatus($id){
-        $holderId = intval($id);
-
-        $holderModel = new ProfessionalTitle();
-
-        $result =  $holderModel->changeStatus($holderId);
-        if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
-        }
-        return response()->json(
-            ['success' => false]
-        );
+    public function getHolderStatus(ProfessionalTitle $professionalTitle){
+        $id = urlencode(e(Input::get('id')));
+        if($id){
+            $data = $professionalTitle->where('id','=',$id)->update(['status'=>Input::get('type')]);
+            if($data != false){
+                return redirect()->back()->withInput()->withErrors('停用成功');
+            }else{
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+        }else{
+            return redirect()->back()->withInput()->withErrors('系统异常');
+    }
     }
     /**
      *职称删除

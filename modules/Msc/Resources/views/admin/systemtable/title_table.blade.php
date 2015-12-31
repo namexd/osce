@@ -18,17 +18,20 @@
             layer.confirm('您确定要删除该职称？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                layer.msg('删除成功', {icon: 1,time: 1000});
+                window.location.href=url;
             });
         })
-        $(".stop").click(function(){
-            var this_id = $(this).siblings(".setid").val();
 
+        $(".stop").click(function(){
+            var this_id = $(this).attr('data');
+            var type = $(this).attr('data-type');
+//                alert(this_id);
+            var url = "/msc/admin/professionaltitle/holder-status?id="+this_id+"&type="+type;
             //询问框
             layer.confirm('您确定要停用该职称？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                layer.msg('停用成功', {icon: 1,time: 1000});
+                window.location.href=url;
             });
         })
         $('#add_from').bootstrapValidator({
@@ -57,6 +60,22 @@
                 },
 
             }
+        });
+        $('.edit').click(function () {
+            $('input[name=name]').val($(this).parent().parent().find('.code').html());
+//                $('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));
+//                $('input[name=floor_buttom]').val($(this).parent().parent().find('.floor').attr('data-b'));
+            $('input[name=address]').val($(this).parent().parent().find('.name').html());
+//                var sname = $(this).parent().parent().find('.sname').html();
+            var status = '';
+            if($(this).parent().parent().find('.status').html() == '正常'){
+                status = 1;
+            }else{
+                status = 0;
+            }
+            $('#add_from').attr('action','{{route("msc.admin.resources.ResourcesSave")}}');
+            var id = $(this).attr("data");
+            $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
         });
     })
 
@@ -115,16 +134,22 @@
                         <tr>
                             <td class="number">{{ @$val['id'] }}</td>
                             <td class="name">{{ @$val['name'] }}</td>
-                            <td class="describe">
+                            <td class="
+                            ">
                                 {{ @$val['description'] }}
                             </td>
                             <td class="type" data="{{ @$val['status'] }}">
                                 @if(@$val['status'] == 1)<span>正常</span>@else<span class="state2">停用</span>@endif
                             </td>
+
                             <td class="opera">
                                 <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" data="{{ @$val['status'] }}"><span>编辑</span></a>
-                                <span class="state2 stop" data="{{ @$val['status'] }}">停用</span>
-                                <span class="state2 delete" data="$val['id']">删除</span>
+                                @if($val['status']==1)
+                                    <a   data="{{@$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
+                                @else
+                                    <a   data="{{@$val['id']}}" data-type="1" class="state2 modal-control stop">正常</a>
+                                @endif
+                                <span class="state2 delete" data="{{ @$val['id'] }}">删除</span>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>
@@ -179,7 +204,7 @@
                 <select id="select_Category"   class="form-control m-b" name="status">
                     <option value="-1">请选择状态</option>
                     <option value="1">正常</option>
-                    <option value="2">停用</option>
+                    <option value="0">停用</option>
                 </select>
             </div>
         </div>
