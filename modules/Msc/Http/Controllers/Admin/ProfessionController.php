@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\StdProfessional;
 use Modules\Msc\Http\Controllers\MscController;
 use Illuminate\Http\Request;
-
+use URL;
+use DB;
 class ProfessionController extends MscController
 {
    /**
@@ -196,22 +197,34 @@ class ProfessionController extends MscController
      */
 
 
-    public  function getProfessionStatus($id){
+    public  function getProfessionStatus(StdProfessional $professional){
 
-
-        $professionId = intval($id);
-
-        $professionModel = new StdProfessional();
-
-        $result = $professionModel->changeStatus($professionId );
-        if ($result) {
-            return response()->json(
-                ['success' => true]
-            );
+        $id = urlencode(e(Input::get('id')));
+        if($id){
+            $data = $professional->where('id','=',$id)->update(['status'=>Input::get('type')]);
+            if($data != false){
+                return redirect()->back()->withInput()->withErrors('停用成功');
+            }else{
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+        }else{
+            return redirect()->back()->withInput()->withErrors('系统异常');
         }
-        return response()->json(
-            ['success' => false]
-        );
+
+
+//        $professionId = intval($id);
+//
+//        $professionModel = new StdProfessional();
+//
+//        $result = $professionModel->changeStatus($professionId);
+//        if ($result) {
+//            return response()->json(
+//                ['success' => true]
+//            );
+//        }
+//        return response()->json(
+//            ['success' => false]
+//        );
 
     }
 
@@ -232,14 +245,15 @@ class ProfessionController extends MscController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public  function  getProfessionDeletion($id){
-        $id = intval($id);
-
-        $professionModel = new StdProfessional();
-
-        $result = $professionModel->SoftTrashed($id);
-        if($result != false){
-            return redirect()->back()->withInput()->withErrors('删除成功');
+    public  function  getProfessionDeletion(){
+        $id = urlencode(e(Input::get('id')));
+        if($id){
+            $data = DB::connection('msc_mis')->table('student_professional')->where('id','=',$id)->delete();
+            if($data != false){
+                return redirect()->back()->withInput()->withErrors('删除成功');
+            }else{
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
         }else{
             return redirect()->back()->withInput()->withErrors('系统异常');
         }
