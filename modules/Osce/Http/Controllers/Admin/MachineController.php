@@ -9,7 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Modules\Osce\Entities\MachineCameras;
+use Modules\Msc\Entities\Vcr as Vcr;
 use Modules\Osce\Entities\MachineCategory;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -108,6 +108,7 @@ class MachineController extends CommonController
      *
      */
     public function getAddCategory(Request $request){
+
         //return view();
     }
 
@@ -173,9 +174,9 @@ class MachineController extends CommonController
      */
     private function getMachineModel($cate_id){
         $config =   [
-            1   =>  'MachineCameras',
+            1   =>  'Vcr',
         ];
-        $name   =   $config[$cate_id];
+        $name   =   '\Modules\Osce\Entities\\'.$config[$cate_id];
         return  new $name;
     }
 
@@ -186,6 +187,17 @@ class MachineController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
+     * 摄像机
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *  Pad
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *  腕表
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
@@ -216,7 +228,7 @@ class MachineController extends CommonController
             }
             if($machine)
             {
-                return redirect()   ->  route('') ;
+                return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
             }
             else
             {
@@ -247,16 +259,38 @@ class MachineController extends CommonController
      */
     private function addCameras(Request $request){
         $this   ->  validate($request,[
-            'name'  =>  'required'
+            'name'          =>  'required',
+            'code'          =>  'required',
+            'ip'            =>  'required',
+            'username'      =>  'required',
+            'password'      =>  'required',
+            'port'          =>  'required',
+            'channel'       =>  'required',
+            'description'   =>  'sometimes',
+        ],[
+            'name.required'     =>'设备名称必填',
+            'code.required'     =>'设备编码必填',
+            'ip.required'       =>'设备IP地址必填',
+            'username.required' =>'设备登录用户名必填',
+            'password.required' =>'设备登录密码必填',
+            'port.required'     =>'设备端口必填',
+            'channel.required'  =>'设备网口必填',
         ]);
         $data   =   [
+            'name'          =>  $request    ->  get('name'),
+            'code'          =>  $request    ->  get('code'),
+            'ip'            =>  $request    ->  get('ip'),
+            'username'      =>  $request    ->  get('username'),
+            'password'      =>  $request    ->  get('password'),
+            'port'          =>  $request    ->  get('port'),
+            'channel'       =>  $request    ->  get('channel'),
+            'description'   =>  $request    ->  get('description'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
         try{
 
             $model      =   $this   ->  getMachineModel($cate_id);
-
-            if($cameras =   $model  ->  create($data))
+            if($cameras =   $model  ->  addMachine($data))
             {
                 return $cameras;
             }
