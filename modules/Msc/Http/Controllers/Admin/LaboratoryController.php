@@ -49,8 +49,9 @@ class LaboratoryController extends Controller {
         $school = DB::connection('msc_mis')->table('school')->get();
         //教学楼
         $floor = DB::connection('msc_mis')->table('location')->where('status','=',1)->get();
+        //获取和老师管理的用户数据
         $teacher = new Teacher();
-        $teacher =  $teacher->where('validated','=',1)->get();
+        $teacher =  $teacher->getdata();
         //dd($teacher);
         return view('msc::admin.labmanage.lab_maintain',[
             'datalist'=>$datalist,

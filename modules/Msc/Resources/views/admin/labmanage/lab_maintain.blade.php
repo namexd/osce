@@ -396,7 +396,9 @@
                         <option value="-1">点击选择</option>
                         @if(!empty($teacher))
                             @foreach($teacher as $tch)
-                                <option value="{{$tch->id}}">{{$tch->name}}</option>
+                                @if($tch->aboutUser)
+                                 <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
+                                @endif
                             @endforeach
                         @endif
                     </select>
