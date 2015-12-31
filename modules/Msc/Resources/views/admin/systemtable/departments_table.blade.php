@@ -18,6 +18,12 @@
             var url="{{ url('/msc/admin/dept/select-dept') }}";
             gethistory(url);
             addfater();
+
+            $(document).ajaxSuccess(function(event, request, settings) {
+                listclick();//dom之后添加事件
+                editall();//更改当前栏目内容
+                deleteall();//删除科室
+            });
         })
 
         function gethistory(url){
@@ -55,7 +61,7 @@
                                     );//第二层添加
                                     $(this.child).each(function() {
                                         $(".treeview ul").append(
-                                                '<li class="list-group-item children1" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'"style="display: none;">'
+                                                '<li class="list-group-item children2" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'"style="display: none;">'
                                                 + '<span class="indent"></span>'
                                                 + '<span class="indent"></span>'
                                                 + '<input type="hidden" class="description" value=" '+this.description+'"/>'
@@ -80,7 +86,7 @@
                             })
                         }else{
                             $(".treeview ul").append(
-                                    '<li class="list-group-item children1" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'">'
+                                    '<li class="list-group-item parent" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'">'
                                     + '<input type="hidden" class="description" value=" '+this.description+'"/>'
 
                                     +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
@@ -89,36 +95,37 @@
                             );//第一层添加
                         }
                     });
-                    $(".list-group-item").unbind().click(function(){
 
-                        var listId = $(this).attr("id");//获取点击时该栏目的ID
-                        var thispid=$(this).attr("pid");
-                        var level=$(this).attr("level");
-                        var thisneme=$(this).text();
-                        $("#hidden_this_id").val(listId);
-                        $(".add-name").val(thisneme);
-                        $(".add-describe").val($(this).children(".description").val());
-                        if(thispid!="0"){
-                            var parent_name=$(this).prevAll(".parent").first().text()
-                            $(".add-parent").val(parent_name);//上级科室
-                        }
-                        $(this).addClass("checked").siblings().removeClass("checked");//表单切换
-
-                        $(this).nextAll(".children1").each(function(){//展开关闭子科室功能
-                            console.log("111");
-                            thispid=$(this).attr("pid");//获取需要展开的子ID
-                            if(thispid==listId){
-                                $(this).toggle();
-                            }
-                        })
-
-                        getChild();//展开关闭功能
-                        addChild(listId,level,thisneme);//添加子科室功能
-                    });
-                    editall();//更改当前栏目内容
-                    deleteall();//删除科室
                 },
 
+            });
+        }
+
+
+        function   listclick(){//dom之后添加事件
+            $(".list-group-item").unbind().click(function(){
+
+                var listId = $(this).attr("id");//获取点击时该栏目的ID
+                var thispid=$(this).attr("pid");
+                var level=$(this).attr("level");
+                var thisneme=$(this).text();
+                $("#hidden_this_id").val(listId);
+                $(".add-name").val(thisneme);
+                $(".add-describe").val($(this).children(".description").val());
+                if(thispid!="0"){
+                    var parent_name=$(this).prevAll(".parent").first().text()
+                    $(".add-parent").val(parent_name);//上级科室
+                }
+                $(this).addClass("checked").siblings().removeClass("checked");//表单切换
+
+                $(this).nextAll(".children1").each(function(){//展开关闭子科室功能
+                    thispid=$(this).attr("pid");//获取需要展开的子ID
+                    if(thispid==listId){
+                        $(this).toggle();
+                    }
+                })
+                getChild();//展开关闭功能
+                addChild(listId,level,thisneme);//添加子科室功能
             });
         }
         function   getChild(){
@@ -174,11 +181,6 @@
                                         +'<span class="icon"><i class="glyphicon glyphicon-plus "></i></span>'
                                 );
                             }
-                            $(".list-group-item").unbind().click(function(){
-                                $(this).addClass("checked").siblings().removeClass("checked");//表单切换
-                                getChild();//展开关闭功能
-                                deleteall();//删除科室
-                            });
                         }
                     })
                 })
@@ -212,7 +214,7 @@
 
         function deleteall(){
 
-           $("#delete").click(function(){
+           $("#delete").unbind().click(function(){
                var thisid=$("#hidden_this_id").val();
                var qj={id:thisid}
                $.ajax({
@@ -223,8 +225,9 @@
                    data:qj,
                    success: function (result) {
                        if(result.message=="删除成功"){
-                           $("#"+thisid).remove();
-                           //$("#"+thisid);
+                           $(result.data.rows).each(function(){
+                               $("#"+this).remove();
+                           })
                            layer.msg(result.message, {icon: 1,time: 1000});
                        } else{
                            layer.msg(result.message, {icon: 1,time: 1000});
@@ -261,11 +264,7 @@
                                 layer.msg(result.message, {icon: 1,time: 1000});
                             }
 
-                            $(".list-group-item").unbind().click(function(){
-                                $(this).addClass("checked").siblings().removeClass("checked");//表单切换
-                                getChild();//展开关闭功能
-                                deleteall();//删除科室
-                            });
+
                         }
                     })
                 });
@@ -282,7 +281,7 @@
         <div class="col-sm-5">
             <div class="ibox">
                 <div class="ibox-title overflow">
-                    <h5>事件</h5>
+                    <h5>科室列表</h5>
                     <input type="button" class="btn  btn_pl btn-success right"  id="new-add-father" value="新增科室">
                 </div>
                 <div class="ibox-content">
