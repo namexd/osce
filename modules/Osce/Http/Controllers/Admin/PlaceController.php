@@ -17,6 +17,14 @@ use Modules\Osce\Http\Controllers\CommonController;
 class PlaceController extends CommonController
 {
     /**
+     * 测试
+     * /osce/admin/place/test
+     */
+    public function getTest(){
+        return view('osce::admin.resourcemanage.clinicalcase');
+    }
+
+    /**
      * 获取场所列表,根据场所类来查找
      * @api       GET /osce/admin/place/place-list
      * @access    public
@@ -112,6 +120,15 @@ class PlaceController extends CommonController
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
+    }
+
+
+    /**
+     * 考场新增
+     */
+    public function getAddPlace(Request $request)
+    {
+        return view('osce::admin.resourcemanage.examroom_add');
     }
 
     public function postEditPlace(Request $request)
