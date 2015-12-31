@@ -132,11 +132,14 @@
                     url: "{{route('msc.admin.laboratory.getFloor')}}",
                     data: {id:id},
                     success: function(msg){
+                        //console.log(msg);
                         if(msg){
-                            $(msg).each(function(i,k){
 
-                                opstr += '<option value="'+i+'">'+k+'</option>';
+                            $.each($(msg),function(i,n){
+                                //console.log(n);
+                                opstr += '<option value="'+n+'">'+n+'楼</option>';
                             });
+                            //console.log(opstr);
                             $('.floor').html(opstr);
                         }
                     }
@@ -152,6 +155,7 @@
                 $('input[name=short_name]').val($(this).parent().parent().find('.short_name').val());
                 $('input[name=enname]').val($(this).parent().parent().find('.enname').val());
                 $('input[name=short_enname]').val($(this).parent().parent().find('.short_enname').val());
+                $('input[name=total]').val($(this).parent().parent().find('.total').val());
 
                 $('.school option').each(function(){
                     if($(this).val() == $('.lname').attr('data')){
@@ -291,6 +295,7 @@
                                     <input type="hidden" class="short_name" value="{{@$v->short_name}}">
                                     <input type="hidden" class="enname" value="{{@$v->enname}}">
                                     <input type="hidden" class="short_enname" value="{{@$v->short_enname}}">
+                                    <input type="hidden" class="total" value="{{@$v->total}}">
                                     <td>
                                         <a href=""  data="{{$v['id']}}"  class="state1 edit update" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                                             <span>编辑</span>
@@ -389,12 +394,12 @@
                     <input type="text" class="form-control name add-name" name="code" value="" />
                 </div>
             </div>
-            {{--<div class="form-group">--}}
-                {{--<label class="col-sm-3 control-label">容量</label>--}}
-                {{--<div class="col-sm-9">--}}
-                    {{--<input type="text" class="form-control describe add-describe" name="capacity" />--}}
-                {{--</div>--}}
-            {{--</div>--}}
+            <div class="form-group">
+                <label class="col-sm-3 control-label">容量</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control describe add-describe" name="total" />
+                </div>
+            </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">管理员</label>
                 <div class="col-sm-9">
