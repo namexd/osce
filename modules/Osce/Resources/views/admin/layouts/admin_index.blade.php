@@ -3,21 +3,21 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 @stop
 @section('head_css')
-    <link href="{{asset('msc/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
-    <link href="{{asset('msc/admin/plugins/css/font-awesome.min.css?v=4.3.0')}}" rel="stylesheet">
-    <link href="{{asset('msc/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
-    <link href="{{asset('msc/admin/plugins/css/style.min.css?v=3.0.0')}}" rel="stylesheet">
-    <link href="{{asset('msc/wechat/jquery-confirm/jquery-confirm.css')}}" rel="stylesheet">
-    <link href="{{asset('msc/common/css/bootstrapValidator.css')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/css/font-awesome.min.css?v=4.3.0')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/css/style.min.css?v=3.0.0')}}" rel="stylesheet">
+    <link href="{{asset('osce/wechat/jquery-confirm/jquery-confirm.css')}}" rel="stylesheet">
+    <link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 @stop
 
 @section('head_js')
-    <script src="{{asset('msc/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/jquery-ui-1.10.4.min.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
-    <script src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/jquery-ui-1.10.4.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
+    <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <!-- 自定义js -->
-    <script src="{{asset('msc/wechat/jquery-confirm/jquery-confirm.js')}}"></script>
+    <script src="{{asset('osce/wechat/jquery-confirm/jquery-confirm.js')}}"></script>
 @stop
 @section('head_style')
     <style type="text/css">
@@ -53,16 +53,16 @@
 <link href="{{asset('osce/admin/css/common.css')}}" rel="stylesheet">
 <!-- 全局js -->
 
-<script src="{{asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
-<script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
-<script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/sliosceroll/jquery.sliosceroll.min.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 
 <!-- 自定义js -->
-<script src="{{asset('msc/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
-<script type="text/javascript" src="{{asset('msc/admin/plugins/js/contabs.min.js')}}"></script>
-<script src="{{asset('msc/admin/plugins/js/content.min.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
+<script type="text/javascript" src="{{asset('osce/admin/plugins/js/contabs.min.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/content.min.js')}}"></script>
 <!-- 第三方插件 -->
-<script src="{{asset('msc/admin/plugins/js/plugins/pace/pace.min.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/pace/pace.min.js')}}"></script>
 
 @show{{-- footer区域javscript脚本 --}}
 

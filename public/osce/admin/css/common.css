@@ -186,3 +186,7 @@ a{-webkit-touch-callout:none;}
 .img_box li{float:left;width:240px;margin:0 10px 10px 0;position: relative;}
 .img_box li .del_img{background:rgba(255,255,255,.5);position:absolute;right:10px;top:10px;width:20px;cursor:pointer;height:20px;line-height:18px;text-align:center;border-radius:50%;}
 .img_box li .del_img:hover{background:rgba(255,255,255,1);}
+/*当前路径*/
+.route-active{
+    font-weight: 700;
+}
