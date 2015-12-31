@@ -87,7 +87,14 @@
                 $('input[name=name]').val($(this).parent().parent().find('.name').html());
 //                $('input[name=]').val($(this).parent().parent().find('.floor').attr('data'));
                 $('input[name=detail]').val($(this).parent().parent().find('.detail').html());
-//                var sname = $(this).parent().parent().find('.sname').html();
+                var devices = $(this).parent().parent().find('.catename').attr('data');
+//                alert(devices);
+                $('.cate option').each(function(){
+                    if($(this).val() == devices){
+                        $(this).attr('selected','selected');
+                    }
+                });
+                
                 var status = '';
                 if($(this).parent().parent().find('.status').html() == '正常'){
                     status = 1;
@@ -264,7 +271,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
                 <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="devices_cate_id">
+                    <select id="select_Category"   class="form-control m-b cate" name="devices_cate_id">
                         <option value="-1">请选择类型</option>
                         <option value="1">耗材</option>
                         <option value="2">模型</option>
