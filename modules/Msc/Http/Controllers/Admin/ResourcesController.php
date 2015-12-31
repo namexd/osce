@@ -39,11 +39,11 @@ class ResourcesController extends MscController
     public function  getResourcesIndex(Request $request)
     {
         $this->validate($request, [
-            'keyword ' => 'sometimes',
+            'keyword' => 'sometimes',
             'status' => 'sometimes|in:1,2',
             'devices_cate_id' => 'sometimes|in:1,2,3,4'
         ]);
-        $keyword = urldecode(e($request->input('keyword ')));
+        $keyword = urldecode(e($request->input('keyword')));
         $status = (int)$request->input('status');
         $devices_cate_id = (int)$request->input('devices_cate_id');
         $devices = new Devices();
@@ -65,6 +65,8 @@ class ResourcesController extends MscController
 //        dd($list);
         return view('msc::admin.systemtable.resource_table',[
             'list'         =>       $list,
+            'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
+            'status'=>$request->input('status')?$request->input('status'):'',
         ]);
     }
 
@@ -91,6 +93,7 @@ class ResourcesController extends MscController
      */
 
     public function postResourcesAdd(Request $request){
+//        dd(111111111111111);
         $this->validate($request,[
             'name'   => 'required|max:20',
             'devices_cate_id'=>'required',
@@ -176,20 +179,19 @@ class ResourcesController extends MscController
      * 修改状态
      */
 
-      public function getResourcesStatus($id){
-          $professionId = intval($id);
-
-          $professionModel = new Devices();
-
-          $result = $professionModel->changeStatus($professionId );
-          if ($result) {
-              return response()->json(
-                  ['success' => true]
-              );
+      public function getResourcesStatus(Devices $devices)
+      {
+          $id = urlencode(e(Input::get('id')));
+          if ($id) {
+              $data = $devices->where('id', '=', $id)->update(['status' => Input::get('type')]);
+              if ($data != false) {
+                  return redirect()->back()->withInput()->withErrors('停用成功');
+              } else {
+                  return redirect()->back()->withInput()->withErrors('系统异常');
+              }
+          } else {
+              return redirect()->back()->withInput()->withErrors('系统异常');
           }
-          return response()->json(
-              ['success' => false]
-          );
       }
 
     /**

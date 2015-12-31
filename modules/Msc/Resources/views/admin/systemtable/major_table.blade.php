@@ -107,10 +107,8 @@
                 }
             })
             $('.edit').click(function () {
-                $('input[name=name]').val($(this).parent().parent().find('.code').html());
-//                $('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));
-//                $('input[name=floor_buttom]').val($(this).parent().parent().find('.floor').attr('data-b'));
-                $('input[name=address]').val($(this).parent().parent().find('.name').html());
+                $('input[name=name]').val($(this).parent().parent().find('.name').html());;
+                $('input[name=code]').val($(this).parent().parent().find('.code').html());
 //                var sname = $(this).parent().parent().find('.sname').html();
                 var status = '';
                 if($(this).parent().parent().find('.status').html() == '正常'){
@@ -137,8 +135,8 @@
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
-                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{$keyword}}">
-                        <input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">
+                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
+                        {{--<input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">--}}
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -172,13 +170,13 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="{{ route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword]) }}">全部</a>
+                                            <a href="{{ route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword])}}">全部</a>
                                         </li>
                                         <li>
                                             <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'2'])}}">停用</a>
+                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -260,5 +258,4 @@
             </div>
         </div>
     </form>
-
-@stop
+ @stop

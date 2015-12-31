@@ -19,15 +19,15 @@ use DB;
 class ProfessionController extends MscController
 {
    /**
-    *×¨ÒµÁĞ±í
+    *ä¸“ä¸šåˆ—è¡¨
     * @method GET
     * @url /msc/admin/profession/profession-list
     * @access public
     *
-    * @param Request $request getÇëÇó<br><br>
-    * <b>postÇëÇó×Ö¶Î£º</b>
-    * * string        keyword       ×¨ÒµÃû³Æ
-    * * int           status        ×¨Òµ×´Ì¬(1£ºÕı³££¬2£ºÍ£ÓÃ)
+    * @param Request $request getè¯·æ±‚<br><br>
+    * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+    * * string        keyword       ä¸“ä¸šåç§°
+    * * int           status        ä¸“ä¸šçŠ¶æ€(1ï¼šæ­£å¸¸ï¼Œ2ï¼šåœç”¨)
     * @return  view
     *
     * @version 1.0
@@ -42,8 +42,9 @@ class ProfessionController extends MscController
          'keyword '   =>    'sometimes',
          'status'  =>   'sometimes|in:1,2'
       ]);
-      $keyword  =   urldecode(e($request->input('keyword ')));
+      $keyword  =   urldecode(e($request->input('keyword')));
       $status  = (int)$request->input('status');
+//       dd($keyword);
       $profession = new StdProfessional();
       $pagination=$profession-> getprofessionList( $keyword,$status);
 //       dd($pagination);
@@ -56,32 +57,29 @@ class ProfessionController extends MscController
              'status'    => is_null($itme->status) ? '-' : $itme->status,
          ];
       }
-//       ×¨Òµ×´Ì¬
-
+//       ä¸“ä¸šçŠ¶æ€
 //       dd($list);
        $ProfessionStatus =  config('msc.profession_status');
-
-       $keyword = Input::get('keyword')?Input::get('keyword'):'';
-
     return view('msc::admin.systemtable.major_table',[
         'list'         =>       $list,
-        'keyword'=>$keyword,
+        'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
+        'status'=>$request->input('status')?$request->input('status'):'',
         'ProfessionStatus'=>$ProfessionStatus
     ]);
    }
 
     /**
-     * ĞÂÔö×¨Òµ
+     * æ–°å¢ä¸“ä¸š
      *
      * @method post
      * @url /msc/admin/profession/profession-add
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        name       ×¨ÒµÃû×Ö(±ØĞëµÄ)
-     * * int            code       ×¨Òµ´úÂë(±ØĞëµÄ)
-     * * int            status       ×´Ì¬(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        name       ä¸“ä¸šåå­—(å¿…é¡»çš„)
+     * * int            code       ä¸“ä¸šä»£ç (å¿…é¡»çš„)
+     * * int            status       çŠ¶æ€(å¿…é¡»çš„)
      * @return   json
      *
      * @version 1.0
@@ -101,22 +99,22 @@ class ProfessionController extends MscController
         $profession = new StdProfessional();
         $result =$profession->postAddProfession($data);
         if($result){
-            return redirect()->back()->withInput()->withErrors('ĞÂÔö³É¹¦');
+            return redirect()->back()->withInput()->withErrors('æ–°å¢æˆåŠŸ');
         }
 
-            return redirect()->back()->withInput()->withErrors('ĞÂÔöÊ§°Ü');
+            return redirect()->back()->withInput()->withErrors('æ–°å¢å¤±è´¥');
     }
 
 
     /**
-     * ±à¼­»ØÏÔ×¨Òµ
+     * ç¼–è¾‘å›æ˜¾ä¸“ä¸š
      * @method GET
      * @url /msc/admin/profession/profession-edit
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * int    id      (±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * int    id      (å¿…é¡»çš„)
      * @return json
      *
      * @version 1.0
@@ -140,17 +138,17 @@ class ProfessionController extends MscController
     }
 
     /**
-     *Ìá½»±à¼­×¨Òµ
+     *æäº¤ç¼–è¾‘ä¸“ä¸š
      * @method post
      * @url /msc/admin/profession/profession-save
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØĞëµÄ)
-     * *string        name       ×¨ÒµÃû×Ö(±ØĞëµÄ)
-     * * int          code       ×¨Òµ´úÂë(±ØĞëµÄ)
-     * * int         status       ×´Ì¬(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * *int   ID    (å¿…é¡»çš„)
+     * *string        name       ä¸“ä¸šåå­—(å¿…é¡»çš„)
+     * * int          code       ä¸“ä¸šä»£ç (å¿…é¡»çš„)
+     * * int         status       çŠ¶æ€(å¿…é¡»çš„)
      *
      * @return json
      *
@@ -171,23 +169,23 @@ class ProfessionController extends MscController
         $profession = new StdProfessional();
         $result =$profession->postSaveProfession($data);
         if ($result) {
-            return redirect()->back()->withInput()->withErrors('ĞŞ¸Ä³É¹¦');
+            return redirect()->back()->withInput()->withErrors('ä¿®æ”¹æˆåŠŸ');
 
         }
-        return redirect()->back()->withInput()->withErrors('ĞŞ¸ÄÊ§°Ü');
+        return redirect()->back()->withInput()->withErrors('ä¿®æ”¹å¤±è´¥');
     }
 
 
 
     /**
-     *¸Ä±ä×¨ÒµµÄ×´Ì¬
+     *æ”¹å˜ä¸“ä¸šçš„çŠ¶æ€
      * @method get
      * @url /msc/admin/profession/profession-status/{id}
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * *int   ID    (å¿…é¡»çš„)
      *
      * @return json
      *
@@ -204,12 +202,12 @@ class ProfessionController extends MscController
         if($id){
             $data = $professional->where('id','=',$id)->update(['status'=>Input::get('type')]);
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('Í£ÓÃ³É¹¦');
+                return redirect()->back()->withInput()->withErrors('åœç”¨æˆåŠŸ');
             }else{
-                return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+                return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
 
 
@@ -230,14 +228,14 @@ class ProfessionController extends MscController
     }
 
     /**
-     *×¨ÒµÉ¾³ı
+     *ä¸“ä¸šåˆ é™¤
      * @method get
      * @url /msc/admin/profession/profession-deletion/{id}
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * *int   ID    (å¿…é¡»çš„)
      *
      * @return json
      *
@@ -251,22 +249,22 @@ class ProfessionController extends MscController
         if($id){
             $data = DB::connection('msc_mis')->table('student_professional')->where('id','=',$id)->delete();
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('É¾³ı³É¹¦');
+                return redirect()->back()->withInput()->withErrors('åˆ é™¤æˆåŠŸ');
             }else{
-                return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+                return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 
     /**
-     * µ¼Èë×¨Òµ±í
+     * å¯¼å…¥ä¸“ä¸šè¡¨
      * @api post /msc/admin/profession/profession-import
      * @access public
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string       training       ¿Î³ÌÎÄ¼şµÄexcl(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string       training       è¯¾ç¨‹æ–‡ä»¶çš„excl(å¿…é¡»çš„)
      * @return object
      * @version 0.8
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -279,20 +277,20 @@ class ProfessionController extends MscController
         try{
             $data = Common::getExclData($request, 'training');
             $professionInfo = array_shift($data);
-            //½«ÖĞÎÄÍ·×ª»»·­Òë³ÉÓ¢ÎÄ
+            //å°†ä¸­æ–‡å¤´è½¬æ¢ç¿»è¯‘æˆè‹±æ–‡
             $professionInfo = Common::arrayChTOEn($professionInfo, 'msc.importForCnToEn.profession_group');
-            //ÒÑ¾­´æÔÚµÄÊı¾İ
+            //å·²ç»å­˜åœ¨çš„æ•°æ®
             $dataHaven = [];
-            //Ìí¼ÓÊ§°ÜµÄÊı¾İ
+            //æ·»åŠ å¤±è´¥çš„æ•°æ®
             $dataFalse = [];
-            //ÅĞ¶ÏÊÇ·ñ´æÔÚÕâ¸ö×¨Òµ
+            //åˆ¤æ–­æ˜¯å¦å­˜åœ¨è¿™ä¸ªä¸“ä¸š
             foreach ($professionInfo as $professionData) {
-                //´¦Àí×´Ì¬status
+                //å¤„ç†çŠ¶æ€status
                 switch ( $professionData['status']){
-                    case "Õı³£":
+                    case "æ­£å¸¸":
                         $professionData['status'] = 1;
                         break;
-                    case "Í£ÓÃ":
+                    case "åœç”¨":
                         $professionData['status'] = 2;
                         break;
                 };

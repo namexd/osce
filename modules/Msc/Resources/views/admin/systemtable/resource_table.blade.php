@@ -25,13 +25,23 @@
             });
 //            停用
             $(".stop").click(function(){
-                var this_id = $(this).siblings(".setid").val();
+                var this_id = $(this).attr('data');
+                var type = $(this).attr('data-type');
+//                alert(this_id);
+                var url = "/msc/admin/resources/resources-status?id="+this_id+"&type="+type;
+                var str = '';
+                if(type == 1){
+                    str = '您确定要启用实验室？';
+                }else{
+
+                    str = '您确定要停用实验室？';
+                }
 
                 //询问框
                 layer.confirm('您确定要停用该资源？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    layer.msg('停用成功', {icon: 1,time: 1000});
+                    window.location.href=url;
                 });
             });
 //            编辑
@@ -72,6 +82,22 @@
 
                 }
             });
+
+            $('.edit').click(function () {
+                $('input[name=name]').val($(this).parent().parent().find('.name').html());
+                $('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));
+                $('input[name=address]').val($(this).parent().parent().find('.detail').html());
+//                var sname = $(this).parent().parent().find('.sname').html();
+                var status = '';
+                if($(this).parent().parent().find('.status').html() == '正常'){
+                    status = 1;
+                }else{
+                    status = 0;
+                }
+                $('#add_from').attr('action','{{route("msc.admin.resources.ResourcesSave")}}');
+                var id = $(this).attr("data");
+                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+            });
         })
     </script>
 @stop
@@ -83,7 +109,8 @@
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
-                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="">
+                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
+                        <input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -113,16 +140,16 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="#">耗材</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'1'])}}">耗材</a>
                                     </li>
                                     <li>
-                                        <a href="#">设备</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'2'])}}">模型</a>
                                     </li>
                                     <li>
-                                        <a href="#">模型</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'3'])}}">设备</a>
                                     </li>
                                     <li>
-                                        <a href="#">虚拟设备</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'4'])}}">虚拟设备</a>
                                     </li>
                                 </ul>
                             </div>
@@ -136,13 +163,13 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="#">全部</a>
+                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword])}}">全部</a>
                                     </li>
                                     <li>
-                                        <a href="#">正常</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                     </li>
                                     <li>
-                                        <a href="#">停用</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
                                     </li>
                                 </ul>
                             </div>
@@ -155,17 +182,21 @@
                         @foreach($list as $val)
                     <tr>
                         <td>{{$val['id']}}</td>
-                        <td>{{$val['name']}}</td>
-                        <td>{{$val['catename']}}</td>
-                        <td>{{$val['detail']}}</td>
-                        @if($val['status']==1)
-                            <span>正常</span>
-                        @else
-                            <span class="state2">停用</span>
-                        @endif
+                        <td class="name">{{$val['name']}}</td>
+
+                        <td class="catename"   data="{{$val['devices_cate_id']}}">{{$val['catename']}}</td>
+
+                        <td class="detail">{{$val['detail']}}</td>
+
+                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
                         <td>
-                            <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
-                            <a class="state2 modal-control stop">停用</a>
+                            <a href=""   data="{{$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
+
+                            @if($val['status']==1)
+                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
+                            @else
+                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">正常</a>
+                            @endif
                             <a   data="{{$val['id']}}" class="state2 edit_role modal-control delete">删除</a>
                             <input type="hidden" class="setid" value="1"/>
                         </td>
@@ -230,9 +261,9 @@
                 <div class="col-sm-9">
                     <select id="select_Category"   class="form-control m-b" name="devices_cate_id">
                         <option value="-1">请选择类型</option>
-                        <option value="1">模型</option>
-                        <option value="2">设备</option>
-                        <option value="3">耗材</option>
+                        <option value="1">耗材</option>
+                        <option value="2">模型</option>
+                        <option value="3">设备</option>
                         <option value="4">虚拟设备</option>
                     </select>
                 </div>

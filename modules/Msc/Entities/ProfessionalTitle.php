@@ -28,14 +28,16 @@ class ProfessionalTitle extends Model
 
     public function getJobTitleList($keyword='', $status=''){
         $builder = $this;
-        if($status){
-            $builder = $builder->where('status','=',$status);
-        }
 
         if ($keyword)
         {
             $builder = $builder->where('name','like','%'.$keyword.'%');
         }
+        if($status){
+            $builder = $builder->where('status','=',$status);
+        }
+
+
         return $builder->orderBy('id')->paginate(config('msc.page_size',10));
     }
 

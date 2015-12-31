@@ -19,15 +19,15 @@ class ProfessionalTitleController extends Controller
 {
 
     /**
-     *Ö°³ÆÁĞ±í
+     *èŒç§°åˆ—è¡¨
      * @method GET
      * @url /msc/admin/professionaltitle/job-title-index
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        keyword       ×¨ÒµÃû³Æ
-     * * int           status        ×¨Òµ×´Ì¬(1£ºÕı³££¬2£ºÍ£ÓÃ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        keyword       ä¸“ä¸šåç§°
+     * * int           status        ä¸“ä¸šçŠ¶æ€(1ï¼šæ­£å¸¸ï¼Œ2ï¼šåœç”¨)
      * @return  view
      *
      * @version 1.0
@@ -42,9 +42,8 @@ class ProfessionalTitleController extends Controller
             'keyword ' => 'sometimes',
             'status' => 'sometimes|in:1,2',
         ]);
-        $keyword = urldecode(e($request->input('keyword ')));
+        $keyword = urldecode(e($request->input('keyword')));
         $status = (int)$request->input('status');
-
         $tabulate = new ProfessionalTitle();
         $pagination =  $tabulate->getJobTitleList($keyword, $status);
         $list = [];
@@ -61,22 +60,24 @@ class ProfessionalTitleController extends Controller
 
         return view('msc::admin.systemtable.title_table',[
             'list'         =>       $list,
+            'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
+            'status'=>$request->input('status')?$request->input('status'):'',
         ]);
     }
 
 
     /**
-     * ĞÂÔöÖ°³Æ
+     * æ–°å¢èŒç§°
      *
      * @method post
      * @url /msc/admin/professionaltitle/holder-add
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        name       Éè±¸Ãû(±ØĞëµÄ)
-     * *string         detail     Ö°³ÆËµÃ÷(±ØĞëµÄ))
-     * * int            status       ×´Ì¬(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        name       è®¾å¤‡å(å¿…é¡»çš„)
+     * *string         detail     èŒç§°è¯´æ˜(å¿…é¡»çš„))
+     * * int            status       çŠ¶æ€(å¿…é¡»çš„)
      * @return   json
      *
      * @version 1.0
@@ -98,24 +99,24 @@ class ProfessionalTitleController extends Controller
         ];
         $ResourcesAdd= ProfessionalTitle::create($data);
         if($ResourcesAdd != false){
-            return redirect()->back()->withInput()->withErrors('Ìí¼Ó³É¹¦');
+            return redirect()->back()->withInput()->withErrors('æ·»åŠ æˆåŠŸ');
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 
     /**
-     * ±à¼­»ØÏÔÖ°³ÆÔİÊ±Ã»ÓĞÓÃ
+     * ç¼–è¾‘å›æ˜¾èŒç§°æš‚æ—¶æ²¡æœ‰ç”¨
      *
      * @method post
      * @url /msc/admin/professionaltitle/holder-edit
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        name       Éè±¸Ãû(±ØĞëµÄ)
-     * *string         detail     Ö°³ÆËµÃ÷(±ØĞëµÄ))
-     * * int            status       ×´Ì¬(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        name       è®¾å¤‡å(å¿…é¡»çš„)
+     * *string         detail     èŒç§°è¯´æ˜(å¿…é¡»çš„))
+     * * int            status       çŠ¶æ€(å¿…é¡»çš„)
      * @return   json
      *
      * @version 1.0
@@ -139,33 +140,34 @@ class ProfessionalTitleController extends Controller
      * User: zhouqiang
      * Date: 2015/12/30 0028
      * Time: 13:01
-     * ĞŞ¸ÄÖ°³Æ
+     * ä¿®æ”¹èŒç§°
      */
 
     public  function postHolderSave(Request $request){
         $this->validate($request,[
+            'id' => 'sometimes|min:0|max:10',
             'name'   => 'required|max:20',
-            'detail'   =>  'required|max:20',
+            'description'   =>  'required|max:50',
             'status' =>   'required|in:1,2'
         ]);
         $data=[
             'name'=>Input::get('name'),
-            'detail'=>Input::get('detail'),
+            'description'=>Input::get('description'),
             'status'=>Input::get('status'),
         ];
         $Save = DB::connection('msc_mis')->table('professional_title')->where('id','=',urlencode(e(Input::get('id'))))->update($data);
         if( $Save != false){
-            return redirect()->back()->withInput()->withErrors('ĞŞ¸Ä³É¹¦');
+            return redirect()->back()->withInput()->withErrors('ä¿®æ”¹æˆåŠŸ');
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
-    /**
+    /** @url /msc/admin/professionaltitle/holder-status
      * Created by PhpStorm.
      * User: zhouqiang
      * Date: 2015/12/30 0028
      * Time: 13:01
-     * ĞŞ¸ÄÖ°³Æ×´Ì¬
+     * ä¿®æ”¹èŒç§°çŠ¶æ€
      */
 
     public function getHolderStatus(ProfessionalTitle $professionalTitle){
@@ -173,23 +175,23 @@ class ProfessionalTitleController extends Controller
         if($id){
             $data = $professionalTitle->where('id','=',$id)->update(['status'=>Input::get('type')]);
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('Í£ÓÃ³É¹¦');
+                return redirect()->back()->withInput()->withErrors('åœç”¨æˆåŠŸ');
             }else{
-                return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+                return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
-    }
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
+        }
     }
     /**
-     *Ö°³ÆÉ¾³ı
+     *èŒç§°åˆ é™¤
      * @method get
      * @url /msc/admin/professionaltitle/holder-remove
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * *int   ID    (å¿…é¡»çš„)
      *
      * @return json
      *
@@ -204,12 +206,12 @@ class ProfessionalTitleController extends Controller
         if($id){
             $data = DB::connection('msc_mis')->table('professional_title')->where('id','=',$id)->delete();
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('É¾³ı³É¹¦');
+                return redirect()->back()->withInput()->withErrors('åˆ é™¤æˆåŠŸ');
             }else{
-                return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+                return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 

@@ -40,6 +40,13 @@ class Devices  extends Model
         {
             $builder = $builder->where($this->table.'.name','like','%'.$keyword.'%');
         }
+        if($status){
+               $builder = $builder->where($this->table.'.status',$status);
+           }
+        if($devices_cate_id){
+               $builder = $builder->where($this->table.'.devices_cate_id',$devices_cate_id);
+           }
+
         $builder = $builder->leftJoin(
             'device_cate',
             function($join){

@@ -62,10 +62,8 @@
             }
         });
         $('.edit').click(function () {
-            $('input[name=name]').val($(this).parent().parent().find('.code').html());
-//                $('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));
-//                $('input[name=floor_buttom]').val($(this).parent().parent().find('.floor').attr('data-b'));
-            $('input[name=address]').val($(this).parent().parent().find('.name').html());
+            $('input[name=name]').val($(this).parent().parent().find('.name').html());
+            $('input[name=description]').val($(this).parent().parent().find('.describe').html());
 //                var sname = $(this).parent().parent().find('.sname').html();
             var status = '';
             if($(this).parent().parent().find('.status').html() == '正常'){
@@ -73,7 +71,7 @@
             }else{
                 status = 0;
             }
-            $('#add_from').attr('action','{{route("msc.admin.resources.ResourcesSave")}}');
+            $('#add_from').attr('action','{{route("msc.admin.professionaltitle.HolderSave")}}');
             var id = $(this).attr("data");
             $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
         });
@@ -89,7 +87,7 @@
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
-                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="">
+                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-default" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -116,10 +114,10 @@
                             <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button">状态<span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="">正常</a>
+                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                 </li>
                                 <li>
-                                    <a href="">停用</a>
+                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
                                 </li>
                             </ul>
                         </div>
@@ -134,16 +132,13 @@
                         <tr>
                             <td class="number">{{ @$val['id'] }}</td>
                             <td class="name">{{ @$val['name'] }}</td>
-                            <td class="
-                            ">
+                            <td class="describe">
                                 {{ @$val['description'] }}
                             </td>
-                            <td class="type" data="{{ @$val['status'] }}">
-                                @if(@$val['status'] == 1)<span>正常</span>@else<span class="state2">停用</span>@endif
-                            </td>
+                            <td class="status" data="{{@$val['status']}}">@if(@$val['status'])正常@else<span class="state2">停用</span>@endif</td>
 
                             <td class="opera">
-                                <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" data="{{ @$val['status'] }}"><span>编辑</span></a>
+                                <a href=""   data="{{@$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span></a>
                                 @if($val['status']==1)
                                     <a   data="{{@$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
                                 @else

@@ -30,19 +30,18 @@ class StdProfessional extends Model
 
    public  function getprofessionList($keyword='',$status=''){
 
-       $connection=\DB::connection('msc_mis');
+       $builder = $this;
 
-       $professionTable=$connection->table('student_professional');
-
-        if($keyword){
-            $professionTable=$professionTable->where('name','like'.'%',$keyword.'%');
-        }
+       if ($keyword)
+       {
+           $builder = $builder->where($this->table.'.name','like','%'.$keyword.'%');
+       }
        if($status){
-           $professionTable =$professionTable->where('status','=',$status);
+           $builder = $builder->where($this->table.'.status',$status);
        }
 
 
-       return $professionTable->select(['id','name','code','status'])->orderBy('id')->paginate(config('msc.page_size',10));
+       return $builder->select(['id','name','code','status'])->orderBy('id')->paginate(config('msc.page_size',10));
    }
 
 
