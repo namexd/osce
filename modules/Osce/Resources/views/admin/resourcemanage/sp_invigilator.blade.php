@@ -18,7 +18,7 @@
     <div class="ibox-title route-nav">
         <ol class="breadcrumb">
             <li><a href="#">资源管理</a></li>
-            <li class="active">人员管理</li>
+            <li class="route-active">人员管理</li>
         </ol>
     </div>
     <div class="ibox-title header">
