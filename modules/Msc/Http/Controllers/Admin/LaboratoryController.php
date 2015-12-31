@@ -84,6 +84,7 @@ class LaboratoryController extends Controller {
             'status' => 'required',
             'floor' => 'required',
             'code' => 'required',
+            'total' => 'required|integer'
         ]);
         $user = Auth::user();
         $data = [
@@ -99,8 +100,11 @@ class LaboratoryController extends Controller {
             'created_user_id'=>$user->id,
             'floor'=>Input::get('floor'),
             'code'=>Input::get('code'),
+            'total'=>Input::get('total'),
         ];
+        //dd(Input::get('total'));
         $add = Laboratory::create($data);
+        //dd($add);
         if($data != false){
             return redirect()->back()->withInput()->withErrors('添加成功');
         }else{
@@ -128,6 +132,7 @@ class LaboratoryController extends Controller {
             'status' => 'required',
             'floor' => 'required',
             'code' => 'required',
+            'total' => 'required|integer'
         ]);
         $user = Auth::user();
         $data = [
@@ -143,6 +148,7 @@ class LaboratoryController extends Controller {
             'created_user_id'=>$user->id,
             'floor'=>Input::get('floor'),
             'code'=>Input::get('code'),
+            'total'=>Input::get('total'),
         ];
         $add = $laboratory->where('id','=',urlencode(e(Input::get('id'))))->update($data);
         if($data != false){
@@ -206,16 +212,18 @@ class LaboratoryController extends Controller {
      * 计算教学楼楼层
      */
     function get_float($ground,$underground){
+        $arr = array();
+        $brr = array();
         //地下-2楼
         for($i=$underground;$i > 0;$i--){
-            $arr[$i] = '-'.$i.'楼';
+            $arr['-'.$i] = '-'.$i;
         }
+
         //地上
         for ($i=1; $i <= $ground; $i++) {
-            $brr[$i] = $i.'楼';
+            $arr[$i] = $i;
         }
         $data = array_merge($arr,$brr);
-
         return $data;
     }
 

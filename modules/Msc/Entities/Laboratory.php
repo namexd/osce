@@ -18,7 +18,7 @@ class Laboratory extends Model
     public $incrementing	=	true;
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
-    protected $fillable 	=	['name', 'short_name', 'enname','short_enname','location_id','open_type','manager_user_id','created_user_id','status','floor','code'];
+    protected $fillable 	=	['name', 'short_name','total', 'enname','short_enname','location_id','open_type','manager_user_id','created_user_id','status','floor','code'];
     public $search          =   [];
 
     //判断实验室类型
