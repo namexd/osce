@@ -39,7 +39,7 @@ class LaboratoryController extends Controller {
         $where['keyword'] = $keyword;
         $datalist = $Laboratory->getFilteredPaginateList($where);
         //$datalist = $datalist->toArray();
-       // dd($datalist);
+        //dd($datalist);
         foreach($datalist as $v){
             $v->opentype = $v->open_type;
             $v->open_type = $Laboratory->getType($v->open_type);
