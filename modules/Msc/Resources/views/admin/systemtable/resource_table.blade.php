@@ -85,8 +85,8 @@
 
             $('.edit').click(function () {
                 $('input[name=name]').val($(this).parent().parent().find('.name').html());
-                $('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));
-                $('input[name=address]').val($(this).parent().parent().find('.detail').html());
+//                $('input[name=]').val($(this).parent().parent().find('.floor').attr('data'));
+                $('input[name=detail]').val($(this).parent().parent().find('.detail').html());
 //                var sname = $(this).parent().parent().find('.sname').html();
                 var status = '';
                 if($(this).parent().parent().find('.status').html() == '正常'){
@@ -94,6 +94,11 @@
                 }else{
                     status = 0;
                 }
+                $('.state option').each(function(){
+                    if($(this).val() == status){
+                        $(this).attr('selected','selected');
+                    }
+                });
                 $('#add_from').attr('action','{{route("msc.admin.resources.ResourcesSave")}}');
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
@@ -188,14 +193,14 @@
 
                         <td class="detail">{{$val['detail']}}</td>
 
-                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
+                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">禁用</span>@endif</td>
                         <td>
                             <a href=""   data="{{$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
 
                             @if($val['status']==1)
-                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
+                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">禁用</a>
                             @else
-                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">正常</a>
+                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">恢复</a>
                             @endif
                             <a   data="{{$val['id']}}" class="state2 edit_role modal-control delete">删除</a>
                             <input type="hidden" class="setid" value="1"/>
@@ -280,7 +285,7 @@
                     <select id="select_Category"   class="form-control m-b" name="status">
                         <option value="-1">请选择状态</option>
                         <option value="1">正常</option>
-                        <option value="2">停用</option>
+                        <option value="0">停用</option>
                     </select>
                 </div>
             </div>
