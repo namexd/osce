@@ -11,5 +11,7 @@ namespace Modules\Osce\Entities;
 
 interface  MachineInterface
 {
+    public function getMachineStatuValues();
     public function addMachine($data);
+    public function editMachine($data);
 }

@@ -19,8 +19,28 @@ class Vcr extends CommonModel implements MachineInterface
     protected $table 		= 	'vcr';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	    =	['id', 'name', 'code','ip','username','password','port','channel','description'];
-    public      $search         =   [];
+    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status'];
+    public      $search    =   [];
+
+    protected $statuValues  =   [
+        0   =>  '损坏',
+        1   =>  '正常',
+    ];
+
+    /**
+     *  获取设备状态值
+     * @access public
+     * @return array
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 15:38
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getMachineStatuValues(){
+        return $this    ->  statuValues;
+    }
 
     /**
      * 新增摄像机
@@ -34,6 +54,7 @@ class Vcr extends CommonModel implements MachineInterface
      * * string        password     摄像机密码(必须的)
      * * string        port         摄像机端口(必须的)
      * * string        channel      摄像机频道(必须的)
+     * * string        status       摄像机状态(必须的)
      * * string        description  摄像机描述(必须的)
      *
      * @return object
@@ -86,5 +107,85 @@ class Vcr extends CommonModel implements MachineInterface
         }
     }
 
+    /**
+     * 编辑摄像头
+     * @access public
+     *
+     * * @param $data
+     * * string        id           摄像机ID(必须的)
+     * * string        name         摄像机名称(必须的)
+     * * string        code         摄像机编码(必须的)
+     * * string        ip           摄像机IP(必须的)
+     * * string        username     摄像机用户名(必须的)
+     * * string        password     摄像机密码(必须的)
+     * * string        port         摄像机端口(必须的)
+     * * string        status       摄像机状态(必须的)
+     * * string        channel      摄像机频道(必须的)
+     * * string        description  摄像机描述(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function editMachine($data){
+        $connection =   DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try
+        {
+            $vcr            =   $this   ->  find($data['id']);
+            if($vcr)
+            {
+                foreach($data as $feild=> $value)
+                {
+                    if($feild=='id')
+                    {
+                        continue;
+                    }
+                    $vcr    ->  $feild  =   $value;
+                }
+                if($vcr     ->  save())
+                {
+//                    $machine    =   Machine ::where('item_id','=',$vcr    ->  id)
+//                                            ->where('type','=',1)
+//                                            ->first();
+                }
+                else
+                {
+                    $machine    =   false;
+                }
+            }
+            else
+            {
+                throw new \Exception('没有找到该摄像机');
+            }
 
+//            if($machine)
+//            {
+//                $machine    ->  name    =   $data['name'];
+//                if($machine->save())
+//                {
+                    $connection -> commit();
+//                }
+//                else
+//                {
+//                    throw new \Exception('保存摄像机资源信息失败');
+//                }
+
+                return $vcr;
+//            }
+//            else
+//            {
+//                throw new   \Exception('没有找到摄像机资源信息');
+//            }
+        }
+        catch(\Exception $ex)
+        {
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
 }

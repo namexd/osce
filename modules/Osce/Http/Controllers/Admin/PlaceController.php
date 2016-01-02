@@ -139,13 +139,6 @@ class PlaceController extends CommonController
     {
         return view('osce::admin.resourcemanage.examroom_add');
     }
-
-    public function postEditPlace(Request $request)
-    {
-        //验证数据，暂时省略
-
-
-    }
     /**
      * 往place表新插入一行数据
      * @api       POST /osce/admin/place/change-status

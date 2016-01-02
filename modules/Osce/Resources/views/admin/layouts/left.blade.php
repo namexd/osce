@@ -23,7 +23,7 @@
                             </li>
                             <li><a  class="J_menuItem" href="{{route('osce.admin.Place.getPlaceList')}}">场所管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="">监考设备管理</a>
+                            <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}" target="iframe0">监考设备管理</a>
                             </li>
                         </ul>
                     </li>
