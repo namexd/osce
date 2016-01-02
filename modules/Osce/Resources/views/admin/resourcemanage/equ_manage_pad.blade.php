@@ -29,7 +29,7 @@
                 <h5 class="title-label">设备管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.machine.getAddPad')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -37,9 +37,10 @@
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            <li class=""><a href="#">摄像机</a></li>
-                            <li class="active"><a href="#">Pad</a></li>
-                            <li class=""><a href="#">腕表</a></li>
+                            @forelse($options as $key=>$option)
+                                <li class="{{$_GET['cate_id']==$option['id']? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
+                            @empty
+                            @endforelse
                         </ul>
                     </div>
                 </div>
@@ -67,13 +68,23 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>设备名称</th>
                         <th>设备ID</th>
+                        <th>设备名称</th>
                         <th>状态</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
+                    @forelse($list as $item)
+                        <tr>
+                            <td>{{$item->id}}</td>
+                            <td>{{$item->id}}</td>
+                            <td>{{$item->name}}</td>
+                            <td>{{$machineStatuValues[$item->status]}}</td>
+                            <td><a href="{{route('osce.admin.machine.getEditPad',['id'=>$item->id])}}">编辑</a></td>
+                        </tr>
+                    @empty
+                    @endforelse
 
                     </tbody>
                 </table>

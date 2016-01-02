@@ -88,7 +88,7 @@
 
                                 <div class="col-sm-10">
                                     <input type="text" required class="form-control" id="name" name="name" value="{{$item['name']}}">
-                                    <input type="hidden" required class="form-control" id="cate_id" name="cate_id" value="1" />
+                                    <input type="hidden" required class="form-control" id="cate_id" name="cate_id" value="3" />
                                     <input type="hidden" required class="form-control" id="id" name="id" value="{{$item['id']}}" />
                                 </div>
                             </div>
@@ -103,59 +103,12 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">IP地址</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="ip" name="ip" value="{{$item['ip']}}">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">用户名</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="username" name="username" value="{{$item['username']}}">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">密码</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="password" name="password" value="{{$item['password']}}">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">端口</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="port" name="port" value="{{$item['port']}}">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">网口号</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="channel" name="channel" value="{{$item['channel']}}">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label">设备状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
                                         <option value="1">正常</option>
                                         <option value="0">损坏</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
-                                <label class="col-sm-2 control-label">功能描述</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text" ng-model="description" id="description" class="form-control" name="description" value="{{$item['description']}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

@@ -9,9 +9,13 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\Vcr;
+use Modules\Osce\Entities\Pad;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\MachineCategory;
 use Modules\Osce\Http\Controllers\CommonController;
+use Predis\Transaction\AbortedMultiExecException;
 
 class MachineController extends CommonController
 {
@@ -152,7 +156,20 @@ class MachineController extends CommonController
         $list   =   $model  ->  paginate(config('osce.page_size'));
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
 
-        return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+        switch($cate_id)
+        {
+            case 1:
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                break;
+            case 2:
+                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                break;
+            case 3:
+                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                break;
+            default:
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+        }
     }
 
     /**
@@ -172,6 +189,8 @@ class MachineController extends CommonController
     private function getMachineModel($cate_id){
         $config =   [
             1   =>  'Vcr',
+            2   =>  'Pad',
+            3   =>  'Watch',
         ];
         $name   =   '\Modules\Osce\Entities\\'.$config[$cate_id];
         return  new $name;
@@ -185,10 +204,14 @@ class MachineController extends CommonController
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * 摄像机
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        name         摄像机名称(必须的)
+     * * string        code         摄像机编码(必须的)
+     * * string        ip           摄像机IP(必须的)
+     * * string        username     摄像机用户名(必须的)
+     * * string        password     摄像机密码(必须的)
+     * * string        port         摄像机端口(必须的)
+     * * string        channel      摄像机频道(必须的)
+     * * string        description  摄像机描述(必须的)
      *  Pad
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
@@ -220,6 +243,13 @@ class MachineController extends CommonController
                 case 1:
                     $machine    =     $this   ->  addCameras($request);
                     break;
+                case 2:
+                    $machine    =     $this   ->  addPad($request);
+                    break;
+                case 3:
+                    $machine    =     $this   ->  addWatch($request);
+                    break;
+
                 default :
                     $machine    =     $this   ->  addCameras($request);
             }
@@ -275,6 +305,13 @@ class MachineController extends CommonController
                 case 1:
                     $machine    =     $this   ->  editCameras($request);
                     break;
+                case 2:
+                    $machine    =     $this   ->  editPad($request);
+                    break;
+                case 3:
+                    $machine    =     $this   ->  editWatch($request);
+                    break;
+
                 default :
                     $machine    =     $this   ->  editCameras($request);
             }
@@ -434,9 +471,40 @@ class MachineController extends CommonController
             throw $ex;
         }
     }
+
+    /**
+     * 新增摄像机表单页面
+     * @url /osce/admin/machine/add-cameras
+     * @access public
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 13:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
     public function getAddCameras(){
         return view('osce::admin.resourcemanage.vcr_add');
     }
+
+    /**
+     *
+     * @url /osce/admin/machine/edit-cameras
+     * @access public
+     *
+     * * @param Request $request
+     * <b>get 请求字段：</b>
+     * * int        id        摄像机ID(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 16：11
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
     public function getEditCameras(Request $request){
         $this   ->  validate($request,[
             'id'   =>  'required|integer'
@@ -447,4 +515,283 @@ class MachineController extends CommonController
 
         return view('osce::admin.resourcemanage.vcr_edit',['item'=>$vcr]);
     }
+
+    /**
+     * 新增pad
+     * @access public
+     *
+     * * @param Request $request
+     * <b>post 请求字段：</b>
+     * * int           name        设备名称(必须的)
+     * * string        code        设备编号(必须的)
+     * * int           status      设备状态(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 16:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    private function addPad(Request $request){
+
+        $this   ->  validate($request,[
+            'name'          =>  'required',
+            'code'          =>  'required',
+            'status'        =>  'required',
+        ],[
+            'name.required'     =>  '设备名称必填',
+            'code.required'     =>  '设备编号必填',
+            'status.required'   =>  '设备状态必填',
+        ]);
+        $user   =   Auth::user();
+        if(empty($user))
+        {
+            throw new \Exception('未找到当前操作人信息');
+        }
+        $data   =   [
+            'name'          =>  $request    ->  get('name'),
+            'code'          =>  $request    ->  get('code'),
+            'status'        =>  $request    ->  get('status'),
+            'create_user_id'=>  $user       ->  id
+        ];
+        $cate_id    =   $request    ->  get('cate_id');
+        try{
+
+            $model      =   $this   ->  getMachineModel($cate_id);
+            if($pad =   $model  ->  addMachine($data))
+            {
+                return $pad;
+            }
+            else
+            {
+                throw new \Exception('新增PAD失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+
+    private function editPad(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+            'name'          =>  'required',
+            'code'          =>  'required',
+            'status'        =>  'sometimes',
+        ],[
+            'id.required'       =>'设备ID必填',
+            'name.required'     =>'设备名称必填',
+            'code.required'     =>'设备编码必填',
+            'status.required'   =>'设备状态必填',
+        ]);
+        $data   =   [
+            'id'            =>  $request    ->  get('id'),
+            'name'          =>  $request    ->  get('name'),
+            'code'          =>  $request    ->  get('code'),
+            'status'        =>  $request    ->  get('status'),
+        ];
+        $cate_id    =   $request    ->  get('cate_id');
+        try{
+            $model      =   $this   ->  getMachineModel($cate_id);
+            if($cameras =   $model  ->  editMachine($data))
+            {
+                return $cameras;
+            }
+            else
+            {
+                throw new \Exception('编辑摄像头失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 新增摄像机表单页面
+     * @url /osce/admin/machine/add-pad
+     * @access public
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 13:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddPad(){
+        return view('osce::admin.resourcemanage.pad_add');
+    }
+
+    /**
+     * 编辑Pad信息
+     * @url /osce/admin/machine/edit-pad
+     * @access public
+     *
+     * * @param Request $request
+     * <b>get 请求字段：</b>
+     * * int        id        摄像机ID(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 16：11
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getEditPad(Request $request){
+        $this   ->  validate($request,[
+            'id'   =>  'required|integer'
+        ]);
+
+        $id     =   intval($request    ->  get('id'));
+        $pad    =   Pad::find($id);
+
+        return view('osce::admin.resourcemanage.pad_edit',['item'=>$pad]);
+    }
+
+    /**
+     * 新增腕表
+     * @access public
+     *
+     * * @param Request $request
+     * <b>post 请求字段：</b>
+     * * int           name        设备名称(必须的)
+     * * string        code        设备编号(必须的)
+     * * int           status      设备状态(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 16:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    private function addWatch(Request  $request){
+        $this   ->  validate($request,[
+            'name'          =>  'required',
+            'code'          =>  'required',
+            'status'        =>  'required',
+        ],[
+            'name.required'     =>  '设备名称必填',
+            'code.required'     =>  '设备编号必填',
+            'status.required'   =>  '设备状态必填',
+        ]);
+
+        $user   =   Auth::user();
+        if(empty($user))
+        {
+            throw new \Exception('未找到当前操作人信息');
+        }
+
+        $data   =   [
+            'name'          =>  $request    ->  get('name'),
+            'code'          =>  $request    ->  get('code'),
+            'status'        =>  $request    ->  get('status'),
+            'create_user_id'=>  $user       ->  id
+        ];
+        $cate_id    =   $request    ->  get('cate_id');
+        try{
+
+            $model      =   $this   ->  getMachineModel($cate_id);
+            if($watch =   $model  ->  addMachine($data))
+            {
+                return $watch;
+            }
+            else
+            {
+                throw new \Exception('新增PAD失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+    private function editWatch(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+            'name'          =>  'required',
+            'code'          =>  'required',
+            'status'        =>  'sometimes',
+        ],[
+            'id.required'       =>'设备ID必填',
+            'name.required'     =>'设备名称必填',
+            'code.required'     =>'设备编码必填',
+            'status.required'   =>'设备状态必填',
+        ]);
+        $data   =   [
+            'id'            =>  $request    ->  get('id'),
+            'name'          =>  $request    ->  get('name'),
+            'code'          =>  $request    ->  get('code'),
+            'status'        =>  $request    ->  get('status'),
+        ];
+        $cate_id    =   $request    ->  get('cate_id');
+        try{
+            $model      =   $this   ->  getMachineModel($cate_id);
+            if($cameras =   $model  ->  editMachine($data))
+            {
+                return $cameras;
+            }
+            else
+            {
+                throw new \Exception('编辑摄像头失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 新增腕表单页面
+     * @url /osce/admin/machine/add-watch
+     * @access public
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 13:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddWatch(){
+        return view('osce::admin.resourcemanage.watch_add');
+    }
+
+    /**
+     * 编辑Pad信息
+     * @url /osce/admin/machine/edit-watch
+     * @access public
+     *
+     * * @param Request $request
+     * <b>get 请求字段：</b>
+     * * int        id        摄像机ID(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-02 16：11
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getEditWatch(Request $request){
+        $this   ->  validate($request,[
+            'id'   =>  'required|integer'
+        ]);
+
+        $id     =   intval($request    ->  get('id'));
+        $watch    =   Pad::find($id);
+
+        return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
+    }
+
 }
