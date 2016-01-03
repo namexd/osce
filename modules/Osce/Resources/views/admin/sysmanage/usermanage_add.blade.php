@@ -19,64 +19,63 @@
 @section('content')
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
-        <li><a href="#">资源管理</a></li>
-        <li class="route-active">场所管理</li>
+        <li><a href="#">OSCE系统</a></li>
+        <li class="route-active">用户管理</li>
     </ol>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">场所管理</h5>
-            </div>
-            <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-            </div>
+    <div class="row table-head-style1 ">
+        <div class="col-xs-6 col-md-2">
+            <h5 class="title-label">用户新增</h5>
         </div>
-    <form class="container-fluid ibox-content" id="list_form">
-        <div class="panel blank-panel">
-            <div class="panel-heading">
-                <div class="panel-options">
-                    <ul class="nav nav-tabs">
-                        <li><a href="#">考场</a></li>
-                        <li class="active"><a href="#">中控室</a></li>
-                        <li class=""><a href="#">走廊</a></li>
-                        <li class=""><a href="#">候考室</a></li>
-                    </ul>
+    </div>
+    <form class="form-horizontal" id="Form3" novalidate="novalidate" action="/msc/admin/user/teacher-save" method="post" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">编辑</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">姓名</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control name edit-name" value="" name="name" />
+                    <input type="hidden" class="edit-hidden-name" value="" name="id"/>
                 </div>
             </div>
-            
-            <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
-                </span>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">胸牌号</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control code edit-code" name="code" />
+                </div>
             </div>
-
-            <table class="table table-striped" id="table-striped">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>场所名称</th>
-                    <th>描述</th>
-                    <th>操作</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>反对撒法</td>
-                        <td>fgs</td>
-                        <td>
-                            <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="btn-group pull-right">
-               
+            <div class="form-group">
+                <div class="col-sm-offset-2" style="padding-left: 15px;">
+                    <input type="radio" class="check_icon edit-man" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
+                    <input type="radio" class="check_icon edit-woman" name="gender" value="0" /> <span>女</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">科室</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control edit-dept_name" name="dept_name" id=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">角色</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control edit-role" name="role" id="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">手机号</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control mobile edit-mobile" name="mobile" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2">
+                    <button type="button" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
+                </div>
             </div>
         </div>
     </form>

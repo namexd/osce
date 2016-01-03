@@ -35,10 +35,19 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('machine/add-watch', ['uses'=>'MachineController@getAddWatch','as'=>'osce.admin.machine.getAddWatch']);
 		Route::get('machine/edit-watch', 	['uses'=>'MachineController@getEditWatch','as'=>'osce.admin.machine.getEditWatch']);
 
+
+		//考核点
+		Route::get('topic/list', 	['uses'=>'TopicController@getList','as'=>'osce.admin.topic.getList']);
+		Route::get('topic/add-topic', 	['uses'=>'TopicController@getAddTopic','as'=>'osce.admin.topic.getAddTopic']);
+		Route::post('topic/add-topic', 	['uses'=>'TopicController@postAddTopic','as'=>'osce.admin.topic.postAddTopic']);
+
 		//考场
 		Route::get('place/place-list', 	['uses'=>'PlaceController@getPlaceList','as'=>'osce.admin.Place.getPlaceList']);
 		Route::get('place/edit-place', 	['uses'=>'PlaceController@getEditPlace','as'=>'osce.admin.Place.getEditPlace']);
 		Route::get('place/add-place', 	['uses'=>'PlaceController@getAddPlace','as'=>'osce.admin.Place.getAddPlace']);
+		//用户管理
+		Route::get('user/staff-list', 	['uses'=>'UserController@getStaffList','as'=>'osce.admin.user.getStaffList']);
+		Route::get('user/edit-staff', 	['uses'=>'UserController@getEditStaff','as'=>'osce.admin.user.getEditStaff']);
 		//测试
 		Route::get('place/test', 	['uses'=>'PlaceController@getTest','as'=>'osce.admin.Place.getTest']);
 

@@ -71,7 +71,7 @@
     <script src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
-    <script src="{{asset('osce/admin/plugins/js/plugins/sliosceroll/jquery.sliosceroll.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 
     <!-- 自定义js -->
