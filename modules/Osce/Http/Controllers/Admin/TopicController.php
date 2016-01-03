@@ -111,30 +111,35 @@ class TopicController extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
             'title' =>  'required',
-            'score' =>  'required',
-            'order' =>  'required',
-            'status'=>  'required',
+            'description' =>  'sometimes',
         ],[
             'id.required'       =>  '课题ID必须',
             'title.required'    =>  '课题名称必须',
-            'score.required'    =>  '课题总分必须',
-            'order.required'    =>  '课题排序必须',
-            'status.required'   =>  '课题状态必须',
         ]);
 
         $data   =   [
-            'title' =>  e($request  ->  get('title')),
-            'score' =>  intval($request  ->  get('score')),
-            'order' =>  intval($request  ->  get('order')),
-            'status'=>  intval($request  ->  get('status')),
+//            'id'            =>  intval($request     ->  get('id')),
+            'title'         =>  e($request          ->  get('title')),
+            'description'   =>  e($request          ->  get('description')),
         ];
         $id     =   intval($request ->get('id'));
 
         $subjectModel   =   new Subject();
-
-        if($subjectModel   ->  editTopic($id,$data))
+        try
         {
-
+            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
+            if($subjectModel   ->  editTopic($id,$data,$formData))
+            {
+                return redirect()->route('osce.admin.topic.getList');
+            }
+            else
+            {
+                throw new \Exception('编辑失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex);
         }
     }
 
@@ -160,5 +165,73 @@ class TopicController extends CommonController
      */
     public function getAddTopic(){
         return view('osce::admin.resourcemanage.categories');
+    }
+
+    /**
+     * 编辑考核标准表单
+     * @url /osce/admin/topic/edit-topic
+     * @access public
+     *
+     *
+     * <b>get 请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE}${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getEditTopic(Request $request){
+        $this   ->  validate($request,[
+            'id'    =>  'required'
+        ]);
+
+        $id         =   $request->get('id');
+        $subject    =   Subject::find($id);
+
+        $items      =   $subject->items;
+
+        $items      =   SubjectItem::builderItemTable($items);
+        return view('osce::admin.resourcemanage.edittopic',['item'=>$subject,'list'=>$items]);
+    }
+
+    /**
+     *
+     * @url /osce/admin/topic/getDelTopic
+     * @access public
+     *
+     *
+     * <b>get 请求字段：</b>
+     * * string        id        考核标准ID(必须的)
+     *
+     * @return
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE}${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getDelTopic(Request $request){
+        $this->validate($request,[
+            'id'=>''
+        ]);
+        $id =   $request->get('id');
+        $SubjectModel   =   new Subject();
+        $subject =  $SubjectModel->find($id);
+        try{
+            $SubjectModel   ->  delSubject($subject);
+            return redirect()->route('osce.admin.topic.getList');
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex);
+        }
     }
 }

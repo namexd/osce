@@ -27,6 +27,9 @@ class Subject extends CommonModel
         return $this->hasOne('App\Entities\User','created_user_id','id');
     }
 
+    public function items(){
+        return $this->hasMany('Modules\Osce\Entities\SubjectItem','subject_id','id');
+    }
     /**
      * 获取课题列表（考核点的盒子的列表）
      * @access public
@@ -89,31 +92,41 @@ class Subject extends CommonModel
      * @access public
      *
      * * @param $id
-     * * @param $data
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * @param array $data
+     * * @param array $points
      *
      * @return object
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE}${TIME}
+     * @date 2016-01-03 18:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editTopic($id,$data){
+    public function editTopic($id,$data,$points){
         $subject    =   $this->find($id);
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
 
         try{
-
+            foreach($data as $field=>$value)
+            {
+                $subject    ->  $field  =$value;
+            }
+            if($subject    ->  save())
+            {
+                $this   ->  editPoint($subject,$points);
+            }
+            else
+            {
+                throw new \Exception('更新考核点信息失败');
+            }
+            $connection ->commit();
         }
         catch(\Exception $ex)
         {
-            return $ex;
+            $connection ->rollBack();
+            throw $ex;
         }
 
     }
@@ -137,7 +150,7 @@ class Subject extends CommonModel
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE}${TIME}
+     * @date 2016-01-03
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
@@ -152,6 +165,60 @@ class Subject extends CommonModel
         }
         catch(\Exception $ex)
         {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 编辑考核点详情
+     * @access protected
+     *
+     * * @param $subject
+     * * @param array $points
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-03 18:37
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    protected function editPoint($subject,array $points){
+        $SubjectItemModel    = new SubjectItem();
+        try{
+            $SubjectItemModel   ->delItemBySubject($subject);
+            foreach($points as $point)
+            {
+                $SubjectItemModel   -> addItem($subject,$point);
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+    public function delSubject($subject){
+        $connection =   DB::connection($this->connection);
+        $connection ->beginTransaction();
+
+        $SubjectItemModel    = new SubjectItem();
+        try
+        {
+            $SubjectItemModel   ->delItemBySubject($subject);
+            if($subject    ->  delete())
+            {
+                $connection ->commit();
+                return true;
+            }
+            else
+            {
+                throw new \Exception('删除失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            $connection ->rollBack();
             throw $ex;
         }
     }

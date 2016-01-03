@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 
 use DB;
 use Auth;
+use Illuminate\Database\Eloquent\Collection;
 
 class SubjectItem extends CommonModel
 {
@@ -29,6 +30,10 @@ class SubjectItem extends CommonModel
         return $this->hasOne('App\Entities\User','created_user_id','id');
     }
 
+    //父级考核点
+    public function parent(){
+        return $this->hasOne('Modules\Osce\Entities\SubjectItem','id','pid');
+    }
     /**
      * 新增 考核标准详情
      * @access public
@@ -70,6 +75,7 @@ class SubjectItem extends CommonModel
         }
         else
         {
+            $level  =   $parent->level+1;
             $data   =   [
                 'subject_id'        =>  $subject->id,
                 'content'           =>  $point['content'],
@@ -77,7 +83,7 @@ class SubjectItem extends CommonModel
                 'score'             =>  $point['score'],
                 'created_user_id'   =>  $user->id,
                 'pid'               =>  $parent->id,
-                'level'             =>  $parent->level++,
+                'level'             =>  $level,
             ];
             $item    =   $this   ->  create($data);
             if(!$item)
@@ -134,6 +140,49 @@ class SubjectItem extends CommonModel
                 'child'     =>  $child
             ];
             $data[]=$item;
+        }
+        return $data;
+    }
+
+    public function delItemBySubject($subject){
+        $list   =   $this   ->  where('subject_id','=',$subject->id)->get();
+        foreach($list as $item)
+        {
+            if(!$item->delete())
+            {
+                throw new \Exception('清空旧的考核标准记录失败');
+            }
+        }
+    }
+
+    static public function builderItemTable(Collection $itemCollect){
+        $list   =   [];
+        $child   =   [];
+        foreach($itemCollect as $item)
+        {
+            if($item->pid   ==  0)
+            {
+                $list[] =    $item;
+            }
+            else
+            {
+                $child[$item->pid][]=$item;
+            }
+        }
+
+        $data   =   [];
+        foreach($list as $item)
+        {
+            $data[]     =   $item;
+            $childItem  =   $child[$item->id];
+
+            $indexArray =   array_pluck($childItem,'order');
+            array_multisort($indexArray, SORT_ASC, $childItem);
+
+            foreach($childItem as $chilren)
+            {
+                $data[]     =   $chilren;
+            }
         }
         return $data;
     }
