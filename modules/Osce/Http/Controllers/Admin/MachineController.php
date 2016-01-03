@@ -137,10 +137,13 @@ class MachineController extends CommonController
      */
     public function getMachineList(Request $request){
         $this   ->  validate($request,[
-            'cate_id'   =>  'sometimes|integer'
+            'cate_id'   =>  'sometimes|integer',
+            'name'      =>  'sometimes'
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
+        $name       =   intval($request   ->  get('name'));
+        $status     =   e($request   ->  get('status'));
         if(empty($cate_id))
         {
             $cate   =   MachineCategory::first();
@@ -153,9 +156,10 @@ class MachineController extends CommonController
 
         $model  =   $this   ->  getMachineModel($cate_id);
         $categroyList   =   MachineCategory::all(['id','name']);
-        $list   =   $model  ->  paginate(config('osce.page_size'));
-        $machineStatuValues   =   $model  ->  getMachineStatuValues();
 
+        $list   =   $model  ->  getList($name,$status);
+
+        $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)
         {
             case 1:

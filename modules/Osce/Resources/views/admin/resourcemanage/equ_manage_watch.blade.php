@@ -32,7 +32,7 @@
                 <a  href="{{route('osce.admin.machine.getAddWatch')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form">
+        <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.machine.getMachineList',['cate_id'=>3])}}" method="get">
             <div class="panel blank-panel">
                 <div class="panel-heading">
                     <div class="panel-options">
@@ -53,11 +53,14 @@
                             状态<span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
+                            @forelse($machineStatuValues as $status=>$machineStatuValue)
+                                @if(array_key_exists('status',$_GET))
+                                    <?php unset($_GET['status']) ?>
+                                @endif
+                                <li><a href="{{route('osce.admin.machine.getMachineList',array_add($_GET,'status',$status))}}">{{$machineStatuValue}}</a></li>
+                            @empty
+                                <li><a>请选择</a></li>
+                            @endforelse
                         </ul>
                     </div>
                     <button type="button" class="btn  btn-default" id="search">&nbsp;搜索&nbsp;</button>

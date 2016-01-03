@@ -188,4 +188,30 @@ class Vcr extends CommonModel implements MachineInterface
             throw $ex;
         }
     }
+
+    /**
+     * 根据设备名称获取 设备列表
+     * @access public
+     *
+     * * @param string $name 设备名称
+     * @return pagination
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE}${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getList($name,$status){
+        $bulder =   $this;
+        if(!is_null($name))
+        {
+            $bulder =   $bulder    ->  where('name','like','%'.$name.'%');
+        }
+        if($status!=='')
+        {
+            $bulder =   $bulder    ->  where('status','=',$status);
+        }
+        return  $bulder ->  paginate(config('osce.page_size'));
+    }
 }

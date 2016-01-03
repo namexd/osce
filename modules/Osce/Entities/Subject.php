@@ -42,8 +42,15 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList(){
-        return $this->  paginate(config('osce.page_size'));
+    public function getList($name){
+        if(!is_null($name))
+        {
+            return $this->where('title','like','%'.$name.'%')->paginate(config('osce.page_size'));
+        }
+        else
+        {
+            return $this->  paginate(config('osce.page_size'));
+        }
     }
 
     /**
