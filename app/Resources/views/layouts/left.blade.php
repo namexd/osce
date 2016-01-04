@@ -48,6 +48,9 @@
                             <li>
                                 <a class="J_menuItem" href="{{route('msc.admin.laboratory.index')}}">实验室列表</a>
                             </li>
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.LadMaintain.LaboratoryList')}}">实验室资源维护</a>
+                            </li>
                         </ul>
                     </li>
 

@@ -104,6 +104,11 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('professionaltitle/holder-status/{id}',['uses'=>'ProfessionalTitleController@getHolderStatus','as'=>'msc.admin.professionaltitle.HolderStatus']);
 		Route::get('professionaltitle/holder-remove',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
 
+		//实验室资源维护路由
+		Route::controller('LadMaintain','LadMaintainController');
+		Route::get('ladMaintain/laboratory-list',['uses'=>'LadMaintainController@getLaboratoryList','as'=>'msc.admin.LadMaintain.LaboratoryList']);
+		Route::post('ladMaintain/devices-add',['uses'=>'LadMaintainController@postDevicesAdd','as'=>'msc.admin.LadMaintain.DevicesAdd']);
+		Route::get('ladMaintain/devices-total-edit',['uses'=>'LadMaintainController@getDevicesTotalEdit','as'=>'msc.admin.LadMaintain.DevicesTotalEdit']);
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
