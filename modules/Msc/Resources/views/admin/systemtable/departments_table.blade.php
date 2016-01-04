@@ -21,7 +21,7 @@
 
             $(document).ajaxSuccess(function(event, request, settings) {
                 listclick();//dom之后添加事件
-                togget();
+                toggle();
                 editall();//更改当前栏目内容
                 deleteall();//删除科室
             });
@@ -43,7 +43,7 @@
                             $(".treeview ul").append(
                                     '<li class="list-group-item parent" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'">'
                                     + '<input type="hidden" class="description" value=" '+this.description+'"/>'
-                                    +'<span class="icon"><i class="glyphicon  glyphicon-plus"></i></span>'
+                                    +'<span class="icon"><i class="glyphicon  glyphicon-plus"><input type="hidden" class="toggel" value="0"/></i></span>'
                                     +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
                                     +'<b>'+this.name+'</b>'
                                     +'</li>'
@@ -62,7 +62,7 @@
                                     );//第二层添加
                                     $(this.child).each(function() {
                                         $(".treeview ul").append(
-                                                '<li class="list-group-item children2" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'"style="display: none;">'
+                                                '<li class="list-group-item children2" id="'+this.id+'"pid="'+this.pid+'" level="'+ this.level+'"style="display: none;">'
                                                 + '<span class="indent"></span>'
                                                 + '<span class="indent"></span>'
                                                 + '<input type="hidden" class="description" value=" '+this.description+'"/>'
@@ -109,37 +109,68 @@
                 var thispid=$(this).attr("pid");
                 var level=$(this).attr("level");
                 var thisneme=$(this).text();
+                console.log(thispid);
                 $("#hidden_this_id").val(listId);
                 $(".add-name").val(thisneme);
                 $(".add-describe").val($(this).children(".description").val());
-                if(thispid!="0"){
+                if(level=="1"){
+                    $(".add-parent").val("");//上级科室
+                }else if(level=="2"){
                     var parent_name=$(this).prevAll(".parent").first().text()
+                    $(".add-parent").val(parent_name);//上级科室
+                }else{
+                    var parent_name=$(this).prevAll(".children1").first().text()
                     $(".add-parent").val(parent_name);//上级科室
                 }
                 $(this).addClass("checked").siblings().removeClass("checked");//表单切换
                 addChild(listId,level,thisneme);//添加子科室功能
             });
         }
-        function  togget(){//dom之后添加事件
-            $(".glyphicon-plus").unbind().click(function(){
-                var fatherid= $(this).parent().parent().attr("id");
-                var fatherlevel= $(this).parent().parent().attr("level");
-                if(fatherlevel=="1"){
-                    $(this).parent().parent().nextUntil(".parent").toggle();
-                }else if(fatherlevel=="2"){
-                    $(this).parent().parent().nextUntil(".children1").toggle();
-                }
+        function  toggle(){//dom之后添加事件
+            $(".glyphicon").unbind().click(function(){
 
+                    var fatherid= $(this).parent().parent().attr("id");
+                    var fatherlevel= $(this).parent().parent().attr("level");
+                    if(fatherlevel=="1"){
+                        $(this).toggleClass("glyphicon-minus");
+                        $(this).toggleClass("glyphicon-plus");
+                          if($(this).children(".toggel").val()=="0"){
+                            $(this).children(".toggel").val("1");
+                            $(this).parent().parent().siblings(".children1").each(function(){
+                                if($(this).attr("pid")==fatherid){
+                                    $(this).show();
+                                }
+                            })
+
+
+                        }else{
+                            $(this).parent().parent().nextUntil(".parent").hide();
+                            $(this).children(".toggel").val("0");
+                              $(this).parent().parent().nextUntil(".parent").each(function(){
+                                  if($(this).attr("level")=="2"){
+                                      $(this).children(".icon").children(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+                                  }
+
+                              });
+                        }
+                        //$(this).parent().parent().nextUntil(".parent").toggle();
+
+
+                    }else if(fatherlevel=="2"){
+                        $(this).toggleClass("glyphicon-minus");
+                        $(this).toggleClass("glyphicon-plus");
+                        $(this).parent().parent().siblings(".children2").each(function(){
+                            if($(this).attr("pid")==fatherid){
+                                $(this).toggle();
+                            }
+                        })
+
+                    }
 
             })
 
-
-            $(this).children().children(".glyphicon").toggleClass("glyphicon-minus");
-            $(this).children().children(".glyphicon").toggleClass("glyphicon-plus");
         }
-        function   getChild(){
 
-        }
         function  addChild(listId,level,thisneme){
             $("#new-add-child").unbind().click(function(){
                 $(".add-name").val("");
@@ -158,8 +189,6 @@
                         data:qj,
                         success: function (result) {
                             if(result.data.total.level=="2"){
-
-
                                 $("#"+listId).after(
                                         '<li class="list-group-item children1" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
                                         + '<span class="indent"></span>'
@@ -183,10 +212,15 @@
                                 )
                             }
                             if($("#"+listId+" .glyphicon-plus").size()=="0"){
+
                                 $("#"+listId+" .icon").before(
                                         +'<span class="icon"><i class="glyphicon glyphicon-plus"></i></span>'
                                 );
+                            }else{
+                                $("#"+listId).nextUntil(".parent").show();
                             }
+
+                            $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
                         }
                     })
                 })
@@ -266,6 +300,7 @@
                                         +'</li>'
                                 );//第一层添加
                                 layer.msg(result.message, {icon: 1,time: 1000});
+                                $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
                             } else{
                                 layer.msg(result.message, {icon: 1,time: 1000});
                             }
