@@ -21,9 +21,10 @@
 
             $(document).ajaxSuccess(function(event, request, settings) {
                 listclick();//dom之后添加事件
-                toggle();
+                toggle();//
                 editall();//更改当前栏目内容
                 deleteall();//删除科室
+                addChild();//添加子科室
             });
         })
 
@@ -66,7 +67,7 @@
                                                 + '<span class="indent"></span>'
                                                 + '<span class="indent"></span>'
                                                 + '<input type="hidden" class="description" value=" '+this.description+'"/>'
-                                                + '<span class="icon"><i class="glyphicon"></i></span>'
+
                                                 + '<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
                                                 +'<b>'+this.name+'</b>'
                                                 + '</li>'
@@ -77,7 +78,7 @@
                                             '<li class="list-group-item children1" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'"style="display: none;">'
                                             + '<span class="indent"></span>'
                                             + '<input type="hidden" class="description" value=" '+this.description+'"/>'
-                                            +'<span class="icon"><i class="glyphicon"></i></span>'
+
                                             +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
                                             +'<b>'+this.name+'</b>'
                                             +'</li>'
@@ -148,7 +149,7 @@
                             $(this).children(".toggel").val("0");
                               $(this).parent().parent().nextUntil(".parent").each(function(){
                                   if($(this).attr("level")=="2"){
-                                      $(this).children(".icon").children(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+                                      $(this).children(".icon").children(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
                                   }
 
                               });
@@ -193,7 +194,7 @@
                                         '<li class="list-group-item children1" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
                                         + '<span class="indent"></span>'
                                         + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
-                                        +'<span class="icon"><i class="glyphicon"></i></span>'
+
                                         +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
                                         +'<b>'+result.data.total.name+'</b>'
                                         +'</li>'
@@ -205,21 +206,21 @@
                                         + '<span class="indent"></span>'
                                         + '<span class="indent"></span>'
                                         + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
-                                        +'<span class="icon"><i class="glyphicon"></i></span>'
+
                                         +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
                                         +'<b>'+result.data.total.name+'</b>'
                                         +'</li>'
                                 )
                             }
-                            if($("#"+listId+" .glyphicon-plus").size()=="0"){
+                            if($("#"+listId+" .glyphicon-plus").size()=="0"&&$("#"+listId+" .glyphicon-minus").size()=="0"){
 
-                                $("#"+listId+" .icon").before(
-                                        +'<span class="icon"><i class="glyphicon glyphicon-plus"></i></span>'
+                                $("#"+listId+" .description").before(
+                                        '<span class="icon"><i class="glyphicon glyphicon-minus"></i></span>'
                                 );
                             }else{
                                 $("#"+listId).nextUntil(".parent").show();
                             }
-
+                            toggle();
                             $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
                         }
                     })
