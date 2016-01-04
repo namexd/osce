@@ -1,4 +1,4 @@
-@extends('msc::admin.layouts.admin')
+@extends('osce::admin.layouts.admin_index')
 @section('only_css')
     <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
     <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
