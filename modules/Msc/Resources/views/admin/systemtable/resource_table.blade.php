@@ -84,32 +84,39 @@
             });
 
             $('.edit').click(function () {
-                $('input[name=name]').val($(this).parent().parent().find('.name').html());
+                if($(this).attr("data")){
+                    $('input[name=name]').val($(this).parent().parent().find('.name').html());
 //                $('input[name=]').val($(this).parent().parent().find('.floor').attr('data'));
-                $('input[name=detail]').val($(this).parent().parent().find('.detail').html());
-                var devices = $(this).parent().parent().find('.catename').attr('data');
+                    $('input[name=detail]').val($(this).parent().parent().find('.detail').html());
+                    var devices = $(this).parent().parent().find('.catename').attr('data');
 //                alert(devices);
-                $('.cate option').each(function(){
-                    if($(this).val() == devices){
-                        $(this).attr('selected','selected');
+                    $('.cate option').each(function(){
+                        if($(this).val() == devices){
+                            $(this).attr('selected','selected');
+                        }
+                    });
+
+                    var status = '';
+                    if($(this).parent().parent().find('.status').html() == '正常'){
+                        status = 1;
+                    }else{
+                        status = 0;
                     }
-                });
-                
-                var status = '';
-                if($(this).parent().parent().find('.status').html() == '正常'){
-                    status = 1;
-                }else{
-                    status = 0;
+                    $('.state option').each(function(){
+                        if($(this).val() == status){
+                            $(this).attr('selected','selected');
+                        }
+                    });
+                    $('#add_from').attr('action','{{route("msc.admin.resources.ResourcesSave")}}');
+                    var id = $(this).attr("data");
+                    $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
                 }
-                $('.state option').each(function(){
-                    if($(this).val() == status){
-                        $(this).attr('selected','selected');
-                    }
-                });
-                $('#add_from').attr('action','{{route("msc.admin.resources.ResourcesSave")}}');
-                var id = $(this).attr("data");
-                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
             });
+
+            $('#addResources').click(function(){
+                $("input,textarea,select").val("");
+                $('#add_from').attr('action',"{{route('msc.admin.resources.ResourcesAdd')}}");
+            })
         })
     </script>
 @stop
@@ -131,9 +138,10 @@
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
                 <button class="btn btn_pl btn-success right">
-                    <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none;">
-                        <span style="color: #fff">添加资源</span>
-                    </a>
+                    <button href=""   id="addResources"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">添加资源</button>
+                    {{--<a href=""  class="state1 edit" id="addResources" data-toggle="modal" data-target="#myModal" style="text-decoration: none;">--}}
+                        {{--<span style="color: #fff" >添加资源</span>--}}
+                    {{--</a>--}}
                 </button>
             </div>
 		</div>
@@ -151,18 +159,13 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'1'])}}">耗材</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'2'])}}">模型</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'3'])}}">设备</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>'4'])}}">虚拟设备</a>
-                                    </li>
+                                    @if(!empty($devicetype))
+                                        @foreach($devicetype as $type)
+                                            <li>
+                                                <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>@$type->id])}}">{{$type->name}}</a>
+                                            </li>
+                                        @endforeach
+                                    @endif
                                 </ul>
                             </div>
                         </th>
@@ -221,35 +224,7 @@
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
-            <ul class="pagination">
-                <li>
-                    <span>«</span>
-                </li>
-                <li class="active">
-                    <span>1</span>
-                </li>
-                <li>
-                    <a>2</a>
-                </li>
-                <li>
-                    <a>3</a>
-                </li>
-                <li>
-                    <a>4</a>
-                </li>
-                <li>
-                    <a>5</a>
-                </li><li>
-                    <a>6</a>
-                </li>
-                <li>
-                    <a>7</a>
-                </li>
-                <li>
-                    <a>»</a>
-                </li>
-
-            </ul>
+            <?php  echo $pagination->render()?>
         </div>
 	</div>
 @stop
@@ -273,10 +248,11 @@
                 <div class="col-sm-9">
                     <select id="select_Category"   class="form-control m-b cate" name="devices_cate_id">
                         <option value="-1">请选择类型</option>
-                        <option value="1">耗材</option>
-                        <option value="2">模型</option>
-                        <option value="3">设备</option>
-                        <option value="4">虚拟设备</option>
+                        @if(!empty($devicetype))
+                            @foreach($devicetype as $type)
+                                <option value="{{$type->id}}">{{$type->name}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
             </div>

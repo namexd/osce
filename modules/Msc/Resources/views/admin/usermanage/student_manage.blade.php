@@ -228,7 +228,6 @@
 			            url:'/msc/admin/user/import-student-user',
 			            fileElementId:'leading-in',//必须要是 input file标签 ID
 			            success: function (data, status){
-			            	
 			            },
 			            error: function (data, status, e){
 			            	console.log("失败");
