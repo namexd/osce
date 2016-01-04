@@ -23,8 +23,11 @@
                             </li>
                             <li><a  class="J_menuItem" href="{{route('osce.admin.Place.getPlaceList')}}">场所管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="">监考设备管理</a>
+                            <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}" target="iframe0">监考设备管理</a>
                             </li>
+							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}" target="iframe0">考核标准</a>
+                            </li>
+							
                         </ul>
                     </li>
                     <li>
@@ -38,6 +41,17 @@
                             </li>
                         </ul>
                     </li>
+					<li>
+						<a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">用户管理</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+                            <li>
+								<a class="active J_menuItem" href="{{route('osce.admin.user.getStaffList')}}">用户管理</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{{ route('auth.AuthManage') }}">角色权限管理</a>
+                            </li>
+                        </ul>
+					<li>
                 </ul>
             </div>
         </nav>

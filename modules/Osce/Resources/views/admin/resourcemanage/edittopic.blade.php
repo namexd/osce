@@ -22,7 +22,7 @@
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postAddTopic')}}">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postEditTopic')}}">
 
                         <div class="hr-line-dashed"></div>
 
@@ -30,7 +30,8 @@
                             <label class="col-sm-2 control-label">名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="title">
+                                <input type="hidden" class="form-control" id="id" name="id" value="{{$item->id}}">
+                                <input type="text" required class="form-control" id="title" name="title" value="{{$item->title}}">
                             </div>
                         </div>
 
@@ -38,7 +39,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="description"/>
+                                <input id="select_Category" required  class="form-control m-b" name="description" value="{{$item->description}}"/>
                             </div>
                         </div>
                         <div class="row">
@@ -61,8 +62,44 @@
                                                     <th>操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="0">
-
+                                            <tbody index="{{count($list)}}">
+                                            @forelse($list as $data)
+                                                <tr class="pid-{{$data->pid==0? $data->order:$data->parent->order}}" current="0" {{$data->pid==0? 'parent='.$data->order.'':'child="'.$data->order.'"'}}>
+                                                    <td>{{$data->pid==0? $data->order:$data->parent->order.'-'.$data->order}}</td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">{{$data->pid==0? '考核点:':'考核项:'}}</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="select_Category"  class="form-control" name="{{$data->pid==0? 'content['.$data->order.'][title]':'content['.$data->parent->order.']['.$data->order.']'}}" value="{{$data->content}}"/>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" name="{{$data->pid==0? 'score['.$data->order.'][total]':'score['.$data->parent->order.']['.$data->order.']'}}">
+                                                            <option value="1" {{$data->score==1? 'selected="selected"':''}}>1</option>
+                                                            <option value="2" {{$data->score==2? 'selected="selected"':''}}>2</option>
+                                                            <option value="3" {{$data->score==3? 'selected="selected"':''}}>3</option>
+                                                            <option value="4" {{$data->score==4? 'selected="selected"':''}}>4</option>
+                                                            <option value="5" {{$data->score==5? 'selected="selected"':''}}>5</option>
+                                                            <option value="6" {{$data->score==6? 'selected="selected"':''}}>6</option>
+                                                            <option value="7" {{$data->score==7? 'selected="selected"':''}}>7</option>
+                                                        </select>
+                                                    </td>
+                                                    @if($data->pid==0)
+                                                    <td>
+                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
+                                                    </td>
+                                                    @else
+                                                    <td>
+                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
+                                                    </td>
+                                                    @endif
+                                                </tr>
+                                            @empty
+                                            @endforelse
                                             </tbody>
                                         </table>
 
@@ -92,7 +129,7 @@
 </div>
 <script>
     $(function(){
-
+        $('tbody').attr('index',parseInt($('tbody').attr('index'))-1)
         /**
          * 新增一条父考核点
          * @author  mao
@@ -165,8 +202,8 @@
                     '</select>'+
                     '</td>'+
                     '<td>'+
-                    '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                    '<a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
+                    '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a> '+
+                    '<a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a> '+
                     '<a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
                     '</td>'+
                     '</tr>';

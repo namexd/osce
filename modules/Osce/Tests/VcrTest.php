@@ -30,4 +30,24 @@ class VcrTest  extends TestCase
        $respone =   $this->action('post','\Modules\Osce\Http\Controllers\Admin\MachineController@postAddMachine','',$data);
        $this    ->  assertRedirectedToRoute('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]);
    }
+    public function testEditVcr(){
+        $cate_id =   1;
+        $list   =   \Modules\Osce\Entities\Vcr::all();
+        $item   =   $this   ->  getRandItem($list);
+
+        $data    =   [
+            'id'             =>  $item  ->  id,
+            'cate_id'        =>  $cate_id,
+            'name'           =>  '测试'.rand(1000,9999),
+            'code'           =>  rand(1000,9999),
+            'ip'             =>  '192.168.1.200',
+            'username'       =>  'admin',
+            'password'       =>  'gogomisrobot',
+            'port'           =>  '9090',
+            'channel'        =>  '30',
+            'description'    =>  '测试'.rand(1000,9999),
+        ];
+        $respone =   $this->action('post','\Modules\Osce\Http\Controllers\Admin\MachineController@postEditMachine','',$data);
+        $this    ->  assertRedirectedToRoute('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]);
+    }
 }

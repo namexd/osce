@@ -1,10 +1,10 @@
 <?php
 /**
- * 设备摄像机模型
+ * PAD模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
- * Date: 2015/12/30
- * Time: 14:11
+ * User: 梧桐雨间的枫叶
+ * Date: 2016/1/2
+ * Time: 16:01
  */
 
 namespace Modules\Osce\Entities;
@@ -12,14 +12,13 @@ namespace Modules\Osce\Entities;
 
 use Modules\Osce\Entities\MachineInterface;
 use DB;
-
-class Vcr extends CommonModel implements MachineInterface
+class Pad extends CommonModel implements MachineInterface
 {
     protected $connection	=	'osce_mis';
-    protected $table 		= 	'vcr';
+    protected $table 		= 	'pad';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status'];
+    protected   $fillable 	=	[ 'name', 'code','status','create_user_id'];
     public      $search    =   [];
 
     protected $statuValues  =   [
@@ -27,46 +26,29 @@ class Vcr extends CommonModel implements MachineInterface
         1   =>  '正常',
     ];
 
-    /**
-     *  获取设备状态值
-     * @access public
-     * @return array
-     *
-     * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2016-01-02 15:38
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
-     */
     public function getMachineStatuValues(){
-        return $this    ->  statuValues;
+        return $this->statuValues;
     }
 
     /**
-     * 新增摄像机
+     * 新增设备
      * @access public
      *
-     * @param
-     * * string        name         摄像机名称(必须的)
-     * * string        code         摄像机编码(必须的)
-     * * string        ip           摄像机IP(必须的)
-     * * string        username     摄像机用户名(必须的)
-     * * string        password     摄像机密码(必须的)
-     * * string        port         摄像机端口(必须的)
-     * * string        channel      摄像机频道(必须的)
-     * * string        status       摄像机状态(必须的)
-     * * string        description  摄像机描述(必须的)
+     * * @param $data
+     * * string        name             设备名称(必须的)
+     * * string        code             设备编号(必须的)
+     * * string        status           设备状态(必须的)
+     * * string        create_user_id   创建人(必须的)
      *
      * @return object
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-31 17:38
+     * @date 2016-01-02 16:06
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addMachine($data)
-    {
+    public function addMachine($data){
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
         try
@@ -82,11 +64,11 @@ class Vcr extends CommonModel implements MachineInterface
             }
             else
             {
-                throw new \Exception('新增摄像机失败');
+                throw new \Exception('新增PAD失败');
             }
             if(empty($machineData))
             {
-                throw new \Exception('没有找到摄像机新增数据');
+                throw new \Exception('没有找到PAD新增数据');
             }
             //$machine    =   Machine::create($machineData);
             $machine    =   true;
@@ -97,7 +79,7 @@ class Vcr extends CommonModel implements MachineInterface
             }
             else
             {
-                throw new   \Exception('新增摄像机资源失败');
+                throw new   \Exception('新增PAD资源失败');
             }
         }
         catch(\Exception $ex)
@@ -106,28 +88,22 @@ class Vcr extends CommonModel implements MachineInterface
             throw $ex;
         }
     }
-
     /**
-     * 编辑摄像头
+     * 编辑设备
      * @access public
      *
      * * @param $data
-     * * string        id           摄像机ID(必须的)
-     * * string        name         摄像机名称(必须的)
-     * * string        code         摄像机编码(必须的)
-     * * string        ip           摄像机IP(必须的)
-     * * string        username     摄像机用户名(必须的)
-     * * string        password     摄像机密码(必须的)
-     * * string        port         摄像机端口(必须的)
-     * * string        status       摄像机状态(必须的)
-     * * string        channel      摄像机频道(必须的)
-     * * string        description  摄像机描述(必须的)
+     * * int            id              设备ID(必须的)
+     * * string        name             设备名称(必须的)
+     * * string        code             设备编号(必须的)
+     * * string        status           设备状态(必须的)
+     * * string        create_user_id   创建人(必须的)
      *
-     * @return view
+     * @return object
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2016-01-02
+     * @date 2016-01-02 16:06
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
@@ -160,7 +136,7 @@ class Vcr extends CommonModel implements MachineInterface
             }
             else
             {
-                throw new \Exception('没有找到该摄像机');
+                throw new \Exception('没有找到该PAD');
             }
 
 //            if($machine)
@@ -168,18 +144,18 @@ class Vcr extends CommonModel implements MachineInterface
 //                $machine    ->  name    =   $data['name'];
 //                if($machine->save())
 //                {
-                    $connection -> commit();
+            $connection -> commit();
 //                }
 //                else
 //                {
-//                    throw new \Exception('保存摄像机资源信息失败');
+//                    throw new \Exception('保存PAD资源信息失败');
 //                }
 
-                return $vcr;
+            return $vcr;
 //            }
 //            else
 //            {
-//                throw new   \Exception('没有找到摄像机资源信息');
+//                throw new   \Exception('没有找到PAD资源信息');
 //            }
         }
         catch(\Exception $ex)
@@ -208,7 +184,7 @@ class Vcr extends CommonModel implements MachineInterface
         {
             $bulder =   $bulder    ->  where('name','like','%'.$name.'%');
         }
-        if($status!=='')
+        if(!is_null($status))
         {
             $bulder =   $bulder    ->  where('status','=',$status);
         }

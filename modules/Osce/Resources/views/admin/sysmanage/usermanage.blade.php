@@ -46,18 +46,22 @@
             </tr>
             </thead>
             <tbody>
+                @forelse($list as $item)
                 <tr>
-                    <td>1</td>
-                    <td>zhangsan</td>
-                    <td>张三</td>
-                    <td>系统管理员</td>
-                    <td>13800000000</td>
-                    <td>2015/12/23 12:23:52</td>
+                    <td>{{$item->id}}</td>
+                    <td>{{$item->code}}</td>
+                    <td>{{$item->name}}</td>
+                    <td>-</td>
+                    <td>{{$item->user->mobile}}</td>
+                    <td>{{$item->user->lastlogindate}}</td>
                     <td>
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="#" class="status1" id="look" data-toggle="modal" data-target="#myModal">查看</a>
+                        <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}" class="status1" id="edit" data-toggle="modal" >编辑</a>
+                        <a href="#" class="status3" id="del" data-toggle="modal" data-target="#myModal">删除</a>
                     </td>
                 </tr>
+                @empty
+                @endforelse
             </tbody>
         </table>
 
