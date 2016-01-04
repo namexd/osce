@@ -79,10 +79,9 @@ class Laboratory extends Model
         return $builder->orderBy('id')->paginate(config('msc.page_size',10));
     }
 
-    public function OrdinaryLaboratoryList(){
-        $this->where()->paginate(config('msc.page_size',10));
+    public function OpenPlan(){
+        return  $this->hasOne('Modules\Msc\Entities\OpenPlan','lab_id','id');
     }
-
     /**
      * @param $data
      * @return array
@@ -90,9 +89,8 @@ class Laboratory extends Model
      * @date    2016年1月4日15:51:06
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetLaboratoryListData($data){
-        $this->
-        $LaboratoryList = [];
+    public function GetLaboratoryListData(){
+        $LaboratoryList = $this->where('open_type','=',1)->with('OpenPlan')->paginate(config('msc.page_size',10));
         return  $LaboratoryList;
     }
 
