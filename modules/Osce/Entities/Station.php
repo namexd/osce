@@ -13,6 +13,7 @@ use DB;
 
 class Station extends CommonModel
 {
+
     protected $connection = 'osce_mis';
     protected $table = 'station';
     public $timestamps = true;
@@ -56,7 +57,7 @@ class Station extends CommonModel
                 $formData[1],
                 'station_id' => $station_id
             ];
-            $result = PlaceVcr::create($placeVcrData);
+            $result = StationVcr::create($placeVcrData);
             array_push($resultArray, $result);
 
             //更改摄像机表中摄像机的状态
@@ -107,7 +108,14 @@ class Station extends CommonModel
         return $builder->first();
     }
 
-
+    /**
+     * 更新的方法
+     * @param $formData
+     * @param $id
+     * @return bool
+     * @throws \Exceptio
+     * @throws \Exception
+     */
     public function updateStation($formData, $id)
     {
         try {
@@ -118,25 +126,32 @@ class Station extends CommonModel
 
             //将原来的摄像机的状态回位
             //通过传入的考站的id找到原来的摄像机
-            $originalVcrId = PlaceVcr::where('station_id', '=', $id)->select('vcr_id')->first();
+            $originalVcrObj = StationVcr::where('station_id', '=', $id)->select('vcr_id')->first();
+            $originalVcrId = $originalVcrObj->id;
             $result = Vcr::findOrFail($originalVcrId);
+            //修改其状态
             $result->status = 1; //可能是1，也可能是其他值
+            //保存
             $result = $result->save();
             array_push($resultArray, $result);
 
-            //将place表的数据修改place表
+            //修改station表
             $placeData = $formData[0];
             $result = $this->where($this->table.'.id', '=', $id)->update($placeData);
             //获得修改后的id
             $station_id = $result->id;
             array_push($resultArray, $result);
 
-            //将考场摄像头的关联数据编辑关联表中
+            //删除与本考站相关的考站_摄像头关联
+            $result = StationVcr::where('station_id', '=', $id)->delete();
+            array_push($resultArray, $result);
+
+            //将考场摄像头的关联数据重新写进关联表中
             $placeVcrData = [
                 $formData[1],
                 'station_id' => $station_id
             ];
-            $result = PlaceVcr::where('station_id', '=', $id)->update($placeVcrData);
+            $result = StationVcr::where('station_id', '=', $id)->create($placeVcrData);
             array_push($resultArray, $result);
 
             //更改摄像机表中摄像机的状态
