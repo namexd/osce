@@ -17,7 +17,7 @@ class TestController extends Controller {
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function Index(){
-        return view('msc::admin.labmanage.lab_maintain');
+        return view('msc::admin.labmanage.resource_maintain');
     }
 
 

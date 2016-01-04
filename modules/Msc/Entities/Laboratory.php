@@ -24,20 +24,14 @@ class Laboratory extends Model
     //判断实验室类型
     public function getType($v){
         switch ($v) {
-            case 0:
-                $name = '不开放';
-                break;
             case 1:
-                $name = '只对学生开放';
+                $name = '实验室';
                 break;
             case 2:
-                $name = '只对老师开放';
+                $name = '准备间';
                 break;
-            case 3:
-                $name = '对所有人开放';
-                break;
-            case 4:
-                $name = '对指定用户开放';
+            default:
+                $name = '';
                 break;
         }
         return $name;
