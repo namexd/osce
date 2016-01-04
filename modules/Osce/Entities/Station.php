@@ -11,16 +11,16 @@ namespace Modules\Osce\Entities;
 
 use DB;
 
-class Place extends CommonModel
+class Station extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'place';
+    protected $table = 'station';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'type', 'time', 'room', 'create_user_id'];
+    protected $fillable = ['name', 'code', 'room_id', 'type', 'description', 'create_user_id'];
     public $search = [];
 
     public function vcrStation()
@@ -35,7 +35,7 @@ class Place extends CommonModel
      * @throws \Exceptio
      * @throws \Exception
      */
-    public function addPlace($formData)
+    public function addStation($formData)
     {
         try {
             $resultArray = [];
@@ -108,12 +108,52 @@ class Place extends CommonModel
     }
 
 
-    public function updatePlace($formData, $id)
+    public function updateStation($formData, $id)
     {
         try {
+            $resultArray = [];
+            //开启事务
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
 
+            //将原来的摄像机的状态回位
+            //通过传入的考站的id找到原来的摄像机
+            $originalVcrId = PlaceVcr::where('station_id', '=', $id)->select('vcr_id')->first();
+            $result = Vcr::findOrFail($originalVcrId);
+            $result->status = 1; //可能是1，也可能是其他值
+            $result = $result->save();
+            array_push($resultArray, $result);
+
+            //将place表的数据修改place表
+            $placeData = $formData[0];
+            $result = $this->where($this->table.'.id', '=', $id)->create($placeData);
+            //获得修改后的id
+            $station_id = $result->id;
+            array_push($resultArray, $result);
+
+            //将考场摄像头的关联数据编辑关联表中
+            $placeVcrData = [
+                $formData[1],
+                'station_id' => $station_id
+            ];
+            $result = PlaceVcr::where('station_id', '=', $id)->create($placeVcrData);
+            array_push($resultArray, $result);
+
+            //更改摄像机表中摄像机的状态
+            $vcr_id = $placeVcrData['vcr_id'];
+            $vcr = Vcr::findOrFail($vcr_id);  //找到选择的摄像机
+            $vcr->status = 0;  //变更状态,但是不一定是0
+            $result = $vcr->save();
+            array_push($resultArray, $result);
+
+            //判断$resultArray中是否有键值为false
+            if (array_search('false', $resultArray) !== false) {
+                $connection->rollBack();
+                throw new \Exceptio('新建房间时发生了错误,请重试!');
+            } else {
+                $connection->commit();
+                return true;
+            }
         } catch (\Exception $ex) {
             throw $ex;
         }

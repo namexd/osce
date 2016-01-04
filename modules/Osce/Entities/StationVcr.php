@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities;
 
 
-class PlaceVcr extends CommonModel
+class StationVcr extends CommonModel
 {
     protected $connection = 'osce_mis';
     protected $table = 'station_vcr';

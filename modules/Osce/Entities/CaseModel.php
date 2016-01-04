@@ -19,7 +19,7 @@ class CaseModel extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'detail', 'status'];
+    protected $fillable = ['name', 'code', 'description', 'create_user_id'];
     public $search = [];
 
     /**
