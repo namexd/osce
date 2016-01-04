@@ -24,7 +24,7 @@ class Devices  extends Model
 
     /**
      * 关联用户信息
-     * @return \App\Entities\User
+     * Modules\Msc\Entities\DevicesCate
      */
     public function devicesInfo()
     {

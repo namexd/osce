@@ -98,7 +98,7 @@
                 }else{
                     $.ajaxFileUpload({
                         type:"post",
-                        url:"",
+                        url:"/msc/admin/profession/profession-import",
                         fileElementId:"load_in",
                         success:function(data,status){
 
@@ -114,27 +114,37 @@
                 }
             })
             $('.edit').click(function () {
-                $('input[name=name]').val($(this).parent().parent().find('.name').html());;
-                $('input[name=code]').val($(this).parent().parent().find('.code').html());
+                if($(this).attr("data")){
+                    $('input[name=name]').val($(this).parent().parent().find('.name').html());;
+                    $('input[name=code]').val($(this).parent().parent().find('.code').html());
 //                var sname = $(this).parent().parent().find('.sname').html();
-                var status = '';
-                if($(this).parent().parent().find('.status').html() == '正常'){
-                    status = 1;
-                }else{
-                    status = 0;
-                }
-
-                $('.state option').each(function(){
-//                alert(status);
-                    if($(this).val() == status){
-                        $(this).attr('selected','selected');
+                    var status = '';
+                    if($(this).parent().parent().find('.status').html() == '正常'){
+                        status = 1;
+                    }else{
+                        status = 0;
                     }
 
-                });
-                $('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');
-                var id = $(this).attr("data");
-                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+                    $('.state option').each(function(){
+//                alert(status);
+                        if($(this).val() == status){
+                            $(this).attr('selected','selected');
+                        }
+                    });
+                    {{--$('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');--}}
+                    {{--var id = $(this).attr("data");--}}
+                    {{--$('#add_from').append('<input type="hidden" name="id" value="'+id+'">');--}}
+
+                    $('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');
+                    var id = $(this).attr("data");
+                    $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+                }
             });
+
+            $('#addprofession').click(function(){
+                $("input,textarea,select").val("");
+                $('#add_from').attr('action',"{{route('msc.admin.profession.ProfessionAdd')}}");
+            })
 
         })
 
@@ -160,9 +170,10 @@
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
                 <button class="btn btn_pl btn-success right">
-                    <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
-                        <span style="color: #fff;">新增专业</span>
-                    </a>
+                    <button href=""   id="addprofession"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">添加专业</button>
+                    {{--<a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">--}}
+                        {{--<span style="color: #fff;">新增专业</span>--}}
+                    {{--</a>--}}
                 </button>
                 <button class="btn btn_pl btn-white right button_margin" id="in">导入专业</button>
                 <input type="file" name="training" id="load_in" style="display: none" value="">
@@ -228,9 +239,13 @@
                         </tbody>
                     </table>
                 </form>
-
             </div>
         </div>
+        {{--分页--}}
+        <div class="btn-group pull-right">
+            <?php echo $pagination->render();?>
+        </div>
+    </div>
 
 @stop
 

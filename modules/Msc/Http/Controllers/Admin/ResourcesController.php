@@ -40,7 +40,7 @@ class ResourcesController extends MscController
     {
         $this->validate($request, [
             'keyword' => 'sometimes',
-            'status' => 'sometimes|in:1,2',
+            'status' => 'sometimes|in:0,1',
             'devices_cate_id' => 'sometimes|in:1,2,3,4'
         ]);
         $keyword = urldecode(e($request->input('keyword')));
@@ -63,10 +63,13 @@ class ResourcesController extends MscController
             ];
         }
 //        dd($list);
+        $devicetype = DB::connection('msc_mis')->table('device_cate')->get();
         return view('msc::admin.systemtable.resource_table',[
+            'pagination'=>$pagination,
             'list'         =>       $list,
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',
+            'devicetype' =>  $devicetype,
         ]);
     }
 
@@ -93,12 +96,11 @@ class ResourcesController extends MscController
      */
 
     public function postResourcesAdd(Request $request){
-//        dd(111111111111111);
         $this->validate($request,[
             'name'   => 'required|max:20',
             'devices_cate_id'=>'required',
             'detail'   =>  'required|max:20',
-            'status' =>   'required|in:1,2'
+            'status' =>   'required|in:0,1'
         ]);
          $data=[
              'name'=>Input::get('name'),
@@ -115,7 +117,7 @@ class ResourcesController extends MscController
     }
 
     /**
-     * 编辑回显资源
+     * 编辑回显资源暂时没有用
      *
      * @method post
      * @url /msc/admin/resources/resources-edit
@@ -151,11 +153,12 @@ class ResourcesController extends MscController
      * 修改资源
      */
     public  function postResourcesSave(Request $request){
+//        dd(222222);
         $this->validate($request,[
             'name'   => 'required|max:20',
             'devices_cate_id'=>'required',
             'detail'   =>  'required|max:20',
-            'status' =>   'required|in:1,2'
+            'status' =>   'required|in:0,1'
         ]);
         $data=[
             'name'=>Input::get('name'),

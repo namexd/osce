@@ -181,11 +181,14 @@
                     }
                 });
                 var open_type = $(this).parent().parent().find('.open_type').attr('data');
-                $('.opentype option').each(function(){
-                    if($(this).val() == open_type){
-                        $(this).attr('selected','selected');
-                    }
-                });
+                if(open_type){
+                    $('.opentype option').each(function(){
+                        if($(this).val() == open_type){
+                            $(this).attr('selected','selected');
+                        }
+                    });
+                }
+
                 $('#add_from').attr('action','{{route("msc.admin.laboratory.getEditLabInsert")}}');
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
@@ -240,19 +243,10 @@
 
 
                                         <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=0">不开放</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=1">实验室</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=1">只对学生开放</a>
-                                        </li>
-                                        <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=2">只对老师开放</a>
-                                        </li>
-                                        <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=3">对所有人开放</a>
-                                        </li>
-                                        <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=4">对指定用户开放</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=2">准备间</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -420,11 +414,8 @@
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b opentype" name="open_type">
                         <option value="-1">点击选择</option>
-                        <option value="0">不开放</option>
-                        <option value="1">只对学生开放</option>
-                        <option value="2">只对老师开放</option>
-                        <option value="3">对所有人开放</option>
-                        <option value="4">对指定用户开放</option>
+                        <option value="1">实验室</option>
+                        <option value="2">准备间</option>
                     </select>
                 </div>
             </div>

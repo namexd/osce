@@ -69,28 +69,38 @@
             }
         });
         $('.edit').click(function () {
-            $('input[name=name]').val($(this).parent().parent().find('.name').html());
-            $('input[name=description]').val($(this).parent().parent().find('.describe').html());
+            if($(this).attr("data")){
+                $('input[name=name]').val($(this).parent().parent().find('.name').html());
+                $('input[name=description]').val($(this).parent().parent().find('.describe').html());
 //                var sname = $(this).parent().parent().find('.sname').html();
-            var status = '';
-            if($(this).parent().parent().find('.status').html() ==='正常'){
-                status = 1;
-            }else{
-                status = 0;
-            }
+                var status = '';
+                if($(this).parent().parent().find('.status').html() ==='正常'){
+                    status = 1;
+                }else{
+                    status = 0;
+                }
 //            alert(status);
 //            var status = $(this).parent().parent().find('.status').attr('data');
-            $('.state option').each(function(){
+                $('.state option').each(function(){
 //                alert(status);
-                if($(this).val() == status){
-                    $(this).attr('selected','selected');
-                }
+                    if($(this).val() == status){
+                        $(this).attr('selected','selected');
+                    }
 
-            });
-            $('#add_from').attr('action','{{route("msc.admin.professionaltitle.HolderSave")}}');
-            var id = $(this).attr("data");
-            $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+                });
+                $('#add_from').attr('action','{{route("msc.admin.professionaltitle.HolderSave")}}');
+                var id = $(this).attr("data");
+                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+            }
+
         });
+
+        $('#addtitletable').click(function(){
+            $("input,textarea,select").val("");
+            $('#add_from').attr('action',"{{route('msc.admin.professionaltitle.HolderAdd')}}");
+        })
+
+
     })
 
 </script>
@@ -111,7 +121,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button href="/msc/admin/lab/had-open-lab-add" class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增职称</button>
+                <button href=""  id="addtitletable"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增职称</button>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -164,26 +174,15 @@
                         </tr>
                     @endforeach
                 @endif
-                {{--<tr>--}}
-                    {{--<td class="number">2</td>--}}
-                    {{--<td class="name">医师</td>--}}
-                    {{--<td class="describe">--}}
-                        {{--主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述--}}
-                    {{--</td>--}}
-                    {{--<td class="type">--}}
-                        {{--<span>正常</span>--}}
-                    {{--</td>--}}
-                    {{--<td class="opera">--}}
-                        {{--<a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>--}}
-                        {{--<span class="state1 stop">停用</span>--}}
-                        {{--<span class="state1 delete">删除</span>--}}
-                        {{--<input type="hidden" class="setid" value="2"/>--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
                 </tbody>
             </table>
-
         </form>
+    </div>
+    <div>
+    {{--分页--}}
+    <div class="btn-group pull-right">
+        <?php echo $pagination->render();?>
+    </div>
     </div>
 @stop
 

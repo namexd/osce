@@ -86,6 +86,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/delete-lab', ['uses'=>'LaboratoryController@getDeleteLab','as'=>'msc.admin.laboratory.getDeleteLab']);
 		Route::get('laboratory/stop-lab', ['uses'=>'LaboratoryController@getStopLab','as'=>'msc.admin.laboratory.getStopLab']);
 		Route::post('laboratory/edit-lab-insert', ['uses'=>'LaboratoryController@getEditLabInsert','as'=>'msc.admin.laboratory.getEditLabInsert']);
+		Route::get('laboratory/lab-clearnder', ['uses'=>'LaboratoryController@getLabClearnder','as'=>'msc.admin.laboratory.getLabClearnder']);
+		Route::get('laboratory/floor-lab', ['uses'=>'LaboratoryController@getFloorLab','as'=>'msc.admin.laboratory.getFloorLab']);
 		//资源路由
 		Route::controller('resources','resourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
@@ -104,6 +106,12 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('professionaltitle/holder-status/{id}',['uses'=>'ProfessionalTitleController@getHolderStatus','as'=>'msc.admin.professionaltitle.HolderStatus']);
 		Route::get('professionaltitle/holder-remove',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
 
+		//实验室资源维护路由
+		Route::controller('LadMaintain','LadMaintainController');
+		Route::get('ladMaintain/laboratory-list',['uses'=>'LadMaintainController@getLaboratoryList','as'=>'msc.admin.LadMaintain.LaboratoryList']);
+		Route::post('ladMaintain/devices-add',['uses'=>'LadMaintainController@postDevicesAdd','as'=>'msc.admin.LadMaintain.DevicesAdd']);
+		Route::get('ladMaintain/devices-total-edit',['uses'=>'LadMaintainController@getDevicesTotalEdit','as'=>'msc.admin.LadMaintain.DevicesTotalEdit']);
+		Route::get('ladMaintain/lad-devices-deletion',['uses'=>'LadMaintainController@getLadDevicesDeletion','as'=>'msc.admin.LadMaintain.LadDevicesDeletion']);
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){

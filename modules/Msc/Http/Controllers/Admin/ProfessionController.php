@@ -40,7 +40,7 @@ class ProfessionController extends MscController
    public function getProfessionList(Request $request){
       $this->validate($request, [
          'keyword '   =>    'sometimes',
-         'status'  =>   'sometimes|in:1,2'
+         'status'  =>   'sometimes|in:0,1'
       ]);
       $keyword  =   urldecode(e($request->input('keyword')));
       $status  = (int)$request->input('status');
@@ -61,6 +61,7 @@ class ProfessionController extends MscController
 //       dd($list);
        $ProfessionStatus =  config('msc.profession_status');
     return view('msc::admin.systemtable.major_table',[
+        'pagination'=>$pagination,
         'list'         =>       $list,
         'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
         'status'=>$request->input('status')?$request->input('status'):'',
@@ -88,16 +89,19 @@ class ProfessionController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postProfessionAdd(Request $request){
-
     $this->validate($request,[
         'name'   => 'required|max:50',
         'code'   =>  'required|max:32',
-        'status' =>   'required|in:1,2'
+        'status' =>   'required|in:0,1'
     ]);
-        $data = $request->only(['name','code','status']);
+        $data=[
+            'name'=>Input::get('name'),
+            'code'=>Input::get('code'),
+            'status'=>Input::get('status'),
+        ];
 
-        $profession = new StdProfessional();
-        $result =$profession->postAddProfession($data);
+        $result= StdProfessional::create($data);
+//        dd($result);
         if($result){
             return redirect()->back()->withInput()->withErrors('新增成功');
         }
@@ -291,7 +295,7 @@ class ProfessionController extends MscController
                         $professionData['status'] = 1;
                         break;
                     case "停用":
-                        $professionData['status'] = 2;
+                        $professionData['status'] = 0;
                         break;
                 };
                 if ($professionData['code'] && $professionData['name']) {

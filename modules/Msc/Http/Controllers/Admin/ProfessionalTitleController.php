@@ -59,6 +59,7 @@ class ProfessionalTitleController extends Controller
 //        dd($list);
 
         return view('msc::admin.systemtable.title_table',[
+            'pagination'=>$pagination,
             'list'         =>       $list,
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',
@@ -90,7 +91,7 @@ class ProfessionalTitleController extends Controller
         $this->validate($request,[
             'name'   => 'required|max:20',
             'description'   =>  'required|max:50',
-            'status' =>   'required|in:1,2'
+            'status' =>   'required|in:0,1'
         ]);
         $data=[
             'name'=>Input::get('name'),

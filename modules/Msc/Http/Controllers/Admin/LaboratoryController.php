@@ -16,9 +16,11 @@ use Modules\Msc\Entities\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Floor;
+use Illuminate\Support\Facades\Cache;
+use Modules\Msc\Http\Controllers\MscController;
 use URL;
 use DB;
-class LaboratoryController extends Controller {
+class LaboratoryController extends MscController {
 
     /**
      * Created by PhpStorm.
@@ -261,4 +263,49 @@ class LaboratoryController extends Controller {
             return 0;exit;
         }
     }
+
+
+    //TODO::实验室开放日历
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月4日11:09:03
+     * 实验室开发日历
+     */
+    public function getLabClearnder(){
+        $location = Floor::where('status','=',1)->get();
+        dd($location);
+        return view('msc::admin.labmanage.lab_maintain');
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月4日11:09:03
+     * 根据楼栋查找楼层及该楼层所有实验室
+     */
+    public function getFloorLab(){
+        $cacheData = Cache::get('key', function() {
+            $local_id = Input::get('lid');
+
+            $local = Floor::where('id','=',$local_id)->first();
+
+            $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
+
+            $labArr = [];
+            $where['status'] = 0;
+            $where['location_id'] = $local_id;
+            foreach($floor as $k=>$v){
+                $where['floor'] = $v;
+                $labArr[$k]['floor'] = $v;
+                $labArr[$k]['lab'] = Laboratory::where($where)->get();
+
+            }
+            return $labArr;
+        });
+        dd($cacheData);
+        //$this->success_data($cacheData,1,'success');
+    }
+
+
 }
