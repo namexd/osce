@@ -126,7 +126,7 @@ class StationController extends CommonController
      * @api       POST /osce/admin/station/edit-station
      * @access    public
      * @param Request $request get请求<br><br>
-     * @param Place $model Place的实例
+     * @param Station $model Station
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
