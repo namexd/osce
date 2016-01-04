@@ -64,6 +64,7 @@ class ResourcesController extends MscController
         }
 //        dd($list);
         return view('msc::admin.systemtable.resource_table',[
+            'pagination'=>$pagination,
             'list'         =>       $list,
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',
@@ -151,6 +152,7 @@ class ResourcesController extends MscController
      * ĞŞ¸Ä×ÊÔ´
      */
     public  function postResourcesSave(Request $request){
+//        dd(222222);
         $this->validate($request,[
             'name'   => 'required|max:20',
             'devices_cate_id'=>'required',

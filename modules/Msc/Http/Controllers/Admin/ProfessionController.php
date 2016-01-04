@@ -61,6 +61,7 @@ class ProfessionController extends MscController
 //       dd($list);
        $ProfessionStatus =  config('msc.profession_status');
     return view('msc::admin.systemtable.major_table',[
+        'pagination'=>$pagination,
         'list'         =>       $list,
         'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
         'status'=>$request->input('status')?$request->input('status'):'',

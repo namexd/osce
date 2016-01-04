@@ -94,7 +94,7 @@
                         $(this).attr('selected','selected');
                     }
                 });
-                
+
                 var status = '';
                 if($(this).parent().parent().find('.status').html() == '正常'){
                     status = 1;
@@ -110,6 +110,10 @@
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
             });
+
+            {{--$('#addResources').click(function(){--}}
+                {{--$('#add_from').attr('action',"{{route('msc.admin.resources.ResourcesAdd')}}");--}}
+            {{--})--}}
         })
     </script>
 @stop
@@ -131,8 +135,8 @@
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
                 <button class="btn btn_pl btn-success right">
-                    <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none;">
-                        <span style="color: #fff">添加资源</span>
+                    <a href=""  class="state1 edit" id="addResources" data-toggle="modal" data-target="#myModal" style="text-decoration: none;">
+                        <span style="color: #fff" >添加资源</span>
                     </a>
                 </button>
             </div>
@@ -221,35 +225,7 @@
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
-            <ul class="pagination">
-                <li>
-                    <span>«</span>
-                </li>
-                <li class="active">
-                    <span>1</span>
-                </li>
-                <li>
-                    <a>2</a>
-                </li>
-                <li>
-                    <a>3</a>
-                </li>
-                <li>
-                    <a>4</a>
-                </li>
-                <li>
-                    <a>5</a>
-                </li><li>
-                    <a>6</a>
-                </li>
-                <li>
-                    <a>7</a>
-                </li>
-                <li>
-                    <a>»</a>
-                </li>
-
-            </ul>
+            <?php  echo $pagination->render()?>
         </div>
 	</div>
 @stop

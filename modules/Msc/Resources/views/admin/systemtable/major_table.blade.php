@@ -98,7 +98,7 @@
                 }else{
                     $.ajaxFileUpload({
                         type:"post",
-                        url:"",
+                        url:"/msc/admin/profession/profession-import",
                         fileElementId:"load_in",
                         success:function(data,status){
 
@@ -129,12 +129,17 @@
                     if($(this).val() == status){
                         $(this).attr('selected','selected');
                     }
-
                 });
+                {{--$('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');--}}
+                {{--var id = $(this).attr("data");--}}
+                {{--$('#add_from').append('<input type="hidden" name="id" value="'+id+'">');--}}
+
                 $('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+
             });
+
 
         })
 
@@ -228,9 +233,13 @@
                         </tbody>
                     </table>
                 </form>
-
             </div>
         </div>
+        {{--分页--}}
+        <div class="btn-group pull-right">
+            <?php echo $pagination->render();?>
+        </div>
+    </div>
 
 @stop
 

@@ -59,6 +59,7 @@ class ProfessionalTitleController extends Controller
 //        dd($list);
 
         return view('msc::admin.systemtable.title_table',[
+            'pagination'=>$pagination,
             'list'         =>       $list,
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',

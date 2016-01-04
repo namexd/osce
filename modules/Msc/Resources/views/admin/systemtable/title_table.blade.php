@@ -164,26 +164,15 @@
                         </tr>
                     @endforeach
                 @endif
-                {{--<tr>--}}
-                    {{--<td class="number">2</td>--}}
-                    {{--<td class="name">医师</td>--}}
-                    {{--<td class="describe">--}}
-                        {{--主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述主任医师描述--}}
-                    {{--</td>--}}
-                    {{--<td class="type">--}}
-                        {{--<span>正常</span>--}}
-                    {{--</td>--}}
-                    {{--<td class="opera">--}}
-                        {{--<a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span> </a>--}}
-                        {{--<span class="state1 stop">停用</span>--}}
-                        {{--<span class="state1 delete">删除</span>--}}
-                        {{--<input type="hidden" class="setid" value="2"/>--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
                 </tbody>
             </table>
-
         </form>
+    </div>
+    <div>
+    {{--分页--}}
+    <div class="btn-group pull-right">
+        <?php echo $pagination->render();?>
+    </div>
     </div>
 @stop
 
