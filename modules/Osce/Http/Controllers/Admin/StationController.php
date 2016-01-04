@@ -12,16 +12,17 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\Room;
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
-class PlaceController extends CommonController
+class StationController extends CommonController
 {
     /**
      * 测试
-     * /osce/admin/place/test
+     * /osce/admin/station/test
      */
     public function getTest()
     {
@@ -31,7 +32,7 @@ class PlaceController extends CommonController
 
     /**
      * 考场新增的着陆页
-     * @api       GET /osce/admin/place/add-place
+     * @api       GET /osce/admin/station/add-station
      * @access    public
      * @param Request $request get请求<br><br>
      * @return view
@@ -39,7 +40,7 @@ class PlaceController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getAddPlace(Request $request)
+    public function getAddStation(Request $request)
     {
         //验证略
 
@@ -57,7 +58,7 @@ class PlaceController extends CommonController
 
     /**
      * 考场新增的业务逻辑
-     * @api       POST /osce/admin/place/add-place
+     * @api       POST /osce/admin/station/add-station
      * @access    public
      * @param Request $request get请求<br><br>
      * @return view
@@ -65,7 +66,7 @@ class PlaceController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postAddPlace(Request $request, Place $model)
+    public function postAddStation(Request $request, Station $model)
     {
         //验证略
 
@@ -76,7 +77,7 @@ class PlaceController extends CommonController
             $caseId = $request->only('case_id', 'create_user_id');
 
             $formData = [$placeData, $vcrId, $caseId];
-            $result = $model->addPlace($formData);
+            $result = $model->addStation($formData);
 
             //将当前时间限定的值放入session
             $time = $request->input('time');
@@ -94,7 +95,7 @@ class PlaceController extends CommonController
 
     /**
      * 考场编辑的着陆页
-     * @api       GET /osce/admin/place/add-place
+     * @api       GET /osce/admin/station/add-station
      * @access    public
      * @param Request $request get请求<br><br>
      * @return view
@@ -102,7 +103,7 @@ class PlaceController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getEditPlace(Request $request, Place $model)
+    public function getEditStation(Request $request, Station $model)
     {
         $this->validate($request, [
             'id' => 'required|integer'
@@ -120,7 +121,18 @@ class PlaceController extends CommonController
 
     }
 
-    public function postEditPlace(Request $request, Place $model)
+    /**
+     * 考场编辑的业务逻辑
+     * @api       POST /osce/admin/station/edit-station
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Place $model Place的实例
+     * @return view
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postEditStation(Request $request, Station $model)
     {
         //验证数据，暂时省略
 
@@ -132,7 +144,7 @@ class PlaceController extends CommonController
             $id = $request->input('id');
 
             $formData = [$placeData, $vcrId, $caseId];
-            $result = $model->updatePlace($formData, $id);
+            $result = $model->updateStation($formData, $id);
 
 
             if (!$result) {
@@ -147,7 +159,7 @@ class PlaceController extends CommonController
     }
 
     /**
-     * 下拉菜单
+     * 下拉菜单，单独封装成了一个方法
      * @return array
      */
     protected function dropDownList()
@@ -161,6 +173,4 @@ class PlaceController extends CommonController
         $subject = Subject::all(['id', 'title']);
         return array($placeCate, $vcr, $room, $subject);  //评分标准
     }
-
-
 }
