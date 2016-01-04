@@ -44,28 +44,6 @@ class CaseModel extends CommonModel
         return $builder;
     }
 
-    /**
-     * 插入数据
-     * @param $formData
-     */
-    public function insertData($formData)
-    {
-        DB::transaction(function () use ($formData) {
-            $this->insert($formData);
-            return true;
-        });
-    }
 
-    /**
-     * 修改一条数据
-     * @param $id
-     * @param $formData
-     */
-    public function updateData($id, $formData)
-    {
-        DB::transaction(function () use ($id, $formData) {
-            $this->where($this->table . '.id', $id)->update($formData);
-            return true;
-        });
-    }
+
 }

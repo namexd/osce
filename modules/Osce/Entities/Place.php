@@ -1,17 +1,18 @@
 <?php
 /**
+ * 考站
  * Created by PhpStorm.
- * User: j5110
- * Date: 2015/12/28
- * Time: 12:00
+ * User: CoffeeKizoku
+ * Date: 2016/1/3
+ * Time: 10:31
  */
 
 namespace Modules\Osce\Entities;
 
+use DB;
 
 class Place extends CommonModel
 {
-
     protected $connection = 'osce_mis';
     protected $table = 'place';
     public $timestamps = true;
@@ -19,73 +20,102 @@ class Place extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'pid', 'address'];
+    protected $fillable = ['name', 'type', 'time', 'room', 'create_user_id'];
     public $search = [];
 
-    /**
-     * 得到place的列表
-     * @param $formData
-     * @param $pid
-     * @return
-     */
-    public function showPlaceList($formData, $pid = 1)
+    public function vcrStation()
     {
+        return $this->hasMany('Modules\Osce\Entities\PlaceVcr', 'station_id', 'id');
+    }
 
-        if ($formData['id'] !== null) {
-            $builder = $this->where($this->table . '.id', $formData['id']);
+    /**
+     * 将数据插入各表,创建考室
+     * @param $formData 0为$placeData,1为$vcrId,2为$caseId
+     * @return bool
+     * @throws \Exceptio
+     * @throws \Exception
+     */
+    public function addPlace($formData)
+    {
+        try {
+            $resultArray = [];
+            //开启事务
+            $connection = DB::connection($this->connection);
+            $connection->beginTransaction();
 
-            return $builder->first();
-        } else {
-            //默认查询status不为0（已删除）的场所
-            $builder = $this->where($this->table . '.status', '<>', 0);
+            //将place表的数据插入place表
+            $placeData = $formData[0];
+            $result = $this->create($placeData);
+            //获得插入后的id
+            $station_id = $result->id;
+            array_push($resultArray, $result);
 
-            //根据pid进行查询
-            $builder = $builder->where($this->table . '.pid', '=', $pid);
 
-            //如果order不为空的话，就使用order的数据，否则就指定，暂时不考虑排序
-//        $orderName = empty($formData['order_name']) ? 1 : $formData['order_name'];
-//        $orderBy = empty($formData['order_by']) ? 'desc' : $formData['order_by'];
-//        $paramArray = ['created_at'];
-//        $builder = $this->order($builder, $orderName, $orderBy, $paramArray);
+            //将考场摄像头的关联数据写入关联表中
+            $placeVcrData = [
+                $formData[1],
+                'station_id' => $station_id
+            ];
+            $result = PlaceVcr::create($placeVcrData);
+            array_push($resultArray, $result);
 
-            //如果keyword不为空，那么就进行模糊查询
-            if ($formData['keyword'] !== null) {
-                $builder = $builder->where($this->table . '.created_at', '=', '%' . $formData['keyword'] . '%');
+            //更改摄像机表中摄像机的状态
+            $vcr_id = $placeVcrData['vcr_id'];
+            $vcr = Vcr::findOrFail($vcr_id);
+            $vcr->status = 0;  //变更状态,但是不一定是0
+            $result = $vcr->save();
+            array_push($resultArray, $result);
+
+            //判断$resultArray中是否有键值为false
+            if (array_search('false', $resultArray) !== false) {
+                $connection->rollBack();
+                throw new \Exceptio('新建房间时发生了错误,请重试!');
+            } else {
+                $connection->commit();
+                return true;
             }
-
-            //选择查询的字段
-            $builder = $builder->select([
-                'id',
-                'name',
-                'status'
-            ]);
-
-            return $builder->paginate(config('osce.page_size'));
+        } catch (\Exception $ex) {
+            throw $ex;
         }
     }
 
     /**
-     * 修改数据
+     * 为编辑着陆页准备的回显数据
      * @param $id
-     * @param $formData
+     * @return mixed
      */
-    public function updateData($id, $formData)
+    public function rollMsg($id)
     {
-        DB::transaction(function () use ($id, $formData) {
-            $this->where($this->table .'.id', $id)->update($formData);
-            return true;
-        });
+        $builder = $this->leftJoin(
+            'place_vcr',
+            function ($join) use ($id) {
+                $join->on('place_vcr.station_id', '=', $id);
+            }
+        );
+
+        $builder->select([
+            $this->table . '.id as id',
+            $this->table . '.name as name',
+            $this->table . '.type as type',
+            $this->table . '.time as time',
+            $this->table . '.room_id as room_id',
+            $this->table . '.create_user_id as create_user_id',
+            $this->table . '.subject_id as subject_id',
+            'place_vcr.vcr_id as vcr_id',
+        ]);
+
+        return $builder->first();
     }
 
-    /**
-     * 插入数据
-     * @param $formData
-     */
-    public function insertData($formData)
+
+    public function updatePlace($formData, $id)
     {
-        DB::transaction(function () use ($formData) {
-            $this->insert($formData);
-            return true;
-        });
+        try {
+            $connection = DB::connection($this->connection);
+            $connection->beginTransaction();
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }

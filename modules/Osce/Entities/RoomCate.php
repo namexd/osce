@@ -8,13 +8,12 @@
 
 namespace Modules\Osce\Entities;
 
-use DB;
 
-class PlaceCate extends CommonModel
+class RoomCate extends CommonModel
 {
 
     protected $connection = 'osce_mis';
-    protected $table = 'place_cate';
+    protected $table = 'room_cate';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
@@ -39,11 +38,14 @@ class PlaceCate extends CommonModel
      */
     public function showPlaceCateList($formData)
     {
-        //默认查询status不为0（已删除）的场所类别
-        $builder = $this->where($this->table . '.status', '<>', 0);
-
+        //选择查询的字段
+        $builder = $this->select([
+            'id',
+            'name',
+            'status'
+        ]);
         //如果传入了ID，那么就依据ID进行查找
-        if ($formData['id'] !== null) {
+        if (array_key_exists('id',$formData)) {
             $builder = $builder->where($this->table . '.id', $formData['id']);
         }
 
@@ -61,50 +63,7 @@ class PlaceCate extends CommonModel
             $builder = $builder->where($this->table . '.created_at', '=', '%' . $formData['keyword'] . '%');
         }
 
-        //选择查询的字段
-        $builder = $builder->select([
-            'id',
-            'name',
-            'status'
-        ]);
-
         return $builder->paginate(config('osce.page_size'));
     }
 
-    /**
-     * 插入数据
-     * @param $formData
-     */
-    public function insertData($formData)
-    {
-        DB::transaction(function () use ($formData) {
-            $this->insert($formData);
-            return true;
-        });
-    }
-
-    /**
-     * 修改数据
-     * @param $id
-     * @param $formData
-     */
-    public function updateData($id, $formData)
-    {
-        DB::transaction(function () use ($id, $formData) {
-            $this->where($this->table .'.id', $id)->update($formData);
-            return true;
-        });
-    }
-
-    /**
-     * 删除数据
-     * @param $id
-     */
-    public function deleteData($id)
-    {
-        DB::transaction(function () use ($id) {
-            $this->where($this->table.'.id',$id)->delete();
-            return true;
-        });
-    }
 }
