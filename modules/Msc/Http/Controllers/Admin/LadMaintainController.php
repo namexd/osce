@@ -41,23 +41,19 @@ class LadMaintainController extends MscController
     public function getLaboratoryList(Request $request){
         $this->validate($request,[
             'keyword' => 'sometimes',
-            'devicename' => 'devicename',
-            'devicetype' =>  'devicetype'
         ]);
         $data=[
             'keyword'=> Input::get('keyword'),
-            'devicename' =>Input::get('devicename'),
-            'devicetype'    => Input::get('devicetype')
         ];
 
-        $location= Floor::where('name', '=',$data['keyword'])->get();
+//        $location= Floor::where('name', '=',$data['keyword'])->get();
 
 
 
-//        $location =Floor::where('status','=',1)->get();
+        $location =Floor::where('status','=',1)->get();
 
-        dd($location);
-        return view('msc::admin.labmanage.lab_maintain');
+//        dd($location);
+        return view('msc::admin.labmanage.resource_maintain');
 
     }
 
