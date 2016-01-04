@@ -91,7 +91,7 @@ class ProfessionalTitleController extends Controller
         $this->validate($request,[
             'name'   => 'required|max:20',
             'description'   =>  'required|max:50',
-            'status' =>   'required|in:1,2'
+            'status' =>   'required|in:0,1'
         ]);
         $data=[
             'name'=>Input::get('name'),

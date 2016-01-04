@@ -15,16 +15,12 @@ class StdProfessional extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'student_professional';
-    protected $fillable 	=	["id","name","code"];
+    protected $fillable 	=	["id","name","code","created_user_id","status"];
     public $incrementing	=	true;
     public $timestamps	=	false;
     protected $primaryKey	=	'id';
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
-
-
-
-
 
 //获得专业分页列表
 
@@ -45,25 +41,17 @@ class StdProfessional extends Model
    }
 
 
-    //新增专业
-    public  function postAddProfession($data){
-
-//         $profession  = $this->where('code',$data['code'])->select('code')->frist();
-//        if($profession){
-//            $profession_code=$profession->code;
+//    //新增专业
+//    public  function postAddProfession($data){
 //
-//            if($profession_code==$data['mobile']){
-//                return false;
-//            }
-//        }
-        $item=array(
-            'name'=>$data['name'],
-            'code'=>$data['code'],
-            'status'=>$data['status']
-        );
-        $result=$this->create($item);
-        return $result;
-    }
+//        $item=array(
+//            'name'=>$data['name'],
+//            'code'=>$data['code'],
+//            'status'=>$data['status']
+//        );
+//        $result=$this->create($item);
+//        return $result;
+//    }
 
 
 //提交编辑
@@ -75,19 +63,6 @@ class StdProfessional extends Model
         ];
         return $this->where('id','=',$data['id'])->update($input);
     }
-
-//改变专业状态
-    public  function changeStatus($professionId){
-        $data=$this->where('id',$professionId)->select('status')->first();
-
-        foreach($data as $tmp){
-            $status=$tmp;
-        };
-
-        return $this->where('id',$professionId)->update(['status'=>3-$status]);
-
-    }
-
 
     //专业删除
      public  function  SoftTrashed($id){

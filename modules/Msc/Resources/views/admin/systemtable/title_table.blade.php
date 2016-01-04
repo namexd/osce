@@ -94,6 +94,13 @@
             }
 
         });
+
+        $('#addtitletable').click(function(){
+            $("input,textarea,select").val("");
+            $('#add_from').attr('action',"{{route('msc.admin.professionaltitle.HolderAdd')}}");
+        })
+
+
     })
 
 </script>
@@ -114,7 +121,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button href="/msc/admin/lab/had-open-lab-add" class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增职称</button>
+                <button href=""  id="addtitletable"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增职称</button>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
