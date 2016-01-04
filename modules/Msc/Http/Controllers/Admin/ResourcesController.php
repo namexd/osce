@@ -96,7 +96,6 @@ class ResourcesController extends MscController
      */
 
     public function postResourcesAdd(Request $request){
-//        dd(111111111111111);
         $this->validate($request,[
             'name'   => 'required|max:20',
             'devices_cate_id'=>'required',
@@ -118,7 +117,7 @@ class ResourcesController extends MscController
     }
 
     /**
-     * 编辑回显资源
+     * 编辑回显资源暂时没有用
      *
      * @method post
      * @url /msc/admin/resources/resources-edit
