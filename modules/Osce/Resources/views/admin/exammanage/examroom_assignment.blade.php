@@ -23,6 +23,14 @@
         line-height: 30px;
     }
     table tr td input[type="checkbox"]{margin-top: 0}
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #e5e6e7;
+        border-radius: 0;
+    }
+    .select2-container--default .select2-selection--multiple:focus{
+        border-color: #1ab394!important;
+        width: 100%;
+    }
     </style>
 @stop
 
@@ -92,6 +100,9 @@
                                                     <td>
                                                         <select class="form-control js-example-basic-multiple" name="teacher_dept" id="professional"  multiple="multiple">
                                                             <option value="">不限</option>
+                                                            <option>张老师</option>
+                                                            <option>陈老师</option>
+                                                            <option>杨老师</option>
                                                         </select>
                                                     </td>
                                                     <td><input type="checkbox">必考</td>
