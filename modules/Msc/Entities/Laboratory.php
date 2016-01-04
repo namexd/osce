@@ -89,4 +89,17 @@ class Laboratory extends Model
         $this->where()->paginate(config('msc.page_size',10));
     }
 
+    /**
+     * @param $data
+     * @return array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月4日15:51:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetLaboratoryListData($data){
+        $this->
+        $LaboratoryList = [];
+        return  $LaboratoryList;
+    }
+
 }
