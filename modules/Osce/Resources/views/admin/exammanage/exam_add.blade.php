@@ -103,10 +103,10 @@ span.laydate-icon{
     </div>
 
 </div>
+@stop{{-- 内容主体区域 --}}
 
-@stop
 
 @section('only_js')
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
-@stop{{-- 内容主体区域 --}}
+@stop

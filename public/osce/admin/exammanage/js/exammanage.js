@@ -6,6 +6,7 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "exam_add":exam_add();break; 
+        case "add_basic":add_basic();break; 
     }
 
 });
@@ -18,6 +19,30 @@ $(function(){
  * @return  {[type]}   [description]
  */
 function exam_add(){
+	//时间选择
+	timePicker(pars.background_img);
+}
+
+/**
+ * 新增考试 基础信息
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-04
+ */
+function add_basic(){
+	//时间选择
+	timePicker(pars.background_img);
+}
+
+/**
+ * 时间选择
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-04
+ * @param   {string}   background 图标地址
+ * @return  {[type]}              [description]
+ */
+function timePicker(background){
 
     /**
      * 日期插件配置
@@ -71,7 +96,7 @@ function exam_add(){
 
     $('.laydate').on('mouseenter',function(){
         //图标路径
-        var url = pars.background_img+"/skins/default/icon2.png";
+        var url = background+"/skins/default/icon2.png";
         $(this).find('span').css('background-image','url('+url+')');
     });
 
