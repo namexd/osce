@@ -59,67 +59,57 @@
                 </div>
                 <div class="ibox-content">
                     <div class="treeview">
-                        {{--<div class="list-group" style="margin-bottom: 0;">--}}
-                            {{--<div class="list-group-item list-group-parent">--}}
-                                {{---1楼--}}
-                                {{--<i class="fa fa-angle-right right"></i>--}}
-                            {{--</div>--}}
-                            {{--<div class="lab_num">--}}
-                                {{--<div class="list-group-item list-group-child">临床1教</div>--}}
-                                {{--<div class="list-group-item list-group-child">临床2教</div>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                        {{--<div class="list-group" style="margin-bottom: 0;">--}}
-                            {{--<div class="list-group-item list-group-parent">--}}
-                                {{---1楼--}}
-                                {{--<i class="fa fa-angle-right right"></i>--}}
-                            {{--</div>--}}
-                            {{--<div class="lab_num">--}}
-                                {{--<div class="list-group-item list-group-child">临床1教</div>--}}
-                                {{--<div class="list-group-item list-group-child">临床2教</div>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    </div>
-                    <div class="container-fluid">
-                        <div class="accordion" id="accordion2">
-                            <div class="accordion-group">
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                                        Click me to exapand. Click me again to collapse. Part I.
-                                    </a>
-                                </div>
-                                <div id="collapseOne" class="accordion-body collapse" style="height: 0px; ">
-                                    <div class="accordion-inner">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                    </div>
-                                </div>
+                        <div class="list-group" style="margin-bottom: 0;">
+                            <div class="list-group-item list-group-parent">
+                                -1楼
+                                <i class="fa fa-angle-right right"></i>
                             </div>
-                            <div class="accordion-group">
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                                        Click me to exapand. Click me again to collapse. Part II.
-                                    </a>
-                                </div>
-                                <div id="collapseTwo" class="accordion-body collapse">
-                                    <div class="accordion-inner">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                    </div>
-                                </div>
+                            <div class="lab_num">
+                                <div class="list-group-item list-group-child">临床1教</div>
+                                <div class="list-group-item list-group-child">临床2教</div>
                             </div>
-                            <div class="accordion-group">
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-                                        Click me to exapand. Click me again to collapse. Part III.
-                                    </a>
-                                </div>
-                                <div id="collapseThree" class="accordion-body collapse">
-                                    <div class="accordion-inner">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="list-group" style="margin-bottom: 0;">
+                            <div class="list-group-item list-group-parent">
+                                -1楼
+                                <i class="fa fa-angle-right right"></i>
+                            </div>
+                            <div class="lab_num">
+                                <div class="list-group-item list-group-child">临床1教</div>
+                                <div class="list-group-item list-group-child">临床2教</div>
                             </div>
                         </div>
                     </div>
+
+                    <ul class="nav" id="side-menu">
+
+                        <li>
+                            <a href="#"><i class="fa fa-table"></i> <span class="nav-label">学生信息审核</span><span class="fa fa-angle-right right"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li>
+                                    <a class="J_menuItem" href="http://www.mis.hx/msc/admin/verify/student" data-index="0">学生注册审核</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li  class="active">
+                            <a href="#"><i class="fa fa-table"></i> <span class="nav-label">楼栋信息管理</span><span class="fa fa-angle-right right"></span></a>
+                            <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                                <li>
+                                    <a class="J_menuItem" href="http://www.mis.hx/msc/admin/floor/index" data-index="1">楼栋列表</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li >
+                            <a href="#"><i class="fa fa-table"></i> <span class="nav-label">实验室管理</span><span class="fa arrow right"></span></a>
+                            <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+                                <li>
+                                    <a class="J_menuItem" href="http://www.mis.hx/msc/admin/laboratory/index" data-index="2">实验室列表</a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                    </ul>
 
 
                 </div>
