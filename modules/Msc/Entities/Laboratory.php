@@ -85,4 +85,8 @@ class Laboratory extends Model
         return $builder->orderBy('id')->paginate(config('msc.page_size',10));
     }
 
+    public function OrdinaryLaboratoryList(){
+        $this->where()->paginate(config('msc.page_size',10));
+    }
+
 }
