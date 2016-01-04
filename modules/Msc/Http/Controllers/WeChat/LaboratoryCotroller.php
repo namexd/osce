@@ -48,7 +48,7 @@ class LaboratoryCotroller extends MscWeChatController
     /**
      * 获取普通实验室列表
      * @method GET
-     * @url /msc/wechat/laboratory-list-data
+     * @url /msc/wechat/laboratory/laboratory-list-data
      * @access public
      * @DateTime 时间（筛选预约的时间）
      * @return \Illuminate\Http\JsonResponse
@@ -58,7 +58,8 @@ class LaboratoryCotroller extends MscWeChatController
      */
     public function LaboratoryListData(){
         $data = [];
-        $this->Laboratory;
+        $data = $this->Laboratory->GetLaboratoryListData();
+        dd($data);
         return response()->json(
             $this->success_rows(1,'获取成功',$data->total(),20,$data->currentPage(),array('ClassroomApplyList'=>$data))
         );
