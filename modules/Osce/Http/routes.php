@@ -50,14 +50,14 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('topic/edit-topic', 	['uses'=>'TopicController@postEditTopic','as'=>'osce.admin.topic.postEditTopic']);
 
 		//考场
-		Route::get('place/place-list', 	['uses'=>'PlaceController@getPlaceList','as'=>'osce.admin.Place.getPlaceList']);
-		Route::get('place/edit-place', 	['uses'=>'PlaceController@getEditPlace','as'=>'osce.admin.Place.getEditPlace']);
-		Route::get('place/add-place', 	['uses'=>'PlaceController@getAddPlace','as'=>'osce.admin.Place.getAddPlace']);
+		Route::get('station/station-list', 	['uses'=>'StationController@getStationList','as'=>'osce.admin.Station.getStationList']);
+		Route::get('station/edit-station', 	['uses'=>'StationController@getEditStation','as'=>'osce.admin.Station.getEditStation']);
+		Route::get('station/add-station', 	['uses'=>'StationController@getAddStation','as'=>'osce.admin.Station.getAddStation']);
 
 
 		//场所分类
-		Route::get('place/place-cate-list',['uses'=>'PlaceController@getPlaceCateList','as'=>'osce.admin.place.getPlaceCateList']);
-		Route::get('place/edit-place-cate',['uses'=>'PlaceController@getEditPlaceCate','as'=>'osce.admin.place.getEditPlaceCate']);
+		Route::get('room-cate/room-cate-list',['uses'=>'RoomCateController@getRoomCateList','as'=>'osce.admin.room.getRoomCateList']);
+		Route::get('room-cate/edit-room-cate',['uses'=>'RoomCateController@getEditRoomCate','as'=>'osce.admin.room.getEditRoomCate']);
 
 		//用户管理
 		Route::get('user/staff-list', 	['uses'=>'UserController@getStaffList','as'=>'osce.admin.user.getStaffList']);

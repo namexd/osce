@@ -61,7 +61,9 @@ class StationController extends CommonController
      * @api       POST /osce/admin/station/add-station
      * @access    public
      * @param Request $request get请求<br><br>
+     * @param Station $model
      * @return view
+     * @throws \Exceptio
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -98,6 +100,7 @@ class StationController extends CommonController
      * @api       GET /osce/admin/station/add-station
      * @access    public
      * @param Request $request get请求<br><br>
+     * @param Station $model
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
