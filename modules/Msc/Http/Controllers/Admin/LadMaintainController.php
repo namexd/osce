@@ -11,6 +11,7 @@ namespace Modules\Msc\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Msc\Entities\Floor;
 use Modules\Msc\Entities\LadDevice;
 use Modules\Msc\Http\Controllers\MscController;
 
@@ -26,7 +27,7 @@ class LadMaintainController extends MscController
      * <b>post请求字段：</b>
      * * string        keyword       试验室相关地址
      * * string        devicename     资源名称
-     * * string        devicetype     资源名称
+     * * string        devicetype     资源类型名称
      *
      * @return view
      *
@@ -39,10 +40,23 @@ class LadMaintainController extends MscController
 
     public function getLaboratoryList(Request $request){
         $this->validate($request,[
-            'keyword' => 'sometimes'
+            'keyword' => 'sometimes',
+            'devicename' => 'devicename',
+            'devicetype' =>  'devicetype'
         ]);
+        $data=[
+            'keyword'=> Input::get('keyword'),
+            'devicename' =>Input::get('devicename'),
+            'devicetype'    => Input::get('devicetype')
+        ];
 
-        dd(1111111111111);
+        $location= Floor::where('name', '=',$data['keyword'])->get();
+
+
+
+//        $location =Floor::where('status','=',1)->get();
+
+        dd($location);
         return view('msc::admin.labmanage.lab_maintain');
 
     }
@@ -73,7 +87,6 @@ class LadMaintainController extends MscController
             'device_id' => 'required|integer',
             'total'    => 'required|integer',
         ]);
-
         $data=[
             'lad_id'=> Input::get('lad_id'),
             'device_id' =>Input::get('device_id'),
@@ -158,7 +171,23 @@ class LadMaintainController extends MscController
 
     }
 
+  //计算楼层层数
+    public function getFloorNumber($ground ,$underground){
+        $arr=array();
+        $brr = array();
+//        地下
+        for($i=$underground;$i>0;$i--){
+            $arr['-'.$i]='-'.$i;
+        }
+//        地上
+        for($i=1;$i<=$ground;$i++){
+            $brr[$i]=$i;
+        }
+        $data = array_merge($arr,$brr);
+        return $data;
 
+
+    }
 
 
 
