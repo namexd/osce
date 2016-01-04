@@ -33,11 +33,13 @@
                     <li>
                         <a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a class="active J_menuItem" href="">候考</a>
+                            <li><a class="active J_menuItem" href="">考试安排</a>
                             </li>
-                            <li><a class="active J_menuItem" href="">监考</a>
+                            <li><a class="active J_menuItem" href="">考生查询</a>
                             </li>
-                            <li><a class="active J_menuItem" href="">巡考</a>
+                            <li><a class="active J_menuItem" href="">成绩查询</a>
+                            </li>
+                            <li><a class="active J_menuItem" href="">咨询&通知</a>
                             </li>
                         </ul>
                     </li>
