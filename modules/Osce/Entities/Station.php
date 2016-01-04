@@ -126,7 +126,7 @@ class Station extends CommonModel
 
             //将place表的数据修改place表
             $placeData = $formData[0];
-            $result = $this->where($this->table.'.id', '=', $id)->create($placeData);
+            $result = $this->where($this->table.'.id', '=', $id)->update($placeData);
             //获得修改后的id
             $station_id = $result->id;
             array_push($resultArray, $result);
@@ -136,7 +136,7 @@ class Station extends CommonModel
                 $formData[1],
                 'station_id' => $station_id
             ];
-            $result = PlaceVcr::where('station_id', '=', $id)->create($placeVcrData);
+            $result = PlaceVcr::where('station_id', '=', $id)->update($placeVcrData);
             array_push($resultArray, $result);
 
             //更改摄像机表中摄像机的状态
