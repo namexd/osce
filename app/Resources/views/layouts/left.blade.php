@@ -50,7 +50,14 @@
                             </li>
                         </ul>
                     </li>
-
+                    <li>
+                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label">实验室开放日历</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.laboratory.getLabClearnder')}}">开放日历管理</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="#"><i class="fa fa-table"></i> <span class="nav-label">系统表管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
