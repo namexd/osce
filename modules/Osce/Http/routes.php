@@ -64,7 +64,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('user/edit-staff', 	['uses'=>'UserController@getEditStaff','as'=>'osce.admin.user.getEditStaff']);
 
 		//测试
-		Route::get('place/test', 	['uses'=>'PlaceController@getTest','as'=>'osce.admin.Place.getTest']);
+		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
 
 	});
 
