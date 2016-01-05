@@ -59,6 +59,9 @@ class LadMaintainController extends MscController
         //楼栋数据
         $location =Floor::where('status','=',1)->get();
 //        dd($location);
+        //楼栋的楼层及楼层试验室数据
+        $FloorLad = $this->getFloorLab();
+//        dd($FloorLad);
         //试验室的设备数据
 //        $LadDevices =new LadDevice();
 //        $LadDevice = $LadDevices->getLadDevice();
@@ -222,11 +225,9 @@ class LadMaintainController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getFloorLab(){
-        $cacheData = Cache::get('key', function() {
+        $cacheData = Cache::get('key',function() {
             $local_id = Input::get('lid');
-
             $local = Floor::where('id','=',$local_id)->first();
-
             $floor = $this->getFloorNumber($local['floor_top'],$local['floor_buttom']);
 
             $labArr = [];
@@ -235,15 +236,17 @@ class LadMaintainController extends MscController
             foreach($floor as $k=>$v){
                 $where['floor'] = $v;
                 $labArr[$k]['floor'] = $v;
-                $labArr[$k]['lab'] = Laboratory::where($where)->get();
-
+                $data = Laboratory::where($where)->get();
+                $labArr[$k]['lab'] = $data->toArray();
             }
-//            return $labArr;
+            return $labArr;
         });
-//        $this->success_data($cacheData,1,'success');
-        return response()->json(
-            $this->success_data(['result' => true, 'cacheData' => $cacheData])
-        );
+        //$str = json_encode($cacheData);
+        return $cacheData;
+        //$this->success_data($cacheData,1,'success');
+//        return response()->json(
+//            $this->success_data(['result' => true, 'cacheData' => $cacheData])
+//        );
     }
 
 
