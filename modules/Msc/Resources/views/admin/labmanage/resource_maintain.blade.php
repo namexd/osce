@@ -168,7 +168,10 @@
                 <thead>
                 <tr>
                     <th>
-                        <input type="checkbox">
+                        <label class="check_label checkbox_input">
+                            <div class="check_real check_icon display_inline"></div>
+                            <input type="hidden" name="" value="">
+                        </label>
                     </th>
                     <th>序号</th>
                     <th>数量</th>
@@ -203,7 +206,10 @@
                 <tbody>
                 <tr>
                     <td>
-                        <input type="checkbox">
+                        <label class="check_label checkbox_input">
+                            <div class="check_real check_icon display_inline"></div>
+                            <input type="hidden" name="" value="">
+                        </label>
                     </td>
                     <td>
                         1

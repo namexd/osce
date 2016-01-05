@@ -3,11 +3,6 @@
 @section('only_css')
 
     <style>
-        .check_name{
-            font-weight: normal;
-            float: right;
-            text-indent: 6px;
-        }
         .clear_padding{
             padding: 0;
         }
@@ -16,9 +11,6 @@
         }
         .border-bottom{
             border-bottom: none!important;
-        }
-        .display_inline{
-            display: inline-block;
         }
         .btn-default{
             color: #9c9c9c;

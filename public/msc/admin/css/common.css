@@ -98,7 +98,8 @@ a{-webkit-touch-callout:none;}
 .check_icon.check{background-position:-32px 0}
 .check_label:hover .check_icon.check{background-position:-32px 0}
 .check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
-
+.display_inline{display: inline-block;}
+.check_name{font-weight: normal;float: right;text-indent: 6px;}
 
 /*�����޸�buttonĬ����ɫЧ��*/
 .btn-primary{
