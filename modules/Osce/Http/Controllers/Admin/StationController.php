@@ -29,6 +29,36 @@ class StationController extends CommonController
         return view('osce::admin.exammanage.examroom_assignment');
     }
 
+    /**
+     * 考场列表的着陆页
+     * @api       GET /osce/admin/station/station-list
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Station $model
+     * @return view
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStationList(Request $request, Station $model)
+    {
+        //验证略
+
+        //传入排序
+        $orderType = empty(config('order_type')) ? 'created_at' : config('order_type');
+        $orderBy = empty(config('order_by')) ? 'desc' : config('order_by');
+
+        //拼凑一个order数组
+        $order = [$orderType, $orderBy];
+
+        //获得展示数据
+        $data = $model->showList($order);
+
+        //将展示数据放在页面上
+        return view('osce::admin.resourcemanage.examroom',
+            ['data' => $data]);
+
+    }
 
     /**
      * 考场新增的着陆页

@@ -30,6 +30,31 @@ class Station extends CommonModel
     }
 
     /**
+     * 获得station列表
+     * @param array $order
+     * @return mixed
+     * @throws \Exception
+     */
+    public function showList($order = ['created_at', 'desc'])
+    {
+        try {
+            //获得排序
+            list($orderType, $orderBy) = $order;
+
+            //开始查询
+            $builder = $this->select([
+                'name',
+                'type',
+                'description'
+            ])->orderBy($orderType, $orderBy);
+
+            return $builder->paginate(config('page_size'));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
      * 将数据插入各表,创建考室
      * @param $formData 0为$placeData,1为$vcrId,2为$caseId
      * @return bool
@@ -127,6 +152,11 @@ class Station extends CommonModel
             //将原来的摄像机的状态回位
             //通过传入的考站的id找到原来的摄像机
             $originalVcrObj = StationVcr::where('station_id', '=', $id)->select('vcr_id')->first();
+
+            if (empty($originalVcrObj)) {
+                throw new \Exception('没有找到原来设定的摄像机');
+            }
+
             $originalVcrId = $originalVcrObj->id;
             $result = Vcr::findOrFail($originalVcrId);
             //修改其状态

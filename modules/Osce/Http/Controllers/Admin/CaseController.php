@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use DB;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\StationCase;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\CaseModel as CaseModel;
 
@@ -50,6 +51,7 @@ class CaseController extends CommonController
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
      *
+     * @param CaseModel $caseModel
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
@@ -58,20 +60,18 @@ class CaseController extends CommonController
     public function postCreateCase(Request $request, CaseModel $caseModel)
     {
         //验证略过
-        $this->validate($request, [
-            'name' => 'required',
-            'status' => 'required|integer',
-            'detail' => 'required'
-        ]);
+
         //获得提交的字段
-        $formData = $request->only('name', 'status', 'detail');
+        $formData = $request->only('name', 'code', 'description', 'create_user_id');
 
         DB::connection('osce_mis')->beginTransaction();
         $result = $caseModel->insertData($formData);
         if ($result !== true) {
             DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withErrors('数据插入失败,请重试!')->withInput();
+            return redirect()->back()->withInput()->withErrors('数据插入失败,请重试!');
         }
+
+        DB::connection('osce_mis')->commit();
         return redirect()->route('osce.admin.case.getCaseList');
 
 
@@ -115,6 +115,7 @@ class CaseController extends CommonController
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
+     * @param CaseModel $caseModel
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
@@ -122,21 +123,16 @@ class CaseController extends CommonController
      */
     public function postEditCase(Request $request, CaseModel $caseModel)
     {
-        //验证
-        $this->validate($request, [
-            'id' => 'required|integer',
-            'name' => 'required',
-            'status' => 'required|integer',
-            'detail' => 'required'
-        ]);
+        //验证,略过
+
         $id = $request->input('id');
-        $formData = $request->only('name', 'status', 'detail');
+        $formData = $request->only('name', 'code', 'description', 'create_user_id');
 
         DB::connection('osce_mis')->beginTransaction();
         $result = $caseModel->updateData($id, $formData);
         if ($result !== true) {
             DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withErrors('数据未能成功修改,请重试!')->withInput();
+            return redirect()->back()->withInput()->withErrors('数据未能成功修改,请重试!');
         }
         DB::connection('osce_mis')->commit();
         return redirect()->route('osce.admin.case.getCaseList');

@@ -17,6 +17,11 @@ class CommonModel extends Model
     public $timestamps = true;
     public $incrementing = true;
 
+    /**
+     * 删除数据
+     * @param $id
+     * @return mixed
+     */
     public function deleteData($id)
     {
         return $this->where($this->table.'.id',$id)->delete();
