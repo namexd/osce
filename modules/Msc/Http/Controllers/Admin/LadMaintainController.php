@@ -11,9 +11,12 @@ namespace Modules\Msc\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Msc\Entities\Devices;
 use Modules\Msc\Entities\Floor;
 use Modules\Msc\Entities\LadDevice;
 use Modules\Msc\Http\Controllers\MscController;
+use URL;
+use DB;
 
 class LadMaintainController extends MscController
 {
@@ -39,20 +42,31 @@ class LadMaintainController extends MscController
 
 
     public function getLaboratoryList(Request $request){
-        $this->validate($request,[
+        $this->validate($request, [
             'keyword' => 'sometimes',
+            'devices_cate_id' => 'sometimes|integer'
+
         ]);
-        $data=[
-            'keyword'=> Input::get('keyword'),
-        ];
-//        $location= Floor::where('name', '=',$data['keyword'])->get();
+        $keyword = urldecode(e($request->input('keyword')));
+        $devices_cate_id = (int)$request->input('devices_cate_id');
+        //添加设备的资源数据
+        $devices = new Devices();
+        $resourceData = $devices->getDevicesList($keyword,$devices_cate_id);
+        $deviceType = DB::connection('msc_mis')->table('device_cate')->get();
 
-
-
+        //楼栋数据
         $location =Floor::where('status','=',1)->get();
+//        dd($location);
+        //楼栋的楼层及楼层试验室数据
+
+        //试验室的设备数据
 
 //        dd($location);
-        return view('msc::admin.labmanage.resource_maintain');
+        return view('msc::admin.labmanage.resource_maintain',[
+            'resourceData' => $resourceData,
+            'deviceType'  => $deviceType,
+            'location'    => $location,
+        ]);
 
     }
 
@@ -180,9 +194,10 @@ class LadMaintainController extends MscController
         }
         $data = array_merge($arr,$brr);
         return $data;
-
-
     }
+
+
+
 
 
 

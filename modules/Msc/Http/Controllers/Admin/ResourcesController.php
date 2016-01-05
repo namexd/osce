@@ -41,7 +41,7 @@ class ResourcesController extends MscController
         $this->validate($request, [
             'keyword' => 'sometimes',
             'status' => 'sometimes|in:0,1',
-            'devices_cate_id' => 'sometimes|in:1,2,3,4'
+            'devices_cate_id' => 'sometimes|integer'
         ]);
         $keyword = urldecode(e($request->input('keyword')));
         $status = (int)$request->input('status');

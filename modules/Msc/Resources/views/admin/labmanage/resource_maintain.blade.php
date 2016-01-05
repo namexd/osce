@@ -58,8 +58,12 @@
                 <div class="ibox-title overflow">
                     <select name="" id="" class="select">
                         <option value="-1">请选择楼栋</option>
-                        <option value="11">11</option>
-                        <option value="22">22</option>
+                        @if(!empty($location))
+                            @foreach($location as $k=>$v)
+                        <option value="{{@$v->id}}">{{@$v->name}}</option>
+                        {{--<option value="22">22</option>--}}
+                            @endforeach
+                            @endif
                     </select>
                 </div>
                 <div class="ibox-content">
