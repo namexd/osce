@@ -51,7 +51,8 @@ span.laydate-icon{
                             <label class="col-sm-2 control-label">考试时间</label>
                             <div class="col-sm-10">
                                 <form class="container-fluid ibox-content" id="list_form">
-                                    <table class="table table-bordered" id="table-striped">
+                                    <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    <table class="table table-bordered" id="exam_add">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -62,7 +63,7 @@ span.laydate-icon{
 
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody index="0">
                                             <tr>
                                                 <td>1</td>
                                                 <td class="laydate">

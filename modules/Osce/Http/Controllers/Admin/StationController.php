@@ -9,7 +9,6 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
-
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
@@ -26,7 +25,9 @@ class StationController extends CommonController
      */
     public function getTest()
     {
-        return view('osce::admin.exammanage.examroom_assignment');
+
+        //dd();
+        return view('osce::admin.exammanage.exam_assignment');
     }
 
     /**
@@ -195,7 +196,7 @@ class StationController extends CommonController
      * 下拉菜单，单独封装成了一个方法
      * @return array
      */
-    protected function dropDownList()
+    private function dropDownList()
     {
         //将下拉菜单的数据查出
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型

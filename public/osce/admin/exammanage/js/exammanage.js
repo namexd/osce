@@ -7,7 +7,11 @@ $(function(){
     switch(pars.pagename){
         case "exam_add":exam_add();break; 
         case "add_basic":add_basic();break;
+<<<<<<< HEAD
         case "sp_invitation":sp_invitation();break;
+=======
+        case "examroom_assignment":examroom_assignment();break;
+>>>>>>> b530abb897cb1b06630d5a87de30e08e14f5d220
     }
 
 });
@@ -22,6 +26,57 @@ $(function(){
 function exam_add(){
 	//时间选择
 	timePicker(pars.background_img);
+
+	/**
+     * 新增一条
+     * @author  mao
+     * @version  1.0
+     * @date        2016-01-05
+     */
+    $('#add-new').click(function(){
+        //计数器标志
+        var index = $('#exam_add').find('tbody').attr('index');
+        index = parseInt(index) + 1;
+
+        var html = '<tr>'+
+                        '<td>'+parseInt(index)+'</td>'+
+                        '<td class="laydate">'+
+                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                        '</td>'+
+                        '<td class="laydate">'+
+                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                        '</td>'+
+                        '<td>3:00</td>'+
+                        '<td>'+
+                            '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                        '</td>'+
+                    '</tr>'+
+        //记录计数
+        $('#exam_add').find('tbody').attr('index',index);
+        $('#exam_add').find('tbody').append(html);
+    });
+
+
+    /**
+     * 删除一条记录
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-05
+     */
+    $('#exam_add').on('click','.fa-trash-o',function(){
+
+        var thisElement = $(this).parent().parent().parent().parent();
+        thisElement.remove();
+        //计数器标志
+        var index = $('#exam_add').find('tbody').attr('index');
+        index = parseInt(index) - 1;
+        $('#exam_add').find('tbody').attr('index',index);
+        //更新序号
+        $('#exam_add tbody').find('tr').each(function(key,elem){
+            $(elem).find('td').eq(0).text(parseInt(key)+1);
+        });
+
+    });
 }
 
 /**
@@ -33,6 +88,58 @@ function exam_add(){
 function add_basic(){
 	//时间选择
 	timePicker(pars.background_img);
+
+	/**
+     * 新增一条
+     * @author  mao
+     * @version  1.0
+     * @date        2016-01-05
+     */
+    $('#add-new').click(function(){
+        //计数器标志
+        var index = $('#add-basic').find('tbody').attr('index');
+        index = parseInt(index) + 1;
+
+        var html = '<tr>'+
+	                    '<td>'+parseInt(index)+'</td>'+
+	                    '<td class="laydate">'+
+	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                    '</td>'+
+	                    '<td class="laydate">'+
+	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                    '</td>'+
+	                    '<td>3:00</td>'+
+	                    '<td>'+
+	                        '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+	                    '</td>'+
+	                '</tr>';
+        //记录计数
+        $('#add-basic').find('tbody').attr('index',index);
+        $('#add-basic').find('tbody').append(html);
+    });
+
+
+    /**
+     * 删除一条记录
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-05
+     */
+    $('#add-basic').on('click','.fa-trash-o',function(){
+
+        var thisElement = $(this).parent().parent().parent().parent();
+        thisElement.remove();
+        //计数器标志
+        var index = $('#add-basic').find('tbody').attr('index');
+        index = parseInt(index) - 1;
+        $('#add-basic').find('tbody').attr('index',index);
+        //更新序号
+        $('#add-basic tbody').find('tr').each(function(key,elem){
+            $(elem).find('td').eq(0).text(parseInt(key)+1);
+        });
+
+    });
+
 }
 
 /**
@@ -74,7 +181,7 @@ function timePicker(background){
      * @version 1.0
      * @date    2016-01-04
      */
-    $('.end').click(function(){
+    $('table').on('click','.end',function(){
         //每一次点击都进行一次随机
         var id = Math.floor(Math.random()*9999);
         id = id.toString();
@@ -91,11 +198,11 @@ function timePicker(background){
      * @version 1.0
      * @date    2016-01-04
      */
-    $('.laydate').on('mouseleave',function(){
+    $('table').on('mouseleave','.laydate',function(){
         $(this).find('span').css('background-image','none')
     });
 
-    $('.laydate').on('mouseenter',function(){
+    $('table').on('mouseenter','.laydate',function(){
         //图标路径
         var url = background+"/skins/default/icon2.png";
         $(this).find('span').css('background-image','url('+url+')');
@@ -103,6 +210,7 @@ function timePicker(background){
 
 }
 
+<<<<<<< HEAD
 /*
  * 邀约sp老师
  * @author lizhiyuan
@@ -121,3 +229,129 @@ function sp_invitation(){
         $(this).parents(".teacher").remove();
     })
 }
+=======
+
+function examroom_assignment(){
+
+	//select2初始化
+    $(".js-example-basic-multiple").select2();
+
+    /**
+     * 选择必考项
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-05
+     */
+    $('#examroom').on('change','.js-example-basic-multiple',function(){
+        //值初始化
+        var current ,
+            num = ['必考','必考','二选一','三选一','四选一','五选一','六选一','七选一','八选一','九选一','十选一'];
+
+        current = $(this).val();
+        if(current==undefined){
+            $(this).parent().siblings('.necessary').text(num[0]);
+        }else{
+            $(this).parent().siblings('.necessary').text(num[current.length]);
+        }
+    });
+
+
+    /**
+     * 新增一条
+     * @author  mao
+     * @version  1.0
+     * @date        2016-01-05
+     */
+    $('#add-new').click(function(){
+        //计数器标志
+        var index = $('#examroom').find('tbody').attr('index');
+        index = parseInt(index) + 1;
+
+        var html = '<tr class="pid-'+index+'">'+
+                    '<td>'+parseInt(index)+'</td>'+
+                    '<td width="498">'+
+                        '<select class="form-control js-example-basic-multiple" multiple="multiple">'+
+                            '<option>不限</option>'+
+                            '<option>张老师</option>'+
+                            '<option>陈老师</option>'+
+                            '<option>杨老师</option>'+
+                        '</select>'+
+                    '</td>'+
+                    '<td class="necessary">必考</td>'+
+                    '<td>'+
+                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
+                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                    '</td>'+
+                '</tr>'+
+        //记录计数
+        $('#examroom').find('tbody').attr('index',index);
+        $('#examroom').find('tbody').append(html);
+        $(".js-example-basic-multiple").select2();
+    });
+
+    /**
+     * 删除一条记录
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-05
+     */
+    $('#examroom').on('click','.fa-trash-o',function(){
+
+        var thisElement = $(this).parent().parent().parent().parent();
+        thisElement.remove();
+        //计数器标志
+        var index = $('#examroom').find('tbody').attr('index');
+        index = parseInt(index) - 1;
+        $('#examroom').find('tbody').attr('index',index);
+        //更新序号
+        $('#examroom tbody').find('tr').each(function(key,elem){
+            $(elem).find('td').eq(0).text(parseInt(key)+1);
+        });
+
+    });
+
+    /**
+     * 数据条目上移
+     * @author marvine
+     * @date    2016-01-05
+     * @version [1.0]
+     */
+    $('#examroom').on('click','.fa-arrow-up',function(){
+        var thisElement = $(this).parent().parent().parent().parent();
+
+        if(thisElement.prev().length){
+
+            var thisSelect = thisElement.find('select').val(),
+                prevSelect = thisElement.prev().find('select').val();
+
+            //交换数据
+            thisElement.find('select').val(prevSelect).trigger("change");
+            prevSelect = thisElement.prev().find('select').val(thisSelect).trigger("change");
+        }else{
+            return;
+        }
+    });
+
+    /**
+     * 数据条目下移
+     * @author marvine
+     * @date    2016-01-05
+     * @version [1.0]
+     */
+    $('#examroom').on('click','.fa-arrow-down',function(){
+        var thisElement = $(this).parent().parent().parent().parent();
+        if(thisElement.next().length){
+            
+            var thisSelect = thisElement.find('select').val(),
+                nextSelect = thisElement.next().find('select').val();
+
+            //交换数据
+            thisElement.find('select').val(nextSelect).trigger("change");
+            nextSelect = thisElement.next().find('select').val(thisSelect).trigger("change");
+        }else{
+            return;
+        }
+    });
+}
+>>>>>>> b530abb897cb1b06630d5a87de30e08e14f5d220

@@ -22,11 +22,37 @@ class Station extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['name', 'code', 'room_id', 'type', 'description', 'create_user_id'];
-    public $search = [];
 
+    /**
+     * 定义访问器 字段名：type
+     * @param $value
+     * @return string
+     */
+    public function getTypeAttribute($value)
+    {
+        switch ($value) {
+            case 1 :
+                $value = '操作';
+                break;
+            case 2 :
+                $value = 'SP';
+                break;
+            case 3 :
+                $value = '理论';
+                break;
+            default :
+                $value = '此数据不合法';
+        }
+        return $value;
+    }
+
+    /**
+     * 与摄像机_考站表的关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function vcrStation()
     {
-        return $this->hasMany('Modules\Osce\Entities\PlaceVcr', 'station_id', 'id');
+        return $this->hasMany('Modules\Osce\Entities\StationVcr', 'station_id', 'id');
     }
 
     /**
@@ -48,7 +74,7 @@ class Station extends CommonModel
                 'description'
             ])->orderBy($orderType, $orderBy);
 
-            return $builder->paginate(config('page_size'));
+            return $builder->paginate(10);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -92,8 +118,8 @@ class Station extends CommonModel
             $result = $vcr->save();
             array_push($resultArray, $result);
 
-            //判断$resultArray中是否有键值为false
-            if (array_search('false', $resultArray) !== false) {
+            //判断$resultArray中是否有键值为false,如果有，那就说明前面有错误
+            if (array_search(false, $resultArray) !== false) {
                 $connection->rollBack();
                 throw new \Exceptio('新建房间时发生了错误,请重试!');
             } else {
@@ -127,6 +153,7 @@ class Station extends CommonModel
             $this->table . '.room_id as room_id',
             $this->table . '.create_user_id as create_user_id',
             $this->table . '.subject_id as subject_id',
+            $this->table . '.description as description',
             'place_vcr.vcr_id as vcr_id',
         ]);
 
@@ -138,7 +165,6 @@ class Station extends CommonModel
      * @param $formData
      * @param $id
      * @return bool
-     * @throws \Exceptio
      * @throws \Exception
      */
     public function updateStation($formData, $id)
@@ -167,7 +193,7 @@ class Station extends CommonModel
 
             //修改station表
             $placeData = $formData[0];
-            $result = $this->where($this->table.'.id', '=', $id)->update($placeData);
+            $result = $this->where($this->table . '.id', '=', $id)->update($placeData);
             //获得修改后的id
             $station_id = $result->id;
             array_push($resultArray, $result);
@@ -194,7 +220,7 @@ class Station extends CommonModel
             //判断$resultArray中是否有键值为false
             if (array_search('false', $resultArray) !== false) {
                 $connection->rollBack();
-                throw new \Exceptio('新建房间时发生了错误,请重试!');
+                throw new \Exception('新建房间时发生了错误,请重试!');
             } else {
                 $connection->commit();
                 return true;

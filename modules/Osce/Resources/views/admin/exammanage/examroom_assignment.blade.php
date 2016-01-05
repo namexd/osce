@@ -36,7 +36,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'add_basic','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment'}" />
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
         <li><a href="#">考试安排</a></li>
@@ -49,7 +49,7 @@
                 <h5 class="title-label">考场安排</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -84,8 +84,9 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
-                                    <form class="container-fluid ibox-content" id="list_form">
-                                        <table class="table table-bordered" id="table-striped">
+                                    <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    <form class="container-fluid ibox-content">
+                                        <table class="table table-bordered" id="examroom">
                                             <thead>
                                             <tr>
                                                 <th>#</th>
@@ -94,24 +95,24 @@
                                                 <th>操作</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
+                                            <tbody index="0">
+                                                <!-- <tr>
                                                     <td>1</td>
-                                                    <td>
-                                                        <select class="form-control js-example-basic-multiple" name="teacher_dept" id="professional"  multiple="multiple">
+                                                    <td width="498">
+                                                        <select class="form-control js-example-basic-multiple" multiple="multiple">
                                                             <option value="">不限</option>
                                                             <option>张老师</option>
                                                             <option>陈老师</option>
                                                             <option>杨老师</option>
                                                         </select>
                                                     </td>
-                                                    <td><input type="checkbox">必考</td>
+                                                    <td class="necessary"><input type="checkbox">必考</td>
                                                     <td>
-                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
                                                     </td>
-                                                </tr>
+                                                </tr> -->
                                             </tbody>
                                         </table>
 
@@ -179,9 +180,5 @@
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
-<script>
-    $(function(){
-        $(".js-example-basic-multiple").select2();
-    })
-</script>
+
 @stop
