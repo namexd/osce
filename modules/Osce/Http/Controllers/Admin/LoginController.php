@@ -26,7 +26,7 @@ class LoginController extends  CommonController
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
 
-        
+
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
             return redirect()->route('osce.admin.index');

@@ -20,31 +20,20 @@
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
         <li><a href="#">资源管理</a></li>
-        <li class="route-active">场所管理</li>
+        <li class="route-active">考场管理</li>
     </ol>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">场所管理</h5>
+                <h5 class="title-label">考场管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.Station.getAddStation')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
-            <div class="panel-heading">
-                <div class="panel-options">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">考场</a></li>
-                        <li class=""><a href="#">中控室</a></li>
-                        <li class=""><a href="#">走廊</a></li>
-                        <li class=""><a href="#">候考室</a></li>
-                    </ul>
-                </div>
-            </div>
-            
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" placeholder="请输入关键字" class="input-sm form-control">
                 <span class="input-group-btn">
