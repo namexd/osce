@@ -22,6 +22,57 @@ $(function(){
 function exam_add(){
 	//时间选择
 	timePicker(pars.background_img);
+
+	/**
+     * 新增一条
+     * @author  mao
+     * @version  1.0
+     * @date        2016-01-05
+     */
+    $('#add-new').click(function(){
+        //计数器标志
+        var index = $('#exam_add').find('tbody').attr('index');
+        index = parseInt(index) + 1;
+
+        var html = '<tr>'+
+                        '<td>'+parseInt(index)+'</td>'+
+                        '<td class="laydate">'+
+                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                        '</td>'+
+                        '<td class="laydate">'+
+                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                        '</td>'+
+                        '<td>3:00</td>'+
+                        '<td>'+
+                            '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                        '</td>'+
+                    '</tr>'+
+        //记录计数
+        $('#exam_add').find('tbody').attr('index',index);
+        $('#exam_add').find('tbody').append(html);
+    });
+
+
+    /**
+     * 删除一条记录
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-05
+     */
+    $('#exam_add').on('click','.fa-trash-o',function(){
+
+        var thisElement = $(this).parent().parent().parent().parent();
+        thisElement.remove();
+        //计数器标志
+        var index = $('#exam_add').find('tbody').attr('index');
+        index = parseInt(index) - 1;
+        $('#exam_add').find('tbody').attr('index',index);
+        //更新序号
+        $('#exam_add tbody').find('tr').each(function(key,elem){
+            $(elem).find('td').eq(0).text(parseInt(key)+1);
+        });
+
+    });
 }
 
 /**
@@ -33,6 +84,58 @@ function exam_add(){
 function add_basic(){
 	//时间选择
 	timePicker(pars.background_img);
+
+	/**
+     * 新增一条
+     * @author  mao
+     * @version  1.0
+     * @date        2016-01-05
+     */
+    $('#add-new').click(function(){
+        //计数器标志
+        var index = $('#add-basic').find('tbody').attr('index');
+        index = parseInt(index) + 1;
+
+        var html = '<tr>'+
+	                    '<td>'+parseInt(index)+'</td>'+
+	                    '<td class="laydate">'+
+	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                    '</td>'+
+	                    '<td class="laydate">'+
+	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                    '</td>'+
+	                    '<td>3:00</td>'+
+	                    '<td>'+
+	                        '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+	                    '</td>'+
+	                '</tr>';
+        //记录计数
+        $('#add-basic').find('tbody').attr('index',index);
+        $('#add-basic').find('tbody').append(html);
+    });
+
+
+    /**
+     * 删除一条记录
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-05
+     */
+    $('#add-basic').on('click','.fa-trash-o',function(){
+
+        var thisElement = $(this).parent().parent().parent().parent();
+        thisElement.remove();
+        //计数器标志
+        var index = $('#add-basic').find('tbody').attr('index');
+        index = parseInt(index) - 1;
+        $('#add-basic').find('tbody').attr('index',index);
+        //更新序号
+        $('#add-basic tbody').find('tr').each(function(key,elem){
+            $(elem).find('td').eq(0).text(parseInt(key)+1);
+        });
+
+    });
+
 }
 
 /**
@@ -74,7 +177,7 @@ function timePicker(background){
      * @version 1.0
      * @date    2016-01-04
      */
-    $('.end').click(function(){
+    $('table').on('click','.end',function(){
         //每一次点击都进行一次随机
         var id = Math.floor(Math.random()*9999);
         id = id.toString();
@@ -91,11 +194,11 @@ function timePicker(background){
      * @version 1.0
      * @date    2016-01-04
      */
-    $('.laydate').on('mouseleave',function(){
+    $('table').on('mouseleave','.laydate',function(){
         $(this).find('span').css('background-image','none')
     });
 
-    $('.laydate').on('mouseenter',function(){
+    $('table').on('mouseenter','.laydate',function(){
         //图标路径
         var url = background+"/skins/default/icon2.png";
         $(this).find('span').css('background-image','url('+url+')');
@@ -163,7 +266,12 @@ function examroom_assignment(){
         $(".js-example-basic-multiple").select2();
     });
 
-    
+    /**
+     * 删除一条记录
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-05
+     */
     $('#examroom').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this).parent().parent().parent().parent();
