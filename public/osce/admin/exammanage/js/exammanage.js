@@ -6,7 +6,8 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "exam_add":exam_add();break; 
-        case "add_basic":add_basic();break; 
+        case "add_basic":add_basic();break;
+        case "sp_invitation":sp_invitation();break;
     }
 
 });
@@ -100,4 +101,23 @@ function timePicker(background){
         $(this).find('span').css('background-image','url('+url+')');
     });
 
+}
+
+/*
+ * 邀约sp老师
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-05
+ */
+function sp_invitation(){
+    $("#teacher-list").change(function(){
+        var $teacher=$("#teacher-list option:selected").text();
+        var sql='<div class="input-group teacher pull-left">'+
+            '<div class="pull-left">'+$teacher+'</div>'+
+            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+        $(this).parents(".pull-right").prev().append(sql);
+    })
+    $(".teacher-box").delegate("i","click",function(){
+        $(this).parents(".teacher").remove();
+    })
 }
