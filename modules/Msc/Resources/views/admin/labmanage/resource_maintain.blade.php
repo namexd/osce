@@ -12,24 +12,14 @@
         .lab_num{display: none;}
         .fa-angle-right{font-size: 30px;margin-top: -8px}
         .deg{transform:rotate(90deg);}
+        .border-bottom{border-bottom:none!important;}
     </style>
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/bootstrap-collapse.js')}}"></script>
+
     <script>
         $(function(){
-            //            删除
-            $(".delete").click(function(){
-                var url = "";
-                //询问框
-                layer.confirm('您确定要删除该设备？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    window.location.href=url;
-                });
-            });
-
 //            新增、编辑切换
             $("#add_device").click(function(){
                 $("#add_device_form").show();
@@ -40,6 +30,21 @@
                 $("#edit_form").show();
             });
 
+//            楼栋选项卡切换
+            $(".list-group-parent").click(function(){
+                $(this).toggleClass("checked").next(".lab_num").toggle("200");
+                $(this).children(".fa").toggleClass("deg");
+                if($(this).parent().next(".list-group").size()=="1"){
+                    $(this).next(".lab_num").children().last().addClass("border-bottom");
+                }
+
+            });
+
+            $(".list-group-child").click(function(){
+                $(".list-group-parent").removeClass("checked");
+                $(".list-group-child").removeClass("checked");
+                $(this).addClass("checked");
+            });
         })
     </script>
 
@@ -79,39 +84,27 @@
                                 <div class="list-group-item list-group-child">临床2教</div>
                             </div>
                         </div>
+                        <div class="list-group" style="margin-bottom: 0;">
+                            <div class="list-group-item list-group-parent">
+                                -1楼
+                                <i class="fa fa-angle-right right"></i>
+                            </div>
+                            <div class="lab_num">
+                                <div class="list-group-item list-group-child">临床1教</div>
+                                <div class="list-group-item list-group-child">临床2教</div>
+                            </div>
+                        </div>
+                        <div class="list-group" style="margin-bottom: 0;">
+                            <div class="list-group-item list-group-parent">
+                                -1楼
+                                <i class="fa fa-angle-right right"></i>
+                            </div>
+                            <div class="lab_num">
+                                <div class="list-group-item list-group-child">临床1教</div>
+                                <div class="list-group-item list-group-child">临床2教</div>
+                            </div>
+                        </div>
                     </div>
-
-                    <ul class="nav" id="side-menu">
-
-                        <li>
-                            <a href="#"><i class="fa fa-table"></i> <span class="nav-label">学生信息审核</span><span class="fa fa-angle-right right"></span></a>
-                            <ul class="nav nav-second-level collapse">
-                                <li>
-                                    <a class="J_menuItem" href="http://www.mis.hx/msc/admin/verify/student" data-index="0">学生注册审核</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li  class="active">
-                            <a href="#"><i class="fa fa-table"></i> <span class="nav-label">楼栋信息管理</span><span class="fa fa-angle-right right"></span></a>
-                            <ul class="nav nav-second-level collapse in" aria-expanded="true">
-                                <li>
-                                    <a class="J_menuItem" href="http://www.mis.hx/msc/admin/floor/index" data-index="1">楼栋列表</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li >
-                            <a href="#"><i class="fa fa-table"></i> <span class="nav-label">实验室管理</span><span class="fa arrow right"></span></a>
-                            <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
-                                <li>
-                                    <a class="J_menuItem" href="http://www.mis.hx/msc/admin/laboratory/index" data-index="2">实验室列表</a>
-                                </li>
-                            </ul>
-                        </li>
-
-
-                    </ul>
-
-
                 </div>
             </div>
         </div>
@@ -131,25 +124,25 @@
                 <div class="ibox-content">
                     <table class="table table-striped" id="table-striped">
                         <thead>
-                            <tr>
-                                <th>序号</th>
-                                <th>设备名称</th>
-                                <th>设备类型</th>
-                                <th>设备数量</th>
-                                <th>操作</th>
-                            </tr>
+                        <tr>
+                            <th>序号</th>
+                            <th>设备名称</th>
+                            <th>设备类型</th>
+                            <th>设备数量</th>
+                            <th>操作</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>听诊器</td>
-                                <td>耗材</td>
-                                <td>30</td>
-                                <td>
-                                    <a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit"><span>编辑数量</span></a>
-                                    <a class="state2 delete">删除</a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>听诊器</td>
+                            <td>耗材</td>
+                            <td>30</td>
+                            <td>
+                                <a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit"><span>编辑数量</span></a>
+                                <a class="state2 delete">删除</a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -180,58 +173,58 @@
             </div>
             <table class="table table-striped" id="">
                 <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox">
-                        </th>
-                        <th>序号</th>
-                        <th>数量</th>
-                        <th>资源名称</th>
-                        <th>
-                            <div class="btn-group Examine">
-                                <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
-                                    资源类型
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="">听诊器</a>
-                                    </li>
-                                    <li>
-                                        <a href="">假体模型</a>
-                                    </li>
-                                    <li>
-                                        <a href="">外科腔镜训练系统</a>
-                                    </li>
-                                    <li>
-                                        <a href="">腹腔镜</a>
-                                    </li>
-                                    <li>
-                                        <a href="">投影仪</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </th>
-                    </tr>
+                <tr>
+                    <th>
+                        <input type="checkbox">
+                    </th>
+                    <th>序号</th>
+                    <th>数量</th>
+                    <th>资源名称</th>
+                    <th>
+                        <div class="btn-group Examine">
+                            <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
+                                资源类型
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="">听诊器</a>
+                                </li>
+                                <li>
+                                    <a href="">假体模型</a>
+                                </li>
+                                <li>
+                                    <a href="">外科腔镜训练系统</a>
+                                </li>
+                                <li>
+                                    <a href="">腹腔镜</a>
+                                </li>
+                                <li>
+                                    <a href="">投影仪</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <input type="checkbox">
-                        </td>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            <input type="number">
-                        </td>
-                        <td>
-                            听诊器
-                        </td>
-                        <td>
-                            耗材
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        <input type="number">
+                    </td>
+                    <td>
+                        听诊器
+                    </td>
+                    <td>
+                        耗材
+                    </td>
+                </tr>
                 </tbody>
             </table>
             <div class="hr-line-dashed"></div>
