@@ -13,7 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Devices;
 use Modules\Msc\Entities\Floor;
+use Modules\Msc\Entities\Laboratory;
 use Modules\Msc\Entities\LadDevice;
+use Illuminate\Support\Facades\Cache;
 use Modules\Msc\Http\Controllers\MscController;
 use URL;
 use DB;
@@ -58,16 +60,18 @@ class LadMaintainController extends MscController
         $location =Floor::where('status','=',1)->get();
 //        dd($location);
         //楼栋的楼层及楼层试验室数据
-
+        $FloorLad = $this->getFloorLab();
         //试验室的设备数据
+        $LadDevices =new LadDevice();
+        $LadDevice = $LadDevices->getLadDevice();
 
 //        dd($location);
         return view('msc::admin.labmanage.resource_maintain',[
             'resourceData' => $resourceData,
             'deviceType'  => $deviceType,
             'location'    => $location,
+            'LadDevice' =>  $LadDevice
         ]);
-
     }
 
     /**
@@ -195,7 +199,36 @@ class LadMaintainController extends MscController
         $data = array_merge($arr,$brr);
         return $data;
     }
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月4日11:09:03
+     * 根据楼栋查找楼层及该楼层所有实验室
+     */
+    public function getFloorLab(){
+        $cacheData = Cache::get('key', function() {
+            $local_id = Input::get('lid');
 
+            $local = Floor::where('id','=',$local_id)->first();
+
+            $floor = $this->getFloorNumber($local['floor_top'],$local['floor_buttom']);
+
+            $labArr = [];
+            $where['status'] = 0;
+            $where['location_id'] = $local_id;
+            foreach($floor as $k=>$v){
+                $where['floor'] = $v;
+                $labArr[$k]['floor'] = $v;
+                $labArr[$k]['lab'] = Laboratory::where($where)->get();
+
+            }
+            return $labArr;
+        });
+//        $this->success_data($cacheData,1,'success');
+        return response()->json(
+            $this->success_data(['result' => true, 'cacheData' => $cacheData])
+        );
+    }
 
 
 
