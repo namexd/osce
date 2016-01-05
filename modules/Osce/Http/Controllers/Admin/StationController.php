@@ -202,7 +202,7 @@ class StationController extends CommonController
      * 下拉菜单，单独封装成了一个方法
      * @return array
      */
-    protected function dropDownList()
+    private function dropDownList()
     {
         //将下拉菜单的数据查出
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型

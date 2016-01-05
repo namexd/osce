@@ -118,7 +118,7 @@ class Station extends CommonModel
             $result = $vcr->save();
             array_push($resultArray, $result);
 
-            //判断$resultArray中是否有键值为false
+            //判断$resultArray中是否有键值为false,如果有，那就说明前面有错误
             if (array_search(false, $resultArray) !== false) {
                 $connection->rollBack();
                 throw new \Exceptio('新建房间时发生了错误,请重试!');
@@ -165,7 +165,6 @@ class Station extends CommonModel
      * @param $formData
      * @param $id
      * @return bool
-     * @throws \Exceptio
      * @throws \Exception
      */
     public function updateStation($formData, $id)
@@ -194,7 +193,7 @@ class Station extends CommonModel
 
             //修改station表
             $placeData = $formData[0];
-            $result = $this->where($this->table.'.id', '=', $id)->update($placeData);
+            $result = $this->where($this->table . '.id', '=', $id)->update($placeData);
             //获得修改后的id
             $station_id = $result->id;
             array_push($resultArray, $result);
@@ -221,7 +220,7 @@ class Station extends CommonModel
             //判断$resultArray中是否有键值为false
             if (array_search('false', $resultArray) !== false) {
                 $connection->rollBack();
-                throw new \Exceptio('新建房间时发生了错误,请重试!');
+                throw new \Exception('新建房间时发生了错误,请重试!');
             } else {
                 $connection->commit();
                 return true;
