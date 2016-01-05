@@ -106,4 +106,20 @@ class LaboratoryCotroller extends MscWeChatController
             $this->success_rows(1,'获取成功',$LaboratoryListData->total(),config('msc.page_size',10),$LaboratoryListData->currentPage(),array('ClassroomApplyList'=>$LaboratoryListData->toArray()))
         );
     }
+
+    /**
+     * 根据id 和 日期 预约普通实验室
+     * @method  GET
+     * @url /msc/wechat/laboratory/open-laboratory-list-data
+     * @access public
+     * @DateTime 时间（筛选预约的时间）
+     * @DateTime 时间（筛选预约的时间）
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月5日11:07:56
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ApplyLaboratory(){
+        $DateTime = Input::get('DateTime');
+        $id = Input::get('id');
+    }
 }
