@@ -79,19 +79,39 @@ class Laboratory extends Model
         return $builder->orderBy('id')->paginate(config('msc.page_size',10));
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月5日10:43:54
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function OpenPlan(){
         return  $this->hasOne('Modules\Msc\Entities\OpenPlan','lab_id','id');
     }
+
+    public function Floor(){
+        return  $this->hasOne('Modules\Msc\Entities\Floor','id','location_id');
+    }
     /**
-     * @param $data
+     * 获取普通实验室列表 和 获取开放实验室列表
+     * @param
+     * @IdRrr 有日历安排的实验室数组
+     * @type  1、普通实验室，2、开放实验室。默认获取开放实验室
      * @return array
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年1月4日15:51:06
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetLaboratoryListData(){
-        $LaboratoryList = $this->where('open_type','=',1)->with('OpenPlan')->paginate(config('msc.page_size',10));
-        return  $LaboratoryList;
+    public function GetLaboratoryListData($IdRrr,$type = 1){
+        $thisBuilder = $this->where('open_type','=',1);
+        if($type == 1){
+            $thisBuilder = $thisBuilder->whereNotIn('id',$IdRrr);
+        }elseif($type == 2){
+            $thisBuilder = $thisBuilder->whereIn('id',$IdRrr);
+        }
+        $thisBuilder = $thisBuilder->with('Floor');
+        return  $thisBuilder->paginate(config('msc.page_size',10));
     }
+
 
 }
