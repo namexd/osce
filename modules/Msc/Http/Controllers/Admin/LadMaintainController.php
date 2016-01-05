@@ -45,7 +45,6 @@ class LadMaintainController extends MscController
         $data=[
             'keyword'=> Input::get('keyword'),
         ];
-
 //        $location= Floor::where('name', '=',$data['keyword'])->get();
 
 
