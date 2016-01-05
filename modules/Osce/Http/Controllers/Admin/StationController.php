@@ -9,7 +9,6 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
-
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
@@ -26,13 +25,8 @@ class StationController extends CommonController
      */
     public function getTest()
     {
-        $array = [];
-        $a = '1';
-        $b = false;
 
-        array_push($array, $a, $b);
-//        dd($array);
-        dd(array_search(false, $array));
+        dd();
         return view('osce::admin.exammanage.examroom_assignment');
     }
 

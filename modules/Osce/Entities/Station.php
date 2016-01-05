@@ -74,7 +74,7 @@ class Station extends CommonModel
                 'description'
             ])->orderBy($orderType, $orderBy);
 
-            return $builder->paginate(config('page_size'));
+            return $builder->paginate(10);
         } catch (\Exception $ex) {
             throw $ex;
         }
