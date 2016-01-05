@@ -58,19 +58,17 @@ class LadMaintainController extends MscController
 
         //楼栋数据
         $location =Floor::where('status','=',1)->get();
-//        dd($location);
-        //楼栋的楼层及楼层试验室数据
-        $FloorLad = $this->getFloorLab();
+        dd($location);
         //试验室的设备数据
-        $LadDevices =new LadDevice();
-        $LadDevice = $LadDevices->getLadDevice();
+//        $LadDevices =new LadDevice();
+//        $LadDevice = $LadDevices->getLadDevice();
 
 //        dd($location);
         return view('msc::admin.labmanage.resource_maintain',[
             'resourceData' => $resourceData,
             'deviceType'  => $deviceType,
             'location'    => $location,
-            'LadDevice' =>  $LadDevice
+//            'LadDevice' =>  $LadDevice
         ]);
     }
 
@@ -184,6 +182,10 @@ class LadMaintainController extends MscController
 
     }
 
+
+
+
+
   //计算楼层层数
     public function getFloorNumber($ground ,$underground){
         $arr=array();
@@ -199,11 +201,25 @@ class LadMaintainController extends MscController
         $data = array_merge($arr,$brr);
         return $data;
     }
+
+
+
     /**
-     * Created by PhpStorm.
-     * User: weihuiguo
-     * Date: 2016年1月4日11:09:03
      * 根据楼栋查找楼层及该楼层所有实验室
+     * @method GET
+     * @url /msc/admin/ladMaintain/floor-lab
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        lid     楼栋地址ID(必须的)
+     *
+     * @return  jsonl
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getFloorLab(){
         $cacheData = Cache::get('key', function() {
@@ -222,7 +238,7 @@ class LadMaintainController extends MscController
                 $labArr[$k]['lab'] = Laboratory::where($where)->get();
 
             }
-            return $labArr;
+//            return $labArr;
         });
 //        $this->success_data($cacheData,1,'success');
         return response()->json(
