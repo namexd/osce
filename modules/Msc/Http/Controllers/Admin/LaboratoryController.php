@@ -274,8 +274,9 @@ class LaboratoryController extends MscController {
      */
     public function getLabClearnder(){
         $location = Floor::where('status','=',1)->get();
-        dd($location);
-        return view('msc::admin.labmanage.lab_maintain');
+        return view('msc::admin.labmanage.lab_maintain',[
+            'location' => $location,
+        ]);
     }
 
     /**
@@ -285,27 +286,22 @@ class LaboratoryController extends MscController {
      * 根据楼栋查找楼层及该楼层所有实验室
      */
     public function getFloorLab(){
-        $cacheData = Cache::get('key', function() {
+        $labArr = [];
+        $cacheData = Cache::remember('lab',3600, function(){
             $local_id = Input::get('lid');
-
             $local = Floor::where('id','=',$local_id)->first();
-
             $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
-
-            $labArr = [];
             $where['status'] = 0;
             $where['location_id'] = $local_id;
             foreach($floor as $k=>$v){
                 $where['floor'] = $v;
                 $labArr[$k]['floor'] = $v;
                 $labArr[$k]['lab'] = Laboratory::where($where)->get();
-
             }
             return $labArr;
         });
-        dd($cacheData);
+        //dd($cacheData);
+        //return $cacheData;
         //$this->success_data($cacheData,1,'success');
     }
-
-
 }
