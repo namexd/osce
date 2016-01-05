@@ -1,19 +1,6 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
-    <style>
-        .layer-date{max-width: 100%!important;}
-        .has-error .form-control{border-color: #ed5565!important;}
-        .code_add,.code_del{position:absolute;right:15px;top:0;}
-        .add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
 
-        .treeview .checked {background-color: #408aff; color: #fff;}
-        .list-group-item{cursor:pointer;}
-        .select{width: 100%;border-color: #ccc;padding: 5px;}
-        .lab_num{display: none;}
-        .fa-angle-right{font-size: 30px;margin-top: -8px}
-        .deg{transform:rotate(90deg);}
-        .border-bottom{border-bottom:none!important;}
-    </style>
 @stop
 
 @section('only_js')

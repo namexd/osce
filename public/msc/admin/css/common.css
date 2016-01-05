@@ -101,6 +101,21 @@ a{-webkit-touch-callout:none;}
 .display_inline{display: inline-block;}
 .check_name{font-weight: normal;float: right;text-indent: 6px;}
 
+/*验证*/
+.has-error .form-control{border-color: #ed5565!important;}
+.code_add,.code_del{position:absolute;right:15px;top:0;}
+.add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
+
+/*选项框样式*/
+.treeview .checked {background-color: #408aff; color: #fff;}
+.list-group-item{cursor:pointer;}
+.select{width: 100%;border-color: #ccc;padding: 5px;}
+.lab_num{display: none;}
+.fa-angle-right{font-size: 30px;margin-top: -8px}
+.deg{transform:rotate(90deg);}
+.border-bottom{border-bottom:none!important;}
+
+
 /*�����޸�buttonĬ����ɫЧ��*/
 .btn-primary{
     background-color:#408AFF;
