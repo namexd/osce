@@ -35,7 +35,6 @@ class LadMaintainController extends MscController
     public function getLaboratoryList(Request $request){
 
         $location =Floor::where('status','=',1)->get();
-
         return view('msc::admin.labmanage.resource_maintain',[
             'location'    => $location,
         ]);

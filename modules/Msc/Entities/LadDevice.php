@@ -18,7 +18,7 @@ class LadDevice extends Model
     public $timestamps	=	true;
     public $incrementing	=	true;
     protected $connection	=	'msc_mis';
-    protected $table 		= 	'lad_device';
+    protected $table 		= 	'lab_device';
     protected $primaryKey	=	'id';
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
@@ -41,7 +41,7 @@ class LadDevice extends Model
     }
 
 
-    
+
 //    public function getLadDevice($LadId){
 //        if($LadId){
 //            $result = $this->leftJoin('')->

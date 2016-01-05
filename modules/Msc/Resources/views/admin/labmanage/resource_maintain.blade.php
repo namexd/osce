@@ -104,7 +104,6 @@
             });
         })
     </script>
-
 @stop
 
 @section('content')
@@ -125,7 +124,6 @@
                 </div>
                 <div class="ibox-content">
                     <div class="treeview">
-
                     </div>
                 </div>
             </div>
