@@ -89,6 +89,12 @@ class Laboratory extends Model
         return  $this->hasOne('Modules\Msc\Entities\OpenPlan','lab_id','id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月5日16:17:36
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function Floor(){
         return  $this->hasOne('Modules\Msc\Entities\Floor','id','location_id');
     }
@@ -111,6 +117,18 @@ class Laboratory extends Model
         }
         $thisBuilder = $thisBuilder->with('Floor');
         return  $thisBuilder->paginate(config('msc.page_size',10));
+    }
+
+    /**
+     * 获取实验室相关信息
+     * @param $id
+     * @return Array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月5日16:19:46
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetLaboratoryInfo($id){
+        return $this->where('id','=',$id)->with('Floor')->first();
     }
 
 
