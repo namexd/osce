@@ -1,12 +1,34 @@
 @extends('msc::admin.layouts.admin')
 @section('only_css')
-
+    <style>
+        label{margin-bottom: 0;}
+    </style>
 @stop
 
 @section('only_js')
 
     <script>
         $(function(){
+//            楼栋选项卡切换
+            function ban(){
+                $(".list-group-parent").click(function(){
+                    $(this).toggleClass("checked").next(".lab_num").toggle("200");
+                    $(this).children(".fa").toggleClass("deg");
+                    if($(this).parent().next(".list-group").length=="1"){
+                        $(this).next(".lab_num").children().last().addClass("border-bottom");
+                    }
+
+                });
+                $(".list-group-child").click(function(){
+                    $(".list-group-parent").removeClass("checked");
+                    $(".list-group-child").removeClass("checked");
+                    $(this).addClass("checked");
+                });
+            }
+            $(document).ajaxSuccess(function(event, request, settings) {
+                //楼栋选项卡切换
+                ban();
+            });
 //            新增、编辑切换
             $("#add_device").click(function(){
                 $("#add_device_form").show();
@@ -16,21 +38,35 @@
                 $("#add_device_form").hide();
                 $("#edit_form").show();
             });
+//            楼栋数据绑定
+            $("#ban_select").change(function(){
+                var $treeview=$(".treeview");
+                $treeview.empty();
+                var $thisId=$(this).val();
+                var url="/msc/admin/ladMaintain/floor-lab?lid="+$thisId;
+                $.ajax({
+                    type:"get",
+                    url:url,
+                    cache:false,
+                    success:function(result){
+                        $(result).each(function(){
+                            $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
+                                    "<div class='list-group-item list-group-parent'>"
+                                    +this.floor+"楼"
+                                    +"</div>"
+                                    +"<div class='lab_num'></div>"
+                                    +"</div>"
+                            );
+                            if(this.lab!=""){
+                                $(this.lab).each(function(){
+                                    $(".treeview #"+ this.floor +" .lab_num").append("<div class='list-group-item list-group-child'>"+this.name+"</div>")
+                                });
+                                $(".treeview #"+ this.floor +" .list-group-parent").append("<i class='fa fa-angle-right right'></i>");
+                            }
 
-//            楼栋选项卡切换
-            $(".list-group-parent").click(function(){
-                $(this).toggleClass("checked").next(".lab_num").toggle("200");
-                $(this).children(".fa").toggleClass("deg");
-                if($(this).parent().next(".list-group").length=="1"){
-                    $(this).next(".lab_num").children().last().addClass("border-bottom");
-                }
-
-            });
-
-            $(".list-group-child").click(function(){
-                $(".list-group-parent").removeClass("checked");
-                $(".list-group-child").removeClass("checked");
-                $(this).addClass("checked");
+                        })
+                    }
+                })
             });
 //            删除
             $(".delete").click(function(){
@@ -40,6 +76,29 @@
                 }, function(){
                     window.location.href=url;
                 });
+            });
+//            新增弹出层选项框
+            $(".check_all").click(function(){
+                if($(this).children(".check_icon").hasClass("check")){
+                    $(this).children(".check_icon").removeClass("check");
+                    $(".check_one").children(".check_icon").removeClass("check");
+                }else{
+                    $(this).children(".check_icon").addClass("check");
+                    $(".check_one").children(".check_icon").addClass("check");
+                }
+            });
+            $(".check_one").click(function(){
+               if($(this).children(".check_icon").hasClass("check")){
+                   $(this).children(".check_icon").removeClass("check");
+                   if($(this).siblings(".check_one").children(".check_icon").hasClass("check")){
+                        return false;
+                   }else{
+                       $(".check_all").children(".check_icon").removeClass("check");
+                   }
+               }else{
+                   $(this).children(".check_icon").addClass("check");
+                   $(".check_all").children(".check_icon").addClass("check");
+               }
             });
         })
     </script>
@@ -52,38 +111,18 @@
         <div class="col-sm-5">
             <div class="ibox">
                 <div class="ibox-title overflow">
-                    <select name="" id="" class="select">
+                    <select name="" id="ban_select" class="select">
                         <option value="-1">请选择楼栋</option>
                         @if(!empty($location))
                             @foreach($location as $k=>$v)
                         <option value="{{@$v->id}}">{{@$v->name}}</option>
-                        {{--<option value="22">22</option>--}}
                             @endforeach
                             @endif
                     </select>
                 </div>
                 <div class="ibox-content">
                     <div class="treeview">
-                        <div class="list-group" style="margin-bottom: 0;">
-                            <div class="list-group-item list-group-parent">
-                                -1楼
-                                <i class="fa fa-angle-right right"></i>
-                            </div>
-                            <div class="lab_num">
-                                <div class="list-group-item list-group-child">临床1教</div>
-                                <div class="list-group-item list-group-child">临床2教</div>
-                            </div>
-                        </div>
-                        <div class="list-group" style="margin-bottom: 0;">
-                            <div class="list-group-item list-group-parent">
-                                -1楼
-                                <i class="fa fa-angle-right right"></i>
-                            </div>
-                            <div class="lab_num">
-                                <div class="list-group-item list-group-child">临床1教</div>
-                                <div class="list-group-item list-group-child">临床2教</div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -155,7 +194,7 @@
                 <thead>
                 <tr>
                     <th>
-                        <label class="check_label checkbox_input">
+                        <label class="check_label checkbox_input check_all">
                             <div class="check_real check_icon display_inline"></div>
                             <input type="hidden" name="" value="">
                         </label>
@@ -193,7 +232,27 @@
                 <tbody>
                 <tr>
                     <td>
-                        <label class="check_label checkbox_input">
+                        <label class="check_label checkbox_input check_one">
+                            <div class="check_real check_icon display_inline"></div>
+                            <input type="hidden" name="" value="">
+                        </label>
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        <input type="number">
+                    </td>
+                    <td>
+                        听诊器
+                    </td>
+                    <td>
+                        耗材
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="check_label checkbox_input check_one">
                             <div class="check_real check_icon display_inline"></div>
                             <input type="hidden" name="" value="">
                         </label>
