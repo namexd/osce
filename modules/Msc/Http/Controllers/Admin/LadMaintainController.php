@@ -58,7 +58,7 @@ class LadMaintainController extends MscController
 
         //楼栋数据
         $location =Floor::where('status','=',1)->get();
-        dd($location);
+//        dd($location);
         //试验室的设备数据
 //        $LadDevices =new LadDevice();
 //        $LadDevice = $LadDevices->getLadDevice();
