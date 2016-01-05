@@ -39,7 +39,7 @@
                 <h5 class="title-label">考试安排</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -81,8 +81,9 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试时间</label>
                                 <div class="col-sm-10">
+                                    <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                                     <form class="container-fluid ibox-content" id="list_form">
-                                        <table class="table table-bordered" id="table-striped">
+                                        <table class="table table-bordered" id="add-basic">
                                             <thead>
                                             <tr>
                                                 <th>#</th>
@@ -93,7 +94,7 @@
 
                                             </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody index="0">
                                                 <tr>
                                                     <td>1</td>
                                                     <td class="laydate">
