@@ -65,11 +65,11 @@
                 <tbody>
                 @forelse($data as $item)
                     <tr>
-                        <td>{{$item->id}}</td>
                         <td>{{$item->name}}</td>
-                        <td>{{$item->status}}</td>
+                        <td>{{$item->type}}</td>
+                        <td>{{$item->description}}</td>
                         <td>
-                            <a href="{{route('osce.admin.Place.getEditPlace')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
+                            <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
                             <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
                         </td>
                     </tr>
