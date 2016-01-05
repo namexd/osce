@@ -1,6 +1,12 @@
 <?php
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
+	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
+		Route::get('login/index', ['uses' => 'LoginController@getIndex', 'as' => 'osce.admin.getIndex']);
+		Route::post('login/index', ['uses' => 'LoginController@postIndex', 'as' => 'osce.admin.postIndex']);
+	});
+});
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
-	Route::get('admin/index', 'OsceController@index');
+	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
 	Route::get('/index', 'OsceController@index');
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		//房间

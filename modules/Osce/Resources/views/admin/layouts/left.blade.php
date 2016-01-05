@@ -15,13 +15,11 @@
                     <li class="active">
                         <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a class="active J_menuItem" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">考站管理</a>
+                            <li><a class="active J_menuItem" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">人员管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="">考场安排</a>
+                            <li><a class="active J_menuItem" href="{{route('osce.admin.Station.getStationList')}}">考站管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="">题库管理</a>
-                            </li>
-                            <li><a  class="J_menuItem" href="{{route('osce.admin.Place.getPlaceList')}}">场所管理</a>
+                            <li><a  class="J_menuItem" href="{{route('osce.admin.room.getRoomList')}}">场所管理</a>
                             </li>
                             <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}" target="iframe0">监考设备管理</a>
                             </li>
