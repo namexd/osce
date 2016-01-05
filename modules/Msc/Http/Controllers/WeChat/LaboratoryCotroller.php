@@ -7,11 +7,13 @@
  */
 
 namespace Modules\Msc\Http\Controllers\WeChat;
+use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use Modules\Msc\Http\Controllers\MscWeChatController;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Laboratory;
+use Modules\Msc\Entities\OpenPlan;
 class LaboratoryCotroller extends MscWeChatController
 {
 
@@ -57,17 +59,27 @@ class LaboratoryCotroller extends MscWeChatController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LaboratoryListData(){
-        $data = [];
-        $data = $this->Laboratory->GetLaboratoryListData();
-        dd($data);
+        $DateTime = Input::get('DateTime');
+        $OpenPlan = new OpenPlan;
+        //TODO 根据日历表获取有 日历安排的教室id
+        if(!empty($DateTime)){
+            $IdRrr = $OpenPlan->GetOpenPlanId($DateTime);
+        }else{
+            return response()->json(
+                $this->success_rows(1,'没有传入预约日期')
+            );
+        }
+        //TODO 获取普通实验室列表（没有日历安排的）
+        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr);
+
         return response()->json(
-            $this->success_rows(1,'获取成功',$data->total(),20,$data->currentPage(),array('ClassroomApplyList'=>$data))
+            $this->success_rows(1,'获取成功',$LaboratoryListData->total(),config('msc.page_size',10),$LaboratoryListData->currentPage(),array('ClassroomApplyList'=>$LaboratoryListData->toArray()))
         );
     }
     /**
      * 获取开放实验室列表
      * @method GET
-     * @url /msc/wechat/open-laboratory-list-data
+     * @url /msc/wechat/laboratory/open-laboratory-list-data
      * @access public
      * @DateTime 时间（筛选预约的时间）
      * @return \Illuminate\Http\JsonResponse
@@ -76,9 +88,22 @@ class LaboratoryCotroller extends MscWeChatController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function OpenLaboratoryListData(){
-        $data = [];
+        $DateTime = Input::get('DateTime');
+        $OpenPlan = new OpenPlan;
+        //TODO 根据日历表获取有 日历安排的教室id
+        if(!empty($DateTime)){
+            $IdRrr = $OpenPlan->GetOpenPlanId($DateTime);
+        }else{
+            return response()->json(
+                $this->success_rows(1,'没有传入预约日期')
+            );
+        }
+
+        //TODO 获取开放实验室列表
+        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,2);
+
         return response()->json(
-            $this->success_rows(1,'获取成功',$data->total(),20,$data->currentPage(),array('ClassroomApplyList'=>$data))
+            $this->success_rows(1,'获取成功',$LaboratoryListData->total(),config('msc.page_size',10),$LaboratoryListData->currentPage(),array('ClassroomApplyList'=>$LaboratoryListData->toArray()))
         );
     }
 }
