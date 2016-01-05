@@ -34,7 +34,7 @@
             $(".list-group-parent").click(function(){
                 $(this).toggleClass("checked").next(".lab_num").toggle("200");
                 $(this).children(".fa").toggleClass("deg");
-                if($(this).parent().next(".list-group").size()=="1"){
+                if($(this).parent().next(".list-group").length=="1"){
                     $(this).next(".lab_num").children().last().addClass("border-bottom");
                 }
 
@@ -44,6 +44,15 @@
                 $(".list-group-parent").removeClass("checked");
                 $(".list-group-child").removeClass("checked");
                 $(this).addClass("checked");
+            });
+//            删除
+            $(".delete").click(function(){
+                var url="";
+                layer.confirm('您确定要删除该设备？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    window.location.href=url;
+                });
             });
         })
     </script>
@@ -68,26 +77,6 @@
                 </div>
                 <div class="ibox-content">
                     <div class="treeview">
-                        <div class="list-group" style="margin-bottom: 0;">
-                            <div class="list-group-item list-group-parent">
-                                -1楼
-                                <i class="fa fa-angle-right right"></i>
-                            </div>
-                            <div class="lab_num">
-                                <div class="list-group-item list-group-child">临床1教</div>
-                                <div class="list-group-item list-group-child">临床2教</div>
-                            </div>
-                        </div>
-                        <div class="list-group" style="margin-bottom: 0;">
-                            <div class="list-group-item list-group-parent">
-                                -1楼
-                                <i class="fa fa-angle-right right"></i>
-                            </div>
-                            <div class="lab_num">
-                                <div class="list-group-item list-group-child">临床1教</div>
-                                <div class="list-group-item list-group-child">临床2教</div>
-                            </div>
-                        </div>
                         <div class="list-group" style="margin-bottom: 0;">
                             <div class="list-group-item list-group-parent">
                                 -1楼
