@@ -7,13 +7,9 @@ $(function(){
     switch(pars.pagename){
         case "exam_add":exam_add();break; 
         case "add_basic":add_basic();break;
-<<<<<<< HEAD
         case "sp_invitation":sp_invitation();break;
-=======
         case "examroom_assignment":examroom_assignment();break;
->>>>>>> b530abb897cb1b06630d5a87de30e08e14f5d220
     }
-
 });
 
 /**
@@ -210,7 +206,7 @@ function timePicker(background){
 
 }
 
-<<<<<<< HEAD
+
 /*
  * 邀约sp老师
  * @author lizhiyuan
@@ -229,7 +225,7 @@ function sp_invitation(){
         $(this).parents(".teacher").remove();
     })
 }
-=======
+
 
 function examroom_assignment(){
 
@@ -354,4 +350,4 @@ function examroom_assignment(){
         }
     });
 }
->>>>>>> b530abb897cb1b06630d5a87de30e08e14f5d220
+
