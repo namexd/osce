@@ -15,7 +15,7 @@
 
     <script>
         $(function(){
-            var url="{{ url('/msc/admin/dept/select-dept') }}";
+            var url="{{ url('/msc/admin/dept/select-dept')}}";
             gethistory(url);
             addfater();
 
