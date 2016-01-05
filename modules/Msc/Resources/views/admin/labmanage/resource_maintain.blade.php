@@ -41,6 +41,8 @@
                     window.location.href=url;
                 });
             });
+//            楼栋数据绑定
+            
         })
     </script>
 
