@@ -119,7 +119,7 @@ class Station extends CommonModel
             array_push($resultArray, $result);
 
             //判断$resultArray中是否有键值为false
-            if (array_search('false', $resultArray) !== false) {
+            if (array_search(false, $resultArray) !== false) {
                 $connection->rollBack();
                 throw new \Exceptio('新建房间时发生了错误,请重试!');
             } else {

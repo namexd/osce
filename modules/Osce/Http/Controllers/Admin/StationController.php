@@ -26,6 +26,13 @@ class StationController extends CommonController
      */
     public function getTest()
     {
+        $array = [];
+        $a = '1';
+        $b = false;
+
+        array_push($array, $a, $b);
+//        dd($array);
+        dd(array_search(false, $array));
         return view('osce::admin.exammanage.examroom_assignment');
     }
 
