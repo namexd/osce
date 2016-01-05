@@ -115,6 +115,7 @@
                         <option value="-1">请选择楼栋</option>
                         @if(!empty($location))
                             @foreach($location as $k=>$v)
+
                         <option value="{{@$v->id}}">{{@$v->name}}</option>
                             @endforeach
                             @endif
