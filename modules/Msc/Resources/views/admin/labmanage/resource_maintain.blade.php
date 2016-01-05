@@ -9,6 +9,11 @@
 
     <script>
         $(function(){
+            $(document).ajaxSuccess(function(event, request, settings) {
+                //楼栋选项卡切换
+                ban();
+            });
+
 //            楼栋选项卡切换
             function ban(){
                 $(".list-group-parent").click(function(){
@@ -25,10 +30,7 @@
                     $(this).addClass("checked");
                 });
             }
-            $(document).ajaxSuccess(function(event, request, settings) {
-                //楼栋选项卡切换
-                ban();
-            });
+
 //            新增、编辑切换
             $("#add_device").click(function(){
                 $("#add_device_form").show();
