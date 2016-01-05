@@ -23,7 +23,7 @@ class Devices  extends Model
     protected $fillable 	=	['name','code','mux_use_time','warning','detail','status','devices_cate_id','created_user_id','id'];
 
     /**
-     * 关联用户信息
+     * 关联设备类型表
      * Modules\Msc\Entities\DevicesCate
      */
     public function devicesInfo()
