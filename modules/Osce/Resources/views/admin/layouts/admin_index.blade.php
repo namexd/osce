@@ -54,7 +54,6 @@
 <!-- 全局js -->
 
 <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
-<script src="{{asset('osce/admin/plugins/js/plugins/sliosceroll/jquery.sliosceroll.min.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 
 <!-- 自定义js -->
