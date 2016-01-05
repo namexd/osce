@@ -65,7 +65,11 @@ function exam_add(){
         thisElement.remove();
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index');
-        index = parseInt(index) - 1;
+        if(index<1){
+            index = 0;
+        }else{
+            index = parseInt(index) - 1;
+        }
         $('#exam_add').find('tbody').attr('index',index);
         //更新序号
         $('#exam_add tbody').find('tr').each(function(key,elem){
@@ -127,7 +131,11 @@ function add_basic(){
         thisElement.remove();
         //计数器标志
         var index = $('#add-basic').find('tbody').attr('index');
-        index = parseInt(index) - 1;
+        if(index<1){
+            index = 0;
+        }else{
+            index = parseInt(index) - 1;
+        }
         $('#add-basic').find('tbody').attr('index',index);
         //更新序号
         $('#add-basic tbody').find('tr').each(function(key,elem){
@@ -278,7 +286,11 @@ function examroom_assignment(){
         thisElement.remove();
         //计数器标志
         var index = $('#examroom').find('tbody').attr('index');
-        index = parseInt(index) - 1;
+        if(index<1){
+            index = 0;
+        }else{
+            index = parseInt(index) - 1;
+        }
         $('#examroom').find('tbody').attr('index',index);
         //更新序号
         $('#examroom tbody').find('tr').each(function(key,elem){
