@@ -329,9 +329,7 @@ function sp_invitation(){
         var id = $(this).parent().parent().parent().attr('value');
         $.ajax({
             type:'get',
-            url: 'http://127.0.0.1:3000/getjson',   //修改请求地址
-            dataType: 'jsonp',//前后台对接删除
-            jsonp: 'callback',//前后台对接删除
+            url: pars.teacher_list,   //修改请求地址
             data:{id:id},
             success:function(res){
 

@@ -68,7 +68,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'sp_invitation'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'sp_invitation','teacher_list':'{{route('osce.admin.spteacher.getShow')}}'}" />
     <div class="ibox-title route-nav">
         <ol class="breadcrumb">
             <li><a href="#">考试安排</a></li>
