@@ -27,7 +27,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.exammanage.exam_add');
+        return view('osce::admin.exammanage.sp_invitation');
     }
 
     /**
@@ -56,7 +56,7 @@ class StationController extends CommonController
         $data = $model->showList($order);
 
         //将展示数据放在页面上
-        return view('osce::admin.resourcemanage.examroom',
+        return view('osce::admin.resourcemanage.test_station',
             ['data' => $data]);
 
     }
@@ -83,7 +83,7 @@ class StationController extends CommonController
         $time = $request->session()->get('time', '');
 
         //将下拉菜单的数据传到页面上
-        return view('osce::admin.resourcemanage.examroom_add',
+        return view('osce::admin.resourcemanage.test_station_add',
             ['placeCate' => $placeCate, 'vcr' => $vcr, 'room' => $room, 'subject' => $subject, 'time' => $time]);
     }
 
@@ -102,14 +102,15 @@ class StationController extends CommonController
     public function postAddStation(Request $request, Station $model)
     {
         //验证略
-
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'type', 'time', 'room_id', 'create_user_id', 'subject_id');
+            $placeData = $request->only('name', 'type', 'mins', 'room_id', 'create_user_id', 'subject_id');
             $vcrId = $request->only('vcr_id', 'create_user_id');
             $caseId = $request->only('case_id', 'create_user_id');
 
             $formData = [$placeData, $vcrId, $caseId];
+
+            dd($formData);
             $result = $model->addStation($formData);
 
             //将当前时间限定的值放入session
@@ -119,7 +120,7 @@ class StationController extends CommonController
             if (!$result) {
                 throw new \Exception('新建考场失败,请重试!');
             } else {
-                return redirect()->route(''); //返回考场列表
+                return redirect()->route('osce::admin.resourcemanage.examroom'); //返回考场列表
             }
         } catch (\Exception $ex) {
             return redirect()->back()->withInput()->withErrors($ex);
@@ -150,7 +151,7 @@ class StationController extends CommonController
 
         list($placeCate, $vcr, $room, $subject) = $this->dropDownList();
         //将下拉菜单的数据传到页面上
-        return view('osce::admin.resourcemanage.examroom_add',
+        return view('osce::admin.resourcemanage.test_station_edit',
             ['placeCate' => $placeCate, 'vcr' => $vcr, 'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg]);
 
     }
@@ -189,7 +190,21 @@ class StationController extends CommonController
         } catch (\Exception $ex) {
             return redirect()->back()->withInput()->withErrors($ex);
         }
+    }
 
+    public function getDelete(Request $request, Station $station)
+    {
+        try {
+            //获取删除的id
+            $id = $request->input('id');
+            //将id传入删除的方法
+            $result = $station->deleteData($id);
+            if ($result) {
+                return redirect()->route('osce::admin.resourcemanage.test_station');
+            }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex);
+        }
     }
 
     /**
@@ -199,7 +214,7 @@ class StationController extends CommonController
     private function dropDownList()
     {
         //将下拉菜单的数据查出
-        $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
+        $placeCate = ['0' => '请选择类别', '1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         $vcr = Vcr::where('status', 1)
             ->select(['id', 'name'])
             ->get();     //关联摄像机

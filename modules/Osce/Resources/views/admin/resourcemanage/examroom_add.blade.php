@@ -80,7 +80,7 @@
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('')}}">
 
                         <div class="hr-line-dashed"></div>
 
@@ -165,8 +165,6 @@
 
                             </div>
                         </div>
-
-
                     </form>
 
                 </div>

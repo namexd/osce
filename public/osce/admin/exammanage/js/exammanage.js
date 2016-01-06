@@ -5,12 +5,38 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
+        case "exam_assignment":exam_assignment();break; 
         case "exam_add":exam_add();break; 
         case "add_basic":add_basic();break;
         case "sp_invitation":sp_invitation();break;
         case "examroom_assignment":examroom_assignment();break;
     }
 });
+
+/**
+ * 考试安排
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-06
+ */
+function exam_assignment(){
+
+    $('table').on('click','.fa-trash-o',function(){
+
+        var thisElement = $(this);
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deletes,
+                data:{id:thisElement.parent().parent().parent().attr('value')},
+                success:function(res){
+                    location.reload();
+                }
+            })
+        });
+    })
+}
 
 /**
  * 新增考试
@@ -37,10 +63,10 @@ function exam_add(){
         var html = '<tr>'+
                         '<td>'+parseInt(index)+'</td>'+
                         '<td class="laydate">'+
-                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                            '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD')+' 00:00</span>'+
                         '</td>'+
                         '<td class="laydate">'+
-                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                            '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD hh:mm')+'</span>'+
                         '</td>'+
                         '<td>3:00</td>'+
                         '<td>'+
@@ -52,7 +78,7 @@ function exam_add(){
         $('#exam_add').find('tbody').append(html);
     });
 
-
+    
     /**
      * 删除一条记录
      * @author mao
@@ -103,10 +129,10 @@ function add_basic(){
         var html = '<tr>'+
 	                    '<td>'+parseInt(index)+'</td>'+
 	                    '<td class="laydate">'+
-	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                        '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD')+' 00:00</span>'+
 	                    '</td>'+
 	                    '<td class="laydate">'+
-	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                        '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD hh:mm')+'</span>'+
 	                    '</td>'+
 	                    '<td>3:00</td>'+
 	                    '<td>'+
@@ -146,6 +172,62 @@ function add_basic(){
 
 }
 
+
+/**
+ * 获取所要格式的时间
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-06
+ * @param   {object}           [外部开放接口]
+ */
+var Time = (function(mod){
+    /**
+     * 小于10时的处理
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-06
+     * @param   {number}   data 传入参数
+     */
+    function Convert(data){
+        if(data>9){
+            return data;
+        }else{
+            return '0'+data;
+        }
+    }
+
+    /**
+     * 获取时间
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-06
+     * @param   {string} YYYY-MM-DD, YYYY-MM-DD hh:mm
+     * @return  {string}   时间格式
+     */
+    mod.getTime = function(format){
+        var now = new Date(),
+            time = '';
+
+        time = now.getFullYear()+'-'+(now.getMonth()>9?(now.getMonth()+1):'0'+(now.getMonth()+1))+'-'+Convert(now.getDate());
+
+        if(format=='YYYY-MM-DD'){
+
+            return time;
+        }else if(format=='YYYY-MM-DD hh:mm'){
+
+           return time += ' '+Convert(now.getHours())+':'+Convert(now.getMinutes());
+        }else{
+
+            return time += ' '+Convert(now.getHours())+':'+Convert(now.getMinutes())+':'+Convert(now.getSeconds());
+        }
+    }
+
+    return mod;
+
+
+})(window.Time||{});
+
+
 /**
  * 时间选择
  * @author mao
@@ -174,10 +256,22 @@ function timePicker(background){
          start: '2014-6-15 23:00:00',    //开始日期
          fixed: true, //是否固定在可视区域
          zIndex: 99999999, //css z-index
-         choose: function(dates){ //选择好日期的回调
-
+         choose: function(date){ //选择好日期的回调
+            var thisElement = $(this.elem).parent();
+            if(thisElement.prev().prev().length){
+                var current = Date.parse(date) - Date.parse(thisElement.prev().find('span').text());
+                var hours = Math.floor(current/(1000*60*60)),
+                    minutes = Math.round((current/(1000*60*60)-hours)*60);
+                thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
+            }else{
+                var current = Date.parse(thisElement.next().find('span').text()) - Date.parse(date);
+                var hours = Math.floor(current/(1000*60*60)),
+                    minutes = Math.round((current/(1000*60*60)-hours)*60);
+                thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes))); 
+            }
          }
     };
+
 
     /**
      * 日期选择
@@ -222,13 +316,39 @@ function timePicker(background){
  * @date    2016-01-05
  */
 function sp_invitation(){
-    $("#teacher-list").change(function(){
-        var $teacher=$("#teacher-list option:selected").text();
+    $(".teacher-list").change(function(){
+        var $teacher=$(".teacher-list option:selected").text();
+
+        var id = $(this).parent().parent().parent().attr('value');
+        $.ajax({
+            type:'get',
+            async:true,
+            url:'http://127.0.0.1:3000/get',
+            dataType:'jsonp',
+            data:{id:id},
+            success:function(res){
+                console.log(res)
+                if(res.code!=1){
+                    layer.alert('res.message');
+                }else{
+                    var data = res.data.rows;
+                    var html = '';
+                    for(var i in data){
+                        html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                    }
+                   $teacher.append(html);
+                }
+            }
+
+        });
+
         var sql='<div class="input-group teacher pull-left">'+
-            '<div class="pull-left">'+$teacher+'</div>'+
-            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+                '<div class="pull-left">'+$teacher+'</div>'+
+                '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
     })
+
+    //删除
     $(".teacher-box").delegate("i","click",function(){
         $(this).parents(".teacher").remove();
     })
@@ -238,7 +358,7 @@ function sp_invitation(){
 function examroom_assignment(){
 
 	//select2初始化
-    $(".js-example-basic-multiple").select2();
+    $(".js-example-basic-multiple").select2()
 
     /**
      * 选择必考项
@@ -253,12 +373,51 @@ function examroom_assignment(){
 
         current = $(this).val();
         if(current==undefined){
+
             $(this).parent().siblings('.necessary').text(num[0]);
         }else{
+
             $(this).parent().siblings('.necessary').text(num[current.length]);
+            //选择的数据
+            $(this).on("select2:select", function(e){
+                //考站数据请求
+                $.ajax({
+                    type:'get',
+                    url:'',
+                    data:{id:e.params.data.id},
+                    async:true,
+                    success:function(res){
+
+                        if(res.code!=1){
+                            layer.alert(res.message);
+                            return;
+                        }else{
+                            var data = res.data.rows;
+                            var html = '';
+                            for(var i in data){
+
+                                html += '<tr>'+
+                                            '<td>'+data[i].id+'</td>'+
+                                            '<td>'+data[i].name+'</td>'+
+                                            '<td>'+
+                                                '<select class="form-control">'+
+                                                    '<option>==请选择==</option>'+
+                                                    '<option>李老师</option>'+
+                                                    '<option>张老师</option>'+
+                                                '</select>'+
+                                            '</td>'+
+                                        '</tr>';
+                                $('exam-place').find('tbody').append(html);
+                            }
+                        }
+                    }
+                });
+            });
+            //删除数据
+            $(this).on("select2:unselect", function(e){console.log(e.params.data.id);});
+
         }
     });
-
 
     /**
      * 新增一条
@@ -267,19 +426,15 @@ function examroom_assignment(){
      * @date        2016-01-05
      */
     $('#add-new').click(function(){
-        //计数器标志
+
+        //新增dom
         var index = $('#examroom').find('tbody').attr('index');
         index = parseInt(index) + 1;
 
         var html = '<tr class="pid-'+index+'">'+
-                    '<td>'+parseInt(index)+'</td>'+
+                    '<td>'+index+'<input type="hiddin"  name="id['+index+'][id]" value="'+index+'"/></td>'+
                     '<td width="498">'+
-                        '<select class="form-control js-example-basic-multiple" multiple="multiple">'+
-                            '<option>不限</option>'+
-                            '<option>张老师</option>'+
-                            '<option>陈老师</option>'+
-                            '<option>杨老师</option>'+
-                        '</select>'+
+                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="name['+index+'][]"></select>'+
                     '</td>'+
                     '<td class="necessary">必考</td>'+
                     '<td>'+
@@ -291,7 +446,31 @@ function examroom_assignment(){
         //记录计数
         $('#examroom').find('tbody').attr('index',index);
         $('#examroom').find('tbody').append(html);
-        $(".js-example-basic-multiple").select2();
+
+        //ajax请求数据
+        $.ajax({
+            type:'get',
+            async:true,
+            url:'',     //请求地址
+            success:function(res){
+                //数据处理
+                var str = [];
+                if(res.code!=1){
+                    layer.alert(res.message);
+                    return;
+                }else{
+                    var data = res.data.rows;
+                    for(var i in data){
+                        str.push({id:data[i].id,text:data[i].name});
+                    }
+                    //动态加载进去数据
+                    $(".js-example-basic-multiple").select2({data:str});
+                }
+            }
+        });
+        var data = [{ id: 0, text: 'enhancement' }, { id: 1, text: 'bug' }, { id: 2, text: 'duplicate' }, { id: 3, text: 'invalid' }, { id: 4, text: 'wontfix' }];
+        $(".js-example-basic-multiple").select2({data:data});
+
     });
 
     /**

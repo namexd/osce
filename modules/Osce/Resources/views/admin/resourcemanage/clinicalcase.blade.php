@@ -11,11 +11,12 @@
 @stop
 
 @section('only_js')
-    
+    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'clinicalcase','deletes':'{{route('osce.admin.case.postDelete')}}'}" />
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
         <li><a href="#">资源管理</a></li>
@@ -28,7 +29,7 @@
             <h5 class="title-label">病例管理</h5>
         </div>
         <div class="col-xs-6 col-md-2" style="float: right;">
-            <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
+            <a  href="{{route('osce.admin.case.getCreateCase')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
         </div>
     </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -43,15 +44,17 @@
             </tr>
             </thead>
             <tbody>
+            @foreach($data as $key => $item)
                 <tr>
-                    <td>1</td>
-                    <td>肠胃炎</td>
-                    <td>食欲不振</td>
-                    <td>
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                    <td>{{$key+1}}</td>
+                    <td>{{$item->name}}</td>
+                    <td>{{$item->description}}</td>
+                    <td value="{{$item->id}}">
+                        <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
 
