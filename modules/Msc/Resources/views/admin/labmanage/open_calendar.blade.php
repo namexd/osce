@@ -120,8 +120,30 @@
                 $('.labtotal').html(total+'人');
 
             });
+            //添加或修改实验室开放时间
+            $('.fadeInRight').delegate('#edit_save','click',function(){
+                var timearr = {};
+                $('.add_time_list').each(function(){
+                    var obj = $(this);
+                    if($(this).find('.check_real').hasClass('check')){
+                        obj.find('.form-group input').each(function(){
+                            var name = $(this).attr('name');
+                            var val = $(this).val();
+                            timearr[name] = val;
+                        });
+                    }
+                });
+                console.log(timearr);
+                {{--$.ajax({--}}
+                    {{--type:"get",--}}
+                    {{--url:"{{route('msc.admin.laboratory.postOperatingLabCleander')}}",--}}
+                    {{--cache:false,--}}
+                    {{--success:function(result){--}}
+                        {{--console.log(result);--}}
 
-            $('.fadeInRight').delegate('');
+                    {{--}--}}
+                {{--})--}}
+            });
         })
     </script>
 @stop
@@ -166,7 +188,6 @@
                     <div class="cal1">
                     </div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>
@@ -188,7 +209,6 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>
@@ -211,7 +231,6 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>
@@ -234,7 +253,6 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>

@@ -62,7 +62,7 @@ class FloorController extends Controller {
      * Time: 17:01
      * 新加楼栋操作
      */
-    public function getAddFloorInsert(Request $Request){
+    public function postAddFloorInsert(Request $Request){
         //dd(Input::get('name'));
         $this->validate($Request, [
             'name'      => 'required',
@@ -71,6 +71,15 @@ class FloorController extends Controller {
             'address' => 'required',
             'status'   => 'required|in:0,1',
             'school_id' =>'required',
+        ],[
+            "name.required" => "楼栋名称必填",
+            "floor_top.required" => "楼层数（地上）必填",
+            "floor_top.integer"  => "楼栋必须为数字",
+            "floor_buttom.required" => "楼层数（地下）必填",
+            "floor_buttom.integer"  => "楼栋必须为数字",
+            "address.required" => "地址必填",
+            "school_id.required" => "学院必选",
+            //"integer"      => ":attribute 长度必须在 :min 和 :max 之间"
         ]);
         $user = Auth::user();
         $data = [
@@ -84,6 +93,7 @@ class FloorController extends Controller {
         ];
         //dd($data);
         $add = Floor::create($data);
+        //dd($add);
         if($add != false){
             return redirect()->back()->withInput()->withErrors('添加成功');
         }else{
@@ -140,9 +150,13 @@ class FloorController extends Controller {
         ];
         if($id){
             $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->update($data);
-
+            if(Input::get('type')){
+                $name = '启用成功';
+            }else{
+                $name = '停用成功';
+            }
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('停用成功');
+                return redirect()->back()->withInput()->withErrors($name);
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }

@@ -24,23 +24,16 @@ class LadDevice extends Model
     protected $hidden 		= 	[];
     protected $fillable 	=	['lab_id','device_id','total','created_user_id','id'];
 
-    //ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½Ò±ï¿½
+    //¹ØÁªÊµÑéÊÒ±í
     public function LadInfo()
     {
         return $this->hasOne('Modules\Msc\Entities\Laboratory','lab_id','id');
     }
-    //ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½Ô´ï¿½ï¿½
+    //¹ØÁªÉè±¸×ÊÔ´±í
     public function DeviceInfo(){
         return $this->hasOne('Modules\Msc\Entities\Devices','id','device_id');
     }
 
-    /**
-     * @param $lab_id
-     * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016å¹´1æœˆ6æ—¥14:19:42
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
     public function GetLadDevice($lab_id){
         return $this->where('lab_id','=',$lab_id)->with(['DeviceInfo'=>function($DeviceInfo){
             $DeviceInfo->with('devicesCateInfo');
