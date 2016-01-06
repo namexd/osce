@@ -71,5 +71,9 @@
                 </div>
             </div>
         </form>
+        <div class="pull-right">
+            {!! $data->render() !!}
+        </div>
     </div>
+
 @stop{{-- 内容主体区域 --}}
