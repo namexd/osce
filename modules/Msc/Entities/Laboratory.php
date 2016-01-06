@@ -120,15 +120,34 @@ class Laboratory extends Model
     }
 
     /**
-     * 获取实验室相关信息
+     * 获取实验室相关信息，以及日历安排（普通实验室填写表单页面、开放实验室展示日历安排页面）
      * @param $id
+     * @param $dateTime
      * @return Array
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年1月5日16:19:46
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetLaboratoryInfo($id){
-        return $this->where('id','=',$id)->with('Floor')->first();
+    public function GetLaboratoryInfo($id,$dateTime){
+        if(!empty($dateTime)){
+            $timeInt = strtotime($dateTime);
+            $y = date('Y',$timeInt);
+            $m = date('m',$timeInt);
+            $d = date('d',$timeInt);
+            return $this->where('id','=',$id)->with(['Floor','OpenPlan'=>function($OpenPlan) use ($y,$m,$d){
+
+                $OpenPlan->where('year','=',$y)->where('month','=',$m)->where('day','=',$d)->with(['OpenLabApply'=>function($OpenLabApply){
+                    //TODO open_lab_apply表 状态1代表 学生预约的开放实验室
+                    $OpenLabApply->where('type','=',1);
+                },'PlanRecord'=>function($PlanRecord){
+                    //TODO plan_record 状态1代表 开放实验室预约的生成的计划
+                    $PlanRecord->where('type','=',1);
+                }]);
+            }])->first();
+        }else{
+            return  false;
+        }
+
     }
 
 

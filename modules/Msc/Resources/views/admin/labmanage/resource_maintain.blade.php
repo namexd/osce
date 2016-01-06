@@ -94,14 +94,12 @@
             $(".check_one").click(function(){
                if($(this).children(".check_icon").hasClass("check")){
                    $(this).children(".check_icon").removeClass("check");
-                   if($(this).siblings(".check_one").children(".check_icon").hasClass("check")){
-                        return false;
-                   }else{
-                       $(".check_all").children(".check_icon").removeClass("check");
-                   }
+                   $(".check_all").children(".check_icon").removeClass("check");
                }else{
                    $(this).children(".check_icon").addClass("check");
-                   $(".check_all").children(".check_icon").addClass("check");
+                   if($(".check_one").size() == $(".check_one").children(".check").size()){
+                        $(".check_all").children(".check_icon").addClass("check");
+                   }
                }
             });
 
