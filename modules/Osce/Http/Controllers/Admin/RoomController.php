@@ -47,7 +47,7 @@ class RoomController extends CommonController
 
 
         //展示页面
-//        return view('osce::admin.resourcemanage.examroom', ['data' => $data]);
+        return view('osce::admin.resourcemanage.examroom', ['data' => $data]);
     }
 
     /**
