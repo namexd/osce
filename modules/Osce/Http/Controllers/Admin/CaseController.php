@@ -157,7 +157,7 @@ class CaseController extends CommonController
 
     /**
      * 根据id删除病历
-     * @api       POST /osce/admin/place/edit-case
+     * @api       POST /osce/admin/case/delete
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>

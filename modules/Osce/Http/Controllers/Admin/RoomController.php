@@ -35,7 +35,7 @@ class RoomController extends CommonController
         //验证规则，暂时留空
 
         //获取各字段
-        $formData = $request->only('keyword', 'order_by', 'order_name');
+        $formData = $request->only('keyword');
         //获取当前场所的类
         $model = new Room();
         $data = $model->showRoomList($formData);

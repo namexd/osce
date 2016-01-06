@@ -65,7 +65,8 @@ class Room extends CommonModel
 
         //如果keyword不为空，那么就进行模糊查询
         if ($formData['keyword'] !== null) {
-            $builder = $builder->where($this->table . '.created_at', '=', '%' . $formData['keyword'] . '%');
+            $builder = $builder->where($this->table . '.name', '=', '%' . $formData['keyword'] . '%')
+                                ->orWhere($this->table . '.description', '=', '%' . $formData['keyword'] . '%');
         }
 
 
