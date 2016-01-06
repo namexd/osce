@@ -71,7 +71,7 @@ class Room extends CommonModel
 
 
 
-        return $builder->paginate(config('osce.page_size'));
+        return $builder->paginate(10);
     }
 
 

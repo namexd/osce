@@ -44,16 +44,18 @@
             </tr>
             </thead>
             <tbody>
+                @foreach($data as $item)
                 <tr>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
+                    <td>{{$item->name}}</td>
+                    <td>{{$item->begin_dt}}~{{$item->end_dt}}</td>
+                    <td>{{$item->description}}</td>
+                    <td>{{$item->total}}</td>
                     <td>
                         <a href="#"><span class="read  state1 detail"><i class="fa  fa-cog"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
                     </td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
 
