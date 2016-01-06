@@ -146,10 +146,8 @@ class ExamController extends CommonController
             $examScreeningData[$key]['create_user_id'] = $user -> id;
         }
 
-        $data   =   [$examData, $examScreeningData];
-
         try{
-            if($exam = $model -> addExam($data))
+            if($exam = $model -> addExam($examData, $examScreeningData))
             {
                 return redirect()->route('osce.admin.exam.getExamList');
             } else {

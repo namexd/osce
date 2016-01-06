@@ -77,42 +77,50 @@ class Exam extends CommonModel
     }
 
     /**
-     * 新增考试的方法
-     * @param $id
-     * @return bool
+     *
+     * @access public
+     *
+     * @param array $examData 考试基本信息
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * @param array $examScreeningData 场次信息
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
      */
-    public function addExam($data)
+    public function addExam(array $examData,array $examScreeningData)
     {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
         try{
-            $resultArray = [];
-            $connection = DB::connection($this->connection);
-            $connection ->beginTransaction();
-
             //将exam表的数据插入exam表
-            $examData = $data[0];
-            $result = $this->create($examData);
-            //获得插入后的id
-            $exam_id = $result->id;
-            array_push($resultArray, $result);
-
+            if(!$result = $this->create($examData))
+            {
+                throw new \Exception('创建考试基本信息失败');
+            }
             //将考试对应的考次关联数据写入考试场次表中
-            $examScreeningData = $data[1];
             foreach($examScreeningData as $key => $value){
-                $examScreeningData[$key]['exam_id'] = $exam_id;
+                $value['exam_id']    =   $result->id;
+                if(!$examScreening = ExamScreening::create($value))
+                {
+                    throw new \Exception('创建考试场次信息失败');
+                }
             }
-            $result = ExamScreening::create($examScreeningData);
-            array_push($resultArray, $result);
-
-            //判断$resultArray中是否有键值为false,如果有，那就说明前面有错误
-            if (array_search(false, $resultArray) !== false) {
-                $connection->rollBack();
-                throw new \Exceptio('新增考试失败,请重试!');
-            } else {
-                $connection->commit();
-                return true;
-            }
-
+            return $result;
+            $connection->commit();
         } catch(\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
     }
