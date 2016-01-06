@@ -40,6 +40,15 @@
                     window.location.href=url;
                 });
             });
+//            新增编辑弹出层切换
+            $("#add_lab").click(function(){
+                $("#add_from").show();
+                $("#edit_from").hide();
+            });
+            $("#edit_lab").click(function(){
+                $("#add_from").hide();
+                $("#edit_from").show();
+            });
 //            编辑
             $('#add_from').bootstrapValidator({
                 message: 'This value is not valid',
@@ -217,7 +226,7 @@
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
                 <button class="btn btn_pl btn-success right">
-                    <a href=""  class="state1 edit addlab" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                    <a href=""  class="state1 edit addlab" data-toggle="modal" data-target="#myModal" style="text-decoration: none" id="add_lab">
                         <span style="color: #fff;">新增实验室</span>
                     </a>
                 </button>
@@ -295,7 +304,7 @@
                                     <input type="hidden" class="short_enname" value="{{@$v->short_enname}}">
                                     <input type="hidden" class="total" value="{{@$v->total}}">
                                     <td>
-                                        <a href=""  data="{{$v['id']}}"  class="state1 edit update" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                                        <a href=""  data="{{$v['id']}}"  class="state1 edit update" data-toggle="modal" data-target="#myModal" style="text-decoration: none" id="edit_lab">
                                             <span>编辑</span>
                                         </a>
                                         @if($v->status == 0)
@@ -324,7 +333,7 @@
 @stop
 
 @section('layer_content')
-
+{{--新增--}}
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -381,7 +390,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>引文缩写</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>英文缩写</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control name add-name" id="short_enname" name="short_enname" value="" />
                 </div>
@@ -443,11 +452,11 @@
         </div>
     </form>
 
-
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
+{{--编辑--}}
+    <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增实验室/编辑实验室</h4>
+            <h4 class="modal-title" id="myModalLabel">编辑实验室</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
