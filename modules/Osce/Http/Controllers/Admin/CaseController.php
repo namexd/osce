@@ -18,7 +18,7 @@ class CaseController extends CommonController
 {
     /**
      * 获取病历列表
-     * @api       GET /osce/admin/place/case-list
+     * @api       GET /osce/admin/case/case-list
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -39,16 +39,33 @@ class CaseController extends CommonController
         //在模型中拿到数据
         $CaseModel = new CaseModel();
         $data = $CaseModel->getList($formData);
-        dd($data);
 
-        return view('', ['data' => $data]);
+        return view('osce::admin.resourcemanage.clinicalcase', ['data' => $data]);
+    }
+
+    /**
+     * 新增数据的着陆页
+     * @api       GET /osce/admin/case/create-case
+     * @access    public
+     * @param Request $request get请求<br><br>
+     *                         <b>get请求字段：</b>
+     *
+     * @param CaseModel $caseModel
+     * @return view
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getCreateCase()
+    {
+        return view('osce::admin.resourcemanage.clinicalcase_add');
     }
 
     /**
      * 往数据库里插入一条数据
-     * @api       POST /osce/admin/place/create-case
+     * @api       POST /osce/admin/case/create-case
      * @access    public
-     * @param Request $request get请求<br><br>
+     * @param Request $request post请求<br><br>
      *                         <b>get请求字段：</b>
      *
      * @param CaseModel $caseModel
@@ -103,7 +120,7 @@ class CaseController extends CommonController
         try {
             $data = CaseModel::findOrFail($id);
 
-//            return view('',['data'=>$data]);
+            return view('osce::admin.resourcemanage.clinicalcase_edit',['data'=>$data]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex);
         }
@@ -136,9 +153,32 @@ class CaseController extends CommonController
         }
         DB::connection('osce_mis')->commit();
         return redirect()->route('osce.admin.case.getCaseList');
+    }
 
-
-
-
+    /**
+     * 根据id删除病历
+     * @api       POST /osce/admin/place/edit-case
+     * @access    public
+     * @param Request $request get请求<br><br>
+     *                         <b>get请求字段：</b>
+     * @param CaseModel $caseModel
+     * @return view
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDelete(Request $request, CaseModel $caseModel)
+    {
+        try {
+            //获取删除的id
+            $id = $request->input('id');
+            //将id传入删除的方法
+            $result = $caseModel->deleteData($id);
+            if ($result) {
+                return redirect()->route('osce::admin.resourcemanage.clinicalcase');
+            }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex);
+        }
     }
 }

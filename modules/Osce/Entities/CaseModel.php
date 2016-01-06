@@ -13,7 +13,7 @@ use DB;
 class CaseModel extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'case';
+    protected $table = 'cases';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
@@ -30,20 +30,34 @@ class CaseModel extends CommonModel
      */
     public function getList($formData)
     {
-        //默认查询status不为0（已删除）的场所
-        $builder = $this->where($this->table . '.status', '<>', 0);
 
         //查询出数据
-        $builder = $builder->select([
+        $builder = $this->select([
             'id',
             'name',
-            'status',
-            'detail'
+            'description'
         ])->paginate(config('osce.page_size'));
 
         return $builder;
     }
 
-
-
+    /**
+     * 删除病例
+     * @param $id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function deleteData($id)
+    {
+        try {
+            //判断在关联表中是否有数据
+            $result = StationCase::where('station_case.case_id', '=', $id)->select('id')->first();
+            if (!($result->id)) {
+                throw new \Exception('不能删除此病例，因为与其他条目相关联');
+            }
+            return $this->where($this->table.'.id', '=', $id)->delete();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
