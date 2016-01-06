@@ -1,6 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    
+
 @stop
 
 @section('only_js')
@@ -66,57 +66,58 @@
             }
         })
 
-  </script>
+    </script>
 @stop
 
 @section('content')
-<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content animated fadeInRight">
 
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>人员管理</h5>
-        </div>
-        <div class="ibox-content">
-            <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>人员管理</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
 
-                <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddInvigilator')}}">
+                    <div class="col-md-12 ">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postEditInvigilator')}}">
 
-                        <div class="hr-line-dashed"></div>
+                            <div class="hr-line-dashed"></div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">名称</label>
-                            <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="name">
-                                <input type="hidden" required class="form-control" id="is_sp" name="is_sp" value="2">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="name" name="name" value="{{$item->name}}">
+                                    <input type="hidden" required class="form-control" id="id" name="id" value="{{$item->id}}">
+                                    <input type="hidden" required class="form-control" id="is_sp" name="is_sp" value="2">
+                                </div>
                             </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">手机号</label>
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="location" id="location" class="form-control" name="moblie">
-                            </div>
-
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-white" type="submit">取消</button>
-                                <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">手机号</label>
+                                <div class="col-sm-10">
+                                    <input type="text" ng-model="location" id="location" class="form-control" name="moblie" value="{{$item->moblie}}">
+                                </div>
 
                             </div>
-                        </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-white" type="submit">取消</button>
+                                    <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+
+                                </div>
+                            </div>
 
 
-                    </form>
+                        </form>
+
+                    </div>
 
                 </div>
-
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 
 @stop{{-- 内容主体区域 --}}
