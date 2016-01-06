@@ -27,6 +27,51 @@ class LadMaintainController extends MscController
      * @method GET
      * @url /msc/admin/ladMaintain/laboratory-list
      * @access public
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2016年1月5日16:48:52
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getLaboratoryList(Request $request){
+
+        $location =Floor::where('status','=',1)->get();
+        return view('msc::admin.labmanage.resource_maintain',[
+            'location'    => $location,
+        ]);
+    }
+
+    /**
+     *实验室相关设备信息
+     *
+     * @method GET
+     * @url /msc/admin/LadMaintain/lab-id-get-laboratory-device-list
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * *int      lad_id       实验室id(必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LabIdGetLaboratoryDeviceList(){
+        $lab_id = Input::get('lab_id');
+        $LadDevice = new LadDevice;
+        $LadDeviceList = $LadDevice->GetLadDevice($lab_id);
+        return response()->json(
+            $this->success_rows(1,'获取成功',$LadDeviceList->total(),config('msc.page_size',10),$LadDeviceList->currentPage(),array('LadDeviceList'=>$LadDeviceList->toArray()))
+        );
+    }
+
+    /**
+     *设备添加数据
+     * @method GET
+     * @url /msc/admin/ladMaintain/laboratory-list-data
+     * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
@@ -34,45 +79,44 @@ class LadMaintainController extends MscController
      * * string        devicename     资源名称
      * * string        devicetype     资源类型名称
      *
-     * @return view
+     * @return json
      *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2016年1月5日16:49:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-
-
-    public function getLaboratoryList(Request $request){
+    public function getLaboratoryListData(Request $request){
         $this->validate($request, [
             'keyword' => 'sometimes',
             'devices_cate_id' => 'sometimes|integer'
-
         ]);
         $keyword = urldecode(e($request->input('keyword')));
         $devices_cate_id = (int)$request->input('devices_cate_id');
         //添加设备的资源数据
         $devices = new Devices();
         $resourceData = $devices->getDevicesList($keyword,$devices_cate_id);
+        $list = [];
+        foreach ($resourceData as $itme) {
+            $list[] = [
+                'id' => $itme->id,
+                'name' => $itme->name,
+                'detail' => $itme->detail,
+                'catename'=>$itme->catename,
+                'devices_cate_id'=>$itme->devices_cate_id,
+                'status' => is_null($itme->status) ? '-' : $itme->status,
+            ];
+        }
         $deviceType = DB::connection('msc_mis')->table('device_cate')->get();
+        $data = [
+            'list'=> $list,
+            'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
+            'deviceType'  => $deviceType
+        ];
+        return response()->json(
+            $this->success_rows(1,'获取成功',1,10,0,$data)
+        );
 
-        //楼栋数据
-        $location =Floor::where('status','=',1)->get();
-//        dd($location);
-        //楼栋的楼层及楼层试验室数据
-        $FloorLad = $this->getFloorLab();
-//        dd($FloorLad);
-        //试验室的设备数据
-//        $LadDevices =new LadDevice();
-//        $LadDevice = $LadDevices->getLadDevice();
-
-//        dd($location);
-        return view('msc::admin.labmanage.resource_maintain',[
-            'resourceData' => $resourceData,
-            'deviceType'  => $deviceType,
-            'location'    => $location,
-//            'LadDevice' =>  $LadDevice
-        ]);
     }
 
     /**

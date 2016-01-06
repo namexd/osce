@@ -89,7 +89,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/lab-clearnder', ['uses'=>'LaboratoryController@getLabClearnder','as'=>'msc.admin.laboratory.getLabClearnder']);
 		Route::get('laboratory/floor-lab', ['uses'=>'LaboratoryController@getFloorLab','as'=>'msc.admin.laboratory.getFloorLab']);
 		//资源路由
-		Route::controller('resources','resourcesController');
+		Route::controller('resources','ResourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
 		Route::post('resources/resources-add',['uses'=>'ResourcesController@postResourcesAdd','as'=>'msc.admin.resources.ResourcesAdd']);
 		Route::get('resources/resources-edit/{id}',['uses'=>'ResourcesController@postResourcesEdit','as'=>'msc.admin.resources.ResourcesEdit']);
@@ -109,6 +109,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//实验室资源维护路由
 		Route::controller('LadMaintain','LadMaintainController');
 		Route::get('ladMaintain/laboratory-list',['uses'=>'LadMaintainController@getLaboratoryList','as'=>'msc.admin.LadMaintain.LaboratoryList']);
+		Route::get('ladMaintain/laboratory-list-data',['uses'=>'LadMaintainController@getLaboratoryListData','as'=>'msc.admin.LadMaintain.LaboratoryListData']);
+		Route::get('/ladMaintain/lab-id-get-laboratory-device-list',['uses'=>'LadMaintainController@LabIdGetLaboratoryDeviceList','as'=>'msc.admin.LadMaintain.LabIdGetLaboratoryDeviceList']);
 		Route::post('ladMaintain/devices-add',['uses'=>'LadMaintainController@postDevicesAdd','as'=>'msc.admin.LadMaintain.DevicesAdd']);
 		Route::get('ladMaintain/devices-total-edit',['uses'=>'LadMaintainController@getDevicesTotalEdit','as'=>'msc.admin.LadMaintain.DevicesTotalEdit']);
 		Route::get('ladMaintain/floor-lab', ['uses'=>'LadMaintainController@getFloorLab','as'=>'msc.admin.ladMaintain.getFloorLab']);
@@ -142,6 +144,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('/laboratory/laboratory-list-data',['uses'=>'LaboratoryCotroller@LaboratoryListData','as'=>'msc.Laboratory.LaboratoryListData']);
 		//获取开放实验室待预约列表数据
 		Route::get('/laboratory/open-laboratory-list-data',['uses'=>'LaboratoryCotroller@OpenLaboratoryListData','as'=>'msc.Laboratory.OpenLaboratoryListData']);
+		//根据实验室id与时间 进入实验室预约填写表单页面
+		Route::get('/laboratory/apply-laboratory',['uses'=>'LaboratoryCotroller@ApplyLaboratory','as'=>'msc.Laboratory.ApplyLaboratory']);
 
 		// /msc/wechat/personal-center/index
 	});

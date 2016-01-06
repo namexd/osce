@@ -26,9 +26,9 @@ class Devices  extends Model
      * 关联设备类型表
      * Modules\Msc\Entities\DevicesCate
      */
-    public function devicesInfo()
+    public function devicesCateInfo()
     {
-        return $this->hasOne('Modules\Msc\Entities\DevicesCate','devices_cate_id','id');
+        return $this->hasOne('Modules\Msc\Entities\DevicesCate','id','devices_cate_id');
     }
     //获取资源列表
     public function getDevicesList($keyword='', $status='', $devices_cate_id=''){

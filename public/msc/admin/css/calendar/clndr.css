@@ -140,7 +140,7 @@ p {
   border-right: 1px solid #000000;
 }
 .cal1 .clndr .clndr-table tr {
-  height: 85px;
+  height: 45px;
 }
 .cal1 .clndr .clndr-table tr td {
   vertical-align: top;
