@@ -323,9 +323,11 @@ function sp_invitation(){
         $.ajax({
             type:'get',
             async:true,
-            url:'';
+            url:'http://127.0.0.1:3000/get',
+            dataType:'jsonp',
             data:{id:id},
             success:function(res){
+                console.log(res)
                 if(res.code!=1){
                     layer.alert('res.message');
                 }else{
