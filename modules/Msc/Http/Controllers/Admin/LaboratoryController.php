@@ -273,6 +273,7 @@ class LaboratoryController extends MscController {
      * 实验室开发日历
      */
     public function getLabClearnder(){
+
         $location = Floor::where('status','=',1)->get();
         return view('msc::admin.labmanage.open_calendar',[
             'location' => $location,
@@ -287,21 +288,34 @@ class LaboratoryController extends MscController {
      */
     public function getFloorLab(){
         $labArr = [];
-        $cacheData = Cache::remember('lab',3600, function(){
-            $local_id = Input::get('lid');
-            $local = Floor::where('id','=',$local_id)->first();
-            $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
-            $where['status'] = 0;
-            $where['location_id'] = $local_id;
-            foreach($floor as $k=>$v){
-                $where['floor'] = $v;
-                $labArr[$k]['floor'] = $v;
-                $labArr[$k]['lab'] = Laboratory::where($where)->get();
-            }
-            return $labArr;
-        });
-        //dd($cacheData);
-        //return $cacheData;
-        //$this->success_data($cacheData,1,'success');
+        $local_id = Input::get('lid');
+        $local = Floor::where('id','=',$local_id)->first();
+        $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
+        $where['status'] = 0;
+        $where['location_id'] = $local_id;
+        $user = Auth::user();
+        $role_id = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
+        $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role_id->role_id)->first();
+        if($role_name->name == '超级管理员'){
+
+        }else{
+            $where['manager_user_id'] = $user['id'];
+        }
+        foreach($floor as $k=>$v){
+            $where['floor'] = $v;
+            $labArr[$k]['floor'] = $v;
+            $labArr[$k]['lab'] = Laboratory::where($where)->get();
+        }
+        return $labArr;
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月6日11:40:11
+     * 添加或修改实验室开放时间
+     */
+    public function postOperatingLabCleander(){
+
     }
 }

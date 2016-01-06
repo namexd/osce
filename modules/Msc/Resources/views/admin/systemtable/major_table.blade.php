@@ -11,6 +11,7 @@
 
 @section('only_js')
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+
     <script>
         $(function(){
 //            删除
@@ -33,10 +34,10 @@
                 var url = "/msc/admin/profession/profession-status?id="+this_id+"&type="+type;
                 var str = '';
                 if(type == 1){
-                    str = '您确定要恢复该专业？';
+                    str = '您确定要启用该专业？';
                 }else{
 
-                    str = '您确定要禁用该专业？';
+                    str = '您确定要停用该专业？';
                 }
 
                 //询问框
@@ -85,12 +86,14 @@
             });
 
 //            导入
+
             $("#in").click(function(){
                 $("#load_in").click();
             });
             $("#load_in").change(function(){
                 var str=$("#load_in").val().substring($("#load_in").val().lastIndexOf(".")+1);
-                if(str != "xlsx"){
+
+                if(str!="xlsx"){
                     layer.alert(
                             "请上传正确的文件格式？",
                             {title:["温馨提示","font-size:16px;color:#408aff"]}
@@ -98,21 +101,22 @@
                 }else{
                     $.ajaxFileUpload({
                         type:"post",
-                        url:"/msc/admin/profession/profession-import",
-                        fileElementId:"load_in",
-                        success:function(data,status){
-
+                        url:"{{route('msc.admin.profession.ProfessionImport')}}",
+                        fileElementId:'load_in',//必须要是 input file标签 ID
+                        success: function (data, status){
+//                            console.log(data);
                         },
-                        error:function(){
+                        error: function (data, status, e){
                             console.log("失败");
                             layer.alert(
                                     "上传失败！",
                                     {title:["温馨提示","font-size:16px;color:#408aff"]}
                             );
                         }
-                    })
+                    });
                 }
-            })
+            });
+
             $('.edit').click(function () {
                 if($(this).attr("data")){
                     $('input[name=name]').val($(this).parent().parent().find('.name').html());;
@@ -169,12 +173,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn_pl btn-success right">
-                    <button href=""   id="addprofession"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">添加专业</button>
-                    {{--<a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">--}}
-                        {{--<span style="color: #fff;">新增专业</span>--}}
-                    {{--</a>--}}
-                </button>
+                <button href=""   id="addprofession"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增专业</button>
                 <button class="btn btn_pl btn-white right button_margin" id="in">导入专业</button>
                 <input type="file" name="training" id="load_in" style="display: none" value="">
             </div>
@@ -217,7 +216,7 @@
                             <td>{{$list['id']}}</td>
                             <td class="code">{{$list['code']}}</td>
                             <td class="name">{{$list['name']}}</td>
-                            <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">禁用</span>@endif</td>
+                            <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">停用</span>@endif</td>
                             {{--@if($list['status']==1)--}}
                                 {{--<td class="status2">正常</td>--}}
                             {{--@else--}}
@@ -226,9 +225,9 @@
                             <td>
                                 <a href=""  data="{{$list['id']}}"  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                                @if($list['status']==1)
-                                <a   data="{{$list['id']}}"  data-type="0"  class="state2 modal-control stop">禁用</a>
+                                <a   data="{{$list['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
                                 @else
-                                    <a   data="{{$list['id']}}" data-type="1" class="state2 modal-control stop">恢复</a>
+                                    <a   data="{{$list['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                                 @endif
                                 <span  data="{{$list['id']}}"  class="state2 edit_role modal-control delete">删除</span>
                                 <input type="hidden" class="setid" value="1"/>

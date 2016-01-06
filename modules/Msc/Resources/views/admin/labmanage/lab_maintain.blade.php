@@ -378,7 +378,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>引文缩写</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>英文缩写</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control name add-name" id="short_enname" name="short_enname" value="" />
                 </div>

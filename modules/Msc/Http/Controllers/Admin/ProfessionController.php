@@ -278,11 +278,15 @@ class ProfessionController extends MscController
      */
 
     public function postProfessionImport(Request $request){
+
         try{
             $data = Common::getExclData($request, 'training');
             $professionInfo = array_shift($data);
+
             //将中文头转换翻译成英文
             $professionInfo = Common::arrayChTOEn($professionInfo, 'msc.importForCnToEn.profession_group');
+
+//            dd($professionInfo);
             //已经存在的数据
             $dataHaven = [];
             //添加失败的数据
@@ -294,7 +298,7 @@ class ProfessionController extends MscController
                     case "正常":
                         $professionData['status'] = 1;
                         break;
-                    case "停用":
+                    case "禁用":
                         $professionData['status'] = 0;
                         break;
                 };
@@ -302,8 +306,9 @@ class ProfessionController extends MscController
                     if (StdProfessional::where('code', '=', $professionData['code'])->count() == 0) {
                         $profession = new StdProfessional();
                         $result= $profession->ProfessionImport($professionData);
+//                         dd(1111);
 
-                        if ( $result== 0) {
+                        if ($result==0) {
                             $dataFalse[] = $professionData;
                         }
                     } else {
