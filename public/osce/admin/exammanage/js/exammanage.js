@@ -14,6 +14,31 @@ $(function(){
 });
 
 /**
+ * 考试安排
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-06
+ */
+function exam_assignment(){
+
+    $('table').on('click','.fa-trash-o',function(){
+
+        var thisElement = $(this);
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deletes,
+                data:{id:thisElement.parent().parent().parent().attr('value')},
+                success:function(res){
+                    location.reload();
+                }
+            })
+        });
+    })
+}
+
+/**
  * 新增考试
  * @author mao
  * @version 1.0
