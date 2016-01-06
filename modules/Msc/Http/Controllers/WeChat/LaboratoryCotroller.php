@@ -108,7 +108,7 @@ class LaboratoryCotroller extends MscWeChatController
     }
 
     /**
-     * 根据id 和 日期 预约普通实验室
+     * 根据id 和 日期 预约普通实验室 填写表单页面
      * @method  GET
      * @url /msc/wechat/laboratory/apply-laboratory
      * @access public
@@ -121,12 +121,37 @@ class LaboratoryCotroller extends MscWeChatController
     public function ApplyLaboratory(){
         $DateTime = Input::get('DateTime');
         $id = Input::get('id');
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id);
+        //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo
         ];
-
         dd($data);
+    }
+    /**
+     * 根据id 和 日期 开放实验室日历列表页面
+     * @method  GET
+     * @url /msc/wechat/laboratory/apply-open-laboratory
+     * @access public
+     * @DateTime 时间（筛选预约的时间）
+     * @id 实验室id
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日09:48:41
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ApplyOpenLaboratory(){
+        $DateTime = Input::get('DateTime');
+        $id = Input::get('id');
+        //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $data = [
+            'ApplyTime'=>$DateTime,
+            'LaboratoryInfo'=>$LaboratoryInfo
+        ];
+        dd($data);
+    }
+    public function OpenLaboratoryForm(){
+
     }
 }

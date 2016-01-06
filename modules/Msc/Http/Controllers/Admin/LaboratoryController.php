@@ -274,7 +274,7 @@ class LaboratoryController extends MscController {
      */
     public function getLabClearnder(){
         $location = Floor::where('status','=',1)->get();
-        return view('msc::admin.labmanage.lab_maintain',[
+        return view('msc::admin.labmanage.open_calendar',[
             'location' => $location,
         ]);
     }

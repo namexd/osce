@@ -45,4 +45,25 @@ class OpenPlan  extends  Model
         }
         return $IdRrr;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日10:14:12
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function OpenLabApply(){
+        return  $this->hasMany('Modules\Msc\Entities\OpenLabApply','lab_plan_id','id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日10:32:55
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function PlanRecord(){
+        return  $this->hasMany('Modules\Msc\Entities\PlanRecord','plan_id','id');
+    }
+
 }
