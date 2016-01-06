@@ -316,18 +316,23 @@ function timePicker(background){
  * @date    2016-01-05
  */
 function sp_invitation(){
-    $(".teacher-list").change(function(){
-        var $teacher=$(".teacher-list option:selected").text();
+
+    /**
+     * 获取数据
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-06  
+     */
+    $('.teacher-list').click(function(){
+        var thisElement = $(this);
 
         var id = $(this).parent().parent().parent().attr('value');
         $.ajax({
             type:'get',
-            async:true,
-            url:'http://127.0.0.1:3000/get',
-            dataType:'jsonp',
+            url: pars.teacher_list,   //修改请求地址
             data:{id:id},
             success:function(res){
-                console.log(res)
+
                 if(res.code!=1){
                     layer.alert('res.message');
                 }else{
@@ -336,11 +341,17 @@ function sp_invitation(){
                     for(var i in data){
                         html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
                     }
-                   $teacher.append(html);
+                   thisElement.html(html);
                 }
             }
 
         });
+    });
+
+    $(".teacher-list").change(function(){
+
+        var $teacher=$(".teacher-list option:selected").text();
+        var thisElement = $(this);
 
         var sql='<div class="input-group teacher pull-left">'+
                 '<div class="pull-left">'+$teacher+'</div>'+
