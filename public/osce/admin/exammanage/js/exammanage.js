@@ -316,13 +316,37 @@ function timePicker(background){
  * @date    2016-01-05
  */
 function sp_invitation(){
-    $("#teacher-list").change(function(){
-        var $teacher=$("#teacher-list option:selected").text();
+    $(".teacher-list").change(function(){
+        var $teacher=$(".teacher-list option:selected").text();
+
+        var id = $(this).parent().parent().parent().attr('value');
+        $.ajax({
+            type:'get',
+            async:true,
+            url:'';
+            data:{id:id},
+            success:function(res){
+                if(res.code!=1){
+                    layer.alert('res.message');
+                }else{
+                    var data = res.data.rows;
+                    var html = '';
+                    for(var i in data){
+                        html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                    }
+                   $teacher.append(html);
+                }
+            }
+
+        });
+
         var sql='<div class="input-group teacher pull-left">'+
-            '<div class="pull-left">'+$teacher+'</div>'+
-            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+                '<div class="pull-left">'+$teacher+'</div>'+
+                '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
     })
+
+    //删除
     $(".teacher-box").delegate("i","click",function(){
         $(this).parents(".teacher").remove();
     })
@@ -393,7 +417,6 @@ function examroom_assignment(){
         }
     });
 
-
     /**
      * 新增一条
      * @author  mao
@@ -407,9 +430,9 @@ function examroom_assignment(){
         index = parseInt(index) + 1;
 
         var html = '<tr class="pid-'+index+'">'+
-                    '<td name=['+parseInt(index)+'][id]>'+parseInt(index)+'</td>'+
+                    '<td>'+index+'<input type="hiddin"  name="id['+index+'][id]" value="'+index+'"/></td>'+
                     '<td width="498">'+
-                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name=['+parseInt(index)+'][name][]></select>'+
+                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="name['+index+'][]"></select>'+
                     '</td>'+
                     '<td class="necessary">必考</td>'+
                     '<td>'+
