@@ -19,6 +19,6 @@ class InvitationController extends CommonController
         //验证略
 
         //获取要发送给sp老师的数据
-        
+
     }
 }
