@@ -110,6 +110,14 @@ class Laboratory extends Model
      */
     public function GetLaboratoryListData($IdRrr,$data,$type = 1){
         $thisBuilder = $this->where('open_type','=',1);
+        $data['FloorId'];
+        $data['FloorNum'];
+        if(!empty($data['FloorId'])){
+            $thisBuilder = $thisBuilder->where('location_id','=',$data['FloorId']);
+        }
+        if(!empty($data['FloorNum'])){
+            $thisBuilder = $thisBuilder->where('floor','=',$data['FloorNum']);
+        }
         if($type == 1){
             $thisBuilder = $thisBuilder->whereNotIn('id',$IdRrr);
         }elseif($type == 2){
