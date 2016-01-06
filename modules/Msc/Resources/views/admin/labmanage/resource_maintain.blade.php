@@ -123,7 +123,10 @@
                                         '<td>'+data[i].device_info.name+'</td>' +
                                         '<td>'+data[i].device_info.devices_info.name+'</td>' +
                                         '<td>'+data[i].total+'</td>' +
-                                        '<td><a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit"><span>编辑数量</span></a><a class="state2 delete">删除</a></td>' +
+                                        '<td>' +
+                                        '<a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit">' +
+                                        '<span>编辑数量</span></a><a class="state2 delete">删除</a>' +
+                                        '</td>' +
                                         '</tr>';
                             }
                         }
@@ -141,24 +144,47 @@
                     url:url,
                     async:true,
                     success:function(result){
+                        var html = '';
+                        var list ='';
                         console.log(result);
-                        $(result).each(function(){
-
-
-
+                        console.log(result.data.rows.list);
+                        $(result.data.rows.deviceType).each(function(){
+                                     html+='<li>' +
+                                         '<a href="">'+this.name+'</a>'+
+                                         ' </li>'
                         })
+                        $('#device-type').html(html);
 
-
-
+                        $(result.data.rows.list).each(function(){
+                                 list+='<tr>' +
+                                    '<td>' +
+                                    '<label class="check_label checkbox_input check_one"> ' +
+                                    '<div class="check_real check_icon display_inline">' +
+                                    '</div> <input type="hidden" name="" value="">' +
+                                    '</label>' +
+                                    '</td>' +
+                                    ' <td>1</td>' +
+                                    ' <td> <input type="number"></td>' +
+                                    ' <td>'+this.name+'</td> ' +
+                                    '<td>'+this.catename+'</td> ' +
+                                    '</tr> '
+                            console.log(this.name);
+                        })
+                        $('#addition tbody').html(list);
                     }
                 })
-
-
             })
 
-
-
-
+          $('.edit').click(function(){
+              if($(this).attr("")){
+                  $('input[name=name]').val($(this).parent().parent().find('.device').html());
+                  $('input[name=type]').val($(this).parent().parent().find('.deviceType').html());
+                  $('input[name=total]').val($(this).parent().parent().find('.total').html());
+              }
+              $('#edit_form').attr('action','{{route("")}}');
+              var id = $(this).attr("data");
+              $('#edit_form').append('<input type="hidden" name="id" value="'+id+'">');
+          })
 
         })
     </script>
@@ -212,10 +238,10 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>1</td>
-                            <td>听诊器</td>
-                            <td>耗材</td>
-                            <td>30</td>
+                            <td class="midbody_id">1</td>
+                            <td  class="device">听诊器</td>
+                            <td class="deviceType">耗材</td>
+                            <td class="total">30</td>
                             <td>
                                 <a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit"><span>编辑数量</span></a>
                                 <a class="state2 delete">删除</a>
@@ -231,10 +257,10 @@
 
 @section('layer_content')
     {{--新增--}}
-    <form class="form-horizontal" id="add_device_form" novalidate="novalidate" action="{{route('msc.admin.profession.ProfessionAdd')}}" method="post">
+    <form class="form-horizontal" id="add_device_form" novalidate="novalidate" action="{{route('msc.admin.LadMaintain.DevicesAdd')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title addition" id="myModalLabel">添加设备</h4>
+            <h4 class="modal-title" id="myModalLabel">添加设备</h4>
         </div>
         <div class="modal-body">
             <div class="row" style="padding: 12px 0">
@@ -249,7 +275,7 @@
                     </form>
                 </div>
             </div>
-            <table class="table table-striped" id="">
+            <table class="table table-striped" id="addition">
                 <thead>
                 <tr>
                     <th>
@@ -267,48 +293,33 @@
                                 资源类型
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="">听诊器</a>
-                                </li>
-                                <li>
-                                    <a href="">假体模型</a>
-                                </li>
-                                <li>
-                                    <a href="">外科腔镜训练系统</a>
-                                </li>
-                                <li>
-                                    <a href="">腹腔镜</a>
-                                </li>
-                                <li>
-                                    <a href="">投影仪</a>
-                                </li>
+                            <ul class="dropdown-menu" id="device-type">
                             </ul>
                         </div>
                     </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>
-                        <label class="check_label checkbox_input check_one">
-                            <div class="check_real check_icon display_inline"></div>
-                            <input type="hidden" name="" value="">
-                        </label>
-                    </td>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        <input type="number">
-                    </td>
-                    <td>
-                        听诊器
-                    </td>
-                    <td>
-                        耗材
-                    </td>
-                </tr>
+                {{--<tr>--}}
+                    {{--<td>--}}
+                        {{--<label class="check_label checkbox_input check_one">--}}
+                            {{--<div class="check_real check_icon display_inline"></div>--}}
+                            {{--<input type="hidden" name="" value="">--}}
+                        {{--</label>--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--1--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--<input type="number">--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--听诊器--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--耗材--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
                 </tbody>
             </table>
             <div class="hr-line-dashed"></div>
@@ -330,19 +341,19 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">资源名称</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="code" value="腹腔镜" disabled="disabled"/>
+                    <input type="text" class="form-control name add-name" name="name" value="腹腔镜" disabled="disabled"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">资源类型</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control describe add-describe" name="name" value="耗材" disabled="disabled"/>
+                    <input type="text" class="form-control describe add-describe" name="type" value="耗材" disabled="disabled"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">数量</label>
                 <div class="col-sm-9">
-                    <input type="number" class="form-control describe add-describe" name="num">
+                    <input type="number" class="form-control describe add-describe" name="total">
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
