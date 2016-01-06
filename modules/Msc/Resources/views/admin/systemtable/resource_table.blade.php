@@ -31,10 +31,10 @@
                 var url = "/msc/admin/resources/resources-status?id="+this_id+"&type="+type;
                 var str = '';
                 if(type == 1){
-                    str = '您确定要恢复资源？';
+                    str = '您确定要启用资源？';
                 }else{
 
-                    str = '您确定要禁用资源？';
+                    str = '您确定要停用资源？';
                 }
 
                 //询问框
@@ -137,12 +137,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn_pl btn-success right">
-                    <button href=""   id="addResources"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">添加资源</button>
-                    {{--<a href=""  class="state1 edit" id="addResources" data-toggle="modal" data-target="#myModal" style="text-decoration: none;">--}}
-                        {{--<span style="color: #fff" >添加资源</span>--}}
-                    {{--</a>--}}
-                </button>
+                <button id="addResources"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增资源</button>
             </div>
 		</div>
         <div class="ibox float-e-margins">
@@ -184,7 +179,7 @@
                                         <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">禁用</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
                                     </li>
                                 </ul>
                             </div>
@@ -203,14 +198,14 @@
 
                         <td class="detail">{{$val['detail']}}</td>
 
-                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">禁用</span>@endif</td>
+                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
                         <td>
                             <a href=""   data="{{$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
 
                             @if($val['status']==1)
-                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">禁用</a>
+                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
                             @else
-                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">恢复</a>
+                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                             @endif
                             <a   data="{{$val['id']}}" class="state2 edit_role modal-control delete">删除</a>
                             <input type="hidden" class="setid" value="1"/>

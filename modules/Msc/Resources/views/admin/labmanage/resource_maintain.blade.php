@@ -19,13 +19,13 @@
                 $(".list-group-parent").click(function(){
                     $(this).toggleClass("checked").next(".lab_num").toggle("200");
                     $(this).children(".fa").toggleClass("deg");
+                    $(".list-group-child").removeClass("checked");
                     if($(this).parent().next(".list-group").length=="1"){
                         $(this).next(".lab_num").children().last().addClass("border-bottom");
                     }
 
                 });
                 $(".list-group-child").click(function(){
-                    $(".list-group-parent").removeClass("checked");
                     $(".list-group-child").removeClass("checked");
                     $(this).addClass("checked");
                 });
