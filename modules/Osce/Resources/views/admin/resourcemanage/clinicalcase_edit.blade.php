@@ -74,7 +74,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>考场信息编辑</h5>
+            <h5>病例编辑</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -85,69 +85,20 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">场所名称</label>
+                            <label class="col-sm-2 control-label">病例名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" value="{{$data->name}}">
+                                <input type="text" required class="form-control" id="name" value="{{$data->name}}" name="name">
                             </div>
                         </div>
+
 
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">描述</label>
-                            <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="account" value="{{$data->status}}" />
-                            </div>
-                            <div class="select-floor" style="display: none;">
-                                <label class="col-sm-2 control-label">楼层</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" id="CategoryId" multiple="">
-                                        <option>一楼</option>
-                                        <option>二楼</option>
-                                        <option>三楼</option>
-                                        <option>四楼</option>
-                                        <option>五楼</option>
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">编号</label>
+                            <label class="col-sm-2 control-label">病例描述</label>
 
                             <div class="col-sm-10">
-                                <input type="text"  required  ng-model="num" id="code" class="form-control">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label">负责人</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="manager_name" id="manager_name" class="form-control">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label" required>负责人电话</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="manager_mobile" id="manager_mobile" class="form-control">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label">功能描述</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="description" id="description" class="form-control">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">地址</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="location" id="location" class="form-control">
+                                <input type="text" ng-model="location" id="location" class="form-control" name="description" value="{{$data->description}}">
                             </div>
 
                         </div>

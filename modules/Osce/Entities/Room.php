@@ -41,8 +41,8 @@ class Room extends CommonModel
     {
         if (array_key_exists('id', $formData)) {
             //如果传入了id,那就只读取该id的数据
-            $builder = $this->where($this->table . '.id', $formData['id']);
-            return $builder->first();
+            $builder = $this->where('id', '=', $formData['id']);
+            return $builder->select('id','name','description')->first();
         }
 
 
@@ -65,7 +65,8 @@ class Room extends CommonModel
 
         //如果keyword不为空，那么就进行模糊查询
         if ($formData['keyword'] !== null) {
-            $builder = $builder->where($this->table . '.created_at', '=', '%' . $formData['keyword'] . '%');
+            $builder = $builder->where($this->table . '.name', '=', '%' . $formData['keyword'] . '%')
+                                ->orWhere($this->table . '.description', '=', '%' . $formData['keyword'] . '%');
         }
 
 

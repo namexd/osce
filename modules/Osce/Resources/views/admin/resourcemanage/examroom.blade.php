@@ -12,11 +12,12 @@
 @stop
 
 @section('only_js')
-    
+ <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>    
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'examroom','deletes':'{{route('osce.admin.room.postDelete')}}'}" />
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
         <li><a href="#">资源管理</a></li>
@@ -35,7 +36,7 @@
     <form class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
             <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword">
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </span>
@@ -57,9 +58,9 @@
                         <td>{{$k+1}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
-                        <td>
-                            <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <td value="{{$item->id}}">
+                            <a href="{{route('osce.admin.room.getEditRoom')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                 @empty
@@ -72,5 +73,9 @@
             </div>
         </div>
     </form>
+    <div class="pull-right">
+        {!! $data->render() !!}
+    </div>
 </div>
+
 @stop{{-- 内容主体区域 --}}

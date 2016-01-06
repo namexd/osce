@@ -33,6 +33,7 @@ class Exam extends CommonModel
 
             //寻找相似的字段
             $builder = $builder->select([
+                'id',
                 'name',
                 'begin_dt',
                 'end_dt',

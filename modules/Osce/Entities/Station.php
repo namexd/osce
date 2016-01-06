@@ -69,6 +69,7 @@ class Station extends CommonModel
 
             //开始查询
             $builder = $this->select([
+                'id',
                 'name',
                 'type',
                 'description'
@@ -225,6 +226,21 @@ class Station extends CommonModel
                 $connection->commit();
                 return true;
             }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function deleteData($id)
+    {
+        try {
+            //判断在关联表中是否有数据
+            $result1 = StationCase::where('station_case.station_id', '=', $id)->select('id')->first();
+            $result2 = StationVcr::where('station_vcr.station_id', '=', $id)->select('id')->first();
+            if (!($result1->id) && !($result2->id)) {
+                throw new \Exception('不能删除此考站，因为与其他条目相关联');
+            }
+            return $this->where($this->table.'.id', '=', $id)->delete();
         } catch (\Exception $ex) {
             throw $ex;
         }

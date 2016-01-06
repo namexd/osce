@@ -15,6 +15,8 @@
                     <li class="active">
                         <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
+                            <li><a class="active J_menuItem" href="{{route('osce.admin.case.getCaseList')}}">病例管理</a>
+                            </li>
                             <li><a class="active J_menuItem" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">人员管理</a>
                             </li>
                             <li><a class="active J_menuItem" href="{{route('osce.admin.Station.getStationList')}}">考站管理</a>

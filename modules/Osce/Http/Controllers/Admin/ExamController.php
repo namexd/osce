@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
@@ -143,8 +145,6 @@ class ExamController extends CommonController
             }
             $examScreeningData[$key]['create_user_id'] = $user -> id;
         }
-//        var_dump('@@');
-//        dd($examScreeningData);
 
         $data   =   [$examData, $examScreeningData];
 
@@ -175,5 +175,45 @@ class ExamController extends CommonController
 
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
+    }
+
+    /**
+     * 通过考试的id获取考站
+     * @api       GET /osce/admin/exam/station-list
+     * @access    public
+     * @param Request $request get请求<br><br>
+     *                         <b>get请求字段：</b>
+     *                                      id  考试id
+     * @return view
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStationList(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+        //$id为考试id
+        $id = $request->input('id');
+
+        //如果在考试考场表里查不到信息的话，就说明还没有选择跳到上一个选项卡去
+        $result = ExamScreening::where('exam_screening.exam_id','=',$id)->first();
+        if (!$result) {
+            return redirect()->route('')->withErrors('对不起，请选择房间');
+        }
+
+        //得到room_id
+        $roomId = $result->room_id;
+
+        //根据room_id得到考站列表
+        $data = Station::where('station.room_id' , '=' , $roomId)
+            ->select([
+                'station.id as id',
+                'station.name as name'
+            ])->get();
+
+        return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
     }
 }
