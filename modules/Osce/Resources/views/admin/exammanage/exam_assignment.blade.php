@@ -50,8 +50,8 @@
                     <td>1</td>
                     <td>1</td>
                     <td>
-                        <a href="#"><span class="read  state1 detail"><i class="fa  fa-cog"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="#"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
             </tbody>
