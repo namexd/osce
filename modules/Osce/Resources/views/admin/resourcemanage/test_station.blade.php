@@ -47,12 +47,21 @@
                         <th>#</th>
                         <th>考站名称</th>
                         <th>类型</th>
-                        <th>科目</th>
+                        <th>描述</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-
+                        @foreach($data as $key => $item)
+                            <th>{{$key+1}}</th>
+                            <th>{{$item->name}}</th>
+                            <th>{{$item->type}}</th>
+                            <th>{{$item->description}}</th>
+                            <th>
+                                <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
+                                <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                            </th>
+                        @endforeach
                     </tbody>
                 </table>
 

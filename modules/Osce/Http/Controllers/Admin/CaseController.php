@@ -143,11 +143,11 @@ class CaseController extends CommonController
         //验证,略过
 
         $id = $request->input('id');
-        $formData = $request->only('name', 'code', 'description', 'create_user_id');
+        $formData = $request->only('name', 'description');
 
         DB::connection('osce_mis')->beginTransaction();
         $result = $caseModel->updateData($id, $formData);
-        if ($result !== true) {
+        if ($result != true) {
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withInput()->withErrors('数据未能成功修改,请重试!');
         }

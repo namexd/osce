@@ -69,6 +69,7 @@ class Station extends CommonModel
 
             //开始查询
             $builder = $this->select([
+                'id',
                 'name',
                 'type',
                 'description'
