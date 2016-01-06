@@ -239,20 +239,23 @@ class Common{
                 foreach($msgArray as $key=>$item)
                 {
                     $itemData=Message::make('news_item')->title($item['title']);
-                    if($key=='desc')
+                    foreach($item as $feild=>$value)
                     {
-                        $itemData=$itemData->description($item);
+                        if($feild==='desc')
+                        {
+                            $itemData=$itemData->description($value);
+                        }
+                        if($feild==='url')
+                        {
+                            $itemData=$itemData->url($value);
+                        }
+                        if($feild==='picUrl')
+                        {
+                            $itemData=$itemData->picUrl($value);
+                        }
                     }
-                    if($key=='url')
-                    {
-                        $itemData=$itemData->url($item);
-                    }
-                    if($key=='picUrl')
-                    {
-                        $itemData=$itemData->picUrl($item);
-                    }
+                    $msgData[]=$itemData;
                 }
-                $msgData[]=$itemData;
                 return $msgData;
             }
         );
