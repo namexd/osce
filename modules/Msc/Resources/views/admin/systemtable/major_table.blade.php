@@ -11,6 +11,7 @@
 
 @section('only_js')
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+
     <script>
         $(function(){
 //            删除
@@ -85,12 +86,14 @@
             });
 
 //            导入
+
             $("#in").click(function(){
                 $("#load_in").click();
             });
             $("#load_in").change(function(){
                 var str=$("#load_in").val().substring($("#load_in").val().lastIndexOf(".")+1);
-                if(str != "xlsx"){
+
+                if(str!="xlsx"){
                     layer.alert(
                             "请上传正确的文件格式？",
                             {title:["温馨提示","font-size:16px;color:#408aff"]}
@@ -98,21 +101,22 @@
                 }else{
                     $.ajaxFileUpload({
                         type:"post",
-                        url:"/msc/admin/profession/profession-import",
-                        fileElementId:"load_in",
-                        success:function(data,status){
-
+                        url:"{{route('msc.admin.profession.ProfessionImport')}}",
+                        fileElementId:'load_in',//必须要是 input file标签 ID
+                        success: function (data, status){
+//                            console.log(data);
                         },
-                        error:function(){
+                        error: function (data, status, e){
                             console.log("失败");
                             layer.alert(
                                     "上传失败！",
                                     {title:["温馨提示","font-size:16px;color:#408aff"]}
                             );
                         }
-                    })
+                    });
                 }
-            })
+            });
+
             $('.edit').click(function () {
                 if($(this).attr("data")){
                     $('input[name=name]').val($(this).parent().parent().find('.name').html());;
