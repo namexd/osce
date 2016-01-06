@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Http\Controllers\CommonController;
+use Auth;
 
 class ExamController extends CommonController
 {
@@ -76,5 +77,103 @@ class ExamController extends CommonController
         } catch (\Exception $ex) {
             return redirect()->back()->withError($ex);
         }
+    }
+
+    /**
+     * 新增考试表单页面
+     * @url /osce/admin/exam/add-exam
+     * @access public
+     * @return view
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-01-02 13:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAddExam(){
+        return view('osce::admin.exammanage.exam_add');
+    }
+
+    /**
+     * 新增考试
+     * @url     POST /osce/admin/exam/add-exam
+     * @access  public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return redirect
+     *
+     * @version 1.0
+     * @author Zhoufuxing <Zhoufuxing@misrobot.com>
+     * @date 2016-01-06 14:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postAddExam(Request $request, Exam $model)
+    {
+        $this   ->  validate($request,[
+            'name'          =>  'required',
+        ],[
+            'name.required'     =>  '考试名称必填',
+        ]);
+
+        $user   =   Auth::user();
+        if(empty($user)){
+            throw new \Exception('未找到当前操作人信息');
+        }
+
+        //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+        $examData = [
+            'name'           => $request  ->  get('name'),
+            'create_user_id' => $user     ->  id
+        ];
+
+        $examScreeningData =  $request  ->  get('time');
+        //判断输入的时间是否有误
+        foreach($examScreeningData as $key => $value){
+            if(!strtotime($value['begin_dt'])){
+                throw new \Exception('输入的时间有误！');
+            }
+            if(!strtotime($value['end_dt'])){
+                throw new \Exception('输入的时间有误！');
+            }
+            $examScreeningData[$key]['create_user_id'] = $user -> id;
+        }
+//        var_dump('@@');
+//        dd($examScreeningData);
+
+        $data   =   [$examData, $examScreeningData];
+
+        try{
+            if($exam = $model -> addExam($data))
+            {
+                return redirect()->route('osce.admin.exam.getExamList');
+            } else {
+                throw new \Exception('新增考试失败');
+            }
+        } catch(\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+
+    public function getStudentList(Request $request)
+    {
+        //验证规则，暂时留空
+
+        //获取各字段
+        $formData = $request->only('exam_name', 'student_name');
+        //获取当前场所的类
+        $model = new Student();
+
+        //从模型得到数据
+        $data = $model->showStudentList();
+
+        //展示页面
+        return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }
 }

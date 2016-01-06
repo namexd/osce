@@ -73,6 +73,46 @@ class Exam extends CommonModel
         } catch (\Exception $ex) {
 
         }
+    }
 
+    /**
+     * 新增考试的方法
+     * @param $id
+     * @return bool
+     */
+    public function addExam($data)
+    {
+        try{
+            $resultArray = [];
+            $connection = DB::connection($this->connection);
+            $connection ->beginTransaction();
+
+            //将exam表的数据插入exam表
+            $examData = $data[0];
+            $result = $this->create($examData);
+            //获得插入后的id
+            $exam_id = $result->id;
+            array_push($resultArray, $result);
+
+            //将考试对应的考次关联数据写入考试场次表中
+            $examScreeningData = $data[1];
+            foreach($examScreeningData as $key => $value){
+                $examScreeningData[$key]['exam_id'] = $exam_id;
+            }
+            $result = ExamScreening::create($examScreeningData);
+            array_push($resultArray, $result);
+
+            //判断$resultArray中是否有键值为false,如果有，那就说明前面有错误
+            if (array_search(false, $resultArray) !== false) {
+                $connection->rollBack();
+                throw new \Exceptio('新增考试失败,请重试!');
+            } else {
+                $connection->commit();
+                return true;
+            }
+
+        } catch(\Exception $ex) {
+            throw $ex;
+        }
     }
 }

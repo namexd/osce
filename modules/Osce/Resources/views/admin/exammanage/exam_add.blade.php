@@ -26,7 +26,7 @@ span.laydate-icon{
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.machine.postAddMachine')}}">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postAddExam')}}">
 
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
@@ -50,7 +50,6 @@ span.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试时间</label>
                             <div class="col-sm-10">
-                                <form class="container-fluid ibox-content" id="list_form">
                                     <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                                     <table class="table table-bordered" id="exam_add">
                                         <thead>
@@ -80,10 +79,15 @@ span.laydate-icon{
                                         </tbody>
                                     </table>
 
+                                        <input type="text" name="time[1][begin_dt]">开始时间
+                                        <input type="text" name="time[1][end_dt]">结束时间<br/>
+
+                                <input type="text" name="time[2][begin_dt]">开始时间
+                                <input type="text" name="time[2][end_dt]">结束时间<br/>
+
                                     <div class="btn-group pull-right">
-                                       
+
                                     </div>
-                                </form>
                             </div>
                         </div>
                         <div class="form-group">
