@@ -29,7 +29,7 @@ class Teacher extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showTeacherData($caseId, array $spteacherId, $teacherType)
+    public function showTeacherData($station_id, array $spteacherId)
     {
         try {
             //将传入的$spteacherId插进数组中
@@ -37,11 +37,16 @@ class Teacher extends CommonModel
                 $this->excludeId = $spteacherId;
             }
 
-            if ($caseId === null && $teacherType ===null) {
+            if ($station_id === null) {
                 throw new \Exception('系统发生了错误，请重试！');
             }
 
-            $builder = $this->where('type' , '=' , $teacherType); //查询教师类型为指定类型的教师
+            //通过传入的$station_id得到病例id
+            $case_id = StationCase::where('station_case.station_id', '=', $station_id)
+                ->select('case_id')->first()->case_id;
+
+            $builder = $this->where('type' , '=' , 2); //查询教师类型为指定类型的教师
+            $builder = $builder->where('case_id' , '=' , $case_id); //查询符合病例的教师
 
             //如果$excludeId不为null，就说明需要排查这个id
             $excludeId = $this->excludeId;

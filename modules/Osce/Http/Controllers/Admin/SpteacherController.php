@@ -15,8 +15,8 @@ use Illuminate\Http\Request;
 class SpteacherController extends CommonController
 {
     /**
-     * SP老师名单的的着陆页
-     * @api       GET /osce/admin/station/station-list
+     * ajax获取SP老师名单
+     * @api       GET /osce/admin/spteacher/show
      * @access    public
      * @param Request $request get请求<br><br> 具体参数如下
      * int $caseId:病例id
@@ -33,13 +33,12 @@ class SpteacherController extends CommonController
         //验证略
 
         //得到请求的病例id和已经选择的sp老师id
-        $caseId = $request->input('case_id', '');
+        $stationId = $request->input('station_id', '');
         $spteacherId = $request->input('spteacher_id', '');
-        $teacherType = $request->input('teacher_type', '');
 
         //得到老师的列表
-        $data = $model->showTeacherData($caseId, $spteacherId, $teacherType);
+        $data = $model->showTeacherData($stationId, $spteacherId);
 
-        return view('', ['data' => $data]);
+        return $this->success_data($data);
     }
 }
