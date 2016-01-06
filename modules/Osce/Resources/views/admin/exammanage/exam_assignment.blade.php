@@ -11,11 +11,12 @@
 @stop
 
 @section('only_js')
-    
+   <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'exam_assignment','deletes':'{{route('osce.admin.exam.postDelete')}}'}" />
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
         <li><a href="#">考试管理</a></li>
@@ -50,7 +51,7 @@
                     <td>{{$item->begin_dt}}~{{$item->end_dt}}</td>
                     <td>{{$item->description}}</td>
                     <td>{{$item->total}}</td>
-                    <td>
+                    <td value="{{$item->id}}">
                         <a href="#"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>

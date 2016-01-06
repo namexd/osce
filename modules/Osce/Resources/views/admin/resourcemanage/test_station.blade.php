@@ -12,11 +12,12 @@
 @stop
 
 @section('only_js')
-
+    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}'}" />
     <div class="ibox-title route-nav">
         <ol class="breadcrumb">
             <li><a href="#">资源管理</a></li>
