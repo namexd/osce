@@ -42,11 +42,12 @@
             // may_add
             $(".add_time_button").click(function(){ //添加时间段
                 var inuput_num=$(".add_time_list  .form-group").size()+1;
+                var time_frame=$(this).attr("id");
                 $(this).parent().parent().parent().append('<div class=" overflow form-group">'
                         +'<div class="col-sm-8">'
-                        +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" placeholder="08：00" value="" />'
+                        +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" frame="'+time_frame+'"placeholder="08：00" value="" />'
                         +'<lable>至</lable>'
-                        +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'"   placeholder="09：00" value="" />'
+                        +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" frame="'+time_frame+'"   placeholder="09：00" value="" />'
                         +'</div>'
                         +'<div class="col-sm-4">'
                         +'<span class="fa fa-trash-o"></span>'
@@ -142,7 +143,7 @@
                                              <input type="text"  class="form-control time-set" name="time-end1"   placeholder="09：00" value="" />
                                     </div>
                                     <div class="col-sm-4">
-                                        <a class="add_time_button">添加时间段</a>
+                                        <a class="add_time_button" id="morning">添加时间段<span></span></a>
                                     </div>
                                 </div>
                         </div>
@@ -164,7 +165,7 @@
                                     <input type="text"  class="form-control time-set" name="time-end2"   placeholder="09：00" value="" />
                                 </div>
                                 <div class="col-sm-4">
-                                    <a class="add_time_button">添加时间段</a>
+                                    <a class="add_time_button" id="noon">添加时间段</a>
                                 </div>
                             </div>
 
@@ -187,7 +188,7 @@
                                     <input type="text"  class="form-control time-set" name="time-end3"   placeholder="09：00" value="" />
                                 </div>
                                 <div class="col-sm-4">
-                                    <a class="add_time_button">添加时间段</a>
+                                    <a class="add_time_button" id="afternoon">添加时间段</a>
                                 </div>
                             </div>
 
@@ -210,7 +211,7 @@
                                     <input type="text"  class="form-control time-set" name="time-end4"   placeholder="09：00" value="" />
                                 </div>
                                 <div class="col-sm-4">
-                                    <a class="add_time_button">添加时间段</a>
+                                    <a class="add_time_button" id="night">添加时间段</a>
                                 </div>
                             </div>
 
