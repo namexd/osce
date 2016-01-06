@@ -190,6 +190,7 @@
                 }
 
                 $('#add_from').attr('action','{{route("msc.admin.laboratory.getEditLabInsert")}}');
+                $('#myModalLabel').html('编辑实验室');
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
             });
@@ -241,7 +242,9 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-
+                                        <li>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}">全部</a>
+                                        </li>
 
                                         <li>
                                             <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status={{@$status}}&open_type=1">实验室</a>
@@ -325,7 +328,7 @@
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增实验室/编辑实验室</h4>
+            <h4 class="modal-title" id="myModalLabel">新增实验室</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
@@ -558,122 +561,4 @@
             </div>
         </div>
     </form>
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增实验室/编辑实验室</h4>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b school" name="hospital">
-                        <option value="-1">请选择所属分院</option>
-                        @if(!empty($school))
-                            @foreach($school as $ss)
-                                <option value="{{$ss->id}}">{{$ss->name}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b local" name="building">
-                        <option value="-1">请选择教学楼</option>
-
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b floor" name="floor">
-                        <option value="-1">请选择楼层</option>
-
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="name" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>简称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="short_name" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>英文全称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="enname" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>引文缩写</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="short_enname" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="code" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control describe add-describe" name="total" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">管理员</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b teacher" name="manager_user_id">
-                        <option value="-1">点击选择</option>
-                        @if(!empty($teacher))
-                            @foreach($teacher as $tch)
-                                @if($tch->aboutUser)
-                                    <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
-                                @endif
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">实验室性质</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b opentype" name="open_type">
-                        <option value="-1">点击选择</option>
-                        <option value="1">实验室</option>
-                        <option value="2">准备间</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b sta" name="status">
-                        <option value="-1">请选择状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">停用</option>
-                    </select>
-                </div>
-            </div>
-            <div class="hr-line-dashed"></div>
-            <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                </div>
-            </div>
-        </div>
-    </form>
-
 @stop

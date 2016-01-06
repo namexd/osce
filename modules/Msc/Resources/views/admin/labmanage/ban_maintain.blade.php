@@ -29,10 +29,10 @@
                 var url = "/msc/admin/floor/stop-floor?id="+this_id+"&type="+type;
                 var str = '';
                 if(type == 1){
-                    str = '您确定要启用实验室？';
+                    str = '您确定要启用该楼栋？';
                 }else{
 
-                    str = '您确定要停用实验室？';
+                    str = '您确定要停用该楼栋？';
                 }
                 //询问框
                 layer.confirm(str, {
@@ -111,6 +111,7 @@
                     }
                 });
                 $('#add_from').attr('action','{{route("msc.admin.floor.getEditFloorInsert")}}');
+                $('#myModalLabel').html('编辑楼栋');
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
             });
@@ -137,7 +138,7 @@
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
                 <button class="btn btn-w-m btn_pl btn-success right">
-                    <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                    <a href=""  class="state1 editadd" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                         <span style="color: #fff;">新增楼栋</span>
                     </a>
                 </button>
@@ -159,6 +160,9 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/msc/admin/floor/index?keyword={{$keyword}}&status={{@$status}}">全部</a>
+                                        </li>
                                         @if(!empty($school))
                                             @foreach($school as $sch)
                                                 <li>
@@ -233,10 +237,10 @@
 
 @section('layer_content')
 {{--编辑--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.floor.getAddFloorInsert')}}" method="post">
+    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.floor.postAddFloorInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增楼栋/编辑楼栋</h4>
+            <h4 class="modal-title" id="myModalLabel">新增楼栋</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
