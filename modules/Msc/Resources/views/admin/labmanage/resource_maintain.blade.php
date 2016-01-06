@@ -42,6 +42,7 @@
             });
 //            楼栋数据绑定
             $("#ban_select").change(function(){
+
                 var $treeview=$(".treeview");
                 $treeview.empty();
                 var $thisId=$(this).val();
@@ -51,6 +52,7 @@
                     url:url,
                     cache:false,
                     success:function(result){
+                        console.log(result);
                         $(result).each(function(){
                             $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
                                     "<div class='list-group-item list-group-parent'>"
@@ -100,6 +102,64 @@
                    }
                }
             });
+
+            $('.treeview').delegate('.list-group-child','click',function(){
+//                alert(11);
+                var lab_id = $(this).attr('lab_id');//lad_id待确定位置
+
+                var url = "{{ route('msc.admin.LadMaintain.LabIdGetLaboratoryDeviceList')}}";
+                $.ajax({
+                    type:"get",
+                    url:url+'?lab_id='+lab_id,
+                    async:true,
+                    success:function(res){
+                        var str = '';
+                        if(res.code == 1){
+                            var data = res.data.rows.LadDeviceList.data;
+                            console.log(data);
+                            for(var i=0;i<data.length;i++){
+                                str += '<tr>' +
+                                        '<td>'+data[i].id+'</td>' +
+                                        '<td>'+data[i].device_info.name+'</td>' +
+                                        '<td>'+data[i].device_info.devices_info.name+'</td>' +
+                                        '<td>'+data[i].total+'</td>' +
+                                        '<td><a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit"><span>编辑数量</span></a><a class="state2 delete">删除</a></td>' +
+                                        '</tr>';
+                            }
+                        }
+                        $('#table-striped tbody').html(str);
+                    }
+                });
+
+            })
+
+            $('.right').click(function(){
+//                alert('11111');
+                var url  = "{{route('msc.admin.LadMaintain.LaboratoryListData')}}";
+                $.ajax({
+                    type:"get",
+                    url:url,
+                    async:true,
+                    success:function(result){
+                        console.log(result);
+                        $(result).each(function(){
+
+
+
+                        })
+
+
+
+                    }
+                })
+
+
+            })
+
+
+
+
+
         })
     </script>
 @stop
@@ -174,7 +234,7 @@
     <form class="form-horizontal" id="add_device_form" novalidate="novalidate" action="{{route('msc.admin.profession.ProfessionAdd')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">添加设备</h4>
+            <h4 class="modal-title addition" id="myModalLabel">添加设备</h4>
         </div>
         <div class="modal-body">
             <div class="row" style="padding: 12px 0">
@@ -229,26 +289,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>
-                        <label class="check_label checkbox_input check_one">
-                            <div class="check_real check_icon display_inline"></div>
-                            <input type="hidden" name="" value="">
-                        </label>
-                    </td>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        <input type="number">
-                    </td>
-                    <td>
-                        听诊器
-                    </td>
-                    <td>
-                        耗材
-                    </td>
-                </tr>
                 <tr>
                     <td>
                         <label class="check_label checkbox_input check_one">
