@@ -80,24 +80,40 @@
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddInvigilator')}}">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
 
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="name">
-                                <input type="hidden" required class="form-control" id="is_sp" name="is_sp" value="2">
+                                <input type="text" required class="form-control" id="name" name="name" value="{{$item->name}}">
+                                <input type="hidden" required class="form-control" id="is_sp" name="is_sp" value="1">
+                                <input type="hidden" required class="form-control" id="is_sp" name="id" value="{{$item->id}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">手机号</label>
                             <div class="col-sm-10">
-                                <input type="text" ng-model="location" id="location" class="form-control" name="moblie">
+                                <input type="text" ng-model="location" id="location" class="form-control" name="moblie" value="{{$item->moblie}}">
                             </div>
 
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="select-floor">
+                                <label class="col-sm-2 control-label">病例</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="case_id">
+                                        @forelse($list as $option)
+                                            <option value="{{$option->id}}" {{$option->id==$item->case_id? 'selected="selected"':''}}>{{$option->name}}</option>
+                                        @empty
+                                            <option value="">无</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
