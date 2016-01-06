@@ -55,11 +55,11 @@
                         +'</div>')
                 deletetime();
             })
-             function deletetime(){ //删除时间段
-                 $(".fa-trash-o").click(function(){
-                     $(this).parent().parent().remove();
-                 })
-             }
+            function deletetime(){ //删除时间段
+                $(".fa-trash-o").click(function(){
+                    $(this).parent().parent().remove();
+                })
+            }
             //选项框点击事件
             $(".check_label").click(function(){
                 if($(this).children(".check_icon").hasClass("check")){
@@ -250,16 +250,16 @@
                             </label>上午
                         </div>
                         <div class="col-sm-10">
-                                <div class="overflow form-group">
-                                    <div class="col-sm-8">
-                                            <input type="text"  class="form-control time-set" name="time-begein1" placeholder="08：00" value="" />
-                                        <lable>至</lable>
-                                             <input type="text"  class="form-control time-set" name="time-end1"   placeholder="09：00" value="" />
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a class="add_time_button" id="morning">添加时间段<span></span></a>
-                                    </div>
+                            <div class="overflow form-group">
+                                <div class="col-sm-8">
+                                    <input type="text"  class="form-control time-set" name="time-begein1" placeholder="08：00" value="" />
+                                    <lable>至</lable>
+                                    <input type="text"  class="form-control time-set" name="time-end1"   placeholder="09：00" value="" />
                                 </div>
+                                <div class="col-sm-4">
+                                    <a class="add_time_button" id="morning">添加时间段<span></span></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
