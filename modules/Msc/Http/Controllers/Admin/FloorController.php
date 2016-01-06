@@ -71,6 +71,15 @@ class FloorController extends Controller {
             'address' => 'required',
             'status'   => 'required|in:0,1',
             'school_id' =>'required',
+        ],[
+            "name.required" => "楼栋名称必填",
+            "floor_top.required" => "楼层数（地上）必填",
+            "floor_top.integer"  => "楼栋必须为数字",
+            "floor_buttom.required" => "楼层数（地下）必填",
+            "floor_buttom.integer"  => "楼栋必须为数字",
+            "address.required" => "地址必填",
+            "school_id.required" => "学院必选",
+            //"integer"      => ":attribute 长度必须在 :min 和 :max 之间"
         ]);
         $user = Auth::user();
         $data = [

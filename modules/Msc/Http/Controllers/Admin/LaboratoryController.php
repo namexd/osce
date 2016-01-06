@@ -255,7 +255,14 @@ class LaboratoryController extends MscController {
      * 联动查找楼层
      */
     public function getFloor(Floor $floor){
-        $floor = $floor->where('id','=',Input::get('id'))->first();
+        if(Input::get('type') == 1){
+            $local_id = Laboratory::where('id','=',Input::get('id'))->first();
+            $floor = $floor->where('id','=',$local_id->location_id)->first();
+            //dd($floor);
+        }else{
+            $floor = $floor->where('id','=',Input::get('id'))->first();
+        }
+
         $floorList = $this->get_float($floor['floor_top'],$floor['floor_buttom']);
         if($floorList != false){
             return $floorList;exit;
