@@ -65,6 +65,8 @@ class LaboratoryCotroller extends MscWeChatController
      */
     public function LaboratoryListData(){
         $DateTime = Input::get('DateTime');
+        $FloorId = Input::get('floor_id');//TODO 楼栋ID
+        $FloorNum = Input::get('floor_num');//TODO 层数
         $OpenPlan = new OpenPlan;
         //TODO 根据日历表获取有 日历安排的教室id
         if(!empty($DateTime)){
@@ -75,7 +77,7 @@ class LaboratoryCotroller extends MscWeChatController
             );
         }
         //TODO 获取普通实验室列表（没有日历安排的）
-        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,$data);
+        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,['FloorId'=>$FloorId,'FloorNum'=>$FloorNum]);
 
         return response()->json(
             $this->success_rows(1,'获取成功',$LaboratoryListData->total(),config('msc.page_size',10),$LaboratoryListData->currentPage(),array('ClassroomApplyList'=>$LaboratoryListData->toArray()))
@@ -94,8 +96,8 @@ class LaboratoryCotroller extends MscWeChatController
      */
     public function OpenLaboratoryListData(){
         $DateTime = Input::get('DateTime');
-        $DateTime = Input::get('DateTime');
-        $DateTime = Input::get('DateTime');
+        $FloorId = Input::get('floor_id');//TODO 楼栋ID
+        $FloorNum = Input::get('floor_num');//TODO 层数
         $OpenPlan = new OpenPlan;
         //TODO 根据日历表获取有 日历安排的教室id
         if(!empty($DateTime)){
@@ -107,7 +109,7 @@ class LaboratoryCotroller extends MscWeChatController
         }
 
         //TODO 获取开放实验室列表
-        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,$data,2);
+        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,['FloorId'=>$FloorId,'FloorNum'=>$FloorNum],2);
 
         return response()->json(
             $this->success_rows(1,'获取成功',$LaboratoryListData->total(),config('msc.page_size',10),$LaboratoryListData->currentPage(),array('ClassroomApplyList'=>$LaboratoryListData->toArray()))
