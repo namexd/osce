@@ -11,11 +11,12 @@
 @stop
 
 @section('only_js')
-    
+    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'clinicalcase','deletes':'{{route('osce.admin.case.postDelete')}}'}" />
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
         <li><a href="#">资源管理</a></li>
@@ -48,9 +49,9 @@
                     <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->description}}</td>
-                    <td>
-                        <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                    <td value="{{$item->id}}">
+                        <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
                 @endforeach
