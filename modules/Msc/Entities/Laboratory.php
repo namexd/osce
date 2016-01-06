@@ -86,7 +86,7 @@ class Laboratory extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function OpenPlan(){
-        return  $this->hasOne('Modules\Msc\Entities\OpenPlan','lab_id','id');
+        return  $this->hasMany('Modules\Msc\Entities\OpenPlan','lab_id','id');
     }
 
     /**
@@ -148,6 +148,21 @@ class Laboratory extends Model
             return  false;
         }
 
+    }
+
+    /**
+     * 根据实验室id和和日历id数组  获取实验室信息楼栋信息和 开放日历信息
+     * @param $LabId
+     * @param $OpenPlanIdRrr
+     * @return array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日13:41:05
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetLaboratoryOpenPlan($LabId,$OpenPlanIdRrr){
+        return $this->where('id','=',$LabId)->with(['Floor','OpenPlan'=>function($OpenPlan) use ($OpenPlanIdRrr){
+            $OpenPlan->whereIn('id',$OpenPlanIdRrr);
+        }])->first();
     }
 
 

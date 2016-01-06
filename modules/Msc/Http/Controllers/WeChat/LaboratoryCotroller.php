@@ -14,6 +14,7 @@ use Modules\Msc\Http\Controllers\MscWeChatController;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Laboratory;
 use Modules\Msc\Entities\OpenPlan;
+use Modules\Msc\Entities\LadDevice;
 class LaboratoryCotroller extends MscWeChatController
 {
 
@@ -121,11 +122,13 @@ class LaboratoryCotroller extends MscWeChatController
     public function ApplyLaboratory(){
         $DateTime = Input::get('DateTime');
         $id = Input::get('id');
+        $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
         $data = [
             'ApplyTime'=>$DateTime,
-            'LaboratoryInfo'=>$LaboratoryInfo
+            'LaboratoryInfo'=>$LaboratoryInfo,
+            'LadDeviceList'=>$LadDevice->GetLadDevice($id)
         ];
         dd($data);
     }
@@ -143,15 +146,46 @@ class LaboratoryCotroller extends MscWeChatController
     public function ApplyOpenLaboratory(){
         $DateTime = Input::get('DateTime');
         $id = Input::get('id');
+        $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
         $data = [
             'ApplyTime'=>$DateTime,
-            'LaboratoryInfo'=>$LaboratoryInfo
+            'LaboratoryInfo'=>$LaboratoryInfo,
+            'LadDeviceList'=>$LadDevice->GetLadDevice($id)
         ];
         dd($data);
     }
-    public function OpenLaboratoryForm(){
 
+    /**
+     * 开放实验室申请表单填写页面
+     * @method  POST
+     * @url /msc/wechat/laboratory/open-laboratory-form
+     * @access public
+     * @param Request $Request
+     * @return \Illuminate\View\View
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日11:06:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function OpenLaboratoryForm(Request $Request){
+        $this->validate($Request,[
+            'lab_id'   => 'required|integer',
+            'open_plan_id'   => 'required',
+            'date_time' => 'required'
+        ]);
+        $requests = $Request->all();
+        $LabId = $requests['lab_id'];
+        $OpenPlanIdRrr = $requests['open_plan_id'];
+        $DateTime = $requests['date_time'];
+        $LadDevice = new LadDevice;
+        $LaboratoryOpenPlanData = $this->Laboratory->GetLaboratoryOpenPlan($LabId,$OpenPlanIdRrr);
+        $data = [
+            'ApplyTime'=>$DateTime,
+            'LaboratoryOpenPlanData'=>$LaboratoryOpenPlanData,
+            'LadDeviceList'=>$LadDevice->GetLadDevice($LabId)
+        ];
+        dd($data);
+        //return  view();
     }
 }
