@@ -74,7 +74,7 @@
                                 <label class="col-sm-2 control-label">考试顺序</label>
 
                                 <div class="col-sm-10">
-                                    <select class="form-control">
+                                    <select class="form-control" style="width:200px;">
                                         <option value="随机">随机</option>
                                         <option value="顺序">顺序</option>
                                     </select>
@@ -96,23 +96,7 @@
                                             </tr>
                                             </thead>
                                             <tbody index="0">
-                                                <!-- <tr>
-                                                    <td>1</td>
-                                                    <td width="498">
-                                                        <select class="form-control js-example-basic-multiple" multiple="multiple">
-                                                            <option value="">不限</option>
-                                                            <option>张老师</option>
-                                                            <option>陈老师</option>
-                                                            <option>杨老师</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="necessary"><input type="checkbox">必考</td>
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
-                                                    </td>
-                                                </tr> -->
+
                                             </tbody>
                                         </table>
 
@@ -126,7 +110,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
-                                        <table class="table table-bordered" id="table-striped">
+                                        <table class="table table-bordered" id="exam-place">
                                             <thead>
                                             <tr>
                                                 <th>#</th>
