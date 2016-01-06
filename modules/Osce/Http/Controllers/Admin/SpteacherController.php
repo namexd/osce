@@ -15,8 +15,8 @@ use Illuminate\Http\Request;
 class SpteacherController extends CommonController
 {
     /**
-     * SP老师名单的的着陆页
-     * @api       GET /osce/admin/station/station-list
+     * ajax获取SP老师名单
+     * @api       GET /osce/admin/spteacher/show
      * @access    public
      * @param Request $request get请求<br><br> 具体参数如下
      * int $caseId:病例id
