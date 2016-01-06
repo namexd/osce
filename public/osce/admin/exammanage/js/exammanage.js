@@ -5,6 +5,7 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
+        case "exam_assignment":exam_assignment();break; 
         case "exam_add":exam_add();break; 
         case "add_basic":add_basic();break;
         case "sp_invitation":sp_invitation();break;
@@ -306,7 +307,7 @@ function sp_invitation(){
 function examroom_assignment(){
 
 	//select2初始化
-    $(".js-example-basic-multiple").select2();
+    $(".js-example-basic-multiple").select2()
 
     /**
      * 选择必考项
@@ -321,9 +322,49 @@ function examroom_assignment(){
 
         current = $(this).val();
         if(current==undefined){
+
             $(this).parent().siblings('.necessary').text(num[0]);
         }else{
+
             $(this).parent().siblings('.necessary').text(num[current.length]);
+            //选择的数据
+            $(this).on("select2:select", function(e){
+                //考站数据请求
+                $.ajax({
+                    type:'get',
+                    url:'',
+                    data:{id:e.params.data.id},
+                    async:true,
+                    success:function(res){
+
+                        if(res.code!=1){
+                            layer.alert(res.message);
+                            return;
+                        }else{
+                            var data = res.data.rows;
+                            var html = '';
+                            for(var i in data){
+
+                                html += '<tr>'+
+                                            '<td>'+data[i].id+'</td>'+
+                                            '<td>'+data[i].name+'</td>'+
+                                            '<td>'+
+                                                '<select class="form-control">'+
+                                                    '<option>==请选择==</option>'+
+                                                    '<option>李老师</option>'+
+                                                    '<option>张老师</option>'+
+                                                '</select>'+
+                                            '</td>'+
+                                        '</tr>';
+                                $('exam-place').find('tbody').append(html);
+                            }
+                        }
+                    }
+                });
+            });
+            //删除数据
+            $(this).on("select2:unselect", function(e){console.log(e.params.data.id);});
+
         }
     });
 
@@ -335,19 +376,15 @@ function examroom_assignment(){
      * @date        2016-01-05
      */
     $('#add-new').click(function(){
-        //计数器标志
+
+        //新增dom
         var index = $('#examroom').find('tbody').attr('index');
         index = parseInt(index) + 1;
 
         var html = '<tr class="pid-'+index+'">'+
-                    '<td>'+parseInt(index)+'</td>'+
+                    '<td name=['+parseInt(index)+'][id]>'+parseInt(index)+'</td>'+
                     '<td width="498">'+
-                        '<select class="form-control js-example-basic-multiple" multiple="multiple">'+
-                            '<option>不限</option>'+
-                            '<option>张老师</option>'+
-                            '<option>陈老师</option>'+
-                            '<option>杨老师</option>'+
-                        '</select>'+
+                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name=['+parseInt(index)+'][name][]></select>'+
                     '</td>'+
                     '<td class="necessary">必考</td>'+
                     '<td>'+
@@ -359,7 +396,31 @@ function examroom_assignment(){
         //记录计数
         $('#examroom').find('tbody').attr('index',index);
         $('#examroom').find('tbody').append(html);
-        $(".js-example-basic-multiple").select2();
+
+        //ajax请求数据
+        $.ajax({
+            type:'get',
+            async:true,
+            url:'',     //请求地址
+            success:function(res){
+                //数据处理
+                var str = [];
+                if(res.code!=1){
+                    layer.alert(res.message);
+                    return;
+                }else{
+                    var data = res.data.rows;
+                    for(var i in data){
+                        str.push({id:data[i].id,text:data[i].name});
+                    }
+                    //动态加载进去数据
+                    $(".js-example-basic-multiple").select2({data:str});
+                }
+            }
+        });
+        var data = [{ id: 0, text: 'enhancement' }, { id: 1, text: 'bug' }, { id: 2, text: 'duplicate' }, { id: 3, text: 'invalid' }, { id: 4, text: 'wontfix' }];
+        $(".js-example-basic-multiple").select2({data:data});
+
     });
 
     /**
