@@ -8,12 +8,11 @@ $(document).ready( function() {
   // moment.locale('ru');
 
   // here's some magic to make sure the dates are happening this month.
-  var thisMonth = moment().format('YYYY-MM');
+  //var thisMonth = moment().format('YYYY-MM');
 
   var eventArray = [
-    { startDate: thisMonth + '-10', endDate: thisMonth + '-14', title: 'Multi-Day Event' },
-    { startDate: thisMonth + '-21', endDate: thisMonth + '-23', title: 'Another Multi-Day Event' },
-    { date: thisMonth + '-27', title: 'Single Day Event' }
+    { startDate: "2016-1-12", endDate: "2016-1-15", title: '已选中的时间段' },
+ /*   { date: thisMonth + '-27', title: 'Single Day Event' }*/
   ];
 
   // the order of the click handlers is predictable.
@@ -27,45 +26,23 @@ $(document).ready( function() {
     //   startDate: '2013-11-01',
     //   endDate: '2013-11-15'
     // },
-    clickEvents: {
-      click: function(target) {
-        console.log(target);
-        // if you turn the `constraints` option on, try this out:
-        // if($(target.element).hasClass('inactive')) {
-        //   console.log('not a valid datepicker date.');
-        // } else {
-        //   console.log('VALID datepicker date.');
-        // }
-      },
-      nextMonth: function() {
-        console.log('next month.');
-      },
-      previousMonth: function() {
-        console.log('previous month.');
-      },
-      onMonthChange: function() {
-        console.log('month changed.');
-      },
-      nextYear: function() {
-        console.log('next year.');
-      },
-      previousYear: function() {
-        console.log('previous year.');
-      },
-      onYearChange: function() {
-        console.log('year changed.');
-      }
+    click: function(target) {
+
+    },
+    nextMonth: function() {
+
+    },
+    previousMonth: function() {
+
     },
     multiDayEvents: {
       startDate: 'startDate',
       endDate: 'endDate',
-      singleDay: 'date'
+      /*singleDay: 'date'*/
     },
     showAdjacentMonths: true,
     adjacentDaysChangeMonth: false
   });
-
-
 
   // bind both clndrs to the left and right arrow keys
   $(document).keydown( function(e) {
@@ -78,5 +55,8 @@ $(document).ready( function() {
       calendars.clndr1.forward();
     }
   });
+
+
+
 
 });
