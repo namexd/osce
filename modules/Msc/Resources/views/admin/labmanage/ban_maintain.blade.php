@@ -29,10 +29,10 @@
                 var url = "/msc/admin/floor/stop-floor?id="+this_id+"&type="+type;
                 var str = '';
                 if(type == 1){
-                    str = '您确定要启用实验室？';
+                    str = '您确定要启用该楼栋？';
                 }else{
 
-                    str = '您确定要停用实验室？';
+                    str = '您确定要停用该楼栋？';
                 }
                 //询问框
                 layer.confirm(str, {
@@ -41,6 +41,16 @@
                     window.location.href=url;
                 });
             });
+//            编辑新增弹出层表单切换
+            $("#add_ban").click(function(){
+                $("#add_from").hide();
+                $("#edit_from").show();
+            });
+            $("#edit_ban").click(function(){
+                $("#add_from").show();
+                $("#edit_from").hide();
+            });
+
 //            编辑
             $('#add_from').bootstrapValidator({
                 message: 'This value is not valid',
@@ -111,6 +121,7 @@
                     }
                 });
                 $('#add_from').attr('action','{{route("msc.admin.floor.getEditFloorInsert")}}');
+                $('#myModalLabel').html('编辑楼栋');
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
             });
@@ -137,7 +148,7 @@
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
                 <button class="btn btn-w-m btn_pl btn-success right">
-                    <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                    <a href=""  class="state1 editadd" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                         <span style="color: #fff;">新增楼栋</span>
                     </a>
                 </button>
@@ -159,6 +170,9 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/msc/admin/floor/index?keyword={{$keyword}}&status={{@$status}}">全部</a>
+                                        </li>
                                         @if(!empty($school))
                                             @foreach($school as $sch)
                                                 <li>
@@ -203,7 +217,7 @@
                                 <td class="address">{{@$v->address}}</td>
                                 <td class="status" data="{{@$v->status}}">@if($v->status)正常@else<span class="state2">停用</span>@endif</td>
                                 <td>
-                                    <a href=""  data="{{$v->id}}"  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                                    <a href=""  data="{{$v->id}}"  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none" id="edit_ban">
                                         <span>编辑</span>
                                     </a>
                                     @if($v->status == 1)
@@ -233,10 +247,15 @@
 
 @section('layer_content')
 {{--编辑--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.floor.getAddFloorInsert')}}" method="post">
+    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.floor.postAddFloorInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增楼栋/编辑楼栋</h4>
+            <h4 class="modal-title" id="myModalLabel">编辑楼栋</h4>
+<<<<<<< .mine
+            <h4 class="modal-title" id="myModalLabel">新增楼栋</h4>
+=======
+            <h4 class="modal-title" id="myModalLabel">编辑楼栋</h4>
+>>>>>>> .theirs
         </div>
         <div class="modal-body">
             <div class="form-group">
@@ -296,4 +315,67 @@
         </div>
     </form>
 
+{{--新增--}}
+<form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.floor.getAddFloorInsert')}}" method="post">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">新增楼栋</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span class="dot">*</span>楼栋名称</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control name add-name" name="name" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地上)</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control name add-name" name="floor_top" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control name add-name" name="floor_buttom" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">地址</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control describe add-describe" name="address" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">所属分院</label>
+            <div class="col-sm-9">
+                <select id="select_Category"   class="form-control m-b school" name="school_id">
+
+                    @if(!empty($school))
+                        @foreach($school as $ss)
+                            <option value="{{$ss->id}}">{{$ss->name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+            <div class="col-sm-9">
+                <select id="select_Category"   class="form-control m-b state" name="status">
+                    <option value="-1">请选择状态</option>
+                    <option value="1">正常</option>
+                    <option value="0">停用</option>
+                </select>
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-2 right">
+                <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+            </div>
+        </div>
+    </div>
+</form>
 @stop

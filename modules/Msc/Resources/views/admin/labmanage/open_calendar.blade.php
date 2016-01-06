@@ -82,12 +82,13 @@
                 var $treeview=$(".treeview");
                 $treeview.empty();
                 var $thisId=$(this).val();
-                var url="/msc/admin/ladMaintain/floor-lab?lid="+$thisId;
+                var url="/msc/admin/laboratory/floor-lab?lid="+$thisId;
                 $.ajax({
                     type:"get",
                     url:url,
                     cache:false,
                     success:function(result){
+                        console.log(result);
                         $(result).each(function(){
                             $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
                                     "<div class='list-group-item list-group-parent'>"
@@ -98,7 +99,7 @@
                             );
                             if(this.lab!=""){
                                 $(this.lab).each(function(){
-                                    $(".treeview #"+ this.floor +" .lab_num").append("<div class='list-group-item list-group-child'>"+this.name+"</div>")
+                                    $(".treeview #"+ this.floor +" .lab_num").append("<div class='list-group-item list-group-child labdetail' data='"+this.total+"' data-labid='"+this.id+"'>"+this.name+"</div>")
                                 });
                                 $(".treeview #"+ this.floor +" .list-group-parent").append("<i class='fa fa-angle-right right'></i>");
                             }
@@ -106,6 +107,42 @@
                         })
                     }
                 })
+            });
+
+
+            $('.treeview').delegate('.labdetail','click',function(){
+                var total = $(this).attr('data');
+                if(total == 'null'){
+                    total = 0;
+                }
+                var labname = $(this).html();
+                $('.labname').html(labname);
+                $('.labtotal').html(total+'人');
+
+            });
+            //添加或修改实验室开放时间
+            $('.fadeInRight').delegate('#edit_save','click',function(){
+                var timearr = {};
+                $('.add_time_list').each(function(){
+                    var obj = $(this);
+                    if($(this).find('.check_real').hasClass('check')){
+                        obj.find('.form-group input').each(function(){
+                            var name = $(this).attr('name');
+                            var val = $(this).val();
+                            timearr[name] = val;
+                        });
+                    }
+                });
+                console.log(timearr);
+                {{--$.ajax({--}}
+                    {{--type:"get",--}}
+                    {{--url:"{{route('msc.admin.laboratory.postOperatingLabCleander')}}",--}}
+                    {{--cache:false,--}}
+                    {{--success:function(result){--}}
+                        {{--console.log(result);--}}
+
+                    {{--}--}}
+                {{--})--}}
             });
         })
     </script>
@@ -139,11 +176,11 @@
                 <div class="ibox-title overflow">
                     <div class="left">
                         <span class="left">已选实验室：</span>
-                        <h5 class="left">临床技能室（3-13）</h5>
+                        <h5 class="left labname"></h5>
                     </div>
                     <div class="left" style="margin-left: 20px">
                         <span class="left">容量：</span>
-                        <h5 class="left">30人</h5>
+                        <h5 class="left labtotal"></h5>
                     </div>
                     <input type="button" class="btn btn_pl btn-success right" data-toggle="modal" data-target="#myModal" value="添加设备" id="add_device">
                 </div>
@@ -151,7 +188,6 @@
                     <div class="cal1">
                     </div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>
@@ -173,7 +209,6 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>
@@ -196,7 +231,6 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>
@@ -219,7 +253,6 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="add_time_list overflow">
-                        <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"></div>
