@@ -52,10 +52,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                @forelse($data as $item)
+                @forelse($data as $k=>$item)
                     <tr>
+                        <td>{{$k+1}}</td>
                         <td>{{$item->name}}</td>
-                        <td>{{$item->type}}</td>
                         <td>{{$item->description}}</td>
                         <td>
                             <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>

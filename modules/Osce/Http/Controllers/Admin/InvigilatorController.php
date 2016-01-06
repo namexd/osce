@@ -17,7 +17,7 @@ class InvigilatorController extends CommonController
 {
     public function getTest()
     {
-        return view('osce::admin.exammanage.exam_notice');
+        return view('osce::admin.exammanage.sp_invitation');
     }
     /**
      * 获取SP考教师列表
