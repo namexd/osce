@@ -59,6 +59,7 @@ class Room extends CommonModel
             $this->table . '.code as code',
             $this->table . '.nfc as nfc',
             $this->table . '.address as address',
+            $this->table . '.description as description',
             $this->table . '.create_user_id as create_user_id'
         ]);
 
