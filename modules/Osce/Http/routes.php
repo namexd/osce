@@ -100,8 +100,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//通知
 		Route::get('notice/msg', 	['uses'=>'NoticeController@getMsg','as'=>'osce.admin.notice.getMsg']);
 		Route::get('notice/list', 	['uses'=>'NoticeController@getList','as'=>'osce.admin.notice.getList']);
-		Route::get('notice/list', 	['uses'=>'NoticeController@getList','as'=>'osce.admin.notice.getList']);
-		Route::get('notice/list', 	['uses'=>'NoticeController@getAddNotice','as'=>'osce.admin.notice.getList']);
+		Route::get('notice/add-notice', 	['uses'=>'NoticeController@getAddNotice','as'=>'osce.admin.notice.getAddNotice']);
+		Route::post('notice/add-notice', 	['uses'=>'NoticeController@postAddNotice','as'=>'osce.admin.notice.postAddNotice']);
+
+		Route::get('notice/edit-notice', 	['uses'=>'NoticeController@getEditNotice','as'=>'osce.admin.notice.getEditNotice']);
+		Route::get('notice/del-notice', 	['uses'=>'NoticeController@getDelNotice','as'=>'osce.admin.notice.getDelNotice']);
+		Route::post('notice/edit-notice', 	['uses'=>'NoticeController@postEditNotice','as'=>'osce.admin.notice.postEditNotice']);
 
 		//测试
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
