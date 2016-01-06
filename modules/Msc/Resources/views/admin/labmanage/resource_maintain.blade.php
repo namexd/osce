@@ -149,16 +149,13 @@
                         console.log(result);
                         console.log(result.data.rows.list);
                         $(result.data.rows.deviceType).each(function(){
-
                                      html+='<li>' +
                                          '<a href="">'+this.name+'</a>'+
                                          ' </li>'
-
                         })
-                        $('.dropdown-menu').html(html);
+                        $('#device-type').html(html);
 
                         $(result.data.rows.list).each(function(){
-
                                  list+='<tr>' +
                                     '<td>' +
                                     '<label class="check_label checkbox_input check_one"> ' +
@@ -296,8 +293,7 @@
                                 资源类型
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu">
-
+                            <ul class="dropdown-menu" id="device-type">
                             </ul>
                         </div>
                     </th>
