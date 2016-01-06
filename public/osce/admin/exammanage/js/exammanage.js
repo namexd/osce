@@ -37,10 +37,10 @@ function exam_add(){
         var html = '<tr>'+
                         '<td>'+parseInt(index)+'</td>'+
                         '<td class="laydate">'+
-                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                            '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD')+' 00:00</span>'+
                         '</td>'+
                         '<td class="laydate">'+
-                            '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+                            '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD hh:mm')+'</span>'+
                         '</td>'+
                         '<td>3:00</td>'+
                         '<td>'+
@@ -52,7 +52,7 @@ function exam_add(){
         $('#exam_add').find('tbody').append(html);
     });
 
-
+    
     /**
      * 删除一条记录
      * @author mao
@@ -103,10 +103,10 @@ function add_basic(){
         var html = '<tr>'+
 	                    '<td>'+parseInt(index)+'</td>'+
 	                    '<td class="laydate">'+
-	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                        '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD')+' 00:00</span>'+
 	                    '</td>'+
 	                    '<td class="laydate">'+
-	                        '<span class="laydate-icon end">2015-11-12 09:00</span>'+
+	                        '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD hh:mm')+'</span>'+
 	                    '</td>'+
 	                    '<td>3:00</td>'+
 	                    '<td>'+
@@ -146,6 +146,62 @@ function add_basic(){
 
 }
 
+
+/**
+ * 获取所要格式的时间
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-06
+ * @param   {object}           [外部开放接口]
+ */
+var Time = (function(mod){
+    /**
+     * 小于10时的处理
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-06
+     * @param   {number}   data 传入参数
+     */
+    function Convert(data){
+        if(data>9){
+            return data;
+        }else{
+            return '0'+data;
+        }
+    }
+
+    /**
+     * 获取时间
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-06
+     * @param   {string} YYYY-MM-DD, YYYY-MM-DD hh:mm
+     * @return  {string}   时间格式
+     */
+    mod.getTime = function(format){
+        var now = new Date(),
+            time = '';
+
+        time = now.getFullYear()+'-'+(now.getMonth()>9?(now.getMonth()+1):'0'+(now.getMonth()+1))+'-'+Convert(now.getDate());
+
+        if(format=='YYYY-MM-DD'){
+
+            return time;
+        }else if(format=='YYYY-MM-DD hh:mm'){
+
+           return time += ' '+Convert(now.getHours())+':'+Convert(now.getMinutes());
+        }else{
+
+            return time += ' '+Convert(now.getHours())+':'+Convert(now.getMinutes())+':'+Convert(now.getSeconds());
+        }
+    }
+
+    return mod;
+
+
+})(window.Time||{});
+
+
 /**
  * 时间选择
  * @author mao
@@ -174,10 +230,22 @@ function timePicker(background){
          start: '2014-6-15 23:00:00',    //开始日期
          fixed: true, //是否固定在可视区域
          zIndex: 99999999, //css z-index
-         choose: function(dates){ //选择好日期的回调
-
+         choose: function(date){ //选择好日期的回调
+            var thisElement = $(this.elem).parent();
+            if(thisElement.prev().prev().length){
+                var current = Date.parse(date) - Date.parse(thisElement.prev().find('span').text());
+                var hours = Math.floor(current/(1000*60*60)),
+                    minutes = Math.round((current/(1000*60*60)-hours)*60);
+                thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
+            }else{
+                var current = Date.parse(thisElement.next().find('span').text()) - Date.parse(date);
+                var hours = Math.floor(current/(1000*60*60)),
+                    minutes = Math.round((current/(1000*60*60)-hours)*60);
+                thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes))); 
+            }
          }
     };
+
 
     /**
      * 日期选择
