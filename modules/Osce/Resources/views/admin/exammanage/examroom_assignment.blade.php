@@ -85,58 +85,55 @@
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
                                     <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-                                    <form class="container-fluid ibox-content">
-                                        <table class="table table-bordered" id="examroom">
-                                            <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>考场列表</th>
-                                                <th>必考&选考</th>
-                                                <th>操作</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody index="0">
+                                    <table class="table table-bordered" id="examroom">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>考场列表</th>
+                                            <th>必考&选考</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody index="0">
 
-                                            </tbody>
-                                        </table>
+                                        </tbody>
+                                    </table>
 
-                                        <div class="btn-group pull-right">
-                                           
-                                        </div>
-                                    </form>
+                                    <div class="btn-group pull-right">
+                                       
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
-                                        <table class="table table-bordered" id="exam-place">
-                                            <thead>
+                                    <table class="table table-bordered" id="exam-place">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>考站</th>
+                                            <th>老师</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
                                             <tr>
-                                                <th>#</th>
-                                                <th>考站</th>
-                                                <th>老师</th>
+                                                <td>1</td>
+                                                <td>3:00</td>
+                                                <td>
+                                                    <select class="form-control">
+                                                        <option>==请选择==</option>
+                                                        <option>李老师</option>
+                                                        <option>张老师</option>
+                                                    </select>
+                                                </td>
                                             </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>3:00</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option>==请选择==</option>
-                                                            <option>李老师</option>
-                                                            <option>张老师</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        </tbody>
+                                    </table>
 
-                                        <div class="btn-group pull-right">
-                                           
-                                        </div>
-                                    </form>
+                                    <div class="btn-group pull-right">
+                                       
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

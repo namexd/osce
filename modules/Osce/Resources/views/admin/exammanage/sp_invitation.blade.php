@@ -81,7 +81,7 @@
                 <h5 class="title-label">考试安排</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -108,7 +108,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                        <tr value="1">
                             <td>1</td>
                             <td>肠胃炎考站</td>
                             <td class="sp-teacher">
@@ -119,7 +119,7 @@
                                     </div>
                                 </div>
                                 <div class="pull-right">
-                                    <select name="" id="teacher-list">
+                                    <select name="" class="teacher-list">
                                         <option value="">选择</option>
                                         <option value="1">张老师</option>
                                         <option value="2">王老师</option>
