@@ -255,7 +255,14 @@ class LaboratoryController extends MscController {
      * 联动查找楼层
      */
     public function getFloor(Floor $floor){
-        $floor = $floor->where('id','=',Input::get('id'))->first();
+        if(Input::get('type') == 1){
+            $local_id = Laboratory::where('id','=',Input::get('id'))->first();
+            $floor = $floor->where('id','=',$local_id->location_id)->first();
+            //dd($floor);
+        }else{
+            $floor = $floor->where('id','=',Input::get('id'))->first();
+        }
+
         $floorList = $this->get_float($floor['floor_top'],$floor['floor_buttom']);
         if($floorList != false){
             return $floorList;exit;
@@ -274,8 +281,9 @@ class LaboratoryController extends MscController {
      */
     public function getLabClearnder(){
         $location = Floor::where('status','=',1)->get();
-        dd($location);
-        return view('msc::admin.labmanage.lab_maintain');
+        return view('msc::admin.labmanage.open_calendar',[
+            'location' => $location,
+        ]);
     }
 
     /**
@@ -285,27 +293,37 @@ class LaboratoryController extends MscController {
      * 根据楼栋查找楼层及该楼层所有实验室
      */
     public function getFloorLab(){
-        $cacheData = Cache::get('key', function() {
-            $local_id = Input::get('lid');
+        $labArr = [];
+        $local_id = Input::get('lid');
+        $local = Floor::where('id','=',$local_id)->first();
+        $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
+        $where['status'] = 0;
+        $where['location_id'] = $local_id;
+        $user = Auth::user();
+        $role_id = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
+        $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role_id->role_id)->first();
+        if($role_name->name == '超级管理员'){
 
-            $local = Floor::where('id','=',$local_id)->first();
-
-            $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
-
-            $labArr = [];
-            $where['status'] = 0;
-            $where['location_id'] = $local_id;
-            foreach($floor as $k=>$v){
-                $where['floor'] = $v;
-                $labArr[$k]['floor'] = $v;
-                $labArr[$k]['lab'] = Laboratory::where($where)->get();
-
-            }
-            return $labArr;
-        });
-        dd($cacheData);
-        //$this->success_data($cacheData,1,'success');
+        }else{
+            $where['manager_user_id'] = $user['id'];
+        }
+        foreach($floor as $k=>$v){
+            $where['floor'] = $v;
+            $labArr[$k]['floor'] = $v;
+            $labArr[$k]['lab'] = Laboratory::where($where)->get();
+        }
+        return $labArr;
     }
 
 
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月6日11:40:11
+     * 添加或修改实验室开放时间
+     */
+    public function postOperatingLabCleander(){
+
+    }
 }

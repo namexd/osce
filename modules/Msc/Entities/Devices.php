@@ -23,12 +23,12 @@ class Devices  extends Model
     protected $fillable 	=	['name','code','mux_use_time','warning','detail','status','devices_cate_id','created_user_id','id'];
 
     /**
-     * 关联用户信息
+     * 关联设备类型表
      * Modules\Msc\Entities\DevicesCate
      */
-    public function devicesInfo()
+    public function devicesCateInfo()
     {
-        return $this->hasOne('Modules\Msc\Entities\DevicesCate','devices_cate_id','id');
+        return $this->hasOne('Modules\Msc\Entities\DevicesCate','id','devices_cate_id');
     }
     //获取资源列表
     public function getDevicesList($keyword='', $status='', $devices_cate_id=''){

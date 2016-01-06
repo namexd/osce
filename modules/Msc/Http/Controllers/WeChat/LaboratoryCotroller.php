@@ -14,6 +14,8 @@ use Modules\Msc\Http\Controllers\MscWeChatController;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Laboratory;
 use Modules\Msc\Entities\OpenPlan;
+use Modules\Msc\Entities\LadDevice;
+use Modules\Msc\Entities\Floor;
 class LaboratoryCotroller extends MscWeChatController
 {
 
@@ -34,7 +36,7 @@ class LaboratoryCotroller extends MscWeChatController
     /**
      * 待预约列表
      * @method  GET
-     * @url /msc/wechat/laboratory-list
+     * @url /msc/wechat/Laboratory/laboratory-list
      * @access public
      * @param Request $Request
      * @return \Illuminate\View\View
@@ -43,6 +45,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LaboratoryList(Request $Request){
+        $Floor = new Floor;
+        $FloorData = $Floor->GetFloorData();
+        dd($FloorData);
         $LaboratoryList = [];
         return view();
     }
@@ -60,6 +65,8 @@ class LaboratoryCotroller extends MscWeChatController
      */
     public function LaboratoryListData(){
         $DateTime = Input::get('DateTime');
+        $FloorId = Input::get('floor_id');//TODO 楼栋ID
+        $FloorNum = Input::get('floor_num');//TODO 层数
         $OpenPlan = new OpenPlan;
         //TODO 根据日历表获取有 日历安排的教室id
         if(!empty($DateTime)){
@@ -70,7 +77,7 @@ class LaboratoryCotroller extends MscWeChatController
             );
         }
         //TODO 获取普通实验室列表（没有日历安排的）
-        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr);
+        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,['FloorId'=>$FloorId,'FloorNum'=>$FloorNum]);
 
         return response()->json(
             $this->success_rows(1,'获取成功',$LaboratoryListData->total(),config('msc.page_size',10),$LaboratoryListData->currentPage(),array('ClassroomApplyList'=>$LaboratoryListData->toArray()))
@@ -89,6 +96,8 @@ class LaboratoryCotroller extends MscWeChatController
      */
     public function OpenLaboratoryListData(){
         $DateTime = Input::get('DateTime');
+        $FloorId = Input::get('floor_id');//TODO 楼栋ID
+        $FloorNum = Input::get('floor_num');//TODO 层数
         $OpenPlan = new OpenPlan;
         //TODO 根据日历表获取有 日历安排的教室id
         if(!empty($DateTime)){
@@ -100,7 +109,7 @@ class LaboratoryCotroller extends MscWeChatController
         }
 
         //TODO 获取开放实验室列表
-        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,2);
+        $LaboratoryListData = $this->Laboratory->GetLaboratoryListData($IdRrr,['FloorId'=>$FloorId,'FloorNum'=>$FloorNum],2);
 
         return response()->json(
             $this->success_rows(1,'获取成功',$LaboratoryListData->total(),config('msc.page_size',10),$LaboratoryListData->currentPage(),array('ClassroomApplyList'=>$LaboratoryListData->toArray()))
@@ -108,12 +117,12 @@ class LaboratoryCotroller extends MscWeChatController
     }
 
     /**
-     * 根据id 和 日期 预约普通实验室
+     * 根据id 和 日期 预约普通实验室 填写表单页面
      * @method  GET
-     * @url /msc/wechat/laboratory/open-laboratory-list-data
+     * @url /msc/wechat/laboratory/apply-laboratory
      * @access public
      * @DateTime 时间（筛选预约的时间）
-     * @DateTime 时间（筛选预约的时间）
+     * @id 实验室id
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年1月5日11:07:56
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -121,5 +130,76 @@ class LaboratoryCotroller extends MscWeChatController
     public function ApplyLaboratory(){
         $DateTime = Input::get('DateTime');
         $id = Input::get('id');
+        $LadDevice = new LadDevice;
+        //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $data = [
+            'ApplyTime'=>$DateTime,
+            'LaboratoryInfo'=>$LaboratoryInfo,
+            'LadDeviceList'=>$LadDevice->GetLadDevice($id)
+        ];
+        dd($data);
+    }
+    /**
+     * 根据id 和 日期 开放实验室日历列表页面
+     * @method  GET
+     * @url /msc/wechat/laboratory/apply-open-laboratory
+     * @access public
+     * @DateTime 时间（筛选预约的时间）
+     * @id 实验室id
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日09:48:41
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ApplyOpenLaboratory(){
+        $DateTime = Input::get('DateTime');
+        $id = Input::get('id');
+        $LadDevice = new LadDevice;
+        //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $data = [
+            'ApplyTime'=>$DateTime,
+            'LaboratoryInfo'=>$LaboratoryInfo,
+            'LadDeviceList'=>$LadDevice->GetLadDevice($id)
+        ];
+        dd($data);
+    }
+
+    /**
+     * 开放实验室申请表单填写页面
+     * @method  POST
+     * @url /msc/wechat/laboratory/open-laboratory-form
+     * @access public
+     * @param Request $Request
+     * @return \Illuminate\View\View
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日11:06:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function OpenLaboratoryForm(Request $Request){
+        $this->validate($Request,[
+            'lab_id'   => 'required|integer',
+            'open_plan_id'   => 'required',
+            'date_time' => 'required|date'
+        ],[
+            'lab_id.required'=>'实验室id必填',
+            'lab_id.integer'=>'实验室id必须为数字',
+            'open_plan_id.required'=>'日历id必填',
+            'date_time.required'=>'预约日期必填',
+            'date_time.date'=>'预约日期格式不正确'
+        ]);
+        $requests = $Request->all();
+        $LabId = $requests['lab_id'];
+        $OpenPlanIdRrr = $requests['open_plan_id'];
+        $DateTime = $requests['date_time'];
+        $LadDevice = new LadDevice;
+        $LaboratoryOpenPlanData = $this->Laboratory->GetLaboratoryOpenPlan($LabId,$OpenPlanIdRrr);
+        $data = [
+            'ApplyTime'=>$DateTime,
+            'LaboratoryOpenPlanData'=>$LaboratoryOpenPlanData,
+            'LadDeviceList'=>$LadDevice->GetLadDevice($LabId)
+        ];
+        dd($data);
+        //return  view();
     }
 }
