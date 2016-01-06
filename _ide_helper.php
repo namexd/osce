@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.1.20 (LTS) on 2015-12-04.
+ * Generated for Laravel 5.1.20 (LTS) on 2016-01-06.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -2230,7 +2230,7 @@ namespace {
          * @static 
          */
         public static function increment($key, $value = 1){
-            return \Illuminate\Cache\RedisStore::increment($key, $value);
+            return \Illuminate\Cache\FileStore::increment($key, $value);
         }
         
         /**
@@ -2242,7 +2242,7 @@ namespace {
          * @static 
          */
         public static function decrement($key, $value = 1){
-            return \Illuminate\Cache\RedisStore::decrement($key, $value);
+            return \Illuminate\Cache\FileStore::decrement($key, $value);
         }
         
         /**
@@ -2252,49 +2252,27 @@ namespace {
          * @static 
          */
         public static function flush(){
-            \Illuminate\Cache\RedisStore::flush();
+            \Illuminate\Cache\FileStore::flush();
         }
         
         /**
-         * Begin executing a new tags operation.
+         * Get the Filesystem instance.
          *
-         * @param array|mixed $names
-         * @return \Illuminate\Cache\RedisTaggedCache 
+         * @return \Illuminate\Filesystem\Filesystem 
          * @static 
          */
-        public static function tags($names){
-            return \Illuminate\Cache\RedisStore::tags($names);
+        public static function getFilesystem(){
+            return \Illuminate\Cache\FileStore::getFilesystem();
         }
         
         /**
-         * Get the Redis connection instance.
+         * Get the working directory of the cache.
          *
-         * @return \Predis\ClientInterface 
+         * @return string 
          * @static 
          */
-        public static function connection(){
-            return \Illuminate\Cache\RedisStore::connection();
-        }
-        
-        /**
-         * Set the connection name to be used.
-         *
-         * @param string $connection
-         * @return void 
-         * @static 
-         */
-        public static function setConnection($connection){
-            \Illuminate\Cache\RedisStore::setConnection($connection);
-        }
-        
-        /**
-         * Get the Redis database instance.
-         *
-         * @return \Illuminate\Redis\Database 
-         * @static 
-         */
-        public static function getRedis(){
-            return \Illuminate\Cache\RedisStore::getRedis();
+        public static function getDirectory(){
+            return \Illuminate\Cache\FileStore::getDirectory();
         }
         
         /**
@@ -2304,31 +2282,7 @@ namespace {
          * @static 
          */
         public static function getPrefix(){
-            return \Illuminate\Cache\RedisStore::getPrefix();
-        }
-        
-        /**
-         * Set the cache key prefix.
-         *
-         * @param string $prefix
-         * @return void 
-         * @static 
-         */
-        public static function setPrefix($prefix){
-            \Illuminate\Cache\RedisStore::setPrefix($prefix);
-        }
-        
-        /**
-         * Begin executing a new tags operation.
-         *
-         * @param string $name
-         * @return \Illuminate\Cache\TaggedCache 
-         * @deprecated since version 5.1. Use tags instead.
-         * @static 
-         */
-        public static function section($name){
-            //Method inherited from \Illuminate\Cache\TaggableStore            
-            return \Illuminate\Cache\RedisStore::section($name);
+            return \Illuminate\Cache\FileStore::getPrefix();
         }
         
     }
@@ -7110,11 +7064,12 @@ namespace {
          * @param string $job
          * @param mixed $data
          * @param string $queue
-         * @return void 
+         * @return mixed 
+         * @throws \Throwable
          * @static 
          */
         public static function push($job, $data = '', $queue = null){
-            \Illuminate\Queue\RedisQueue::push($job, $data, $queue);
+            return \Illuminate\Queue\SyncQueue::push($job, $data, $queue);
         }
         
         /**
@@ -7127,7 +7082,7 @@ namespace {
          * @static 
          */
         public static function pushRaw($payload, $queue = null, $options = array()){
-            return \Illuminate\Queue\RedisQueue::pushRaw($payload, $queue, $options);
+            return \Illuminate\Queue\SyncQueue::pushRaw($payload, $queue, $options);
         }
         
         /**
@@ -7137,25 +7092,11 @@ namespace {
          * @param string $job
          * @param mixed $data
          * @param string $queue
-         * @return void 
+         * @return mixed 
          * @static 
          */
         public static function later($delay, $job, $data = '', $queue = null){
-            \Illuminate\Queue\RedisQueue::later($delay, $job, $data, $queue);
-        }
-        
-        /**
-         * Release a reserved job back onto the queue.
-         *
-         * @param string $queue
-         * @param string $payload
-         * @param int $delay
-         * @param int $attempts
-         * @return void 
-         * @static 
-         */
-        public static function release($queue, $payload, $delay, $attempts){
-            \Illuminate\Queue\RedisQueue::release($queue, $payload, $delay, $attempts);
+            return \Illuminate\Queue\SyncQueue::later($delay, $job, $data, $queue);
         }
         
         /**
@@ -7166,62 +7107,7 @@ namespace {
          * @static 
          */
         public static function pop($queue = null){
-            return \Illuminate\Queue\RedisQueue::pop($queue);
-        }
-        
-        /**
-         * Delete a reserved job from the queue.
-         *
-         * @param string $queue
-         * @param string $job
-         * @return void 
-         * @static 
-         */
-        public static function deleteReserved($queue, $job){
-            \Illuminate\Queue\RedisQueue::deleteReserved($queue, $job);
-        }
-        
-        /**
-         * Migrate the delayed jobs that are ready to the regular queue.
-         *
-         * @param string $from
-         * @param string $to
-         * @return void 
-         * @static 
-         */
-        public static function migrateExpiredJobs($from, $to){
-            \Illuminate\Queue\RedisQueue::migrateExpiredJobs($from, $to);
-        }
-        
-        /**
-         * Get the underlying Redis instance.
-         *
-         * @return \Illuminate\Redis\Database 
-         * @static 
-         */
-        public static function getRedis(){
-            return \Illuminate\Queue\RedisQueue::getRedis();
-        }
-        
-        /**
-         * Get the expiration time in seconds.
-         *
-         * @return int|null 
-         * @static 
-         */
-        public static function getExpire(){
-            return \Illuminate\Queue\RedisQueue::getExpire();
-        }
-        
-        /**
-         * Set the expiration time in seconds.
-         *
-         * @param int|null $seconds
-         * @return void 
-         * @static 
-         */
-        public static function setExpire($seconds){
-            \Illuminate\Queue\RedisQueue::setExpire($seconds);
+            return \Illuminate\Queue\SyncQueue::pop($queue);
         }
         
         /**
@@ -7235,7 +7121,7 @@ namespace {
          */
         public static function pushOn($queue, $job, $data = ''){
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\RedisQueue::pushOn($queue, $job, $data);
+            return \Illuminate\Queue\SyncQueue::pushOn($queue, $job, $data);
         }
         
         /**
@@ -7250,7 +7136,7 @@ namespace {
          */
         public static function laterOn($queue, $delay, $job, $data = ''){
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\RedisQueue::laterOn($queue, $delay, $job, $data);
+            return \Illuminate\Queue\SyncQueue::laterOn($queue, $delay, $job, $data);
         }
         
         /**
@@ -7262,7 +7148,7 @@ namespace {
          */
         public static function marshal(){
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\RedisQueue::marshal();
+            return \Illuminate\Queue\SyncQueue::marshal();
         }
         
         /**
@@ -7276,7 +7162,7 @@ namespace {
          */
         public static function bulk($jobs, $data = '', $queue = null){
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\RedisQueue::bulk($jobs, $data, $queue);
+            return \Illuminate\Queue\SyncQueue::bulk($jobs, $data, $queue);
         }
         
         /**
@@ -7288,7 +7174,7 @@ namespace {
          */
         public static function setContainer($container){
             //Method inherited from \Illuminate\Queue\Queue            
-            \Illuminate\Queue\RedisQueue::setContainer($container);
+            \Illuminate\Queue\SyncQueue::setContainer($container);
         }
         
         /**
@@ -7300,7 +7186,7 @@ namespace {
          */
         public static function setEncrypter($crypt){
             //Method inherited from \Illuminate\Queue\Queue            
-            \Illuminate\Queue\RedisQueue::setEncrypter($crypt);
+            \Illuminate\Queue\SyncQueue::setEncrypter($crypt);
         }
         
     }
@@ -12286,7 +12172,7 @@ namespace {
     class Wechat extends \Overtrue\LaravelWechat\Facade{
         
         /**
-         * 监听
+         * 监听.
          *
          * @param string $target
          * @param string|callable $type
@@ -12299,7 +12185,7 @@ namespace {
         }
         
         /**
-         * 监听事件
+         * 监听事件.
          *
          * @param string|callable $type
          * @param callable $callback
@@ -12311,7 +12197,7 @@ namespace {
         }
         
         /**
-         * 监听消息
+         * 监听消息.
          *
          * @param string|callable $type
          * @param callable $callback
@@ -12323,7 +12209,7 @@ namespace {
         }
         
         /**
-         * handle服务端并返回字符串内容
+         * handle服务端并返回字符串内容.
          *
          * @return mixed 
          * @static 
@@ -12333,7 +12219,7 @@ namespace {
         }
         
         /**
-         * 获取输入
+         * 获取输入.
          *
          * @param array $input
          * @static 
