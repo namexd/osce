@@ -32,8 +32,8 @@ class LadMaintainController extends MscController
      * @date 2016年1月5日16:48:52
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getLaboratoryList(Request $request){
-
+    public function getLaboratoryList(){
+//        dd(11111);
         $location =Floor::where('status','=',1)->get();
         return view('msc::admin.labmanage.resource_maintain',[
             'location'    => $location,

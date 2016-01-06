@@ -61,8 +61,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('user/teacher-info', ['uses'=>'UserController@getTeacherInfo','as'=>'msc.admin.user.TeacherInfo']);
 		//楼栋路由
 		Route::get('floor/index', ['uses'=>'FloorController@index','as'=>'msc.admin.floor.index']);
-		Route::post('floor/add-floor-insert', ['uses'=>'FloorController@getAddFloorInsert','as'=>'msc.admin.floor.getAddFloorInsert']);
-		Route::post('floor/edit-floor-insert', ['uses'=>'FloorController@getEditFloorInsert','as'=>'msc.admin.floor.getEditFloorInsert']);
+		Route::post('floor/add-floor-insert', ['uses'=>'FloorController@postAddFloorInsert','as'=>'msc.admin.floor.postAddFloorInsert']);
+
+		Route::post('floor/edit-floor-insert', ['uses'=>'FloorController@postEditFloorInsert','as'=>'msc.admin.floor.postEditFloorInsert']);
 		Route::get('floor/stop-floor', ['uses'=>'FloorController@getStopFloor','as'=>'msc.admin.floor.getStopFloor']);
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
 		Route::get('floor/stop-floor', ['uses'=>'FloorController@getStopFloor','as'=>'msc.admin.floor.getStopFloor']);
@@ -152,6 +153,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('/laboratory/apply-open-laboratory',['uses'=>'LaboratoryCotroller@ApplyOpenLaboratory','as'=>'msc.Laboratory.ApplyOpenLaboratory']);
 		//开放实验填写预约表单页面
 		Route::post('/laboratory/open-laboratory-form',['uses'=>'LaboratoryCotroller@OpenLaboratoryForm','as'=>'msc.Laboratory.OpenLaboratoryForm']);
+		//等待预约搜索页面
+		Route::get('/laboratory/laboratory-list',['uses'=>'LaboratoryCotroller@LaboratoryList','as'=>'msc.Laboratory.LaboratoryList']);
 
 		// /msc/wechat/personal-center/index
 	});
