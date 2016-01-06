@@ -151,11 +151,11 @@
                 //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
                 $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
                // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
-                $('input[name=name]').val($(this).parent().parent().find('.name').html());
-                $('input[name=short_name]').val($(this).parent().parent().find('.short_name').val());
-                $('input[name=enname]').val($(this).parent().parent().find('.enname').val());
-                $('input[name=short_enname]').val($(this).parent().parent().find('.short_enname').val());
-                $('input[name=total]').val($(this).parent().parent().find('.total').val());
+                $('#name').val($(this).parent().parent().find('.name').html());
+                $('#short_name').val($(this).parent().parent().find('.short_name').val());
+                $('#enname').val($(this).parent().parent().find('.enname').val());
+                $('#short_enname').val($(this).parent().parent().find('.short_enname').val());
+                $('#total').val($(this).parent().parent().find('.total').val());
 
                 $('.school option').each(function(){
                     if($(this).val() == $('.lname').attr('data')){
