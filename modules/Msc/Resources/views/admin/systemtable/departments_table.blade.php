@@ -29,7 +29,6 @@
         })
 
         function gethistory(url){
-
             $.ajax({
                 url:url, /*${ctx}/*/
                 type:"get",
@@ -50,7 +49,6 @@
                                     +'</li>'
                             );//第一层添加
                             $(this.child).each(function() {
-
                                 if(this.child!=""){
                                     $(".treeview ul").append(
                                             '<li class="list-group-item children1" id="'+this.id+'"pid="'+this.pid+'" level="'+this.level+'"style="display: none;">'
@@ -97,13 +95,9 @@
                             );//第一层添加
                         }
                     });
-
-                },
-
+                }
             });
         }
-
-
         function   listclick(){//dom之后添加事件
             $(".list-group-item").unbind().click(function(){
                 $("#submit").hide();
@@ -131,9 +125,9 @@
         }
         function  toggle(){//dom之后添加事件
             $(".glyphicon").unbind().click(function(){
-
                     var fatherid= $(this).parent().parent().attr("id");
                     var fatherlevel= $(this).parent().parent().attr("level");
+
                     if(fatherlevel=="1"){
                         $(this).toggleClass("glyphicon-minus");
                         $(this).toggleClass("glyphicon-plus");
@@ -144,20 +138,18 @@
                                     $(this).show();
                                 }
                             })
-
-
+                              return false;
                         }else{
+
                             $(this).parent().parent().nextUntil(".parent").hide();
                             $(this).children(".toggel").val("0");
                               $(this).parent().parent().nextUntil(".parent").each(function(){
                                   if($(this).attr("level")=="2"){
                                       $(this).children(".icon").children(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
                                   }
-
                               });
+                              return false;
                         }
-                        //$(this).parent().parent().nextUntil(".parent").toggle();
-
 
                     }else if(fatherlevel=="2"){
                         $(this).toggleClass("glyphicon-minus");
@@ -167,71 +159,75 @@
                                 $(this).toggle();
                             }
                         })
-
                     }
-
             })
-
         }
-
         function  addChild(listId,level,thisneme){
-
             $("#new-add-child").unbind().click(function(){
+                if(level>=3){
+                    layer.msg("无法再添加子科室", {icon: 2,time: 1000});
+                    return false;
+                }
                 $("#edit_save").hide();
                 $("#submit").show();
                 $(".add-name").val("");
                 $(".add-describe").val("");
                 $(".add-parent").val(thisneme);
                 level++;
-                $("#submit").unbind().click(function(){
-                    var name=$(".add-name").val();
-                    var describe=$(".add-describe").val();
-                    var qj={name:name,pid:listId,level:level,description:describe}
-                    $.ajax({
-                        url:"{{ route('msc.Dept.AddDept') }}", /*${ctx}/*/
-                        type: "post",
-                        dataType: "json",
-                        cache: false,
-                        data:qj,
-                        success: function (result) {
-                            if(result.data.total.level=="2"){
-                                $("#"+listId).after(
-                                        '<li class="list-group-item children1" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
-                                        + '<span class="indent"></span>'
-                                        + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
+                addChildgroup(level,listId);
 
-                                        +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
-                                        +'<b>'+result.data.total.name+'</b>'
-                                        +'</li>'
-                                )
-
-                            }else if(result.data.total.level=="3"){
-                                $("#"+listId).after(
-                                        '<li class="list-group-item children1" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
-                                        + '<span class="indent"></span>'
-                                        + '<span class="indent"></span>'
-                                        + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
-
-                                        +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
-                                        +'<b>'+result.data.total.name+'</b>'
-                                        +'</li>'
-                                )
-                            }
-                            if($("#"+listId+" .glyphicon-plus").size()=="0"&&$("#"+listId+" .glyphicon-minus").size()=="0"){
-
-                                $("#"+listId+" .description").before(
-                                        '<span class="icon"><i class="glyphicon glyphicon-minus"></i></span>'
-                                );
-                            }else{
-                                $("#"+listId).nextUntil(".parent").show();
-                            }
-                            toggle();
-                            $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
-                        }
-                    })
-                })
             })
 
+        }
+        function addChildgroup(level,listId){
+            $("#submit").unbind().click(function(){
+                alert(level,listId);
+                var name=$(".add-name").val();
+                var describe=$(".add-describe").val();
+                var qj={name:name,pid:listId,level:level,description:describe}
+                $.ajax({
+                    url:"{{ route('msc.Dept.AddDept') }}", /*${ctx}/*/
+                    type: "post",
+                    dataType: "json",
+                    cache: false,
+                    data:qj,
+                    success: function (result) {
+
+                        if(result.data.total.level=="2"){
+                            $("#"+listId).after(
+                                    '<li class="list-group-item children1" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
+                                    + '<span class="indent"></span>'
+                                    + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
+
+                                    +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
+                                    +'<b>'+result.data.total.name+'</b>'
+                                    +'</li>'
+                            )
+                        }else if(result.data.total.level=="3"){
+                            $("#"+listId).after(
+                                    '<li class="list-group-item children2" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
+                                    + '<span class="indent"></span>'
+                                    + '<span class="indent"></span>'
+                                    + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
+
+                                    +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
+                                    +'<b>'+result.data.total.name+'</b>'
+                                    +'</li>'
+                            )
+                        }
+                        if($("#"+listId+" .glyphicon-plus").size()=="0"&&$("#"+listId+" .glyphicon-minus").size()=="0"){
+                            $("#"+listId+" .description").before(
+                                    '<span class="icon"><i class="glyphicon glyphicon-minus"><input type="hidden" class="toggel" value="1"/></i></span>'
+                            );
+                            $("#"+listId+" .toggel").val("1");
+                        }else{
+                            $("#"+listId).nextUntil(".parent").show();
+                        }
+                        toggle();
+                        $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
+                    }
+                })
+            })
         }
         function editall(){
             $("#edit_save").click(function(){
@@ -257,7 +253,6 @@
                 })
             })
         }
-
         function deleteall(){
            $("#delete").unbind().click(function(){
                var thisid=$("#hidden_this_id").val();
@@ -285,6 +280,7 @@
             $("#new-add-father").unbind().click(function(){
                 $("#edit_save").hide();
                 $("#submit").show();
+                $(".add-parent").val("");
                 $(".add-name").val("");
                 $(".add-describe").val("");
                 $("#submit").unbind().click(function(){
@@ -300,7 +296,7 @@
                         success: function (result) {
                             if(result.message=="添加成功"){
                                 $(".treeview ul").append(
-                                        '<li class="list-group-item children1" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
+                                        '<li class="list-group-item parent" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
                                         + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
                                         +'<span class="icon"><i class="glyphicon glyphicon-stop"></i></span>'
                                         +'<b>'+result.data.total.name+'</b>'
@@ -308,8 +304,12 @@
                                 );//第一层添加
                                 layer.msg(result.message, {icon: 1,time: 1000});
                                 $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
+                                var level=result.data.total.level;
+                                var listId=result.data.total.id;
+                                addChildgroup(level,listId);
+                                deleteall();
                             } else{
-                                layer.msg(result.message, {icon: 1,time: 1000});
+                                layer.msg(result.message, {icon: 2,time: 1000});
                             }
 
 
@@ -380,7 +380,7 @@
                         <div class="form-group">
                             <div class=" right">
                                 <button class="btn btn-primary"  type="button" id="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认</button>
-                                <button class="btn btn-primary"  type="button" id="edit_save" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                                <button class="btn btn-primary"  type="button" id="edit_save" style="display:none" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
                             </div>
                         </div>
                     </form>
