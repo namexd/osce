@@ -17,6 +17,10 @@
 
     <script>
         $(function(){
+            $(document).ajaxSuccess(function(event, request, settings) {
+                //楼栋选项卡切换
+                ban();
+            });
 //            新增、编辑切换
             $("#add_device").click(function(){
                 $("#add_device_form").show();
@@ -27,26 +31,30 @@
                 $("#edit_form").show();
             });
 //            楼栋选项卡切换
-            $(".list-group-parent").click(function(){
-                $(this).toggleClass("checked").next(".lab_num").toggle("200");
-                $(this).children(".fa").toggleClass("deg");
-                if($(this).parent().next(".list-group").length=="1"){
-                    $(this).next(".lab_num").children().last().addClass("border-bottom");
-                }
-            });
-            $(".list-group-child").click(function(){
-                $(".list-group-parent").removeClass("checked");
-                $(".list-group-child").removeClass("checked");
-                $(this).addClass("checked");
-            });
+            function ban(){
+                $(".list-group-parent").click(function(){
+                    $(this).toggleClass("checked").next(".lab_num").toggle("200");
+                    $(this).children(".fa").toggleClass("deg");
+                    if($(this).parent().next(".list-group").length=="1"){
+                        $(this).next(".lab_num").children().last().addClass("border-bottom");
+                    }
+
+                });
+                $(".list-group-child").click(function(){
+                    $(".list-group-parent").removeClass("checked");
+                    $(".list-group-child").removeClass("checked");
+                    $(this).addClass("checked");
+                });
+            }
             // may_add
             $(".add_time_button").click(function(){ //添加时间段
                 var inuput_num=$(".add_time_list  .form-group").size()+1;
+                var time_frame=$(this).attr("id");
                 $(this).parent().parent().parent().append('<div class=" overflow form-group">'
                         +'<div class="col-sm-8">'
-                        +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" placeholder="08：00" value="" />'
+                        +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" frame="'+time_frame+'"placeholder="08：00" value="" />'
                         +'<lable>至</lable>'
-                        +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'"   placeholder="09：00" value="" />'
+                        +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" frame="'+time_frame+'"   placeholder="09：00" value="" />'
                         +'</div>'
                         +'<div class="col-sm-4">'
                         +'<span class="fa fa-trash-o"></span>'
@@ -68,6 +76,37 @@
 
                 }
             });
+
+            //楼栋实验室数据绑定
+            $("#ban_select").change(function(){
+                var $treeview=$(".treeview");
+                $treeview.empty();
+                var $thisId=$(this).val();
+                var url="/msc/admin/ladMaintain/floor-lab?lid="+$thisId;
+                $.ajax({
+                    type:"get",
+                    url:url,
+                    cache:false,
+                    success:function(result){
+                        $(result).each(function(){
+                            $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
+                                    "<div class='list-group-item list-group-parent'>"
+                                    +this.floor+"楼"
+                                    +"</div>"
+                                    +"<div class='lab_num'></div>"
+                                    +"</div>"
+                            );
+                            if(this.lab!=""){
+                                $(this.lab).each(function(){
+                                    $(".treeview #"+ this.floor +" .lab_num").append("<div class='list-group-item list-group-child'>"+this.name+"</div>")
+                                });
+                                $(".treeview #"+ this.floor +" .list-group-parent").append("<i class='fa fa-angle-right right'></i>");
+                            }
+
+                        })
+                    }
+                })
+            });
         })
     </script>
 @stop
@@ -78,34 +117,19 @@
         <div class="col-sm-5">
             <div class="ibox">
                 <div class="ibox-title overflow">
-                    <select name="" id="" class="select">
+                    <select name="" id="ban_select" class="select">
                         <option value="-1">请选择楼栋</option>
-                        <option value="11">11</option>
-                        <option value="22">22</option>
+                        @if(!empty($location))
+                            @foreach($location as $k=>$v)
+
+                                <option value="{{@$v->id}}">{{@$v->name}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
                 <div class="ibox-content">
                     <div class="treeview">
-                        <div class="list-group" style="margin-bottom: 0;">
-                            <div class="list-group-item list-group-parent">
-                                -1楼
-                                <i class="fa fa-angle-right right"></i>
-                            </div>
-                            <div class="lab_num">
-                                <div class="list-group-item list-group-child">临床1教</div>
-                                <div class="list-group-item list-group-child">临床2教</div>
-                            </div>
-                        </div>
-                        <div class="list-group" style="margin-bottom: 0;">
-                            <div class="list-group-item list-group-parent">
-                                -1楼
-                                <i class="fa fa-angle-right right"></i>
-                            </div>
-                            <div class="lab_num">
-                                <div class="list-group-item list-group-child">临床1教</div>
-                                <div class="list-group-item list-group-child">临床2教</div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -142,7 +166,7 @@
                                              <input type="text"  class="form-control time-set" name="time-end1"   placeholder="09：00" value="" />
                                     </div>
                                     <div class="col-sm-4">
-                                        <a class="add_time_button">添加时间段</a>
+                                        <a class="add_time_button" id="morning">添加时间段<span></span></a>
                                     </div>
                                 </div>
                         </div>
@@ -164,7 +188,7 @@
                                     <input type="text"  class="form-control time-set" name="time-end2"   placeholder="09：00" value="" />
                                 </div>
                                 <div class="col-sm-4">
-                                    <a class="add_time_button">添加时间段</a>
+                                    <a class="add_time_button" id="noon">添加时间段</a>
                                 </div>
                             </div>
 
@@ -187,7 +211,7 @@
                                     <input type="text"  class="form-control time-set" name="time-end3"   placeholder="09：00" value="" />
                                 </div>
                                 <div class="col-sm-4">
-                                    <a class="add_time_button">添加时间段</a>
+                                    <a class="add_time_button" id="afternoon">添加时间段</a>
                                 </div>
                             </div>
 
@@ -210,7 +234,7 @@
                                     <input type="text"  class="form-control time-set" name="time-end4"   placeholder="09：00" value="" />
                                 </div>
                                 <div class="col-sm-4">
-                                    <a class="add_time_button">添加时间段</a>
+                                    <a class="add_time_button" id="night">添加时间段</a>
                                 </div>
                             </div>
 
