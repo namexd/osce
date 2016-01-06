@@ -34,6 +34,9 @@ class LadDevice extends Model
         return $this->hasOne('Modules\Msc\Entities\Devices','id','device_id');
     }
 
+
+
+
     public function GetLadDevice($lab_id){
         return $this->where('lab_id','=',$lab_id)->with(['DeviceInfo'=>function($DeviceInfo){
             $DeviceInfo->with('devicesCateInfo');

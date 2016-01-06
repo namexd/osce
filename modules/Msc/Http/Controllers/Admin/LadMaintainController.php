@@ -33,9 +33,8 @@ class LadMaintainController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getLaboratoryList(){
-//        dd(11111);
         $location =Floor::where('status','=',1)->get();
-        return view('msc::admin.labmanage.resource_maintain',[
+       return view('msc::admin.labmanage.resource_maintain',[
             'location'    => $location,
         ]);
     }
@@ -44,7 +43,7 @@ class LadMaintainController extends MscController
      *实验室相关设备信息
      *
      * @method GET
-     * @url /msc/admin/LadMaintain/lab-id-get-laboratory-device-list
+     * @url /msc/admin/ladMaintain/laboratory-device-list
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -58,10 +57,14 @@ class LadMaintainController extends MscController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LabIdGetLaboratoryDeviceList(){
+    public function getLaboratoryDeviceList(){
+//        dd(22222);
+
         $lab_id = Input::get('lab_id');
+//        dd($lab_id);
         $LadDevice = new LadDevice;
         $LadDeviceList = $LadDevice->GetLadDevice($lab_id);
+//        dd($LadDeviceList);
         return response()->json(
             $this->success_rows(1,'获取成功',$LadDeviceList->total(),config('msc.page_size',10),$LadDeviceList->currentPage(),array('LadDeviceList'=>$LadDeviceList->toArray()))
         );
@@ -292,9 +295,5 @@ class LadMaintainController extends MscController
 //            $this->success_data(['result' => true, 'cacheData' => $cacheData])
 //        );
     }
-
-
-
-
 
 }
