@@ -52,4 +52,14 @@ class Floor extends Model
         )->select($this->table.'.*','school.name as sname');
         return $builder->orderBy( $this->table.'.id')->paginate(config('msc.page_size',10));
     }
+
+    /**
+     * @return array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月6日16:52:32
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetFloorData(){
+        return  $this->where('status','=',1)->get();
+    }
 }
