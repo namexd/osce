@@ -58,7 +58,10 @@ class LadMaintainController extends MscController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LabIdGetLaboratoryDeviceList(){
+
+    public function getLaboratoryDeviceList(){
+
+
         $lab_id = Input::get('lab_id');
         $LadDevice = new LadDevice;
         $LadDeviceList = $LadDevice->GetLadDevice($lab_id);
