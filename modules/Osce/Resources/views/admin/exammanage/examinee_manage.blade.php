@@ -72,7 +72,9 @@
                         </span>
                     </div>
                     <div class="operate pull-right">
-                        <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
+                        <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}">
+                            <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
+                        </a>
                         <button type="button" class="btn btn-md btn-white" id="">导入</button>
                     </div>
                 </div>
@@ -88,7 +90,19 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                    @forelse($data as $item)
+                        <tr>
+                            <td>{{$item->name}}</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            </td>
+                        </tr>
+                    @empty
+                    @endforelse
                     </tbody>
                 </table>
 

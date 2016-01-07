@@ -81,20 +81,18 @@ class Exam extends CommonModel
      * @access public
      *
      * @param array $examData 考试基本信息
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        name        参数中文名(必须的)
+     * * string    create_user_id       参数中文名(必须的)
      * @param array $examScreeningData 场次信息
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        exam_id          参数中文名(必须的)
+     * * string        begin_dt         参数中文名(必须的)
+     * * string        end_dt           参数中文名(必须的)
+     * * string     create_user_id      参数中文名(必须的)
      *
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
@@ -117,8 +115,8 @@ class Exam extends CommonModel
                     throw new \Exception('创建考试场次信息失败');
                 }
             }
-            return $result;
             $connection->commit();
+            return $result;
         } catch(\Exception $ex) {
             $connection->rollBack();
             throw $ex;

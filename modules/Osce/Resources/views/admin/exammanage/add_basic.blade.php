@@ -64,7 +64,7 @@
                                 <label class="col-sm-2 control-label">考试名称</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="name" name="name">
+                                    <input type="text" required class="form-control" id="name" name="name" value="{{$data['name']}}">
                                     <input type="hidden" required class="form-control" id="cate_id" name="cate_id" value="2" />
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
                                 <label class="col-sm-2 control-label">考试地点</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="code">
+                                    <input type="text" required class="form-control" id="code" name="code" value="{{$data['name']}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
