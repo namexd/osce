@@ -25,6 +25,7 @@
                 editall();//更改当前栏目内容
                 deleteall();//删除科室
                 addChild();//添加子科室
+
             });
         })
 
@@ -163,6 +164,7 @@
             })
         }
         function  addChild(listId,level,thisneme){
+            var name=$(".add-name").val();
             $("#new-add-child").unbind().click(function(){
                 if(level>=3){
                     layer.msg("无法再添加子科室", {icon: 2,time: 1000});
@@ -182,6 +184,10 @@
         function addChildgroup(level,listId){
             $("#submit").unbind().click(function(){
                 var name=$(".add-name").val();
+                validate (name);//验证科室名称
+                if(mark){
+                    return false;
+                }
                 var describe=$(".add-describe").val();
                 var qj={name:name,pid:listId,level:level,description:describe}
                 $.ajax({
@@ -255,24 +261,29 @@
         function deleteall(){
             $("#delete").unbind().click(function(){
                 var thisid=$("#hidden_this_id").val();
-                var qj={id:thisid}
-                $.ajax({
-                    url:"{{ route('msc.Dept.DelDept') }}", /*${ctx}/*/
-                    type: "post",
-                    dataType: "json",
-                    cache: false,
-                    data:qj,
-                    success: function (result) {
-                        if(result.message=="删除成功"){
-                            $(result.data.rows).each(function(){
-                                $("#"+this).remove();
-                            })
-                            layer.msg(result.message, {icon: 1,time: 1000});
-                        } else{
-                            layer.msg(result.message, {icon: 1,time: 1000});
+                var qj={id:thisid};
+                layer.confirm('您确定要删除该科室？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    $.ajax({
+                        url:"{{ route('msc.Dept.DelDept') }}", /*${ctx}/*/
+                        type: "post",
+                        dataType: "json",
+                        cache: false,
+                        data:qj,
+                        success: function (result) {
+                            if(result.message=="删除成功"){
+                                $(result.data.rows).each(function(){
+                                    $("#"+this).remove();
+                                });
+                                layer.msg(result.message, {icon: 1,time: 1000});
+                            } else{
+                                layer.msg(result.message, {icon: 1,time: 1000});
+                            }
                         }
-                    }
-                })
+                    })
+                });
+
             })
         }
         function addfater(){
@@ -282,10 +293,17 @@
                 $(".add-parent").val("");
                 $(".add-name").val("");
                 $(".add-describe").val("");
+
                 $("#submit").unbind().click(function(){
                     var name=$(".add-name").val();
+                    validate (name);//添加验证
+                    if(mark){
+                        alert(202);
+                        return false;
+                    }
                     var describe=$(".add-describe").val();
                     var qj={name:name,pid:"0",level:1,description:describe}
+
                     $.ajax({
                         url:"{{ route('msc.Dept.AddDept') }}", /*${ctx}/*/
                         type: "post",
@@ -318,6 +336,19 @@
 
             })
         }
+        //        添加科室验证
+        function validate (name){
+            mark = false;
+            $(".list-group").find(".list-group-item").each(function(){
+                if($(this).text()==name){
+                    mark = true;
+                    layer.msg("该科室已存在", {icon: 2,time: 1000});
+                    return false;
+                }
+            })
+
+        }
+
     </script>
 
 @stop
@@ -344,37 +375,32 @@
             <div class="ibox">
                 <div class="ibox-title overflow">
                     <h5>科室信息</h5>
-
                     <input type="button" class="btn btn_pl btn-success right"  id="new-add-child" value="新增子科室">
                     <button class="btn btn_pl btn-white right button_margin marr_15" id="delete">删除该科室</button>
                     <input type="hidden" value="" id="hidden_this_id"/>
                 </div>
                 <div class="ibox-content">
-                    <form method="post" class="form-horizontal">
-
+                    <form method="post" class="form-horizontal" id="add_department">
                         <div class="form-group">
                             <label class="col-sm-3 control-label"><span class="dot">*</span>科室名称</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control name add-name" name="name" value="" />
+                                <input type="text" class="form-control name add-name" name="name" value="" placeholder="请输入科室名称" />
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label"><span class="dot">*</span>上级科室</label>
                             <div class="col-sm-9">
-                                <input type="text" disabled  class="form-control name add-parent" name="name" value="" />
+                                <input type="text" disabled  class="form-control name add-parent" name="up_name" value="" />
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">职称描述</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control describe add-describe" name="describe" />
+                                <input type="text" class="form-control describe add-describe" name="describe" placeholder="请输入职称描述" />
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class=" right">
