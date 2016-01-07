@@ -13,9 +13,9 @@
 @stop
 
 @section('content')
-	<input type="hidden" id="parameter" value="{'pagename':'ban_maintain'}" />
-	<div class="wrapper wrapper-content animated fadeInRight">
-		<div class="row table-head-style1">
+    <input type="hidden" id="parameter" value="{'pagename':'ban_maintain'}" />
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
@@ -35,7 +35,7 @@
                     </a>
                 </button>
             </div>
-		</div>
+        </div>
         <div class="ibox float-e-margins">
             <div class="container-fluid ibox-content">
                 <form action="" class="container-fluid" id="list_form">
@@ -91,26 +91,26 @@
                         <tbody>
                         @if(!empty($data))
                             @foreach($data as $k=>$v)
-                            <tr>
-                                <td>{{@$k+1}}</td>
-                                <td class="name">{{@$v->name}}</td>
-                                <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_buttom}}">{{intval(@$v->floor_top) + intval(@$v->floor_buttom)}}</td>
-                                <td class="sname">{{@$v->sname}}</td>
-                                <td class="address">{{@$v->address}}</td>
-                                <td class="status" data="{{@$v->status}}">@if($v->status)正常@else<span class="state2">停用</span>@endif</td>
-                                <td>
-                                    <a href=""  data="{{$v->id}}"  class="state1 edit edit_ban" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
-                                        <span>编辑</span>
-                                    </a>
-                                    @if($v->status == 1)
-                                        <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">停用</a>
-                                    @else
-                                        <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
-                                    @endif
-                                    <a data="{{$v->id}}" class="state2 edit_role modal-control delete">删除</a>
-                                    <input type="hidden" class="setid" value="1"/>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{@$k+1}}</td>
+                                    <td class="name">{{@$v->name}}</td>
+                                    <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_buttom}}">{{intval(@$v->floor_top) + intval(@$v->floor_buttom)}}</td>
+                                    <td class="sname">{{@$v->sname}}</td>
+                                    <td class="address">{{@$v->address}}</td>
+                                    <td class="status" data="{{@$v->status}}">@if($v->status)正常@else<span class="state2">停用</span>@endif</td>
+                                    <td>
+                                        <a href=""  data="{{$v->id}}"  class="state1 edit edit_ban" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                                            <span>编辑</span>
+                                        </a>
+                                        @if($v->status == 1)
+                                            <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">停用</a>
+                                        @else
+                                            <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
+                                        @endif
+                                        <a data="{{$v->id}}" class="state2 edit_role modal-control delete">删除</a>
+                                        <input type="hidden" class="setid" value="1"/>
+                                    </td>
+                                </tr>
                             @endforeach
                         @endif
 
@@ -125,11 +125,11 @@
         <div class="btn-group pull-right">
             <?php echo $data->render();?>
         </div>
-	</div>
+    </div>
 @stop
 
 @section('layer_content')
-{{--编辑--}}
+    {{--编辑--}}
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.floor.postAddFloorInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -193,67 +193,67 @@
         </div>
     </form>
 
-{{--新增--}}
-<form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.floor.postAddFloorInsert')}}" method="post">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">新增楼栋</h4>
-    </div>
-    <div class="modal-body">
-        <div class="form-group">
-            <label class="col-sm-3 control-label"><span class="dot">*</span>楼栋名称</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control name add-name" name="name" value="" />
-            </div>
+    {{--新增--}}
+    <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.floor.postAddFloorInsert')}}" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">新增楼栋</h4>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地上)</label>
-            <div class="col-sm-9">
-                <input type="number" class="form-control name add-name" name="floor_top" value="" />
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼栋名称</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="name" value="" />
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
-            <div class="col-sm-9">
-                <input type="number" class="form-control name add-name" name="floor_buttom" value="" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地上)</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control name add-name" name="floor_top" value="" />
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">地址</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control describe add-describe" name="address" />
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control name add-name" name="floor_buttom" value="" />
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">所属分院</label>
-            <div class="col-sm-9">
-                <select id="select_Category"   class="form-control m-b " name="school_id">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">地址</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control describe add-describe" name="address" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">所属分院</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b " name="school_id">
 
-                    @if(!empty($school))
-                        @foreach($school as $ss)
-                            <option value="{{$ss->id}}">{{$ss->name}}</option>
-                        @endforeach
-                    @endif
-                </select>
+                        @if(!empty($school))
+                            @foreach($school as $ss)
+                                <option value="{{$ss->id}}">{{$ss->name}}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b " name="status">
+                        <option value="-1">请选择状态</option>
+                        <option value="1">正常</option>
+                        <option value="0">停用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2 right">
+                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-            <div class="col-sm-9">
-                <select id="select_Category"   class="form-control m-b " name="status">
-                    <option value="-1">请选择状态</option>
-                    <option value="1">正常</option>
-                    <option value="0">停用</option>
-                </select>
-            </div>
-        </div>
-        <div class="hr-line-dashed"></div>
-        <div class="form-group">
-            <div class="col-sm-4 col-sm-offset-2 right">
-                <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-            </div>
-        </div>
-    </div>
-</form>
+    </form>
 @stop

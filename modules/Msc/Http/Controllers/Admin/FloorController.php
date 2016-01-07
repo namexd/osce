@@ -109,7 +109,7 @@ class FloorController extends Controller {
      * Time: 17:01
      * 修改楼栋操作
      */
-    public function getEditFloorInsert(Request $Request){
+    public function postEditFloorInsert(Request $Request){
         $this->validate($Request, [
             'name'      => 'required',
             'floor_top'       => 'required|integer',

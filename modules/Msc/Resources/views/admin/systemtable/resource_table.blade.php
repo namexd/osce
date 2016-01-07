@@ -73,7 +73,7 @@
                                         <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">禁用</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
                                     </li>
                                 </ul>
                             </div>
@@ -92,14 +92,14 @@
 
                         <td class="detail">{{$val['detail']}}</td>
 
-                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">禁用</span>@endif</td>
+                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
                         <td>
                             <a href=""   data="{{$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
 
                             @if($val['status']==1)
-                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">禁用</a>
+                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
                             @else
-                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">恢复</a>
+                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                             @endif
                             <a   data="{{$val['id']}}" class="state2 edit_role modal-control delete">删除</a>
                             <input type="hidden" class="setid" value="1"/>

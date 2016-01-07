@@ -34,10 +34,10 @@
                 var url = "/msc/admin/profession/profession-status?id="+this_id+"&type="+type;
                 var str = '';
                 if(type == 1){
-                    str = '您确定要恢复该专业？';
+                    str = '您确定要启用该专业？';
                 }else{
 
-                    str = '您确定要禁用该专业？';
+                    str = '您确定要停用该专业？';
                 }
 
                 //询问框
@@ -165,7 +165,6 @@
                 <form action="" method="get">
                     <div class="input-group">
                         <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
-                        {{--<input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">--}}
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -216,18 +215,13 @@
                             <td>{{$list['id']}}</td>
                             <td class="code">{{$list['code']}}</td>
                             <td class="name">{{$list['name']}}</td>
-                            <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">禁用</span>@endif</td>
-                            {{--@if($list['status']==1)--}}
-                                {{--<td class="status2">正常</td>--}}
-                            {{--@else--}}
-                                {{--<td>停用</td>--}}
-                            {{--@endif--}}
+                            <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">停用</span>@endif</td>
                             <td>
                                 <a href=""  data="{{$list['id']}}"  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
                                @if($list['status']==1)
-                                <a   data="{{$list['id']}}"  data-type="0"  class="state2 modal-control stop">禁用</a>
+                                <a   data="{{$list['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
                                 @else
-                                    <a   data="{{$list['id']}}" data-type="1" class="state2 modal-control stop">恢复</a>
+                                    <a   data="{{$list['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                                 @endif
                                 <span  data="{{$list['id']}}"  class="state2 edit_role modal-control delete">删除</span>
                                 <input type="hidden" class="setid" value="1"/>
