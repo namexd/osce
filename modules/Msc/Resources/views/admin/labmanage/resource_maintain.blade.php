@@ -108,6 +108,7 @@
             function labdata(){
                 $('.treeview .list-group-child').click(
                         function(){
+
                             var lab_id = $(this).attr('lab_id');
                             var url = "{{ route('msc.admin.LadMaintain.LaboratoryDeviceList')}}";
                             $.ajax({
@@ -115,18 +116,19 @@
                                 url:url+'?lab_id='+lab_id,
                                 async:true,
                                 success:function(res){
+
                                     var str = '';
                                     if(res.code == 1){
                                         var data = res.data.rows.LadDeviceList.data;
                                         for(var i=0;i<data.length;i++){
                                             str += '<tr>' +
                                                     '<td>'+data[i].id+'</td>' +
-                                                    '<td class="device_name>'+data[i].device_info.name+'</td>' +
+                                                    '<td class="device_name">'+data[i].device_info.name+'</td>' +
                                                     '<td class="device_type">'+data[i].device_info.devices_cate_info.name+'</td>' +
                                                     '<td class="total">'+data[i].total+'</td>' +
-                                                    '<td>' +
-                                                    '<a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit">' +
-                                                    '<span >编辑数量</span>' +
+                                                    '<td class="opera">' +
+                                                    '<a class="state1 edit edit_res"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit">' +
+                                                    '<span class="edit_num" labDeviceId="'+data[i].id+'">编辑数量</span>' +
                                                     '</a>' +
                                                     '<a class="state2 delete"><span>删除</span></a>' +
                                                     '</td>' +
@@ -159,10 +161,8 @@
             });
 
             $('#table-striped').delegate('.edit_num','click',function(){
-//                ($(this).attr('labDeviceId'));
-
+//                alert($(this).attr('labDeviceId'));
                 if($(this).attr("labDeviceId")){
-                    alert($(this).parent().parent().parent().find('.device_name').html());
                     $('input[name=name]').val($(this).parent().parent().parent().find('.device_name').html());
 
                     $('input[name=type]').val($(this).parent().parent().parent().find('.device_type').html());
@@ -173,6 +173,23 @@
                 $('#edit_form').append('<input type="hidden" name="id" value="'+id+'">');
 
             })
+//            编辑aiax提交
+            $('#edit_form').submit(function(){
+
+                alert(1111111111);
+
+{{--//                $('#edit_form').serialize()--}}
+                {{--var url ="{{route('msc.admin.LadMaintain.DevicesTotalEdit')}}" ;--}}
+                {{--$.ajax({--}}
+                    {{--type:post,--}}
+                    {{--url:url,--}}
+                    {{--async:true,--}}
+
+
+//                })
+            })
+
+
 
 
             //删除
@@ -352,7 +369,7 @@
         </div>
     </form>
     {{--编辑--}}
-    <form class="form-horizontal" id="edit_form" novalidate="novalidate" action="{{route('msc.admin.profession.ProfessionAdd')}}" method="post">
+    <form class="form-horizontal" id="edit_form" novalidate="novalidate" action="" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">编辑数量</h4>
