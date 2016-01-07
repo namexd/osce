@@ -31,10 +31,9 @@ class Devices  extends Model
         return $this->hasOne('Modules\Msc\Entities\DevicesCate','id','devices_cate_id');
     }
     //获取资源列表
-    public function getDevicesList($keyword='', $status='', $devices_cate_id=''){
+    public function getDevicesList($DeviceIdArr,$keyword='', $status='', $devices_cate_id=''){
 
-
-        $builder = $this;
+        $builder = $this->whereNotIn('devices.id',$DeviceIdArr);
 
         if ($keyword)
         {
