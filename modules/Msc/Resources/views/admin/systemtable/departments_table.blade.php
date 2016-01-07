@@ -181,7 +181,6 @@
         }
         function addChildgroup(level,listId){
             $("#submit").unbind().click(function(){
-                alert(level,listId);
                 var name=$(".add-name").val();
                 var describe=$(".add-describe").val();
                 var qj={name:name,pid:listId,level:level,description:describe}
