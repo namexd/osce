@@ -30,7 +30,7 @@ function test_station(){
                 url:pars.deletes,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
                 success:function(res){
-                    location.reload();
+                    //location.reload();
                 }
             })
         });

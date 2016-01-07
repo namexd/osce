@@ -18,12 +18,6 @@
 
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}'}" />
-    <div class="ibox-title route-nav">
-        <ol class="breadcrumb">
-            <li><a href="#">资源管理</a></li>
-            <li class="route-active">考站管理</li>
-        </ol>
-    </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -54,6 +48,7 @@
                     </thead>
                     <tbody>
                         @foreach($data as $key => $item)
+                            <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$item->type}}</td>
@@ -62,6 +57,7 @@
                                 <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                 <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                             </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
