@@ -74,6 +74,54 @@ class Exam extends CommonModel
         } catch (\Exception $ex) {
 
         }
+    }
 
+    /**
+     *
+     * @access public
+     *
+     * @param array $examData 考试基本信息
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * @param array $examScreeningData 场次信息
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function addExam(array $examData,array $examScreeningData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //将exam表的数据插入exam表
+            if(!$result = $this->create($examData))
+            {
+                throw new \Exception('创建考试基本信息失败');
+            }
+            //将考试对应的考次关联数据写入考试场次表中
+            foreach($examScreeningData as $key => $value){
+                $value['exam_id']    =   $result->id;
+                if(!$examScreening = ExamScreening::create($value))
+                {
+                    throw new \Exception('创建考试场次信息失败');
+                }
+            }
+            return $result;
+            $connection->commit();
+        } catch(\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
     }
 }
