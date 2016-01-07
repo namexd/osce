@@ -119,8 +119,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
-                                    <button class="btn btn-white" type="submit">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-white" type="submit">取消</button>
 
                                 </div>
                             </div>

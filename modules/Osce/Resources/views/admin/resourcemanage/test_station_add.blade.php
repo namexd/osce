@@ -105,8 +105,8 @@
 
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <input type="button" class="btn btn-white" value="取消" style="margin-right: 20px;">
-                                    <input type="submit" class="btn btn-primary" value="保存">
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <input type="button" class="btn btn-white" value="取消">
                                 </div>
                             </div>
                         </form>
