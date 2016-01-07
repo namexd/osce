@@ -51,24 +51,26 @@
                     url:url,
                     cache:false,
                     success:function(result){
-                        console.log(result);
-                        $(result).each(function(){
-                            $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
-                                    "<div class='list-group-item list-group-parent'>"
-                                    +this.floor+"楼"
-                                    +"</div>"
-                                    +"<div class='lab_num'></div>"
-                                    +"</div>"
-                            );
-                            if(this.lab!=""){
-                                $(this.lab).each(function(){
-                                    console.log(this.id);
-                                    $(".treeview #"+ this.floor +" .lab_num").append("<div class='list-group-item list-group-child  labdetail'  data='"+this.total+"' lab_id='"+this.id+"'>"+this.name+"</div>")
-                                });
-                                $(".treeview #"+ this.floor +" .list-group-parent").append("<i class='fa fa-angle-right right'></i>");
-                            }
+                            $(result).each(function(){
+                                if(this.lab.length>0){
+                                    $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
+                                            "<div class='list-group-item list-group-parent'>"
+                                            +this.floor+"楼"
+                                            +"</div>"
+                                            +"<div class='lab_num'></div>"
+                                            +"</div>"
+                                    );
+                                }
 
-                        })
+                                if(this.lab!=""){
+                                    $(this.lab).each(function(){
+                                        $(".treeview #"+ this.floor +" .lab_num").append("<div class='list-group-item list-group-child  labdetail'  data='"+this.total+"' lab_id='"+this.id+"'>"+this.name+"</div>")
+                                    });
+                                    $(".treeview #"+ this.floor +" .list-group-parent").append("<i class='fa fa-angle-right right'></i>");
+                                }
+
+                            })
+
                     }
                 })
             });
