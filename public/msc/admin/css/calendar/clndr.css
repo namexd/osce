@@ -154,7 +154,7 @@ p {
 .cal1 .clndr .clndr-table tr .day:hover {
   background: #eee;
 }
-.cal1 .clndr .clndr-table tr .day.today,
+/*.cal1 .clndr .clndr-table tr .day.today,
 .cal1 .clndr .clndr-table tr .day.my-today {
   background: #9AD6E3;
 }
@@ -165,7 +165,7 @@ p {
 .cal1 .clndr .clndr-table tr .day.today.event,
 .cal1 .clndr .clndr-table tr .day.my-today.event {
   background: #a7dbc1;
-}
+}*/
 .cal1 .clndr .clndr-table tr .day.event,
 .cal1 .clndr .clndr-table tr .day.my-event {
   background: #B4E09F;
