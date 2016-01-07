@@ -399,12 +399,31 @@ class LaboratoryController extends MscController {
        foreach($post as $aa=>$pp){
            $post[$aa]['lab_id'] = Input::get('lid');
            $post[$aa]['created_user_id'] = $user->id;
+           $post[$aa]['created_at'] = time();
+           $post[$aa]['updated_at'] = time();
        }
-        $cnt = count($post);
         foreach($where as $o=>$time){
                 $plan[] = array_merge($time,$post[0]);
         }
-        OpenPlan::create($plan);
+        OpenPlan::insert($plan);
+        if(@$post[1]){
+            foreach ($where as $o => $time) {
+                $plan[] = array_merge($time, $post[1]);
+            }
+            OpenPlan::insert($plan);
+        }
+        if(@$post[2]) {
+            foreach ($where as $o => $time) {
+                $plan[] = array_merge($time, $post[2]);
+            }
+            OpenPlan::insert($plan);
+        }
+        if(@$post[3]) {
+            foreach ($where as $o => $time) {
+                $plan[] = array_merge($time, $post[3]);
+            }
+            OpenPlan::insert($plan);
+        }
         exit;
     }
 }
