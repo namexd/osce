@@ -317,6 +317,9 @@ function timePicker(background){
  */
 function sp_invitation(){
 
+    //select2初始化
+    $(".js-example-basic-single").select2();
+
     /**
      * 获取数据
      * @author mao
@@ -327,18 +330,27 @@ function sp_invitation(){
         var thisElement = $(this);
 
         var id = $(this).parent().parent().parent().attr('value');
+        var selected = [];
+
+        thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+            selected.push($(elem).attr('value'));
+        });
+        console.log(selected)
         $.ajax({
             type:'get',
             url: pars.teacher_list,   //修改请求地址
-            data:{id:id},
+            data:{id:id,selected:selected},
             success:function(res){
+
+                var source = [];
 
                 if(res.code!=1){
                     layer.alert('res.message');
                 }else{
                     var data = res.data.rows;
-                    var html = '';
+                    var html = '<option>选择</option>';
                     for(var i in data){
+
                         html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
                     }
                    thisElement.html(html);
@@ -351,9 +363,10 @@ function sp_invitation(){
     $(".teacher-list").change(function(){
 
         var $teacher=$(".teacher-list option:selected").text();
+        var id = $(".teacher-list option:selected").val();
         var thisElement = $(this);
 
-        var sql='<div class="input-group teacher pull-left">'+
+        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
                 '<div class="pull-left">'+$teacher+'</div>'+
                 '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
