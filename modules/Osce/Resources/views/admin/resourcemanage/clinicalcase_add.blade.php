@@ -88,7 +88,7 @@
                             <label class="col-sm-2 control-label">病例名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" value="">
+                                <input type="text" required class="form-control" id="name" value="" name="name">
                             </div>
                         </div>
 

@@ -54,6 +54,7 @@
                     </thead>
                     <tbody>
                         @foreach($data as $key => $item)
+                            <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$item->type}}</td>
@@ -62,6 +63,7 @@
                                 <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                 <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                             </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
