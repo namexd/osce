@@ -332,10 +332,11 @@ function sp_invitation(){
         var id = $(this).parent().parent().parent().attr('value');
         var selected = [];
 
+        //选择的数据
         thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
             selected.push($(elem).attr('value'));
         });
-        console.log(selected)
+
         $.ajax({
             type:'get',
             url: pars.teacher_list,   //修改请求地址
