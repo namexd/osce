@@ -173,7 +173,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button href=""   id="addprofession"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">添加专业</button>
+                <button href=""   id="addprofession"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增专业</button>
                 <button class="btn btn_pl btn-white right button_margin" id="in">导入专业</button>
                 <input type="file" name="training" id="load_in" style="display: none" value="">
             </div>
