@@ -16,6 +16,7 @@ use Modules\Msc\Entities\Laboratory;
 use Modules\Msc\Entities\OpenPlan;
 use Modules\Msc\Entities\LadDevice;
 use Modules\Msc\Entities\Floor;
+use Illuminate\Support\Facades\Auth;
 class LaboratoryCotroller extends MscWeChatController
 {
 
@@ -205,5 +206,30 @@ class LaboratoryCotroller extends MscWeChatController
         ];
         dd($data);
         //return  view();
+    }
+
+    /**
+     * @method  POST
+     * @url /msc/wechat/laboratory/open-laboratory-form-op
+     * @access public
+     * @param Request $Request
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月7日10:31:29
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function OpenLaboratoryFormOp(Request $Request){
+        $this->validate($Request,[
+            'lab_id'   => 'required|integer',
+            'open_plan_id'   => 'required',
+            'description'=>'required|max:512'
+        ],[
+            'lab_id.required'=>'实验室id必填',
+            'lab_id.integer'=>'实验室id必须为数字',
+            'open_plan_id.required'=>'日历id必填',
+            'description.required'=>'预约日期必填',
+            'description.max'=>'预约原因最长不能超过512个字节'
+        ]);
+        $user = Auth::user();
+        dd($Request->all());
     }
 }
