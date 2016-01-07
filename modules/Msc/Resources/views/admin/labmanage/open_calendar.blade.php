@@ -87,7 +87,6 @@
                     url:url,
                     cache:false,
                     success:function(result){
-                        console.log(result);
                         $(result).each(function(){
                             $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
                                     "<div class='list-group-item list-group-parent'>"
@@ -115,7 +114,7 @@
                 var labname = $(this).html();
                 $('.labname').html(labname);
                 $('.labtotal').html(total+'人');
-
+                $('.labid').val($(this).attr('data-labid'));
             });
 
         })
@@ -162,7 +161,7 @@
                             if(make){
                                 return false;
                             }
-                            $('#savedate').append('<input type="hidden" name="savedate[]" value="'+savedate_one+'">');
+                            $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
 
 
                             if( $contentEl.length > 0 ) {
@@ -215,6 +214,76 @@
 
             }
 
+            $('#edit_save').click(function(){
+                var datestr = '';
+                var timestr = '';
+                var start = '';
+                var end = '';
+                var timeArr = '';
+                var type = '';
+                var str = '';
+                var name = '';
+                if(!$('.dataarr').val()){
+                    layer.alert('请选择日期');
+                    return false;
+                }
+
+                if(!$('.check_real').hasClass('check')){
+                    layer.alert('未勾选时间段');
+                    return false;
+                }
+                $('.dataarr').each(function(){
+                    datestr += $(this).val()+"&";
+                });
+                $('.check_real').each(function(k){
+                    if($(this).hasClass('check')){
+                        var name = '';
+                        type = $(this).attr('data');
+                        timeArr['type'] = type;
+                        var obj = $(this).parent().parent().siblings().find('input');
+                        $.each(obj,function(n,value) {
+                            if($(this).val()){
+                                timeArr += $(this).val()+'!';
+                            }else{
+                                if(type == 'morning'){
+                                    name = '上午';
+                                }else if(type == 'noon'){
+                                    name = '中午';
+                                }else if(type == 'afternoon'){
+                                    name = '下午';
+                                }else if(type == 'night'){
+                                    name = '晚上';
+                                }
+                                layer.alert(name+'的时间段未填写完整');
+                                return false;
+                            }
+
+                        });
+                        timeBrr = timeArr;
+                        timeArr = '';
+                        $('.'+type).val(timeBrr);
+                    }
+
+                });
+
+                $('.check_real').each(function(){
+                    if($(this).hasClass('check')){
+                        timestr += $('.'+$(this).attr('data')).val()+'@';
+                    }
+                });
+                if($('.lid').val()){
+                    layer.alert('请选择实验室');
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('msc.admin.laboratory.postOperatingLabCleander')}}",
+                    data: {date:datestr,timestr:timestr,lid:$('.labid').val()},
+                    success: function(msg){
+                        //console.log(msg);
+                    }
+                });
+            });
         });
     </script>
 @stop
@@ -237,7 +306,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="treeview">
-                       
+
                     </div>
                 </div>
             </div>
@@ -247,13 +316,13 @@
                 <div class="ibox-title overflow">
                     <div class="left">
                         <span class="left">已选实验室：</span>
-                        <h5 class="left">临床技能室（3-13）</h5>
+                        <h5 class="left labname">临床技能室（3-13）</h5>
                     </div>
                     <div class="left" style="margin-left: 20px">
                         <span class="left">容量：</span>
-                        <h5 class="left">30人</h5>
+                        <h5 class="left labtotal">30人</h5>
                     </div>
-
+                    <input type="hidden" name="" class="labid" value="">
                 </div>
                 <div class="ibox-content">
                     <section class="main">
@@ -273,17 +342,15 @@
                     </section>
                     <div class="add_time_list overflow">
                         {{--<input type="hidden" value="" id="savedate"/>--}}
-                        <div id="savedate">
 
-                        </div>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
-                                <div class="check_real check_icon display_inline"></div>
+                                <div class="check_real check_icon display_inline" data="morning"></div>
                                 <input type="hidden" name="" value="">
                             </label>上午
                         </div>
                         <div class="col-sm-10">
-                            <div class="overflow form-group">
+                            <div class="overflow form-group input">
                                 <div class="col-sm-8">
                                     <input type="text"  class="form-control time-set" name="time-begein1" placeholder="08：00" value="" />
                                     <lable>至</lable>
@@ -300,7 +367,7 @@
                         <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
-                                <div class="check_real check_icon display_inline"></div>
+                                <div class="check_real check_icon display_inline" data="noon"></div>
                                 <input type="hidden" name="" value="">
                             </label> 中午
                         </div>
@@ -323,7 +390,7 @@
                         <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
-                                <div class="check_real check_icon display_inline"></div>
+                                <div class="check_real check_icon display_inline" data="afternoon"></div>
                                 <input type="hidden" name="" value="">
                             </label>下午
                         </div>
@@ -346,7 +413,7 @@
                         <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
-                                <div class="check_real check_icon display_inline"></div>
+                                <div class="check_real check_icon display_inline"  data="night"></div>
                                 <input type="hidden" name="" value="">
                             </label> 晚上
                         </div>
@@ -364,7 +431,14 @@
 
                         </div>
                     </div>
+                    <input type="hidden" name="" class="morning">
+                    <input type="hidden" name="" class="noon">
+                    <input type="hidden" name="" class="afternoon">
+                    <input type="hidden" name="" class="night">
                     <div class="hr-line-dashed"></div>
+                    <div id="savedate">
+
+                    </div>
                     <div class="form-group overflow">
                         <div class=" right">
                             <button class="btn btn-primary"  type="button" id="edit_save" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>

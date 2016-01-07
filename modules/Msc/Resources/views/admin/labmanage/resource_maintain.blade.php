@@ -83,7 +83,8 @@
                 var labname = $(this).html();
                 $('.labname').html(labname);
                 $('.labtotal').html(total+'人');
-
+                $('#add_device').removeAttr('disabled');
+                $('#lab_id').val($(this).attr('lab_id'));
             });
 //            新增弹出层选项框
             $(".check_all").click(function(){
@@ -110,39 +111,43 @@
             function labdata(){
                 $('.treeview .list-group-child').click(
                         function(){
-
                             var lab_id = $(this).attr('lab_id');
-                            var url = "{{ route('msc.admin.LadMaintain.LaboratoryDeviceList')}}";
-                            $.ajax({
-                                type:"get",
-                                url:url+'?lab_id='+lab_id,
-                                async:true,
-                                success:function(res){
-
-                                    var str = '';
-                                    if(res.code == 1){
-                                        var data = res.data.rows.LadDeviceList.data;
-                                        for(var i=0;i<data.length;i++){
-                                            str += '<tr>' +
-                                                    '<td>'+data[i].id+'</td>' +
-                                                    '<td class="device_name">'+data[i].device_info.name+'</td>' +
-                                                    '<td class="device_type">'+data[i].device_info.devices_cate_info.name+'</td>' +
-                                                    '<td class="total">'+data[i].total+'</td>' +
-                                                    '<td class="opera">' +
-                                                    '<a class="state1 edit edit_res"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit">' +
-                                                    '<span class="edit_num" labDeviceId="'+data[i].id+'">编辑数量</span>' +
-                                                    '</a>' +
-                                                    '<a class="state2 delete"><span>删除</span></a>' +
-                                                    '</td>' +
-                                                    '</tr>';
-                                        }
-                                    }
-                                    $('#table-striped tbody').html(str);
-                                }
-                            });
+                            updateLabDeviceList(lab_id);
                         }
                 )
             }
+            //更新和当前实验室相关的列表数据
+            function updateLabDeviceList(lab_id){
+                var url = "{{ route('msc.admin.LadMaintain.LaboratoryDeviceList')}}";
+                $.ajax({
+                    type:"get",
+                    url:url+'?lab_id='+lab_id,
+                    async:true,
+                    success:function(res){
+
+                        var str = '';
+                        if(res.code == 1){
+                            var data = res.data.rows.LadDeviceList.data;
+                            for(var i=0;i<data.length;i++){
+                                str += '<tr>' +
+                                        '<td>'+data[i].id+'</td>' +
+                                        '<td class="device_name">'+data[i].device_info.name+'</td>' +
+                                        '<td class="device_type">'+data[i].device_info.devices_cate_info.name+'</td>' +
+                                        '<td class="total">'+data[i].total+'</td>' +
+                                        '<td class="opera">' +
+                                        '<a class="state1 edit edit_res"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit">' +
+                                        '<span class="edit_num" labDeviceId="'+data[i].id+'">编辑数量</span>' +
+                                        '</a>' +
+                                        '<a class="state2 delete"><span>删除</span></a>' +
+                                        '</td>' +
+                                        '</tr>';
+                            }
+                        }
+                        $('#table-striped tbody').html(str);
+                    }
+                });
+            }
+
 //            设备添加回显数据
             $('#add_device').click(function(){
 //                点击新增按钮显示当前实验室设备弹出层
@@ -170,25 +175,10 @@
                     $('input[name=type]').val($(this).parent().parent().parent().find('.device_type').html());
                     $('input[name=total]').val($(this).parent().parent().parent().find('.total').html());
                 }
-                $('#edit_form').attr('action','{{route('msc.admin.LadMaintain.DevicesTotalEdit')}}');
                 var id = $(this).attr("labDeviceId");
+                $('input[name="id"]').remove();
                 $('#edit_form').append('<input type="hidden" name="id" value="'+id+'">');
 
-            })
-//            编辑aiax提交
-            $('#edit_form').submit(function(){
-
-                alert(1111111111);
-
-{{--//                $('#edit_form').serialize()--}}
-                {{--var url ="{{route('msc.admin.LadMaintain.DevicesTotalEdit')}}" ;--}}
-                {{--$.ajax({--}}
-                    {{--type:post,--}}
-                    {{--url:url,--}}
-                    {{--async:true,--}}
-
-
-//                })
             })
 
 
@@ -213,13 +203,12 @@
                 var url  = "{{route('msc.admin.LadMaintain.LaboratoryListData')}}";
                 $.ajax({
                     type:"get",
-                    url:url+'?keyword='+$('#keyword').val(),
+                    url:url+'?keyword='+$('#keyword').val()+'&lab_id='+$('#lab_id').val(),
                     async:true,
                     success:function(result){
+                        console.log(result);
                         var html = '';
                         var list ='';
-                        console.log(result);
-                        console.log(result.data.rows.list);
                         $(result.data.rows.deviceType).each(function(){
                             html+='<li>' +
                                     '<a href="">'+this.name+'</a>'+
@@ -231,15 +220,14 @@
                                     '<td>' +
                                     '<label class="check_label checkbox_input check_one"> ' +
                                     '<div class="check_real check_icon display_inline">' +
-                                    '</div> <input type="hidden" name="" value="">' +
+                                    '</div> <input type="hidden" name="" value="'+this.id+'">' +
                                     '</label>' +
                                     '</td>' +
                                     ' <td>'+this.id+'</td>' +
-                                    ' <td> <input type="number"></td>' +
+                                    ' <td> <input type="number" class="deviceNum" value="1"></td>' +
                                     ' <td>'+this.name+'</td> ' +
                                     '<td>'+this.catename+'</td> ' +
                                     '</tr> '
-                            console.log(this.id);
                         })
                         $('#addition tbody').html(list);
                     }
@@ -247,6 +235,42 @@
 
             }
 
+            $('#saveEdit').click(function(){
+                var url = "{{route('msc.admin.LadMaintain.DevicesTotalEdit')}}";
+                alert(url);
+            })
+
+            //添加实验室相关设备
+            $('#addDevice').click(function(){
+
+                var DeviceIdNumArr = [];
+
+                $(".check_one").children(".check").next("input").each(function(){
+                    DeviceIdNumArr.push( $(this).val()+','+$(this).parents('tr').find('.deviceNum').val());
+                })
+                var url = "{{ route('msc.admin.LadMaintain.DevicesAdd') }}";
+
+                $.ajax({
+                    type:"post",
+                    url:url,
+                    data:{lab_id:$('#lab_id').val(),device_id_num:DeviceIdNumArr},
+                    async:true,
+                    success:function(result){
+                        updateLabDeviceList($('#lab_id').val());
+                    }
+                })
+            })
+
+           //触发 check 选中
+            $('#addition').delegate('.deviceNum','change',function(){
+                var num = $(this).val();
+                if(num>0){
+                    $(this).parents("tr").find('.check_real').addClass('check');
+                }else{
+                    $(this).val(1);
+                    return false;
+                }
+            })
 
 
 
@@ -290,7 +314,7 @@
                         <p class="left">容量：</p>
                         <h5 class="left  labtotal " >0人</h5>
                     </div>
-                    <input type="button" class="btn btn_pl btn-success right" data-toggle="modal" data-target="#myModal" value="新增设备" id="add_device">
+                    <input type="button" class="btn btn_pl btn-success right" data-toggle="modal" data-target="#myModal" disabled="disabled" value="新增设备" id="add_device">
                 </div>
                 <div class="ibox-content">
                     <table class="table table-striped" id="table-striped">
@@ -364,7 +388,8 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <input type="hidden" id="lab_id">
+                    <button class="btn btn-primary"  type="submit" id="addDevice" data-dismiss="modal" aria-hidden="true">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                     <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
                 </div>
             </div>
@@ -398,7 +423,7 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-primary" id="saveEdit"  type="submit" data-dismiss="modal" aria-hidden="true">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                     <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
                 </div>
             </div>

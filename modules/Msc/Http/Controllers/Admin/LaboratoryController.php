@@ -16,6 +16,7 @@ use Modules\Msc\Entities\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Floor;
+use Modules\Msc\Entities\OpenPlan;
 use Illuminate\Support\Facades\Cache;
 use Modules\Msc\Http\Controllers\MscController;
 use URL;
@@ -281,11 +282,18 @@ class LaboratoryController extends MscController {
      */
     public function getLabClearnder(){
         $location = Floor::where('status','=',1)->get();
+
         return view('msc::admin.labmanage.open_calendar',[
             'location' => $location,
         ]);
     }
 
+
+    public function getEditLabCleander(){
+        $lid = Input::get('id');
+        $cleaner = OpenPlan::where('lab_id','=',$lid)->where('status','=',1)->get();
+        return $cleaner;
+    }
     /**
      * Created by PhpStorm.
      * User: weihuiguo
@@ -315,6 +323,21 @@ class LaboratoryController extends MscController {
         return $labArr;
     }
 
+//    /**
+//     * 计算日期是当月第几周
+//     */
+//    public function current_week($firstDate=''){
+//        $firstDate=empty($firstDate)?strtotime(date('Y').'-01-01'):(is_numeric($firstDate)?$firstDate:strtotime($firstDate));
+//        //开学第一天的时间戳
+//        list($year,$month,$day)=explode('-',date('Y-n-j',$firstDate));
+//        $time_chuo_of_first_day=mktime(0,0,0,$month,$day,$year);
+//        //今天的时间戳
+//        list($year,$month,$day)=explode('-',date('Y-n-j'));
+//        $time_chuo_of_current_day=mktime(0,0,0,$month,$day,$year);
+//        $zhou=intval(($time_chuo_of_current_day-$time_chuo_of_first_day)/60/60/24/7)+1;
+//        return $zhou;
+//
+//    }
 
 
     /**
@@ -324,6 +347,83 @@ class LaboratoryController extends MscController {
      * 添加或修改实验室开放时间
      */
     public function postOperatingLabCleander(){
+        //dd(Input::get());
+        $date = explode('&',trim(Input::get('date'),'&'));
+        $timestr =  explode('@',trim(Input::get('timestr'),'@'));
+        foreach($timestr as $k=>$v){
+            $arr['time'.$k] = explode('!',trim($v,'!'));
+        }
+        if(count($arr) > 1 && count($arr) < 3){
+            $brr = array_merge($arr['time0'],$arr['time1']);
+        }
+        if(count($arr) < 2){
+            foreach($arr as $lttwo){
+                $brr = $lttwo;
+            }
+        }
 
+        if(count($arr) >= 3 && count($arr) < 4){
+            //dd(count($arr));
+            $data[1] = array_merge($arr['time0'],$arr['time1']);
+            //$data[2] = array_merge($arr['time2'],$arr['time3']);
+            $brr = array_merge($data[1],$arr['time2']);
+        }
+
+        if(count($arr) >= 4){
+            $data[1] = array_merge($arr['time0'],$arr['time1']);
+            $data[2] = array_merge($arr['time2'],$arr['time3']);
+            $brr = array_merge($data[1],$data[2]);
+        }
+        //dd($brr);
+        $cnt = count($brr);
+        for($i=0;$i < $cnt;$i++){
+            if($i%2 == 0){
+                $begintime[] = $brr[$i];
+            }else{
+                $endtime[] = $brr[$i];
+            }
+        }
+        for($j=0;$j < $cnt/2;$j++){
+            $where[$j]['begintime'] = $begintime[$j];
+            $where[$j]['endtime'] = $endtime[$j];
+        }
+        $user = Auth::user();
+
+        foreach($date as $kk=>$dv){
+            $datearr = explode('-',$dv);
+            $post[$kk]['year'] = $datearr[0];
+            $post[$kk]['month'] = $datearr[1];
+            $post[$kk]['day'] = $datearr[2];
+
+        }
+       foreach($post as $aa=>$pp){
+           $post[$aa]['lab_id'] = Input::get('lid');
+           $post[$aa]['created_user_id'] = $user->id;
+           $post[$aa]['created_at'] = time();
+           $post[$aa]['updated_at'] = time();
+       }
+        foreach($where as $o=>$time){
+                $plan[] = array_merge($time,$post[0]);
+        }
+        OpenPlan::insert($plan);
+        if(@$post[1]){
+            foreach ($where as $o => $time) {
+                $plan[] = array_merge($time, $post[1]);
+            }
+            OpenPlan::insert($plan);
+        }
+        if(@$post[2]) {
+            foreach ($where as $o => $time) {
+                $plan[] = array_merge($time, $post[2]);
+            }
+            OpenPlan::insert($plan);
+        }
+        if(@$post[3]) {
+            foreach ($where as $o => $time) {
+                $plan[] = array_merge($time, $post[3]);
+            }
+            OpenPlan::insert($plan);
+        }
+        exit;
     }
 }
