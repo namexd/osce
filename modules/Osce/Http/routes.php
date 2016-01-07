@@ -97,6 +97,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
 		Route::post('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/station-list', ['uses'=>'ExamController@getStationList','as'=>'osce.admin.exam.getStationList']);
+		Route::get('exam/exam-list-data', ['uses'=>'ExamController@getExamListData','as'=>'osce.admin.exam.getExamListData']);
 
 		//sp
 		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getStationList','as'=>'osce.admin.spteacher.getShow']);

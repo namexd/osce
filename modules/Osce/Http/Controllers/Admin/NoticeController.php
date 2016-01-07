@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use App\Http\Requests\Request;
 use App\Repositories\Common;
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Notice;
 use Modules\Osce\Http\Controllers\CommonController;
 use Overtrue\Wechat\Message;
