@@ -18,7 +18,7 @@ class StationVcr extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'pid', 'cid'];
+    protected $fillable = ['station_id', 'vcr_id'];
     public $search = [];
 
     /**

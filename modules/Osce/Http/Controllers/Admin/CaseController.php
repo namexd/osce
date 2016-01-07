@@ -79,13 +79,13 @@ class CaseController extends CommonController
         //验证略过
 
         //获得提交的字段
-        $formData = $request->only('name', 'code', 'description', 'create_user_id');
+        $formData = $request->only('name', 'description');
 
         DB::connection('osce_mis')->beginTransaction();
         $result = $caseModel->insertData($formData);
-        if ($result !== true) {
+        if ($result == false) {
             DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withInput()->withErrors('数据插入失败,请重试!');
+            return redirect()->back()->withErrors('数据插入失败,请重试!');
         }
 
         DB::connection('osce_mis')->commit();
@@ -159,15 +159,15 @@ class CaseController extends CommonController
      * 根据id删除病历
      * @api       POST /osce/admin/case/delete
      * @access    public
-     * @param Request $request get请求<br><br>
-     *                         <b>get请求字段：</b>
+     * @param Request $request post请求<br><br>
+     *                         <b>post请求字段：</b>
      * @param CaseModel $caseModel
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getDelete(Request $request, CaseModel $caseModel)
+    public function postDelete(Request $request, CaseModel $caseModel)
     {
         try {
             //获取删除的id
@@ -175,10 +175,10 @@ class CaseController extends CommonController
             //将id传入删除的方法
             $result = $caseModel->deleteData($id);
             if ($result) {
-                return redirect()->route('osce::admin.resourcemanage.clinicalcase');
+                return redirect()->route('osce.admin.case.getCaseList');
             }
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex);
+            return response()->json($this->fail($ex));
         }
     }
 }

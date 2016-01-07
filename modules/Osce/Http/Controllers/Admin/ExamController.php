@@ -423,4 +423,27 @@ class ExamController extends CommonController
 
         return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
     }
+
+    /**
+     * 获取考试列表 接口 （带翻页）
+     * @api GET /osce/admin/invigilator/exam-list-data
+     * @access public
+     *
+     * @return json {id:考试ID,name:考试名称}
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getExamListData(){
+        $exam   = new Exam();
+        $pagination = $exam->showExamList();
+
+        $data   =   $pagination->toArray();
+        return response()->json(
+            $this->success_rows(1,'获取成功',$pagination->total(),config('msc.page_size'),$pagination->currentPage(),$data['data'])
+        );
+    }
 }
