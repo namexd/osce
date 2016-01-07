@@ -16,5 +16,5 @@ class OpenLabApply extends Model
     protected $table 		= 	'open_lab_apply';
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
-    protected $fillable 	=	['lab_id', 'type','lab_plan_id','status','created_user_id'];
+    protected $fillable 	=	['lab_id', 'type','lab_plan_id','status','apply_user_id','description'];
 }

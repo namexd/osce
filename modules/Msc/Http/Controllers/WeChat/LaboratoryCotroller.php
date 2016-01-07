@@ -17,6 +17,8 @@ use Modules\Msc\Entities\OpenPlan;
 use Modules\Msc\Entities\LadDevice;
 use Modules\Msc\Entities\Floor;
 use Illuminate\Support\Facades\Auth;
+use Modules\Msc\Entities\OpenLabApply;
+use DB;
 class LaboratoryCotroller extends MscWeChatController
 {
 
@@ -229,7 +231,32 @@ class LaboratoryCotroller extends MscWeChatController
             'description.required'=>'预约日期必填',
             'description.max'=>'预约原因最长不能超过512个字节'
         ]);
+        $req = $Request->all();
         $user = Auth::user();
-        dd($Request->all());
+        $insertArr = [];
+        $data = [
+            'lab_id'=>$req['lab_id'],
+            'type'=>($user->user_type == 1)?2:1,
+            'description'=>$req['description'],
+            'apply_user_id'=>$user->id,
+            'created_at'=>date('Y-m-d H:i:s',time()),
+            'updated_at'=>date('Y-m-d H:i:s',time()),
+        ];
+        //TODO 拼凑插入数组
+        if(is_array($req['open_plan_id'])){
+            foreach($req['open_plan_id'] as $v){
+                $data['lab_plan_id'] = $v;
+                $insertArr [] = $data;
+            }
+        }
+        
+        $return = DB::connection('msc_mis')->table('open_lab_apply')->insert($insertArr);
+
+        if($return){
+            dd('申请成功');
+        }else{
+            dd('申请失败');
+        }
+
     }
 }
