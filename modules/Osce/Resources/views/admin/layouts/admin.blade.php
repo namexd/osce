@@ -12,7 +12,14 @@
             font-family: 微软雅黑;
             font-size: 14px;
         }
-
+        .row.content-tabs,.page-tabs-content,.page-tabs.J_menuTabs,.content-tabs .roll-nav, .page-tabs-list{height: 50px!important;}
+        .page-tabs a {
+            height: 50px;
+            line-height: 50px;
+        }
+        .roll-right.J_tabClose { width: 170px;}
+        .roll-nav.roll-right.J_tabClose i{margin: 0 18px;line-height: 50px;}
+        .roll-nav.roll-right.J_tabExit{line-height: 50px;}
     </style>
 @stop
 
@@ -40,11 +47,12 @@
                 </nav>
                 <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
                 </button>
+                
 
                 <button class="roll-nav roll-right J_tabClose">
-                    <i class="fa fa-envelope"> 通知</i>
-                    <i class="fa fa-bell"> 消息</i>
-                    <i class="fa fa-gear"> 设置</i>
+                    <i class="fa fa-envelope"></i>
+                    <i class="fa fa-bell"></i>
+                    <i class="fa fa-gear"></i>
                 </button>
 
                 <a href="login.html" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>

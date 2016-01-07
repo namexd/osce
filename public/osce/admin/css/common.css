@@ -112,6 +112,7 @@ a{-webkit-touch-callout:none;}
 
 .btn-default{background-color: #fff;border-color: #ccc;color: #333;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
+a.btn:hover {text-decoration: none;}
 
 
 
@@ -141,7 +142,8 @@ a{-webkit-touch-callout:none;}
 .table thead th{ font-size: 14px;}
 .btn-link{height:30px;min-width:80px;line-height: 16px; color: #fff;}
 .opera  span{ padding: 0 5px; cursor: pointer;}
-
+.table tbody td a{margin: 0 10px;}
+.table tbody td a:first-child{margin-left: 0;}
 /**
  * 表格状态
  */
@@ -207,3 +209,4 @@ a{-webkit-touch-callout:none;}
  */
 body .layer-ext-moon .layui-layer-btn .layui-layer-btn0 {background: #1ab394;}
 body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
+.fa-2x{font-size: 16px;}
