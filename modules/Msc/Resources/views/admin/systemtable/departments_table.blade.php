@@ -106,8 +106,6 @@
 
         function   listclick(){//dom之后添加事件
             $(".list-group-item").unbind().click(function(){
-                $("#submit").hide();
-                $("#edit_save").show();
                 var listId = $(this).attr("id");//获取点击时该栏目的ID
                 var thispid=$(this).attr("pid");
                 var level=$(this).attr("level");
@@ -175,10 +173,7 @@
         }
 
         function  addChild(listId,level,thisneme){
-
             $("#new-add-child").unbind().click(function(){
-                $("#edit_save").hide();
-                $("#submit").show();
                 $(".add-name").val("");
                 $(".add-describe").val("");
                 $(".add-parent").val(thisneme);
@@ -259,6 +254,7 @@
         }
 
         function deleteall(){
+
            $("#delete").unbind().click(function(){
                var thisid=$("#hidden_this_id").val();
                var qj={id:thisid}
@@ -283,8 +279,6 @@
         }
         function addfater(){
             $("#new-add-father").unbind().click(function(){
-                $("#edit_save").hide();
-                $("#submit").show();
                 $(".add-name").val("");
                 $(".add-describe").val("");
                 $("#submit").unbind().click(function(){
@@ -380,7 +374,10 @@
                         <div class="form-group">
                             <div class=" right">
                                 <button class="btn btn-primary"  type="button" id="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+
                                 <button class="btn btn-primary"  type="button" id="edit_save" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+
+                                <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
                             </div>
                         </div>
                     </form>

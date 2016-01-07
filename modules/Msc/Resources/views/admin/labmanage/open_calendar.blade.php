@@ -123,8 +123,10 @@
             //添加或修改实验室开放时间
             $('.fadeInRight').delegate('#edit_save','click',function(){
                 var timearr = {};
+                var type = '';
                 $('.add_time_list').each(function(){
                     var obj = $(this);
+                    type = obj.find('.form-group').attr('data');
                     if($(this).find('.check_real').hasClass('check')){
                         obj.find('.form-group input').each(function(){
                             var name = $(this).attr('name');
@@ -143,6 +145,20 @@
 
                     {{--}--}}
                 {{--})--}}
+            });
+
+            $('.fadeInRight').delegate('.check_real','click',function(){
+                var start = '';
+                var end = '';
+                var timeArr = '';
+                var type = $(this).attr('data');
+                if($(this).hasClass('check')){
+                    var obj = $(this).parent().parent().siblings().find('input');
+                    obj.each(function(){
+                        timeArr+= $(this).attr('name')+'='+$(this).val()+'|';
+                    });
+                    console.log(timeArr);
+                }
             });
         })
     </script>
@@ -190,16 +206,16 @@
                     <div class="add_time_list overflow">
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
-                                <div class="check_real check_icon display_inline"></div>
+                                <div class="check_real check_icon display_inline" data="morning"></div>
                                 <input type="hidden" name="" value="">
                             </label>上午
                         </div>
                         <div class="col-sm-10">
-                                <div class="overflow form-group">
-                                    <div class="col-sm-8">
-                                            <input type="text"  class="form-control time-set" name="time-begein1" placeholder="08：00" value="" />
+                                <div class="overflow form-group" >
+                                    <div class="col-sm-8 input">
+                                            <input type="text"  class="form-control time-set start" name="time-begein1" placeholder="08：00" value="" />
                                         <lable>至</lable>
-                                             <input type="text"  class="form-control time-set" name="time-end1"   placeholder="09：00" value="" />
+                                             <input type="text"  class="form-control time-set end" name="time-end1"   placeholder="09：00" value="" />
                                     </div>
                                     <div class="col-sm-4">
                                         <a class="add_time_button" id="morning">添加时间段<span></span></a>
@@ -216,7 +232,7 @@
                             </label> 中午
                         </div>
                         <div class="col-sm-10">
-                            <div class="overflow form-group">
+                            <div class="overflow form-group" data="noon">
                                 <div class="col-sm-8">
                                     <input type="text"  class="form-control time-set" name="time-begein2" placeholder="08：00" value="" />
                                     <lable>至</lable>
@@ -238,7 +254,7 @@
                             </label>下午
                         </div>
                         <div class="col-sm-10">
-                            <div class="overflow form-group">
+                            <div class="overflow form-group" data="afternoon">
                                 <div class="col-sm-8">
                                     <input type="text"  class="form-control time-set" name="time-begein3" placeholder="08：00" value="" />
                                     <lable>至</lable>
@@ -260,7 +276,7 @@
                             </label> 晚上
                         </div>
                         <div class="col-sm-10">
-                            <div class="overflow form-group">
+                            <div class="overflow form-group" data="night">
                                 <div class="col-sm-8">
                                     <input type="text"  class="form-control time-set" name="time-begein4" placeholder="08：00" value="" />
                                     <lable>至</lable>

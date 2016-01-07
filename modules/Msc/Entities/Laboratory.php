@@ -108,16 +108,8 @@ class Laboratory extends Model
      * @date    2016年1月4日15:51:06
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetLaboratoryListData($IdRrr,$data,$type = 1){
+    public function GetLaboratoryListData($IdRrr,$type = 1){
         $thisBuilder = $this->where('open_type','=',1);
-        $data['FloorId'];
-        $data['FloorNum'];
-        if(!empty($data['FloorId'])){
-            $thisBuilder = $thisBuilder->where('location_id','=',$data['FloorId']);
-        }
-        if(!empty($data['FloorNum'])){
-            $thisBuilder = $thisBuilder->where('floor','=',$data['FloorNum']);
-        }
         if($type == 1){
             $thisBuilder = $thisBuilder->whereNotIn('id',$IdRrr);
         }elseif($type == 2){

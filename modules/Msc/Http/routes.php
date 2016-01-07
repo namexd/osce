@@ -69,7 +69,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('floor/stop-floor', ['uses'=>'FloorController@getStopFloor','as'=>'msc.admin.floor.getStopFloor']);
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
          //专业表路由
-//		 Route::controller('profession','ProfessionController');
+		 //Route::controller('profession','ProfessionController');
 		 Route::get('profession/profession-list',['uses'=>'ProfessionController@getProfessionList','as'=>'msc.admin.profession.ProfessionList']);
 		 Route::post('profession/profession-add',['uses'=>'ProfessionController@postProfessionAdd','as'=>'msc.admin.profession.ProfessionAdd']);
 		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);
@@ -110,10 +110,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('professionaltitle/holder-remove',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
 
 		//实验室资源维护路由
-		Route::controller('ladMaintain','LadMaintainController');
+		Route::controller('LadMaintain','LadMaintainController');
 		Route::get('ladMaintain/laboratory-list',['uses'=>'LadMaintainController@getLaboratoryList','as'=>'msc.admin.LadMaintain.LaboratoryList']);
 		Route::get('ladMaintain/laboratory-list-data',['uses'=>'LadMaintainController@getLaboratoryListData','as'=>'msc.admin.LadMaintain.LaboratoryListData']);
-		Route::get('ladMaintain/laboratory-device-list',['uses'=>'LadMaintainController@getLaboratoryDeviceList','as'=>'msc.admin.LadMaintain.LaboratoryDeviceList']);
+		Route::get('/ladMaintain/lab-id-get-laboratory-device-list',['uses'=>'LadMaintainController@LabIdGetLaboratoryDeviceList','as'=>'msc.admin.LadMaintain.LabIdGetLaboratoryDeviceList']);
 		Route::post('ladMaintain/devices-add',['uses'=>'LadMaintainController@postDevicesAdd','as'=>'msc.admin.LadMaintain.DevicesAdd']);
 		Route::get('ladMaintain/devices-total-edit',['uses'=>'LadMaintainController@getDevicesTotalEdit','as'=>'msc.admin.LadMaintain.DevicesTotalEdit']);
 		Route::get('ladMaintain/floor-lab', ['uses'=>'LadMaintainController@getFloorLab','as'=>'msc.admin.ladMaintain.getFloorLab']);
@@ -153,8 +153,6 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('/laboratory/apply-open-laboratory',['uses'=>'LaboratoryCotroller@ApplyOpenLaboratory','as'=>'msc.Laboratory.ApplyOpenLaboratory']);
 		//开放实验填写预约表单页面
 		Route::post('/laboratory/open-laboratory-form',['uses'=>'LaboratoryCotroller@OpenLaboratoryForm','as'=>'msc.Laboratory.OpenLaboratoryForm']);
-		//等待预约搜索页面
-		Route::get('/laboratory/laboratory-list',['uses'=>'LaboratoryCotroller@LaboratoryList','as'=>'msc.Laboratory.LaboratoryList']);
 
 		// /msc/wechat/personal-center/index
 	});
