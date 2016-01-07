@@ -25,79 +25,53 @@
         <div class="pull-left">
             <h3>人员管理</h3>
         </div>
-       <div class="pull-right">
-           <button type="button" class="btn btn-default">新增</button>
-       </div>
+        <div class="col-xs-6 col-md-2" style="float: right;">
+            <a  href="{{route('osce.admin.invigilator.getAddSpInvigilator')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+        </div>
     </div>
     <div class="container-fluid ibox-content">
         <ul class="nav nav-tabs">
             <li role="presentation"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监巡考老师</a></li>
-            <li role="presentation" class="active"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
+            <li role="presentation"  class="active"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
         </ul>
         <table class="table table-striped" id="table-striped">
             <thead>
-                <tr>
-                    <th>#</th>
-                    <th>账号</th>
-                    <th>
-                        姓名
-                    </th>
-                    <th>联系电话</th>
-                    <th>
-                        最近登录
-                    </th>
-                    <th>
-                        操作
-                    </th>
-                </tr>
+            <tr>
+                <th>#</th>
+                <th>
+                    姓名
+                </th>
+                <th>联系电话</th>
+                <th>最后登录时间</th>
+                <th>
+                    操作
+                </th>
+            </tr>
             </thead>
             <tbody>
+            @forelse($list as  $item)
                 <tr>
-                    <td>1</td>
-                    <td>aaaaa</td>
-                    <td>高老叟</td>
-                    <td>1111111111</td>
-                    <td>2015/12/11</td>
+                    <td>{{$item->id}}</td>
+                    <td>{{$item->name}}</td>
+                    <td>{{$item->moblie or '-'}}</td>
+                    <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                     <td>
-                        <a href=""><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href=""><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
+                        <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
                     </td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>aaaaa</td>
-                    <td>高老叟</td>
-                    <td>1111111111</td>
-                    <td>2015/12/11</td>
-                    <td>
-                        <a href=""><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href=""><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
-                    </td>
-                </tr>
+            @empty
+            @endforelse
             </tbody>
         </table>
         <div class="row">
             <div class="pull-left">
-                共2条
+                共{{$list->total()}}条
             </div>
             <div class="pull-right">
                 <nav>
                     <ul class="pagination">
-                        <li>
-                            <a href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li>
-                            <a href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
+                        {!! $list->appends($_GET)->render() !!}
                     </ul>
                 </nav>
             </div>

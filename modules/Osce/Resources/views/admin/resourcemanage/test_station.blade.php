@@ -12,11 +12,12 @@
 @stop
 
 @section('only_js')
-
+    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}'}" />
     <div class="ibox-title route-nav">
         <ol class="breadcrumb">
             <li><a href="#">资源管理</a></li>
@@ -29,7 +30,7 @@
                 <h5 class="title-label">考站管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.Station.getAddStation')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -47,12 +48,23 @@
                         <th>#</th>
                         <th>考站名称</th>
                         <th>类型</th>
-                        <th>科目</th>
+                        <th>描述</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-
+                        @foreach($data as $key => $item)
+                            <tr>
+                            <td>{{$key+1}}</td>
+                            <td>{{$item->name}}</td>
+                            <td>{{$item->type}}</td>
+                            <td>{{$item->description}}</td>
+                            <td value="{{$item->id}}">
+                                <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                                <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -61,5 +73,9 @@
                 </div>
             </div>
         </form>
+        <div class="pull-right">
+            {!! $data->render() !!}
+        </div>
     </div>
+
 @stop{{-- 内容主体区域 --}}

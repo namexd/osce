@@ -35,19 +35,14 @@ class RoomController extends CommonController
         //验证规则，暂时留空
 
         //获取各字段
-        $formData = $request->only('keyword', 'order_by', 'order_name');
+        $formData = $request->only('keyword');
         //获取当前场所的类
         $model = new Room();
         $data = $model->showRoomList($formData);
-        //将创建人插入$data对象
-
-        foreach ($data as $item) {
-            $item['creater'] = empty($model->creater()) ? '-' : $model->find($item['id'])->creater->name;
-        }
 
 
         //展示页面
-//        return view('osce::admin.resourcemanage.examroom', ['data' => $data]);
+        return view('osce::admin.resourcemanage.examroom', ['data' => $data]);
     }
 
     /**
@@ -75,10 +70,8 @@ class RoomController extends CommonController
 
         $data = $model->showRoomList($formData);
 
-        //拼装创建者
-        $data['creater'] = empty($model->creater()) ? '-' : $model->find($data['id'])->creater->name;
+
         //将数据展示到页面
-//        dd($data);
         return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data]);
     }
 
@@ -98,9 +91,8 @@ class RoomController extends CommonController
     {
         //验证数据，暂时省略
 
-        $formData = $request->only('name', 'nfc', 'address', 'code', 'create_user_id');
+        $formData = $request->only('name', 'description');
         $id = $request->input('id');
-        dd($formData);
         $Room = new Room();
         $result = $Room->updateData($id, $formData);
 
@@ -108,12 +100,29 @@ class RoomController extends CommonController
             if (!$result) {
                 throw new \Exception('数据修改失败！请重试');
             } else {
-                return redirect()->route('osce.admin.Room.getRoomList');
+                return redirect()->route('osce.admin.room.getRoomList');
             }
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex);
         }
 
+    }
+
+    /**
+     * 添加着陆页
+     * @api       get /osce/admin/room/get-room
+     * @access    public
+     * @param Request $request post请求<br><br>
+     *                         <b>get请求字段：</b>
+     *                         array           id            主键ID
+     * @return view
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAddRoom()
+    {
+        return view('osce::admin.resourcemanage.examroom_add');
     }
 
     /**
@@ -131,7 +140,7 @@ class RoomController extends CommonController
      */
     public function postCreateRoom(Request $request, Room $room)
     {
-        $formData = $request->only('name', 'nfc', 'address', 'code', 'create_user_id');
+        $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
 
         DB::connection('osce_mis')->beginTransaction();
 
@@ -162,6 +171,9 @@ class RoomController extends CommonController
         //验证略
 
         $id = $request->input('id');
+        if (!$id) {
+            throw new \Exception('没有该房间！');
+        }
 
         DB::connection('osce_mis')->beginTransaction();
         $result = $room->deleteData($id);
@@ -170,7 +182,7 @@ class RoomController extends CommonController
             return redirect()->back()->withErrors('系统异常');
         }
 
-        DB::connection('msc_mis')->commit();
+        DB::connection('osce_mis')->commit();
         return redirect()->route('osce.admin.Room.getRoomList');
     }
 

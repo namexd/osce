@@ -10,19 +10,24 @@
 namespace Modules\Osce\Entities;
 
 
+use App\Entities\User;
+
 class Invigilator extends CommonModel
 {
     protected $connection	=	'osce_mis';
     protected $table 		= 	'invigilator';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected $fillable 	=	['name', 'is_sp'];
+    protected $fillable 	=	['name', 'is_sp','moblie','case_id'];
 
     protected $is_spValues  =   [
         '1' =>  '是',
         '2' =>  '不是',
     ];
 
+    public function userInfo(){
+        return $this    ->  hasOne('\App\Entities\User','mobile','mobile');
+    }
     /**
      * 获取是否为SP老师的值
      * @access public

@@ -1,6 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
+    <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style>
         button.btn.btn-white.dropdown-toggle {
             border: none;
@@ -68,7 +69,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'sp_invitation'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'sp_invitation','teacher_list':'{{route('osce.admin.spteacher.getShow')}}'}" />
     <div class="ibox-title route-nav">
         <ol class="breadcrumb">
             <li><a href="#">考试安排</a></li>
@@ -81,7 +82,7 @@
                 <h5 class="title-label">考试安排</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -108,26 +109,26 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>肠胃炎考站</td>
-                            <td class="sp-teacher">
-                                <div class="teacher-box pull-left">
-                                    <div class="input-group teacher pull-left">
-                                        <div class="pull-left">张老师</div>
-                                        <div class="pull-left"><i class="fa fa-times"></i></div>
+                            <tr value="1">
+                                <td>1</td>
+                                <td>肠胃炎考站</td>
+                                <td class="sp-teacher">
+                                    <div class="teacher-box pull-left">
+                                        <!-- <div class="input-group teacher pull-left">
+                                            <div class="pull-left">张老师</div>
+                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                        </div> -->
                                     </div>
-                                </div>
-                                <div class="pull-right">
-                                    <select name="" id="teacher-list">
-                                        <option value="">选择</option>
-                                        <option value="1">张老师</option>
-                                        <option value="2">王老师</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td><a href="">发起邀请</a></td>
-                        </tr>
+                                    <div class="pull-right">
+                                        <select name="" class="teacher-list">
+                                            <option value="">选择</option>
+                                            <option value="1">张老师</option>
+                                            <option value="2">王老师</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td><a href="">发起邀请</a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -153,5 +154,6 @@
 
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
+    <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
 
 @stop

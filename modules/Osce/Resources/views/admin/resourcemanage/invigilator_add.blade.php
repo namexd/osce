@@ -80,84 +80,26 @@
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddInvigilator')}}">
 
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name">
-                            </div>
-                        </div>
-
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">类别</label>
-                            <div class="col-sm-10">
-                                <select id="select_Category" required  class="form-control m-b" name="account">
-                                    <option value="0">请选择类别</option>
-                                    <option value="Classroom">教室</option>
-                                    <option>开放设备</option>
-                                </select>
-                            </div>
-                            <div class="select-floor" style="display: none;">
-                                <label class="col-sm-2 control-label">楼层</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" id="CategoryId" multiple="">
-                                        <option>一楼</option>
-                                        <option>二楼</option>
-                                        <option>三楼</option>
-                                        <option>四楼</option>
-                                        <option>五楼</option>
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">编号</label>
-
-                            <div class="col-sm-10">
-                                <input type="text"  required  ng-model="num" id="code" class="form-control">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label">负责人</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="manager_name" id="manager_name" class="form-control">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label" required>负责人电话</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="manager_mobile" id="manager_mobile" class="form-control">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label">功能描述</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="description" id="description" class="form-control">
+                                <input type="text" required class="form-control" id="name" name="name">
+                                <input type="hidden" required class="form-control" id="is_sp" name="is_sp" value="2">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">地址</label>
-
+                            <label class="col-sm-2 control-label">手机号</label>
                             <div class="col-sm-10">
-                                <input type="text" ng-model="location" id="location" class="form-control">
+                                <input type="text" ng-model="location" id="location" class="form-control" name="moblie">
                             </div>
 
                         </div>
                         <div class="hr-line-dashed"></div>
-
-
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-white" type="submit">取消</button>

@@ -18,7 +18,7 @@ class Room extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'code', 'address', 'nfc', 'create_user_id'];
+    protected $fillable = ['name', 'code', 'address', 'nfc', 'description'];
     public $search = [];
 
     /**
@@ -41,8 +41,8 @@ class Room extends CommonModel
     {
         if (array_key_exists('id', $formData)) {
             //如果传入了id,那就只读取该id的数据
-            $builder = $this->where($this->table . '.id', $formData['id']);
-            return $builder->first();
+            $builder = $this->where('id', '=', $formData['id']);
+            return $builder->select('id','name','description')->first();
         }
 
 
@@ -59,18 +59,20 @@ class Room extends CommonModel
             $this->table . '.code as code',
             $this->table . '.nfc as nfc',
             $this->table . '.address as address',
+            $this->table . '.description as description',
             $this->table . '.create_user_id as create_user_id'
         ]);
 
         //如果keyword不为空，那么就进行模糊查询
         if ($formData['keyword'] !== null) {
-            $builder = $builder->where($this->table . '.created_at', '=', '%' . $formData['keyword'] . '%');
+            $builder = $builder->where($this->table . '.name', '=', '%' . $formData['keyword'] . '%')
+                                ->orWhere($this->table . '.description', '=', '%' . $formData['keyword'] . '%');
         }
 
 
 
 
-        return $builder->paginate(config('osce.page_size'));
+        return $builder->paginate(10);
     }
 
 
