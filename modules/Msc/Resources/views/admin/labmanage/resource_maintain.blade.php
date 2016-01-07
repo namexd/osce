@@ -290,7 +290,7 @@
                         <p class="left">容量：</p>
                         <h5 class="left  labtotal " >0人</h5>
                     </div>
-                    <input type="button" class="btn btn_pl btn-success right" data-toggle="modal" data-target="#myModal" value="添加设备" id="add_device">
+                    <input type="button" class="btn btn_pl btn-success right" data-toggle="modal" data-target="#myModal" value="新增设备" id="add_device">
                 </div>
                 <div class="ibox-content">
                     <table class="table table-striped" id="table-striped">
