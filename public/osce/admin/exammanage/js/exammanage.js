@@ -316,33 +316,58 @@ function timePicker(background){
  * @date    2016-01-05
  */
 function sp_invitation(){
-    $(".teacher-list").change(function(){
-        var $teacher=$(".teacher-list option:selected").text();
+
+    //select2初始化
+    $(".js-example-basic-single").select2();
+
+    /**
+     * 获取数据
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-06  
+     */
+    $('.teacher-list').click(function(){
+        var thisElement = $(this);
 
         var id = $(this).parent().parent().parent().attr('value');
+        var selected = [];
+
+        //选择的数据
+        thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+            selected.push($(elem).attr('value'));
+        });
+
         $.ajax({
             type:'get',
-            async:true,
-            url:'http://127.0.0.1:3000/get',
-            dataType:'jsonp',
-            data:{id:id},
+            url: pars.teacher_list,   //修改请求地址
+            data:{id:id,selected:selected},
             success:function(res){
-                console.log(res)
+
+                var source = [];
+
                 if(res.code!=1){
                     layer.alert('res.message');
                 }else{
                     var data = res.data.rows;
-                    var html = '';
+                    var html = '<option>选择</option>';
                     for(var i in data){
+
                         html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
                     }
-                   $teacher.append(html);
+                   thisElement.html(html);
                 }
             }
 
         });
+    });
 
-        var sql='<div class="input-group teacher pull-left">'+
+    $(".teacher-list").change(function(){
+
+        var $teacher=$(".teacher-list option:selected").text();
+        var id = $(".teacher-list option:selected").val();
+        var thisElement = $(this);
+
+        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
                 '<div class="pull-left">'+$teacher+'</div>'+
                 '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);

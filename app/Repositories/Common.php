@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Overtrue\Wechat\Message;
 use Overtrue\Wechat\Staff;
+use Overtrue\Wechat\Broadcast;
 use Queue;
 use App;
 use Illuminate\Http\Request;
@@ -239,20 +240,23 @@ class Common{
                 foreach($msgArray as $key=>$item)
                 {
                     $itemData=Message::make('news_item')->title($item['title']);
-                    if($key=='desc')
+                    foreach($item as $feild=>$value)
                     {
-                        $itemData=$itemData->description($item);
+                        if($feild==='desc')
+                        {
+                            $itemData=$itemData->description($value);
+                        }
+                        if($feild==='url')
+                        {
+                            $itemData=$itemData->url($value);
+                        }
+                        if($feild==='picUrl')
+                        {
+                            $itemData=$itemData->picUrl($value);
+                        }
                     }
-                    if($key=='url')
-                    {
-                        $itemData=$itemData->url($item);
-                    }
-                    if($key=='picUrl')
-                    {
-                        $itemData=$itemData->picUrl($item);
-                    }
+                    $msgData[]=$itemData;
                 }
-                $msgData[]=$itemData;
                 return $msgData;
             }
         );
@@ -322,4 +326,17 @@ class Common{
         return $data;
     }
     */
+    //微信群发
+
+
+
+
+    static public function sendWeixinToMany($message,array $OpendIdArray){
+        if(count($OpendIdArray)==0)
+        {
+            throw new \Exception('你选择的接收用户数量为0');
+        }
+        $broadcast = new Broadcast(config('app_id'), config('secret'));
+        $broadcast->send($message)->to($OpendIdArray);
+    }
 }
