@@ -33,10 +33,10 @@ function resource_table(){
             var url = "/msc/admin/resources/resources-status?id="+this_id+"&type="+type;
             var str = '';
             if(type == 1){
-                str = '您确定要恢复资源？';
+                str = '您确定要启用资源？';
             }else{
 
-                str = '您确定要禁用资源？';
+                str = '您确定要停用资源？';
             }
 
             //询问框

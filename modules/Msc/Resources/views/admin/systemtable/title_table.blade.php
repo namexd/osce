@@ -29,10 +29,10 @@
             var url = "/msc/admin/professionaltitle/holder-status?id="+this_id+"&type="+type;
             var str = '';
             if(type == 1){
-                str = '您确定要恢复职称？';
+                str = '您确定要启用职称？';
             }else{
 
-                str = '您确定要禁用职称？';
+                str = '您确定要停用职称？';
             }
             //询问框
             layer.confirm(str, {
@@ -159,14 +159,14 @@
                             <td class="number">{{ @$val['id'] }}</td>
                             <td class="name">{{ @$val['name'] }}</td>
                             <td class="describe">{{ @$val['description'] }}</td>
-                            <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)正常@else<span class="state2">禁用</span>@endif</td>
+                            <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
 
                             <td class="opera">
                                 <a href=""   data="{{@$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span></a>
                                 @if($val['status']==1)
-                                    <a   data="{{@$val['id']}}"  data-type="0"  class="state2 modal-control stop">禁用</a>
+                                    <a   data="{{@$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
                                 @else
-                                    <a   data="{{@$val['id']}}" data-type="1" class="state2 modal-control stop">恢复</a>
+                                    <a   data="{{@$val['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                                 @endif
                                 <span class="state2 delete" data="{{ @$val['id'] }}">删除</span>
                                 <input type="hidden" class="setid" value="1"/>
