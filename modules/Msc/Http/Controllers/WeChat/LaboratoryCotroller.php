@@ -58,9 +58,11 @@ class LaboratoryCotroller extends MscWeChatController
      * @url /msc/wechat/laboratory/laboratory-list-data
      * @access public
      * @DateTime 时间（筛选预约的时间）
+     * @floor_id 地址id
+     * @floor_num 几楼
      * @return \Illuminate\Http\JsonResponse
      * @author tangjun <tangjun@misrobot.com>
-     * @date
+     * @date    2016年1月4日15:46:29
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LaboratoryListData(){
@@ -89,6 +91,8 @@ class LaboratoryCotroller extends MscWeChatController
      * @url /msc/wechat/laboratory/open-laboratory-list-data
      * @access public
      * @DateTime 时间（筛选预约的时间）
+     * @floor_id 地址id
+     * @floor_num 几楼
      * @return \Illuminate\Http\JsonResponse
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年1月4日15:46:29
