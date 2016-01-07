@@ -285,7 +285,6 @@ class LaboratoryController extends MscController {
 
         return view('msc::admin.labmanage.open_calendar',[
             'location' => $location,
-            'cleanderdata'=>$cleaner
         ]);
     }
 
@@ -403,13 +402,9 @@ class LaboratoryController extends MscController {
        }
         $cnt = count($post);
         foreach($where as $o=>$time){
-            if($cnt > $o){
-                $plan[] = array_merge($time,$post[$o]);
-            }else{
-                continue;
-            }
-
+                $plan[] = array_merge($time,$post[0]);
         }
-        dd($plan);
+        OpenPlan::create($plan);
+        exit;
     }
 }
