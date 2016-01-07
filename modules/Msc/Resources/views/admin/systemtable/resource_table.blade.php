@@ -31,12 +31,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn_pl btn-success right">
-                    <button href=""   id="addResources"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">添加资源</button>
-                    {{--<a href=""  class="state1 edit" id="addResources" data-toggle="modal" data-target="#myModal" style="text-decoration: none;">--}}
-                        {{--<span style="color: #fff" >添加资源</span>--}}
-                    {{--</a>--}}
-                </button>
+                <button href=""   id="addResources"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">添加资源</button>
             </div>
 		</div>
         <div class="ibox float-e-margins">
