@@ -280,7 +280,6 @@ class LaboratoryController extends MscController {
      * 实验室开发日历
      */
     public function getLabClearnder(){
-
         $location = Floor::where('status','=',1)->get();
         return view('msc::admin.labmanage.open_calendar',[
             'location' => $location,
@@ -315,6 +314,8 @@ class LaboratoryController extends MscController {
         }
         return $labArr;
     }
+
+
 
     /**
      * Created by PhpStorm.
