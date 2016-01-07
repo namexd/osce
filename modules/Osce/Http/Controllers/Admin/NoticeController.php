@@ -22,16 +22,13 @@ class NoticeController extends CommonController
         $Message  =   Common::CreateWeiXinMessage([
             [
                 'title' =>'邀请通知',
-                'desc'  =>'osce考试第一期邀请',
+                'desc'  =>'osce考试第一期邀请001',
                 'url'=>'http://www.baidu.com'
             ]
             //['title'=>'osce考试第一期邀请','url'=>'http://www.baidu.com'],
         ]);
-        //oI7UquKmahFwGV0l2nyu_f51nDJ4 //罗海华的 opendid
-        //oI7UquPKycumti7NU4HQYjVnRjPo
-        //Common::sendWeiXin(['oI7UquKmahFwGV0l2nyu_f51nDJ4','oI7UquPKycumti7NU4HQYjVnRjPo'],$Message);
-        dd(123);
-        Common::sendWeiXin('oI7UquKmahFwGV0l2nyu_f51nDJ4',$Message);
+        //Common::sendWeiXin('oI7UquKmahFwGV0l2nyu_f51nDJ4',$Message);
+        Common::sendWeixinToMany($Message,['oI7UquKmahFwGV0l2nyu_f51nDJ4','oI7UquPKycumti7NU4HQYjVnRjPo']);
     }
 
     /**
