@@ -83,15 +83,6 @@
                 $('.labtotal').html(total+'人');
 
             });
-//            删除
-            $(".delete").click(function(){
-                var url="";
-                layer.confirm('您确定要删除该设备？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    window.location.href=url;
-                });
-            });
 //            新增弹出层选项框
             $(".check_all").click(function(){
                 if($(this).children(".check_icon").hasClass("check")){
@@ -130,12 +121,12 @@
                                         for(var i=0;i<data.length;i++){
                                             str += '<tr>' +
                                                     '<td>'+data[i].id+'</td>' +
-                                                    '<td>'+data[i].device_info.name+'</td>' +
-                                                    '<td>'+data[i].device_info.devices_cate_info.name+'</td>' +
-                                                    '<td>'+data[i].total+'</td>' +
+                                                    '<td class="device_name>'+data[i].device_info.name+'</td>' +
+                                                    '<td class="device_type">'+data[i].device_info.devices_cate_info.name+'</td>' +
+                                                    '<td class="total">'+data[i].total+'</td>' +
                                                     '<td>' +
                                                     '<a class="state1 edit"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit">' +
-                                                    '<span>编辑数量</span>' +
+                                                    '<span >编辑数量</span>' +
                                                     '</a>' +
                                                     '<a class="state2 delete"><span>删除</span></a>' +
                                                     '</td>' +
@@ -153,41 +144,53 @@
 //                点击新增按钮显示当前实验室设备弹出层
                 $("#add_device_form").show();
                 $("#edit_form").hide();
-                var url  = "{{route('msc.admin.LadMaintain.LaboratoryListData')}}";
-                $.ajax({
-                    type:"get",
-                    url:url,
-                    async:true,
-                    success:function(result){
-                        var html = '';
-                        var list ='';
-                        $(result.data.rows.deviceType).each(function(){
-                                     html+='<li>' +
-                                         '<a href="">'+this.name+'</a>'+
-                                         ' </li>'
-                        });
-                        $('#device-type').html(html);
-                        $(result.data.rows.list).each(function(){
-                                 list+='<tr>' +
-                                    '<td>' +
-                                    '<label class="check_label checkbox_input check_one"> ' +
-                                    '<div class="check_real check_icon display_inline">' +
-                                    '</div> <input type="hidden" name="" value="">' +
-                                    '</label>' +
-                                    '</td>' +
-                                    ' <td>1</td>' +
-                                    ' <td> <input type="number"></td>' +
-                                    ' <td>'+this.name+'</td> ' +
-                                    '<td>'+this.catename+'</td> ' +
-                                    '</tr> '
-                            console.log(this.name);
-                        })
-                        $('#addition tbody').html(list);
-                    }
-                })
+                add();
             })
 //            添加中  关键字搜索
             $('#search').click(function(){
+                add();
+                return false;
+            });
+            //编辑数量
+
+            $('#table-striped').delegate('.edit_res','click',function(){
+                $("#add_device_form").hide();
+                $("#edit_form").show();
+            });
+
+            $('#table-striped').delegate('.edit_num','click',function(){
+//                ($(this).attr('labDeviceId'));
+
+                if($(this).attr("labDeviceId")){
+                    alert($(this).parent().parent().parent().find('.device_name').html());
+                    $('input[name=name]').val($(this).parent().parent().parent().find('.device_name').html());
+
+                    $('input[name=type]').val($(this).parent().parent().parent().find('.device_type').html());
+                    $('input[name=total]').val($(this).parent().parent().parent().find('.total').html());
+                }
+                $('#edit_form').attr('action','{{route('msc.admin.LadMaintain.DevicesTotalEdit')}}');
+                var id = $(this).attr("labDeviceId");
+                $('#edit_form').append('<input type="hidden" name="id" value="'+id+'">');
+
+            })
+
+
+            //删除
+            $('#table-striped').delegate('.delete','click',function(){
+//                alert(111111111111);
+                var this_id = $(this).attr('data');
+                var url = "/msc/admin/ladMaintain/lad-devices-deletion?id="+this_id;
+                layer.confirm('您确定要删除该设备？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    window.location.href=url;
+                });
+            });
+
+
+            //设备添加方法
+
+            function add(){
                 var url  = "{{route('msc.admin.LadMaintain.LaboratoryListData')}}";
                 $.ajax({
                     type:"get",
@@ -202,7 +205,7 @@
                             html+='<li>' +
                                     '<a href="">'+this.name+'</a>'+
                                     ' </li>'
-                        });
+                        })
                         $('#device-type').html(html);
                         $(result.data.rows.list).each(function(){
                             list+='<tr>' +
@@ -212,30 +215,25 @@
                                     '</div> <input type="hidden" name="" value="">' +
                                     '</label>' +
                                     '</td>' +
-                                    ' <td>1</td>' +
+                                    ' <td>'+this.id+'</td>' +
                                     ' <td> <input type="number"></td>' +
                                     ' <td>'+this.name+'</td> ' +
                                     '<td>'+this.catename+'</td> ' +
                                     '</tr> '
-                            console.log(this.name);
-                        });
+                            console.log(this.id);
+                        })
                         $('#addition tbody').html(list);
                     }
-                });
-                return false;
-            });
-            //编辑数量
-          $('.edit').click(function(){
-              if($(this).attr("")){
-                  $('input[name=name]').val($(this).parent().parent().find('.device').html());
-                  $('input[name=type]').val($(this).parent().parent().find('.deviceType').html());
-                  $('input[name=total]').val($(this).parent().parent().find('.total').html());
-              }
-              $('#edit_form').attr('action','');
-              var id = $(this).attr("data");
-              $('#edit_form').append('<input type="hidden" name="id" value="'+id+'">');
-          })
+                })
+
+            }
+
+
+
+
         })
+
+
 
     </script>
 @stop
@@ -267,11 +265,11 @@
                 <div class="ibox-title overflow">
                     <div class="left">
                         <p class="left">已选实验室：</p>
-                        <h5 class="left labname">临床技能室（3-13）</h5>
+                        <h5 class="left labname">无</h5>
                     </div>
                     <div class="left" style="margin-left: 20px">
                         <p class="left">容量：</p>
-                        <h5 class="left  labtotal " >30人</h5>
+                        <h5 class="left  labtotal " >0人</h5>
                     </div>
                     <input type="button" class="btn btn_pl btn-success right" data-toggle="modal" data-target="#myModal" value="添加设备" id="add_device">
                 </div>
