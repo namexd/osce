@@ -249,7 +249,7 @@ class LaboratoryCotroller extends MscWeChatController
                 $insertArr [] = $data;
             }
         }
-        
+
         $return = DB::connection('msc_mis')->table('open_lab_apply')->insert($insertArr);
 
         if($return){

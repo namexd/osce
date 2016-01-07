@@ -98,6 +98,16 @@ class Laboratory extends Model
     public function Floor(){
         return  $this->hasOne('Modules\Msc\Entities\Floor','id','location_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月7日11:53:54
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LabApply(){
+        return  $this->hasOne('Modules\Msc\Entities\LabApply','lab_id','id');
+    }
     /**
      * 获取普通实验室列表 和 获取开放实验室列表
      * @param
@@ -135,14 +145,12 @@ class Laboratory extends Model
             $m = date('m',$timeInt);
             $d = date('d',$timeInt);
             return $this->where('id','=',$id)->with(['Floor','OpenPlan'=>function($OpenPlan) use ($y,$m,$d){
-
                 $OpenPlan->where('year','=',$y)->where('month','=',$m)->where('day','=',$d)->with(['OpenLabApply'=>function($OpenLabApply){
                     //TODO open_lab_apply表 状态1代表 学生预约的开放实验室
                     $OpenLabApply->where('type','=',1);
-                },'PlanRecord'=>function($PlanRecord){
-                    //TODO plan_record 状态1代表 开放实验室预约的生成的计划
-                    $PlanRecord->where('type','=',1);
                 }]);
+            },'LabApply'=>function($LabApply) use($dateTime){
+                $LabApply->where('apply_time','=',$dateTime);
             }])->first();
         }else{
             return  false;
