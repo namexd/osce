@@ -17,6 +17,7 @@ use Modules\Msc\Entities\Laboratory;
 use Modules\Msc\Entities\LadDevice;
 use Illuminate\Support\Facades\Cache;
 use Modules\Msc\Http\Controllers\MscController;
+use Illuminate\Support\Facades\Auth;
 use URL;
 use DB;
 
@@ -90,15 +91,19 @@ class LadMaintainController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getLaboratoryListData(Request $request){
+
         $this->validate($request, [
             'keyword' => 'sometimes',
-            'devices_cate_id' => 'sometimes|integer'
+            'devices_cate_id' => 'sometimes|integer',
+            'lab_id'=>'required|integer'
         ]);
         $keyword = urldecode(e($request->input('keyword')));
         $devices_cate_id = (int)$request->input('devices_cate_id');
-        //添加设备的资源数据
+        $LadDevice = new LadDevice;
+        //TODO 获取属于当前实验室的 设备ID
+        $DeviceIdArr = $LadDevice->getLadDeviceId((int)$request->input('lab_id'));
         $devices = new Devices();
-        $resourceData = $devices->getDevicesList($keyword,$devices_cate_id);
+        $resourceData = $devices->getDevicesList($DeviceIdArr,$keyword,$devices_cate_id);
         $list = [];
         foreach ($resourceData as $itme) {
             $list[] = [
@@ -144,20 +149,33 @@ class LadMaintainController extends MscController
 
     public  function postDevicesAdd(Request $request){
         $this->validate($request,[
-            'lad_id' => 'required|integer',
-            'device_id' => 'required|integer',
-            'total'    => 'required|integer',
+            'lab_id' => 'required|integer',
+            'device_id_num' => 'required'
         ]);
-        $data=[
-            'lad_id'=> Input::get('lad_id'),
-            'device_id' =>Input::get('device_id'),
-            'total'    => Input::get('total')
-        ];
-        $add = LadDevice::create($data);
-        if($add != false){
-            return redirect()->back()->withInput()->withErrors('添加成功');
+        $insertArr = [];
+        $req = $request->all();
+        $user = Auth::user();
+        if(is_array($req['device_id_num'])){
+            foreach($req['device_id_num'] as $v){
+                $arr = explode(",",$v);
+                $LabDevices['lab_id'] = $req['lab_id'];
+                $LabDevices['device_id'] = $arr[0];
+                $LabDevices['total'] = $arr[1];
+                $LabDevices['created_at'] = date('Y-m-d H:i:s',time());
+                $LabDevices['updated_at'] = date('Y-m-d H:i:s',time());
+                $LabDevices['created_user_id'] = $user->id;
+                $insertArr [] = $LabDevices;
+            }
+        }
+        $return = DB::connection('msc_mis')->table('lab_device')->insert($insertArr);
+        if($return){
+            return response()->json(
+                $this->success_data([],1,'添加成功')
+            );
         }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
+            return response()->json(
+                $this->success_data([],2,'添加失败')
+            );
         }
     }
 
