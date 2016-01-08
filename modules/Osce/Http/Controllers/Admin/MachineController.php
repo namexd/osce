@@ -856,8 +856,8 @@ class MachineController extends CommonController
         $watchModel   =   new Watch();
 
         $pagination             =   $watchModel   ->  paginate('osce.page_size');
-        $data['paginate']=$pagination;
-        return $data;
+
+        return ['data'=>$data,'pagination'=>$pagination];
     }
 
 }
