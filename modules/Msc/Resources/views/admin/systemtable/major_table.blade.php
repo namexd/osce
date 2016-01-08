@@ -18,7 +18,7 @@
             $(".delete").click(function(){
                 var this_id = $(this).attr('data');
 //                alert(this_id);
-                var url = "/msc/admin/profession/profession-deletion?id="+this_id;
+                var url = "{{ route('msc.admin.profession.ProfessionDeletion') }}"+"?id="+this_id;
                 //询问框
                 layer.confirm('您确定要删除该专业？', {
                     btn: ['确定','取消'] //按钮
@@ -30,8 +30,7 @@
             $(".stop").click(function(){
                 var this_id = $(this).attr('data');
                 var type = $(this).attr('data-type');
-//                alert(this_id);
-                var url = "/msc/admin/profession/profession-status?id="+this_id+"&type="+type;
+                var url = "{{ route('msc.admin.profession.ProfessionStatus') }}"+"?id="+this_id+"&type="+type;
                 var str = '';
                 if(type == 1){
                     str = '您确定要启用该专业？';

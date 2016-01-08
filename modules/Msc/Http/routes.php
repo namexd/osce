@@ -74,8 +74,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		 Route::post('profession/profession-add',['uses'=>'ProfessionController@postProfessionAdd','as'=>'msc.admin.profession.ProfessionAdd']);
 		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);
 		 Route::post('profession/profession-save',['uses'=>'ProfessionController@postProfessionSave','as'=>'msc.admin.profession.ProfessionSave']);
-		 Route::get('profession/profession-status/{id}',['uses'=>'ProfessionController@getProfessionStatus','as'=>'msc.admin.profession.ProfessionStatus']);
-		 Route::get('profession/profession-deletion/{id}',['uses'=>'ProfessionController@getProfessionDeletion','as'=>'msc.admin.profession.ProfessionDeletion']);
+		 Route::get('profession/profession-status',['uses'=>'ProfessionController@getProfessionStatus','as'=>'msc.admin.profession.ProfessionStatus']);
+		 Route::get('profession/profession-deletion',['uses'=>'ProfessionController@getProfessionDeletion','as'=>'msc.admin.profession.ProfessionDeletion']);
 		 Route::post('profession/profession-import',['uses'=>'ProfessionController@postProfessionImport','as'=>'msc.admin.profession.ProfessionImport']);
 		//实验室路由
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
