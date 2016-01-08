@@ -67,7 +67,6 @@
 		_initEvents : function() {
 
 			var self = this;
-
 			this.$el.on( 'click.calendario', 'div.fc-row > div', function() {
 
 				var $cell = $( this ),
@@ -310,15 +309,19 @@
 
 		},
 		gotoPreviousMonth : function( callback ) {
+			$("#savedate").empty();
 			this._move( 'month', 'previous', callback );
 		},
 		gotoPreviousYear : function( callback ) {
+			$("#savedate").empty();
 			this._move( 'year', 'previous', callback );
 		},
 		gotoNextMonth : function( callback ) {
+			$("#savedate").empty();
 			this._move( 'month', 'next', callback );
 		},
 		gotoNextYear : function( callback ) {
+			$("#savedate").empty();
 			this._move( 'year', 'next', callback );
 		}
 
