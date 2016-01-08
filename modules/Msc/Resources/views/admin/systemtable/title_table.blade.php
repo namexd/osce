@@ -39,7 +39,7 @@
             }, function(){
                 window.location.href=url;
             });
-        })
+        });
         $('#add_from').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -52,7 +52,7 @@
                     message: 'The username is not valid',
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '用户名不能为空'
+                            message: '职称名不能为空'
                         }
                     }
                 },
