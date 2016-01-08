@@ -8,6 +8,8 @@
 
 namespace Modules\Osce\Entities;
 
+use Modules\Msc\Entities\Vcr;
+
 class Room extends CommonModel
 {
 
@@ -30,51 +32,74 @@ class Room extends CommonModel
         return $this->belongsTo('App\Entities\User', 'create_user_id', 'id');
     }
 
+
     /**
      * 得到room的列表
-     * @param $formData
-     * @return
+     * @param string $keyword
+     * @param int $type
+     * @param string $id
+     * @return array
+     * @throws \Exception
+     * @internal param $formData
      * @internal param int $pid
      * @internal param null $id
      */
-    public function showRoomList($formData)
+    public function showRoomList($keyword = '', $type = 1, $id = '')
     {
-        if (array_key_exists('id', $formData)) {
-            //如果传入了id,那就只读取该id的数据
-            $builder = $this->where('id', '=', $formData['id']);
-            return $builder->select('id','name','description')->first();
+        try {
+            //如果传入了id,就说明是编辑,那就只读取该id的数据
+            if ($id !== "") {
+                $builder = $this->where('id', '=', $id);
+                $result = $builder->select('id', 'name', 'description')->first();
+                if (!$result){
+                    throw new \Exception('查无此考场！');
+                }
+                return $result;
+            }
+
+            //判断传入的type是否合法
+            $area = Area::where('area.cate', '=', $type)->first();
+            if (!$area) {
+                throw new \Exception('传入的场所区域不合法！');
+            }
+
+            //根据type选择要查询的对象
+            if ($type == 1) {
+                //如果是1，就说明是考场
+                //选择查询的字段
+                $builder = $this->select([
+                    $this->table . '.id as id',
+                    $this->table . '.name as name',
+                    $this->table . '.code as code',
+                    $this->table . '.nfc as nfc',
+                    $this->table . '.address as address',
+                    $this->table . '.description as description',
+                ]);
+            } else {
+                //如果是其他，就只与摄像头之间关联
+                //得到当前传入的type对应哪个区域的摄像头
+                $areaId = $area->id;
+                //通过关联拿到对应的摄像机的数据
+                $vcr = Area::find($areaId)->areaVcr()->get();
+                if (!$vcr) {
+                    throw new \Exception('系统出了问题，请重试！');
+                }
+            }
+
+            //如果keyword不为空，那么就进行模糊查询
+            if ($keyword !== "") {
+                $builder = $builder->where($this->table . '.name', '=', '%' . $keyword . '%')
+                    ->orWhere($this->table . '.description', '=', '%' . $keyword . '%');
+            }
+
+            //判断是否是考场
+            $result = empty($vcr) ? $builder->paginate(10) : $vcr;
+
+            return array($area, $result);
+        } catch (\Exception $ex) {
+            throw $ex;
         }
-
-
-        //如果order不为空的话，就使用order的数据，否则就指定，暂时不考虑排序
-//        $orderName = empty($formData['order_name']) ? 1 : $formData['order_name'];
-//        $orderBy = empty($formData['order_by']) ? 'desc' : $formData['order_by'];
-//        $paramArray = ['created_at'];
-//        $builder = $this->order($builder, $orderName, $orderBy, $paramArray);
-
-        //选择查询的字段
-        $builder = $this->select([
-            $this->table . '.id as id',
-            $this->table . '.name as name',
-            $this->table . '.code as code',
-            $this->table . '.nfc as nfc',
-            $this->table . '.address as address',
-            $this->table . '.description as description',
-            $this->table . '.create_user_id as create_user_id'
-        ]);
-
-        //如果keyword不为空，那么就进行模糊查询
-        if ($formData['keyword'] !== null) {
-            $builder = $builder->where($this->table . '.name', '=', '%' . $formData['keyword'] . '%')
-                                ->orWhere($this->table . '.description', '=', '%' . $formData['keyword'] . '%');
-        }
-
-
-
-
-        return $builder->paginate(10);
     }
-
 
 
 }

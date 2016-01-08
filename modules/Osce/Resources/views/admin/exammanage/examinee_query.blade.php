@@ -24,12 +24,6 @@
 
 
 @section('content')
-    <div class="ibox-title route-nav">
-        <ol class="breadcrumb">
-            <li><a href="#">考试管理</a></li>
-            <li class="route-active">考生查询</li>
-        </ol>
-    </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -69,7 +63,20 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                  @foreach($data as $item)
+                     <tr>
+                         <td>{{ $item->exam_name  }}</td>
+                         <td>{{ $item-> student_name }}</td>
+                         @if( $item-> gender==0)
+                         <td>女</td>
+                         @else
+                         <td>男</td>
+                         @endif
+                         <td>{{ $item-> code }}</td>
+                         <td>{{ $item-> idCard }}</td>
+                         <td>{{ $item-> mobile }}</td>
+                     </tr>
+                   @endforeach
                     </tbody>
                 </table>
 

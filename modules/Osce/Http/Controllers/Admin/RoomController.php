@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 
+use Modules\Osce\Entities\Area;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Room as Room;
@@ -23,26 +24,39 @@ class RoomController extends CommonController
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
      *                         string        keyword         关键字
-     *                         string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
-     *                         string        order_by        排序方式 枚举 e.g:desc,asc
+     *                         int           type            类型
+     *                         int           id              房间的id
      * @return view
-     * @version   1.0
+     * @version   2.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getRoomList(Request $request)
+    public function getRoomList(Request $request, Room $room)
     {
         //验证规则，暂时留空
-
+        $this->validate($request,[
+            'id' => 'sometimes|integer',
+            'keyword' => 'sometimes',
+            'type' => 'sometimes|integer'
+        ]);
         //获取各字段
-        $formData = $request->only('keyword');
+        $keyword = e($request->input('keyword', ''));
+        $type = $request->input('type', 1);
+        $id = $request->input('id', '');
         //获取当前场所的类
-        $model = new Room();
-        $data = $model->showRoomList($formData);
-
+        list($area,$data) = $room->showRoomList($keyword, $type, $id);
 
         //展示页面
-        return view('osce::admin.resourcemanage.examroom', ['data' => $data]);
+        if ($type == 1) {
+            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data]);
+        } else if ($type == 2){
+            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data]);
+        }else if ($type == 3){
+            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data]);
+        }else{
+            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data]);
+        }
+
     }
 
     /**

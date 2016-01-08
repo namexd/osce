@@ -8,8 +8,8 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
-use App\Http\Requests\Request;
 use App\Repositories\Common;
+use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Notice;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -17,20 +17,6 @@ use Overtrue\Wechat\Message;
 
 class NoticeController extends CommonController
 {
-    //发送消息示例代码
-    public function getMsg(){
-        $Message  =   Common::CreateWeiXinMessage([
-            [
-                'title' =>'邀请通知',
-                'desc'  =>'osce考试第一期邀请001',
-                'url'=>'http://www.baidu.com'
-            ]
-            //['title'=>'osce考试第一期邀请','url'=>'http://www.baidu.com'],
-        ]);
-        //Common::sendWeiXin('oI7UquKmahFwGV0l2nyu_f51nDJ4',$Message);
-        Common::sendWeixinToMany($Message,['oI7UquKmahFwGV0l2nyu_f51nDJ4','oI7UquPKycumti7NU4HQYjVnRjPo']);
-    }
-
     /**
      * 已发布通知列表
      * @api GET /osce/admin/notice/list
@@ -73,7 +59,8 @@ class NoticeController extends CommonController
      *
      */
     public function getAddNotice(Request $request){
-        //return view();
+        $list   =   Exam::get();
+        return view('osce::admin.exammanage.exam_notice_add',['list'=>$list]);
     }
 
     /**
@@ -108,9 +95,9 @@ class NoticeController extends CommonController
         $exam_id    =   $request    ->  get('exam_id');
         $groups    =   $request     ->  get('groups');
 
-        try
-        {
-            if(is_array($groups))
+//        try
+//        {
+            if(!is_array($groups))
             {
                 throw new \Exception('请选择接收人所属角色');
             }
@@ -123,11 +110,11 @@ class NoticeController extends CommonController
             {
                 throw new \Exception('通知创建失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()   ->  back()  ->withErrors($ex);
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            return redirect()   ->  back()  ->withErrors($ex);
+//        }
     }
 
     /**

@@ -20,10 +20,10 @@ class Notice extends CommonModel
     protected $table 		= 	'notice';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected $fillable 	=	['title','content','create_user_id'];
+    protected $fillable 	=	['title','content','create_user_id','exam_id'];
 
     public function exam(){
-        return $this->hasOne('\Modules\Osce\Entities\Exam','id','eaxm_id');
+        return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
     }
     public function receivers(){
         return $this->hasManyThrough('App\Entities\User','Modules\Osce\Entities\NoticeTo','id','notice_id','id');
@@ -88,7 +88,8 @@ class Notice extends CommonModel
                 'uid'       =>  $item['id']
             ];
         }
-        if($this   -> insert($data))
+        $noticeToModel  =   new NoticeTo();
+        if($noticeToModel   -> addNoticeTo($data))
         {
             return true;
         }
@@ -100,7 +101,7 @@ class Notice extends CommonModel
     public function sendMsg($notice,$to){
         try
         {
-            $url    =   route('notice/msg',['id'=>$notice->id]);
+            $url    =   route('osce.admin.notice.getMsg',['id'=>$notice->id]);
             $msgData    =   [
                 [
                     'title' =>$notice->exam->name.'通知',
@@ -143,7 +144,7 @@ class Notice extends CommonModel
             'exam_id'   =>  $exam_id,
         ];
         try{
-            $to     =   $this   ->  getGroupsOpendIds($groups);
+            $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
             $notice =   $this   ->  addNotice($data,$to);
             return $notice;
         }
@@ -170,11 +171,22 @@ class Notice extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getGroupsOpendIds($groups){
+    public function getGroupsOpendIds($groups,$exam_id){
+
         return  [
             ['id'=>79,'opendid'=>'oI7UquKmahFwGV0l2nyu_f51nDJ4'],
             ['id'=>81,'opendid'=>'oI7UquPKycumti7NU4HQYjVnRjPo'],
         ];
+    }
+    private function getExamTeachers($exam_id){
+        $list   =   Invigilator::where('type','=',1)->get();
+        //return array_pluck($list,'user');
+    }
+    private function getExamStudent($exam_id){
+
+    }
+    private function getSpTeachers($exam_id){
+
     }
 
     public function getNoticeToOpendIds($notice){

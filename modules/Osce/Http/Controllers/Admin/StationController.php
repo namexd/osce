@@ -28,7 +28,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.exammanage.exam_notice_add');
+        return view('osce::admin.exammanage.examroom_assignment');
     }
 
     /**
