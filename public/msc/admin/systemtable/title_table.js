@@ -5,16 +5,16 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "title_table":title_table();break; //Ö°³ÆÁĞ±íÒ³Ãæ
+        case "title_table":title_table();break; //èŒç§°åˆ—è¡¨é¡µé¢
     }
 });
 function title_table(){
     $(".delete").click(function(){
         var this_id = $(this).attr('data');
         var url = "/msc/admin/professionaltitle/holder-remove?id="+this_id;
-        //Ñ¯ÎÊ¿ò
-        layer.confirm('ÄúÈ·¶¨ÒªÉ¾³ı¸ÃÖ°³Æ£¿', {
-            btn: ['È·¶¨','È¡Ïû'] //°´Å¥
+        //è¯¢é—®æ¡†
+        layer.confirm('æ‚¨ç¡®å®šè¦åˆ é™¤è¯¥èŒç§°ï¼Ÿ', {
+            btn: ['ç¡®å®š','å–æ¶ˆ'] //æŒ‰é’®
         }, function(){
             window.location.href=url;
         });
@@ -25,81 +25,81 @@ function title_table(){
         var url = "/msc/admin/professionaltitle/holder-status?id="+this_id+"&type="+type;
         var str = '';
         if(type == 1){
-            str = 'ÄúÈ·¶¨ÒªÆôÓÃÖ°³Æ£¿';
+            str = 'æ‚¨ç¡®å®šè¦å¯ç”¨èŒç§°ï¼Ÿ';
         }else{
 
-            str = 'ÄúÈ·¶¨ÒªÍ£ÓÃÖ°³Æ£¿';
+            str = 'æ‚¨ç¡®å®šè¦åœç”¨èŒç§°ï¼Ÿ';
         }
-        //Ñ¯ÎÊ¿ò
+        //è¯¢é—®æ¡†
         layer.confirm(str, {
-            btn: ['È·¶¨','È¡Ïû'] //°´Å¥
+            btn: ['ç¡®å®š','å–æ¶ˆ'] //æŒ‰é’®
         }, function(){
             window.location.href=url;
         });
     });
-//        ĞÂÔö±íµ¥ÑéÖ¤
+//        æ–°å¢è¡¨å•éªŒè¯
     $('#add_from').bootstrapValidator({
         message: 'This value is not valid',
-        feedbackIcons: {/*ÊäÈë¿ò²»Í¬×´Ì¬£¬ÏÔÊ¾Í¼Æ¬µÄÑùÊ½*/
+        feedbackIcons: {/*è¾“å…¥æ¡†ä¸åŒçŠ¶æ€ï¼Œæ˜¾ç¤ºå›¾ç‰‡çš„æ ·å¼*/
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
-        fields: {/*ÑéÖ¤*/
-            name: {/*¼üÃûusernameºÍinput nameÖµ¶ÔÓ¦*/
+        fields: {/*éªŒè¯*/
+            name: {/*é”®åusernameå’Œinput nameå€¼å¯¹åº”*/
                 message: 'The username is not valid',
                 validators: {
-                    notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                        message: 'Ö°³ÆÃû²»ÄÜÎª¿Õ'
+                    notEmpty: {/*éç©ºæç¤º*/
+                        message: 'èŒç§°åä¸èƒ½ä¸ºç©º'
                     }
                 }
             },
             status: {
                 validators: {
-                    notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                        message: '×´Ì¬²»ÄÜÎª¿Õ'
+                    notEmpty: {/*éç©ºæç¤º*/
+                        message: 'çŠ¶æ€ä¸èƒ½ä¸ºç©º'
                     }
                 }
             },
-            description: {/*¼üÃûusernameºÍinput nameÖµ¶ÔÓ¦*/
+            description: {/*é”®åusernameå’Œinput nameå€¼å¯¹åº”*/
                 message: 'The username is not valid',
                 validators: {
-                    notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                        message: 'ÃèÊö²»ÄÜÎª¿Õ'
+                    notEmpty: {/*éç©ºæç¤º*/
+                        message: 'æè¿°ä¸èƒ½ä¸ºç©º'
                     }
                 }
             }
         }
     });
-    //        ±à¼­±íµ¥ÑéÖ¤
+    //        ç¼–è¾‘è¡¨å•éªŒè¯
     $('#edit_from').bootstrapValidator({
         message: 'This value is not valid',
-        feedbackIcons: {/*ÊäÈë¿ò²»Í¬×´Ì¬£¬ÏÔÊ¾Í¼Æ¬µÄÑùÊ½*/
+        feedbackIcons: {/*è¾“å…¥æ¡†ä¸åŒçŠ¶æ€ï¼Œæ˜¾ç¤ºå›¾ç‰‡çš„æ ·å¼*/
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
-        fields: {/*ÑéÖ¤*/
-            name: {/*¼üÃûusernameºÍinput nameÖµ¶ÔÓ¦*/
+        fields: {/*éªŒè¯*/
+            name: {/*é”®åusernameå’Œinput nameå€¼å¯¹åº”*/
                 message: 'The username is not valid',
                 validators: {
-                    notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                        message: 'Ö°³ÆÃû²»ÄÜÎª¿Õ'
+                    notEmpty: {/*éç©ºæç¤º*/
+                        message: 'èŒç§°åä¸èƒ½ä¸ºç©º'
                     }
                 }
             },
             status: {
                 validators: {
-                    notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                        message: '×´Ì¬²»ÄÜÎª¿Õ'
+                    notEmpty: {/*éç©ºæç¤º*/
+                        message: 'çŠ¶æ€ä¸èƒ½ä¸ºç©º'
                     }
                 }
             },
-            description: {/*¼üÃûusernameºÍinput nameÖµ¶ÔÓ¦*/
+            description: {/*é”®åusernameå’Œinput nameå€¼å¯¹åº”*/
                 message: 'The username is not valid',
                 validators: {
-                    notEmpty: {/*·Ç¿ÕÌáÊ¾*/
-                        message: 'ÃèÊö²»ÄÜÎª¿Õ'
+                    notEmpty: {/*éç©ºæç¤º*/
+                        message: 'æè¿°ä¸èƒ½ä¸ºç©º'
                     }
                 }
             }
@@ -108,13 +108,13 @@ function title_table(){
     $('.edit').click(function () {
         $("#add_from").hide();
         $("#edit_from").show();
-//            È¥³ıÎª¿ÕÑùÊ½
+//            å»é™¤ä¸ºç©ºæ ·å¼
         $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
         if($(this).attr("data")){
             $('input[name=name]').val($(this).parent().parent().find('.name').html());
             $('input[name=description]').val($(this).parent().parent().find('.describe').html());
             var status = '';
-            if($(this).parent().parent().find('.status').html() ==='Õı³£'){
+            if($(this).parent().parent().find('.status').html() ==='æ­£å¸¸'){
                 status = 1;
             }else{
                 status = 0;
