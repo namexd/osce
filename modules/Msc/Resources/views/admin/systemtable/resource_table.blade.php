@@ -148,7 +148,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">说明</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="detail" value="" />
+                    <input type="text" class="form-control add-name detail" name="detail" value="" />
                 </div>
             </div>
             <div class="form-group">

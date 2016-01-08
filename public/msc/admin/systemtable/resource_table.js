@@ -131,13 +131,34 @@ function resource_table(){
                 }
             }
         });
-
+        $(".sure_btn").click(function(){
+            var name=$("#add_from .name").val();
+            var cate=$("#add_from .cate").val();
+            var detail=$("#add_from .detail").val();
+            var state=$("#add_from .state").val();
+            if(name.trim()==""){
+                $("#add_from .name").focus();
+                return false;
+            }
+            if(cate.trim()==""){
+                $("#add_from .cate").focus();
+                return false;
+            }
+            if(detail.trim()==""){
+                $("#add_from .detail").focus();
+                return false;
+            }
+            if(state.trim()==""){
+                $("#add_from .state").focus();
+                return false;
+            }
+        });
         $('.edit').click(function () {
             $("#add_from").hide();
             $("#edit_from").show();
             //            解决再次点击样式问题
-            $(".sure_btn").removeAttr("disabled");
-            $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
+            //$(".sure_btn").removeAttr("disabled");
+           // $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             if($(this).attr("data")){
                 $('input[name=name]').val($(this).parent().parent().find('.name').html());
 //                $('input[name=]').val($(this).parent().parent().find('.floor').attr('data'));
@@ -169,8 +190,8 @@ function resource_table(){
             $("#add_from").show();
             $("#edit_from").hide();
             //            解决再次点击样式问题
-            $(".sure_btn").removeAttr("disabled");
-            $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
+            //$(".sure_btn").removeAttr("disabled");
+           // $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             $("input,textarea,select").val("");
             
         })
