@@ -154,9 +154,10 @@
             $('#add_device').click(function(){
 //                点击新增按钮显示当前实验室设备弹出层
                 $("#add_device_form").show();
+                $(".check_all").children(".check_icon").removeClass("check");
                 $("#edit_form").hide();
                 add();
-            })
+            });
 //            添加中  关键字搜索
             $('#search').click(function(){
                 add();
@@ -268,7 +269,13 @@
                         }
                     }
                 })
-            })
+            });
+            //编辑数量验证不能为负
+            $("#edit_form").delegate(".plus","change",function(){
+                if($(this).val()<=0){
+                    $(this).val("1");
+                }
+            });
 
             //添加实验室相关设备
             $('#addDevice').click(function(){
@@ -453,7 +460,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">数量</label>
                 <div class="col-sm-9">
-                    <input type="number" class="form-control describe add-describe" name="total">
+                    <input type="number" class="form-control describe add-describe plus" name="total">
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
