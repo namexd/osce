@@ -68,10 +68,6 @@
             //选项框点击事件
             $(".check_label").click(function(){
                 $(this).children(".check_icon").toggleClass("check");
-                //$("this").children("input").toggle();
-                console.log($("this").children("input").val());
-
-
             });
 
 
@@ -123,11 +119,12 @@
     </script>
     <script type="text/javascript">
         var codropsEvents = {
-            '01-01-2016' : '<a href="http://tympanus.net/codrops/2012/11/23/three-script-updates/">Three Script Updates</a>',
+            '01-02-2016' : '<a href="http://tympanus.net/codrops/2012/11/23/three-script-updates/">Three Script Updates</a>',
         };
+        getEvent();
         function getEvent(){
-            alert(12);
-            var qj={id:"14"}
+
+            var qj={id:"13"}
             $.ajax({
                 url:"{{ route('msc.admin.laboratory.getEditLabCleander')}}", /*${ctx}/*/
                 type:"get",
@@ -136,8 +133,19 @@
                 cache:false,
                 data:qj,
                 success: function(result) {
-                    var codropsEvents;
-                    console.log(result);
+                    codropsEvents=[];
+                    var eventime;
+                    var event;
+                    $(result.data).each(function(){
+                        eventime= this.date.month+"-"+this.date.day+"-"+this.date.year;
+                        this.child
+                        $(result.data).each(function(){
+                            
+                        });
+                        //var event=
+                        return eventime;
+                    })
+                    console.log(eventime);
                 }
             })
         }
@@ -357,7 +365,6 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline" data="morning"></div>
-                                <input  type="hidden"  name="" value="111" >
                             </label>
                             <span> 上午</span>
                         </div>
@@ -380,7 +387,6 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline" data="noon"></div>
-                                <input type="hidden" name="" value="" style="display: none" checked>
                             </label> 中午
                         </div>
                         <div class="col-sm-10">
@@ -403,7 +409,6 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline" data="afternoon"></div>
-                                <input type="hidden" name="" value="" style="display: none" checked>
                             </label>下午
                         </div>
                         <div class="col-sm-10">
@@ -426,7 +431,6 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"  data="night"></div>
-                                <input type="hidden" name="" value="" style="display: none" checked>
                             </label> 晚上
                         </div>
                         <div class="col-sm-10">
