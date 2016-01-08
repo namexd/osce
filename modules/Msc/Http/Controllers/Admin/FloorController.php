@@ -40,10 +40,13 @@ class FloorController extends Controller {
         $datalist = $Floor->getFilteredPaginateList($where);
         foreach($datalist as $v){
             $lab = Laboratory::where(['location_id'=>$v->id,'status'=>1])->get();
+            $lab = $lab->toArray();
+            //dd($lab);
             if($lab){
                 $v->dtype = 1;
             }
         }
+        //dd($datalist);
         $school = DB::connection('msc_mis')->table('school')->get();
         $keyword = Input::get('keyword')?Input::get('keyword'):'';
         return view('msc::admin.labmanage.ban_maintain',[

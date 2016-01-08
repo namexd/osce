@@ -248,9 +248,8 @@
                 $('#enname').val($(this).parent().parent().find('.enname').val());
                 $('#short_enname').val($(this).parent().parent().find('.short_enname').val());
                 $('#total').val($(this).parent().parent().find('.total').val());
-
                 $('.oldschool option').each(function(){
-                    if($(this).val() == $('.lname').attr('data')){
+                    if($(this).val() == $(updateobj).parent().parent().find('.lname').attr('data')){
                         $(this).attr('selected','selected');
                     }
                 });
@@ -276,7 +275,7 @@
                 $.ajax({
                     type: "POST",
                     url: "{{route('msc.admin.laboratory.getLocal')}}",
-                    data: {id:id,type:1},
+                    data: {id:$(updateobj).parent().parent().find('.lname').attr('data'),type:1},
                     success: function(msg){
                         console.log(msg);
                         var opstr = '';
@@ -460,7 +459,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b oldschool school" name="hospital">
+                    <select id="select_Category" class="form-control m-b oldschool" name="hospital">
                         <option value="-1">请选择所属分院</option>
                         @if(!empty($school))
                             @foreach($school as $ss)

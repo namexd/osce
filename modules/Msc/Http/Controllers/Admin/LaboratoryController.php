@@ -45,9 +45,13 @@ class LaboratoryController extends MscController {
         //$this->end_sql(1);
         //$datalist = $datalist->toArray();
         //dd($datalist);
-        foreach($datalist as $v){
+        foreach($datalist as $k=>$v){
             $v->opentype = $v->open_type;
             $v->open_type = $Laboratory->getType($v->open_type);
+            $floor = $v->floors;
+            if(is_null($floor) || $floor == ''){
+                unset($datalist[$k]);
+            }
 
         }
         //学院
@@ -254,7 +258,6 @@ class LaboratoryController extends MscController {
     public function getLocal(Floor $floor){
         $id = Input::get('id');
         $local = $floor->where('school_id','=',$id)->where('status','=',1)->get();
-        dd($local);
         if($local != false){
             return $local;exit;
         }else{
