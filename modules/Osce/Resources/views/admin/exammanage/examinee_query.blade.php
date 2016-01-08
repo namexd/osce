@@ -69,7 +69,20 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                  @foreach($data as $item)
+                     <tr>
+                         <td>{{ $item->exam_name  }}</td>
+                         <td>{{ $item-> student_name }}</td>
+                         @if( $item-> gender==0)
+                         <td>女</td>
+                         @else
+                         <td>男</td>
+                         @endif
+                         <td>{{ $item-> code }}</td>
+                         <td>{{ $item-> idCard }}</td>
+                         <td>{{ $item-> mobile }}</td>
+                     </tr>
+                   @endforeach
                     </tbody>
                 </table>
 
