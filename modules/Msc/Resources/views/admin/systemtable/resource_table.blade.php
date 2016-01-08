@@ -64,7 +64,8 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword])}}">全部</a>
+                                        
+                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'2'])}}">全部</a>
                                     </li>
                                     <li>
                                         <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
@@ -116,10 +117,12 @@
 @stop
 
 @section('layer_content')
+  
     {{--新增--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.resources.ResourcesAdd')}}" method="post">
+    <form class="form-horizontal" id="add_from" novalidate="novalidate"  action="{{ route('msc.admin.resources.ResourcesAdd') }}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            
             <h4 class="modal-title" id="myModalLabel">新增资源</h4>
         </div>
         <div class="modal-body">

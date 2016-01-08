@@ -148,7 +148,6 @@ function resource_table(){
                         $(this).attr('selected','selected');
                     }
                 });
-
                 var status = '';
                 if($(this).parent().parent().find('.status').html() == '正常'){
                     status = 1;
@@ -171,6 +170,7 @@ function resource_table(){
             //            解决再次点击样式问题
             $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             $("input,textarea,select").val("");
+            
         })
     })
 }

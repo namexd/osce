@@ -24,7 +24,7 @@ class ProfessionalTitle extends Model
     protected $fillable 	=	['name', 'code', 'description','status','id'];
     public $search          =   [];
 
-   //»ñÈ¡Ö°³ÆÁĞ±í
+   //ï¿½ï¿½È¡Ö°ï¿½ï¿½ï¿½Ğ±ï¿½
 
     public function getJobTitleList($keyword='', $status=''){
         $builder = $this;
@@ -33,7 +33,7 @@ class ProfessionalTitle extends Model
         {
             $builder = $builder->where('name','like','%'.$keyword.'%');
         }
-        if($status){
+        if(in_array($status,[0,1])){
             $builder = $builder->where('status','=',$status);
         }
 
@@ -41,7 +41,7 @@ class ProfessionalTitle extends Model
         return $builder->orderBy('id')->paginate(config('msc.page_size',10));
     }
 
-//    //¸Ä±äÖ°³Æ×´Ì¬
+//    //ï¿½Ä±ï¿½Ö°ï¿½ï¿½×´Ì¬
 //    public  function changeStatus($professionId){
 //        $data=$this->where('id',$professionId)->select('status')->first();
 //
