@@ -36,15 +36,15 @@
                 
             </div>
         </div>
-    <form class="container-fluid ibox-content" id="list_form">
+    {{--<form class="container-fluid ibox-content" id="list_form">--}}
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#">基础信息</a></li>
-                        <li class=""><a href="#">考场安排</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="#">邀请SP</a></li>
-                        <li class=""><a href="#">考生管理</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamineeManage')}}?id={{$id}}">考生管理</a></li>
                         <li class=""><a href="#">智能排考</a></li>
                     </ul>
                 </div>
@@ -53,12 +53,13 @@
             <div class="ibox float-e-margins">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postEditExam')}}">
+                            <input type="hidden" name="exam_id" value="{{$id}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试名称</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="name" name="name" value="{{$data['name']}}">
+                                    <input type="text" required class="form-control" id="name" name="name" value="{{$examData['name']}}">
                                     <input type="hidden" required class="form-control" id="cate_id" name="cate_id" value="2" />
                                 </div>
                             </div>
@@ -68,7 +69,7 @@
                                 <label class="col-sm-2 control-label">考试地点</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="code" value="{{$data['name']}}">
+                                    <input type="text" required class="form-control" id="code" name="code" value="{{$examData['name']}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -76,7 +77,6 @@
                                 <label class="col-sm-2 control-label">考试时间</label>
                                 <div class="col-sm-10">
                                     <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-                                    <form class="container-fluid ibox-content" id="list_form">
                                         <table class="table table-bordered" id="add-basic">
                                             <thead>
                                             <tr>
@@ -89,32 +89,51 @@
                                             </tr>
                                             </thead>
                                             <tbody index="0">
+                                            @forelse($examScreeningData as $key => $item)
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>{{$key+1}}</td>
                                                     <td class="laydate">
-                                                        <span class="laydate-icon end">2015-11-12 09:00</span>
+                                                        <input type="hidden" name="time[{{$key}}][id]" value="{{$item->id}}">
+                                                        <input type="hidden" name="time[{{$key}}][exam_id]" value="{{$id}}">
+                                                        <input type="text" name="time[{{$key}}][begin_dt]" class="laydate-icon end" value="{{$item->begin_dt}}">
+                                                        {{--<span class="laydate-icon end">2015-11-12 09:00</span>--}}
                                                     </td>
                                                     <td class="laydate">
-                                                        <span class="laydate-icon end">2015-11-12 09:00</span>
+                                                        <input type="text" name="time[{{$key}}][end_dt]" class="laydate-icon end" value="{{$item->end_dt}}">
+                                                        {{--<span class="laydate-icon end">2015-11-12 09:00</span>--}}
                                                     </td>
                                                     <td>3:00</td>
                                                     <td>
                                                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
                                                     </td>
                                                 </tr>
+                                            @empty
+                                            @endforelse
+                                                {{--<tr>--}}
+                                                    {{--<td>{{count($examScreeningData)+1}}</td>--}}
+                                                    {{--<td class="laydate">--}}
+                                                        {{--<input type="text" name="time[{{count($examScreeningData)}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i:s', time())}}">--}}
+                                                    {{--</td>--}}
+                                                    {{--<td class="laydate">--}}
+                                                        {{--<input type="text" name="time[{{count($examScreeningData)}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i:s', time()+(3*3600))}}">--}}
+                                                    {{--</td>--}}
+                                                    {{--<td>3:00</td>--}}
+                                                    {{--<td>--}}
+                                                        {{--<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>--}}
+                                                    {{--</td>--}}
+                                                {{--</tr>--}}
                                             </tbody>
                                         </table>
 
                                         <div class="btn-group pull-right">
                                            
                                         </div>
-                                    </form>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <button class="btn btn-white" type="submit">取消</button>
+                                    <button class="btn btn-white" type="button">取消</button>
 
                                 </div>
                             </div>
@@ -128,7 +147,7 @@
             </div>
 
         </div>
-    </form>
+    {{--</form>--}}
 </div>
 @stop{{-- 内容主体区域 --}}
 
