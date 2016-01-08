@@ -12,11 +12,14 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
+use Symfony\Component\Translation\Interval;
 
 class ExamController extends CommonController
 {
@@ -452,5 +455,105 @@ class ExamController extends CommonController
         return response()->json(
             $this->success_rows(1,'获取成功',$pagination->total(),config('msc.page_size'),$pagination->currentPage(),$data['data'])
         );
+    }
+
+    /**
+     *检测是否绑定
+     * @method GET 接口
+     * @url exam/watch-status/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        腕表Id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchStatus($id){
+        $IsEnd=ExamScreeningStudent::where('watch_id',$id)->select('is_end')->first()->is_end;
+        if($IsEnd==1){
+            return response()->json(
+                $this->success_data(1,'已绑定')
+            );
+        }
+        if($IsEnd==0){
+            return response()->json(
+                $this->success_data(0,'未绑定')
+            );
+        }
+    }
+
+    /**
+     *绑定腕表
+     * @method GET 接口
+     * @url exam/bound-watch/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        腕表id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getBoundWatch($id){
+
+        $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>1]);
+
+        if($result){
+            $result=Watch::where('id',$id)->update(['status'=>1]);
+            if($result){
+                return response()->json(
+                    $this->success_data(1,'绑定成功')
+                );
+            }
+        }else{
+            return response()->json(
+                $this->success_data(0,'绑定失败','false')
+            );
+        }
+    }
+
+    /**
+     *解除绑定腕表
+     * @method GET 接口
+     * @url exam/unwrap-watch/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        腕表ID(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getUnwrapWatch($id){
+        $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>0]);
+
+        if($result){
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                return response()->json(
+                    $this->success_data(1,'解绑成功')
+                );
+            }
+        }else{
+            return response()->json(
+                $this->success_data(0,'解绑失败','data')
+            );
+        }
     }
 }

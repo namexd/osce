@@ -1,0 +1,93 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: fengyell <Luohaihua@misrobot.com>
+ * Date: 2016/1/8
+ * Time: 15:42
+ */
+
+namespace Modules\Osce\Entities;
+
+use Modules\Osce\Entities\CommonModel;
+use DB;
+
+class ExamRoom extends CommonModel
+{
+    protected $connection	=	'osce_mis';
+    protected $table 		= 	'exam_room';
+    public $incrementing	=	true;
+    public $timestamps	    =	true;
+    protected $fillable 	=	['exam_id','room_id','create_user_id'];
+
+    /*
+     * 所属考试
+     */
+    public function exam(){
+        return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
+    }
+
+    /*
+     * 所属房间
+     */
+    public function room(){
+        return $this->hasOne('\Modules\Osce\Entities\Room','id','room_id');
+    }
+
+    /**
+     * 获取考试所属房间关系列表
+     * @access public
+     *
+     * @param $exam_id
+     *
+     * @return mixed
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getRoomListByExam($exam_id){
+        return $this    ->  where('exam_id','=',$exam_id)   ->  get();
+    }
+
+    public function getRoomSpTeachersByExamId($exam_id){
+        return  Teacher::leftJoin('station_teacher',function($join){
+            $join    ->  on('teacher.id','=','station_teacher.user_id');
+        })  ->leftJoin($this->table,function($join){
+            $join    ->  on('exam_room.room_id','=','room_station.room_id');
+        })
+            ->where('teacher.type','=',2)
+            ->where('exam_room.exam_id','=',$exam_id)
+            ->select([
+                'teacher.id as id',
+                'teacher.name as name',
+                'teacher.code as code',
+                'teacher.type as type',
+                'teacher.case_id as case_id',
+                'teacher.status as status',
+                'room_station.room_id',
+                'exam_room.room_id',
+            ])
+            ->get();
+    }
+    public function getRoomTeachersByExamId($exam_id){
+        return  Teacher::leftJoin('station_teacher',function($join){
+            $join    ->  on('teacher.id','=','station_teacher.user_id');
+        })  ->leftJoin('room_station',function($join){
+            $join    ->  on('room_station.station_id','=','station_teacher.station_id');
+        })  ->leftJoin($this->table,function($join){
+            $join    ->  on('room_station.room_id','=','exam_room.room_id');
+        })
+            ->whereIn('teacher.type',[1,3])
+            ->where('exam_room.exam_id','=',$exam_id)
+            ->select(DB::raw(implode(',',[
+                'teacher.id as id',
+                'teacher.name as name',
+                'teacher.code as code',
+                'teacher.type as type',
+                'teacher.case_id as case_id',
+                'teacher.status as status',
+            ])))
+            ->get();
+    }
+}

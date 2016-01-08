@@ -263,9 +263,13 @@ class Common{
         );
         return $message;
     }
+
     /**
      * 将Excl导入产生的数组(二维) ，其中 中文的字段换成对应的英文
-     * return array
+     * @param $data
+     * @param array $nameToEn
+     * @return array
+     * @throws \Exception
      */
     public static function arrayChTOEn($data,$nameToEn=[]){
         if(is_string($nameToEn))
