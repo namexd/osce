@@ -41,7 +41,7 @@ class Devices  extends Model
         {
             $builder = $builder->where($this->table.'.name','like','%'.$keyword.'%');
         }
-        if($status){
+        if(in_array($status,[0,1])){
                $builder = $builder->where($this->table.'.status',$status);
            }
         if($devices_cate_id){
