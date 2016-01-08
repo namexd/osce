@@ -126,6 +126,22 @@
         var codropsEvents = {
             '01-01-2016' : '<a href="http://tympanus.net/codrops/2012/11/23/three-script-updates/">Three Script Updates</a>',
         };
+        function getEvent(){
+            alert(12);
+            var qj={id:"14"}
+            $.ajax({
+                url:"{{ route('msc.admin.laboratory.getEditLabCleander')}}", /*${ctx}/*/
+                type:"get",
+                dataType:"json",
+                contentType : 'application/json',
+                cache:false,
+                data:qj,
+                success: function(result) {
+                    var codropsEvents;
+                    console.log(result);
+                }
+            })
+        }
         $(function() {
             var transEndEventNames = {
                         'WebkitTransition' : 'webkitTransitionEnd',
@@ -167,6 +183,7 @@
 
 
                             if( $contentEl.length > 0 ) {
+
                                 showEvents( $contentEl, dateProperties );
                             }
                         },
@@ -190,7 +207,6 @@
 
             // just an example..
             function showEvents( $contentEl, dateProperties ) {
-                console.log( dateProperties );
 
                 hideEvents();
 
@@ -204,7 +220,9 @@
                 }, 25 );
 
             }
-            function hideEvents() {
+
+
+         function hideEvents() {
 
                 var $events = $( '#custom-content-reveal' );
                 if( $events.length > 0 ) {
@@ -216,6 +234,8 @@
 
             }
 
+
+            //保存提交日历设置
             $('#edit_save').click(function(){
                 var datestr = '';
                 var timestr = '';
@@ -298,16 +318,7 @@
                 });
             });
         });
-        $.ajax({
-            url:"{{ route('msc.admin.laboratory.getEditLabCleander')}}", /*${ctx}/*/
-            type:"get",
-            dataType:"json",
-            contentType : 'application/json',
-            cache:false,
-            success: function(result) {
-                console.log(result);
-            }
-        })
+
     </script>
 @stop
 
