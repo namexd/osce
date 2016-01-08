@@ -476,7 +476,6 @@ function examroom_assignment(){
                             }else{
                                 data = res_data;
                             }
-                            console.log(data);
 
                             //准备dom
                             for(var i in data){

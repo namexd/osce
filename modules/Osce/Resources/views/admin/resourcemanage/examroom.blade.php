@@ -34,9 +34,9 @@
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#">考场</a></li>
-                        <li><a href="#">中控室</a></li>
-                        <li class=""><a href="#">走廊</a></li>
-                        <li class=""><a href="#">候考区</a></li>
+                        <li><a href="{{route('osce.admin.room.getRoomList')}}?type=2">中控室</a></li>
+                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=3">走廊</a></li>
+                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=4">候考区</a></li>
                     </ul>
                 </div>
             </div>
