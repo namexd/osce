@@ -204,4 +204,23 @@ class Watch extends CommonModel implements MachineInterface
         }
         return  $bulder ->  paginate(config('osce.page_size'));
     }
+
+
+    public function getWatch($code){
+
+        $builder=$this->Join(
+            'exam_screening_student','exam_screening_student.watch_id','=','watch.id'
+        );
+        if($code){
+          $builder->where('watch.code','like','%'.$code.'%');
+        }
+
+        $builder->select(
+           'watch.id as id',
+           'watch.name as name',
+           'watch.code as code',
+           'watch.status as status'
+        );
+        dd($builder->toSql());
+    }
 }
