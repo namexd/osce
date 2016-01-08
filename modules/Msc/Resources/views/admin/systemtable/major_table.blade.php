@@ -42,10 +42,8 @@
                 if(type == 1){
                     str = '您确定要启用该专业？';
                 }else{
-
                     str = '您确定要停用该专业？';
                 }
-
                 //询问框
                 layer.confirm(str, {
                     btn: ['确定','取消'] //按钮
@@ -53,7 +51,7 @@
                    window.location.href=url;
                 });
             });
-//            编辑
+//            新增表单验证
             $('#add_from').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -62,7 +60,7 @@
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {/*验证*/
-                    number: {/*键名username和input name值对应*/
+                    code: {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
@@ -78,24 +76,52 @@
                             }
                         }
                     },
-                    type: {
+                    status: {
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择状态'
+                            notEmpty: {/*非空提示*/
+                                message: '状态不能为空'
                             }
-
                         }
                     }
-
                 }
             });
-
+            //            编辑表单验证
+            $('#edit_from').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    code: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '专业代码不能为空'
+                            }
+                        }
+                    },
+                    name: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '专业名称不能为空'
+                            }
+                        }
+                    },
+                    status: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '状态不能为空'
+                            }
+                        }
+                    }
+                }
+            });
 //            导入
-
             $("#in").change(function(){
                 var str=$("#load_in").val().substring($("#load_in").val().lastIndexOf(".")+1);
-
                 if(str!="xlsx"){
                     layer.alert(
                             "请上传正确的文件格式？",
@@ -124,44 +150,37 @@
                     });
                 }
             });
-
             $('.edit').click(function () {
+                $("#add_from").hide();
+                $("#edit_from").show();
+                $(".sure_btn").removeAttr("disabled");
+                $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
                 if($(this).attr("data")){
-                    $('input[name=name]').val($(this).parent().parent().find('.name').html());;
+                    $('input[name=name]').val($(this).parent().parent().find('.name').html());
                     $('input[name=code]').val($(this).parent().parent().find('.code').html());
-//                var sname = $(this).parent().parent().find('.sname').html();
                     var status = '';
                     if($(this).parent().parent().find('.status').html() == '正常'){
                         status = 1;
                     }else{
                         status = 0;
                     }
-
                     $('.state option').each(function(){
-//                alert(status);
                         if($(this).val() == status){
                             $(this).attr('selected','selected');
                         }
                     });
-                    {{--$('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');--}}
-                    {{--var id = $(this).attr("data");--}}
-                    {{--$('#add_from').append('<input type="hidden" name="id" value="'+id+'">');--}}
-
-                    $('#add_from').attr('action','{{route("msc.admin.profession.ProfessionSave")}}');
                     var id = $(this).attr("data");
-                    $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+                    $('#edit_from').append('<input type="hidden" name="id" value="'+id+'">');
                 }
             });
-
             $('#addprofession').click(function(){
+                $("#add_from").show();
+                $("#edit_from").hide();
+                $(".sure_btn").removeAttr("disabled");
+                $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
                 $("input,textarea,select").val("");
-                $('#add_from').attr('action',"{{route('msc.admin.profession.ProfessionAdd')}}");
             })
-
         })
-
-
-
     </script>
 @stop
 
@@ -253,11 +272,11 @@
 @stop
 
 @section('layer_content')
-{{--编辑--}}
+{{--新增--}}
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.profession.ProfessionAdd')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增专业/编辑专业</h4>
+            <h4 class="modal-title" id="myModalLabel">新增专业</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
@@ -276,7 +295,6 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
                 <div class="col-sm-9">
                     <select id="select_Category"   class="form-control m-b state" name="status">
-                        <option value="-1">请选择状态</option>
                         <option value="1">正常</option>
                         <option value="0">禁用</option>
                     </select>
@@ -285,10 +303,48 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                     <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
                 </div>
             </div>
         </div>
     </form>
+
+{{--编辑--}}
+<form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route("msc.admin.profession.ProfessionSave")}}" method="post">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">编辑专业</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span class="dot">*</span>专业代码</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control name add-name" name="code" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span class="dot">*</span>专业名称</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control describe add-describe" name="name" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+            <div class="col-sm-9">
+                <select id="select_Category"   class="form-control m-b state" name="status">
+                    <option value="1">正常</option>
+                    <option value="0">禁用</option>
+                </select>
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-2 right">
+                <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+            </div>
+        </div>
+    </div>
+</form>
  @stop
