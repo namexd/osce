@@ -286,6 +286,7 @@
                             layer.confirm(msg.info, {
                                 btn: ['確定'] //按钮
                             }, function(){
+                                console.log(msg.data);
                                 //确定之后-把已添加的数据返回并显示
                                 //location.reload();
                             });

@@ -314,19 +314,20 @@ class LaboratoryController extends MscController {
         }
         return $temp2;
     }
-    //如果进入日历时数据已存在
-    public function getEditLabCleander(){
-        $lid = Input::get('id');
+
+    //查找实验室已存在的开放日历
+    public function get_lab_cleander($id){
+        $lid = $id;
         $cleaner = OpenPlan::where('lab_id','=',$lid)->where('status','=',1)->get();
         $cleaner = $cleaner->toArray();
         $array = array();
         foreach($cleaner as $k=>$v){
             if(array_key_exists('year',$v) || array_key_exists('month',$v) || array_key_exists('day',$v)){
-                    $array[$k]['year'] = $v['year'];
-                    $array[$k]['month'] = $v['month'];
-                    $array[$k]['day'] = $v['day'];
-                    $array[$k]['lab_id'] = Input::get('id');
-                    $array[$k]['status'] = 1;
+                $array[$k]['year'] = $v['year'];
+                $array[$k]['month'] = $v['month'];
+                $array[$k]['day'] = $v['day'];
+                $array[$k]['lab_id'] = $lid;
+                $array[$k]['status'] = 1;
             }
         }
         $arr = array();
@@ -337,6 +338,10 @@ class LaboratoryController extends MscController {
             $arr[$o]['child'] = OpenPlan::where($date)->select('begintime','endtime')->get();
         }
         return $arr;
+    }
+    //如果进入日历时数据已存在
+    public function getEditLabCleander(){
+        return ['data'=>$this->get_lab_cleander(Input::get('id'))];
     }
     /**
      * Created by PhpStorm.
@@ -362,7 +367,9 @@ class LaboratoryController extends MscController {
         foreach($floor as $k=>$v){
             $where['floor'] = $v;
             $labArr[$k]['floor'] = $v;
+            //$this->start_sql(1);
             $labArr[$k]['lab'] = Laboratory::where($where)->get();
+            //$this->end_sql(1);
         }
         return $labArr;
     }
@@ -494,7 +501,7 @@ class LaboratoryController extends MscController {
         }
         DB::connection('msc_mis')->commit();
         //當前添加的實驗室的开放日历
-        $labdata = OpenPlan::where(['status'=>1,'lab_id'=>Input::get('lid')])->get();
+        $labdata = $this->get_lab_cleander(Input::get('lid'));
         return ['status'=>1,'info'=>'操作成功','data'=>$labdata];
     }
 }
