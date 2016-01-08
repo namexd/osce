@@ -4,6 +4,7 @@
     table tr td .form-group {
         margin-bottom: 0;
     }
+    td input{margin: 5px 0;}
 </style>
 @stop
 
