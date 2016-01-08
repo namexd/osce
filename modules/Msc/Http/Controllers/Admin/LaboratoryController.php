@@ -88,6 +88,9 @@ class LaboratoryController extends MscController {
             'floor' => 'required',
             'code' => 'required',
             'total' => 'required|integer'
+        ],[
+            "total.required" => "实验室容量必填",
+            //"integer"      => ":attribute 长度必须在 :min 和 :max 之间"
         ]);
         $user = Auth::user();
         $data = [
@@ -136,6 +139,9 @@ class LaboratoryController extends MscController {
             'floor' => 'required',
             'code' => 'required',
             'total' => 'required|integer'
+        ],[
+            "total.required" => "实验室容量必填",
+            //"integer"      => ":attribute 长度必须在 :min 和 :max 之间"
         ]);
         $user = Auth::user();
         $data = [

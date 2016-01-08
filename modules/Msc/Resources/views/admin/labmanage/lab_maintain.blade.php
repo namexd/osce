@@ -237,10 +237,10 @@
                     });
                 }
 
-                $('#add_from').attr('action','{{route("msc.admin.laboratory.getEditLabInsert")}}');
+                $('#edit_from').attr('action','{{route("msc.admin.laboratory.getEditLabInsert")}}');
                 $('#myModalLabel').html('编辑实验室');
 
-                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+                $('#edit_from').append('<input type="hidden" name="id" value="'+id+'">');
             });
 
         })

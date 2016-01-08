@@ -122,7 +122,7 @@ function ban_maintain(){
                     $(this).attr('selected','selected');
                 }
             });
-            $('#add_from').attr('action','{{route("msc.admin.floor.postEditFloorInsert")}}');
+            //$('#add_from').attr('action','{{route("msc.admin.floor.postEditFloorInsert")}}');
             $('#myModalLabel').html('编辑楼栋');
             var id = $(this).attr("data");
             $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
