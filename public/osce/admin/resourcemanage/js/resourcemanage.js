@@ -147,6 +147,12 @@ function categories(){
                 '<input id="select_Category"  class="form-control" name="content['+parent+']['+child+']"/>'+
                 '</div>'+
                 '</div>'+
+                '<div class="form-group">'+
+                '<label class="col-sm-2 control-label">评分标准:</label>'+
+                '<div class="col-sm-10">'+
+                '<input id="select_Category"  class="form-control" name="description['+parent+']['+child+']"/>'+
+                '</div>'+
+                '</div>'+
                 '</td>'+
                 '<td>'+
                 '<select class="form-control" name="score['+parent+']['+child+']">'+
@@ -244,15 +250,19 @@ function categories(){
     $('tbody').on('click','.fa-arrow-up',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.prev().attr('child')!=undefined){
-            var thisInput = thisElement.find('input').val(),
-                    thisSelect = thisElement.find('select').val(),
-                    prevInput = thisElement.prev().find('input').val(),
-                    prevSelect = thisElement.prev().find('select').val();
+            var thisInput = thisElement.find('input:first').val(),
+                thisInputLast = thisElement.find('input:last').val(),
+                thisSelect = thisElement.find('select').val(),
+                prevInput = thisElement.prev().find('input:first').val(),
+                prevInputLast = thisElement.prev().find('input:last').val(),
+                prevSelect = thisElement.prev().find('select').val();
 
             //交换数据
-            thisElement.find('input').val(prevInput);
+            thisElement.find('input:first').val(prevInput);
+            thisElement.find('input:last').val(prevInputLast);
             thisElement.find('select').val(prevSelect);
-            thisElement.prev().find('input').val(thisInput);
+            thisElement.prev().find('input:first').val(thisInput);
+            thisElement.prev().find('input:last').val(thisInputLast);
             thisElement.prev().find('select').val(thisSelect);
         }else{
             return;
@@ -268,15 +278,19 @@ function categories(){
     $('tbody').on('click','.fa-arrow-down',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().attr('child')!=undefined){
-            var thisInput = thisElement.find('input').val(),
-                    thisSelect = thisElement.find('select').val(),
-                    nextInput = thisElement.next().find('input').val(),
-                    nextSelect = thisElement.next().find('select').val();
+            var thisInput = thisElement.find('input:first').val(),
+                thisInputLast = thisElement.find('input:last').val(),
+                thisSelect = thisElement.find('select').val(),
+                nextInput = thisElement.next().find('input:first').val(),
+                nextInputLast = thisElement.next().find('input:last').val(),
+                nextSelect = thisElement.next().find('select').val();
 
             //交换数据
-            thisElement.find('input').val(nextInput);
+            thisElement.find('input:first').val(nextInput);
+            thisElement.find('input:last').val(nextInputLast);
             thisElement.find('select').val(nextSelect);
-            thisElement.next().find('input').val(thisInput);
+            thisElement.next().find('input:first').val(thisInput);
+            thisElement.next().find('input:last').val(thisInputLast);
             thisElement.next().find('select').val(thisSelect);
         }else{
             return;
