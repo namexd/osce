@@ -476,7 +476,6 @@ function examroom_assignment(){
                             }else{
                                 data = res_data;
                             }
-                            console.log(data);
 
                             //准备dom
                             for(var i in data){
@@ -490,7 +489,7 @@ function examroom_assignment(){
                                             '<td>'+(parseInt(i)+1)+'</td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control">'+teacher+'</select>'+
+                                                '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
                                             '</td>'+
                                         '</tr>';
                             }
@@ -552,7 +551,7 @@ function examroom_assignment(){
                                             '<td>'+(parseInt(i)+1)+'</td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control">'+teacher+'</select>'+
+                                                '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
                                             '</td>'+
                                         '</tr>';
                             }
@@ -581,9 +580,9 @@ function examroom_assignment(){
         index = parseInt(index) + 1;
 
         var html = '<tr class="pid-'+index+'">'+
-                    '<td>'+index+'<input type="hidden"  name="id['+index+'][id]" value="'+index+'"/></td>'+
+                    '<td>'+index+'</td>'+
                     '<td width="498">'+
-                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="name['+index+'][]"></select>'+
+                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="select['+index+']"></select>'+
                     '</td>'+
                     '<td class="necessary">必考</td>'+
                     '<td>'+
