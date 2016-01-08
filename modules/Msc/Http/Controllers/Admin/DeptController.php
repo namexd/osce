@@ -106,6 +106,7 @@ class DeptController extends MscController
         $data = [
             'name'   =>  $requests['name'],
             'description' => $requests['description'],
+            'updated_at'=>date('Y-m-d H:i:s')
         ];
         $DeptInfo = $this->TeacherDept->UpdateDept($requests['id'],$data);
         if($DeptInfo){
