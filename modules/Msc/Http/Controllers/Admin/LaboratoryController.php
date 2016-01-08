@@ -297,6 +297,8 @@ class LaboratoryController extends MscController {
     function array_unique_fb($array2D)
     {
         $key = array();
+        $temp = array();
+        $temp2 = array();
         foreach ($array2D as $k=>$v)
         {
             if(empty($key)) $key = array_keys($v);//记录数组的KEY
@@ -318,8 +320,10 @@ class LaboratoryController extends MscController {
     //查找实验室已存在的开放日历
     public function get_lab_cleander($id){
         $lid = $id;
+
         $cleaner = OpenPlan::where('lab_id','=',$lid)->where('status','=',1)->get();
         $cleaner = $cleaner->toArray();
+        //dd($cleaner);
         $array = array();
         foreach($cleaner as $k=>$v){
             if(array_key_exists('year',$v) || array_key_exists('month',$v) || array_key_exists('day',$v)){
@@ -328,17 +332,20 @@ class LaboratoryController extends MscController {
                 $array[$k]['day'] = $v['day'];
                 $array[$k]['lab_id'] = $lid;
                 $array[$k]['status'] = 1;
+                $array[$k]['period_type'] = $v['period_type'];
             }
         }
+
         $arr = array();
         $array = $this->array_unique_fb($array);
         sort($array);
         foreach($array as $o=>$date){
             $arr[$o]['date'] = $date;
-            $arr[$o]['child'] = OpenPlan::where($date)->select('begintime','endtime')->get();
+            $arr[$o]['child'] = OpenPlan::where($date)->select('begintime','endtime','period_type')->get();
         }
         return $arr;
     }
+
     //如果进入日历时数据已存在
     public function getEditLabCleander(){
         return ['data'=>$this->get_lab_cleander(Input::get('id'))];
@@ -374,6 +381,23 @@ class LaboratoryController extends MscController {
         return $labArr;
     }
 
+    //判断上午，中午，下午，晚上
+    public function get_n($type){
+        switch ($type) {
+            case 'morning':
+                $name = '1';
+                break;
+            case 'noon':
+                $name = '2';
+                break;
+            case 'afternoon':
+                $name = '3';
+                break;
+            default:
+                $name = '4';
+        }
+        return $name;
+    }
 //    /**
 //     * 计算日期是当月第几周
 //     */
@@ -401,6 +425,7 @@ class LaboratoryController extends MscController {
         DB::connection('msc_mis')->beginTransaction();
         $date = explode('&',trim(Input::get('date'),'&'));
         $timestr =  explode('@',trim(Input::get('timestr'),'@'));
+        //dd($timestr);
         foreach($timestr as $k=>$v){
             $arr['time'.$k] = explode('!',trim($v,'!'));
         }
@@ -457,6 +482,13 @@ class LaboratoryController extends MscController {
             $plan[] = array_merge($time,$post[0]);
         }
         try{
+            foreach($plan as $t1=>$v1){
+                $begintime = explode('*',$v1['begintime']);
+                $endtime = explode('*',$v1['endtime']);
+                $plan[$t1]['begintime'] = $begintime[1];
+                $plan[$t1]['endtime'] = $endtime[1];
+                $plan[$t1]['period_type'] = $this->get_n($endtime[0]);
+            }
             OpenPlan::insert($plan);
 
         } catch (Exception $e){
@@ -471,6 +503,13 @@ class LaboratoryController extends MscController {
                 $plan1[] = array_merge($time, $post[1]);
             }
             try{
+                foreach($plan1 as $t1=>$v1){
+                    $begintime = explode('*',$v1['begintime']);
+                    $endtime = explode('*',$v1['endtime']);
+                    $plan1[$t1]['begintime'] = $begintime[1];
+                    $plan1[$t1]['endtime'] = $endtime[1];
+                    $plan1[$t1]['period_type'] = $this->get_n($endtime[0]);
+                }
                 OpenPlan::insert($plan1);
             } catch (Exception $e){
                 DB::connection('msc_mis')->rollback();
@@ -482,6 +521,13 @@ class LaboratoryController extends MscController {
                 $plan2[] = array_merge($time, $post[2]);
             }
             try{
+                foreach($plan2 as $t1=>$v1){
+                    $begintime = explode('*',$v1['begintime']);
+                    $endtime = explode('*',$v1['endtime']);
+                    $plan2[$t1]['begintime'] = $begintime[1];
+                    $plan2[$t1]['endtime'] = $endtime[1];
+                    $plan2[$t1]['period_type'] = $this->get_n($endtime[0]);
+                }
                 OpenPlan::insert($plan2);
             } catch (Exception $e){
                 DB::connection('msc_mis')->rollback();
@@ -493,6 +539,13 @@ class LaboratoryController extends MscController {
                 $plan3[] = array_merge($time, $post[3]);
             }
             try{
+                foreach($plan3 as $t1=>$v1){
+                    $begintime = explode('*',$v1['begintime']);
+                    $endtime = explode('*',$v1['endtime']);
+                    $plan3[$t1]['begintime'] = $begintime[1];
+                    $plan3[$t1]['endtime'] = $endtime[1];
+                    $plan3[$t1]['period_type'] = $this->get_n($endtime[0]);
+                }
                 OpenPlan::insert($plan3);
             } catch (Exception $e){
                 DB::connection('msc_mis')->rollback();
