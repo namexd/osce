@@ -25,7 +25,6 @@
         $(".stop").click(function(){
             var this_id = $(this).attr('data');
             var type = $(this).attr('data-type');
-//                alert(this_id);
             var url = "/msc/admin/professionaltitle/holder-status?id="+this_id+"&type="+type;
             var str = '';
             if(type == 1){

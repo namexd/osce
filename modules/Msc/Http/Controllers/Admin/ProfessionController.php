@@ -206,7 +206,7 @@ class ProfessionController extends MscController
         if($id){
             $data = $professional->where('id','=',$id)->update(['status'=>Input::get('type')]);
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('停用成功');
+                return redirect()->back()->withInput()->withErrors('状态变更成功');
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
