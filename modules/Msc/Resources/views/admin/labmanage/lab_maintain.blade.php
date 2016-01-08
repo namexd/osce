@@ -200,7 +200,6 @@
                     data: {id:id,type:1},
                     success: function(msg){
                         var opstr = '';
-                        console.log(msg);
                         if(msg){
                             $.each($(msg),function(i,n){
                                 if(n == $(this).parent().parent().find('.floors').html()){
@@ -212,9 +211,26 @@
                         }
                     }
                 });
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('msc.admin.laboratory.getLocal')}}",
+                    data: {id:id,type:1},
+                    success: function(msg){
+                        var opstr = '';
+                        console.log(msg);
+                        if(msg){
+                            $.each($(msg),function(i,n){
+                                if(n == $(this).parent().parent().find('.floors').html()){
+                                    opstr += '<option value="'+ n.id+'" selected="selected">'+ n.name+'</option>';
+                                }
+                                opstr += '<option value="'+ n.id+'">'+ n.name+'</option>';
+                            });
+                            $('.oldlocal').html(opstr);
+                        }
+                    }
+                });
+               // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
 
-                var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
-                $('.oldlocal').html(str);
                 var status = $(this).parent().parent().find('.status').attr('data');
                 $('.sta option').each(function(){
                     if($(this).val() == status){
