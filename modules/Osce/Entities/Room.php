@@ -8,7 +8,6 @@
 
 namespace Modules\Osce\Entities;
 
-use Modules\Msc\Entities\Vcr;
 
 class Room extends CommonModel
 {

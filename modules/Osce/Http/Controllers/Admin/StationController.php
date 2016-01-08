@@ -28,7 +28,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.exammanage.examroom_assignment');
+        return view('osce::admin.exammanage.sp_invitation');
     }
 
     /**
@@ -82,7 +82,6 @@ class StationController extends CommonController
 
         //获得上次的时间限制
         $time = $request->session()->get('time', '');
-        dd($vcr);
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourcemanage.test_station_add',
             ['placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case, 'room' => $room, 'subject' => $subject, 'time' => $time]);
