@@ -10,6 +10,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Pad;
 use Modules\Osce\Entities\Watch;
@@ -799,9 +801,9 @@ class MachineController extends CommonController
     }
 
     /**
-     *查询腕表
+     *查询腕表数据
      * @method GET
-     * @url machine/watch-list
+     * @url
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -824,12 +826,38 @@ class MachineController extends CommonController
         ]);
 
         $code=intval($request->get('code'));
+        if($code){
+            $list=Watch::where('code','like','%'.$code.'%');
+        }else{
+            $list=Watch::select();
+        }
+        $data=[];
+        foreach($list as $item){
+           $data[]=[ 'id'      =>$item->id,
+                     'status'  =>$item->status,
+                     'name'    =>$item->name,
+                     'code'    =>$item->code,
+                   ];
+         }
 
-        $watchModel=new Watch();
+        foreach($data as $itm){
+             if($itm['status']==1){
+               $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first()->student_id;
+               $itm['student_id']=$studentId;
+             }
+        }
 
-        $list=$watchModel->getWatch($code);
+        foreach($data as $v){
+            if($v['student_id']){
+                $studentName=Student::where('id',$v['student_id'])->select('name')->first()->name;
+                $v['student_name']=$studentName;
+            }
+        }
+        $watchModel   =   new Watch();
 
-        return $list;
+        $pagination             =   $watchModel   ->  paginate('osce.page_size');
+
+        return ['data'=>$data,'pagination'=>$pagination];
     }
 
 }

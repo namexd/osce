@@ -16,6 +16,7 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 use Symfony\Component\Translation\Interval;
@@ -509,9 +510,12 @@ class ExamController extends CommonController
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>1]);
 
         if($result){
-            return response()->json(
-                $this->success_data(1,'绑定成功')
-            );
+            $result=Watch::where('id',$id)->update(['status'=>1]);
+            if($result){
+                return response()->json(
+                    $this->success_data(1,'绑定成功')
+                );
+            }
         }else{
             return response()->json(
                 $this->success_data(0,'绑定失败','false')
@@ -540,9 +544,12 @@ class ExamController extends CommonController
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>0]);
 
         if($result){
-            return response()->json(
-                $this->success_data(1,'解绑成功')
-            );
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                return response()->json(
+                    $this->success_data(1,'解绑成功')
+                );
+            }
         }else{
             return response()->json(
                 $this->success_data(0,'解绑失败','data')

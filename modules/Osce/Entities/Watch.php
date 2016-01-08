@@ -23,8 +23,11 @@ class Watch extends CommonModel implements MachineInterface
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '损坏',
-        1   =>  '正常',
+        0   =>  '未使用',
+        1   =>  '使用中',
+        2   =>  '报废',
+        3   =>  '损坏',
+        4   =>  '维修',
     ];
 
     /**
@@ -206,21 +209,4 @@ class Watch extends CommonModel implements MachineInterface
     }
 
 
-    public function getWatch($code){
-
-        $builder=$this->Join(
-            'exam_screening_student','exam_screening_student.watch_id','=','watch.id'
-        );
-        if($code){
-          $builder->where('watch.code','like','%'.$code.'%');
-        }
-
-        $builder->select(
-           'watch.id as id',
-           'watch.name as name',
-           'watch.code as code',
-           'watch.status as status'
-        );
-        dd($builder->toSql());
-    }
 }
