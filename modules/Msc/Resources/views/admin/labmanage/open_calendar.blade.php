@@ -114,6 +114,7 @@
                 var labname = $(this).html();
                 $('.labname').html(labname);
                 $('.labtotal').html(total+'人');
+                $('.labid').val('');
                 $('.labid').val($(this).attr('data-labid'));
             });
 
@@ -271,7 +272,7 @@
                         timestr += $('.'+$(this).attr('data')).val()+'@';
                     }
                 });
-                if($('.lid').val()){
+                if(!$('.labid').val()){
                     layer.alert('请选择实验室');
                     return false;
                 }
@@ -280,7 +281,18 @@
                     url: "{{route('msc.admin.laboratory.postOperatingLabCleander')}}",
                     data: {date:datestr,timestr:timestr,lid:$('.labid').val()},
                     success: function(msg){
-                        //console.log(msg);
+                        if(msg.status){
+                            layer.confirm(msg.info, {
+                                btn: ['確定'] //按钮
+                            }, function(){
+                                //确定之后-把已添加的数据返回并显示
+                                //location.reload();
+                            });
+
+                        }else{
+                            layer.alert(msg.info);
+                            return false;
+                        }
                     }
                 });
             });
