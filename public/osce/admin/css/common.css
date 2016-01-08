@@ -102,11 +102,11 @@ a{-webkit-touch-callout:none;}
 /**
  * 按钮颜色
  */
-/*.btn{
+.btn{
     width: 70px;
     height: 34px;
     margin: 10px;
-}*/
+}
 .btn-primary{
     background-color: #1ab394;
     border-color: #1ab394;
