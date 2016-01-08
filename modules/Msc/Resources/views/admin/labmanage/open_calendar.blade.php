@@ -294,6 +294,7 @@
 //                                //确定之后-把已添加的数据返回并显示
 //                                //location.reload();
 //                            });
+                            console.log(msg.data);
 
                         }else{
                             layer.alert(msg.info);
