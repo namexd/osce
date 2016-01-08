@@ -198,16 +198,20 @@ class LadMaintainController extends MscController
      */
 
     public function getDevicesTotalEdit(Request $request,LadDevice $ladDevice){
-//        dd(111111111);
             $this->validate($request,[
-                'total'    => 'required|integer',
+                'lab_device_id' =>'required|integer',
+                'total'    => 'required|integer'
             ]);
         $data = $request->only(['total']);
-        $update = $ladDevice->where('id','=',urlencode(e(Input::get('id'))))->update($data);
-        if($update != false){
-            return redirect()->back()->withInput()->withErrors('编辑成功');
+        $update = $ladDevice->where('id','=',urlencode(e(Input::get('lab_device_id'))))->update($data);
+        if($update){
+            return response()->json(
+                $this->success_data([],1,'添加成功')
+            );
         }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
+            return response()->json(
+                $this->success_data([],2,'编辑失败')
+            );
         }
 
     }
@@ -231,21 +235,23 @@ class LadMaintainController extends MscController
      */
 
     public function getLadDevicesDeletion(){
-//        dd(22222222222);
-
         $id = urlencode(e(Input::get('id')));
-        //dd($id);
-        if($id){
+        if(!empty($id)){
             $data = LadDevice::find($id);
             $del = $data->delete();
-            //dd($del);
-            if($del != false){
-                return redirect()->back()->withInput()->withErrors('删除成功');
+            if($del){
+                return response()->json(
+                    $this->success_data([],1,'删除成功')
+                );
             }else{
-                return redirect()->back()->withInput()->withErrors('系统异常');
+                return response()->json(
+                    $this->success_data([],2,'删除失败')
+                );
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
+            return response()->json(
+                $this->success_data([],3,'没有传入LadDevices表ID')
+            );
         }
 
     }

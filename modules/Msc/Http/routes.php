@@ -110,7 +110,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('professionaltitle/holder-remove',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
 
 		//实验室资源维护路由
-		Route::controller('LadMaintain','LadMaintainController');
+		//Route::controller('LadMaintain','LadMaintainController');
 		Route::get('ladMaintain/laboratory-list',['uses'=>'LadMaintainController@getLaboratoryList','as'=>'msc.admin.LadMaintain.LaboratoryList']);
 		Route::get('ladMaintain/laboratory-list-data',['uses'=>'LadMaintainController@getLaboratoryListData','as'=>'msc.admin.LadMaintain.LaboratoryListData']);
 		Route::get('/ladMaintain/laboratory-device-list',['uses'=>'LadMaintainController@getLaboratoryDeviceList','as'=>'msc.admin.LadMaintain.LaboratoryDeviceList']);
