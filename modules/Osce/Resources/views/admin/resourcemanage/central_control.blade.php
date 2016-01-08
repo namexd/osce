@@ -8,6 +8,7 @@
     }
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
+    .input-group input{height: 34px;}
     </style>
 @stop
 
@@ -23,7 +24,7 @@
                 <h5 class="title-label">场所管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -40,7 +41,7 @@
             </div>
             
             <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword">
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </span>
@@ -50,22 +51,26 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>场所名称</th>
+                    <th>摄像机</th>
                     <th>描述</th>
                     <th>操作</th>
 
                 </tr>
                 </thead>
                 <tbody>
+                @forelse($data as $k=>$item)
                     <tr>
-                        <td>1</td>
-                        <td>反对撒法</td>
-                        <td>fgs</td>
-                        <td>
-                            <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <td>{{$k+1}}</td>
+                        <td>{{$item->name}}</td>
+                        <td>{{$item->description}}</td>
+                        <td value="{{$item->id}}">
+                            <a href="{{route('osce.admin.room.getEditRoom')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
+                @empty
+                @endforelse
+                </tbody>
                 </tbody>
             </table>
 
