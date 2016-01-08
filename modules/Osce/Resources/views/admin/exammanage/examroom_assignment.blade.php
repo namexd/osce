@@ -31,6 +31,7 @@
         border-color: #1ab394!important;
         width: 100%;
     }
+    .control-label{text-align: right;}
     </style>
 @stop
 
@@ -116,7 +117,7 @@
                                             <th>老师</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody index="0">
                                             <tr>
                                                 <td>1</td>
                                                 <td>3:00</td>
