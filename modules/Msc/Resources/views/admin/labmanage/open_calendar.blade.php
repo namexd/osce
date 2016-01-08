@@ -2,6 +2,7 @@
 @section('only_css')
     <link rel="stylesheet" href="{{ asset('/msc/admin/css/calendar/calendar.css') }}">
     <link rel="stylesheet" href="{{ asset('/msc/admin/css/calendar/custom_2.css') }}">
+
     <style>
         /*may-add*/
         .add_time_list .time-set{ width: 45%; float: left;line-height: 34px;}
@@ -118,9 +119,8 @@
 
     </script>
     <script type="text/javascript">
-        var codropsEvents = {
-            '01-02-2016' : '<a href="http://tympanus.net/codrops/2012/11/23/three-script-updates/">Three Script Updates</a>',
-        };
+        $(function() {
+
         getEvent();
         function getEvent(){
 
@@ -133,76 +133,265 @@
                 cache:false,
                 data:qj,
                 success: function(result) {
-                    codropsEvents=[];
                     var eventime;
-                    var event;
-                    $(result.data).each(function(){
+                    event="";
+                    var str = '{';
+                    $(result.data).each(function(index, item){
+
+                        if(this.date.day<10){
+                            this.date.day="0"+this.date.day;
+                        }
+                        if(this.date.month<10){
+                            this.date.month="0"+this.date.month;
+                        }
                         eventime= this.date.month+"-"+this.date.day+"-"+this.date.year;
-                        this.child
-                        $(result.data).each(function(){
-                            
+
+                        $(this.child).each(function(){
+                            event=event+"<div class='timesave' begintime='" +this.begintime
+                                            +"' endtime='"+this.endtime
+                                    +"' period_type='"+this.period_type+ "'></div>";
+
                         });
-                        //var event=
-                        return eventime;
+                        str += '"'+eventime+'": "'+event+'",';
+                        var obj = eval('('+'{"'+eventime+'": "'+event+'"}'+')');
+                        event="";//清空event里面内容
+
                     })
-                    console.log(eventime);
+                    str += '}';
+                    codropsEvents = eval('('+str+')');
+                    load();
                 }
             })
         }
-        $(function() {
-            var transEndEventNames = {
-                        'WebkitTransition' : 'webkitTransitionEnd',
-                        'MozTransition' : 'transitionend',
-                        'OTransition' : 'oTransitionEnd',
-                        'msTransition' : 'MSTransitionEnd',
-                        'transition' : 'transitionend'
-                    },
-                    transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
-                    $calendar = $( '#calendar' ),
-                    cal = $calendar.calendario( {
-                        onDayClick : function( $el, $contentEl, dateProperties,savedate) {
-                            if(dateProperties.month<10){
-                                dateProperties.month="0"+dateProperties.month;
-                            }
-                            if(dateProperties.day<10){
-                                dateProperties.day="0"+dateProperties.day;
-                            }
-                            var savedate_one=dateProperties.year+"-"+dateProperties.month+"-"+dateProperties.day;
-                            var make = false;
-                            var dateDocArr = $('#savedate').find('input');
-                            $el.toggleClass("check");
-                            if(dateDocArr.length>0){
-                                dateDocArr.each(function(){
-                                    if(savedate_one == $(this).val()){
-                                        $(this).remove();
-                                        make = true;
-                                        return false;
-                                    }
-                                })
-                            }
-                            if(make){
-                                return false;
-                            }
-                            $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
 
 
-                            if( $contentEl.length > 0 ) {
-
-                                showEvents( $contentEl, dateProperties );
-                            }
+            function load(){
+                var transEndEventNames = {
+                            'WebkitTransition' : 'webkitTransitionEnd',
+                            'MozTransition' : 'transitionend',
+                            'OTransition' : 'oTransitionEnd',
+                            'msTransition' : 'MSTransitionEnd',
+                            'transition' : 'transitionend'
                         },
-                        caldata : codropsEvents,
-                        displayWeekAbbr : true
-                    } ),
-                    $month = $( '#custom-month' ).html( cal.getMonthName() ),
-                    $year = $( '#custom-year' ).html( cal.getYear() );
+                        transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
+                        $calendar = $( '#calendar' )
+                cal = $calendar.calendario( {
+                    onDayClick : function( $el, $contentEl, dateProperties,savedate) {
+                        if(dateProperties.month<10){
+                            dateProperties.month="0"+dateProperties.month;
+                        }
+                        if(dateProperties.day<10){
+                            dateProperties.day="0"+dateProperties.day;
+                        }
+                        var savedate_one=dateProperties.year+"-"+dateProperties.month+"-"+dateProperties.day;
+                        var make = false;
+                        var dateDocArr = $('#savedate').find('input');
+                        $el.toggleClass("check");
+                        if(dateDocArr.length>0){
+                            dateDocArr.each(function(){
+                                if(savedate_one == $(this).val()){
+                                    $(this).remove();
+                                    make = true;
+                                    return false;
+                                }
+                            })
+                        }
+                        if(make){
+                            return false;
+                        }
+                        $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
 
-            $( '#custom-next' ).on( 'click', function() {
-                cal.gotoNextMonth( updateMonthYear );
-            } );
-            $( '#custom-prev' ).on( 'click', function() {
-                cal.gotoPreviousMonth( updateMonthYear );
-            } );
+
+                        if( $contentEl.length > 0 ) {
+                            cleardate();
+                            var mark_morning = false;
+                            var mark_noon = false;
+                            var  mark_afternoon = false;
+                            var  mark_night = false;
+                            var  inuput_num= 5;//初始设定添加的为第五个
+
+                            $contentEl.find(".timesave").each(function(){
+                                var period_type= $(this).attr("period_type");
+                                var begintime= $(this).attr("begintime");
+                                var endtime= $(this).attr("endtime");
+
+                                if(period_type=="1"){//上午
+                                    $(".morning").children().children().children(".check_icon").addClass("check");
+                                    if(!mark_morning){
+                                        $(".morning").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein1" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end1" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
+                                                +'</div>'
+                                                +'</div>');
+                                        mark_morning = true;
+                                    }else{
+                                        $(".morning").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                                inuput_num++;
+                                    }
+
+                                }
+                                else if(period_type=="2"){
+                                    //中午
+
+                                    $(".noon").children().children().children().addClass("check");
+                                    if(!mark_noon){
+                                        $(".noon").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein2" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end2" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
+                                                +'</div>'
+                                                +'</div>');
+                                        mark_noon = true;
+                                    }else{
+                                        $(".noon").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                        inuput_num++;
+                                    }
+
+                                }
+                                else  if(period_type=="3"){
+
+                                    //下午
+                                    $(".afternoon").children().children().children().addClass("check");
+                                    if(!mark_afternoon){
+                                        $(".afternoon").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein3" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end3" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
+                                                +'</div>'
+                                                +'</div>');
+                                        mark_afternoon = true;
+                                    }else{
+                                        $(".afternoon").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                        inuput_num++;
+                                    }
+
+                                }else{
+                                    //晚上
+                                    $(".night").children().children().children().addClass("check");
+                                    if(!mark_night){
+                                        $(".night").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein4" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
+                                                +'</div>'
+                                                +'</div>');
+                                        mark_night = true;
+                                    }else{
+                                        $(".night").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                        inuput_num++;
+                                    }
+                                }
+
+                            })
+
+                            deletetime();
+                            $(".add_time_button").click(function(){ //添加时间段
+                                var inuput_num=$(".add_time_list  .form-group").size()+1;
+                                var time_frame=$(this).attr("id");
+                                $(this).parent().parent().parent().append('<div class=" overflow form-group">'
+                                        +'<div class="col-sm-8">'
+                                        +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" frame="'+time_frame+'"placeholder="08：00" value="" />'
+                                        +'<lable>至</lable>'
+                                        +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" frame="'+time_frame+'"   placeholder="09：00" value="" />'
+                                        +'</div>'
+                                        +'<div class="col-sm-4">'
+                                        +'<span class="fa fa-trash-o"></span>'
+                                        +'</div>'
+                                        +'</div>')
+                                deletetime();
+                            })
+                            function  deletetime(){
+                                $(".fa-trash-o").click(function(){
+                                    $(this).parent().parent().remove();
+                                });
+                            }
+
+
+                        }else{
+                            $(".morning").children().children().children().removeClass("check");
+                            $(".noon").children().children().children().removeClass("check");
+                            $(".afternoon").children().children().children().removeClass("check");
+                            $(".night").children().children().children().removeClass("check");
+                        }
+                        //清空时间段
+                        function cleardate(){
+                            $(".morning").children(".col-sm-10").empty();
+                            $(".noon").children(".col-sm-10").empty();
+                            $(".afternoon").children(".col-sm-10").empty();
+                            $(".night").children(".col-sm-10").empty();
+                            $(".morning").children().children().children().removeClass("check");
+                            $(".noon").children().children().children().removeClass("check");
+                            $(".afternoon").children().children().children().removeClass("check");
+                            $(".night").children().children().children().removeClass("check");
+                        }
+                    },
+                    caldata : codropsEvents,
+                    displayWeekAbbr : true
+                } ),
+                        $month = $( '#custom-month' ).html( cal.getMonthName() ),
+                        $year = $( '#custom-year' ).html( cal.getYear() );
+
+                $( '#custom-next' ).on( 'click', function() {
+                    cal.gotoNextMonth( updateMonthYear );
+                } );
+                $( '#custom-prev' ).on( 'click', function() {
+                    cal.gotoPreviousMonth( updateMonthYear );
+                } );
+            }
+
 
             function updateMonthYear() {
                 $month.html( cal.getMonthName() );
@@ -359,7 +548,7 @@
                             </div>
                         </div>
                     </section>
-                    <div class="add_time_list overflow">
+                    <div class="add_time_list overflow morning">
                         {{--<input type="hidden" value="" id="savedate"/>--}}
 
                         <div class="col-sm-2">
@@ -369,7 +558,7 @@
                             <span> 上午</span>
                         </div>
                         <div class="col-sm-10">
-                            <div class="overflow form-group input">
+                            <div class="overflow form-group input ">
                                 <div class="col-sm-8">
                                     <input type="text"  class="form-control time-set" name="time-begein1" placeholder="08：00" value="" />
                                     <lable>至</lable>
@@ -382,7 +571,7 @@
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
-                    <div class="add_time_list overflow">
+                    <div class="add_time_list overflow noon">
                         <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
@@ -404,7 +593,7 @@
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
-                    <div class="add_time_list overflow">
+                    <div class="add_time_list overflow afternoon">
                         <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
@@ -426,7 +615,7 @@
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
-                    <div class="add_time_list overflow">
+                    <div class="add_time_list overflow night">
                         <input type="hidden" value="存储日期"/>
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
