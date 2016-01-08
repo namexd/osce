@@ -63,7 +63,7 @@
                         <ul class="nav nav-second-level">
                             <li><a class="active J_menuItem" href="{{route('osce.admin.exam.getExamList')}}">考试安排</a>
                             </li>
-                            <li><a class="active J_menuItem" href="{{route('osce.admin.exam.getStudentList')}}">考生查询</a>
+                            <li><a class="active J_menuItem" href="{{route('osce.admin.exam.getStudentQuery')}}">考生查询</a>
                             </li>
                             <li><a class="active J_menuItem" href="">成绩查询</a>
                             </li>

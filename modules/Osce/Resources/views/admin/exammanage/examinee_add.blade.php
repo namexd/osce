@@ -135,7 +135,8 @@
             </div>
             <div class="ibox-content">
                 <div class="row">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="www.baidu.com">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postAddExaminee')}}">
+                        <input type="hidden" name="exam_id" value="{{$id}}" />
                         <input type="hidden" name="resources_type" id="resources_type" value="TOOLS" />
                         <div class="col-md-3 col-sm-3">
                             <ul class="img_box">
@@ -174,7 +175,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" >身份证号:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="id_number" name="id_number"  class="form-control">
+                                    <input type="text" id="id_number" name="id_card"  class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
