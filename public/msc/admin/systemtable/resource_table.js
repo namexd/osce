@@ -86,6 +86,8 @@ function resource_table(){
         });
 
         $('.edit').click(function () {
+            //            解决再次点击样式问题
+            $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             if($(this).attr("data")){
                 $('input[name=name]').val($(this).parent().parent().find('.name').html());
 //                $('input[name=]').val($(this).parent().parent().find('.floor').attr('data'));
@@ -116,6 +118,8 @@ function resource_table(){
         });
 
         $('#addResources').click(function(){
+            //            解决再次点击样式问题
+            $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             $("input,textarea,select").val("");
             $('#add_from').attr('action',"{{route('msc.admin.resources.ResourcesAdd')}}");
         })
