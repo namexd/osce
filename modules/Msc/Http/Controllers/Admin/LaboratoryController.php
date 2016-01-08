@@ -178,8 +178,14 @@ class LaboratoryController extends MscController {
         $id = urlencode(e(Input::get('id')));
         if($id){
             $data = $laboratory->where('id','=',$id)->update(['status'=>Input::get('type')]);
+            //dd(Input::get('type'));
+            if(!Input::get('type')){
+                $name = '启用成功';
+            }else{
+                $name = '停用成功';
+            }
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('停用成功');
+                return redirect()->back()->withInput()->withErrors($name);
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
@@ -294,27 +300,18 @@ class LaboratoryController extends MscController {
         ]);
     }
     //二维数组去重
-    function array_unique_fb($array2D)
-    {
-        $key = array();
-        $temp = array();
-        $temp2 = array();
-        foreach ($array2D as $k=>$v)
-        {
-            if(empty($key)) $key = array_keys($v);//记录数组的KEY
-            $v = join(",",$v); //降维,也可以用implode,将一维数组转换为用逗号连接的字符串
-            $temp[$k] = $v;
-
-        }
-        $temp = array_unique($temp); //去掉重复的字符串,也就是重复的一维数组
-        foreach ($temp as $k => $v)
-        {
-            $array=explode(",",$v); //再将拆开的数组重新组装
-            foreach ($array as $i=>$t){
-                $temp2[$k] = !empty($temp2[$k]) ? array_merge($temp2[$k], array("{$key[$i]}"=>$t)) : array("{$key[$i]}"=>$t); //依次添加到新的数组中去
+    function er_array_unique($arr){
+        $newarr = array();
+        if(is_array($arr)){
+            foreach($arr as $v){
+                if(!in_array($v,$newarr,true)){
+                    $newarr[] = $v;
+                }
             }
+        }else{
+            return false;
         }
-        return $temp2;
+        return $newarr;
     }
 
     //查找实验室已存在的开放日历
@@ -332,12 +329,12 @@ class LaboratoryController extends MscController {
                 $array[$k]['day'] = $v['day'];
                 $array[$k]['lab_id'] = $lid;
                 $array[$k]['status'] = 1;
-                $array[$k]['period_type'] = $v['period_type'];
+
             }
         }
 
         $arr = array();
-        $array = $this->array_unique_fb($array);
+        $array = $this->er_array_unique($array);
         sort($array);
         foreach($array as $o=>$date){
             $arr[$o]['date'] = $date;
