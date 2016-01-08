@@ -63,8 +63,10 @@ class ExamScreening extends CommonModel
         )
             ->  where($this->table.'.id','=',$examId)
             ->  select([
+                'station.id as station_id',
                 'station.name as station_name',
                 'teacher.name as teacher_name',
+                'teacher.id as teacher_id'
             ]);
         return $builder->get();
 

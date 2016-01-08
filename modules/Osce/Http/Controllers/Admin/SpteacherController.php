@@ -65,10 +65,20 @@ class SpteacherController extends CommonController
           ],[
               'exam_id.required'   => '没有考试ID'
           ]);
+
            $examId = $request->input('exam_id');
             $ScreeningModel=new ExamScreening();
          $Station = $ScreeningModel->getStationList($examId);
+        $data=[
+               'station_id' =>$Station['station_id'],
+               'station_name' =>$Station['station_name'],
+               'teacher_name' =>$Station['teacher_name'],
+               'teacher_id' =>$Station['teacher_id'],
+        ];
 
+        return view('Osce::admin.exammanage.sp_invitation',[
+            'data'    => $data,
+        ]);
     }
 
 
