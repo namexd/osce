@@ -122,7 +122,7 @@ class Notice extends CommonModel
     }
 
     /**
-     *
+     * 发布通知
      * @access public
      *
      * @param $title        通知标题
@@ -224,8 +224,7 @@ class Notice extends CommonModel
      *
      */
     private function getStudentsOpendIds($exam_id,array $data=[]){
-        $list   =   Teacher::get();
-        //$list   =   Teacher::whereIn('type',[1,3])->get();
+        $list   =   Teacher::where('exam_id','=',$exam_id);
         foreach($list as $teacher)
         {
             if(is_null($teacher->userInfo))
