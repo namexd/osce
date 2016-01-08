@@ -35,10 +35,10 @@ class CaseController extends CommonController
         //验证暂时空置
 
         //获得提交的各个值
-        $formData = $request->only('keyword', 'order_name', 'order_by');
+        $paginate = $request->input('paginate');
         //在模型中拿到数据
         $CaseModel = new CaseModel();
-        $data = $CaseModel->getList($formData);
+        $data = $CaseModel->getList($paginate);
 
         return view('osce::admin.resourcemanage.clinicalcase', ['data' => $data]);
     }
@@ -119,7 +119,6 @@ class CaseController extends CommonController
         //通过id查到该条信息
         try {
             $data = CaseModel::findOrFail($id);
-
             return view('osce::admin.resourcemanage.clinicalcase_edit',['data'=>$data]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex);

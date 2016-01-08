@@ -21,6 +21,15 @@ class Exam extends CommonModel
     protected $fillable = ['name', 'code', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'description'];
 
     /**
+     * 考试场次关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function examScreening()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\ExamScreening','exam_id','id');
+    }
+
+    /**
      * 展示考试列表的方法
      * @return mixed
      * @throws \Exception
@@ -124,4 +133,7 @@ class Exam extends CommonModel
             throw $ex;
         }
     }
+
+    
+
 }

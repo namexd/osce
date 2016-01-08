@@ -28,7 +28,7 @@ class CaseModel extends CommonModel
      * @param $formData
      * @return mixed
      */
-    public function getList($formData)
+    public function getList($paginate)
     {
 
         //查询出数据
@@ -36,7 +36,7 @@ class CaseModel extends CommonModel
             'id',
             'name',
             'description'
-        ])->paginate(config('osce.page_size'));
+        ])->paginate($paginate);
 
         return $builder;
     }
