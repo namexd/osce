@@ -131,6 +131,9 @@
                             <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button">状态<span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li>
+                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'2'])}}">全部</a>
+                                </li>
+                                <li>
                                     <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
                                 </li>
                                 <li>
