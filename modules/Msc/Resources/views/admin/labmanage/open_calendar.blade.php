@@ -225,6 +225,7 @@
                 var type = '';
                 var str = '';
                 var name = '';
+                var timeBrr = '';
                 if(!$('.dataarr').val()){
                     layer.alert('请选择日期');
                     return false;
@@ -245,7 +246,7 @@
                         var obj = $(this).parent().parent().siblings().find('input');
                         $.each(obj,function(n,value) {
                             if($(this).val()){
-                                timeArr += $(this).val()+'!';
+                                timeArr += type+'*'+$(this).val()+'!';
                             }else{
                                 if(type == 'morning'){
                                     name = '上午';
@@ -263,6 +264,7 @@
                         });
                         timeBrr = timeArr;
                         timeArr = '';
+
                         $('.'+type).val(timeBrr);
                     }
 
@@ -270,7 +272,9 @@
 
                 $('.check_real').each(function(){
                     if($(this).hasClass('check')){
+
                         timestr += $('.'+$(this).attr('data')).val()+'@';
+                        //console.log(timestr);
                     }
                 });
                 if(!$('.labid').val()){
@@ -283,13 +287,13 @@
                     data: {date:datestr,timestr:timestr,lid:$('.labid').val()},
                     success: function(msg){
                         if(msg.status){
-                            layer.confirm(msg.info, {
-                                btn: ['確定'] //按钮
-                            }, function(){
-                                console.log(msg.data);
-                                //确定之后-把已添加的数据返回并显示
-                                //location.reload();
-                            });
+//                            layer.confirm(msg.info, {
+//                                btn: ['確定'] //按钮
+//                            }, function(){
+//                                console.log(msg.data);
+//                                //确定之后-把已添加的数据返回并显示
+//                                //location.reload();
+//                            });
 
                         }else{
                             layer.alert(msg.info);
