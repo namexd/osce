@@ -8,13 +8,13 @@
  * Copyright 2012, Codrops
  * http://www.codrops.com
  */
-;( function( $, window, undefined ) {
+;
+( function( $, window, undefined ) {
 
 
 	'use strict';
 
 	$.Calendario = function( options, element ) {
-
 		this.$el = $( element );
 		this._init( options );
 
@@ -339,6 +339,7 @@
 
 	$.fn.calendario = function( options ) {
 
+
 		var instance = $.data( this, 'calendario' );
 
 		if ( typeof options === 'string' ) {
@@ -385,7 +386,6 @@
 			});
 
 		}
-
 		return instance;
 
 	};

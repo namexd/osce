@@ -40,12 +40,18 @@ class LaboratoryController extends MscController {
             $where['open_type'] = Input::get('open_type');
         }
         $where['keyword'] = $keyword;
+        //$this->start_sql(1);
         $datalist = $Laboratory->getFilteredPaginateList($where);
+        //$this->end_sql(1);
         //$datalist = $datalist->toArray();
         //dd($datalist);
-        foreach($datalist as $v){
+        foreach($datalist as $k=>$v){
             $v->opentype = $v->open_type;
             $v->open_type = $Laboratory->getType($v->open_type);
+            $floor = $v->floors;
+            if(is_null($floor) || $floor == ''){
+                unset($datalist[$k]);
+            }
 
         }
         //学院

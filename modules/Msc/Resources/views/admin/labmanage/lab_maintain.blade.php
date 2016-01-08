@@ -238,6 +238,7 @@
             });
 
             $('.update').click(function () {
+                var updateobj = $(this);
                 $('#code').val($(this).parent().parent().find('.code').html());
                 //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
                 $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
@@ -247,9 +248,8 @@
                 $('#enname').val($(this).parent().parent().find('.enname').val());
                 $('#short_enname').val($(this).parent().parent().find('.short_enname').val());
                 $('#total').val($(this).parent().parent().find('.total').val());
-
                 $('.oldschool option').each(function(){
-                    if($(this).val() == $('.lname').attr('data')){
+                    if($(this).val() == $(updateobj).parent().parent().find('.lname').attr('data')){
                         $(this).attr('selected','selected');
                     }
                 });
@@ -262,7 +262,8 @@
                         var opstr = '';
                         if(msg){
                             $.each($(msg),function(i,n){
-                                if(n == $(this).parent().parent().find('.floors').html()){
+
+                                if(n == $(updateobj).parent().parent().find('.floors').html()){
                                     opstr += '<option value="'+n+'" selected="selected">'+n+'楼</option>';
                                 }
                                 opstr += '<option value="'+n+'">'+n+'楼</option>';
@@ -274,13 +275,13 @@
                 $.ajax({
                     type: "POST",
                     url: "{{route('msc.admin.laboratory.getLocal')}}",
-                    data: {id:id,type:1},
+                    data: {id:$(updateobj).parent().parent().find('.lname').attr('data'),type:1},
                     success: function(msg){
-                        var opstr = '';
                         console.log(msg);
+                        var opstr = '';
                         if(msg){
                             $.each($(msg),function(i,n){
-                                if(n == $(this).parent().parent().find('.floors').html()){
+                                if(n.id == $(updateobj).parent().parent().find('.lname').attr('data')){
                                     opstr += '<option value="'+ n.id+'" selected="selected">'+ n.name+'</option>';
                                 }
                                 opstr += '<option value="'+ n.id+'">'+ n.name+'</option>';
@@ -458,7 +459,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b oldschool school" name="hospital">
+                    <select id="select_Category" class="form-control m-b oldschool" name="hospital">
                         <option value="-1">请选择所属分院</option>
                         @if(!empty($school))
                             @foreach($school as $ss)

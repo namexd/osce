@@ -45,6 +45,9 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>''])}}">全部</a>
+                                    </li>
                                     @if(!empty($devicetype))
                                         @foreach($devicetype as $type)
                                             <li>
