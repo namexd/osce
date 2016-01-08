@@ -110,6 +110,7 @@
                         success: function (data, status){
                             if(data.status = true){
                                 layer.msg("导入成功，有"+data.dataHavenInfo.count+"条已有数据未被导入", {icon: 1,time: 4000});
+                                window.location.href = window.location.href;
                             }else{
                                 layer.msg("导入失败", {icon: 1,time: 1000});
                             }
