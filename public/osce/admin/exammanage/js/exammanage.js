@@ -10,6 +10,7 @@ $(function(){
         case "add_basic":add_basic();break;
         case "sp_invitation":sp_invitation();break;
         case "examroom_assignment":examroom_assignment();break;
+        case "exam_notice_add":exam_notice_add();break;
     }
 });
 
@@ -565,5 +566,16 @@ function examroom_assignment(){
             return;
         }
     });
+}
+
+/**
+ * 考试通知 新增
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-07
+ */
+function exam_notice_add(){
+
+    var ue = UE.getEditor('editor');
 }
 

@@ -41,4 +41,18 @@ class SpteacherController extends CommonController
 
         return $this->success_data($data);
     }
+
+    //邀请sp页面数据
+    public function getInvitationIndex(Request $request){
+
+
+
+
+
+
+
+    }
+
+
+
 }

@@ -34,11 +34,16 @@ class Exam extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showExamList()
+
+    public function showExamList($formData='')
     {
         try {
             //不寻找已经被软删除的数据
             $builder = $this->where('status' , '<>' , 0);
+
+            if($formData){
+               $builder=$builder->where('name','like',$formData['exam_name'].'%');
+            }
 
             //寻找相似的字段
             $builder = $builder->select([
@@ -90,20 +95,18 @@ class Exam extends CommonModel
      * @access public
      *
      * @param array $examData 考试基本信息
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        name        参数中文名(必须的)
+     * * string    create_user_id       参数中文名(必须的)
      * @param array $examScreeningData 场次信息
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        exam_id          参数中文名(必须的)
+     * * string        begin_dt         参数中文名(必须的)
+     * * string        end_dt           参数中文名(必须的)
+     * * string     create_user_id      参数中文名(必须的)
      *
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
@@ -126,14 +129,37 @@ class Exam extends CommonModel
                     throw new \Exception('创建考试场次信息失败');
                 }
             }
-            return $result;
             $connection->commit();
+            return $result;
+
         } catch(\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
     }
 
-    
+    //考生查询
+    public function getList($formData=''){
+         $builder=$this->Join(
+             'student','student.id','=','exam.student_id'
+         );
+         if($formData['exam_name']){
+            $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'');
+         }
+        if($formData['student_name']){
+            $builder=$builder->where('student.name','like','%'.$formData['student_name'].'');
+        }
 
+        $builder->select([
+            'exam.name as exam_name',
+            'student.name as student_name',
+            'student.gender as gender',
+            'student.code as code',
+            'student.id_card as idCard',
+            'student.mobile as mobile',
+        ]);
+
+        $builder->orderBy('exam.begin_dt');
+        return $builder->paginate(10);
+    }
 }
