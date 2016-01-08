@@ -103,8 +103,7 @@ a{-webkit-touch-callout:none;}
  * 按钮颜色
  */
 .btn{
-    width: 70px;
-    height: 34px;
+    padding: 7px 20px;
     margin: 0 10px;
 }
 .btn-primary{
