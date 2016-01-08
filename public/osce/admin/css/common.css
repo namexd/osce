@@ -105,7 +105,7 @@ a{-webkit-touch-callout:none;}
 .btn{
     width: 70px;
     height: 34px;
-    margin: 10px;
+    margin: 0 10px;
 }
 .btn-primary{
     background-color: #1ab394;
