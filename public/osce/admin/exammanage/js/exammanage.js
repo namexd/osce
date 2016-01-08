@@ -532,11 +532,13 @@ function examroom_assignment(){
                                 html = '',
                                 data = [];
 
-                            //数据去重
-
+                            //数据去重 删除数据
                             for(var i in sp_no){
+                                for(var j in res_data){
+                                    if(sp_no[i].id==res_data[j].id){sp_no[i].flag--}
+                                }
                                 if(sp_no[i].flag!=0)data.push(sp_no[i]);
-                            }console.log(data)
+                            }
 
                             //准备dom
                             for(var i in data){
