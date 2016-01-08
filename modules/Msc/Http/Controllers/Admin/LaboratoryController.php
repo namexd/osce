@@ -293,12 +293,50 @@ class LaboratoryController extends MscController {
             'location' => $location,
         ]);
     }
+    //二维数组去重
+    function array_unique_fb($array2D)
+    {
+        $key = array();
+        foreach ($array2D as $k=>$v)
+        {
+            if(empty($key)) $key = array_keys($v);//记录数组的KEY
+            $v = join(",",$v); //降维,也可以用implode,将一维数组转换为用逗号连接的字符串
+            $temp[$k] = $v;
 
-
+        }
+        $temp = array_unique($temp); //去掉重复的字符串,也就是重复的一维数组
+        foreach ($temp as $k => $v)
+        {
+            $array=explode(",",$v); //再将拆开的数组重新组装
+            foreach ($array as $i=>$t){
+                $temp2[$k] = !empty($temp2[$k]) ? array_merge($temp2[$k], array("{$key[$i]}"=>$t)) : array("{$key[$i]}"=>$t); //依次添加到新的数组中去
+            }
+        }
+        return $temp2;
+    }
+    //如果进入日历时数据已存在
     public function getEditLabCleander(){
         $lid = Input::get('id');
         $cleaner = OpenPlan::where('lab_id','=',$lid)->where('status','=',1)->get();
-        return $cleaner;
+        $cleaner = $cleaner->toArray();
+        $array = array();
+        foreach($cleaner as $k=>$v){
+            if(array_key_exists('year',$v) || array_key_exists('month',$v) || array_key_exists('day',$v)){
+                    $array[$k]['year'] = $v['year'];
+                    $array[$k]['month'] = $v['month'];
+                    $array[$k]['day'] = $v['day'];
+                    $array[$k]['lab_id'] = Input::get('id');
+                    $array[$k]['status'] = 1;
+            }
+        }
+        $arr = array();
+        $array = $this->array_unique_fb($array);
+        sort($array);
+        foreach($array as $o=>$date){
+            $arr[$o]['date'] = $date;
+            $arr[$o]['child'] = OpenPlan::where($date)->select('begintime','endtime')->get();
+        }
+        return $arr;
     }
     /**
      * Created by PhpStorm.
