@@ -31,12 +31,12 @@
         border-color: #1ab394!important;
         width: 100%;
     }
+    .control-label{text-align: right;}
     </style>
 @stop
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}'}" />
 <input type="hidden" id="parameter" value="{'pagename':'examroom_assignment'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
@@ -111,7 +111,7 @@
                                             <th>老师</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody index="0">
                                             <tr>
                                                 <td>1</td>
                                                 <td>3:00</td>

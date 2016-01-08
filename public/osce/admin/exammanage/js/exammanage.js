@@ -383,6 +383,41 @@ function sp_invitation(){
 
 function examroom_assignment(){
 
+    /**
+     * 数组去重
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-08
+     * @param   {array}   arr1 [description]
+     * @param   {array}   arr2 [description]
+     * @return  {array}        结果数据
+     */
+    function tab(arr1,arr2){
+        var arr = arr1.concat(arr2);
+        var lastArr = [];
+        for(var i = 0;i<arr.length;i++){
+            var current = unique(arr[i],lastArr);
+            if(! current.flag){
+
+                lastArr.push(arr[i]);
+                lastArr[lastArr.length-1]['flag'] = 1;
+            }else{
+                lastArr[current.id]['flag'] += 1;
+            }
+        }
+        return lastArr;
+    }
+    function unique(n,arr)
+    {
+        for(var i=0;i<arr.length;i++){
+            //对相同id的数据进行去重
+            if(n.id==arr[i].id){
+                return {id:i,flag:true};
+            }
+        }
+        return {flag:false};
+    }
+
 	//select2初始化
     $(".js-example-basic-multiple").select2()
 
@@ -409,38 +444,126 @@ function examroom_assignment(){
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:'',
+                    url:'http://127.0.0.1:3000/getList',
+                    dataType:'jsonp',
+                    jsonp:'callback',
                     data:{id:e.params.data.id},
                     async:true,
                     success:function(res){
+
+                        //记录数据
+                        var thisElement = $('#exam-place').find('tbody');
+                        var sp_no;
+                        if(thisElement.attr('data')==undefined){
+                            sp_no = '{}';
+                        }
+                        else{
+                            sp_no = JSON.parse(thisElement.attr('data'));
+                        }
 
                         if(res.code!=1){
                             layer.alert(res.message);
                             return;
                         }else{
-                            var data = res.data.rows;
-                            var html = '';
+                            var res_data = res.data.rows,
+                                html = '',
+                                data;
+
+                            //thisElement.attr('data',JSON.stringify(data));
+                            //数据去重
+                            if(sp_no!='{}'){
+                                data = tab(sp_no,res_data);
+                            }else{
+                                data = res_data;
+                            }
+                            console.log(data);
+
+                            //准备dom
                             for(var i in data){
 
+                                var teacher = '<option>==请选择==</option>';
+                                for(var j in data[i].teacher){
+                                    teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
+                                }
+
                                 html += '<tr>'+
-                                            '<td>'+data[i].id+'</td>'+
+                                            '<td>'+(parseInt(i)+1)+'</td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control">'+
-                                                    '<option>==请选择==</option>'+
-                                                    '<option>李老师</option>'+
-                                                    '<option>张老师</option>'+
-                                                '</select>'+
+                                                '<select class="form-control">'+teacher+'</select>'+
                                             '</td>'+
                                         '</tr>';
-                                $('exam-place').find('tbody').append(html);
                             }
+                            //动态插入考场安排
+                            thisElement.html(html);
+                            thisElement.attr('data',JSON.stringify(data));
                         }
                     }
                 });
             });
+
             //删除数据
-            $(this).on("select2:unselect", function(e){console.log(e.params.data.id);});
+            $(this).on("select2:unselect", function(e){
+                //考站数据请求
+                $.ajax({
+                    type:'get',
+                    url:'http://127.0.0.1:3000/getList',
+                    dataType:'jsonp',
+                    jsonp:'callback',
+                    data:{id:e.params.data.id},
+                    async:true,
+                    success:function(res){
+
+                        //记录数据
+                        var thisElement = $('#exam-place').find('tbody');
+                        var sp_no;
+                        if(thisElement.attr('data')==undefined){
+                            sp_no = '{}';
+                        }
+                        else{
+                            sp_no = JSON.parse(thisElement.attr('data'));
+                        }
+
+                        if(res.code!=1){
+                            layer.alert(res.message);
+                            return;
+                        }else{
+                            var res_data = res.data.rows,
+                                html = '',
+                                data = [];
+
+                            //数据去重 删除数据
+                            for(var i in sp_no){
+                                for(var j in res_data){
+                                    if(sp_no[i].id==res_data[j].id){sp_no[i].flag--}
+                                }
+                                if(sp_no[i].flag!=0)data.push(sp_no[i]);
+                            }
+
+                            //准备dom
+                            for(var i in data){
+
+                                var teacher = '<option>==请选择==</option>';
+                                for(var j in data[i].teacher){
+                                    teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
+                                }
+
+                                html += '<tr>'+
+                                            '<td>'+(parseInt(i)+1)+'</td>'+
+                                            '<td>'+data[i].name+'</td>'+
+                                            '<td>'+
+                                                '<select class="form-control">'+teacher+'</select>'+
+                                            '</td>'+
+                                        '</tr>';
+                            }
+                            //动态插入考场安排
+                            thisElement.html(html);
+                            thisElement.attr('data',JSON.stringify(data));
+                        }
+                    }
+                });
+
+            });
 
         }
     });
@@ -458,7 +581,7 @@ function examroom_assignment(){
         index = parseInt(index) + 1;
 
         var html = '<tr class="pid-'+index+'">'+
-                    '<td>'+index+'<input type="hiddin"  name="id['+index+'][id]" value="'+index+'"/></td>'+
+                    '<td>'+index+'<input type="hidden"  name="id['+index+'][id]" value="'+index+'"/></td>'+
                     '<td width="498">'+
                         '<select class="form-control js-example-basic-multiple" multiple="multiple" name="name['+index+'][]"></select>'+
                     '</td>'+
@@ -477,7 +600,9 @@ function examroom_assignment(){
         $.ajax({
             type:'get',
             async:true,
-            url:'',     //请求地址
+            url:'http://127.0.0.1:3000/getjson',     //请求地址
+            dataType:'jsonp',
+            jsonp:'callback',
             success:function(res){
                 //数据处理
                 var str = [];
@@ -494,8 +619,6 @@ function examroom_assignment(){
                 }
             }
         });
-        var data = [{ id: 0, text: 'enhancement' }, { id: 1, text: 'bug' }, { id: 2, text: 'duplicate' }, { id: 3, text: 'invalid' }, { id: 4, text: 'wontfix' }];
-        $(".js-example-basic-multiple").select2({data:data});
 
     });
 
