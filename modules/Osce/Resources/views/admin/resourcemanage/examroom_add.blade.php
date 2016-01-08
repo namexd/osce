@@ -134,7 +134,6 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-white" type="submit">取消</button>
                                 <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
-
                             </div>
                         </div>
                     </form>
