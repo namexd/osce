@@ -12,7 +12,6 @@
     </style>
 @stop
 @section('only_js')
-    <script src="{{ asset('/msc/admin/js/calendar2/data.js') }}"></script>
     <script src= "{{ asset('/msc/admin/js/calendar2/jquery.calendario.js') }}"></script>
     <script src="{{ asset('/msc/admin/js/calendar2/modernizr.custom.js') }}"></script>
     <script>
@@ -68,13 +67,13 @@
             }
             //选项框点击事件
             $(".check_label").click(function(){
-                if($(this).children(".check_icon").hasClass("check")){
-                    $(this).children(".check_icon").removeClass("check");
-                }else{
-                    $(this).children(".check_icon").addClass("check");
+                $(this).children(".check_icon").toggleClass("check");
+                //$("this").children("input").toggle();
+                console.log($("this").children("input").val());
 
-                }
+
             });
+
 
             //楼栋实验室数据绑定
             $("#ban_select").change(function(){
@@ -151,12 +150,9 @@
                         'transition' : 'transitionend'
                     },
                     transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
-                    $wrapper = $( '#custom-inner' ),
                     $calendar = $( '#calendar' ),
                     cal = $calendar.calendario( {
                         onDayClick : function( $el, $contentEl, dateProperties,savedate) {
-
-                            $(this).addClass("check");
                             if(dateProperties.month<10){
                                 dateProperties.month="0"+dateProperties.month;
                             }
@@ -208,32 +204,8 @@
             // just an example..
             function showEvents( $contentEl, dateProperties ) {
 
-                hideEvents();
-
-                var $events = $( '<div id="custom-content-reveal" class="custom-content-reveal"><h4>Events for ' + dateProperties.monthname + ' ' + dateProperties.day + ', ' + dateProperties.year + '</h4></div>' ),
-                        $close = $( '<span class="custom-content-close"></span>' ).on( 'click', hideEvents );
-
-                $events.append( $contentEl.html() , $close ).insertAfter( $wrapper );
-
-                setTimeout( function() {
-                    $events.css( 'top', '0%' );
-                }, 25 );
-
+                console.log($contentEl);
             }
-
-
-         function hideEvents() {
-
-                var $events = $( '#custom-content-reveal' );
-                if( $events.length > 0 ) {
-
-                    $events.css( 'top', '100%' );
-                    Modernizr.csstransitions ? $events.on( transEndEventName, function() { $( this ).remove(); } ) : $events.remove();
-
-                }
-
-            }
-
 
             //保存提交日历设置
             $('#edit_save').click(function(){
@@ -381,8 +353,9 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline" data="morning"></div>
-                                <input type="hidden" name="" value="">
-                            </label>上午
+                                <input  type="hidden"  name="" value="111" >
+                            </label>
+                            <span> 上午</span>
                         </div>
                         <div class="col-sm-10">
                             <div class="overflow form-group input">
@@ -403,7 +376,7 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline" data="noon"></div>
-                                <input type="hidden" name="" value="">
+                                <input type="hidden" name="" value="" style="display: none" checked>
                             </label> 中午
                         </div>
                         <div class="col-sm-10">
@@ -426,7 +399,7 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline" data="afternoon"></div>
-                                <input type="hidden" name="" value="">
+                                <input type="hidden" name="" value="" style="display: none" checked>
                             </label>下午
                         </div>
                         <div class="col-sm-10">
@@ -449,7 +422,7 @@
                         <div class="col-sm-2">
                             <label class="check_label checkbox_input">
                                 <div class="check_real check_icon display_inline"  data="night"></div>
-                                <input type="hidden" name="" value="">
+                                <input type="hidden" name="" value="" style="display: none" checked>
                             </label> 晚上
                         </div>
                         <div class="col-sm-10">
