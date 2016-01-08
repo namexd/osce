@@ -42,4 +42,15 @@ class Common
 //            $model =
 //        }
     }
+    static public function getRandStr($length,$word=''){
+        $word   =   $word   ===''? '1234567890':$word;
+        $str    =   '';
+
+        for($i=0;$i<$length;$i++)
+        {
+            $randNum    =   rand(0,strlen($word))-1;
+            $str        .=   $word[$randNum];
+        }
+        return $str;
+    }
 }

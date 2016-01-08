@@ -47,8 +47,8 @@
                 <tr>
                     <td>{{$item->id}}</td>
                     <td>{{$item->name}}</td>
-                    <td>{{$item->moblie or '-'}}</td>
-                    <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
+                    <td>{{$item->userInfo->mobile or '-'}}</td>
+                    <td>{{is_null($item->userInfo)? $item->userInfo->lastlogindate:'-'}}</td>
                     <td>
                         <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
                         <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>

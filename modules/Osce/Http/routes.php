@@ -90,6 +90,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考场
 		Route::post('room/delete',['uses'=>'RoomController@postDelete','as'=>'osce.admin.room.postDelete']);
+		Route::get('room/room-list',['uses'=>'RoomController@getRoomList','as'=>'osce.admin.room.getRoomList']);
 
 		//用户管理
 		Route::get('user/staff-list', 	['uses'=>'UserController@getStaffList','as'=>'osce.admin.user.getStaffList']);

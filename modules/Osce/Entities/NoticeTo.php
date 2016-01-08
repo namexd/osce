@@ -15,8 +15,12 @@ use Modules\Osce\Entities\CommonModel;
 class NoticeTo extends CommonModel
 {
     protected $connection	=	'osce_mis';
-    protected $table 		= 	'notice';
+    protected $table 		= 	'notice_to';
     public $incrementing	=	true;
     public $timestamps	    =	true;
     public $fillable    =   ['notice_id','uid'];
+
+    public function addNoticeTo(array $list){
+        return  $this   ->  insert($list);
+    }
 }

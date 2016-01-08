@@ -235,4 +235,9 @@ class TopicController extends CommonController
             return redirect()->back()->withErrors($ex);
         }
     }
+
+    public function Excel()
+    {
+
+    }
 }
