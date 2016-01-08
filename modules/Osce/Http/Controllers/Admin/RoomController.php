@@ -45,6 +45,7 @@ class RoomController extends CommonController
         $id = $request->input('id', '');
         //获取当前场所的类
         list($area,$data) = $room->showRoomList($keyword, $type, $id);
+//        dd($data);
 
         //展示页面
         if (empty($area)) { //这种情况出现在编辑中

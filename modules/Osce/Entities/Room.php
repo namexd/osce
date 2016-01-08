@@ -48,7 +48,7 @@ class Room extends CommonModel
     {
         try {
             //如果传入了id,就说明是编辑,那就只读取该id的数据
-            if ($id !== null) {
+            if ($id !== "") {
                 $builder = $this->where('id', '=', $id);
                 $result = $builder->select('id', 'name', 'description')->first();
                 if (!$result){
@@ -87,7 +87,7 @@ class Room extends CommonModel
             }
 
             //如果keyword不为空，那么就进行模糊查询
-            if ($keyword !== null) {
+            if ($keyword !== "") {
                 $builder = $builder->where($this->table . '.name', '=', '%' . $keyword . '%')
                     ->orWhere($this->table . '.description', '=', '%' . $keyword . '%');
             }
