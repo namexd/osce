@@ -76,8 +76,8 @@
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary" type="submit">保存</button>
                                 <button class="btn btn-white" type="submit">取消</button>
-                                <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;存</button>
 
                             </div>
                         </div>
@@ -166,8 +166,8 @@
                     '</td>'+
                     '<td>'+
                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                    '<a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                    '<a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
+                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
                     '</td>'+
                     '</tr>';
             //记录计数

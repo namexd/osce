@@ -55,6 +55,14 @@ class Teacher extends CommonModel
 
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function station()
+    {
+        return $this->belongsToMany('\Modules\Osce\Entities\station','station_sp','user_id','station_id');
+    }
+
+    /**
      * SP老师的查询
      * @param $caseId
      * @param $spteacherId

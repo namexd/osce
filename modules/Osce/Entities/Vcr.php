@@ -27,6 +27,8 @@ class Vcr extends CommonModel implements MachineInterface
         1   =>  '正常',
     ];
 
+
+
     /**
      *  获取设备状态值
      * @access public
