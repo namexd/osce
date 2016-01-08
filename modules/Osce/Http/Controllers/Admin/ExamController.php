@@ -36,9 +36,14 @@ class ExamController extends CommonController
     public function getExamList(Request $request, Exam $exam)
     {
         //验证略
+        $this->validate($request,[
+            'exam_name' =>'sometimes'
+        ]);
+
+        $formData = $request->only('exam_name');
 
         //从模型得到数据
-        $data = $exam->showExamList();
+        $data = $exam->showExamList($formData);
 
         return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
 
@@ -365,20 +370,23 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>  zhouchong <Zhouchong@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentQuery(Request $request)
     {
         //验证规则，暂时留空
-
+        $this   ->    validate($request,[
+              'exam_name'      => 'sometimes',
+              'student_name'   => 'sometimes',
+        ]);
         //获取各字段
         $formData = $request->only('exam_name', 'student_name');
         //获取当前场所的类
-
+         $examModel= new Exam();
         //从模型得到数据
-        $data = [];
+        $data=$examModel->getList($formData);
 
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
