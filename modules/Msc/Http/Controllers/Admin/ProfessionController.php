@@ -286,11 +286,10 @@ class ProfessionController extends MscController
             //将中文头转换翻译成英文
             $professionInfo = Common::arrayChTOEn($professionInfo, 'msc.importForCnToEn.profession_group');
 
-//            dd($professionInfo);
             //已经存在的数据
             $dataHaven = [];
-            //添加失败的数据
-            $dataFalse = [];
+
+            $data = [];
             //判断是否存在这个专业
             foreach ($professionInfo as $professionData) {
                 //处理状态status
@@ -304,21 +303,16 @@ class ProfessionController extends MscController
                 };
                 if ($professionData['code'] && $professionData['name']) {
                     if (StdProfessional::where('code', '=', $professionData['code'])->count() == 0) {
-                        $profession = new StdProfessional();
-                        $result= $profession->ProfessionImport($professionData);
-//                         dd(1111);
-
-                        if ($result==0) {
-                            $dataFalse[] = $professionData;
-                        }
+                        $professionData['created_at'] = date('Y-m-d H:i:s');
+                        $professionData['updated_at'] = date('Y-m-d H:i:s');
+                        $data [] = $professionData;
                     } else {
                         $dataHaven[] = $professionData;
                     }
                 }
             }
-            return response()->json(
-                $this->success_data(['result' => true, 'dataFalse' => $dataFalse, 'dataHaven' => $dataHaven])
-            );
+            $return = DB::connection('msc_mis')->table('student_professional')->insert($data);
+            echo json_encode(['result' => true, 'status' => $return, 'dataHavenInfo' =>['dataHaven'=>$dataHaven,'count'=>count($dataHaven)] ]);
         }
         catch (\Exception $e) {
             return response()->json($this->fail($e));

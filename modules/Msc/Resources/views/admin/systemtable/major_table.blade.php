@@ -6,6 +6,13 @@
         .code_add,.code_del{position:absolute;right:15px;top:0;}
         .add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
         .button_margin{margin-right: 10px}
+        .loading{ width:82px; height: 34px; position: relative;
+            border-radius: 3px; cursor: pointer;}
+        #load_in{opacity: 0;width: 100%;height: 100%; color:inherit;
+            background:#fff;border:1px solid #e7eaec;cursor: pointer;}
+        .loading p{ text-align: center; position: absolute;
+            font-size:14px;font-weight: 400; color: #3c3c3c; left: 12px;
+            top: 6px;cursor: pointer;}
     </style>
 @stop
 
@@ -86,10 +93,7 @@
 
 //            导入
 
-            $("#in").click(function(){
-                $("#load_in").click();
-            });
-            $("#load_in").change(function(){
+            $("#in").change(function(){
                 var str=$("#load_in").val().substring($("#load_in").val().lastIndexOf(".")+1);
 
                 if(str!="xlsx"){
@@ -102,11 +106,15 @@
                         type:"post",
                         url:"{{route('msc.admin.profession.ProfessionImport')}}",
                         fileElementId:'load_in',//必须要是 input file标签 ID
+                        dataType: 'json',
                         success: function (data, status){
-//                            console.log(data);
+                            if(data.status = true){
+                                layer.msg("导入成功，有"+data.dataHavenInfo.count+"条已有数据未被导入", {icon: 1,time: 4000});
+                            }else{
+                                layer.msg("导入失败", {icon: 1,time: 1000});
+                            }
                         },
                         error: function (data, status, e){
-                            console.log("失败");
                             layer.alert(
                                     "上传失败！",
                                     {title:["温馨提示","font-size:16px;color:#408aff"]}
@@ -172,8 +180,10 @@
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
                 <button href=""   id="addprofession"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增专业</button>
-                <button class="btn btn_pl btn-white right button_margin" id="in">导入专业</button>
-                <input type="file" name="training" id="load_in" style="display: none" value="">
+                <span class="right button_margin  btn-white loading" id = "in">
+                    <p>导入专业</p>
+                    <input  type="file" name="training" id="load_in"  value="">
+                </span>
             </div>
 		</div>
         <div class="ibox float-e-margins">
