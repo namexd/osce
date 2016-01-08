@@ -24,27 +24,14 @@ class Station extends CommonModel
     protected $fillable = ['name', 'mins', 'room_id', 'type', 'subject_id'];
 
     /**
-     * 定义访问器 字段名：type
-     * @param $value
-     * @return string
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-//    public function getTypeAttribute($value)
-//    {
-//        switch ($value) {
-//            case 1 :
-//                $value = '操作';
-//                break;
-//            case 2 :
-//                $value = 'SP';
-//                break;
-//            case 3 :
-//                $value = '理论';
-//                break;
-//            default :
-//                $value = '此数据不合法';
-//        }
-//        return $value;
-//    }
+    public function room()
+    {
+        return $this->belongsToMany('\Modules\Osce\Entities\room','room_station','station_id','room_id');
+    }
+
+
 
     /**
      * 与摄像机_考站表的关联

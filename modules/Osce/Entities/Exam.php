@@ -21,15 +21,29 @@ class Exam extends CommonModel
     protected $fillable = ['name', 'code', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'description'];
 
     /**
+     * 考试场次关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function examScreening()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\ExamScreening','exam_id','id');
+    }
+
+    /**
      * 展示考试列表的方法
      * @return mixed
      * @throws \Exception
      */
-    public function showExamList()
+
+    public function showExamList($formData='')
     {
         try {
             //不寻找已经被软删除的数据
             $builder = $this->where('status' , '<>' , 0);
+
+            if($formData){
+               $builder=$builder->where('name','like',$formData['exam_name'].'%');
+            }
 
             //寻找相似的字段
             $builder = $builder->select([
@@ -117,9 +131,35 @@ class Exam extends CommonModel
             }
             $connection->commit();
             return $result;
+
         } catch(\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
+    }
+
+    //考生查询
+    public function getList($formData=''){
+         $builder=$this->Join(
+             'student','student.id','=','exam.student_id'
+         );
+         if($formData['exam_name']){
+            $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'');
+         }
+        if($formData['student_name']){
+            $builder=$builder->where('student.name','like','%'.$formData['student_name'].'');
+        }
+
+        $builder->select([
+            'exam.name as exam_name',
+            'student.name as student_name',
+            'student.gender as gender',
+            'student.code as code',
+            'student.id_card as idCard',
+            'student.mobile as mobile',
+        ]);
+
+        $builder->orderBy('exam.begin_dt');
+        return $builder->paginate(10);
     }
 }

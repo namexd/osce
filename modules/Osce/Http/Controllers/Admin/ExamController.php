@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -36,9 +37,14 @@ class ExamController extends CommonController
     public function getExamList(Request $request, Exam $exam)
     {
         //验证略
+        $this->validate($request,[
+            'exam_name' =>'sometimes'
+        ]);
+
+        $formData = $request->only('exam_name');
 
         //从模型得到数据
-        $data = $exam->showExamList();
+        $data = $exam->showExamList($formData);
 
         return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
 
@@ -365,20 +371,23 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>  zhouchong <Zhouchong@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentQuery(Request $request)
     {
         //验证规则，暂时留空
-
+        $this   ->    validate($request,[
+              'exam_name'      => 'sometimes',
+              'student_name'   => 'sometimes',
+        ]);
         //获取各字段
         $formData = $request->only('exam_name', 'student_name');
         //获取当前场所的类
-
+         $examModel= new Exam();
         //从模型得到数据
-        $data = [];
+        $data=$examModel->getList($formData);
 
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
@@ -396,7 +405,7 @@ class ExamController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStationList(Request $request)
+    public function getStationList(Request $request, Exam $exam)
     {
         $this->validate($request, [
             'id' => 'required|integer'
@@ -408,18 +417,16 @@ class ExamController extends CommonController
         //如果在考试考场表里查不到信息的话，就说明还没有选择跳到上一个选项卡去
         $result = ExamScreening::where('exam_screening.exam_id','=',$id)->first();
         if (!$result) {
-            return redirect()->route('')->withErrors('对不起，请选择房间');
+            return redirect()->back()->withErrors('对不起，请选择房间');
         }
 
         //得到room_id
         $roomId = $result->room_id;
+        //得到sp老师的编号
+        $spTeacherId = ExamSpTeacher::where('exam_sp_teacher.exam_screening_id', '=' , $result->id)
+            ->select('teacher_id')->get();
 
-        //根据room_id得到考站列表
-        $data = Station::where('station.room_id' , '=' , $roomId)
-            ->select([
-                'station.id as id',
-                'station.name as name'
-            ])->get();
+
 
         return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
     }
