@@ -40,7 +40,9 @@ class LaboratoryController extends MscController {
             $where['open_type'] = Input::get('open_type');
         }
         $where['keyword'] = $keyword;
+        //$this->start_sql(1);
         $datalist = $Laboratory->getFilteredPaginateList($where);
+        //$this->end_sql(1);
         //$datalist = $datalist->toArray();
         //dd($datalist);
         foreach($datalist as $v){
@@ -252,6 +254,7 @@ class LaboratoryController extends MscController {
     public function getLocal(Floor $floor){
         $id = Input::get('id');
         $local = $floor->where('school_id','=',$id)->where('status','=',1)->get();
+        dd($local);
         if($local != false){
             return $local;exit;
         }else{

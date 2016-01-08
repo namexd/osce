@@ -238,6 +238,7 @@
             });
 
             $('.update').click(function () {
+                var updateobj = $(this);
                 $('#code').val($(this).parent().parent().find('.code').html());
                 //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
                 $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
@@ -262,7 +263,8 @@
                         var opstr = '';
                         if(msg){
                             $.each($(msg),function(i,n){
-                                if(n == $(this).parent().parent().find('.floors').html()){
+
+                                if(n == $(updateobj).parent().parent().find('.floors').html()){
                                     opstr += '<option value="'+n+'" selected="selected">'+n+'楼</option>';
                                 }
                                 opstr += '<option value="'+n+'">'+n+'楼</option>';
@@ -276,11 +278,11 @@
                     url: "{{route('msc.admin.laboratory.getLocal')}}",
                     data: {id:id,type:1},
                     success: function(msg){
-                        var opstr = '';
                         console.log(msg);
+                        var opstr = '';
                         if(msg){
                             $.each($(msg),function(i,n){
-                                if(n == $(this).parent().parent().find('.floors').html()){
+                                if(n.id == $(updateobj).parent().parent().find('.lname').attr('data')){
                                     opstr += '<option value="'+ n.id+'" selected="selected">'+ n.name+'</option>';
                                 }
                                 opstr += '<option value="'+ n.id+'">'+ n.name+'</option>';

@@ -11,6 +11,7 @@ namespace Modules\Msc\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Modules\Msc\Entities\Laboratory;
 use Pingpong\Modules\Routing\Controller;
 use Modules\Msc\Entities\Floor;
 use Modules\Msc\Entities\School;
@@ -37,7 +38,12 @@ class FloorController extends Controller {
         }
         $where['keyword'] = $keyword;
         $datalist = $Floor->getFilteredPaginateList($where);
-        //dd($datalist);
+        foreach($datalist as $v){
+            $lab = Laboratory::where(['location_id'=>$v->id,'status'=>1])->get();
+            if($lab){
+                $v->dtype = 1;
+            }
+        }
         $school = DB::connection('msc_mis')->table('school')->get();
         $keyword = Input::get('keyword')?Input::get('keyword'):'';
         return view('msc::admin.labmanage.ban_maintain',[
@@ -150,6 +156,7 @@ class FloorController extends Controller {
         ];
         if($id){
             $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->update($data);
+
             if(Input::get('type')){
                 $name = '启用成功';
             }else{
@@ -177,7 +184,13 @@ class FloorController extends Controller {
     public function getDeleteFloor(){
         $id = urlencode(e(Input::get('id')));
         if($id){
-            $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->delete();
+            $lab = Laboratory::where(['location_id'=>$id,'status'=>1])->get();
+            if(!$lab){
+                $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->delete();
+            }else{
+                return redirect()->back()->withInput()->withErrors('该楼栋下有实验室，不可删除');
+            }
+
             if($data != false){
                 return redirect()->back()->withInput()->withErrors('删除成功');
             }else{

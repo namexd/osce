@@ -136,6 +136,7 @@ function resource_table(){
             $("#add_from").hide();
             $("#edit_from").show();
             //            解决再次点击样式问题
+            $(".sure_btn").removeAttr("disabled");
             $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             if($(this).attr("data")){
                 $('input[name=name]').val($(this).parent().parent().find('.name').html());
@@ -168,6 +169,7 @@ function resource_table(){
             $("#add_from").show();
             $("#edit_from").hide();
             //            解决再次点击样式问题
+            $(".sure_btn").removeAttr("disabled");
             $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             $("input,textarea,select").val("");
             
