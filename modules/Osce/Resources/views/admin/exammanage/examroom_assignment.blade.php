@@ -58,10 +58,10 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class=""><a href="#">基础信息</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
                         <li class="active"><a href="#">考场安排</a></li>
                         <li class=""><a href="#">邀请SP</a></li>
-                        <li class=""><a href="#">考生管理</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="#">智能排考</a></li>
                     </ul>
                 </div>
@@ -86,6 +86,10 @@
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
                                     <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    {{--<select name="room_id[1]" multiple="multiple">--}}
+                                        {{--<option value="1">123</option>--}}
+                                        {{--<option value="2">31</option>--}}
+                                    {{--</select>--}}
                                     <table class="table table-bordered" id="examroom">
                                         <thead>
                                         <tr>
@@ -96,6 +100,12 @@
                                         </tr>
                                         </thead>
                                         <tbody index="0">
+                                            <tr>
+                                                <td>#</td>
+                                                <td>#</td>
+                                                <td>#</td>
+                                                <td>#</td>
+                                            </tr>
 
                                         </tbody>
                                     </table>

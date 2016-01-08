@@ -47,10 +47,18 @@ class Student extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function selectExamStudent($exam_id)
+    public function selectExamStudent($exam_id, $keyword)
     {
         try {
             $result = $this->where('exam_id', '=', $exam_id);
+
+            //如果keyword不为空，那么就进行模糊查询
+            if ($keyword['keyword'] !== null) {
+                $result = $result->where($this->table . '.name', '=', '%' . $keyword['keyword'] . '%')
+                    ->orWhere($this->table . '.id_card', '=', '%' . $keyword['keyword'] . '%');
+//                    ->orWhere($this->table . '.phone', '=', '%' .$keyword['keyword'] . '%')
+//                    ->orWhere($this->table . '.学号', '=', '%' .$keyword['keyword'] . '%');
+            }
 
             return $result->paginate(10);
         } catch (\Exception $ex) {

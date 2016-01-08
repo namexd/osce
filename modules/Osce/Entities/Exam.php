@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Auth;
 class Exam extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -117,6 +118,62 @@ class Exam extends CommonModel
             }
             $connection->commit();
             return $result;
+        } catch(\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
+
+    public function editExam($exam_id, array $examData, array $examScreeningData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //更新考试信息
+            if(!$result = $this->updateData($exam_id, $examData)){
+                throw new \Exception('修改考试信息时报!');
+            }
+            //查询操作人信息
+            $user   =   Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            $examScreening_ids = [];
+            //判断输入的时间是否有误
+            foreach($examScreeningData as $key => $value){
+                if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
+                    throw new \Exception('输入的时间有误！');
+                }
+                //不存在id,为新添加的数据
+                if(!isset($value['id'])){
+                    $value['exam_id'] = $exam_id;
+                    $value['create_user_id'] = $user -> id;
+
+                    if(!$result = ExamScreening::create($value))
+                    {
+                        throw new \Exception('添加考试场次信息失败');
+                    }
+                    array_push($examScreening_ids, $result->id);
+                }else{
+                    array_push($examScreening_ids, $value['id']);
+                    $examScreening = new ExamScreening();
+                    if(!$result = $examScreening->updateData($value['id'], $value)){
+                        throw new \Exception('更新考试场次信息失败');
+                    }
+                }
+            }
+            //查询是否有要删除的考试场次
+            $result = ExamScreening::where('exam_id', '=', $exam_id)->whereNotIn('id', $examScreening_ids)->get();
+            if(count($result) != 0){
+                foreach($result as $value){
+                    if(!$res = ExamScreening::where('id', '=', $value['id'])->delete()){
+                        throw new \Exception('删除考试场次信息失败');
+                    }
+                }
+            }
+
+            $connection->commit();
+            return true;
         } catch(\Exception $ex) {
             $connection->rollBack();
             throw $ex;
