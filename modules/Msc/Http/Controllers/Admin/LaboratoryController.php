@@ -353,7 +353,7 @@ class LaboratoryController extends MscController {
      * 添加或修改实验室开放时间
      */
     public function postOperatingLabCleander(){
-        //dd(Input::get());
+        DB::connection('msc_mis')->beginTransaction();
         $date = explode('&',trim(Input::get('date'),'&'));
         $timestr =  explode('@',trim(Input::get('timestr'),'@'));
         foreach($timestr as $k=>$v){
@@ -405,31 +405,58 @@ class LaboratoryController extends MscController {
        foreach($post as $aa=>$pp){
            $post[$aa]['lab_id'] = Input::get('lid');
            $post[$aa]['created_user_id'] = $user->id;
-           $post[$aa]['created_at'] = time();
-           $post[$aa]['updated_at'] = time();
+           $post[$aa]['created_at'] = date('Y-m-d H:i:s');
+           $post[$aa]['updated_at'] = date('Y-m-d H:i:s');
        }
         foreach($where as $o=>$time){
-                $plan[] = array_merge($time,$post[0]);
+            $plan[] = array_merge($time,$post[0]);
         }
-        OpenPlan::insert($plan);
+        try{
+            OpenPlan::insert($plan);
+
+        } catch (Exception $e){
+            DB::connection('msc_mis')->rollback();
+            return ['status'=>1,'info'=>$e];exit;
+        }
+
+
+
         if(@$post[1]){
             foreach ($where as $o => $time) {
-                $plan[] = array_merge($time, $post[1]);
+                $plan1[] = array_merge($time, $post[1]);
             }
-            OpenPlan::insert($plan);
+            try{
+                OpenPlan::insert($plan1);
+            } catch (Exception $e){
+                DB::connection('msc_mis')->rollback();
+                return ['status'=>1,'info'=>$e];exit;
+            }
         }
         if(@$post[2]) {
             foreach ($where as $o => $time) {
-                $plan[] = array_merge($time, $post[2]);
+                $plan2[] = array_merge($time, $post[2]);
             }
-            OpenPlan::insert($plan);
+            try{
+                OpenPlan::insert($plan2);
+            } catch (Exception $e){
+                DB::connection('msc_mis')->rollback();
+                return ['status'=>1,'info'=>$e];exit;
+            }
         }
         if(@$post[3]) {
             foreach ($where as $o => $time) {
-                $plan[] = array_merge($time, $post[3]);
+                $plan3[] = array_merge($time, $post[3]);
             }
-            OpenPlan::insert($plan);
+            try{
+                OpenPlan::insert($plan3);
+            } catch (Exception $e){
+                DB::connection('msc_mis')->rollback();
+                return ['status'=>1,'info'=>$e];exit;
+            }
         }
-        exit;
+        DB::connection('msc_mis')->commit();
+        //當前添加的實驗室的开放日历
+        $labdata = OpenPlan::where(['status'=>1,'lab_id'=>Input::get('lid')])->get();
+        return ['status'=>1,'info'=>'操作成功','data'=>$labdata];
     }
 }

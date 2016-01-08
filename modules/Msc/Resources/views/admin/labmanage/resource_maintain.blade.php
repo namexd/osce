@@ -107,6 +107,7 @@
                     }
                 }
             });
+
             //实验室数据显示
             function labdata(){
                 $('.treeview .list-group-child').click(
@@ -116,6 +117,7 @@
                         }
                 )
             }
+
             //更新和当前实验室相关的列表数据
             function updateLabDeviceList(lab_id){
                 var url = "{{ route('msc.admin.LadMaintain.LaboratoryDeviceList')}}";
@@ -133,12 +135,12 @@
                                         '<td>'+data[i].id+'</td>' +
                                         '<td class="device_name">'+data[i].device_info.name+'</td>' +
                                         '<td class="device_type">'+data[i].device_info.devices_cate_info.name+'</td>' +
-                                        '<td class="total">'+data[i].total+'</td>' +
+                                        '<td class="total" id="DeviceNum_'+data[i].id+'">'+data[i].total+'</td>' +
                                         '<td class="opera">' +
                                         '<a class="state1 edit edit_res"  data-toggle="modal" data-target="#myModal"  style="text-decoration: none" id="edit">' +
                                         '<span class="edit_num" labDeviceId="'+data[i].id+'">编辑数量</span>' +
                                         '</a>' +
-                                        '<a class="state2 delete"><span>删除</span></a>' +
+                                        '<a class="state2 delete" labDeviceId="'+data[i].id+'"><span>删除</span></a>' +
                                         '</td>' +
                                         '</tr>';
                             }
@@ -161,12 +163,12 @@
                 return false;
             });
             //编辑数量
-
             $('#table-striped').delegate('.edit_res','click',function(){
                 $("#add_device_form").hide();
                 $("#edit_form").show();
             });
 
+            //编辑的时候把数据提取到表单
             $('#table-striped').delegate('.edit_num','click',function(){
 //                alert($(this).attr('labDeviceId'));
                 if($(this).attr("labDeviceId")){
@@ -175,6 +177,7 @@
                     $('input[name=type]').val($(this).parent().parent().parent().find('.device_type').html());
                     $('input[name=total]').val($(this).parent().parent().parent().find('.total').html());
                 }
+
                 var id = $(this).attr("labDeviceId");
                 $('input[name="id"]').remove();
                 $('#edit_form').append('<input type="hidden" name="id" value="'+id+'">');
@@ -184,15 +187,27 @@
 
 
 
-            //删除
+            //删除和当前实验室相关的 设备信息
             $('#table-striped').delegate('.delete','click',function(){
-//                alert(111111111111);
-                var this_id = $(this).attr('data');
-                var url = "/msc/admin/ladMaintain/lad-devices-deletion?id="+this_id;
+                var $this = $(this);
+                var this_id = $(this).attr('labDeviceId');
+                var url = "{{ route('msc.admin.LadMaintain.LadDevicesDeletion') }}"+"?id="+this_id;
                 layer.confirm('您确定要删除该设备？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    window.location.href=url;
+                    $.ajax({
+                        type:"get",
+                        url:url,
+                        async:true,
+                        success:function(res){
+                            if(res.code == 1){
+                                $this.parents('tr').remove();
+                                layer.msg("删除成功", {icon: 1,time: 1000});
+                            }else{
+                                layer.msg(res.message, {icon: 2,time: 1000});
+                            }
+                        }
+                    });
                 });
             });
 
@@ -206,7 +221,6 @@
                     url:url+'?keyword='+$('#keyword').val()+'&lab_id='+$('#lab_id').val(),
                     async:true,
                     success:function(result){
-                        console.log(result);
                         var html = '';
                         var list ='';
                         $(result.data.rows.deviceType).each(function(){
@@ -235,9 +249,25 @@
 
             }
 
+            //保存编辑数量
             $('#saveEdit').click(function(){
                 var url = "{{route('msc.admin.LadMaintain.DevicesTotalEdit')}}";
-                alert(url);
+                var labDeviceId = $('#edit_form').find('input[name="id"]').val();
+                var total = $('#edit_form').find('input[name="total"]').val();
+                $.ajax({
+                    type:"get",
+                    url:url,
+                    data:{lab_device_id:labDeviceId,total:total},
+                    async:true,
+                    success:function(result){
+                        if(result.code == 1){
+                            $('#DeviceNum_'+labDeviceId).html(total);
+                            layer.msg("编辑成功", {icon: 1,time: 1000});
+                        }else{
+                            layer.msg("编辑失败", {icon: 2,time: 1000});
+                        }
+                    }
+                })
             })
 
             //添加实验室相关设备
@@ -256,7 +286,13 @@
                     data:{lab_id:$('#lab_id').val(),device_id_num:DeviceIdNumArr},
                     async:true,
                     success:function(result){
-                        updateLabDeviceList($('#lab_id').val());
+                        if(result.code == 1){
+                            updateLabDeviceList($('#lab_id').val());
+                            layer.msg("添加成功", {icon: 1,time: 1000});
+                        }else{
+                            layer.msg("添加失败", {icon: 2,time: 1000});
+                        }
+
                     }
                 })
             })
