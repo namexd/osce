@@ -69,7 +69,9 @@ class Laboratory extends Model
         {
             $builder = $builder->where($lab.'.open_type','=',$where['open_type']);
         }
-        $builder = $builder->with(['floors','user']);
+        $builder = $builder->with(['floors'=>function($f){
+            $f->where('status','=',1);
+        },'user']);
 //        dd($builder);
 //        $builder = $builder->leftJoin('location', function($join) use($local, $lab) {
 //            $join->on($local.'.id', '=', $lab.'.location_id');

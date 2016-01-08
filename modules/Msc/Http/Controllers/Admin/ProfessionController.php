@@ -173,12 +173,22 @@ class ProfessionController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public  function postProfessionSave(Request $request){
-//        dd($request);
         $this->validate($request,[
             'id' => 'sometimes|min:0|max:10',
-            'name'   => 'required|max:50',
-            'code'   =>  'required|max:32',
+            'name'   => 'required|max:50|unique:msc_mis.student_professional',
+            'code'   =>  'required|max:32|unique:msc_mis.student_professional',
             'status' =>   'required|in:0,1'
+        ],[
+            'name.required'=>'专业名称必填',
+            'name.max'=>'专业名称最长50个字节',
+
+            'name.unique'=>'专业名称不能重复添加',
+            'code.required'=>'专业专业代码必填',
+            'code.max'=>'专业代码最长32个字节',
+
+            'code.unique'=>'专业代码不能重复添加',
+            'status.required'=>'状态值必填',
+            'status'=>'状态值只能为0或1'
         ]);
         $data = $request->only(['name','code','status','id']);
         $profession = new StdProfessional();
@@ -217,7 +227,11 @@ class ProfessionController extends MscController
         if($id){
             $data = $professional->where('id','=',$id)->update(['status'=>Input::get('type')]);
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('状态变更成功');
+                if(Input::get('type') == 1){
+                    return redirect()->back()->withInput()->withErrors('启用成功');
+                }else{
+                    return redirect()->back()->withInput()->withErrors('停用成功');
+                }
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }

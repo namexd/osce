@@ -186,7 +186,11 @@ class ResourcesController extends MscController
         if ($id) {
             $data = $devices->where('id', '=', $id)->update(['status' => Input::get('type')]);
             if ($data != false) {
-                return redirect()->back()->withInput()->withErrors('状态变更成功');
+                if(Input::get('type') == 1){
+                    return redirect()->back()->withInput()->withErrors('启用成功');
+                }else{
+                    return redirect()->back()->withInput()->withErrors('停用成功');
+                }
             } else {
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }

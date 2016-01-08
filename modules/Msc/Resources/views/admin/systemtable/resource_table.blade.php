@@ -45,6 +45,9 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>''])}}">全部</a>
+                                    </li>
                                     @if(!empty($devicetype))
                                         @foreach($devicetype as $type)
                                             <li>
@@ -164,7 +167,7 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                     <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
                 </div>
             </div>
@@ -213,7 +216,7 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                     <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
                 </div>
             </div>
