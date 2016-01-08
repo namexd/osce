@@ -98,6 +98,65 @@ function ban_maintain(){
 
             }
         });
+        //            新增表单验证
+        $('#edit_from').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {/*验证*/
+                name: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '楼栋名称不能为空'
+                        }
+                    }
+                },
+                floor_top: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '地上层数不能为空'
+                        }
+                    }
+                },
+                floor_buttom: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '地下层数不能为空'
+                        }
+                    }
+                },
+                address: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '地址不能为空'
+                        }
+                    }
+                },
+                school_id: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '所属分院不能为空'
+                        }
+                    }
+                },
+                status: {
+                    validators: {
+                        regexp: {
+                            regexp: /^(?!-1).*$/,
+                            message: '请选择状态'
+                        }
+
+                    }
+                }
+            }
+        });
 
         $('.edit').click(function () {
             $('.lname').val($(this).parent().parent().find('.name').html());
