@@ -10,9 +10,6 @@
 
 @section('only_js')
     <script src="{{asset('msc/admin/systemtable/resource_table.js')}}"></script>
-    <script>
-
-    </script>
 @stop
 
 @section('content')

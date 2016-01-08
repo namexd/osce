@@ -55,48 +55,7 @@ function ban_maintain(){
 
 //            编辑
         $('#add_from').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                name: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '楼栋名称不能为空'
-                        }
-                    }
-                },
-                up: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '地上层数不能为空'
-                        }
-                    }
-                },
-                down: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '地下层数不能为空'
-                        }
-                    }
-                },
-                type: {
-                    validators: {
-                        regexp: {
-                            regexp: /^(?!-1).*$/,
-                            message: '请选择状态'
-                        }
 
-                    }
-                }
-
-            }
         });
         //            新增表单验证
         $('#edit_from').bootstrapValidator({

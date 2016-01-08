@@ -39,7 +39,7 @@
             }, function(){
                 window.location.href=url;
             });
-        })
+        });
         $('#add_from').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -52,7 +52,7 @@
                     message: 'The username is not valid',
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '用户名不能为空'
+                            message: '职称名不能为空'
                         }
                     }
                 },
@@ -63,25 +63,22 @@
                             message: '请选择状态'
                         }
                     }
-                },
-
+                }
             }
         });
         $('.edit').click(function () {
+//            去除为空样式
+            $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             if($(this).attr("data")){
                 $('input[name=name]').val($(this).parent().parent().find('.name').html());
                 $('input[name=description]').val($(this).parent().parent().find('.describe').html());
-//                var sname = $(this).parent().parent().find('.sname').html();
                 var status = '';
                 if($(this).parent().parent().find('.status').html() ==='正常'){
                     status = 1;
                 }else{
                     status = 0;
                 }
-//            alert(status);
-//            var status = $(this).parent().parent().find('.status').attr('data');
                 $('.state option').each(function(){
-//                alert(status);
                     if($(this).val() == status){
                         $(this).attr('selected','selected');
                     }
@@ -91,10 +88,9 @@
                 var id = $(this).attr("data");
                 $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
             }
-
         });
-
         $('#addtitletable').click(function(){
+            $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             $("input,textarea,select").val("");
             $('#add_from').attr('action',"{{route('msc.admin.professionaltitle.HolderAdd')}}");
         })
@@ -131,10 +127,6 @@
                     <th>名称</th>
                     <th>描述</th>
                     <th>
-                        {{--<input type="hidden" name="status" value="{{$status}}">--}}
-                        {{--<input type="hidden" name="manager_name" value="{{manager_name}}">--}}
-                        {{--<input type="hidden" name="opened" value="{{opened}}">--}}
-
                         <div class="btn-group Examine">
                             <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button">状态<span class="caret"></span></button>
                             <ul class="dropdown-menu">
@@ -148,7 +140,6 @@
                         </div>
                     </th>
                     <th>操作</th>
-
                 </tr>
                 </thead>
                 <tbody>
@@ -159,7 +150,6 @@
                             <td class="name">{{ @$val['name'] }}</td>
                             <td class="describe">{{ @$val['description'] }}</td>
                             <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
-
                             <td class="opera">
                                 <a href=""   data="{{@$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span></a>
                                 @if($val['status']==1)
@@ -225,7 +215,4 @@
 
     </div>
 </form>
-
-<!--删除-->
-
 @stop
