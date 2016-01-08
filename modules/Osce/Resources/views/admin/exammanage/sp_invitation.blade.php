@@ -108,10 +108,18 @@
                                 <td>肠胃炎考站</td>
                                 <td class="sp-teacher">
                                     <div class="teacher-box pull-left">
-                                        <!-- <div class="input-group teacher pull-left">
+                                        <div class="input-group teacher pull-left">
                                             <div class="pull-left">张老师</div>
                                             <div class="pull-left"><i class="fa fa-times"></i></div>
-                                        </div> -->
+                                        </div>
+                                        <div class="input-group teacher pull-left teacher-primary">
+                                            <div class="pull-left">张老师</div>
+                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                        </div>
+                                        <div class="input-group teacher pull-left teacher-warn">
+                                            <div class="pull-left">张老师</div>
+                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                        </div>
                                     </div>
                                     <div class="pull-right">
                                         <select name="" class="teacher-list">

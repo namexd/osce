@@ -10,6 +10,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Pad;
 use Modules\Osce\Entities\Watch;
@@ -771,7 +773,7 @@ class MachineController extends CommonController
     }
 
     /**
-     * 编辑Pad信息
+     * 编辑腕表单页面
      * @url /osce/admin/machine/edit-watch
      * @access public
      *
@@ -793,9 +795,69 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
-        $watch    =   Pad::find($id);
+        $watch    =   Watch::find($id);
 
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
+    }
+
+    /**
+     *查询腕表数据
+     * @method GET
+     * @url
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchList(Request $request){
+        $this  ->validate($request,[
+            'code'  =>  'required|integer'
+        ]);
+
+        $code=intval($request->get('code'));
+        if($code){
+            $list=Watch::where('code','like','%'.$code.'%');
+        }else{
+            $list=Watch::select();
+        }
+        $data=[];
+        foreach($list as $item){
+           $data[]=[ 'id'      =>$item->id,
+                     'status'  =>$item->status,
+                     'name'    =>$item->name,
+                     'code'    =>$item->code,
+                   ];
+         }
+
+        foreach($data as $itm){
+             if($itm['status']==1){
+               $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first()->student_id;
+               $itm['student_id']=$studentId;
+             }
+        }
+
+        foreach($data as $v){
+            if($v['student_id']){
+                $studentName=Student::where('id',$v['student_id'])->select('name')->first()->name;
+                $v['student_name']=$studentName;
+            }
+        }
+        $watchModel   =   new Watch();
+
+        $pagination             =   $watchModel   ->  paginate('osce.page_size');
+
+        return ['data'=>$data,'pagination'=>$pagination];
     }
 
 }
