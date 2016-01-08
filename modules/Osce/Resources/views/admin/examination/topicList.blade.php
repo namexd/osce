@@ -8,6 +8,7 @@
     }
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
+    .input-group input{height: 34px;}
     </style>
 @stop
 

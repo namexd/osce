@@ -771,7 +771,7 @@ class MachineController extends CommonController
     }
 
     /**
-     * 编辑Pad信息
+     * 编辑腕表单页面
      * @url /osce/admin/machine/edit-watch
      * @access public
      *
@@ -793,7 +793,7 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
-        $watch    =   Pad::find($id);
+        $watch    =   Watch::find($id);
 
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
     }
