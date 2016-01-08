@@ -93,6 +93,13 @@ class ProfessionController extends MscController
         'name'   => 'required|max:50',
         'code'   =>  'required|max:32',
         'status' =>   'required|in:0,1'
+    ],[
+        'name.required'=>'专业名称必填',
+        'name.max'=>'专业名称最长50个字节',
+        'code.required'=>'专业专业代码必填',
+        'code.max'=>'专业代码最长32个字节',
+        'status.required'=>'状态值必填',
+        'status'=>'状态值只能为0或1'
     ]);
         $data=[
             'name'=>Input::get('name'),
