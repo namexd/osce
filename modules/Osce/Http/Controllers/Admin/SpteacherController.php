@@ -8,10 +8,13 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
+use DB;
+use Url;
 
 class SpteacherController extends CommonController
 {
@@ -116,10 +119,55 @@ class SpteacherController extends CommonController
                'case_id'    =>'required|integer',
                'type'    =>'required|integer',
         ]);
-        
+        $Invitation = [];
+        $req = $request->all();
+        $user = Auth::user();
+        if(is_array($req['user_id'])){
+            foreach($req['user_id'] as $v){
+                $arr = explode(",",$v);
+                $Invitations['station_id'] = $req['station_id'];
+                $Invitations['case_id'] = $req['case_id'];
+                $Invitations['type'] = $req['type'];
+//                $LabDevices['user_id'] = $arr[0];
+                $LabDevices['created_user_id'] = $user->id;
+                $Invitation [] = $LabDevices;
+            }
+        }
+
+        $return = DB::connection('msc_mis')->table('lab_device')->insert($Invitation);
+
+        if($return){
+            return redirect()->back()->withInput()->withErrors('保存成功');
+        }else{
+            return redirect()->back()->withInput()->withErrors('保存失败');
+        }
+
     }
 
 
+
+
+    /**
+     *  发起sp邀请
+     * @method GET
+     * @url /osce/admin/spteacher/invitation-Sp
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        id       考试id(必须的)
+     *
+     * @return
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getInvitationSp(){
+
+
+
+    }
 
 
 
