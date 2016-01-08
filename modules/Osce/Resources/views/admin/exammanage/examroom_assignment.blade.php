@@ -31,19 +31,13 @@
         border-color: #1ab394!important;
         width: 100%;
     }
+    .control-label{text-align: right;}
     </style>
 @stop
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}'}" />
 <input type="hidden" id="parameter" value="{'pagename':'examroom_assignment'}" />
-<div class="ibox-title route-nav">
-    <ol class="breadcrumb">
-        <li><a href="#">考试安排</a></li>
-        <li class="route-active">考场安排</li>
-    </ol>
-</div>
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -127,7 +121,7 @@
                                             <th>老师</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody index="0">
                                             <tr>
                                                 <td>1</td>
                                                 <td>3:00</td>
@@ -149,8 +143,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
-                                    <button class="btn btn-white" type="submit">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-white" type="submit">取消</button>
 
                                 </div>
                             </div>

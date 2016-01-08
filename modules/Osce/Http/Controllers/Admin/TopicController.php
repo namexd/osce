@@ -8,8 +8,10 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use App\Repositories\Common;
 use DB;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -233,6 +235,33 @@ class TopicController extends CommonController
         catch(\Exception $ex)
         {
             return redirect()->back()->withErrors($ex);
+        }
+    }
+
+    /**
+     *
+     * @url /osce/admin/topic/import-excel
+     * @access public
+     *
+     *
+     * <b>get 请求字段：</b>
+     *
+     *
+     * @param Request $request
+     * @version 1.0
+     * @author jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postImportExcel(Request $request)
+    {
+        try {
+            $data = Common::getExclData($request, 'topic');
+            $topicList = array_shift($data);
+            //将中文表头，按配置翻译成英文的字段名
+//            $data = Common::arrayChTOEn($topicList, 'osce.importForCnToEn.topic');
+            dd($topicList);
+        } catch (\Exception $ex) {
+
         }
     }
 }

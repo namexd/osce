@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 
+use Modules\Osce\Entities\Area;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\RoomCate as RoomCate;
 use Illuminate\Http\Request;
@@ -16,35 +17,7 @@ use Illuminate\Http\Request;
 class RoomCateController extends CommonController
 {
 
-    /**
-     * 获取场所类别列表,根据场所类来查找
-     * @api       GET /osce/admin/room-cate/room-cate-list
-     * @access    public
-     * @param Request $request get请求<br><br>
-     *                         <b>get请求字段：</b>
-     *                         string        keyword         关键字
-     *                         string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
-     *                         string        order_by        排序方式 枚举 e.g:desc,asc
-     * @return view
-     * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getRoomCateList(Request $request)
-    {
-        //验证规则，暂时留空
 
-        //获取各字段
-        $formData = $request->only('keyword', 'order_by', 'order_name');
-        //获取当前场所的类
-        //目前暂时按照一级来做，所以不需要pid
-//        $pid = $request->input('pid');
-//        $pid = empty($pid) ? 1 : $pid;
-        //展示页面
-        $place = new RoomCate();
-        $data = $place->showRoomCateList($formData);
-        dd($data);
-    }
 
     /**
      * 插入一条数据

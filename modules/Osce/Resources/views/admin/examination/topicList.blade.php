@@ -8,6 +8,7 @@
     }
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
+    .input-group input{height: 34px;}
     </style>
 @stop
 
@@ -17,12 +18,6 @@
 
 
 @section('content')
-<div class="ibox-title route-nav">
-    <ol class="breadcrumb">
-        <li><a href="">考试管理</a></li>
-        <li class="route-active">考核点管理</li>
-    </ol>
-</div>
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -57,8 +52,8 @@
                         <td>{{$item->title}}</td>
                         <td>{{$item->score}}</td>
                         <td>
-                            <a href="{{route('osce.admin.topic.getEditTopic',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                            <a href="{{route('osce.admin.topic.getEditTopic',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                 @empty

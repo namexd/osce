@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
@@ -41,4 +42,45 @@ class SpteacherController extends CommonController
 
         return $this->success_data($data);
     }
+
+    /**
+     *  sp邀请页面数据
+     * @method GET
+     * @url /osce/admin/spteacher/invitation-index
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        id       考试id(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getInvitationIndex(Request $request){
+          $this->validate($request,[
+              'exam_id'    =>'required|integer'
+          ],[
+              'exam_id.required'   => '没有考试ID'
+          ]);
+
+           $examId = $request->input('exam_id');
+            $ScreeningModel=new ExamScreening();
+         $Station = $ScreeningModel->getStationList($examId);
+        $data=[
+               'station_id' =>$Station['station_id'],
+               'station_name' =>$Station['station_name'],
+               'teacher_name' =>$Station['teacher_name'],
+               'teacher_id' =>$Station['teacher_id'],
+        ];
+
+        return view('Osce::admin.exammanage.sp_invitation',[
+            'data'    => $data,
+        ]);
+    }
+
+
+
 }

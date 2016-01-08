@@ -23,7 +23,7 @@
                 <h5 class="title-label">场所管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -32,9 +32,9 @@
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             <li class=""><a href="#">考场</a></li>
-                            <li class=""><a href="#">中控室</a></li>
-                            <li class=""><a href="#">走廊</a></li>
-                            <li class="active"><a href="#">候考室</a></li>
+                            <li><a href="{{route('osce.admin.room.getRoomList')}}?type=2">中控室</a></li>
+                            <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=3">走廊</a></li>
+                            <li class="active"><a href="{{route('osce.admin.room.getRoomList')}}?type=4">候考区</a></li>
                         </ul>
                     </div>
                 </div>
@@ -57,7 +57,18 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                    @forelse($data as $k=>$item)
+                        <tr>
+                            <td>{{$k+1}}</td>
+                            <td>{{$item->name}}</td>
+                            <td>{{$item->description}}</td>
+                            <td value="{{$item->id}}">
+                                <a href="{{route('osce.admin.room.getEditRoom')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                                <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            </td>
+                        </tr>
+                    @empty
+                    @endforelse
                     </tbody>
                 </table>
 

@@ -8,6 +8,7 @@
     }
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
+    .input-group input{height: 34px;}
     </style>
 @stop
 
@@ -27,12 +28,22 @@
                 <a  href="{{route('osce.admin.room.getAddRoom')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-    <form class="container-fluid ibox-content" id="list_form">
+    <form class="container-fluid ibox-content" id="list_form" method="get" action="{{route('osce.admin.room.getRoomList')}}?type=1">
         <div class="panel blank-panel">
+            <div class="panel-heading">
+                <div class="panel-options">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#">考场</a></li>
+                        <li><a href="{{route('osce.admin.room.getRoomList')}}?type=2">中控室</a></li>
+                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=3">走廊</a></li>
+                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=4">候考区</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword">
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
+                    <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                 </span>
             </div>
 

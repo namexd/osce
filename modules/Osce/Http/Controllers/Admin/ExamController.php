@@ -13,10 +13,14 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Room;
+use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
+use Symfony\Component\Translation\Interval;
 
 class ExamController extends CommonController
 {
@@ -37,9 +41,14 @@ class ExamController extends CommonController
     public function getExamList(Request $request, Exam $exam)
     {
         //验证略
+        $this->validate($request,[
+            'exam_name' =>'sometimes'
+        ]);
+
+        $formData = $request->only('exam_name');
 
         //从模型得到数据
-        $data = $exam->showExamList();
+        $data = $exam->showExamList($formData);
 
         return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
 
@@ -406,20 +415,23 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>  zhouchong <Zhouchong@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentQuery(Request $request)
     {
         //验证规则，暂时留空
-
+        $this   ->    validate($request,[
+              'exam_name'      => 'sometimes',
+              'student_name'   => 'sometimes',
+        ]);
         //获取各字段
         $formData = $request->only('exam_name', 'student_name');
         //获取当前场所的类
-
+         $examModel= new Exam();
         //从模型得到数据
-        $data = [];
+        $data=$examModel->getList($formData);
 
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
@@ -437,7 +449,7 @@ class ExamController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStationList(Request $request)
+    public function getStationList(Request $request, Exam $exam)
     {
         $this->validate($request, [
             'id' => 'required|integer'
@@ -449,18 +461,16 @@ class ExamController extends CommonController
         //如果在考试考场表里查不到信息的话，就说明还没有选择跳到上一个选项卡去
         $result = ExamScreening::where('exam_screening.exam_id','=',$id)->first();
         if (!$result) {
-            return redirect()->route('')->withErrors('对不起，请选择房间');
+            return redirect()->back()->withErrors('对不起，请选择房间');
         }
 
         //得到room_id
         $roomId = $result->room_id;
+        //得到sp老师的编号
+        $spTeacherId = ExamSpTeacher::where('exam_sp_teacher.exam_screening_id', '=' , $result->id)
+            ->select('teacher_id')->get();
 
-        //根据room_id得到考站列表
-        $data = Station::where('station.room_id' , '=' , $roomId)
-            ->select([
-                'station.id as id',
-                'station.name as name'
-            ])->get();
+
 
         return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
     }
@@ -491,10 +501,6 @@ class ExamController extends CommonController
     /**
      * 考场安排
      * @api GET /osce/admin/exam/getExamroomAssignment
-     * @access public
-     *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
      *
      * @return object
@@ -530,11 +536,112 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getRoomListData(){
-        $data = Room::select(['id','name'])->get();
+    public function getRoomListData()
+    {
+        $data = Room::select(['id', 'name'])->get();
 
         return response()->json(
-            $this->success_data($data, 1,'success')
+            $this->success_data($data, 1, 'success')
         );
+    }
+
+    /**
+     *检测是否绑定
+     * @method GET 接口
+     * @url exam/watch-status/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        腕表Id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchStatus($id){
+        $IsEnd=ExamScreeningStudent::where('watch_id',$id)->select('is_end')->first()->is_end;
+        if($IsEnd==1){
+            return response()->json(
+                $this->success_data(1,'已绑定')
+            );
+        }
+        if($IsEnd==0){
+            return response()->json(
+                $this->success_data(0,'未绑定')
+            );
+        }
+    }
+
+    /**
+     *绑定腕表
+     * @method GET 接口
+     * @url exam/bound-watch/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        腕表id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getBoundWatch($id){
+
+        $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>1]);
+
+        if($result){
+            $result=Watch::where('id',$id)->update(['status'=>1]);
+            if($result){
+                return response()->json(
+                    $this->success_data(1,'绑定成功')
+                );
+            }
+        }else{
+            return response()->json(
+                $this->success_data(0,'绑定失败','false')
+            );
+        }
+    }
+
+    /**
+     *解除绑定腕表
+     * @method GET 接口
+     * @url exam/unwrap-watch/{id}
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        腕表ID(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getUnwrapWatch($id){
+        $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>0]);
+
+        if($result){
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                return response()->json(
+                    $this->success_data(1,'解绑成功')
+                );
+            }
+        }else{
+            return response()->json(
+                $this->success_data(0,'解绑失败','data')
+            );
+        }
     }
 }
