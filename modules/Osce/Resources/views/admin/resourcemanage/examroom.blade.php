@@ -8,6 +8,7 @@
     }
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
+    .input-group input{height: 34px;}
     </style>
 @stop
 
@@ -29,6 +30,16 @@
         </div>
     <form class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
+            <div class="panel-heading">
+                <div class="panel-options">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#">考场</a></li>
+                        <li><a href="#">中控室</a></li>
+                        <li class=""><a href="#">走廊</a></li>
+                        <li class=""><a href="#">候考区</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword">
                 <span class="input-group-btn">

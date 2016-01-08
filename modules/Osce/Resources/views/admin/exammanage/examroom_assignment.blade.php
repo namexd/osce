@@ -36,7 +36,6 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}'}" />
 <input type="hidden" id="parameter" value="{'pagename':'examroom_assignment'}" />
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
