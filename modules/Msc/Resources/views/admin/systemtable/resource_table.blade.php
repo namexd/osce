@@ -10,9 +10,6 @@
 
 @section('only_js')
     <script src="{{asset('msc/admin/systemtable/resource_table.js')}}"></script>
-    <script>
-
-    </script>
 @stop
 
 @section('content')
@@ -67,7 +64,8 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword])}}">全部</a>
+                                        
+                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'2'])}}">全部</a>
                                     </li>
                                     <li>
                                         <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
@@ -119,11 +117,13 @@
 @stop
 
 @section('layer_content')
-    {{--编辑--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.resources.ResourcesAdd')}}" method="post">
+  
+    {{--新增--}}
+    <form class="form-horizontal" id="add_from" novalidate="novalidate"  action="{{ route('msc.admin.resources.ResourcesAdd') }}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增资源/编辑资源</h4>
+            
+            <h4 class="modal-title" id="myModalLabel">新增资源</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
@@ -170,5 +170,53 @@
             </div>
         </div>
     </form>
-
+{{--编辑--}}
+    <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route("msc.admin.resources.ResourcesSave")}}" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">编辑资源</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="name" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b cate" name="devices_cate_id">
+                        @if(!empty($devicetype))
+                            @foreach($devicetype as $type)
+                                <option value="{{$type->id}}">{{$type->name}}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">说明</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="detail" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b state" name="status">
+                        <option value="1">正常</option>
+                        <option value="0">禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2 right">
+                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                </div>
+            </div>
+        </div>
+    </form>
 @stop

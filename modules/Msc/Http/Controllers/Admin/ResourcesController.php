@@ -40,11 +40,11 @@ class ResourcesController extends MscController
     {
         $this->validate($request, [
             'keyword' => 'sometimes',
-            'status' => 'sometimes|in:0,1',
+            'status' => 'sometimes|in:0,1,2',
             'devices_cate_id' => 'sometimes|integer'
         ]);
         $keyword = urldecode(e($request->input('keyword')));
-        $status = (int)$request->input('status');
+        $status = (int)$request->input('status',2);
         $devices_cate_id = (int)$request->input('devices_cate_id');
         $devices = new Devices();
         $pagination = $devices->getDevicesList([],$keyword, $status, $devices_cate_id);
@@ -163,7 +163,8 @@ class ResourcesController extends MscController
             'detail'=>Input::get('detail'),
             'status'=>Input::get('status'),
         ];
-        $Save = DB::connection('msc_mis')->table('devices')->where('id','=',urlencode(e(Input::get('id'))))->update($data);
+        $devices = new Devices;
+        $Save = $devices->where('id','=',urlencode(e(Input::get('id'))))->update($data);
         if( $Save != false){
             return redirect()->back()->withInput()->withErrors('修改成功');
         }else{

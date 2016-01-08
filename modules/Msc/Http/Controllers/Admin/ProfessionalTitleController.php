@@ -39,11 +39,11 @@ class ProfessionalTitleController extends Controller
     public function  getJobTitleIndex(Request $request)
     {
         $this->validate($request, [
-            'keyword ' => 'sometimes',
-            'status' => 'sometimes|in:1,2',
+            'status' => 'sometimes|in:0,1,2'
         ]);
+
         $keyword = urldecode(e($request->input('keyword')));
-        $status = (int)$request->input('status');
+        $status = (int)$request->input('status',2);
         $tabulate = new ProfessionalTitle();
         $pagination =  $tabulate->getJobTitleList($keyword, $status);
         $list = [];
@@ -149,7 +149,7 @@ class ProfessionalTitleController extends Controller
             'id' => 'sometimes|min:0|max:10',
             'name'   => 'required|max:20',
             'description'   =>  'required|max:50',
-            'status' =>   'required|in:1,2'
+            'status' =>   'required|in:0,1,2'
         ]);
         $data=[
             'name'=>Input::get('name'),

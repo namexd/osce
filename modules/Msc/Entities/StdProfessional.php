@@ -17,10 +17,8 @@ class StdProfessional extends Model
     protected $table 		= 	'student_professional';
     protected $fillable 	=	["id","name","code","created_user_id","status"];
     public $incrementing	=	true;
-    public $timestamps	=	false;
+    public $timestamps	=	true;
     protected $primaryKey	=	'id';
-    protected $guarded 		= 	[];
-    protected $hidden 		= 	[];
 
 //获得专业分页列表
 

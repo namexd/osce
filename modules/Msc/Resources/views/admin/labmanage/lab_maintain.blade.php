@@ -44,13 +44,73 @@
             $("#add_lab").click(function(){
                 $("#add_from").show();
                 $("#edit_from").hide();
-
+                $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             });
             $(".edit_lab").click(function(){
                 $("#add_from").hide();
                 $("#edit_from").show();
+                $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
             });
-//            编辑
+            //编辑验证
+            $("#edit_from").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    hospital: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择所属分院'
+                            }
+                        }
+                    },
+                    building: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择教学楼'
+                            }
+                        }
+                    },
+                    floor: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择楼层'
+                            }
+                        }
+                    },
+                    name: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '实验室名称不能为空'
+                            }
+                        }
+                    },
+                    number: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '房号不能为空'
+                            }
+                        }
+                    },
+                    type: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择状态'
+                            }
+                        }
+                    }
+                }
+            });
+//            新增验证
             $('#add_from').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -388,7 +448,7 @@
 @stop
 
 @section('layer_content')
-{{--新增--}}
+{{--编辑--}}
     <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -507,7 +567,7 @@
         </div>
     </form>
 
-{{--编辑--}}
+{{--新增--}}
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post" style="display:none">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -532,7 +592,6 @@
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b local" name="building">
                         <option value="-1">请选择教学楼</option>
-
                     </select>
                 </div>
             </div>
@@ -541,7 +600,6 @@
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b floor" name="floor">
                         <option value="-1">请选择楼层</option>
-
                     </select>
                 </div>
             </div>
