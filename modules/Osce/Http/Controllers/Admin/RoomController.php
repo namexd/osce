@@ -47,11 +47,11 @@ class RoomController extends CommonController
         list($area,$data) = $room->showRoomList($keyword, $type, $id);
 
         //展示页面
-        if (empty($area)) { //这种情况出现在编辑中
-            return view('osce::admin.resourcemanage.examroom', ['data' => $data]);
+        if ($type == 1) {
+            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data]);
+        } else {
+            return view('', ['area' => $area, 'data' => $data]);
         }
-        return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data]);
-
 
     }
 
