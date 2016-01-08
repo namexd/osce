@@ -19,15 +19,15 @@ use DB;
 class ResourcesController extends MscController
 {
     /**
-     *×ÊÔ´ÁĞ±í
+     *èµ„æºåˆ—è¡¨
      * @method GET
      * @url /msc/admin/resources/resources-index
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        keyword       ×¨ÒµÃû³Æ
-     * * int           status        ×¨Òµ×´Ì¬(1£ºÕı³££¬2£ºÍ£ÓÃ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        keyword       ä¸“ä¸šåç§°
+     * * int           status        ä¸“ä¸šçŠ¶æ€(1ï¼šæ­£å¸¸ï¼Œ2ï¼šåœç”¨)
      * @return  view
      *
      * @version 1.0
@@ -47,9 +47,7 @@ class ResourcesController extends MscController
         $status = (int)$request->input('status');
         $devices_cate_id = (int)$request->input('devices_cate_id');
         $devices = new Devices();
-        $pagination = $devices->getDevicesList($keyword, $status, $devices_cate_id);
-//        dd($pagination);
-
+        $pagination = $devices->getDevicesList([],$keyword, $status, $devices_cate_id);
 
         $list = [];
         foreach ($pagination as $itme) {
@@ -62,7 +60,6 @@ class ResourcesController extends MscController
                 'status' => is_null($itme->status) ? '-' : $itme->status,
             ];
         }
-//        dd($list);
         $devicetype = DB::connection('msc_mis')->table('device_cate')->get();
         return view('msc::admin.systemtable.resource_table',[
             'pagination'=>$pagination,
@@ -75,18 +72,18 @@ class ResourcesController extends MscController
 
 
     /**
-     * ĞÂÔö×ÊÔ´
+     * æ–°å¢èµ„æº
      *
      * @method post
      * @url /msc/admin/resources/resources-add
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        name       Éè±¸Ãû(±ØĞëµÄ)
-     * *string         detail     Éè±¸ËµÃ÷(±ØĞëµÄ)
-     * * int            devices_cate_id   ×ÊÔ´ÀàĞÍ (±ØĞëµÄ)
-     * * int            status       ×´Ì¬(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        name       è®¾å¤‡å(å¿…é¡»çš„)
+     * *string         detail     è®¾å¤‡è¯´æ˜(å¿…é¡»çš„)
+     * * int            devices_cate_id   èµ„æºç±»å‹ (å¿…é¡»çš„)
+     * * int            status       çŠ¶æ€(å¿…é¡»çš„)
      * @return   json
      *
      * @version 1.0
@@ -102,30 +99,30 @@ class ResourcesController extends MscController
             'detail'   =>  'required|max:20',
             'status' =>   'required|in:0,1'
         ]);
-         $data=[
-             'name'=>Input::get('name'),
-             'devices_cate_id'=>Input::get('devices_cate_id'),
-             'detail'=>Input::get('detail'),
-             'status'=>Input::get('status'),
-         ];
+        $data=[
+            'name'=>Input::get('name'),
+            'devices_cate_id'=>Input::get('devices_cate_id'),
+            'detail'=>Input::get('detail'),
+            'status'=>Input::get('status'),
+        ];
         $ResourcesAdd= Devices::create($data);
         if($ResourcesAdd != false){
-            return redirect()->back()->withInput()->withErrors('Ìí¼Ó³É¹¦');
+            return redirect()->back()->withInput()->withErrors('æ·»åŠ æˆåŠŸ');
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 
     /**
-     * ±à¼­»ØÏÔ×ÊÔ´ÔİÊ±Ã»ÓĞÓÃ
+     * ç¼–è¾‘å›æ˜¾èµ„æºæš‚æ—¶æ²¡æœ‰ç”¨
      *
      * @method post
      * @url /msc/admin/resources/resources-edit
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int       id   ×ÊÔ´ID£¨±ØĞëµÄ£©
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * *int       id   èµ„æºIDï¼ˆå¿…é¡»çš„ï¼‰
      * @return   json
      *
      * @version 1.0
@@ -134,23 +131,23 @@ class ResourcesController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-       public  function getResourcesEdit($id){
-           $ResourcesId = intval($id);
-           $Resources= Devices::findOrFail($ResourcesId);
-           $data=[
-               'name'   =>   $Resources['name'],
-               'detail'   =>   $Resources['detail'],
-               'devices_cate_id'   => $Resources['devices_cate_id'],
-               'status' =>    $Resources['status']
-           ];
-           die(json_encode($data));
-}
+    public  function getResourcesEdit($id){
+        $ResourcesId = intval($id);
+        $Resources= Devices::findOrFail($ResourcesId);
+        $data=[
+            'name'   =>   $Resources['name'],
+            'detail'   =>   $Resources['detail'],
+            'devices_cate_id'   => $Resources['devices_cate_id'],
+            'status' =>    $Resources['status']
+        ];
+        die(json_encode($data));
+    }
     /**
      * Created by PhpStorm.
      * User: zhouqiang
      * Date: 2015/12/30 0028
      * Time: 13:01
-     * ĞŞ¸Ä×ÊÔ´
+     * ä¿®æ”¹èµ„æº
      */
     public  function postResourcesSave(Request $request){
 //        dd(222222);
@@ -168,9 +165,9 @@ class ResourcesController extends MscController
         ];
         $Save = DB::connection('msc_mis')->table('devices')->where('id','=',urlencode(e(Input::get('id'))))->update($data);
         if( $Save != false){
-            return redirect()->back()->withInput()->withErrors('ĞŞ¸Ä³É¹¦');
+            return redirect()->back()->withInput()->withErrors('ä¿®æ”¹æˆåŠŸ');
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 
@@ -179,33 +176,33 @@ class ResourcesController extends MscController
      * User: zhouqiang
      * Date: 2015/12/30 0028
      * Time: 13:01
-     * ĞŞ¸Ä×´Ì¬
+     * ä¿®æ”¹çŠ¶æ€
      */
 
-      public function getResourcesStatus(Devices $devices)
-      {
-          $id = urlencode(e(Input::get('id')));
-          if ($id) {
-              $data = $devices->where('id', '=', $id)->update(['status' => Input::get('type')]);
-              if ($data != false) {
-                  return redirect()->back()->withInput()->withErrors('Í£ÓÃ³É¹¦');
-              } else {
-                  return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
-              }
-          } else {
-              return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
-          }
-      }
+    public function getResourcesStatus(Devices $devices)
+    {
+        $id = urlencode(e(Input::get('id')));
+        if ($id) {
+            $data = $devices->where('id', '=', $id)->update(['status' => Input::get('type')]);
+            if ($data != false) {
+                return redirect()->back()->withInput()->withErrors('çŠ¶æ€å˜æ›´æˆåŠŸ');
+            } else {
+                return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
+            }
+        } else {
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
+        }
+    }
 
     /**
-     *×¨ÒµÉ¾³ı
+     *ä¸“ä¸šåˆ é™¤
      * @method get
      * @url /msc/admin/resources/resources-remove/{id}
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * *int   ID    (å¿…é¡»çš„)
      *
      * @return json
      *
@@ -220,12 +217,12 @@ class ResourcesController extends MscController
         if($id){
             $data = DB::connection('msc_mis')->table('devices')->where('id','=',$id)->delete();
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('É¾³ı³É¹¦');
+                return redirect()->back()->withInput()->withErrors('åˆ é™¤æˆåŠŸ');
             }else{
-                return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+                return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 

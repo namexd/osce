@@ -32,8 +32,10 @@ class Devices  extends Model
     }
     //获取资源列表
     public function getDevicesList($DeviceIdArr,$keyword='', $status='', $devices_cate_id=''){
-
-        $builder = $this->whereNotIn('devices.id',$DeviceIdArr);
+        $builder = $this;
+        if(!empty($DeviceIdArr)){
+            $builder = $builder->whereNotIn('devices.id',$DeviceIdArr);
+        }
 
         if ($keyword)
         {

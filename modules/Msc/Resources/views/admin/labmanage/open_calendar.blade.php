@@ -8,7 +8,7 @@
         .add_time_list .fa-trash-o{font-size:24px;line-height: 34px;}
         .add_time_list lable{ width: 10%; float: left; text-align: center;line-height: 34px;}
         .add_time_list .add_time_button{line-height: 34px;}
-        .clndr-table .check{ background-color: #408aff; color: #fff;}
+        #calendar .check{ background-color: #ef4f69; color: #fff!important;}
     </style>
 @stop
 @section('only_js')
@@ -123,8 +123,10 @@
 
     </script>
     <script type="text/javascript">
+        var codropsEvents = {
+            '01-01-2016' : '<a href="http://tympanus.net/codrops/2012/11/23/three-script-updates/">Three Script Updates</a>',
+        };
         $(function() {
-            var savedate=[];
             var transEndEventNames = {
                         'WebkitTransition' : 'webkitTransitionEnd',
                         'MozTransition' : 'transitionend',
@@ -146,10 +148,9 @@
                                 dateProperties.day="0"+dateProperties.day;
                             }
                             var savedate_one=dateProperties.year+"-"+dateProperties.month+"-"+dateProperties.day;
-                            //var savedate=$("#savedate").val(savedate_one);
-
                             var make = false;
                             var dateDocArr = $('#savedate').find('input');
+                            $el.toggleClass("check");
                             if(dateDocArr.length>0){
                                 dateDocArr.each(function(){
                                     if(savedate_one == $(this).val()){
@@ -297,6 +298,16 @@
                 });
             });
         });
+        $.ajax({
+            url:"{{ route('msc.admin.laboratory.getEditLabCleander')}}", /*${ctx}/*/
+            type:"get",
+            dataType:"json",
+            contentType : 'application/json',
+            cache:false,
+            success: function(result) {
+                console.log(result);
+            }
+        })
     </script>
 @stop
 
