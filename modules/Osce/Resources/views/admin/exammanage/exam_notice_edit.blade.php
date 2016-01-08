@@ -22,11 +22,11 @@
             <h5>新增通知</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal" action="{{route('osce.admin.notice.postAddNotice')}}">
+            <form method="post" class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">
-                            <select id="select_Category"   class="form-control" name="exam id">
+                            <select id="select_Category"   class="form-control" name="sex">
                                 @forelse($list as $exam)
                                 <option value="{{$exam->id}}">{{$exam->name}}</option>
                                 @empty
@@ -40,15 +40,15 @@
                         <label class="col-sm-2 control-label">接收人:</label>
                         <div class="col-sm-10 select_code">
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" name="groups[]" value="1">
+                                <input type="checkbox" disabled="disabled">
                                 <label>考生</label>
                             </div>
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" name="groups[]" value="2">
+                                <input type="checkbox" disabled="disabled">
                                 <label>老师</label>
                             </div>
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" name="groups[]" value="3">
+                                <input type="checkbox"  disabled="disabled" checked="checked">
                                 <label>sp老师</label>
                             </div>
                         </div>
@@ -57,14 +57,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">标题:</label>
                         <div class="col-sm-10">
-                            <input type="text"  id="title" name="title" class="form-control">
+                            <input type="text"  id="examinee_id" name="examinee_id" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content"></script>
+                            <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

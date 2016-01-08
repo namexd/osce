@@ -80,7 +80,7 @@
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postEditSpInvigilator')}}">
 
                         <div class="hr-line-dashed"></div>
 
@@ -88,15 +88,15 @@
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name" value="{{$item->name}}">
-                                <input type="hidden" required class="form-control" id="is_sp" name="is_sp" value="1">
-                                <input type="hidden" required class="form-control" id="is_sp" name="id" value="{{$item->id}}">
+                                <input type="hidden" required class="form-control" id="type" name="type" value="2">
+                                <input type="hidden" required class="form-control" id="id" name="id" value="{{$item->id}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">手机号</label>
                             <div class="col-sm-10">
-                                <input type="text" ng-model="location" id="location" class="form-control" name="moblie" value="{{$item->moblie}}">
+                                <input type="text" ng-model="location" id="location" class="form-control" name="mobile" value="{{$item->userInfo->mobile}}">
                             </div>
 
                         </div>
@@ -118,7 +118,7 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-white" type="submit">取消</button>
+                                <a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>
                                 <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
 
                             </div>

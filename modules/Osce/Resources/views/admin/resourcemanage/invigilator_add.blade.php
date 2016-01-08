@@ -88,7 +88,6 @@
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name">
-                                <input type="hidden" required class="form-control" id="is_sp" name="is_sp" value="2">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -97,12 +96,22 @@
                             <div class="col-sm-10">
                                 <input type="text" ng-model="location" id="location" class="form-control" name="moblie">
                             </div>
-
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">手机号</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="type">
+                                    <option value="1">监考老师</option>
+                                    <option value="3">巡考老师</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-white" type="submit">取消</button>
+                                <a class="btn btn-white" href="{{route('osce.admin.invigilator.getInvigilatorList')}}">取消</a>
                                 <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
 
                             </div>

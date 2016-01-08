@@ -96,9 +96,18 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">手机号</label>
                                 <div class="col-sm-10">
-                                    <input type="text" ng-model="location" id="location" class="form-control" name="moblie" value="{{$item->moblie}}">
+                                    <input type="text" ng-model="location" id="location" class="form-control" name="mobile" value="{{$item->userInfo->mobile}}">
                                 </div>
-
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">手机号</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="type">
+                                        <option value="1" {{$item->type==1? 'selected="selected"':''}}>监考老师</option>
+                                        <option value="3" {{$item->type==3? 'selected="selected"':''}}>巡考老师</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
