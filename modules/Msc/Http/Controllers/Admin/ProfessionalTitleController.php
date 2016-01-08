@@ -43,7 +43,7 @@ class ProfessionalTitleController extends Controller
         ]);
 
         $keyword = urldecode(e($request->input('keyword')));
-        $status = (int)$request->input('status');
+        $status = (int)$request->input('status',2);
         $tabulate = new ProfessionalTitle();
         $pagination =  $tabulate->getJobTitleList($keyword, $status);
         $list = [];
@@ -149,7 +149,7 @@ class ProfessionalTitleController extends Controller
             'id' => 'sometimes|min:0|max:10',
             'name'   => 'required|max:20',
             'description'   =>  'required|max:50',
-            'status' =>   'required|in:1,2'
+            'status' =>   'required|in:0,1,2'
         ]);
         $data=[
             'name'=>Input::get('name'),
