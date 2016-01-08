@@ -49,8 +49,12 @@ class RoomController extends CommonController
         //展示页面
         if ($type == 1) {
             return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data]);
-        } else {
-            return view('', ['area' => $area, 'data' => $data]);
+        } else if ($type == 2){
+            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data]);
+        }else if ($type == 3){
+            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data]);
+        }else{
+            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data]);
         }
 
     }
