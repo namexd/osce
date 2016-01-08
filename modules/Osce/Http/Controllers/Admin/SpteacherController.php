@@ -60,26 +60,69 @@ class SpteacherController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getInvitationIndex(Request $request){
-          $this->validate($request,[
-              'exam_id'    =>'required|integer'
-          ],[
-              'exam_id.required'   => '没有考试ID'
-          ]);
+
+//          $this->validate($request,[
+//              'exam_id'    =>'required|integer'
+//          ],[
+////              'exam_id.required'   => '没有考试ID'
+//          ]);
 
            $examId = $request->input('exam_id');
-            $ScreeningModel=new ExamScreening();
-         $Station = $ScreeningModel->getStationList($examId);
-        $data=[
-               'station_id' =>$Station['station_id'],
-               'station_name' =>$Station['station_name'],
-               'teacher_name' =>$Station['teacher_name'],
-               'teacher_id' =>$Station['teacher_id'],
-        ];
+            if($examId){
+                $ScreeningModel=new ExamScreening();
+                $Station = $ScreeningModel->getStationList($examId);
+//        dd($Station);
+                $data=[
+                    'station_id' =>$Station['station_id'],
+                    'station_name' =>$Station['station_name'],
+                    'teacher_name' =>$Station['teacher_name'],
+                    'teacher_id' =>$Station['teacher_id'],
+                ];
+//        dd( $data);
 
-        return view('Osce::admin.exammanage.sp_invitation',[
-            'data'    => $data,
-        ]);
+                return view('Osce::admin.exammanage.sp_invitation',[
+                    'data'    => $data,
+                ]);
+            }
+//
+//        return redirect()->route('osce.admin.place.getRoomCateList');//还不确定。
     }
+
+
+
+    /**
+     *  sp邀请保存
+     * @method GET
+     * @url /osce/admin/spteacher/invitation-add
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        id       考试id(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+
+    public function  getInvitationAdd(Request $request){
+
+        $this->validate($request,[
+               'station_id'    =>'required|integer',
+               'user_id'    =>'required|integer',
+               'case_id'    =>'required|integer',
+               'type'    =>'required|integer',
+        ]);
+        
+    }
+
+
+
+
+
 
 
 
