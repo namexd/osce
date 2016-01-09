@@ -6,11 +6,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
-		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.notice.getRegister']);
-		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.notice.postRegister']);
+		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.user.getRegister']);
+		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 
-		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.notice.getLogin']);
-		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.notice.postLogin']);
+		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
+		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
 	});
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
@@ -155,6 +155,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 //微信端路由
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::group(['prefix'=>'wechat','namespace'=>'Wechat'],function(){
+
+		//欢迎页
+		Route::get('index/index',['uses'=>'IndexController@getIndex','as'=>'osce.wechat.index.getIndex']);
 		//通知
 		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
 		//sp邀请
