@@ -291,6 +291,15 @@ class Common{
         }
         return $newData;
     }
+
+    /**
+     * 微信的发送方法
+     * @param $openid
+     * @param $msg
+     * @return bool
+     * @throws \Exception
+     * @throws \Overtrue\Wechat\Exception
+     */
     public static function sendMsg($openid,$msg){
         if(empty($openid))
         {

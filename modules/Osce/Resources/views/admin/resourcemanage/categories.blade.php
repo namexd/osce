@@ -14,7 +14,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'categories','teacher_list':'{{route('osce.admin.topic.postImportExcel')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'categories','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -51,7 +51,9 @@
                                     <div class="ibox-title">
                                         <h5>评分标准：</h5>
                                         <div class="ibox-tools">
-                                            <a href="javascript:void(0)" id="file1" class="btn btn-outline btn-default">导入<input type="file" name="courses" id="file0" multiple="multiple" /></a>
+                                            <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
+                                                <input type="file" name="topic" id="file0" multiple="multiple" />
+                                            </a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
@@ -61,7 +63,7 @@
                                                 <tr>
                                                     <th>序号</th>
                                                     <th>考核内容</th>
-                                                    <th width="80">分数</th>
+                                                    <th width="120">分数</th>
                                                     <th>操作</th>
                                                 </tr>
                                             </thead>
@@ -82,7 +84,6 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <button class="btn btn-white" type="submit">取消</button>
-
                             </div>
                         </div>
                     </form>

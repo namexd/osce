@@ -91,6 +91,11 @@ class Student extends CommonModel
         }
     }
 
+    /**
+     * 单个添加考生
+     * @return mixed
+     * @throws \Exception
+     */
     public function addExaminee($examineeData)
     {
         $connection = DB::connection($this->connection);

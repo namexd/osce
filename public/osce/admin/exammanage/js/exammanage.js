@@ -65,9 +65,11 @@ function exam_add(){
                         '<td>'+parseInt(index)+'</td>'+
                         '<td class="laydate">'+
                             '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD')+' 00:00</span>'+
+                            '<input type="hidden" name="time[1][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
                         '</td>'+
                         '<td class="laydate">'+
                             '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD hh:mm')+'</span>'+
+                            '<input type="hidden" name="time[1][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
                         '</td>'+
                         '<td>3:00</td>'+
                         '<td>'+
@@ -289,6 +291,7 @@ function timePicker(background){
         $(this).attr('id',id);
         //数据绑定
         laydate(option);
+        
     });
 
     /**
