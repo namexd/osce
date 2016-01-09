@@ -18,5 +18,10 @@ return [
 			'考核创建人'=>'42',
 			'考核描述'=>'description'
 		],
+	],
+	'machine_category'=>[
+		1 =>'Vcr',
+		2 =>'Pad',
+		3 =>'Watch'
 	]
 ];
