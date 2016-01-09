@@ -62,6 +62,49 @@ class Teacher extends CommonModel
         return $this->belongsToMany('\Modules\Osce\Entities\station','station_sp','user_id','station_id');
     }
 
+
+
+
+     public  function invitationTeacherData($teacher_id){
+
+         $builder=$this;
+         try{
+             if ($teacher_id !== null) {
+                 $this->excludeId = $teacher_id;
+             }
+             $excludeId = $this->excludeId;
+             $excludeIds[] = $excludeId;
+             if (count($excludeId) !== 0) {
+                 $builder = $builder->leftJoin('cases',function($join){
+                     $join    ->  on('cases.id','=', 'teacher.case_id');
+             })->whereIn('id', $excludeIds);
+//                 dd($builder);
+             }
+
+             $data=$builder->select('teacher.name','cases.name as cname')->get();
+//             dd(11);
+             $openId= $this->find($data->id)->userInfo->opendid;
+             dd($openId);
+             $list=array(
+                 'openid' =>$openId,
+                 'teacher_name'=>$data->name,
+                 'teacher_id'=>$data->id,
+                 'case_name'=>$data->cname
+             );
+
+
+             return $list;
+
+         }catch (\Exception $ex) {
+             throw $ex;
+         }
+
+     }
+
+
+
+
+
     /**
      * SP老师的查询
      * @param $caseId
@@ -104,6 +147,8 @@ class Teacher extends CommonModel
             throw $ex;
         }
     }
+
+
 
 
     /**
@@ -308,5 +353,9 @@ class Teacher extends CommonModel
         }
         return $teacher;
     }
+
+
+
+
 
 }

@@ -70,7 +70,7 @@ class SpteacherController extends CommonController
 ////              'exam_id.required'   => '没有考试ID'
 //          ]);
 
-           $examId = $request->input('exam_id');
+           $examId = $request->input('id');
             if($examId){
                 $ScreeningModel=new ExamScreening();
                 $Station = $ScreeningModel->getStationList($examId);
@@ -81,14 +81,15 @@ class SpteacherController extends CommonController
                     'teacher_name' =>$Station['teacher_name'],
                     'teacher_id' =>$Station['teacher_id'],
                 ];
-//        dd( $data);
+
 
                 return view('osce::admin.exammanage.sp_invitation',[
                     'data'    => $data,
+                    'id' =>$request->input('id')
                 ]);
             }
 //
-//        return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
+             //        return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
         return view('osce::admin.exammanage.sp_invitation');
     }
 
@@ -135,7 +136,7 @@ class SpteacherController extends CommonController
             }
         }
 
-        $return = DB::connection('msc_mis')->table('lab_device')->insert($Invitation);
+        $return = DB::connection('osce_mis')->table('invite')->insert($Invitation);
 
         if($return){
             return redirect()->back()->withInput()->withErrors('保存成功');
