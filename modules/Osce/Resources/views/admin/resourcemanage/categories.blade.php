@@ -51,7 +51,9 @@
                                     <div class="ibox-title">
                                         <h5>评分标准：</h5>
                                         <div class="ibox-tools">
-    
+                                            <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
+                                                <input type="file" name="topic" id="file0" multiple="multiple" />
+                                            </a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
@@ -61,7 +63,7 @@
                                                 <tr>
                                                     <th>序号</th>
                                                     <th>考核内容</th>
-                                                    <th width="80">分数</th>
+                                                    <th width="120">分数</th>
                                                     <th>操作</th>
                                                 </tr>
                                             </thead>

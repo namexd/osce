@@ -51,9 +51,9 @@
                             </li>
                             <li><a  class="J_menuItem" href="{{route('osce.admin.room.getRoomList')}}">场所管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}" target="iframe0">监考设备管理</a>
+                            <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}">监考设备管理</a>
                             </li>
-							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}" target="iframe0">考核标准</a>
+							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">考核标准</a>
                             </li>
 							
                         </ul>

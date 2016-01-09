@@ -315,4 +315,8 @@ class Teacher extends CommonModel
         $result = $this->where()->get();
         return $result;
     }
+
+    public function registerTeacher(){
+        //$this   ->  registerUser();
+    }
 }

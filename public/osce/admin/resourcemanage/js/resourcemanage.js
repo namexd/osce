@@ -306,6 +306,7 @@ function categories(){
     $("#file1").change(function(){
             $.ajaxFileUpload
             ({
+
                 url:pars.excel,
                 secureuri:false,//
                 fileElementId:'file0',//必须要是 input file标签 ID
@@ -316,7 +317,92 @@ function categories(){
                     data    =   eval('('+data+')');
 
                     if(data.code == 1){
-                        layer.alert('导入成功！');
+                        //layer.alert('导入成功！');
+                        
+                        /**
+                         * 数据导入
+                         * @author mao
+                         * @version 1.0
+                         * @date    2016-01-08
+                         */
+                        var html = '';
+                        var res = data.data;
+                        var index = 0;
+
+                        for(var i in res){
+                           if(res[i].level==1){
+
+                                index++;
+                               //添加父级dom
+                               html += '<tr parent="'+res[i].sort+'" current="0"  class="pid-'+res[i].sort+'">'+
+                                       '<td>'+res[i].sort+'</td>'+
+                                       '<td>'+
+                                       '<div class="form-group">'+
+                                       '<label class="col-sm-2 control-label">考核点:</label>'+
+                                       '<div class="col-sm-10">'+
+                                       '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+res[i].sort+'][title]"/>'+
+                                       '</div>'+
+                                       '</div>'+
+                                       '</td>'+
+                                       '<td>'+
+                                       '<select class="form-control" name="score['+res[i].sort+'][total]">'+
+                                       '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
+                                       '<option value="1">1</option>'+
+                                       '<option value="2">2</option>'+
+                                       '<option value="3">3</option>'+
+                                       '<option value="4">4</option>'+
+                                       '</select>'+
+                                       '</td>'+
+                                       '<td>'+
+                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                       '</td>'+
+                                       '</tr>';
+                        
+                               for(var j in res){
+                                   if(res[j].level==2&&res[j].pid==res[i].sort){
+                        
+                                       //处理子级dom
+                                       html += '<tr child="'+res[j].sort+'" class="pid-'+res[i].sort+'" >'+
+                                               '<td>'+res[i].sort+'-'+res[j].sort+'</td>'+
+                                               '<td>'+
+                                               '<div class="form-group">'+
+                                               '<label class="col-sm-2 control-label">考核项:</label>'+
+                                               '<div class="col-sm-10">'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+res[i].score+']['+res[j].sort+']"/>'+
+                                               '</div>'+
+                                               '</div>'+
+                                               '<div class="form-group">'+
+                                               '<label class="col-sm-2 control-label">评分标准:</label>'+
+                                               '<div class="col-sm-10">'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+res[i].score+']['+res[j].sort+']"/>'+
+                                               '</div>'+
+                                               '</div>'+
+                                               '</td>'+
+                                               '<td>'+
+                                               '<select class="form-control" name="score['+res[i].score+']['+res[j].sort+']">'+
+                                               '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
+                                               '<option value="1">1</option>'+
+                                               '<option value="2">2</option>'+
+                                               '<option value="3">3</option>'+
+                                               '<option value="4">4</option>'+
+                                               '</select>'+
+                                               '</td>'+
+                                               '<td>'+
+                                               '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                                               '</td>'+
+                                               '</tr>';
+                                   }
+                               }
+                           }
+                        }
+                        $('tbody').attr('index',index);
+                        $('tbody').append(html);
+
+
+
                     }
                 },
                 error: function (data, status, e)

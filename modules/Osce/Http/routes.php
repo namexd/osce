@@ -4,6 +4,14 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('login/index', ['uses' => 'LoginController@getIndex', 'as' => 'osce.admin.getIndex']);
 		Route::post('login/index', ['uses' => 'LoginController@postIndex', 'as' => 'osce.admin.postIndex']);
 	});
+	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
+		//登录注册
+		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.user.getRegister']);
+		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
+
+		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
+		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
+	});
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
@@ -144,8 +152,19 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
 
 	});
+});
+//微信端路由
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
+	Route::group(['prefix'=>'wechat','namespace'=>'Wechat'],function(){
 
-
+		//欢迎页
+		Route::get('index/index',['uses'=>'IndexController@getIndex','as'=>'osce.wechat.index.getIndex']);
+		//通知
+		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
+		//sp邀请
+		Route::get('invitation/invitation-list',['uses'=>'InvitationController@getInvitationList','as'=>'osce.wechat.invitation.getInvitationList']);
+	});
 });
 
 Route::get('room/createroom', function() {return view('osce::admin.test');});  //添加的着陆页,测试用
+

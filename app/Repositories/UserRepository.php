@@ -458,6 +458,38 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * 发送找回密码验证码
+     * @access public
+     *
+     * @param
+     * * string        mobile        手机号(必须的)
+     *
+     * @return Array {'expiretime':过期时间,'mobile':'手机号'}
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-11-11 16:40
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getResetPasswordVerify($mobile){
+        $SysValidatecode=new SysValidatecode();
+        try{
+            $verify=$SysValidatecode->getMobileRegVerify($mobile);
+            $dataReturn=[
+                'expiretime'=>$verify->expiretime,
+                'mobile'=>$verify->mobile
+            ];
+            Common::sendSms($verify->mobile,'你正在重置密码，验证码为：'.$verify->code);
+            return $dataReturn;
+        }
+        catch(\Exception $ex)
+        {
+            throw new $ex;
+        }
+    }
+
+    /**
      * 验证注册用户手机验证码
      * @access public
      *
