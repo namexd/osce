@@ -143,8 +143,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
 
 	});
-
-
+});
+//微信端路由
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
+	Route::group(['prefix'=>'wechat','namespace'=>'Wechat'],function(){
+		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
+	});
 });
 
 Route::get('room/createroom', function() {return view('osce::admin.test');});  //添加的着陆页,测试用
+

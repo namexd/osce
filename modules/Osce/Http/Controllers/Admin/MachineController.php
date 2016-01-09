@@ -120,6 +120,7 @@ class MachineController extends CommonController
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
+        $cate_id    =   $cate_id==0? 1:$cate_id;
         $name       =   intval($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
         $cate   =   config('osce.machine_category');
@@ -830,13 +831,7 @@ class MachineController extends CommonController
                   'studentName'    =>$studentName,
               ];
             }
-          }else{
-                 $row[]=[ 'id'      =>$item->id,
-                          'status'  =>$item->status,
-                          'name'    =>$item->name,
-                          'code'    =>$item->code,
-                 ];
-             }
+          }
         }
 
         $watchModel   =   new Watch();
