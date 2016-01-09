@@ -9,12 +9,12 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
+<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'categories','teacher_list':'{{route('osce.admin.topic.postImportExcel')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'categories','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -51,7 +51,7 @@
                                     <div class="ibox-title">
                                         <h5>评分标准：</h5>
                                         <div class="ibox-tools">
-                                            <a href="javascript:void(0)" id="file1" class="btn btn-outline btn-default">导入<input type="file" name="courses" id="file0" multiple="multiple" /></a>
+                                            <a href="javascript:void(0)" id="file1" class="btn btn-outline btn-default">导入<input type="file" name="topic" id="file0" multiple="multiple" /></a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>

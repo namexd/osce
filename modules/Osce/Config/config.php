@@ -9,14 +9,14 @@ return [
 
 	'importForCnToEn'=>[
 		// 中英文 字段名对照
-		'subject'=>[
-			'考核名称'=>'name',
-			'考核描述'=>'description',
-			'考核序号'=>'sort',
-			'考核满分'=>'score',
-			'考核状态'=>'status',
-			'考核创建人'=>'42',
-			'考核描述'=>'description'
+		'standard'=>[
+			'序号'=>'sort',
+			'考核点'=>'check_point',
+			'考核项'=>'check_item',
+			'评分标准'=>'answer',
+			'分数'=>'score',
+			'父级序号'=>'pid',
+			'层级'=>'level'
 		],
 	]
 ];
