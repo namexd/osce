@@ -15,6 +15,7 @@ use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
+use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Watch;
@@ -401,6 +402,32 @@ class ExamController extends CommonController
     }
 
     /**
+     * 导入考生
+     * @api GET /osce/admin/exam/getImportExaminee
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        exam_id        考试id(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getImportExaminee(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+
+    }
+
+    /**
      * 考生查询
      * @api GET /osce/admin/exam/getStudentQuery
      * @access public
@@ -539,6 +566,38 @@ class ExamController extends CommonController
     public function getRoomListData()
     {
         $data = Room::select(['id', 'name'])->get();
+
+        return response()->json(
+            $this->success_data($data, 1, 'success')
+        );
+    }
+
+    /**
+     * 获取考站数据 接口
+     * @api GET /osce/admin/exam/getStationData
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        room_id        考场ID(必须的)
+     *
+     * @return  json  {station_id:考站ID,name:考场名称}
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getStationData(Request $request)
+    {
+        $this->validate($request, [
+            'room_id' => 'required|integer'
+        ]);
+        //获取考场ID：room_id
+        $room_id = $request -> get('room_id');
+        $model = new RoomStation();
+        $data = $model->getRoomStationData($room_id);
 
         return response()->json(
             $this->success_data($data, 1, 'success')
