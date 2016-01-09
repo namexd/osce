@@ -309,4 +309,7 @@ class Teacher extends CommonModel
         return $teacher;
     }
 
+    public function registerTeacher(){
+        //$this   ->  registerUser();
+    }
 }

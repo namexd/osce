@@ -101,6 +101,16 @@ class Student extends CommonModel
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
+            //根据条件：查找用户是否有账号和密码
+            //用户信息
+                //如果查找到了，编辑处理
+                //如果没找到，新增处理
+                    //如果新增成功，发短信通知用户
+            //根据用户ID和考试号查找考生
+            //考生信息
+                //如果找到了
+                //相同：跳过，不同：编辑处理
+                //如果没找到：新增考生
             //查询id_card是否已经存在student表中
             $student = $this->where('id_card', '=', $examineeData['id_card'])
                             ->where('exam_id', '=', $examineeData['exam_id'])
@@ -130,4 +140,22 @@ class Student extends CommonModel
         }
     }
 
+    public function registerUser($data,$password){
+        $form_user=$data;
+        $form_user['username']  =   $data['mobile'];
+        $form_user['openid']    =   '';
+        $form_user['password']  =   bcrypt($password);
+        $user=User::create($form_user);
+        if($user)
+        {
+            return $user;
+        }
+        else
+        {
+            throw new \Exception('创建用户失败');
+        }
+    }
+    public function sendRegisterEms($mobile,$password){
+        //发送短消息
+    }
 }
