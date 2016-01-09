@@ -122,35 +122,32 @@ class MachineController extends CommonController
         $cate_id    =   intval($request   ->  get('cate_id'));
         $name       =   intval($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
-        if(empty($cate_id))
+        $cate   =   config('osce.machine_category');
+        if(is_null($cate))
         {
-            $cate   =   config('osce.machine_category');
-            if(is_null($cate))
-            {
-                abort(404,'设备类别不存在，请检查数据或联系管理员');
-            }
-            $cate_id    =   $cate   ->  id;
+            abort(404,'设备类别不存在，请检查数据或联系管理员');
         }
-
+        if(!array_key_exists($cate_id,$cate))
+        {
+            abort(404,'设备类别不存在，请检查数据或联系管理员');
+        }
         $model  =   $this   ->  getMachineModel($cate_id);
-        $categroyList   =  config('osce.machine_category ');
-
         $list   =   $model  ->  getList($name,$status);
 
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)
         {
             case 1:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
             case 2:
-                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
             case 3:
-                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
             default:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
         }
     }
 
@@ -819,25 +816,34 @@ class MachineController extends CommonController
                    ];
 
          }
-
+        $row=[];
         foreach($data as $itm){
              if($itm['status']==1){
                $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first()->student_id;
-
+             if($studentId){
+                $studentName=Student::where('id',$studentId)->select('name')->first()->name;
+              $row[]=[
+                  'id'             =>$item->id,
+                  'status'         =>$item->status,
+                  'name'           =>$item->name,
+                  'code'           =>$item->code,
+                  'studentName'    =>$studentName,
+              ];
+            }
+          }else{
+                 $row[]=[ 'id'      =>$item->id,
+                          'status'  =>$item->status,
+                          'name'    =>$item->name,
+                          'code'    =>$item->code,
+                 ];
              }
         }
-//
-//        foreach($data as $v){
-//            if($v['student_id']){
-//                $studentName=Student::where('id',$v['student_id'])->select('name')->first()->name;
-//                $v['student_name']=$studentName;
-//            }
-//        }
+
         $watchModel   =   new Watch();
 
         $pagination             =   $watchModel   ->  paginate(7);
-        dd($data);
-        return ['data'=>$data,'pagination'=>$pagination];
+        dd($row);
+        return ['row'=>$row,'pagination'=>$pagination];
     }
 
 }

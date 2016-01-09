@@ -20,8 +20,17 @@ return [
 		],
 	],
 	'machine_category'=>[
-		1 =>'Vcr',
-		2 =>'Pad',
-		3 =>'Watch'
+		1 =>[
+			'id'=>1,
+			'name'=>'摄像机',
+		],
+		2 =>[
+			'id'=>2,
+			'name'=>'Pad',
+		],
+		3 =>[
+			'id'=>3,
+			'name'=>'Watch',
+		]
 	]
 ];
