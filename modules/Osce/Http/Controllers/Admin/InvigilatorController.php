@@ -393,8 +393,8 @@ class InvigilatorController extends CommonController
         ]);
 
         $id                 =   (int)$request    ->  get('id');
-//        try
-//        {
+        try
+        {
             $TeahcerModel   =   new Teacher();
             $name           =   e($request->get('name'));
             $mobile         =   e($request->get('mobile'));
@@ -408,11 +408,11 @@ class InvigilatorController extends CommonController
             {
                 throw new \Exception('编辑失败');
             }
-//        }
-//        catch(\Exception $ex)
-//        {
-//            return redirect()->back()->withErrors($ex);
-//        }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex);
+        }
     }
     /**
      * 发送预约邀请

@@ -296,4 +296,35 @@ function categories(){
             return;
         }
     });
+
+    /**
+     * 文件导入
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-08
+     */
+    $("#file1").change(function(){
+            $.ajaxFileUpload
+            ({
+                url:pars.excel,
+                secureuri:false,//
+                fileElementId:'file0',//必须要是 input file标签 ID
+                dataType: 'text',//
+                success: function (data, status)
+                {
+                    data    =   data.replace('<pre>','').replace('</pre>','');
+                    data    =   eval('('+data+')');
+
+                    if(data.code == 1){
+                        layer.alert('导入成功！');
+                    }
+                },
+                error: function (data, status, e)
+                {
+                    layer.alert('导入失败！');
+                }
+            });
+        }) ;
+
+
 }
