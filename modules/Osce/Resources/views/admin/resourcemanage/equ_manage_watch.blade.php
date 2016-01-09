@@ -75,7 +75,7 @@
                     @forelse($list as $item)
                         <tr>
                             <td>{{$item->id}}</td>
-                            <td>{{$item->id}}</td>
+                            <td>{{$item->code}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$machineStatuValues[$item->status]}}</td>
                             <td><a href="{{route('osce.admin.machine.getEditWatch',['id'=>$item->id])}}">编辑</a></td>
