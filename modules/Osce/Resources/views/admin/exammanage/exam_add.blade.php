@@ -66,10 +66,27 @@ span.laydate-icon{
                                             <tr>
                                                 <td>1</td>
                                                 <td class="laydate">
-                                                    <span class="laydate-icon end">2015-11-12 09:00</span>
+                                                    <input type="text" name="time[1][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i:s', time())}}">
+                                                    {{--<span class="laydate-icon end">2015-11-12 09:00</span>--}}
                                                 </td>
                                                 <td class="laydate">
-                                                    <span class="laydate-icon end">2015-11-12 09:00</span>
+                                                    <input type="text" name="time[1][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i:s', time()+(3*3600))}}">
+                                                    {{--<span class="laydate-icon end">2015-11-12 09:00</span>--}}
+                                                </td>
+                                                <td>3:00</td>
+                                                <td>
+                                                    <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td class="laydate">
+                                                    <input type="text" name="time[2][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i:s', time())}}">
+                                                    {{--<span class="laydate-icon end">2015-11-12 09:00</span>--}}
+                                                </td>
+                                                <td class="laydate">
+                                                    <input type="text" name="time[2][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i:s', time()+(3*3600))}}">
+                                                    {{--<span class="laydate-icon end">2015-11-12 09:00</span>--}}
                                                 </td>
                                                 <td>3:00</td>
                                                 <td>
@@ -79,11 +96,11 @@ span.laydate-icon{
                                         </tbody>
                                     </table>
 
-                                        <input type="text" name="time[1][begin_dt]">开始时间
-                                        <input type="text" name="time[1][end_dt]">结束时间<br/>
+                                        {{--<input type="text" name="time[1][begin_dt]">开始时间--}}
+                                        {{--<input type="text" name="time[1][end_dt]">结束时间<br/>--}}
 
-                                <input type="text" name="time[2][begin_dt]">开始时间
-                                <input type="text" name="time[2][end_dt]">结束时间<br/>
+                                        {{--<input type="text" name="time[2][begin_dt]">开始时间--}}
+                                        {{--<input type="text" name="time[2][end_dt]">结束时间<br/>--}}
 
                                     <div class="btn-group pull-right">
 
