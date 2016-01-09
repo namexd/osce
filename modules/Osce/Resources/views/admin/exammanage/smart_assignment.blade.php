@@ -22,20 +22,41 @@
             line-height: 30px;
         }
         .assign-box{
-            width: 800px;
+            width: 1050px;
         }
-        .assign-box li{
+        .classroom-box>ul>li{
             float: left;
-            width: 160px;
-            height: 30px;
-            line-height: 30px;
+        }
+        .clearfloat:after{
+            content: '';
+            visibility: hidden;
+            display: block;
+            clear: both;
+            height: 0;
+        }
+        .time-list{
+            width: 50px;
+            height: 500px;
+            background-color: #ccc;
+        }
+        .assign-box>div{
+            float: left;
+        }
+        .classroom-box{
+            width: 1000px;
+        }
+        ul{
+            padding: 0;
+        }
+        .end{
+            margin-top: 460px;
         }
     </style>
 @stop
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'add_basic','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'smart_assignment','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -59,43 +80,15 @@
                     </div>
                 </div>
             </div>
-            <div class="assign-box">
-                <div class="classroom-box">
-                    <ul>
-                        <li>
-                            <dl>
-                                <dt>教室401</dt>
-                                <dd>张三，李四，王五</dd>
-                            </dl>
-                        </li>
-                        <li>
-                            <dl>
-                                <dt>教室401</dt>
-                                <dd>张三，李四，王五</dd>
-                            </dl>
-                        </li>
-                        <li>
-                            <dl>
-                                <dt>教室401</dt>
-                                <dd>张三，李四，王五</dd>
-                            </dl>
-                        </li>
-                        <li>
-                            <dl>
-                                <dt>教室401</dt>
-                                <dd>张三，李四，王五</dd>
-                            </dl>
-                        </li>
-                            <dl>
-                                <dt>教室401</dt>
-                                <dd>张三，李四，王五</dd>
-                            </dl>
-                        </li>
-                    </ul>
-                </div>
+            <div class="assign-box clearfloat">
                 <div class="time-list">
+                    <p>8:00</p>
+                    <p class="end">12:00</p>
+                </div>
+                <div class="classroom-box">
 
                 </div>
+
             </div>
             <div>
                 <button class="btn btn-default" type="button">智能排考</button>

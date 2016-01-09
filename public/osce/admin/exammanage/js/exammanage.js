@@ -11,6 +11,7 @@ $(function(){
         case "sp_invitation":sp_invitation();break;
         case "examroom_assignment":examroom_assignment();break;
         case "exam_notice_add":exam_notice_add();break;
+        case "smart_assignment":smart_assignment();break;
     }
 });
 
@@ -702,3 +703,164 @@ function exam_notice_add(){
     var ue = UE.getEditor('editor');
 }
 
+/*
+ * 考试通知 新增
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-09
+*/
+function smart_assignment(){
+
+
+        //模拟数据
+
+        //var everyli=1000/smartlist.length;
+        //var lists="";//代表列
+        //var rooms="";//代表教室
+        //for(var i=0;i<smartlist.length;i++){
+        //    lists+="<li style='width: "+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt><dl/><li/>";
+        //    for(var j=0;j<smartlist[i].child.length;j++){
+        //        for(var k=0;k<smartlist[i].child[j].items.length;k++){
+        //            $(".classroom-box>ul").append("<li style='width:"+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt>" +
+        //                "<dd>"+smartlist[i].child[j].items[k]+"<dd/></dl></li>");
+        //        }
+        //        console.log(smartlist[i].child[j].items.length);
+        //
+        //
+        //    }
+        //}
+
+
+}
+function makeItem(data){
+    //var data    ={
+    //        'begin':1000,
+    //        'end':1600,
+    //        'items':[
+    //            '罗海华',
+    //            '李治远',
+    //            '毛云刚',
+    //        ]
+    //    };
+    var li  =   $('<li>');
+    var dl  =   $('<dl>');
+    var dt  =   $('<dt>');
+    li.append(dl);
+    dl.append(dt);
+    var items   =   data.items;
+    for(var i in items)
+    {
+        var dd  = $('<dd>').text(items[i]);
+        dt.append(dd);
+    }
+    return li;
+}
+function makeCols(data){
+    //var data    =   {
+    //    'name':'教室404',
+    //    'child':[
+    //        {
+    //            'begin':1000,
+    //            'end':1500,
+    //            'items':[
+    //                '罗海华2',
+    //                '李治远3',
+    //                '毛云刚5',
+    //            ]
+    //        },
+    //        {
+    //            'begin':1500,
+    //            'end':2800,
+    //            'items':[
+    //                '罗海华6',
+    //                '李治远7',
+    //                '毛云刚6',
+    //            ]
+    //        },
+    //
+    //    ],
+    //
+    //};
+    var ul  =   $('<ul>');
+    var child   =   data.child;
+    var title   =   $('<li class="title">').text(data.name);
+    ul.append(title)
+    for(var i in child)
+    {
+
+        var itemData    =   child[i];
+        var item    =   makeItem(itemData);
+        ul.append(item);
+    }
+    return ul;
+}
+function makeAll(data){
+    var ul =    $('<ul class="clearfloat">');
+    var liWidth=1000/data.length;
+    for(var i in data)
+    {
+
+        var colData     =   data[i];
+        var colul       =   makeCols(colData);
+        var li          =   $('<li>');
+        li.append(colul);
+        li.css("width",liWidth+"px");
+        ul.append(li);
+    }
+    return ul;
+}
+$(function(){
+    var smartlist=[
+        {
+            'name':'教室404',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1500,
+                    'items':[
+                        '罗海华2',
+                        '李治远3',
+                        '毛云刚5',
+                    ]
+                },
+                {
+                    'begin':1500,
+                    'end':2800,
+                    'items':[
+                        '罗海华6',
+                        '李治远7',
+                        '毛云刚6',
+                    ]
+                },
+
+            ],
+
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1600,
+                    'items':[
+                        '罗海华',
+                        '李治远',
+                        '毛云刚',
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        '罗海华1',
+                        '李治远1',
+                        '毛云刚1',
+                    ]
+                },
+
+            ],
+        }
+    ];
+    var dom =   makeAll(smartlist);
+    $('.classroom-box').append(dom);
+});
