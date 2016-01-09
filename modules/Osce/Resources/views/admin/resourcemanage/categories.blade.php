@@ -63,7 +63,7 @@
                                                 <tr>
                                                     <th>序号</th>
                                                     <th>考核内容</th>
-                                                    <th width="80">分数</th>
+                                                    <th width="120">分数</th>
                                                     <th>操作</th>
                                                 </tr>
                                             </thead>
