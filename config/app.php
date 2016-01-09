@@ -145,6 +145,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\CustomValidatorServiceProvider::class,
+        App\Repositories\Message\MessageServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
@@ -160,6 +161,8 @@ return [
         Pingpong\Menus\MenusServiceProvider::class,
 
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
+
 
     ],
 
@@ -213,9 +216,10 @@ return [
         'HTML'      => Illuminate\Html\HtmlFacade::class,
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
         'Wechat'    => Overtrue\LaravelWechat\Facade::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Module' => Pingpong\Modules\Facades\Module::class,
-        'Menu' => Pingpong\Menus\MenuFacade::class,
+        'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
+        'Module'    => Pingpong\Modules\Facades\Module::class,
+        'Menu'      => Pingpong\Menus\MenuFacade::class,
+        'Message'   =>  App\Repositories\Message\MessageFacade::class,
     ],
 
 ];
