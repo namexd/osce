@@ -327,15 +327,15 @@ function categories(){
                          */
                         var html = '';
                         var res = data.data;
-                        var index = 0;
+                        var index = parseInt($('tbody').attr('index'));
 
                         for(var i in res){
                            if(res[i].level==1){
 
                                 index++;
                                //添加父级dom
-                               html += '<tr parent="'+res[i].sort+'" current="0"  class="pid-'+res[i].sort+'">'+
-                                       '<td>'+res[i].sort+'</td>'+
+                               html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
+                                       '<td>'+index+'</td>'+
                                        '<td>'+
                                        '<div class="form-group">'+
                                        '<label class="col-sm-2 control-label">考核点:</label>'+
@@ -345,7 +345,7 @@ function categories(){
                                        '</div>'+
                                        '</td>'+
                                        '<td>'+
-                                       '<select class="form-control" name="score['+res[i].sort+'][total]">'+
+                                       '<select class="form-control" name="score['+index+'][total]">'+
                                        '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
                                        '<option value="1">1</option>'+
                                        '<option value="2">2</option>'+
@@ -363,8 +363,8 @@ function categories(){
                                    if(res[j].level==2&&res[j].pid==res[i].sort){
                         
                                        //处理子级dom
-                                       html += '<tr child="'+res[j].sort+'" class="pid-'+res[i].sort+'" >'+
-                                               '<td>'+res[i].sort+'-'+res[j].sort+'</td>'+
+                                       html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
+                                               '<td>'+index+'-'+res[j].sort+'</td>'+
                                                '<td>'+
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">考核项:</label>'+
@@ -380,7 +380,7 @@ function categories(){
                                                '</div>'+
                                                '</td>'+
                                                '<td>'+
-                                               '<select class="form-control" name="score['+res[i].score+']['+res[j].sort+']">'+
+                                               '<select class="form-control" name="score['+index+']['+res[j].sort+']">'+
                                                '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
                                                '<option value="1">1</option>'+
                                                '<option value="2">2</option>'+

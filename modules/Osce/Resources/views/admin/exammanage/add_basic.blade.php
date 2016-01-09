@@ -41,10 +41,10 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">基础信息</a></li>
-                        <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
-                        <li class=""><a href="#">邀请SP</a></li>
-                        <li class=""><a href="{{route('osce.admin.exam.getExamineeManage')}}?id={{$id}}">考生管理</a></li>
+                        <li class="active"><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
+                        <li><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
+                        <li><a href="{{route('osce.admin.spteacher.getInvitationIndex')}}?id={{$id}}">邀请SP</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="#">智能排考</a></li>
                     </ul>
                 </div>
@@ -118,7 +118,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <button class="btn btn-white" type="button">取消</button>
+                                    <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 
                                 </div>
                             </div>
