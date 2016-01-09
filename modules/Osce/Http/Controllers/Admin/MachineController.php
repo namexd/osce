@@ -15,36 +15,12 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Pad;
 use Modules\Osce\Entities\Watch;
-use Modules\Osce\Entities\MachineCategory;
 use Modules\Osce\Http\Controllers\CommonController;
 use Predis\Transaction\AbortedMultiExecException;
 
 class MachineController extends CommonController
 {
-    /**
-     * 设备类型列表
-     * @api GET /osce/admin/machine/category-list
-     * @access public
-     *
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     *
-     * @return view
-     *
-     * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-30 10:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
-     */
-    public function getCategoryList(){
-        $MachineCategoryModel   =   new MachineCategory();
 
-        $pagination             =   $MachineCategoryModel   ->  paginate('osce.page_size');
-
-        //return view('',['list'=>$pagination]);
-    }
 
     /**
      *  新增设备类别
@@ -76,7 +52,7 @@ class MachineController extends CommonController
         ];
         try
         {
-            $category   =   MachineCategory::firstOrCreate($data);
+            $category   =   config('machine_category');
             if($category)
             {
                 return redirect()->route('osce.admin.machine.getCategoryList');
@@ -148,7 +124,7 @@ class MachineController extends CommonController
         $status     =   e($request   ->  get('status'));
         if(empty($cate_id))
         {
-            $cate   =   MachineCategory::first();
+            $cate   =   config('osce.machine_category');
             if(is_null($cate))
             {
                 abort(404,'设备类别不存在，请检查数据或联系管理员');
@@ -157,7 +133,7 @@ class MachineController extends CommonController
         }
 
         $model  =   $this   ->  getMachineModel($cate_id);
-        $categroyList   =   MachineCategory::all(['id','name']);
+        $categroyList   =  config('osce.machine_category ');
 
         $list   =   $model  ->  getList($name,$status);
 
@@ -822,41 +798,45 @@ class MachineController extends CommonController
      */
     public function getWatchList(Request $request){
         $this  ->validate($request,[
-            'code'  =>  'required|integer'
+            'code'  =>  'sometimes|integer'
         ]);
 
         $code=intval($request->get('code'));
+
         if($code){
             $list=Watch::where('code','like','%'.$code.'%');
         }else{
-            $list=Watch::select();
+            $list=Watch::select()->get();
         }
+
         $data=[];
         foreach($list as $item){
+
            $data[]=[ 'id'      =>$item->id,
                      'status'  =>$item->status,
                      'name'    =>$item->name,
                      'code'    =>$item->code,
                    ];
+
          }
 
         foreach($data as $itm){
              if($itm['status']==1){
                $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first()->student_id;
-               $itm['student_id']=$studentId;
+
              }
         }
-
-        foreach($data as $v){
-            if($v['student_id']){
-                $studentName=Student::where('id',$v['student_id'])->select('name')->first()->name;
-                $v['student_name']=$studentName;
-            }
-        }
+//
+//        foreach($data as $v){
+//            if($v['student_id']){
+//                $studentName=Student::where('id',$v['student_id'])->select('name')->first()->name;
+//                $v['student_name']=$studentName;
+//            }
+//        }
         $watchModel   =   new Watch();
 
-        $pagination             =   $watchModel   ->  paginate('osce.page_size');
-
+        $pagination             =   $watchModel   ->  paginate(7);
+        dd($data);
         return ['data'=>$data,'pagination'=>$pagination];
     }
 

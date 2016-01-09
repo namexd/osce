@@ -48,17 +48,17 @@ class ExamScreening extends CommonModel
         )   ->  leftJoin (
             'cases',
             function ($join) {
-                $join->on('case.id','=','station_case.case_id');
+                $join->on('cases.id','=','station_case.case_id');
             }
         )   ->  leftJoin (
-            'teacher_sp',
+            'station_sp',
             function ($join) {
-                $join->on('teacher_sp.case_id','=','case.id');
+                $join->on('station_sp.case_id','=','cases.id');
             }
         )->  leftJoin (
             'teacher',
             function ($join) {
-                $join->on('teacher.id','=','teacher_sp.user_id');
+                $join->on('teacher.id','=','station_sp.user_id');
             }
         )
             ->  where($this->table.'.id','=',$examId)

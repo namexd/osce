@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Station;
@@ -147,10 +148,7 @@ class ExamController extends CommonController
         $examScreeningData =  $request  ->  get('time');
         //判断输入的时间是否有误
         foreach($examScreeningData as $key => $value){
-            if(!strtotime($value['begin_dt'])){
-                throw new \Exception('输入的时间有误！');
-            }
-            if(!strtotime($value['end_dt'])){
+            if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
                 throw new \Exception('输入的时间有误！');
             }
             $examScreeningData[$key]['create_user_id'] = $user -> id;
@@ -169,7 +167,7 @@ class ExamController extends CommonController
     }
 
     /**
-     * 编辑考试基本信息
+     * 编辑考试基本信息表单页面
      * @api   GET /osce/admin/exam/getEditExam
      * @access public
      *
@@ -192,16 +190,56 @@ class ExamController extends CommonController
             'id' => 'required|integer'
         ]);
 
-        //获得ID
+        //获得exam_id
         $id = $request->input('id');
-
         //通过id查到该条信息
         try {
-            $data = Exam::findOrFail($id);
+            $examData = Exam::findOrFail($id);
+            $examScreeningData = ExamScreening::where(['exam_id' => $id])->get();
 
-            return view('osce::admin.exammanage.add_basic',['data'=>$data]);
+            return view('osce::admin.exammanage.add_basic',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex);
+        }
+    }
+
+    /**
+     * 保存编辑考试基本信息
+     * @api POST /osce/admin/exam/postEditExam
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        exam_id        考试id(必须的)
+     * * string        name           考试名(必须的)
+     * * string        begin_dt       开始时间(必须的)
+     * * string        end_dt         结束时间(必须的)
+     *
+     * @return redirect
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postEditExam(Request $request, Exam $exam)
+    {
+        //验证,略过
+
+        $exam_id = $request->input('exam_id');
+        $examData = $request->only('name');
+        $examScreeningData = $request -> get('time');
+
+        try{
+            if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
+            {
+                return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id]);
+            } else {
+                throw new \Exception('修改考试失败');
+            }
+        } catch(\Exception $ex) {
+            throw $ex;
         }
     }
 
@@ -213,6 +251,7 @@ class ExamController extends CommonController
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        exam_id        考试id(必须的)
+     * * string        keyword        关键字(姓名，学号，身份证号，电话)
      *
      * @return view
      *
@@ -223,7 +262,7 @@ class ExamController extends CommonController
      */
     public function getExamineeManage(Request $request)
     {
-        //验证规则，暂时留空
+        //验证规则
         $this->validate($request, [
             'id' => 'required|integer'
         ]);
@@ -231,10 +270,12 @@ class ExamController extends CommonController
         try {
             //获取id
             $exam_id = $request->input('id');
+            //获取各字段
+            $keyword = $request->only('keyword');
 
             $student = new Student();
             //从模型得到数据
-            $data = $student->selectExamStudent($exam_id);
+            $data = $student->selectExamStudent($exam_id, $keyword);
 
             //展示页面
             return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data]);
@@ -454,6 +495,53 @@ class ExamController extends CommonController
         $data   =   $pagination->toArray();
         return response()->json(
             $this->success_rows(1,'获取成功',$pagination->total(),config('msc.page_size'),$pagination->currentPage(),$data['data'])
+        );
+    }
+
+    /**
+     * 考场安排
+     * @api GET /osce/admin/exam/getExamroomAssignment
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getExamroomAssignment(Request $request)
+    {
+        $this->validate($request,[
+            'id' => 'required|integer'
+        ]);
+        $exam_id = $request -> get('id');
+
+
+        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id]);
+    }
+
+
+    /**
+     * 获取考场列表 接口
+     * @api GET /osce/admin/exam/Room-list-data
+     * @access public
+     *
+     * @return json  {id:考场ID,name:考场名称}
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getRoomListData()
+    {
+        $data = Room::select(['id', 'name'])->get();
+
+        return response()->json(
+            $this->success_data($data, 1, 'success')
         );
     }
 

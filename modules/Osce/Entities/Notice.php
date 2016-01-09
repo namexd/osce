@@ -12,6 +12,7 @@ namespace Modules\Osce\Entities;
 
 use App\Repositories\Common;
 use Modules\Osce\Entities\CommonModel;
+use Modules\Osce\Entities\Teacher;
 use DB;
 
 class Notice extends CommonModel
@@ -121,7 +122,7 @@ class Notice extends CommonModel
     }
 
     /**
-     *
+     * 发布通知
      * @access public
      *
      * @param $title        通知标题
@@ -172,21 +173,92 @@ class Notice extends CommonModel
      *
      */
     public function getGroupsOpendIds($groups,$exam_id){
-
-        return  [
-            ['id'=>79,'opendid'=>'oI7UquKmahFwGV0l2nyu_f51nDJ4'],
-            ['id'=>81,'opendid'=>'oI7UquPKycumti7NU4HQYjVnRjPo'],
-        ];
+        $data   =   [];
+        if(in_array(1,$groups))
+        {
+            $data   =   $this   ->  getStudentsOpendIds($exam_id,$data);
+        }
+        if(in_array(2,$groups))
+        {
+            $data   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
+        }
+        if(in_array(3,$groups))
+        {
+            $data   =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
+        }
+        return $data;
     }
-    private function getExamTeachers($exam_id){
-        $list   =   Invigilator::where('type','=',1)->get();
-        //return array_pluck($list,'user');
+    private function getExamTeachersOpendIds($exam_id,array $data=[]){
+        $ExamRoom   =   new ExamRoom();
+        $list   =   $ExamRoom   ->  getRoomTeachersByExamId($exam_id);
+        foreach($list as $teacher)
+        {
+            if(is_null($teacher->userInfo))
+            {
+                throw new \Exception('没有找到指定的教务人员用户信息');
+            }
+            if($teacher->userInfo->openid)
+            {
+                $data[] =   [
+                    'id'    =>  $teacher->userInfo->id,
+                    'openid'=>  $teacher->userInfo->openid,
+                ];
+            }
+        }
+        return $data;
     }
-    private function getExamStudent($exam_id){
 
+    /**
+     * 根据考试ID获取学生openid列表
+     * @access public
+     *
+     * @param int $exam_id 考试id
+     * @param array $data
+     *
+     * @return array
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    private function getStudentsOpendIds($exam_id,array $data=[]){
+        $list   =   Teacher::where('exam_id','=',$exam_id);
+        foreach($list as $teacher)
+        {
+            if(is_null($teacher->userInfo))
+            {
+                throw new \Exception('没有找到指定的教务人员用户信息');
+            }
+            if($teacher->userInfo->openid)
+            {
+                $data[] =   [
+                    'id'    =>  $teacher->userInfo->id,
+                    'openid'=>  $teacher->userInfo->openid,
+                ];
+            }
+        }
+        return $data;
     }
-    private function getSpTeachers($exam_id){
-
+    private function getExamSpTeachersOpendIds($exam_id,array $data=[]){
+        $ExamRoom   =   new ExamRoom();
+        $list   =   $ExamRoom   ->  getRoomSpTeachersByExamId($exam_id);
+        foreach($list as $teacher)
+        {
+            if(is_null($teacher->userInfo))
+            {
+                throw new \Exception('没有找到指定的教务人员用户信息');
+            }
+            if($teacher->userInfo->openid)
+            {
+                $data[] =   [
+                    'id'    =>  $teacher->userInfo->id,
+                    'openid'=>  $teacher->userInfo->openid,
+                ];
+            }
+        }
+        return $data;
     }
 
     public function getNoticeToOpendIds($notice){

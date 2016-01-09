@@ -9,7 +9,7 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
+<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 @stop
 
@@ -51,7 +51,7 @@
                                     <div class="ibox-title">
                                         <h5>评分标准：</h5>
                                         <div class="ibox-tools">
-                                            <a href="javascript:void(0)" id="file1" class="btn btn-outline btn-default">导入<input type="file" name="topic" id="file0" multiple="multiple" /></a>
+    
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
@@ -82,7 +82,6 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <button class="btn btn-white" type="submit">取消</button>
-
                             </div>
                         </div>
                     </form>

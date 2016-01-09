@@ -18,5 +18,10 @@ return [
 			'父级序号'=>'pid',
 			'层级'=>'level'
 		],
+	],
+	'machine_category'=>[
+		1 =>'Vcr',
+		2 =>'Pad',
+		3 =>'Watch'
 	]
 ];
