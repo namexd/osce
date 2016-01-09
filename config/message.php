@@ -10,14 +10,14 @@ return [
 
     'messages'=>[
         'sms'               =>  [
-            'driver'        =>  'lingkai',
+            'driver'        =>  'sms',
             'cnname'        =>  '凌凯',
-            'api_url'       =>  'http://mb345.com/ws/BatchSend.aspx?',
-            'corp_id'       =>  'LKSDK0004929',
-            'api_pwd'       =>  'jkwqm814@',
+            'url'           =>  'http://mb345.com/ws/BatchSend.aspx?',
+            'username'      =>  'LKSDK0004929',
+            'password'      =>  'jkwqm814@',
         ],
         'wechat'            =>  [
-            'driver'        =>  'overtrue',
+            'driver'        =>  'wechat',
             'use_alias'     =>  env('WECHAT_USE_ALIAS', false),
             'app_id'        =>  env('WECHAT_APPID', 'wx660216bfe4ef9b00'), // 必填
             'secret'        =>  env('WECHAT_SECRET', '6b99bb2e397d5ea1c650a5454a63ba55'), // 必填
@@ -25,7 +25,7 @@ return [
             'encoding_key'  =>  env('WECHAT_ENCODING_KEY', 'YourEncodingAESKey') // 加密模式需要，其它模式不需要
         ],
         'email'             =>  [
-            'driver'        =>  'local',
+            'driver'        =>  'email',
             'server'        =>  '',//smtp.xx.xx
             'port'          =>  '25',
             'ssl'           =>  false,
@@ -33,7 +33,7 @@ return [
             'password'      =>  ''
         ],
         'pm'              =>    [
-            'driver'        =>  'local',
+            'driver'        =>  'pm',
         ]
     ]
 ];
