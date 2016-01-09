@@ -21,8 +21,10 @@ class InvitationController extends CommonController
 
 
     //获取要发送给sp老师的数据
-    public function getInvitation(Request $request)
+    public function getInvitationList(Request $request)
     {
+
+        dd(1111);
         //验证略
         $this->validate($request,[
             'tid' => 'required|integer',
