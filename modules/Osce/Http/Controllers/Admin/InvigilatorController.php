@@ -9,15 +9,16 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\CaseModel;
-use Modules\Osce\Entities\Invigilator;
 use Modules\Osce\Http\Controllers\CommonController;
+use Auth;
 
 class InvigilatorController extends CommonController
 {
     public function getTest()
     {
-        return view('osce::wechat.exammanage.exam_notice_detail');
+        return view('osce::admin.exammanage.examinee_query_detail');
     }
     /**
      * 获取SP考教师列表
@@ -26,12 +27,12 @@ class InvigilatorController extends CommonController
      *
      * @param Request $request get 请求<br><br>
      * <b>get请求字段：</b>
-     * * string        is_sp        是否为sp老师(必须的)
+     * * string        type        是否为sp老师(必须的)
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return view {姓名：$item->name,是否为sp老师：$isSpValues[$item->is_sp]}
+     * @return view {姓名：$item->name,是否为sp老师：$isSpValues[$item->type]}
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -40,7 +41,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function getSpInvigilatorList(Request $request){
-       $Invigilator    =   new Invigilator();
+       $Invigilator    =   new Teacher();
 
         $list       =   $Invigilator    ->getSpInvigilatorList();
         $isSpValues =   $Invigilator    ->  getIsSpValues();
@@ -68,7 +69,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function getInvigilatorList(){
-        $Invigilator    =   new Invigilator();
+        $Invigilator    =   new Teacher();
 
         $list       =   $Invigilator    ->  getInvigilatorList();
         $isSpValues =   $Invigilator    ->  getIsSpValues();
@@ -120,10 +121,11 @@ class InvigilatorController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        id           老师信息ID(必须的)
-     * * string        name         老师名称(必须的)
-     * * string        is_sp        老师类型(必须的)
-     * * string        moblie       老师手机号(必须的)
+     * * string        name             用户姓名(必须的)
+     * * string        mobile           用户手机号(必须的)
+     * * string        code             用户工号
+     * * string        type             用户类型(必须的)
+     * * string        case_id          病例ID
      *
      * @return redirect
      *
@@ -136,26 +138,33 @@ class InvigilatorController extends CommonController
     public function postAddInvigilator(Request $request){
         $this   ->  validate($request,[
             'name'      =>  'required',
-            'is_sp'     =>  'required|in:1,2',
-            'moblie'     =>  'required',
+            'type'      =>  'required|in:1,3',
+            'moblie'    =>  'required',
+            'code'      =>  'sometimes',
+            'case_id'   =>  'sometimes',
         ],[
             'name.required'     =>  '监考教师姓名必填',
-            'is_sp.required'    =>  '监考教师类型必填',
-            'moblie.required'    =>  '监考教师手机必填'
+            'type.required'     =>  '监考教师类型必填',
+            'type.in'           =>  '监考教师类型不对',
+            'moblie.required'   =>  '监考教师手机必填'
         ]);
-
+        $user   =   Auth::user();
         $data   =   [
-            'name'  =>  e($request->get('name')),
-            'is_sp' =>  intval($request->get('is_sp')),
-            'moblie' =>  e($request->get('moblie')),
+            'name'              =>  e($request->get('name')),
+            'type'              =>  intval($request->get('type')),
+            'mobile'            =>  e($request->get('moblie')),
+            'code'              =>  e($request->get('code')),
+            'case_id'           =>  intval($request->get('case_id')),
+            'status'            =>  1,
+            'create_user_id'    => $user->id
         ];
 
-        $Invigilator    =   new Invigilator();
+        $Invigilator    =   new Teacher();
         try
         {
-            if($Invigilator    ->  create($data))
+            if($Invigilator    ->  addInvigilator($data))
             {
-                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             }
             else
             {
@@ -175,11 +184,13 @@ class InvigilatorController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        id           老师信息ID(必须的)
-     * * string        name         老师名称(必须的)
-     * * string        is_sp        老师类型(必须的)
-     * * string        moblie       老师手机号(必须的)
-     * * string        case_id      老师病例(必须的)
+     * * string        name             用户姓名(必须的)
+     * * string        mobile           用户手机号(必须的)
+     * * string        code             用户工号(必须的)
+     * * string        type             用户类型(必须的)
+     * * string        case_id          病例ID(必须的)
+     * * string        status           用户状态(必须的)
+     * * string        create_user_id   创建人ID(必须的)
      *
      * @return view
      *
@@ -192,27 +203,32 @@ class InvigilatorController extends CommonController
     public function postAddSpInvigilator(Request $request){
         $this   ->  validate($request,[
             'name'      =>  'required',
-            'is_sp'     =>  'required|in:1,2',
-            'moblie'     =>  'required',
-            'case_id'     =>  'required',
+            'type'      =>  'required|in:2',
+            'mobile'    =>  'required',
+            'code'      =>  'sometimes',
+            'case_id'   =>  'sometimes',
         ],[
             'name.required'     =>  '监考教师姓名必填',
-            'is_sp.required'    =>  '监考教师类型必填',
-            'moblie.required'    =>  '监考教师手机必填',
-            'case_id.required'    =>  '监考教师病例必填'
+            'type.required'     =>  '监考教师类型必填',
+            'type.in'           =>  '监考教师类型不对',
+            'mobile.required'   =>  '监考教师手机必填',
+            'case_id.required'  =>  '监考教师病例必填'
         ]);
-
-        $data   =   [
-            'name'  =>  e($request->get('name')),
-            'is_sp' =>  intval($request->get('is_sp')),
-            'moblie' =>  e($request->get('moblie')),
-            'case_id' =>  intval($request->get('case_id')),
-        ];
-
-        $Invigilator    =   new Invigilator();
         try
         {
-            if($Invigilator    ->  create($data))
+            $user   =   Auth::user();
+            $data   =   [
+                'name'              =>  e($request->get('name')),
+                'type'              =>  intval($request->get('type')),
+                'mobile'            =>  e($request->get('mobile')),
+                'code'              =>  e($request->get('code')),
+                'case_id'           =>  intval($request->get('case_id')),
+                'status'            =>  1,
+                'create_user_id'    => $user->id
+            ];
+
+            $Invigilator    =   new Teacher();
+            if($Invigilator    ->  addInvigilator($data))
             {
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
             }
@@ -226,29 +242,6 @@ class InvigilatorController extends CommonController
             return redirect()->back()->withErrors($ex);
         }
     }
-    /**
-     *  关联老师（将用户注册的账号和管理员导入的单个监考教师信息进行关联）
-     * @url GET /osce/admin/invigilator/relative-invigilator
-     * @access public
-     *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     *
-     * @return view
-     *
-     * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-29 15:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
-     */
-    public function postRelativeInvigilator(Request $request){
-
-    }
 
     /**
      *
@@ -257,7 +250,14 @@ class InvigilatorController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * int        id        老师信息ID(必须的)
+     * * int           id               老师信息ID(必须的)
+     * * string        name             用户姓名(必须的)
+     * * string        mobile           用户手机号(必须的)
+     * * string        code             用户工号(必须的)
+     * * int           type             用户类型(必须的)
+     * * int           case_id          病例ID(必须的)
+     * * int           status           用户状态(必须的)
+     * * int           create_user_id   创建人ID(必须的)
      *
      * @return view
      *
@@ -273,17 +273,38 @@ class InvigilatorController extends CommonController
         ]);
         $id             =   intval($request    ->  get('id'));
 
-        $InvigilatorModel    =   new Invigilator();
+        $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
         return view('osce::admin.resourcemanage.invigilator_edit',['item'=>$invigilator]);
     }
+
+    /**
+     * 编辑sp老师名单
+     * @url GET /osce/admin/invigilator/edit-sp-snvigilator
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return View
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
     public function getEditSpInvigilator(Request $request){
         $this   ->  validate($request,[
             'id'    =>  'required',
         ]);
         $id             =   intval($request    ->  get('id'));
 
-        $InvigilatorModel    =   new Invigilator();
+        $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
         $list   =   CaseModel::get();
         return view('osce::admin.resourcemanage.sp_invigilator_edit',['item'=>$invigilator,'list'=>$list]);
@@ -291,15 +312,19 @@ class InvigilatorController extends CommonController
 
     /**
      * 编辑监考老师信息
-     * @url GET /osce/admin/invigilator/edit-invigilator
+     * @url POST /osce/admin/invigilator/edit-invigilator
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int           id               老师信息ID(必须的)
+     * * string        name             用户姓名(必须的)
+     * * string        mobile           用户手机号(必须的)
+     * * string        code             用户工号(必须的)
+     * * int           type             用户类型(必须的)
+     * * int           case_id          病例ID(必须的)
+     * * int           status           用户状态(必须的)
+     * * int           create_user_id   创建人ID(必须的)
      *
      * @return redirect
      *
@@ -313,23 +338,16 @@ class InvigilatorController extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
             'name'  =>  'required',
-            'is_sp' =>  'required',
-            'moblie' =>  'required',
+            'mobile' =>  'required',
         ]);
         $id             =   (int)$request    ->  get('id');
         try
         {
-            $invigilator    =   Invigilator::find($id);
-            $data   =   [
-                'name'  =>  e($request->get('name')),
-                'is_sp' =>  intval($request->get('is_sp')),
-                'moblie'=>  e($request->get('moblie')),
-            ];
-            foreach($data as $feild =>$item)
-            {
-                $invigilator    ->  $feild  =   $item;
-            }
-            if($invigilator    ->  save())
+            $teacherModel   =   new Teacher();
+            $name           =   e($request->get('name'));
+            $mobile         =   e($request->get('mobile'));
+
+            if($teacherModel    ->  editInvigilator($id,$name,$mobile))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             }
@@ -353,7 +371,7 @@ class InvigilatorController extends CommonController
      * <b>post请求字段：</b>
      * * string        id           老师信息ID(必须的)
      * * string        name         老师名称(必须的)
-     * * string        is_sp        老师类型(必须的)
+     * * string        type        老师类型(必须的)
      * * string        moblie       老师手机号(必须的)
      * * string        case_id      老师病例(必须的)
      *
@@ -367,28 +385,22 @@ class InvigilatorController extends CommonController
      */
     public function postEditSpInvigilator(Request $request){
         $this   ->  validate($request,[
-            'id'    =>  'required',
-            'name'  =>  'required',
-            'is_sp' =>  'required',
-            'moblie' =>  'required',
-            'case_id' =>  'required',
+            'id'        =>  'required',
+            'name'      =>  'required',
+            'type'      =>  'required',
+            'mobile'    =>  'required',
+            'case_id'   =>  'required',
         ]);
 
-        $id             =   (int)$request    ->  get('id');
+        $id                 =   (int)$request    ->  get('id');
         try
         {
-            $invigilator    =   Invigilator::find($id);
-            $data   =   [
-                'name'  =>  e($request->get('name')),
-                'is_sp' =>  intval($request->get('is_sp')),
-                'moblie'=>  e($request->get('moblie')),
-                'case_id'=>  intval($request->get('case_id')),
-            ];
-            foreach($data as $feild =>$item)
-            {
-                $invigilator    ->  $feild  =   $item;
-            }
-            if($invigilator    ->  save())
+            $TeahcerModel   =   new Teacher();
+            $name           =   e($request->get('name'));
+            $mobile         =   e($request->get('mobile'));
+            $caseId         =   intval($request->get('case_id'));
+
+            if($TeahcerModel    ->  editSpInvigilator($id,$name,$mobile,$caseId))
             {
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
             }

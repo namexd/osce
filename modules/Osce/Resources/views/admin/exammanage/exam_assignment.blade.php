@@ -17,12 +17,6 @@
 
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'exam_assignment','deletes':'{{route('osce.admin.exam.postDelete')}}'}" />
-<div class="ibox-title route-nav">
-    <ol class="breadcrumb">
-        <li><a href="#">考试管理</a></li>
-        <li class="route-active">考试安排</li>
-    </ol>
-</div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
@@ -52,7 +46,7 @@
                     <td>{{$item->description}}</td>
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
-                        <a href="#"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                        <a href="{{route('osce.admin.exam.getEditExam')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>

@@ -36,12 +36,6 @@
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'add_basic','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
-    <div class="ibox-title route-nav">
-        <ol class="breadcrumb">
-            <li><a href="#">考试安排</a></li>
-            <li class="route-active">考试安排</li>
-        </ol>
-    </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -56,8 +50,8 @@
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            <li class=""><a href="#">基础信息</a></li>
-                            <li class=""><a href="#">考场安排</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment', ['id'=>$id])}}">考场安排</a></li>
                             <li class=""><a href="#">邀请SP</a></li>
                             <li class="active"><a href="#">考生管理</a></li>
                             <li class=""><a href="#">智能排考</a></li>
@@ -72,7 +66,9 @@
                         </span>
                     </div>
                     <div class="operate pull-right">
-                        <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
+                        <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}">
+                            <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
+                        </a>
                         <button type="button" class="btn btn-md btn-white" id="">导入</button>
                     </div>
                 </div>
@@ -88,7 +84,19 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                    @forelse($data as $item)
+                        <tr>
+                            <td>{{$item->name}}</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            </td>
+                        </tr>
+                    @empty
+                    @endforelse
                     </tbody>
                 </table>
 

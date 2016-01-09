@@ -70,12 +70,6 @@
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'sp_invitation','teacher_list':'{{route('osce.admin.spteacher.getShow')}}'}" />
-    <div class="ibox-title route-nav">
-        <ol class="breadcrumb">
-            <li><a href="#">考试安排</a></li>
-            <li class="route-active">考试安排</li>
-        </ol>
-    </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -114,10 +108,18 @@
                                 <td>肠胃炎考站</td>
                                 <td class="sp-teacher">
                                     <div class="teacher-box pull-left">
-                                        <!-- <div class="input-group teacher pull-left">
+                                        <div class="input-group teacher pull-left">
                                             <div class="pull-left">张老师</div>
                                             <div class="pull-left"><i class="fa fa-times"></i></div>
-                                        </div> -->
+                                        </div>
+                                        <div class="input-group teacher pull-left teacher-primary">
+                                            <div class="pull-left">张老师</div>
+                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                        </div>
+                                        <div class="input-group teacher pull-left teacher-warn">
+                                            <div class="pull-left">张老师</div>
+                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                        </div>
                                     </div>
                                     <div class="pull-right">
                                         <select name="" class="teacher-list">
@@ -139,8 +141,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 col-xs-12 col-sm-offset-5 col-xs-offset-5">
-                        <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
-                        <button class="btn btn-white" type="submit">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                        <button class="btn btn-primary" type="submit">保存</button>
+                        <button class="btn btn-white" type="submit">取消</button>
 
                     </div>
                 </div>

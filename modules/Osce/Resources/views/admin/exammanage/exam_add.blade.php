@@ -1,7 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
 <style>
-span.laydate-icon{
+input.laydate-icon{
     border: 0;
     background-position: right;
     background-image: none;
@@ -33,8 +33,7 @@ span.laydate-icon{
                             <label class="col-sm-2 control-label">考试名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="name">
-                                <input type="hidden" required class="form-control" id="cate_id" name="cate_id" value="2" />
+                                <input type="text" required class="form-control" id="code" name="name">
                             </div>
                         </div>
 
@@ -63,27 +62,8 @@ span.laydate-icon{
                                         </tr>
                                         </thead>
                                         <tbody index="0">
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="laydate">
-                                                    <span class="laydate-icon end">2015-11-12 09:00</span>
-                                                </td>
-                                                <td class="laydate">
-                                                    <span class="laydate-icon end">2015-11-12 09:00</span>
-                                                </td>
-                                                <td>3:00</td>
-                                                <td>
-                                                    <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
-                                                </td>
-                                            </tr>
                                         </tbody>
                                     </table>
-
-                                        <input type="text" name="time[1][begin_dt]">开始时间
-                                        <input type="text" name="time[1][end_dt]">结束时间<br/>
-
-                                <input type="text" name="time[2][begin_dt]">开始时间
-                                <input type="text" name="time[2][end_dt]">结束时间<br/>
 
                                     <div class="btn-group pull-right">
 
@@ -93,7 +73,7 @@ span.laydate-icon{
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">创建考试</button>
-                                <button class="btn btn-white" type="submit">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                                <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 
                             </div>
                         </div>

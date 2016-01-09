@@ -12,6 +12,7 @@ namespace Modules\Osce\Entities;
 
 use App\Repositories\Common;
 use Modules\Osce\Entities\CommonModel;
+use Modules\Osce\Entities\Teacher;
 use DB;
 
 class Notice extends CommonModel
@@ -20,10 +21,10 @@ class Notice extends CommonModel
     protected $table 		= 	'notice';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected $fillable 	=	['title','content','create_user_id'];
+    protected $fillable 	=	['title','content','create_user_id','exam_id'];
 
     public function exam(){
-        return $this->hasOne('\Modules\Osce\Entities\Exam','id','eaxm_id');
+        return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
     }
     public function receivers(){
         return $this->hasManyThrough('App\Entities\User','Modules\Osce\Entities\NoticeTo','id','notice_id','id');
@@ -88,7 +89,8 @@ class Notice extends CommonModel
                 'uid'       =>  $item['id']
             ];
         }
-        if($this   -> insert($data))
+        $noticeToModel  =   new NoticeTo();
+        if($noticeToModel   -> addNoticeTo($data))
         {
             return true;
         }
@@ -100,7 +102,7 @@ class Notice extends CommonModel
     public function sendMsg($notice,$to){
         try
         {
-            $url    =   route('notice/msg',['id'=>$notice->id]);
+            $url    =   route('osce.admin.notice.getMsg',['id'=>$notice->id]);
             $msgData    =   [
                 [
                     'title' =>$notice->exam->name.'通知',
@@ -120,7 +122,7 @@ class Notice extends CommonModel
     }
 
     /**
-     *
+     * 发布通知
      * @access public
      *
      * @param $title        通知标题
@@ -143,7 +145,7 @@ class Notice extends CommonModel
             'exam_id'   =>  $exam_id,
         ];
         try{
-            $to     =   $this   ->  getGroupsOpendIds($groups);
+            $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
             $notice =   $this   ->  addNotice($data,$to);
             return $notice;
         }
@@ -170,11 +172,93 @@ class Notice extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getGroupsOpendIds($groups){
-        return  [
-            ['id'=>79,'opendid'=>'oI7UquKmahFwGV0l2nyu_f51nDJ4'],
-            ['id'=>81,'opendid'=>'oI7UquPKycumti7NU4HQYjVnRjPo'],
-        ];
+    public function getGroupsOpendIds($groups,$exam_id){
+        $data   =   [];
+        if(in_array(1,$groups))
+        {
+            $data   =   $this   ->  getStudentsOpendIds($exam_id,$data);
+        }
+        if(in_array(2,$groups))
+        {
+            $data   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
+        }
+        if(in_array(3,$groups))
+        {
+            $data   =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
+        }
+        return $data;
+    }
+    private function getExamTeachersOpendIds($exam_id,array $data=[]){
+        $ExamRoom   =   new ExamRoom();
+        $list   =   $ExamRoom   ->  getRoomTeachersByExamId($exam_id);
+        foreach($list as $teacher)
+        {
+            if(is_null($teacher->userInfo))
+            {
+                throw new \Exception('没有找到指定的教务人员用户信息');
+            }
+            if($teacher->userInfo->openid)
+            {
+                $data[] =   [
+                    'id'    =>  $teacher->userInfo->id,
+                    'openid'=>  $teacher->userInfo->openid,
+                ];
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 根据考试ID获取学生openid列表
+     * @access public
+     *
+     * @param int $exam_id 考试id
+     * @param array $data
+     *
+     * @return array
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    private function getStudentsOpendIds($exam_id,array $data=[]){
+        $list   =   Teacher::where('exam_id','=',$exam_id);
+        foreach($list as $teacher)
+        {
+            if(is_null($teacher->userInfo))
+            {
+                throw new \Exception('没有找到指定的教务人员用户信息');
+            }
+            if($teacher->userInfo->openid)
+            {
+                $data[] =   [
+                    'id'    =>  $teacher->userInfo->id,
+                    'openid'=>  $teacher->userInfo->openid,
+                ];
+            }
+        }
+        return $data;
+    }
+    private function getExamSpTeachersOpendIds($exam_id,array $data=[]){
+        $ExamRoom   =   new ExamRoom();
+        $list   =   $ExamRoom   ->  getRoomSpTeachersByExamId($exam_id);
+        foreach($list as $teacher)
+        {
+            if(is_null($teacher->userInfo))
+            {
+                throw new \Exception('没有找到指定的教务人员用户信息');
+            }
+            if($teacher->userInfo->openid)
+            {
+                $data[] =   [
+                    'id'    =>  $teacher->userInfo->id,
+                    'openid'=>  $teacher->userInfo->openid,
+                ];
+            }
+        }
+        return $data;
     }
 
     public function getNoticeToOpendIds($notice){

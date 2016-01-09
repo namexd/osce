@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Auth;
 class Exam extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -21,15 +22,29 @@ class Exam extends CommonModel
     protected $fillable = ['name', 'code', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'description'];
 
     /**
+     * 考试场次关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function examScreening()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\ExamScreening','exam_id','id');
+    }
+
+    /**
      * 展示考试列表的方法
      * @return mixed
      * @throws \Exception
      */
-    public function showExamList()
+
+    public function showExamList($formData='')
     {
         try {
             //不寻找已经被软删除的数据
             $builder = $this->where('status' , '<>' , 0);
+
+            if($formData){
+               $builder=$builder->where('name','like',$formData['exam_name'].'%');
+            }
 
             //寻找相似的字段
             $builder = $builder->select([
@@ -81,20 +96,18 @@ class Exam extends CommonModel
      * @access public
      *
      * @param array $examData 考试基本信息
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        name        参数中文名(必须的)
+     * * string    create_user_id       参数中文名(必须的)
      * @param array $examScreeningData 场次信息
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        exam_id          参数中文名(必须的)
+     * * string        begin_dt         参数中文名(必须的)
+     * * string        end_dt           参数中文名(必须的)
+     * * string     create_user_id      参数中文名(必须的)
      *
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
@@ -117,11 +130,110 @@ class Exam extends CommonModel
                     throw new \Exception('创建考试场次信息失败');
                 }
             }
-            return $result;
             $connection->commit();
+            return $result;
+
         } catch(\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
+    }
+
+    /**
+     * 保存编辑考试 数据
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        exam_id        考试id(必须的)
+     * * string        begin_dt       开始时间(必须的)
+     * * string        end_dt         结束时间(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function editExam($exam_id, array $examData, array $examScreeningData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            //更新考试信息
+            if (!$result = $this->updateData($exam_id, $examData)) {
+                throw new \Exception('修改考试信息时报!');
+            }
+            //查询操作人信息
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息');
+            }
+            $examScreening_ids = [];
+            //判断输入的时间是否有误
+            foreach ($examScreeningData as $key => $value) {
+                if (!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])) {
+                    throw new \Exception('输入的时间有误！');
+                }
+                //不存在id,为新添加的数据
+                if (!isset($value['id'])) {
+                    $value['exam_id'] = $exam_id;
+                    $value['create_user_id'] = $user->id;
+
+                    if (!$result = ExamScreening::create($value)) {
+                        throw new \Exception('添加考试场次信息失败');
+                    }
+                    array_push($examScreening_ids, $result->id);
+                } else {
+                    array_push($examScreening_ids, $value['id']);
+                    $examScreening = new ExamScreening();
+                    if (!$result = $examScreening->updateData($value['id'], $value)) {
+                        throw new \Exception('更新考试场次信息失败');
+                    }
+                }
+            }
+            //查询是否有要删除的考试场次
+            $result = ExamScreening::where('exam_id', '=', $exam_id)->whereNotIn('id', $examScreening_ids)->get();
+            if (count($result) != 0) {
+                foreach ($result as $value) {
+                    if (!$res = ExamScreening::where('id', '=', $value['id'])->delete()) {
+                        throw new \Exception('删除考试场次信息失败');
+                    }
+                }
+            }
+
+            $connection->commit();
+            return true;
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
+
+    //考生查询
+    public function getList($formData=''){
+         $builder=$this->Join(
+             'student','student.id','=','exam.student_id'
+         );
+         if($formData['exam_name']){
+            $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'');
+         }
+        if($formData['student_name']){
+            $builder=$builder->where('student.name','like','%'.$formData['student_name'].'');
+        }
+
+        $builder->select([
+            'exam.name as exam_name',
+            'student.name as student_name',
+            'student.gender as gender',
+            'student.code as code',
+            'student.id_card as idCard',
+            'student.mobile as mobile',
+        ]);
+
+        $builder->orderBy('exam.begin_dt');
+        return $builder->paginate(10);
     }
 }

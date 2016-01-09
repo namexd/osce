@@ -23,8 +23,11 @@ class Watch extends CommonModel implements MachineInterface
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '损坏',
-        1   =>  '正常',
+        0   =>  '未使用',
+        1   =>  '使用中',
+        2   =>  '报废',
+        3   =>  '损坏',
+        4   =>  '维修',
     ];
 
     /**
@@ -204,4 +207,6 @@ class Watch extends CommonModel implements MachineInterface
         }
         return  $bulder ->  paginate(config('osce.page_size'));
     }
+
+
 }

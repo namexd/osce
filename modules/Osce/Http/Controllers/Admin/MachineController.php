@@ -10,39 +10,17 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Pad;
 use Modules\Osce\Entities\Watch;
-use Modules\Osce\Entities\MachineCategory;
 use Modules\Osce\Http\Controllers\CommonController;
 use Predis\Transaction\AbortedMultiExecException;
 
 class MachineController extends CommonController
 {
-    /**
-     * 设备类型列表
-     * @api GET /osce/admin/machine/category-list
-     * @access public
-     *
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     *
-     * @return view
-     *
-     * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-30 10:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
-     */
-    public function getCategoryList(){
-        $MachineCategoryModel   =   new MachineCategory();
 
-        $pagination             =   $MachineCategoryModel   ->  paginate('osce.page_size');
-
-        //return view('',['list'=>$pagination]);
-    }
 
     /**
      *  新增设备类别
@@ -74,7 +52,7 @@ class MachineController extends CommonController
         ];
         try
         {
-            $category   =   MachineCategory::firstOrCreate($data);
+            $category   =   config('machine_category');
             if($category)
             {
                 return redirect()->route('osce.admin.machine.getCategoryList');
@@ -142,37 +120,35 @@ class MachineController extends CommonController
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
+        $cate_id    =   $cate_id==0? 1:$cate_id;
         $name       =   intval($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
-        if(empty($cate_id))
+        $cate   =   config('osce.machine_category');
+        if(is_null($cate))
         {
-            $cate   =   MachineCategory::first();
-            if(is_null($cate))
-            {
-                abort(404,'设备类别不存在，请检查数据或联系管理员');
-            }
-            $cate_id    =   $cate   ->  id;
+            abort(404,'设备类别不存在，请检查数据或联系管理员');
         }
-
+        if(!array_key_exists($cate_id,$cate))
+        {
+            abort(404,'设备类别不存在，请检查数据或联系管理员');
+        }
         $model  =   $this   ->  getMachineModel($cate_id);
-        $categroyList   =   MachineCategory::all(['id','name']);
-
         $list   =   $model  ->  getList($name,$status);
 
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)
         {
             case 1:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
             case 2:
-                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
             case 3:
-                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
             default:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$categroyList,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
         }
     }
 
@@ -771,7 +747,7 @@ class MachineController extends CommonController
     }
 
     /**
-     * 编辑Pad信息
+     * 编辑腕表单页面
      * @url /osce/admin/machine/edit-watch
      * @access public
      *
@@ -793,9 +769,76 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
-        $watch    =   Pad::find($id);
+        $watch    =   Watch::find($id);
 
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
+    }
+
+    /**
+     *查询腕表数据
+     * @method GET
+     * @url
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchList(Request $request){
+        $this  ->validate($request,[
+            'code'  =>  'sometimes|integer'
+        ]);
+
+        $code=intval($request->get('code'));
+
+        if($code){
+            $list=Watch::where('code','like','%'.$code.'%');
+        }else{
+            $list=Watch::select()->get();
+        }
+
+        $data=[];
+        foreach($list as $item){
+
+           $data[]=[ 'id'      =>$item->id,
+                     'status'  =>$item->status,
+                     'name'    =>$item->name,
+                     'code'    =>$item->code,
+                   ];
+
+         }
+        $row=[];
+        foreach($data as $itm){
+             if($itm['status']==1){
+               $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first()->student_id;
+             if($studentId){
+                $studentName=Student::where('id',$studentId)->select('name')->first()->name;
+              $row[]=[
+                  'id'             =>$item->id,
+                  'status'         =>$item->status,
+                  'name'           =>$item->name,
+                  'code'           =>$item->code,
+                  'studentName'    =>$studentName,
+              ];
+            }
+          }
+        }
+
+        $watchModel   =   new Watch();
+
+        $pagination             =   $watchModel   ->  paginate(7);
+        dd($row);
+        return ['row'=>$row,'pagination'=>$pagination];
     }
 
 }

@@ -9,6 +9,10 @@
 namespace Modules\Osce\Entities;
 
 
+use App\Entities\User;
+use DB;
+use Modules\Osce\Repositories\Common;
+
 class Teacher extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -18,8 +22,45 @@ class Teacher extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'code', 'type', 'case_id', 'create_user_id'];
+    protected $fillable = ['id','name', 'code', 'type', 'case_id', 'create_user_id','status'];
     private $excludeId = [];
+
+    protected $type_values  =   [
+        '1' =>  '监考老师',
+        '2' =>  'SP病人',
+        '3' =>  '巡考老师',
+    ];
+
+    /**
+     * 用户关联
+     */
+    public function userInfo(){
+        return $this    ->  hasOne('\App\Entities\User','id','id');
+    }
+    /**
+     * 获取是否为SP老师的值
+     * @access public
+     *
+     * @return array
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 16:56
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getIsSpValues(){
+        return $this    ->  type_values;
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function station()
+    {
+        return $this->belongsToMany('\Modules\Osce\Entities\station','station_sp','user_id','station_id');
+    }
 
     /**
      * SP老师的查询
@@ -62,5 +103,213 @@ class Teacher extends CommonModel
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+
+    /**
+     * 获取sp老师列表
+     * @access public
+     *
+     * @param
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return pagination
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 10:52
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getSpInvigilatorList(){
+        return  $this   ->  where('type','=',2)
+            ->  paginate(config('osce.page_size'));
+    }
+
+    /**
+     * 获取非SP监考老师列表
+     * @access public
+     *
+     * @param
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return pagination
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 16:58
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getInvigilatorList(){
+        return  $this   ->  whereIn('type',[1,3])
+            ->  paginate(config('osce.page_size'));
+    }
+
+    /**
+     * 新增监考人
+     * @access public
+     *
+     * @param array $data
+     * * string        name             用户姓名(必须的)
+     * * string        mobile           用户手机号(必须的)
+     * * string        code             用户工号(必须的)
+     * * string        type             用户类型(必须的)
+     * * string        case_id          病例ID(必须的)
+     * * string        status           用户状态(必须的)
+     * * string        create_user_id   创建人ID(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-08 10:20
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function addInvigilator($data){
+        $mobile =   $data['mobile'];
+        $user   =   User::where('username','=',$mobile)->first();
+
+        if(!$user)
+        {
+            $password   =   Common::getRandStr(6);
+            $user       =   $this   ->  registerUser($data,$password);
+            $this       ->  sendRegisterEms($mobile,$password);
+        }
+        $teacher    =   $this   ->  find($user  ->  id);
+        if($teacher)
+        {
+            throw new \Exception('该教职员工已经存在');
+        }
+        else
+        {
+            $data['id'] =   $user    ->  id;
+            if($teacher =   $this   ->  create($data))
+            {
+                return $teacher;
+            }
+            else
+            {
+                throw new \Exception('教职员工创建失败');
+            }
+        }
+    }
+
+    public function registerUser($data,$password){
+        $form_user=$data;
+        $form_user['username']  =   $data['mobile'];
+        $form_user['openid']    =   '';
+        $form_user['password']  =   bcrypt($password);
+        $user=User::create($form_user);
+        if($user)
+        {
+            return $user;
+        }
+        else
+        {
+            throw new \Exception('创建用户失败');
+        }
+    }
+    public function sendRegisterEms($mobile,$password){
+        //发送短消息
+    }
+
+    /**
+     * 编辑非SP教务人员
+     * @access public
+     *
+     * @param int       $id     教务人员ID
+     * @param string    $name   教务人员姓名
+     * @param string    $mobile 教务人员手机号
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function editInvigilator($id,$name,$mobile,$type){
+        //教务人员信息变更
+        $teacher    =   $this   ->  find($id);
+        if(!$teacher)
+        {
+            throw new   \Exception('没有找到该教务人员');
+        }
+        if($teacher->name!==$name)
+        {
+            $teacher    ->  name    =   $name;
+        }
+        if($teacher->type!==$type)
+        {
+            $teacher    ->  type    =   $type;
+        }
+        if(!$teacher->save())
+        {
+            throw new   \Exception('教务人员名称变更失败');
+        }
+        //教务人员用户信息变更
+        $userInfo   =   $teacher->userInfo;
+        if($userInfo->name!==$name)
+        {
+            $userInfo   ->name  =$name;
+        }
+        if($userInfo->mobile!==$mobile)
+        {
+            $userInfo   ->mobile  =$name;
+        }
+        if(!$userInfo->save())
+        {
+            throw new   \Exception('教务人员用户信息变更失败');
+        }
+        return $teacher;
+    }
+
+    public function editSpInvigilator($id,$name,$mobile,$caseId){
+        //教务人员信息变更
+        $teacher    =   $this   ->  find($id);
+        if(!$teacher)
+        {
+            throw new   \Exception('没有找到该教务人员');
+        }
+        if($teacher->name!==$name)
+        {
+            $teacher    ->  name    =   $name;
+        }
+        if($teacher->case_id!==$caseId)
+        {
+            $teacher    ->  case_id    =   $caseId;
+        }
+        if(!$teacher->save())
+        {
+            throw new   \Exception('教务人员名称变更失败');
+        }
+        //教务人员用户信息变更
+        $userInfo   =   $teacher->userInfo;
+        if($userInfo->name!==$name)
+        {
+            $userInfo   ->name  =$name;
+        }
+        if($userInfo->mobile!==$mobile)
+        {
+            $userInfo   ->mobile  =$name;
+        }
+        if(!$userInfo->save())
+        {
+            throw new   \Exception('教务人员用户信息变更失败');
+        }
+        return $teacher;
+    }
+
+    public function registerTeacher(){
+        //$this   ->  registerUser();
     }
 }

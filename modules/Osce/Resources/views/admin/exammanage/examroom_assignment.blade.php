@@ -31,19 +31,13 @@
         border-color: #1ab394!important;
         width: 100%;
     }
+    .control-label{text-align: right;}
     </style>
 @stop
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}'}" />
 <input type="hidden" id="parameter" value="{'pagename':'examroom_assignment'}" />
-<div class="ibox-title route-nav">
-    <ol class="breadcrumb">
-        <li><a href="#">考试安排</a></li>
-        <li class="route-active">考场安排</li>
-    </ol>
-</div>
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -58,10 +52,10 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class=""><a href="#">基础信息</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
                         <li class="active"><a href="#">考场安排</a></li>
                         <li class=""><a href="#">邀请SP</a></li>
-                        <li class=""><a href="#">考生管理</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="#">智能排考</a></li>
                     </ul>
                 </div>
@@ -86,6 +80,10 @@
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
                                     <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    {{--<select name="room_id[1]" multiple="multiple">--}}
+                                        {{--<option value="1">123</option>--}}
+                                        {{--<option value="2">31</option>--}}
+                                    {{--</select>--}}
                                     <table class="table table-bordered" id="examroom">
                                         <thead>
                                         <tr>
@@ -117,7 +115,7 @@
                                             <th>老师</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody index="0">
                                             <tr>
                                                 <td>1</td>
                                                 <td>3:00</td>
@@ -139,8 +137,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
-                                    <button class="btn btn-white" type="submit">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-white" type="button">取消</button>
 
                                 </div>
                             </div>
