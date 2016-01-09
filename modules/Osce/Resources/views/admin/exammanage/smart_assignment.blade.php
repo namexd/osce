@@ -21,6 +21,15 @@
             height: 30px;
             line-height: 30px;
         }
+        .assign-box{
+            width: 800px;
+        }
+        .assign-box li{
+            float: left;
+            width: 160px;
+            height: 30px;
+            line-height: 30px;
+        }
     </style>
 @stop
 
@@ -50,8 +59,43 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="assign-box">
+                <div class="classroom-box">
+                    <ul>
+                        <li>
+                            <dl>
+                                <dt>教室401</dt>
+                                <dd>张三，李四，王五</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>教室401</dt>
+                                <dd>张三，李四，王五</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>教室401</dt>
+                                <dd>张三，李四，王五</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>教室401</dt>
+                                <dd>张三，李四，王五</dd>
+                            </dl>
+                        </li>
+                            <dl>
+                                <dt>教室401</dt>
+                                <dd>张三，李四，王五</dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <div class="time-list">
 
+                </div>
             </div>
             <div>
                 <button class="btn btn-default" type="button">智能排考</button>
