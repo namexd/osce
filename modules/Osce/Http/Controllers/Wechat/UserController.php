@@ -89,7 +89,7 @@ class UserController  extends CommonController
             }
             else
             {
-                $user   =   Common::create(['username'=>$mobile],$password);
+                $user   =   Common::registerUser(['username'=>$mobile],$password);
                 $user   ->  name        =   $name;
                 $user   ->  gender      =   $gender;
                 $user   ->  nickname    =   $nickname;
@@ -224,7 +224,7 @@ class UserController  extends CommonController
      * <b>get请求字段：</b>
      * * string        mobile        手机号(必须的)
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return Json
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -253,6 +253,26 @@ class UserController  extends CommonController
         }
     }
 
+    /**
+     * 重置密码处理
+     * @url /osce/wechat/user/reset-password
+     * @access public
+     *
+     * @param Request $request
+     * <b>post 请求字段：</b>
+     * * string        mobile        电话(必须的)
+     * * string        verify        验证码(必须的)
+     * * string        password      密码(必须的)
+     * * string        repassword    重复密码(必须的)
+     *
+     * @return redirect
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-10 15:41
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
     public function postResetPassword(UserRepository $user,Request $request){
         $this   ->  validate($request,[
             'mobile'    =>  'required',
@@ -266,7 +286,34 @@ class UserController  extends CommonController
             'repassword.required'=>  '请输入确认密码',
             'repassword.confirmed'=>  '两次密码',
         ]);
-
-
+        $data   =   [
+            'mobile'    =>  $request    ->  get('mobile'),
+            'code'      =>  $request    ->  get('verify'),
+        ];
+        $password   =   $request    ->  get('password');
+        try{
+            if($user->getRegCheckMobileVerfiy($data))
+            {
+                $password  =   bcrypt($password);
+                $user   =   User::where('mobile','=',$password)->first();
+                if(empty($user))
+                {
+                    throw new \Exception('用户不存在');
+                }
+                $user       ->   password   =   $password;
+                if($user    ->  save())
+                {
+                    return  redirect()      ->  route('osce.wechat.user.getLogin');
+                }
+            }
+            else
+            {
+                throw new \Exception('验证码错误');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return  redirect()  ->  back()  ->  withErrors($ex);
+        }
     }
 }
