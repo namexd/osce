@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Modules\Osce\Entities\Area;
+use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Room as Room;
@@ -90,6 +91,25 @@ class RoomController extends CommonController
 
         //将数据展示到页面
         return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data]);
+    }
+
+    /**
+     * 添加摄像机房间页面的着陆页
+     * @api       GET /osce/admin/room/edit-room
+     * @access    public
+     * @param Request $request post请求<br><br>
+     *                         <b>get请求字段：</b>
+     *                         array           id            主键ID
+     * @return view
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAddVcr(Request $request, Room $room)
+    {
+        //获取摄像头数据
+        $data = Vcr::where('status','<>',0)->get();
+        return view('osce::admin.resourcemanage.central_control_add',['data'=>$data]);
     }
 
     /**

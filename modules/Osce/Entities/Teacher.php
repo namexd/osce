@@ -67,7 +67,6 @@ class Teacher extends CommonModel
 
     //邀请老师的数据
     public  function invitationContent($teacher_id){
-
         $builder=$this;
         try{
             if ($teacher_id !== null) {
@@ -81,19 +80,21 @@ class Teacher extends CommonModel
                     $join    ->  on('cases.id','=', 'teacher.case_id');
                 })->whereIn($this->table.'.id', $excludeIds);
             }
-
-            $data=$builder->select('teacher.name','teacher.id as teacher_id','cases.name as cname','cases.id as caseId')->get()->toArray();
-//             dd($data);
+            $data=$builder->select('teacher.name','teacher.id','cases.name as cname','cases.id as caseId')->get()->toArray();
             $list=[];
             foreach($data as $v){
-                $list['teacher_id']=$v['teacher_id'];
+                $list['teacher_id']=$v['id'];
                 $list['teacher_name']=$v['name'];
                 $list['case_name']=$v['cname'];
                 $list['case_id']=$v['caseId'];
             }
-//             $openId= $this->where('id', '=', $open['id'])->with('userInfo')->first()->toArray();
+
+
+//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
             $openId= Teacher::find($list['teacher_id'])->userInfo->toArray();
             $list['openid']=$openId['openid'];
+//            dd($list);
+
             return $list;
 
         }catch (\Exception $ex) {
@@ -362,11 +363,28 @@ class Teacher extends CommonModel
         return $teacher;
     }
 
-
+    /**
+     * 获取监考老师列表
+     * @return mixed
+     * @throws \Exception
+     */
     public function getTeacherList($formData)
     {
-        $result = $this->where()->get();
-        return $result;
+        try{
+            $teacher = $this->whereIn('type', [1,3]);
+                if(!empty($formData)){
+                    if(count($formData) == 1){
+                        $teacher->where('id', '<>', implode(',', $formData));
+                    }else{
+                        $teacher->whereNotIn('id', $formData);
+                    }
+                }
+            $teacher = $teacher->select(['id', 'name'])->get();
+            return $teacher;
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     public function registerTeacher(){

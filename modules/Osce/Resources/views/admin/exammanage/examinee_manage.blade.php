@@ -35,7 +35,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'add_basic','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'examinee_manage','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}','excel':'{{route('osce.admin.exam.postImportStudent')}}'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -69,7 +69,9 @@
                         <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}">
                             <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
                         </a>
-                        <button type="button" class="btn btn-md btn-white" id="">导入</button>
+                        <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
+                            <input type="file" name="topic" id="file0" multiple="multiple" />
+                        </a>
                     </div>
                 </div>
                 <table class="table table-striped" id="table-striped">
@@ -113,6 +115,7 @@
 @section('only_js')
 
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 
 @stop

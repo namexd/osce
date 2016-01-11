@@ -9,9 +9,11 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 
+use App\Entities\User;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
-use Modules\Osce\Entities\ExamPlan;
+
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -21,7 +23,9 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
+use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
+use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
 
@@ -141,21 +145,38 @@ class ExamController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
 
-        //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-        $examData = [
-            'name'           => $request  ->  get('name'),
-            'status'         => 1,
-            'create_user_id' => $user     ->  id
-        ];
-
         $examScreeningData =  $request  ->  get('time');
+        //考试的最早时间（开始时间）、最晚时间（结束时间）
+        $begin_dt = '';
+        $end_dt = '';
+
         //判断输入的时间是否有误
         foreach($examScreeningData as $key => $value){
             if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
                 throw new \Exception('输入的时间有误！');
             }
+            //获取第一组时间数据
+            if($key == 0){
+                $begin_dt = $value['begin_dt'];
+                $end_dt = $value['end_dt'];
+            }
+            //获取最早开始时间，最晚结束时间
+            if($key>0 && strtotime($begin_dt) > strtotime($value['begin_dt'])){
+                $begin_dt = $value['begin_dt'];
+            }
+            if($key>0 && strtotime($end_dt) < strtotime($value['end_dt'])){
+                $end_dt = $value['end_dt'];
+            }
             $examScreeningData[$key]['create_user_id'] = $user -> id;
         }
+        //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+        $examData = [
+            'name'           => $request  ->  get('name'),
+            'begin_dt'       => $begin_dt,
+            'end_dt'         => $end_dt,
+            'status'         => 1,
+            'create_user_id' => $user     ->  id
+        ];
 
         try{
             if($exam = $model -> addExam($examData, $examScreeningData))
@@ -230,9 +251,46 @@ class ExamController extends CommonController
     {
         //验证,略过
 
+        //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
         $exam_id = $request->input('exam_id');
-        $examData = $request->only('name');
         $examScreeningData = $request -> get('time');
+
+        //查询操作人信息
+        $user = Auth::user();
+        if (empty($user)) {
+            throw new \Exception('未找到当前操作人信息');
+        }
+        //考试的最早时间（开始时间）、最晚时间（结束时间）
+        $begin_dt = '';
+        $end_dt = '';
+
+        //判断输入的时间是否有误
+        foreach($examScreeningData as $key => $value){
+            if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
+                throw new \Exception('输入的时间有误！');
+            }
+            //获取第一组时间数据
+            if($key == 0){
+                $begin_dt = $value['begin_dt'];
+                $end_dt = $value['end_dt'];
+            }
+            //获取最早开始时间，最晚结束时间
+            if($key>0 && strtotime($begin_dt) > strtotime($value['begin_dt'])){
+                $begin_dt = $value['begin_dt'];
+            }
+            if($key>0 && strtotime($end_dt) < strtotime($value['end_dt'])){
+                $end_dt = $value['end_dt'];
+            }
+            $examScreeningData[$key]['create_user_id'] = $user -> id;
+        }
+        //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+        $examData = [
+            'name'           => $request  ->  get('name'),
+            'begin_dt'       => $begin_dt,
+            'end_dt'         => $end_dt,
+            'sequence_cate'  => $request  ->  get('sequence_cate'),
+            'sequence_mode'  => $request  ->  get('sequence_mode'),
+        ];
 
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
@@ -334,7 +392,7 @@ class ExamController extends CommonController
 
     /**
      * 新增考生表单页面
-     * @api GET /osce/admin/exam/getAddExaminee
+     * @api GET /osce/admin/exam/add-examinee
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -356,7 +414,7 @@ class ExamController extends CommonController
 
     /**
      * 新增考生
-     * @api post /osce/admin/exam/postAddExaminee
+     * @api post /osce/admin/exam/add-examinee
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -389,26 +447,21 @@ class ExamController extends CommonController
             'images_path.required'  =>  '请上传照片',
         ]);
 
-        $user   =   Auth::user();
-        if(empty($user)){
-            throw new \Exception('未找到当前操作人信息');
-        }
         //考试id
         $exam_id = $request->get('exam_id');
         //考生数据
         $examineeData = [
-            'name'           => $request  ->  get('name'),
-            'exam_id'        => $exam_id,
-            'user_id'        => 1,
-            'idcard'         => $request  ->  get('idcard'),            //身份证号
-            'mobile'         => $request  ->  get('tell'),              //手机号
-            'code'           => $request  ->  get('examinee_id'),       //学号
-            'avator'         => $request  ->  get('images_path')[0],    //照片
-            'create_user_id' => $user     ->  id
+            'name'           => $request  ->  get('name'),          //姓名
+            'gender'         => $request  ->  get('sex'),           //性别
+            'idcard'         => $request  ->  get('idcard'),        //身份证号
+            'mobile'         => $request  ->  get('tell'),          //手机号
+            'code'           => $request  ->  get('examinee_id'),   //学号
+            'avatar'         => $request  ->  get('images_path')[0],//照片
+            'email'          => $request  ->  get('email'),         //邮箱
         ];
 
         try{
-            if($exam = $model -> addExaminee($examineeData))
+            if($exam = $model -> addExaminee($exam_id, $examineeData))
             {
                 return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
             } else {
@@ -420,15 +473,15 @@ class ExamController extends CommonController
     }
 
     /**
-     * 导入考生
-     * @api GET /osce/admin/exam/getImportExaminee
+     * Excel导入考生
+     * @api GET /osce/admin/exam/getImportStudent
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        exam_id        考试id(必须的)
      *
-     * @return object
+     * @return view
      *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
@@ -436,12 +489,31 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getImportExaminee(Request $request)
+    public function getImportStudent(Request $request){
+        $exam_id = $request->get('id');
+        return view('osce::admin.exammanage.import',['id' => $exam_id]);
+    }
+    public function postImportStudent(Request $request, Student $student)
     {
-        $this->validate($request, [
-            'id' => 'required|integer'
-        ]);
+        try {
+            //获得上传的数据
+            $exam_id = $request -> get('id');
+            $data = Common::getExclData($request, 'student');
+            //去掉sheet
+            $studentList = array_shift($data);
+            //将中文表头转为英文
+            $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
 
+            //将数组导入到模型中的addInvigilator方法
+            if ($student->addExaminee($exam_id, $examineeData)) {
+                throw new \Exception('系统出错，请重试！');
+            } else {
+                echo json_encode($this->success_data());
+            }
+
+        } catch (\Exception $ex) {
+            echo json_encode($this->fail($ex));
+        }
 
     }
 
@@ -562,9 +634,36 @@ class ExamController extends CommonController
             'id' => 'required|integer'
         ]);
         $exam_id = $request -> get('id');
+        $examRoom = new ExamRoom();
+        //获取考试id对应的考场数据
+        $examRoomData = $examRoom -> getRoomListByExam($exam_id);
+        //获取考试对应的考站数据
+        $examStationData = $examRoom -> getExamStation($exam_id);
 
 
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id]);
+        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
+    }
+
+    /**
+     * 保存 考场安排数据
+     * @api POST /osce/admin/exam/postExamroomAssignmen
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return redirect
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postExamroomAssignmen(Request $request)
+    {
+
     }
 
 
@@ -610,10 +709,11 @@ class ExamController extends CommonController
     public function getStationData(Request $request)
     {
         $this->validate($request, [
-            'room_id' => 'required|integer'
+            'id' => 'required|integer'
         ]);
         //获取考场ID：room_id
-        $room_id = $request -> get('room_id');
+        $room_id = $request -> get('id');
+
         $roomStation = new RoomStation();
         $data = $roomStation->getRoomStationData($room_id);
 
@@ -622,6 +722,23 @@ class ExamController extends CommonController
         );
     }
 
+    /**
+     * 获取老师列表数据 接口
+     * @api GET /osce/admin/exam/getTeacherListData
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        teacher        老师id数组(必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
     public function getTeacherListData(Request $request)
     {
         //获取老师ID数组：teacher_id
@@ -637,7 +754,7 @@ class ExamController extends CommonController
     /**
      *检测是否绑定
      * @method GET 接口
-     * @url exam/watch-status/{id}
+     * @url exam/watch-status
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -651,16 +768,20 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWatchStatus($id){
+    public function getWatchStatus(Request $request){
+        $this->validate($request,[
+            'id' =>'required|integer'
+        ]);
+        $id=$request->get('id');
         $IsEnd=ExamScreeningStudent::where('watch_id',$id)->select('is_end')->first()->is_end;
         if($IsEnd==1){
             return response()->json(
-                $this->success_data(1,'已绑定')
+                $this->success_rows(1,'已绑定')
             );
         }
         if($IsEnd==0){
             return response()->json(
-                $this->success_data(0,'未绑定')
+                $this->success_rows(0,'未绑定')
             );
         }
     }
@@ -668,7 +789,7 @@ class ExamController extends CommonController
     /**
      *绑定腕表
      * @method GET 接口
-     * @url exam/bound-watch/{id}
+     * @url exam/bound-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -682,20 +803,33 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getBoundWatch($id){
-
+    public function getBoundWatch(Request $request){
+        $this->validate($request,[
+            'id' =>'required|integer'
+        ]);
+        $id=$request->get('id');
+        $action='绑定';
+        $userId=ExamScreeningStudent::where('watch_id',$id)->select()->first()->student_id;
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>1]);
-
         if($result){
+            $signinDt=ExamScreeningStudent::where('watch_id',$id)->select()->first()->signin_dt;
             $result=Watch::where('id',$id)->update(['status'=>1]);
             if($result){
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$signinDt,'is_end'=>1,'status'=>1),
+                    'create_user_id' =>$userId,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->historyRecord($data);
                 return response()->json(
-                    $this->success_data(1,'绑定成功')
+                    $this->success_rows(1,'绑定成功')
                 );
             }
         }else{
             return response()->json(
-                $this->success_data(0,'绑定失败','false')
+                $this->success_rows(0,'绑定失败','false')
             );
         }
     }
@@ -703,7 +837,7 @@ class ExamController extends CommonController
     /**
      *解除绑定腕表
      * @method GET 接口
-     * @url exam/unwrap-watch/{id}
+     * @url exam/unwrap-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -717,21 +851,88 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getUnwrapWatch($id){
+    public function getUnwrapWatch(Request $request){
+        $this->validate($request,[
+            'id' =>'required|integer'
+        ]);
+        $id=$request->get('id');
+        $action='解绑';
+        $userId=ExamScreeningStudent::where('watch_id',$id)->select()->first()->student_id;
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>0]);
-
         if($result){
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->first()->updated_at;
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$updated_at,'is_end'=>0,'status'=>0),
+                    'create_user_id' =>$userId,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->historyRecord($data);
                 return response()->json(
-                    $this->success_data(1,'解绑成功')
+                    $this->success_rows(1,'解绑成功')
                 );
             }
         }else{
             return response()->json(
-                $this->success_data(0,'解绑失败','data')
+                $this->success_rows(0,'解绑失败')
             );
         }
+    }
+
+    /**
+     *检测学生状态
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentDetails(Request $request){
+        $this->validate($request,[
+            'id_card' => 'required'
+        ]);
+
+        $idCard=$request->get('id_card');
+
+        $students=Student::where('id_card',$idCard)->select('id','code')->get();
+        foreach($students as $item){
+            $student=[
+                'id'    =>$item->id,
+                'code'  =>$item->code,
+//                'exam_id'  =>$item->exam_id,
+            ];
+        }
+        if(!$student){
+           return response()->json(
+               $this->success_rows(2,'未找到学生相关信息')
+           );
+        }
+        $student['is_end']=ExamScreeningStudent::where('student_id',$student['id'])->select('is_end')->first()->is_end;
+//        $student['exam']=Exam::where('exam_id',$student['exam_id'])->select()->first(); //查询准考证号
+
+        if($student['is_end']==1){
+            return response()->json(
+                $this->success_data($student,0,'已绑定')
+            );
+        }
+         return response()->json(
+                 $this->success_data($student,1,'未绑定')
+                );
     }
 
     /**

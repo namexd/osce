@@ -15,6 +15,7 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Pad;
 use Modules\Osce\Entities\Watch;
+use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use Predis\Transaction\AbortedMultiExecException;
 
@@ -684,6 +685,14 @@ class MachineController extends CommonController
             $model      =   $this   ->  getMachineModel($cate_id);
             if($watch =   $model  ->  addMachine($data))
             {
+//                $action='新增';
+//                $data=array(
+//                    'create_user_id'=>$data['create_user_id'],
+//                    'action'        =>$action,
+//                    'context'       =>array('name'=>$data['name'],'code'=>$data['code'],'status'=>$data['status']),
+//                );
+//                $watchModel=new WatchLog();
+//                $watchModel->historyRecord($data);
                 return $watch;
             }
             else
@@ -719,6 +728,15 @@ class MachineController extends CommonController
             $model      =   $this   ->  getMachineModel($cate_id);
             if($cameras =   $model  ->  editMachine($data))
             {
+//                $action='编辑';
+//                $data=array(
+//                    'create_user_id'=>$data['create_user_id'],
+//                    'action'        =>$action,
+//                    'context'       =>array('name'=>$data['name'],'code'=>$data['code'],'status'=>$data['status']),
+//                    'watch_id'       =>$data['id'],
+//                );
+//                $watchModel=new WatchLog();
+//                $watchModel->historyRecord($data);
                 return $cameras;
             }
             else
@@ -775,5 +793,6 @@ class MachineController extends CommonController
 
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
     }
+
 
 }

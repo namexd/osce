@@ -195,23 +195,14 @@ class Exam extends CommonModel
         try {
             //更新考试信息
             if (!$result = $this->updateData($exam_id, $examData)) {
-                throw new \Exception('修改考试信息时报!');
-            }
-            //查询操作人信息
-            $user = Auth::user();
-            if (empty($user)) {
-                throw new \Exception('未找到当前操作人信息');
+                throw new \Exception('修改考试信息失败!');
             }
             $examScreening_ids = [];
             //判断输入的时间是否有误
-            foreach ($examScreeningData as $key => $value) {
-                if (!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])) {
-                    throw new \Exception('输入的时间有误！');
-                }
+            foreach ($examScreeningData as $value) {
                 //不存在id,为新添加的数据
                 if (!isset($value['id'])) {
                     $value['exam_id'] = $exam_id;
-                    $value['create_user_id'] = $user->id;
 
                     if (!$result = ExamScreening::create($value)) {
                         throw new \Exception('添加考试场次信息失败');
@@ -220,6 +211,7 @@ class Exam extends CommonModel
                 } else {
                     array_push($examScreening_ids, $value['id']);
                     $examScreening = new ExamScreening();
+
                     if (!$result = $examScreening->updateData($value['id'], $value)) {
                         throw new \Exception('更新考试场次信息失败');
                     }

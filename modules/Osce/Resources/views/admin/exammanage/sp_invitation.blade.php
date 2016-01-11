@@ -86,7 +86,7 @@
                         <ul class="nav nav-tabs">
                             {{--<li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>--}}
                             {{--<li><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>--}}
-                            {{--<li class="active"><a href="{{route('osce.admin.spteacher.getInvitationIndex',['exam_id'=>$id])}}">邀请SP</a></li>--}}
+                            {{--<li class="active"><a href="{{route('osce.admin.spteacher.getInvitationIndex',['id'=>$id])}}">邀请SP</a></li>--}}
                             {{--<li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>--}}
                             {{--<li class=""><a href="#">智能排考</a></li> --}}
                         </ul>
@@ -103,6 +103,32 @@
                         </tr>
                         </thead>
                         <tbody>
+                        @forelse($data as $key => $item)
+                            <tr value="1">
+                                <td>1</td>
+                                <td>{{$item['station_name']}}</td>
+                                <td class="sp-teacher">
+                                    <div class="teacher-box pull-left">
+                                    @forelse($item['techs'] as $key => $index)
+                                        <div class="input-group teacher pull-left" value="{{$index['id']}}">
+                                            <div class="pull-left">{{$index['name']}}</div>
+                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                        </div>
+                                    @empty
+                                    @endforelse
+                                    </div>
+                                    <div class="pull-right">
+                                        <select name="" class="teacher-list">
+                                            <option value="">选择</option>
+                                            <option value="1">张老师</option>
+                                            <option value="2">王老师</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td><a href="">发起邀请</a></td>
+                            </tr>
+                        @empty
+                        @endforelse
                             <tr value="1">
                                 <td>1</td>
                                 <td>肠胃炎考站</td>

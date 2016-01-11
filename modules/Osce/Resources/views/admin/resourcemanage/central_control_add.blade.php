@@ -88,7 +88,7 @@
                             <label class="col-sm-2 control-label">场所名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" value="{{$data->name}}">
+                                <input type="text" required class="form-control" id="name" value="">
                             </div>
                         </div>
 
@@ -96,7 +96,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="account" value="{{$data->status}}" />
+                                <input id="select_Category" required  class="form-control m-b" name="account" value="" />
                             </div>
                             <div class="select-floor" style="display: none;">
                                 <label class="col-sm-2 control-label">楼层</label>

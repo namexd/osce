@@ -9,6 +9,7 @@
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
     .input-group input{height: 34px;}
+
     </style>
 @stop
 
@@ -24,7 +25,7 @@
                 <h5 class="title-label">场所管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.room.getAddVcr')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -32,20 +33,17 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li><a href="{{route('osce.admin.room.getRoomList')}}?type=1">考场</a></li>
-                        <li class="active"><a href="javascript:void(0)">中控室</a></li>
-                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=3">走廊</a></li>
-                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=4">候考区</a></li>
+                        @foreach($area as $item)
+                            <li
+                                    @if($item->cate == 2)
+                                    class="active"
+                                    @endif><a href="{{route('osce.admin.room.getRoomList')}}?type={{$item->cate}}">{{$item->name}}</a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
             
-            <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
-                </span>
-            </div>
+
 
             <table class="table table-striped" id="table-striped">
                 <thead>

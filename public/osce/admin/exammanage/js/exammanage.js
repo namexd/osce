@@ -11,6 +11,8 @@ $(function(){
         case "sp_invitation":sp_invitation();break;
         case "examroom_assignment":examroom_assignment();break;
         case "exam_notice_add":exam_notice_add();break;
+        case "smart_assignment":smart_assignment();break;
+        case "examinee_manage":examinee_manage();break;
     }
 });
 
@@ -341,7 +343,7 @@ function sp_invitation(){
             type:'get',
             url: pars.teacher_list,   //修改请求地址
             data:{id:id,selected:selected},
-            success:function(res){console.log(res)
+            success:function(res){
 
                 var source = [];
 
@@ -399,9 +401,17 @@ function examroom_assignment(){
             if(! current.flag){
 
                 lastArr.push(arr[i]);
-                lastArr[lastArr.length-1]['flag'] = 1;
+                if(lastArr[lastArr.length-1]['flag']==undefined){
+                    lastArr[lastArr.length-1]['flag'] = 1;
+                }else{
+                    lastArr[lastArr.length-1]['flag'] = lastArr[lastArr.length-1].flag +1;
+                }
             }else{
-                lastArr[current.id]['flag'] += 1;
+                if(lastArr[lastArr.length-1].flag==undefined){
+                    lastArr[lastArr.length-1]['flag'] = 1;
+                }else{
+                    lastArr[lastArr.length-1]['flag'] = lastArr[lastArr.length-1].flag +1;
+                }
             }
         }
         return lastArr;
@@ -418,7 +428,11 @@ function examroom_assignment(){
     }
 
 	//select2初始化
-    $(".js-example-basic-multiple").select2()
+    $(".js-example-basic-multiple").select2();
+
+    //数据选择计数器
+    var select2_data,
+        select2_data_del;
 
     /**
      * 选择必考项
@@ -440,19 +454,28 @@ function examroom_assignment(){
             $(this).parent().siblings('.necessary').text(num[current.length]);
             //选择的数据
             $(this).on("select2:select", function(e){
+
+                //让select只进入一次
+                if(select2_data!=undefined){
+                    if(select2_data.id==e.params.data.id){
+                        select2_data = null;
+                        return;
+                    }
+                    select2_data = e.params.data;
+                }else{
+                    select2_data = e.params.data;
+                }
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:pars.url,//'http://127.0.0.1:3000/getList',
-                    //dataType:'jsonp',
-                    //jsonp:'callback',
+                    url:pars.url,
                     data:{id:e.params.data.id},
                     async:true,
                     success:function(res){
 
                         //记录数据
                         var thisElement = $('#exam-place').find('tbody');
-                        var sp_no;
+                        var sp_no=null;
                         if(thisElement.attr('data')==undefined){
                             sp_no = '{}';
                         }
@@ -464,37 +487,143 @@ function examroom_assignment(){
                             layer.alert(res.message);
                             return;
                         }else{
-                            var res_data = res.data.rows,
+                            var res_data = res.data,
                                 html = '',
                                 data;
-
+                            
                             //thisElement.attr('data',JSON.stringify(data));
                             //数据去重
                             if(sp_no!='{}'){
                                 data = tab(sp_no,res_data);
                             }else{
-                                data = res_data;
+                                data = tab([],res_data);
                             }
 
                             //准备dom
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
-                                for(var j in data[i].teacher){
+                                var typeValue = [0,'技能操作站','SP站'];
+                                /*for(var j in data[i].teacher){
                                     teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }
+                                }*/
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'</td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="select['+data[i].id+']">'+teacher+'</select>'+
                                             '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right">'+
+                                                    '<select name="" class="teacher-list js-example-basic-multiple">'+
+                                                        '<option>==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
+                                            '</td>'+
+                                            '<td><a href="">发起邀请</a></td>'+
                                         '</tr>';
                             }
                             //动态插入考场安排
                             thisElement.html(html);
                             thisElement.attr('data',JSON.stringify(data));
+
+
+                            /**
+                             * 老师类型选择
+                             * @author mao
+                             * @version 1.0
+                             * @date    2016-01-11
+                             */
+                            $('.teacher-teach').select2({
+                                placeholder: "==请选择==",
+                                ajax:{
+                                    url: pars.teacher_list,
+                                    delay:0,
+                                    data: function (params) {
+
+                                        var ids = [];
+                                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                            var id = $(elem).find('td').eq(3).find('select option:selected').val();
+                                            if(id==null){
+                                                return;
+                                            }else{
+                                                ids.push(id);
+                                            }
+                                            //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
+                                        });
+
+                                      return {
+                                        teacher:ids
+                                      };
+                                    },
+                                    dataType: 'json',
+                                    processResults: function (res) {
+
+                                        //数据格式化
+                                        var str = [];
+                                        for(var i in res.data){
+                                            str.push({id:res.data[i].id,text:res.data[i].name});
+                                        }
+
+                                        //加载入数据
+                                        return {
+                                            results: str
+                                        };
+                                    }
+
+                                }
+                            });
+
+
+                            /**
+                             * 老师类型选择
+                             * @author mao
+                             * @version 1.0
+                             * @date    2016-01-11
+                             */
+                            $('.teacher-list').select2({
+                                placeholder: "==请选择==",
+                                ajax:{
+                                    url: pars.teacher_list,
+                                    delay:0,
+                                    data: function (params) {
+
+                                        var ids = [];
+                                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                            var id = $(elem).find('td').eq(3).find('select option:selected').val();
+                                            if(id==null){
+                                                return;
+                                            }else{
+                                                ids.push(id);
+                                            }
+                                        });
+
+                                      return {
+                                        teacher:ids
+                                      };
+                                    },
+                                    dataType: 'json',
+                                    processResults: function (res) {
+
+                                        //数据格式化
+                                        var str = [];
+                                        for(var i in res.data){
+                                            str.push({id:res_data[i].id,text:res.data[i].name});
+                                        }
+
+                                        //加载入数据
+                                        return {
+                                            results: str
+                                        };
+                                    }
+
+                                }
+                            });
+
                         }
                     }
                 });
@@ -502,12 +631,21 @@ function examroom_assignment(){
 
             //删除数据
             $(this).on("select2:unselect", function(e){
+
+                //让select只进入一次
+                if(select2_data_del!=undefined){
+                    if(select2_data_del.id==e.params.data.id){
+                        select2_data = null;
+                        return;
+                    }
+                    select2_data_del = e.params.data;
+                }else{
+                    select2_data_del = e.params.data;
+                }
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:pars.url,//'http://127.0.0.1:3000/getList',
-                    //dataType:'jsonp',
-                    //jsonp:'callback',
+                    url:pars.url,
                     data:{id:e.params.data.id},
                     async:true,
                     success:function(res){
@@ -526,7 +664,8 @@ function examroom_assignment(){
                             layer.alert(res.message);
                             return;
                         }else{
-                            var res_data = res.data.rows,
+
+                            var res_data = res.data,
                                 html = '',
                                 data = [];
 
@@ -547,11 +686,22 @@ function examroom_assignment(){
                                 }
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'</td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                                '<select class="form-control teacher-teach" name="select['+data[i].id+']">'+teacher+'</select>'+
                                             '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right">'+
+                                                    '<select name="" class="teacher-list">'+
+                                                        '<option value="">==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
+                                            '</td>'+
+                                            '<td><a href="">发起邀请</a></td>'+
                                         '</tr>';
                             }
                             //动态插入考场安排
@@ -686,6 +836,71 @@ function examroom_assignment(){
         }
     });
 
+
+    $('#exam-place').on('change',".teacher-list",function(){
+
+        var $teacher= $(this).find('option:selected').text().split('==')[0];
+        var id = $(this).find('option:selected').val();
+        var thisElement = $(this);
+
+        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
+                '<div class="pull-left">'+$teacher+'</div>'+
+                '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+        $(this).parents(".pull-right").prev().append(sql);
+    })
+
+    //删除
+    $('#exam-place').on('click',".teacher-box i",function(){
+        $(this).parents(".teacher").remove();
+    })
+
+
+
+   /* $('#exam-place').on('click','.teacher-teach',function(){
+
+        var thisElement = $(this);
+        $.ajax({
+            type:'get',
+            url: pars.teacher_list,   //修改请求地址
+            async:true,
+            data:{teacher:[]},
+            success:function(res){
+
+                var source = [];
+
+                if(res.code!=1){
+                    layer.alert('res.message');
+                }else{
+                    var data = res.data;
+                    var html = '<option>==选择==</option>';
+                    for(var i in data){
+
+                        html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                    }
+                   thisElement.html(html);
+                }
+            }
+        });
+    });*/
+
+    $('.teacher-teach').select2({
+        placeholder: "==请选择==",
+        ajax:{
+            url: pars.teacher_list,
+            dataType: 'json',
+            data: function (term, page) {console.log(term,page)
+                return {
+                        input: term
+                    };
+            },
+            results: function (data) {
+                allOption=data;
+                   return {results:data};
+                }
+
+        }
+    })
+
 }
 
 /**
@@ -697,5 +912,474 @@ function examroom_assignment(){
 function exam_notice_add(){
 
     var ue = UE.getEditor('editor');
+}
+
+/*
+ * 考试通知 新增
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-09
+*/
+function smart_assignment(){
+
+
+        //模拟数据
+
+        //var everyli=1000/smartlist.length;
+        //var lists="";//代表列
+        //var rooms="";//代表教室
+        //for(var i=0;i<smartlist.length;i++){
+        //    lists+="<li style='width: "+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt><dl/><li/>";
+        //    for(var j=0;j<smartlist[i].child.length;j++){
+        //        for(var k=0;k<smartlist[i].child[j].items.length;k++){
+        //            $(".classroom-box>ul").append("<li style='width:"+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt>" +
+        //                "<dd>"+smartlist[i].child[j].items[k]+"<dd/></dl></li>");
+        //        }
+        //        console.log(smartlist[i].child[j].items.length);
+        //
+        //
+        //    }
+        //}
+
+
+}
+function makeItem(data){
+    //var data    ={
+    //        'begin':1000,
+    //        'end':1600,
+    //        'items':[
+    //            {
+    //                id:1,
+    //                name:'李治远3'
+    //            },
+    //            {
+    //                id:2,
+    //                name:'李治远2'
+    //            },
+    //            {
+    //                id:3,
+    //                name:'李治远1'
+    //            }
+    //        ]
+    //    };
+
+    var dl  =   $('<dl class="clearfloat">');
+
+    var items   =   data.items;
+    var everyHeight=data.end-data.begin;
+    dl.css("height",everyHeight/10+"px");
+
+    for(var i in items)
+    {
+        var dd  = $('<dd>').text(items[i].name);
+        dd.attr("sid",items[i].id);
+
+        dd.bind("click",changeTwo);
+        dl.append(dd);
+    }
+    return dl;
+}
+function makeCols(data){
+    //var data    =   {
+    //    'name':'教室404',
+    //    'child':[
+    //        {
+    //            'begin':1000,
+    //            'end':1500,
+    //            'items':[
+    //                '罗海华2',
+    //                '李治远3',
+    //                '毛云刚5',
+    //            ]
+    //        },
+    //        {
+    //            'begin':1500,
+    //            'end':2800,
+    //            'items':[
+    //                '罗海华6',
+    //                '李治远7',
+    //                '毛云刚6',
+    //            ]
+    //        },
+    //
+    //    ],
+    //
+    //};
+    var ul  =   $('<ul>');
+
+
+    var child   =   data.child;
+    var title   =   $('<li class="title">').text(data.name);
+    ul.append(title);
+    for(var i in child)
+    {
+
+        var itemData    =   child[i];
+        var li  =   $('<li>');
+        li.addClass("rows"+i);
+        var item    =   makeItem(itemData);
+        ul.append(li);
+        li.append(item);
+    }
+
+    return ul;
+}
+function makeAll(data){
+    var ul =    $('<ul class="clearfloat">');
+    var liWidth=1000/data.length;
+    for(var i in data)
+    {
+
+        var colData     =   data[i];
+        var colul       =   makeCols(colData);
+        var li          =   $('<li>');
+        li.append(colul);
+        li.css("width",liWidth+"px");
+        li.addClass("cols"+i);
+        ul.append(li);
+    }
+    return ul;
+}
+$(function(){
+    var smartlist=[
+        {
+            'name':'教室404',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1500,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+                {
+                    'begin':1500,
+                    'end':2800,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+
+            ],
+
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1600,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+
+            ],
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1600,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+
+            ],
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':2000,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
+                    ]
+                },
+
+            ],
+        },
+    ];
+    var dom =   makeAll(smartlist);
+    $('.classroom-box').append(dom);
+    //changeTwo();
+});
+
+//点击两个表格可进行交换
+function changeTwo(){
+
+    if($(this).hasClass('active'))
+    {
+        $(this).removeClass('active');
+        return ;
+    }
+    $(this).addClass('active');
+    if($(".active").length-1==2){
+        var change1=$($(".active")[1]).html();
+        var change2=$($(".active")[2]).html();
+        $($(".active")[2]).html(change1);
+        $($(".active")[1]).html(change2);
+        if($(".error").length==0){
+        }else{
+
+        }
+        console.log($($(".active")[1]).parent().parent().parent().parent().attr("class"))
+        console.log($($(".active")[2]).parent().parent().parent().parent().attr("class"))
+        $.ajax({
+            url:"",
+            type:"get",
+            dataType:"json",
+            data:{
+                    id1:$($(".active")[1]).attr("sid"),
+                    id2:$($(".active")[2]).attr("sid"),
+                    row1:$($(".active")[1]).parent().parent().attr("class"),
+                    row2:$($(".active")[2]).parent().parent().attr("class"),
+                    col1:$($(".active")[1]).parent().parent().parent().parent().attr("class"),
+                    col2:$($(".active")[2]).parent().parent().parent().parent().attr("class")
+            },
+            success: function(result) {
+                console.log(result);
+                $("dd").removeClass("active");
+                var status=1//冲突状态
+                if(status==1){
+                    $($(".active")[1]).addClass("error");
+                    $($(".active")[2]).addClass("error");
+                    $(".save").attr("disabled");
+                }else{
+                    $($(".active")[1]).removeClass("error");
+                    $($(".active")[2]).removeClass("error");
+                    $(".save").removeAttr("disabled");
+                }
+            }})
+    }
+}
+
+
+
+
+
+//文件导入
+function examinee_manage(){
+    alert(pars.excel);
+    $("#file1").change(function(){
+        $.ajaxFileUpload
+        ({
+
+            url:pars.excel,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'text',//
+            success: function (data, status)
+            {
+                data    =   data.replace('<pre>','').replace('</pre>','');
+                data    =   eval('('+data+')');
+
+                if(data.code == 1){
+                    layer.alert('导入成功！');
+
+                    /*/!**
+                     * 数据导入
+                     * @author mao
+                     * @version 1.0
+                     * @date    2016-01-08
+                     *!/
+                     var html = '';
+                     var res = data.data;
+                     var index = parseInt($('tbody').attr('index'));
+
+                     for(var i in res){
+                     if(res[i].level==1){
+
+                     index++;
+                     //添加父级dom
+                     html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
+                     '<td>'+index+'</td>'+
+                     '<td>'+
+                     '<div class="form-group">'+
+                     '<label class="col-sm-2 control-label">考核点:</label>'+
+                     '<div class="col-sm-10">'+
+                     '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+res[i].sort+'][title]"/>'+
+                     '</div>'+
+                     '</div>'+
+                     '</td>'+
+                     '<td>'+
+                     '<select class="form-control" name="score['+index+'][total]">'+
+                     '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
+                     '<option value="1">1</option>'+
+                     '<option value="2">2</option>'+
+                     '<option value="3">3</option>'+
+                     '<option value="4">4</option>'+
+                     '</select>'+
+                     '</td>'+
+                     '<td>'+
+                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                     '</td>'+
+                     '</tr>';
+
+                     for(var j in res){
+                     if(res[j].level==2&&res[j].pid==res[i].sort){
+
+                     //处理子级dom
+                     html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
+                     '<td>'+index+'-'+res[j].sort+'</td>'+
+                     '<td>'+
+                     '<div class="form-group">'+
+                     '<label class="col-sm-2 control-label">考核项:</label>'+
+                     '<div class="col-sm-10">'+
+                     '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+res[i].score+']['+res[j].sort+']"/>'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="form-group">'+
+                     '<label class="col-sm-2 control-label">评分标准:</label>'+
+                     '<div class="col-sm-10">'+
+                     '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+res[i].score+']['+res[j].sort+']"/>'+
+                     '</div>'+
+                     '</div>'+
+                     '</td>'+
+                     '<td>'+
+                     '<select class="form-control" name="score['+index+']['+res[j].sort+']">'+
+                     '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
+                     '<option value="1">1</option>'+
+                     '<option value="2">2</option>'+
+                     '<option value="3">3</option>'+
+                     '<option value="4">4</option>'+
+                     '</select>'+
+                     '</td>'+
+                     '<td>'+
+                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
+                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                     '</td>'+
+                     '</tr>';
+                     }
+                     }
+                     }
+                     }
+                     $('tbody').attr('index',index);
+                     $('tbody').append(html);*/
+
+
+
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.alert('导入失败！');
+            }
+        });
+    }) ;
 }
 

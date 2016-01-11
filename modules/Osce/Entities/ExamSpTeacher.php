@@ -6,10 +6,15 @@
  * Time: 17:04
  */
 
-namespace modules\Osce\Entities;
+namespace Modules\Osce\Entities;
 
 
-class ExamSpTeacher
+
+
+use Modules\Osce\Repositories\Common;
+
+
+class ExamSpTeacher extends CommonModel
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_sp_teacher';
@@ -21,8 +26,11 @@ class ExamSpTeacher
     protected $fillable = ['invite_id', 'exam_screening_id', 'case_id', 'teacher_id', 'create_user_id'];
 
     public function addExamSp(array $list){
+//        dd($list['teacher_id']);
+//        return  $this   ->  insert($list);
 
-        return  $this   ->  insert($list);
+        return  $this ->where('teacher_id','=',$list['teacher_id'])->update($list);
+//        return  $this ->where('teacher_id','=',$list['teacher_id'])-> update('invite_id','=',$list['invite_id']);
     }
 
 

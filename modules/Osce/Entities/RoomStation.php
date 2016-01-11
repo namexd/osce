@@ -29,10 +29,12 @@ class RoomStation extends CommonModel
     public function getRoomStationData($room_id)
     {
         try{
-            $builder = $this->leftJoin ('station', function ($join) {
-                $join->on('station.id', '=', $this->table.'.station_id');
-            })
-            ->where($this->table.'.room_id', '=', $room_id)->orderBy($this->table.'.created_at', 'desc')->get();
+            $builder = $this->select(['station.id', 'station.name', 'station.type'])
+                ->leftJoin ('station', function ($join) {
+                    $join->on('station.id', '=', $this->table.'.station_id');
+                })
+                ->where($this->table.'.room_id', '=', $room_id)
+                ->orderBy($this->table.'.created_at', 'desc')->get();
 
             return $builder;
 
