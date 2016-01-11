@@ -100,6 +100,14 @@
                             }
                         }
                     },
+                    total: {/*键名username和input name值对应*/
+                        validators: {
+                            regexp: {
+                                regexp: /^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,
+                                message: '请填写实验室容量'
+                            }
+                        }
+                    },
                     type: {
                         validators: {
                             regexp: {
@@ -156,6 +164,14 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '房号不能为空'
+                            }
+                        }
+                    },
+                    total: {/*键名username和input name值对应*/
+                        validators: {
+                            regexp: {
+                                regexp: /^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,
+                                message: '请正确填写实验室容量'
                             }
                         }
                     },
