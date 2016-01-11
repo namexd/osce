@@ -20,6 +20,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
+use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 use Symfony\Component\Translation\Interval;
@@ -671,7 +672,7 @@ class ExamController extends CommonController
     /**
      *绑定腕表
      * @method GET 接口
-     * @url exam/bound-watch/{id}
+     * @url exam/bound-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -690,11 +691,21 @@ class ExamController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
+        $action='绑定';
+        $userId=ExamScreeningStudent::where('watch_id',$id)->select()->first()->student_id;
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>1]);
-
         if($result){
+            $signinDt=ExamScreeningStudent::where('watch_id',$id)->select()->first()->signin_dt;
             $result=Watch::where('id',$id)->update(['status'=>1]);
             if($result){
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$signinDt,'is_end'=>1,'status'=>1),
+                    'create_user_id' =>$userId,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->historyRecord($data);
                 return response()->json(
                     $this->success_data(1,'绑定成功')
                 );
@@ -709,7 +720,7 @@ class ExamController extends CommonController
     /**
      *解除绑定腕表
      * @method GET 接口
-     * @url exam/unwrap-watch/{id}
+     * @url exam/unwrap-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -728,11 +739,21 @@ class ExamController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
+        $action='解绑';
+        $userId=ExamScreeningStudent::where('watch_id',$id)->select()->first()->student_id;
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>0]);
-
         if($result){
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->first()->updated_at;
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$updated_at,'is_end'=>0,'status'=>0),
+                    'create_user_id' =>$userId,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->historyRecord($data);
                 return response()->json(
                     $this->success_data(1,'解绑成功')
                 );

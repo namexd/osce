@@ -81,12 +81,12 @@ class TrainController extends  CommonController{
             'end_dt'                  =>'required',
             'teacher'                 =>'required',
             'content'                 =>'required',
-            'attachments'             =>'sometimes',
             'status'                  =>'required',
             'create_user_id'          =>'required',
         ]);
-
-        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','attachments','status','create_user_id']);
+        $attachments=$request->input('attachments');
+        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status','create_user_id']);
+        $data['attachments']=serialize($attachments);
         $result=$this->create($data);
         if($result){
             return response()->json(
@@ -132,8 +132,23 @@ class TrainController extends  CommonController{
 //            );
 //        }
         $list=InformTrain::find($id);
+
+        foreach($list as $item){
+          $data=[
+              'name' =>$item->name,
+              'address' =>$item->address,
+              'begin_dt' =>$item->begin_dt,
+              'end_dt' =>$item->end_dt,
+              'teacher' =>$item->teacher,
+              'content' =>$item->content,
+              'status' =>$item->status,
+              'attachments' =>$item->attachments,
+              'create_user_id' =>$item->create_user_id,
+          ];
+        }
+        $data['attachments']=unserialize($data['attachments']);
         return response()->json(
-            $this->success_data(1,'success',$list)
+            $this->success_data(1,'success',$data)
         );
     }
 
@@ -159,10 +174,18 @@ class TrainController extends  CommonController{
      */
     public function postEditTrain(Request $request){
         $this->validate($request,[
-            'id'  =>'required|integer',
+            'id'                      =>'required|integer',
+            'name'                    =>'required|max:64',
+            'address'                 =>'required|max:64',
+            'begin_dt'                =>'required',
+            'end_dt'                  =>'required',
+            'teacher'                 =>'required',
+            'content'                 =>'required',
+            'status'                  =>'required',
+            'create_user_id'          =>'required',
         ]);
-
-        $data=$request->only([]);
+        $attachments=$request->input('attachments');
+        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status','create_user_id']);
         $user=Auth::user();
         $userId=$user->id;
         $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
@@ -171,6 +194,7 @@ class TrainController extends  CommonController{
                 $this->success_rows(3,'false')
             );
         }
+        $data['attachments']=unserialize($attachments);
         $result=InformTrain::where('id',$data['id'])->update($data);
         if($result){
             return response()->json(
