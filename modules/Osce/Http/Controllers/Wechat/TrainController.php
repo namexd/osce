@@ -123,14 +123,15 @@ class TrainController extends  CommonController{
             'id'  => 'required|integer'
         ]);
         $id=intval($request->get('id'));
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-//        if($userId!==$creteId){
-//            return response()->json(
-//                $this->success_rows(3,'false')
-//            );
-//        }
+        $user=Auth::user();
+        $userId=$user->id;
+        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+        $manager=config('osce.manager');
+        if($userId!==$id || $creteId!==$manager[0]){
+            return response()->json(
+                $this->success_rows(3,'false')
+            );
+        }
         $list=InformTrain::find($id);
 
         foreach($list as $item){
@@ -189,7 +190,8 @@ class TrainController extends  CommonController{
         $user=Auth::user();
         $userId=$user->id;
         $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
-        if($userId!==$creteId){
+        $manager=config('osce.manager');
+        if($userId!==$creteId || $creteId!==$manager[0]){
             return response()->json(
                 $this->success_rows(3,'false')
             );
@@ -235,7 +237,8 @@ class TrainController extends  CommonController{
         $user=Auth::user();
         $userId=$user->id;
         $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-        if($userId!==$creteId){
+        $manager=config('osce.manager');
+        if($userId!==$creteId || $creteId!==$manager[0]){
             return response()->json(
                 $this->success_rows(3,'false')
             );
