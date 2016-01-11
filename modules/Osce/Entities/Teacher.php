@@ -371,10 +371,15 @@ class Teacher extends CommonModel
     public function getTeacherList($formData)
     {
         try{
-            $teacher = $this->where(['type' => 1])
-                ->whereNotIN('id', $formData)
-                ->select(['id', 'name'])->get();
-
+            $teacher = $this->whereIn('type', [1,3]);
+                if(!empty($formData)){
+                    if(count($formData) == 1){
+                        $teacher->where('id', '<>', implode(',', $formData));
+                    }else{
+                        $teacher->whereNotIn('id', $formData);
+                    }
+                }
+            $teacher = $teacher->select(['id', 'name'])->get();
             return $teacher;
 
         } catch (\Exception $ex) {

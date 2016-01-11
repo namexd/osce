@@ -81,7 +81,6 @@
                 
             </div>
         </div>
-        <form method="post" class="form-horizontal container-fluid ibox-content">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
@@ -98,7 +97,7 @@
             <div class="ibox float-e-margins">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 
@@ -172,7 +171,6 @@
             </div>
 
         </div>
-        </form>
 </div>
 @stop{{-- 内容主体区域 --}}
 
