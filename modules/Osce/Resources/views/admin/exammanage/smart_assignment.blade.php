@@ -21,12 +21,63 @@
             height: 30px;
             line-height: 30px;
         }
+        .assign-box{
+        }
+        .classroom-box>ul>li{
+            float: left;
+        }
+        .clearfloat:after{
+            content: '';
+            visibility: hidden;
+            display: block;
+            clear: both;
+            height: 0;
+        }
+        .time-list{
+            width: 50px;
+            height: 500px;
+            background-color: #ccc;
+        }
+        .assign-box>div{
+            float: left;
+        }
+        .classroom-box{
+            width: 1002px;
+        }
+        ul,dl{
+            padding: 0;
+            margin: 0;
+        }
+        dt{
+            font-weight: inherit;
+        }
+        .end{
+            margin-top: 460px;
+        }
+        dd{
+            float: left;
+            width: 60px;
+        }
+        /*dl:hover{
+            background-color: #f4f4f4;
+            cursor: pointer;
+        }*/
+        dl{
+            border: 1px solid #ccc;
+        }
+        .title{
+            border: 1px solid #ccc;
+            background-color: #eee;
+        }
+        .active{
+            background-color:#F00;
+        }
     </style>
 @stop
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'add_basic','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'smart_assignment','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -50,7 +101,14 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="assign-box clearfloat">
+                <div class="time-list">
+                    <p>8:00</p>
+                    <p class="end">12:00</p>
+                </div>
+                <div class="classroom-box">
+
+                </div>
 
             </div>
             <div>

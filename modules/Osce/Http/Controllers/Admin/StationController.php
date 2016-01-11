@@ -28,7 +28,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::wechat.user.register');
+        return view('osce::admin.exammanage.sp_invitation');
     }
 
     /**

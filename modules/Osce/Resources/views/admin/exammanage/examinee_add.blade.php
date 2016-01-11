@@ -159,8 +159,8 @@
                                 <label class="col-sm-2 control-label">性别:</label>
                                 <div class="col-sm-10 select_code">
                                     <select id="select_Category"   class="form-control m-b" name="sex">
-                                        <option value="">男</option>
-                                        <option value="">女</option>
+                                        <option value="1">男</option>
+                                        <option value="2">女</option>
                                     </select>
                                 </div>
                             </div>
