@@ -185,7 +185,7 @@ class LaboratoryController extends MscController {
         if($id){
             $data = $laboratory->where('id','=',$id)->update(['status'=>Input::get('type')]);
             //dd(Input::get('type'));
-            if(!Input::get('type')){
+            if(Input::get('type')){
                 $name = '启用成功';
             }else{
                 $name = '停用成功';

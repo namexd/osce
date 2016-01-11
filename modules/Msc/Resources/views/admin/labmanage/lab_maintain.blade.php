@@ -28,7 +28,7 @@
                 var type = $(this).attr('data-type');
                 var url = "/msc/admin/laboratory/stop-lab?id="+this_id+"&type="+type;
                 var str = '';
-                if(type == 1){
+                if(type == 0){
                     str = '您确定要停用实验室？';
                 }else{
                     str = '您确定要启用实验室？';
