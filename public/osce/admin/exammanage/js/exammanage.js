@@ -337,12 +337,11 @@ function sp_invitation(){
         thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
             selected.push($(elem).attr('value'));
         });
-
         $.ajax({
             type:'get',
             url: pars.teacher_list,   //修改请求地址
             data:{id:id,selected:selected},
-            success:function(res){
+            success:function(res){console.log(res)
 
                 var source = [];
 
@@ -599,9 +598,7 @@ function examroom_assignment(){
         $.ajax({
             type:'get',
             async:true,
-            url:'http://127.0.0.1:3000/getjson',     //请求地址
-            dataType:'jsonp',
-            jsonp:'callback',
+            url:pars.list,     //请求地址
             success:function(res){
                 //数据处理
                 var str = [];
@@ -609,7 +606,7 @@ function examroom_assignment(){
                     layer.alert(res.message);
                     return;
                 }else{
-                    var data = res.data.rows;
+                    var data = res.data;
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
