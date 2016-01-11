@@ -565,7 +565,7 @@ function examroom_assignment(){
                                         //数据格式化
                                         var str = [];
                                         for(var i in res.data){
-                                            str.push({id:res_data[i].id,text:res.data[i].name});
+                                            str.push({id:res.data[i].id,text:res.data[i].name});
                                         }
 
                                         //加载入数据
