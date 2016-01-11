@@ -70,7 +70,10 @@
             background-color: #eee;
         }
         .active{
-            background-color:#F00;
+            background-color:#ccc;
+        }
+        .error{
+            background-color:#ff0000;
         }
     </style>
 @stop
@@ -109,11 +112,10 @@
                 <div class="classroom-box">
 
                 </div>
-
             </div>
             <div>
                 <button class="btn btn-default" type="button">智能排考</button>
-                <button class="btn btn-default" type="button">保存方案</button>
+                <button class="btn btn-default save" type="button">保存方案</button>
                 <button class="btn btn-default" type="button">导出excel</button>
             </div>
         </form>

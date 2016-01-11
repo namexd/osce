@@ -12,6 +12,7 @@ $(function(){
         case "examroom_assignment":examroom_assignment();break;
         case "exam_notice_add":exam_notice_add();break;
         case "smart_assignment":smart_assignment();break;
+        case "examinee_manage":examinee_manage();break;
     }
 });
 
@@ -745,9 +746,18 @@ function makeItem(data){
     //        'begin':1000,
     //        'end':1600,
     //        'items':[
-    //            '罗海华',
-    //            '李治远',
-    //            '毛云刚',
+    //            {
+    //                id:1,
+    //                name:'李治远3'
+    //            },
+    //            {
+    //                id:2,
+    //                name:'李治远2'
+    //            },
+    //            {
+    //                id:3,
+    //                name:'李治远1'
+    //            }
     //        ]
     //    };
 
@@ -759,7 +769,9 @@ function makeItem(data){
 
     for(var i in items)
     {
-        var dd  = $('<dd>').text(items[i]);
+        var dd  = $('<dd>').text(items[i].name);
+        dd.attr("sid",items[i].id);
+
         dd.bind("click",changeTwo);
         dl.append(dd);
     }
@@ -802,6 +814,7 @@ function makeCols(data){
 
         var itemData    =   child[i];
         var li  =   $('<li>');
+        li.addClass("rows"+i);
         var item    =   makeItem(itemData);
         ul.append(li);
         li.append(item);
@@ -820,6 +833,7 @@ function makeAll(data){
         var li          =   $('<li>');
         li.append(colul);
         li.css("width",liWidth+"px");
+        li.addClass("cols"+i);
         ul.append(li);
     }
     return ul;
@@ -833,18 +847,36 @@ $(function(){
                     'begin':1000,
                     'end':1500,
                     'items':[
-                        '罗海华2',
-                        '李治远3',
-                        '毛云刚5',
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
                 {
                     'begin':1500,
                     'end':2800,
                     'items':[
-                        '罗海华6',
-                        '李治远7',
-                        '毛云刚6',
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
 
@@ -858,18 +890,36 @@ $(function(){
                     'begin':1000,
                     'end':1600,
                     'items':[
-                        '罗海华',
-                        '李治远',
-                        '毛云刚',
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
                 {
                     'begin':1600,
                     'end':2200,
                     'items':[
-                        '罗海华1',
-                        '李治远1',
-                        '毛云刚1',
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
 
@@ -882,18 +932,36 @@ $(function(){
                     'begin':1000,
                     'end':1600,
                     'items':[
-                        '罗海华',
-                        '李治远',
-                        '毛云刚',
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
                 {
                     'begin':1600,
                     'end':2200,
                     'items':[
-                        '罗海华1',
-                        '李治远1',
-                        '毛云刚1',
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
 
@@ -906,16 +974,36 @@ $(function(){
                     'begin':1000,
                     'end':2000,
                     'items':[
-
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
                 {
                     'begin':1600,
                     'end':2200,
                     'items':[
-                        '罗海华1',
-                        '李治远1',
-                        '毛云刚1',
+                        {
+                            id:1,
+                            name:'李治远3'
+                        },
+                        {
+                            id:2,
+                            name:'李治远2'
+                        },
+                        {
+                            id:3,
+                            name:'李治远1'
+                        }
                     ]
                 },
 
@@ -941,5 +1029,155 @@ function changeTwo(){
         var change2=$($(".active")[2]).html();
         $($(".active")[2]).html(change1);
         $($(".active")[1]).html(change2);
+        if($(".error").length==0){
+        }else{
+
+        }
+        console.log($($(".active")[1]).parent().parent().parent().parent().attr("class"))
+        console.log($($(".active")[2]).parent().parent().parent().parent().attr("class"))
+        $.ajax({
+            url:"",
+            type:"get",
+            dataType:"json",
+            data:{
+                    id1:$($(".active")[1]).attr("sid"),
+                    id2:$($(".active")[2]).attr("sid"),
+                    row1:$($(".active")[1]).parent().parent().attr("class"),
+                    row2:$($(".active")[2]).parent().parent().attr("class"),
+                    col1:$($(".active")[1]).parent().parent().parent().parent().attr("class"),
+                    col2:$($(".active")[2]).parent().parent().parent().parent().attr("class")
+            },
+            success: function(result) {
+                console.log(result);
+                $("dd").removeClass("active");
+                var status=1//冲突状态
+                if(status==1){
+                    $($(".active")[1]).addClass("error");
+                    $($(".active")[2]).addClass("error");
+                    $(".save").attr("disabled");
+                }else{
+                    $($(".active")[1]).removeClass("error");
+                    $($(".active")[2]).removeClass("error");
+                    $(".save").removeAttr("disabled");
+                }
+            }})
     }
 }
+
+
+
+
+
+//文件导入
+function examinee_manage(){
+    alert(pars.excel);
+    $("#file1").change(function(){
+        $.ajaxFileUpload
+        ({
+
+            url:pars.excel,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'text',//
+            success: function (data, status)
+            {
+                data    =   data.replace('<pre>','').replace('</pre>','');
+                data    =   eval('('+data+')');
+
+                if(data.code == 1){
+                    layer.alert('导入成功！');
+
+                    /*/!**
+                     * 数据导入
+                     * @author mao
+                     * @version 1.0
+                     * @date    2016-01-08
+                     *!/
+                     var html = '';
+                     var res = data.data;
+                     var index = parseInt($('tbody').attr('index'));
+
+                     for(var i in res){
+                     if(res[i].level==1){
+
+                     index++;
+                     //添加父级dom
+                     html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
+                     '<td>'+index+'</td>'+
+                     '<td>'+
+                     '<div class="form-group">'+
+                     '<label class="col-sm-2 control-label">考核点:</label>'+
+                     '<div class="col-sm-10">'+
+                     '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+res[i].sort+'][title]"/>'+
+                     '</div>'+
+                     '</div>'+
+                     '</td>'+
+                     '<td>'+
+                     '<select class="form-control" name="score['+index+'][total]">'+
+                     '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
+                     '<option value="1">1</option>'+
+                     '<option value="2">2</option>'+
+                     '<option value="3">3</option>'+
+                     '<option value="4">4</option>'+
+                     '</select>'+
+                     '</td>'+
+                     '<td>'+
+                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                     '</td>'+
+                     '</tr>';
+
+                     for(var j in res){
+                     if(res[j].level==2&&res[j].pid==res[i].sort){
+
+                     //处理子级dom
+                     html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
+                     '<td>'+index+'-'+res[j].sort+'</td>'+
+                     '<td>'+
+                     '<div class="form-group">'+
+                     '<label class="col-sm-2 control-label">考核项:</label>'+
+                     '<div class="col-sm-10">'+
+                     '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+res[i].score+']['+res[j].sort+']"/>'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="form-group">'+
+                     '<label class="col-sm-2 control-label">评分标准:</label>'+
+                     '<div class="col-sm-10">'+
+                     '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+res[i].score+']['+res[j].sort+']"/>'+
+                     '</div>'+
+                     '</div>'+
+                     '</td>'+
+                     '<td>'+
+                     '<select class="form-control" name="score['+index+']['+res[j].sort+']">'+
+                     '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
+                     '<option value="1">1</option>'+
+                     '<option value="2">2</option>'+
+                     '<option value="3">3</option>'+
+                     '<option value="4">4</option>'+
+                     '</select>'+
+                     '</td>'+
+                     '<td>'+
+                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
+                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                     '</td>'+
+                     '</tr>';
+                     }
+                     }
+                     }
+                     }
+                     $('tbody').attr('index',index);
+                     $('tbody').append(html);*/
+
+
+
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.alert('导入失败！');
+            }
+        });
+    }) ;
+}
+
