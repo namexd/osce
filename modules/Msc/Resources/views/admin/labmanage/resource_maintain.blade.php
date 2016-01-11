@@ -119,17 +119,43 @@
             }
 
             //更新和当前实验室相关的列表数据
-            function updateLabDeviceList(lab_id){
+            function updateLabDeviceList(lab_id,page){
                 var url = "{{ route('msc.admin.LadMaintain.LaboratoryDeviceList')}}";
                 $.ajax({
                     type:"get",
-                    url:url+'?lab_id='+lab_id,
+                    url:url+'?lab_id='+lab_id+'&page='+page,
                     async:true,
                     success:function(res){
-
                         var str = '';
                         if(res.code == 1){
                             var data = res.data.rows.LadDeviceList.data;
+                            if(res.data.total>0){
+                                var sum = Math.ceil(res.data.total/res.data.pagesize);
+                                var string = '';
+                                //TODO 拼凑上一页的按钮
+                                if(res.data.page == 1){
+                                    string += '<li class="disabled"><span>«</span></li>';
+                                }else{
+                                    string += '<li rel="prev" page="'+(res.data.page-1)+'" ><a href="javascript:void(0)">«</a></li>';
+                                }
+
+                                for(var i = 0;i<sum;i++){
+                                    if(res.data.page == (i+1)){
+                                        string += '<li class="active"><span>'+(i+1)+'</span></li>';
+                                    }else{
+                                        string += '<li page="'+(i+1)+'"><a href="javascript:void(0)">'+(i+1)+'</a></li>';
+                                    }
+                                }
+
+                                //TODO 拼凑下一页的按钮
+                                if(res.data.page == sum){
+                                    string += '<li class="disabled"><span>»</span></li>';
+                                }else{
+                                    string += '<li rel="next" page="'+(res.data.page+1)+'" ><a href="javascript:void(0)">»</a></li>';
+                                }
+
+                                $('.pagination').html(string);
+                            }
                             for(var i=0;i<data.length;i++){
                                 str += '<tr>' +
                                         '<td>#'+(i+1)+'</td>' +
@@ -149,6 +175,12 @@
                     }
                 });
             }
+
+            //和实验室有关的 资源的翻页
+            $('.pagination').delegate('a','click',function(){
+                var page = $(this).parents('li').attr('page');
+                updateLabDeviceList($('#lab_id').val(),page);
+            })
 
 //            设备添加回显数据
             $('#add_device').click(function(){
@@ -340,10 +372,13 @@
                         <option value="-1">请选择楼栋</option>
                         @if(!empty($location))
                             @foreach($location as $k=>$v)
-
-                        <option value="{{@$v->id}}">{{@$v->name}}</option>
+                                @if($k == 0)
+                                    <option value="{{@$v->id}}" selected="selected">{{@$v->name}}</option>
+                                @else
+                                    <option value="{{@$v->id}}">{{@$v->name}}</option>
+                                @endif
                             @endforeach
-                            @endif
+                        @endif
                     </select>
                 </div>
                 <div class="ibox-content">
@@ -380,6 +415,11 @@
 
                         </tbody>
                     </table>
+                    <div class="btn-group pull-right">
+                        <ul class="pagination">
+
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
