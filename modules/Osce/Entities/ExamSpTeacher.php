@@ -11,7 +11,7 @@ namespace modules\Osce\Entities;
 
 
 
-use Modules\Osce\Repositories\Common;
+use Modules\Osce\Entities\CommonModel;
 
 
 class ExamSpTeacher extends CommonModel
