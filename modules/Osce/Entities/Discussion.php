@@ -11,17 +11,14 @@ use Modules\Msc\Entities\CommonModel;
 
 class Discussion extends CommonModel{
     protected $connection	=	'osce_mis';
-    protected $table 		= 	'discussion';
+    protected $table 		= 	'bbs_topic';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	[];
+    protected   $fillable 	=	['title','content','pid','create_user_id'];
     public      $search    =   [];
 
-    public function getList(){
-        return $this->hasMany('Modules\Osce\Entities','discussion_id','id');
-    }
     public function getAuthor(){
-        return $this->hasMany('Modules\Msc\Entities\Users','id','create_user_id');
+        return $this->hasMany('App\Entities\User','id','create_user_id');
     }
 
     public function getDiscussionPagination(){

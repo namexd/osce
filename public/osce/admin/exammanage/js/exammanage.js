@@ -11,6 +11,7 @@ $(function(){
         case "sp_invitation":sp_invitation();break;
         case "examroom_assignment":examroom_assignment();break;
         case "exam_notice_add":exam_notice_add();break;
+        case "smart_assignment":smart_assignment();break;
     }
 });
 
@@ -480,15 +481,26 @@ function examroom_assignment(){
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
-                                for(var j in data[i].teacher){
+                                var typeValue = ['技能操作站','SP站'];
+                                /*for(var j in data[i].teacher){
                                     teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }
+                                }*/
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'</td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
                                                 '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                            '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right">'+
+                                                    '<select name="" class="teacher-list">'+
+                                                        '<option value="">==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
                                             '</td>'+
                                         '</tr>';
                             }
@@ -510,7 +522,7 @@ function examroom_assignment(){
                     //jsonp:'callback',
                     data:{id:e.params.data.id},
                     async:true,
-                    success:function(res){
+                    success:function(res){console.log(res);
 
                         //记录数据
                         var thisElement = $('#exam-place').find('tbody');
@@ -699,3 +711,235 @@ function exam_notice_add(){
     var ue = UE.getEditor('editor');
 }
 
+/*
+ * 考试通知 新增
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-09
+*/
+function smart_assignment(){
+
+
+        //模拟数据
+
+        //var everyli=1000/smartlist.length;
+        //var lists="";//代表列
+        //var rooms="";//代表教室
+        //for(var i=0;i<smartlist.length;i++){
+        //    lists+="<li style='width: "+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt><dl/><li/>";
+        //    for(var j=0;j<smartlist[i].child.length;j++){
+        //        for(var k=0;k<smartlist[i].child[j].items.length;k++){
+        //            $(".classroom-box>ul").append("<li style='width:"+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt>" +
+        //                "<dd>"+smartlist[i].child[j].items[k]+"<dd/></dl></li>");
+        //        }
+        //        console.log(smartlist[i].child[j].items.length);
+        //
+        //
+        //    }
+        //}
+
+
+}
+function makeItem(data){
+    //var data    ={
+    //        'begin':1000,
+    //        'end':1600,
+    //        'items':[
+    //            '罗海华',
+    //            '李治远',
+    //            '毛云刚',
+    //        ]
+    //    };
+
+    var dl  =   $('<dl class="clearfloat">');
+
+    var items   =   data.items;
+    var everyHeight=data.end-data.begin;
+    dl.css("height",everyHeight/10+"px");
+
+    for(var i in items)
+    {
+        var dd  = $('<dd>').text(items[i]);
+        dd.bind("click",changeTwo);
+        dl.append(dd);
+    }
+    return dl;
+}
+function makeCols(data){
+    //var data    =   {
+    //    'name':'教室404',
+    //    'child':[
+    //        {
+    //            'begin':1000,
+    //            'end':1500,
+    //            'items':[
+    //                '罗海华2',
+    //                '李治远3',
+    //                '毛云刚5',
+    //            ]
+    //        },
+    //        {
+    //            'begin':1500,
+    //            'end':2800,
+    //            'items':[
+    //                '罗海华6',
+    //                '李治远7',
+    //                '毛云刚6',
+    //            ]
+    //        },
+    //
+    //    ],
+    //
+    //};
+    var ul  =   $('<ul>');
+
+
+    var child   =   data.child;
+    var title   =   $('<li class="title">').text(data.name);
+    ul.append(title);
+    for(var i in child)
+    {
+
+        var itemData    =   child[i];
+        var li  =   $('<li>');
+        var item    =   makeItem(itemData);
+        ul.append(li);
+        li.append(item);
+    }
+
+    return ul;
+}
+function makeAll(data){
+    var ul =    $('<ul class="clearfloat">');
+    var liWidth=1000/data.length;
+    for(var i in data)
+    {
+
+        var colData     =   data[i];
+        var colul       =   makeCols(colData);
+        var li          =   $('<li>');
+        li.append(colul);
+        li.css("width",liWidth+"px");
+        ul.append(li);
+    }
+    return ul;
+}
+$(function(){
+    var smartlist=[
+        {
+            'name':'教室404',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1500,
+                    'items':[
+                        '罗海华2',
+                        '李治远3',
+                        '毛云刚5',
+                    ]
+                },
+                {
+                    'begin':1500,
+                    'end':2800,
+                    'items':[
+                        '罗海华6',
+                        '李治远7',
+                        '毛云刚6',
+                    ]
+                },
+
+            ],
+
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1600,
+                    'items':[
+                        '罗海华',
+                        '李治远',
+                        '毛云刚',
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        '罗海华1',
+                        '李治远1',
+                        '毛云刚1',
+                    ]
+                },
+
+            ],
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1600,
+                    'items':[
+                        '罗海华',
+                        '李治远',
+                        '毛云刚',
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        '罗海华1',
+                        '李治远1',
+                        '毛云刚1',
+                    ]
+                },
+
+            ],
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':2000,
+                    'items':[
+
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        '罗海华1',
+                        '李治远1',
+                        '毛云刚1',
+                    ]
+                },
+
+            ],
+        },
+    ];
+    var dom =   makeAll(smartlist);
+    $('.classroom-box').append(dom);
+    //changeTwo();
+});
+
+//点击两个表格可进行交换
+function changeTwo(){
+
+    if($(this).hasClass('active'))
+    {
+        $(this).removeClass('active');
+        return ;
+    }
+    $(this).addClass('active');
+    if($(".active").length-1==2){
+        var change1=$($(".active")[1]).html();
+        var change2=$($(".active")[2]).html();
+        $($(".active")[2]).html(change1);
+        $($(".active")[1]).html(change2);
+    }
+}

@@ -8,6 +8,9 @@
 
 namespace Modules\Osce\Entities;
 
+use Modules\Osce\Repositories\Common;
+use App\Entities\User;
+use Auth;
 use DB;
 class Student extends CommonModel
 {
@@ -96,39 +99,58 @@ class Student extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function addExaminee($examineeData)
+    public function addExaminee($exam_id, $examineeData)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
-            //根据条件：查找用户是否有账号和密码
-            //用户信息
-                //如果查找到了，编辑处理
-                //如果没找到，新增处理
-                    //如果新增成功，发短信通知用户
-            //根据用户ID和考试号查找考生
-            //考生信息
-                //如果找到了
-                //相同：跳过，不同：编辑处理
-                //如果没找到：新增考生
-            //查询id_card是否已经存在student表中
-            $student = $this->where('idcard', '=', $examineeData['idcard'])
-                            ->where('exam_id', '=', $examineeData['exam_id'])
-                            ->select('id')->first();
+            $operator   =   Auth::user();
+            if(empty($operator)){
+                throw new \Exception('未找到当前操作人信息');
+            }
 
-            //存在则更新数据, 否则新增
+            //根据条件：查找用户是否有账号和密码
+            $user = User::where(['username' => $examineeData['mobile']])->first();
+            //如果查找到了，对用户信息 进行编辑处理
+            if(count($user) != 0){
+                var_dump('##');
+                $user -> name   = $examineeData['name'];    //姓名
+                $user -> gender = $examineeData['gender'];  //性别
+                $user -> mobile = $examineeData['mobile'];  //手机号
+                $user -> avatar = $examineeData['avatar'];  //头像
+                $user -> idcard = $examineeData['idcard'];  //身份证号
+                $user -> email  = $examineeData['email'];   //邮箱
+                if(!($user->save())){      //跟新用户
+                    throw new \Exception('新增考生失败！');
+                }
+
+            }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
+                $password   =   Common::getRandStr(6);
+                $user       =   $this   ->  registerUser($examineeData,$password);
+                $this       ->  sendRegisterEms($examineeData['mobile'],$password);
+            }
+
+            //根据用户ID和考试号查找考生
+            $student = $this->where('user_id', '=', $user->id)
+                ->where('exam_id', '=', $exam_id)->first();
+
+            //存在考生信息,则更新数据, 否则新增
             if($student){
                 //跟新考生数据
                 $student->name    = $examineeData['name'];
-                $student->exam_id = $examineeData['exam_id'];
+                $student->exam_id = $exam_id;
                 $student->idcard  = $examineeData['idcard'];
                 $student->mobile  = $examineeData['mobile'];
                 $student->code    = $examineeData['code'];
-                $student->avator  = $examineeData['avator'];
+                $student->avator  = $examineeData['avatar'];
                 if (!($student->save())) {
                     throw new \Exception('新增考生失败！');
                 }
             }else{
+                $examineeData['exam_id'] = $exam_id;
+                $examineeData['user_id'] = $user->id;
+                $examineeData['avator'] = $examineeData['avatar'];
+                $examineeData['create_user_id'] = $operator->id;
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');
                 }

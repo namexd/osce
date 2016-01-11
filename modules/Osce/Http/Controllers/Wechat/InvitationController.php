@@ -39,7 +39,7 @@ class InvitationController extends CommonController
         ]);
         $teacher_id =   $request  -> get('teacher_id');
         $exam_id =   $request -> get('exam_id');
-        $station_id =   $request    -> get('station_id');
+//        $station_id =   $request    -> get('station_id');
         $teacher  =new Teacher();
         $data= $teacher->invitationContent($teacher_id);
 //        dd($data);
@@ -68,7 +68,7 @@ class InvitationController extends CommonController
 
     /**
      * 已发布邀请列表
-     * @api GET /osce/admin/notice/list
+     * @api GET /osce/admin/invitation/list
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -91,7 +91,7 @@ class InvitationController extends CommonController
 
     /**
      *sp邀请用户的还回结果
-     * @api GET /osce/admin/notice/list
+     * @api GET /osce/admin/invitation/invitation-respond
      * @access public
      *
      * @param Request $request post请求<br><br>

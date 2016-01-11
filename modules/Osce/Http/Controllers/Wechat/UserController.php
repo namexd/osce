@@ -19,7 +19,8 @@ class UserController  extends CommonController
 {
 
     public function getRegister(){
-        //return view();
+        return view('osce::wechat.user.register');
+
     }
 
     /**
@@ -130,7 +131,7 @@ class UserController  extends CommonController
      *
      */
     public function getLogin(){
-        //return view('');
+        return view('osce::wechat.user.login');
     }
 
     /**
@@ -183,7 +184,7 @@ class UserController  extends CommonController
      *
      */
     public function getForgetPassword(){
-        //return view();
+        return view('osce::wechat.user.forget_pwd');
     }
 
     /**
