@@ -104,7 +104,7 @@ class ExamRoom extends CommonModel
         })->leftJoin($this->table,function($join){
             $join    ->  on('room_station.room_id','=','exam_room.room_id');
         })
-            ->whereIn('teacher.type',[1,3])
+            ->whereIn('teacher.type',[2])
             ->where('exam_room.exam_id','=',$exam_id)
             ->select(DB::raw(implode(',',[
                 'teacher.id as id',

@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
+use Modules\Osce\Entities\InformTrain;
 use Modules\Osce\Entities\Train;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
@@ -20,47 +21,48 @@ class ExamTrainController extends CommonController
 
 
     /**
-     *¿¼Ç°ÅàÑµÁĞ±í
-     * @api GET /osce/admin/examtrain/exam-training-index
+     *è€ƒå‰åŸ¹è®­åˆ—è¡¨
+     * @api GET /osce/wechat/examtrain/exam-training-index
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     * 'name', 'address','begin_dt','end_dt','teacher','content','attachments','status','create_user_id'
      */
-        public  function  getExamTrainingIndex( Request $request,Train $train){
-            $id = urlencode(e(Input::get('id')));
+        public  function  getExamTrainingIndex( Request $request,InformTrain $train){
             $message= [];
-            if($id){
-                $user= DB::connection('sys_mis')->table('users')->where('id','=',$id)->select('name')->get();
-                $message['user_name'] = $user->name;
-                $list = $train->get()->toArray();
+            $informModel= new InformTrain();
+                $list = $informModel->getInformList();
+                dd($list);
                 foreach($list as $data){
                     $message['name'] = $data['name'];
-                    $message['place'] = $data['place'];
+                    $message['address'] = $data['address'];
                     $message['begin_dt'] = $data['begin_dt'];
                     $message['end_dt'] = $data['end_dt'];
                 }
-            }else{
-                throw new \Exception('ÇëÖØĞÂµÇÂ½£¡£¡£¡£¡');
-            }
-            return  view();
+                dd($message);
+//            }else{
+//                throw new \Exception('è¯·é‡æ–°ç™»é™†ï¼ï¼ï¼ï¼');
+//            }
+//            return  view();
         }
 
 
     /**
-     *¿¼Ç°ÅàÑµÌí¼Ó
-     * @api GET /osce/admin/examtrain/add-training
+     *è€ƒå‰åŸ¹è®­æ·»åŠ 
+     * @api GET /osce/wechat/examtrain/add-training
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -69,41 +71,46 @@ class ExamTrainController extends CommonController
      */
 
     public  function postAddTraining(Request $request ,Train $train){
+        dd(1111111);
             $this->validate($request,[
                 'name' => 'required',
-                'place' => 'required',
+                'address' => 'required',
                 'begin_dt' => 'required',
                 'end_dt' => 'required',
-                'teacher_name' => 'required',
-                'remark' => 'required',
-                'accessory' =>'required'
+                'teacher' => 'required',
+                'content' => 'required',
+                'attachments' =>'required',
+                'status' =>'required'
             ]);
+             
+
+
         $data=[
             'name'=> Input::get('name'),
-            'place'=> Input::get('place'),
+            'address'=> Input::get('address'),
             'begin_dt'=> Input::get('begin_dt'),
             'end_dt'=> Input::get('end_dt'),
-            'teacher_name'=> Input::get('teacher_name'),
-            'remark'=> Input::get('remark'),
-            'accessory'=> Input::get('accessory'),
+            'teacher'=> Input::get('teacher'),
+            'content'=> Input::get('content'),
+            'attachments'=> Input::get('attachments'),
         ];
 
-        $add=Train::create();
-        if($data != fasle){
-            return redirect()->back()->withInput()->withErrors('Ìí¼Ó³É¹¦');
+        $add=InformTrain::create($data);
+        if($add != fasle){
+            return redirect()->back()->withInput()->withErrors('æ·»åŠ æˆåŠŸ');
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 
     /**
-     *¿¼Ç°ÅàÑµÉ¾³ı
-     * @api GET /osce/admin/examtrain/delete-training
+     *è€ƒå‰åŸ¹è®­åˆ é™¤
+     * @api GET /osce/wechat/examtrain/delete-training
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -113,29 +120,30 @@ class ExamTrainController extends CommonController
 
 
       public  function getDeleteTraining(Request $request){
+          dd(111111);
           $id = urlencode(e(Input::get('id')));
           if($id){
               $data = DB::connection('osce_mis')->table('train')->where('id','=',$id)->delete();
               if($data != fasle){
-                  return redirect()->back()->withInput()->withErrors('É¾³ı³É¹¦');
+                  return redirect()->back()->withInput()->withErrors('åˆ é™¤æˆåŠŸ');
               }else{
-                  return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+                  return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
               }
           }else{
-              return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+              return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
           }
 
       }
 
 
     /**
-     *¿¼Ç°ÅàÑµ²é¿´
-     * @api GET /osce/admin/examtrain/see-training
+     *è€ƒå‰åŸ¹è®­æŸ¥çœ‹
+     * @api GET /osce/wechat/examtrain/see-training
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -143,20 +151,21 @@ class ExamTrainController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public  function   getSeeTraining(Request $request){
+        dd(11111);
         $id = urlencode(e(Input::get('id')));
         if($id){
             $data = DB::connection('osce_mis')->table('train')->where('id','=',$id)->first()->toArray();
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
         $list =[
             'name' =>$data['name'],
-            'place' =>$data['place'],
+            'address' =>$data['address'],
             'begin_dt' =>$data['begin_dt'],
             'end_dt' =>$data['end_dt'],
-            'teacher_name' =>$data['teacher_name'],
-            'remark' =>$data['remark'],
-            'accessory' =>$data['accessory'],
+            'teacher' =>$data['teacher'],
+            'content' =>$data['content'],
+            'attachments' =>$data['attachments'],
         ];
            die(json_encode($list));
     }
