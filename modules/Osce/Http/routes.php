@@ -70,7 +70,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		Route::get('machine/add-watch', ['uses'=>'MachineController@getAddWatch','as'=>'osce.admin.machine.getAddWatch']);
 		Route::get('machine/edit-watch', 	['uses'=>'MachineController@getEditWatch','as'=>'osce.admin.machine.getEditWatch']);
-		Route::get('machine/watch-list',	['uses'=>'MachineController@getWatchList','as'=>'osce.admin.machine.getWatchList']);
 
 
 		//考核点
