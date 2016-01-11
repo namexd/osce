@@ -180,7 +180,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('train/edit-train',['uses'=>'TrainController@postEditTrain','as'=>'osce.wechat.postEditTrain']);
 
 		//考前培训
-		Route::get('esamtrain/exam-training-index',['uses'=>'ExamTrainController@getExamTrainingIndex','as'=>'osce.wechat.getExamTrainingIndex']);
+		Route::get('examtrain/exam-training-index',['uses'=>'ExamTrainController@getExamTrainingIndex','as'=>'osce.wechat.getExamTrainingIndex']);
+		Route::post('examtrain/add-training',['uses'=>'ExamTrainController@postAddTraining','as'=>'osce.wechat.postAddTraining']);
+		Route::get('examtrain/delete-training',['uses'=>'ExamTrainController@getDeleteTraining','as'=>'osce.wechat.getDeleteTraining']);
+		Route::get('examtrain/see-training',['uses'=>'ExamTrainController@getSeeTraining','as'=>'osce.wechat.getSeeTraining']);
 
 	});
 });
