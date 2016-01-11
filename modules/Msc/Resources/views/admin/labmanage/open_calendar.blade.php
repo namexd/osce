@@ -41,6 +41,7 @@
                     $(".list-group-parent").removeClass("checked");
                     $(".list-group-child").removeClass("checked");
                     $(this).addClass("checked");
+                    var labid=$(this).attr("data-labid");
                     getEvent(labid);
                 });
             }
@@ -494,6 +495,8 @@
                     data: {date:datestr,timestr:timestr,lid:$('.labid').val()},
                     success: function(msg){
                         if(msg.status){
+
+                            layer.msg(msg.info, {icon: 1,time: 1000});
 //                            layer.confirm(msg.info, {
 //                                btn: ['確定'] //按钮
 //                            }, function(){
@@ -505,7 +508,7 @@
                             console.log(msg.data);
 
                         }else{
-                            layer.alert(msg.info);
+                            layer.msg(msg.info, {icon: 2,time: 1000});
                             return false;
                         }
                     }
