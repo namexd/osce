@@ -39,7 +39,7 @@ class TrainController extends  CommonController{
 
         if(!$userId){
             return response()->json(
-                $this->success_rows(404,'ÇëÏÈµÇÂ½')
+                $this->success_rows(0,'false')
             );
         }
         $trainModel=new InformTrain();
