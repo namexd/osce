@@ -55,18 +55,21 @@
                     cache:false,
                     success:function(result){
                         $(result).each(function(){
-                            $treeview.append( "<div class='list-group' style='margin-bottom: 0' id='"+this.floor+"'>" +
-                                    "<div class='list-group-item list-group-parent'>"
-                                    +this.floor+"楼"
-                                    +"</div>"
-                                    +"<div class='lab_num'></div>"
-                                    +"</div>"
-                            );
+                            //alert(this.floor);
+
                             if(this.lab!=""){
+
+                                $(".treeview #"+ this.floor +" .list-group-parent").append("<i class='fa fa-angle-right right'></i>");
+                                    $treeview.append("<div class='list-group' style='margin-bottom: 0' id='" + this.floor + "'>" +
+                                            "<div class='list-group-item list-group-parent'>"
+                                            + this.floor + "楼"
+                                            + "</div>"
+                                            + "<div class='lab_num'></div>"
+                                            + "</div>"
+                                    );
                                 $(this.lab).each(function(){
                                     $(".treeview #"+ this.floor +" .lab_num").append("<div class='list-group-item list-group-child labdetail' data='"+this.total+"' data-labid='"+this.id+"'>"+this.name+"</div>")
                                 });
-                                $(".treeview #"+ this.floor +" .list-group-parent").append("<i class='fa fa-angle-right right'></i>");
                             }
 
                         })
