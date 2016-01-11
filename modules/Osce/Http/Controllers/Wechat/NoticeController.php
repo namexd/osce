@@ -9,12 +9,13 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Notice;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class NoticeController extends CommonController
 {
     /**
-     *
+     * 通知列表
      * @url GET /osce/wechat/notice/system-list
      * @access public
      *
@@ -32,7 +33,44 @@ class NoticeController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getSystemList(){
-        echo 123;
+    public function getSystemList(Request $request){
+        $notice =   new Notice();
+        $list   =   $notice ->  getList();
+
+        //return view('',['list'=>$list]);
+    }
+
+    /**
+     * 查看通知详情
+     * @url /osce/wechat/notice/view
+     * @access public
+     *
+     * * @param Request $request
+     * <b>get 请求字段：</b>
+     * * string        id        消息ID(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE}${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getView(Request $request){
+        $this   ->  validate($request,[
+            'id'    =>  'required',
+        ]);
+
+        $id     =   $request    ->  get('id');
+        $notice =   Notice::find($id);
+
+        if(is_null($notice))
+        {
+            //消息不存在
+            abort(404,'你要查看的通知不存在');
+        }
+
+        //return view('',['item'=>$notice]);
     }
 }

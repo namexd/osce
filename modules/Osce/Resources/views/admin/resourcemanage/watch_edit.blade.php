@@ -106,8 +106,11 @@
                                 <label class="col-sm-2 control-label">设备状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
-                                        <option value="1">正常</option>
-                                        <option value="0">损坏</option>
+                                        <option value="0">未使用</option>
+                                        <option value="1">使用中</option>
+                                        <option value="2">报废</option>
+                                        <option value="3">损坏</option>
+                                        <option value="4">维修</option>
                                     </select>
                                 </div>
                             </div>

@@ -116,7 +116,8 @@ class MachineController extends CommonController
     public function getMachineList(Request $request){
         $this   ->  validate($request,[
             'cate_id'   =>  'sometimes|integer',
-            'name'      =>  'sometimes'
+            'name'      =>  'sometimes',
+            'status'      =>  'sometimes'
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
@@ -659,9 +660,9 @@ class MachineController extends CommonController
             'code'          =>  'required',
             'status'        =>  'required',
         ],[
-            'name.required'     =>  '设备名称必填',
-            'code.required'     =>  '设备编号必填',
-            'status.required'   =>  '设备状态必填',
+            'name.required'     =>  '腕表名称必填',
+            'code.required'     =>  '腕表编号必填',
+            'status.required'   =>  '腕表状态必选',
         ]);
 
         $user   =   Auth::user();
@@ -676,6 +677,7 @@ class MachineController extends CommonController
             'status'        =>  $request    ->  get('status'),
             'create_user_id'=>  $user       ->  id
         ];
+
         $cate_id    =   $request    ->  get('cate_id');
         try{
 
@@ -686,7 +688,7 @@ class MachineController extends CommonController
             }
             else
             {
-                throw new \Exception('新增PAD失败');
+                throw new \Exception('新增腕表失败');
             }
         }
         catch(\Exception $ex)
@@ -772,73 +774,6 @@ class MachineController extends CommonController
         $watch    =   Watch::find($id);
 
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
-    }
-
-    /**
-     *查询腕表数据
-     * @method GET
-     * @url
-     * @access public
-     *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     *
-     * @return ${response}
-     *
-     * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
-     * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getWatchList(Request $request){
-        $this  ->validate($request,[
-            'code'  =>  'sometimes|integer'
-        ]);
-
-        $code=intval($request->get('code'));
-
-        if($code){
-            $list=Watch::where('code','like','%'.$code.'%');
-        }else{
-            $list=Watch::select()->get();
-        }
-
-        $data=[];
-        foreach($list as $item){
-
-           $data[]=[ 'id'      =>$item->id,
-                     'status'  =>$item->status,
-                     'name'    =>$item->name,
-                     'code'    =>$item->code,
-                   ];
-
-         }
-        $row=[];
-        foreach($data as $itm){
-             if($itm['status']==1){
-               $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first()->student_id;
-             if($studentId){
-                $studentName=Student::where('id',$studentId)->select('name')->first()->name;
-              $row[]=[
-                  'id'             =>$item->id,
-                  'status'         =>$item->status,
-                  'name'           =>$item->name,
-                  'code'           =>$item->code,
-                  'studentName'    =>$studentName,
-              ];
-            }
-          }
-        }
-
-        $watchModel   =   new Watch();
-
-        $pagination             =   $watchModel   ->  paginate(7);
-        dd($row);
-        return ['row'=>$row,'pagination'=>$pagination];
     }
 
 }
