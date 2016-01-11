@@ -77,9 +77,9 @@
                         }
                     },
                     floor: {
-                        message: 'The floor is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
                                 message: '请选择楼层'
                             }
                         }
@@ -319,8 +319,10 @@
                             $.each($(msg),function(i,n){
                                 if(n.id == $(updateobj).parent().parent().find('.lname').attr('data-local')){
                                     opstr += '<option value="'+ n.id+'" selected="selected">'+ n.name+'</option>';
+                                }else{
+                                    opstr += '<option value="'+ n.id+'">'+ n.name+'</option>';
                                 }
-                                opstr += '<option value="'+ n.id+'">'+ n.name+'</option>';
+
                             });
                             $('.oldlocal').html(opstr);
                         }

@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Floor;
 use Modules\Msc\Entities\OpenPlan;
+use Modules\Msc\Entities\LabApply;
 use Illuminate\Support\Facades\Cache;
 use Modules\Msc\Http\Controllers\MscController;
 use URL;
@@ -581,9 +582,10 @@ class LaboratoryController extends MscController {
      * Date: 2016年1月11日11:35:27
      * 实验室预约记录审核
      */
-    public function getLabOrderList(){
-
-        return view('msc::admin.labmanage.lab_maintain',[
+    public function getLabOrderList(LabApply $LabApply){
+        $LabOrderList = $LabApply->get_check_list();
+        dd($LabOrderList);
+        return view('msc::admin.labmanage.booking_examine',[
         ]);
     }
 }
