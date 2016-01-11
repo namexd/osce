@@ -45,6 +45,9 @@ class ResourcesController extends MscController
         ]);
         $keyword = urldecode(e($request->input('keyword')));
         $status = (int)$request->input('status',2);
+        if($status == null){
+            $status = 2;
+        }
         $devices_cate_id = (int)$request->input('devices_cate_id');
         $devices = new Devices();
         $pagination = $devices->getDevicesList([],$keyword, $status, $devices_cate_id);
