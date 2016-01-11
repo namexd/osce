@@ -363,11 +363,22 @@ class Teacher extends CommonModel
         return $teacher;
     }
 
-
+    /**
+     * 获取监考老师列表
+     * @return mixed
+     * @throws \Exception
+     */
     public function getTeacherList($formData)
     {
-        $result = $this->where()->get();
-        return $result;
+        try{
+            $teacher = $this->where(['type' => 1])
+                ->select(['id', 'name'])->get();
+
+            return $teacher;
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     public function registerTeacher(){

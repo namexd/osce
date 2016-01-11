@@ -6,11 +6,10 @@
  * Time: 15:13
  */
 namespace Modules\Osce\Http\Controllers\Wechat;
-use App\Http\Requests\Request;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\Discussion;
-use Modules\Osce\Entities\Reply;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class DiscussionController extends  CommonController{
@@ -34,15 +33,15 @@ class DiscussionController extends  CommonController{
      */
 
       public function getQuestionList(){
-//          $user=Auth::users();
-//          if(!$user){
-//              return response()->json(
-//                  $this->success_rows(1,'请先登录')
-//              );
-//          }
+          $user=Auth::user();
+          if(!$user){
+              return response()->json(
+                  $this->success_rows(2,'请先登录')
+              );
+          }
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
-          $list=Discussion::select()->orderBy('create_at','desc');
+          $list=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
 
             $data=[];
             foreach($list as $item){
@@ -50,7 +49,6 @@ class DiscussionController extends  CommonController{
                    'id'             =>$item->id,
                    'title'          =>$item->title,
                    'context'        =>$item->context,
-                   'question'       =>$item->question,
                    'create_user'    =>$item->getAuthor,
                    'create_at'      =>$item->create_at,
                    'update_at'      =>$item->update_at,
@@ -58,7 +56,7 @@ class DiscussionController extends  CommonController{
             }
 
           return response()->json(
-              $this->success_rows(1,'获取问题列表',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$data)
+              $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$data)
           );
       }
 
@@ -81,37 +79,47 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getCheckQuestion(Request $request){
-          $user=Auth::users();
+          $user=Auth::user();
           if(!$user){
               return response()->json(
-                  $this->success_rows(1,'请先登录')
+                  $this->success_rows(2,'请先登录')
               );
           }
           $id    =   intval($request   ->  get('id'));
-          $list=Discussion::where('id',$id)->select();
-
+          $list=Discussion::where('id',$id)->select()->get();
+          $discussionModel	=	new Discussion();
+          $pagination				=	$discussionModel	->	getDiscussionPagination();
           foreach($list as $item){
-              $data=[
+              $question=[
                   'id'             =>$item->id,
                   'title'          =>$item->title,
                   'context'        =>$item->context,
-                  'question'       =>$item->question,
                   'create_user'    =>$item->getAuthor,
                   'create_at'      =>$item->create_at,
                   'update_at'      =>$item->update_at,
               ];
           }
-          //获取回复人信息
-            $replyModel=new Reply();
-//            $pagination				=	$replyModel	->	getPaginate($user->id);
-            $replys=$replyModel->getReplyList($id);
 
+          //获取回复人信息
+           $replys=Discussion::where('pid',$id)->select()->get();
+           $data=[];
+          foreach($replys as $itm){
+              $data[]=[
+                  'id'             =>$itm->id,
+                  'title'          =>$itm->title,
+                  'context'        =>$itm->context,
+                  'create_user'    =>$itm->getAuthor,
+                  'create_at'      =>$itm->create_at,
+                  'update_at'      =>$itm->update_at,
+              ];
+          }
             $row=array(
                 'replys' =>$replys,
-                'data'   =>$data,
+                'question'   =>$question,
             );
+
           return response()->json(
-              $this->success_rows(1,'success',$row)
+              $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$row)
           );
       }
 
@@ -138,26 +146,27 @@ class DiscussionController extends  CommonController{
       public function postAddQuestion(Request $request){
           //验证规则
           $this->validate($request,[
-
+               'title'    =>'required|max:256',
+               'content'  =>'required',
           ]);
-          $user=Auth::users();
+          $user=Auth::user();
           if(!$user){
             return response()->json(
-                $this->success_data(1,'请先登录')
+                $this->success_data(2,'请先登录')
             );
           }
           $userId=$user->id;
-          $data=$request->only(['']);
+          $data=$request->only(['title','content']);
           $data['user_id']=$userId;
           $discussionModel= new Discussion();
           $result=$discussionModel->save($data);
           if($result){
               return response()->json(
-                  $this->success_data(1,'提交问题成功')
+                  $this->success_data(1,'success')
               );
           }
           return response()->json(
-              $this->success_data(1,'提交问题失败')
+              $this->success_data(0,'false')
           );
       }
 
@@ -183,26 +192,74 @@ class DiscussionController extends  CommonController{
      */
       public function postAddReply(Request $request){
           $this->validate($request,[
-
+               'pid'      => 'required|integer',
+               'content'  => 'required|integer',
           ]);
           $user=Auth::users();
           if(!$user){
               return response()->json(
-                  $this->success_data(1,'请先登录')
+                  $this->success_data(2,'请先登录')
               );
           }
           $userId=$user->id;
-          $data=$request->only([]);
-          $replyModel= new Reply();
-          $data['user_id']=$userId;
-          $result=$replyModel->save($data);
+          $data=$request->only(['pid','content']);
+          $result=Discussion::insert(['content'=>$data['content'],'pid'=>$data['pid'],'create_user_id'=>$userId]);
           if($result){
               return response()->json(
-                  $this->success_data(1,'回复成功')
+                  $this->success_data($data,1,'success')
               );
           }
           return response()->json(
-              $this->success_data(1,'回复失败')
+              $this->success_data($data,0,'false')
           );
       }
+
+    /**
+     *删除该问题
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+     public function getDelQuestion(Request $request){
+          $this->validate($request,[
+              'id'  =>'required|integer'
+          ]);
+         $user=Auth::users();
+         if(!$user){
+             return response()->json(
+                 $this->success_data($user,2,'false')
+             );
+         }
+         $userId=$user->id;
+         $id=$request->get('id');
+         $manager=config('osce.manager');
+         if($userId!==$id || $id!==$manager[0]){
+              return response()->json(
+                  $this->success_data($user,3,'false')
+              );
+         }
+         $result=Discussion::where('id',$id)->delete();
+         if($result){
+             return response()->json(
+                 $this->success_rows(1,'success')
+             );
+         }
+         return response()->json(
+             $this->success_rows(0,'false')
+         );
+     }
 }
