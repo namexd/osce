@@ -101,7 +101,7 @@ class SubjectItem extends CommonModel
      * * @param array $content
      * * string        title        考核点名称
      * * string        *-*          考核项名称
-     * * @param asrray $score
+     * * @param array $score
      * <b>get 请求字段：</b>
      * * string        total        考核项名称
      * * string        *-*          考核项分数

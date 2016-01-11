@@ -18,6 +18,7 @@ use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
@@ -367,7 +368,7 @@ class ExamController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      * '
@@ -375,18 +376,34 @@ class ExamController extends CommonController
     public function postAddExaminee(Request $request, Student $model)
     {
         $this   ->  validate($request,[
+            'exam_id'       =>  'required',
             'name'          =>  'required',
-            'id_card'       =>  'required',
+            'idcard'        =>  'required',
+            'tell'          =>  'required',
+            'images_path'   =>  'required',
         ],[
-            'name.required'     =>  '姓名必填',
-            'id_card.required'  =>  '身份证号必填',
+            'name.required'         =>  '姓名必填',
+            'idcard.required'       =>  '身份证号必填',
+            'tell.required'         =>  '手机号必填',
+            'images_path.required'  =>  '请上传照片',
         ]);
+
+        $user   =   Auth::user();
+        if(empty($user)){
+            throw new \Exception('未找到当前操作人信息');
+        }
+        //考试id
         $exam_id = $request->get('exam_id');
+        //考生数据
         $examineeData = [
             'name'           => $request  ->  get('name'),
-            'id_card'        => $request  ->  get('id_card'),
             'exam_id'        => $exam_id,
-            'images_path'    => $request  ->  get('images_path'),
+            'user_id'        => 1,
+            'idcard'         => $request  ->  get('idcard'),            //身份证号
+            'mobile'         => $request  ->  get('tell'),              //手机号
+            'code'           => $request  ->  get('examinee_id'),       //学号
+            'avator'         => $request  ->  get('images_path')[0],    //照片
+            'create_user_id' => $user     ->  id
         ];
 
         try{
@@ -413,7 +430,7 @@ class ExamController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
@@ -596,8 +613,20 @@ class ExamController extends CommonController
         ]);
         //获取考场ID：room_id
         $room_id = $request -> get('room_id');
-        $model = new RoomStation();
-        $data = $model->getRoomStationData($room_id);
+        $roomStation = new RoomStation();
+        $data = $roomStation->getRoomStationData($room_id);
+
+        return response()->json(
+            $this->success_data($data, 1, 'success')
+        );
+    }
+
+    public function getTeacherListData(Request $request)
+    {
+        //获取老师ID数组：teacher_id
+        $formData = $request -> get('teacher');
+        $teacher = new Teacher();
+        $data = $teacher->getTeacherList($formData);
 
         return response()->json(
             $this->success_data($data, 1, 'success')

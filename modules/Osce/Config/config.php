@@ -18,6 +18,9 @@ return [
 			'父级序号'=>'pid',
 			'层级'=>'level'
 		],
+		'teacher'=>[
+			//暂时空置
+		]
 	],
 	'machine_category'=>[
 		1 =>[
@@ -32,5 +35,5 @@ return [
 			'id'=>3,
 			'name'=>'Watch',
 		]
-	]
+	],
 ];

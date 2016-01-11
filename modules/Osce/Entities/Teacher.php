@@ -62,6 +62,49 @@ class Teacher extends CommonModel
         return $this->belongsToMany('\Modules\Osce\Entities\station','station_sp','user_id','station_id');
     }
 
+
+
+
+     public  function invitationTeacherData($teacher_id){
+
+         $builder=$this;
+         try{
+             if ($teacher_id !== null) {
+                 $this->excludeId = $teacher_id;
+             }
+             $excludeId = $this->excludeId;
+             $excludeIds[] = $excludeId;
+             if (count($excludeId) !== 0) {
+                 $builder = $builder->leftJoin('cases',function($join){
+                     $join    ->  on('cases.id','=', 'teacher.case_id');
+             })->whereIn('id', $excludeIds);
+//                 dd($builder);
+             }
+
+             $data=$builder->select('teacher.name','cases.name as cname')->get();
+//             dd(11);
+             $openId= $this->find($data->id)->userInfo->opendid;
+             dd($openId);
+             $list=array(
+                 'openid' =>$openId,
+                 'teacher_name'=>$data->name,
+                 'teacher_id'=>$data->id,
+                 'case_name'=>$data->cname
+             );
+
+
+             return $list;
+
+         }catch (\Exception $ex) {
+             throw $ex;
+         }
+
+     }
+
+
+
+
+
     /**
      * SP老师的查询
      * @param $caseId
@@ -104,6 +147,8 @@ class Teacher extends CommonModel
             throw $ex;
         }
     }
+
+
 
 
     /**
@@ -186,7 +231,15 @@ class Teacher extends CommonModel
         $teacher    =   $this   ->  find($user  ->  id);
         if($teacher)
         {
-            throw new \Exception('该教职员工已经存在');
+            //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
+            $teacher->name = $data['name'];
+            $teacher = $teacher->save();
+            if (!$teacher) {
+                throw new \Exception('保存老师名字失败，请重试！');
+            } else {
+                return $teacher;
+            }
+//            throw new \Exception('该教职员工已经存在');
         }
         else
         {
@@ -307,6 +360,13 @@ class Teacher extends CommonModel
             throw new   \Exception('教务人员用户信息变更失败');
         }
         return $teacher;
+    }
+
+
+    public function getTeacherList($formData)
+    {
+        $result = $this->where()->get();
+        return $result;
     }
 
     public function registerTeacher(){

@@ -21,8 +21,23 @@ class RoomStation extends CommonModel
     protected $fillable = ['room_id', 'station_id', 'create_user_id'];
 
 
+    /**
+     * 获取考场对应的考站数据
+     * @return mixed
+     * @throws \Exception
+     */
     public function getRoomStationData($room_id)
     {
-        $result = $this->where('room_id', '=', $room_id)->get();
+        try{
+            $builder = $this->leftJoin ('station', function ($join) {
+                $join->on('station.id', '=', $this->table.'.station_id');
+            })
+            ->where($this->table.'.room_id', '=', $room_id)->orderBy($this->table.'.created_at', 'desc')->get();
+
+            return $builder;
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }
