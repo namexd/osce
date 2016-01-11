@@ -71,22 +71,22 @@ class SpteacherController extends CommonController
 //          ],[
 ////              'exam_id.required'   => '没有考试ID'
 //          ]);
-
         $examId = $request->input('id');
+
         $inviteModel =new ExamSpTeacher();
-        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
+//        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
 
 //        dd($inviteData);
-
         if($examId){
             $ExamModel=new ExamRoom();
             $TeacherSp = $ExamModel->getStationList($examId);
-            dump($TeacherSp->toArray());
+            // dump($TeacherSp->toArray());
             $stationTeacher=[];
             foreach($TeacherSp as  $data){
                 $stationData = [];
                 if(isset($stationTeacher[$data['station_id']])){
                     $stationData = $stationTeacher[$data['station_id']];
+//                    dd($stationData);
                     $stationData['techs'][$data['id']] = [
                         'name' =>$data['name'],
                         'id' =>$data['id'],
@@ -118,15 +118,15 @@ class SpteacherController extends CommonController
                 $stationTeacher[$data['station_id']] = $stationData;
             }
 
-            dd( $stationTeacher );
+            // dd( $stationTeacher );
 
-            return view('osce.admin.spteacher. getInvitationIndex',[
-                'data'    => $data,
+            return view('osce::admin.exammanage.sp_invitation',[
+                'data'    => $stationTeacher,
 
             ]);
         }
 //
-        return redirect()->route('osce.admin.spteacher. getInvitationIndex');//还不确定。
+        return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
 
     }
 
@@ -182,35 +182,5 @@ class SpteacherController extends CommonController
         }
 
     }
-
-
-
-
-    /**
-     *  发起sp邀请
-     * @method GET
-     * @url /osce/admin/spteacher/invitation-Sp
-     * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string        id       考试id(必须的)
-     *
-     * @return
-     *
-     * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getInvitationSp(){
-
-
-
-    }
-
-
-
-
-
 
 }

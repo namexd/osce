@@ -37,7 +37,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -54,7 +54,7 @@
                     <ul class="nav nav-tabs">
                         <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
                         <li class="active"><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
-                        <li class=""><a href="{{route('osce.admin.spteacher.getInvitationIndex',['exam_id'=>$id])}}">邀请SP</a></li>
+                        <li class=""><a href="{{route('osce.admin.spteacher.getInvitationIndex',['id'=>$id])}}">邀请SP</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="#">智能排考</a></li>
                     </ul>
