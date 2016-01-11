@@ -21,28 +21,44 @@ class Invite extends CommonModel
     protected $fillable = ['id','name', 'begin_dt', 'end_dt', 'exam_screening_id'];
     private $excludeId = [];
 
-
-
-
-
-
-        //±£¥Ê≤¢∑¢ÀÕ—˚«Î
+    //‰øùÂ≠òÂπ∂ÂèëÈÄÅÈÇÄËØ∑
     public function addInvite(array $data){
+
         $connection     =   DB::connection($this->connection);
         $connection     ->  beginTransaction();
         try{
-            if($notice  =   $this   -> create($data))
+            $inviteData=[
+                'name'   =>$data['exam_name'],
+                'begin_dt' =>$data['begin_dt'],
+                'end_dt' =>$data['end_dt'],
+                'exam_screening_id' =>$data['exam_id'],
+
+            ];
+//            dd($data, $inviteData);
+
+            if($notice  =   $this  -> create($inviteData))
             {
-                //πÿ¡™œ˚œ¢Ω” ’”√ªß∫Õœ˚œ¢
-//                $this   ->  makeNoticeUserRelative($notice);
-                //—˚«Î”√ªß
-                $this   ->  sendMsg($notice,array_pluck($data,'openid'));
+                $list=[
+                    'invite_id' =>  $notice->id,
+                    'exam_screening_id' =>$data['exam_id'],
+                    'case_id'     =>$data['case_id'],
+                    'teacher_id'     =>$data['teacher_id'],
+                ];
+
+
+                //ÂÖ≥ËÅîÂà∞ËÄÉËØïÈÇÄËØ∑spËÄÅÂ∏àË°®
+                $examspModel =new ExamSpTeacher();
+                $result =$examspModel -> addExamSp($list);
+
+                dd($notice,$data,$list, $result);
+                //ÈÇÄËØ∑Áî®Êà∑
+                $this   ->  sendMsg($notice,$data);
                 $connection ->commit();
                 return $notice;
             }
             else
             {
-                throw new \Exception('¥¥Ω®Õ®÷™ ß∞‹');
+                throw new \Exception('ÂàõÂª∫ÈÇÄËØ∑Â§±Ë¥•');
             }
         }
         catch(\Exception $ex)
@@ -54,9 +70,9 @@ class Invite extends CommonModel
 
 
 
-//       ∑¢ÀÕ—˚«Î
+//       ÂèëÈÄÅÈÇÄËØ∑
 
-    public function sendMsg($notice,$to){
+    public function sendMsg($notice,$data){
         try
         {
 
@@ -64,14 +80,14 @@ class Invite extends CommonModel
 //            $url    =   route('osce.admin.notice.getMsg',['id'=>$notice->id]);
             $msgData    =   [
                 [
-                     'title' =>'—˚«ÎÕ®÷™',
-                     'desc'  =>'osceøº ‘µ⁄“ª∆⁄—˚«Î',
-                     'url'=>'http://www.baidu.com'
+                    'title' =>'ÈÇÄËØ∑ÈÄöÁü•',
+                    'desc'  =>'osceËÄÉËØïÁ¨¨‰∏ÄÊúüÈÇÄËØ∑',
+                    'url'=>'http://www.baidu.com'
                 ],
             ];
-            Common::sendWeiXin('oI7UquLMNUjVyUNaeMP0sRcF4VyU',$msgData);//µ•∑¢
+            Common::sendWeiXin('oI7UquLMNUjVyUNaeMP0sRcF4VyU',$msgData);//ÂçïÂèë
 //            $message    =   Common::CreateWeiXinMessage($msgData);
-//            Common::sendWeixinToMany($message,$to);
+//            Common::sendWeixinToMany($message,$data);
         }
         catch(\Exception $ex)
         {

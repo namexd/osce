@@ -9,7 +9,9 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
@@ -70,27 +72,62 @@ class SpteacherController extends CommonController
 ////              'exam_id.required'   => '没有考试ID'
 //          ]);
 
-           $examId = $request->input('id');
-            if($examId){
-                $ScreeningModel=new ExamScreening();
-                $Station = $ScreeningModel->getStationList($examId);
-//        dd($Station);
-                $data=[
-                    'station_id' =>$Station['station_id'],
-                    'station_name' =>$Station['station_name'],
-                    'teacher_name' =>$Station['teacher_name'],
-                    'teacher_id' =>$Station['teacher_id'],
-                ];
+        $examId = $request->input('id');
+        $inviteModel =new ExamSpTeacher();
+        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
 
+//        dd($inviteData);
 
-                return view('osce::admin.exammanage.sp_invitation',[
-                    'data'    => $data,
-                    'id' =>$request->input('id')
-                ]);
+        if($examId){
+            $ExamModel=new ExamRoom();
+            $TeacherSp = $ExamModel->getStationList($examId);
+            dump($TeacherSp->toArray());
+            $stationTeacher=[];
+            foreach($TeacherSp as  $data){
+                $stationData = [];
+                if(isset($stationTeacher[$data['station_id']])){
+                    $stationData = $stationTeacher[$data['station_id']];
+                    $stationData['techs'][$data['id']] = [
+                        'name' =>$data['name'],
+                        'id' =>$data['id'],
+                        'status' => -1
+                    ];
+                } else {
+                    $stationData = [
+                        'station_id' =>$data['station_id'],
+                        'station_name' =>$data['station_name'],
+                        'techs' => [
+                            $data['id'] => [
+                                'name' => $data['name'],
+                                'id' => $data['id'],
+                                'status' => -1 // < 0  没有邀请
+                            ]
+                        ]
+                    ];
+                }
+                $stationData['invited'] = [];
+                // handle invite teacher
+                if (isset($inviteData[$data['id']]) ){
+                    $stationData['techs'][$data['id']]['status'] = $inviteData[$data['id']]['status'];
+                    $stationData['invited'][] = [
+                        'name'  => $data['name'],
+                        'id'    => $data['id'],
+                        'status' => $inviteData[$data['id']]['status']
+                    ];
+                }
+                $stationTeacher[$data['station_id']] = $stationData;
             }
+
+            dd( $stationTeacher );
+
+            return view('osce.admin.spteacher. getInvitationIndex',[
+                'data'    => $data,
+
+            ]);
+        }
 //
-             //        return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
-        return view('osce::admin.exammanage.sp_invitation');
+        return redirect()->route('osce.admin.spteacher. getInvitationIndex');//还不确定。
+
     }
 
 
@@ -116,10 +153,10 @@ class SpteacherController extends CommonController
     public function  getInvitationAdd(Request $request){
 
         $this->validate($request,[
-               'station_id'    =>'required|integer',
-               'user_id'    =>'required|integer',
-               'case_id'    =>'required|integer',
-               'type'    =>'required|integer',
+            'station_id'    =>'required|integer',
+            'user_id'    =>'required|integer',
+            'case_id'    =>'required|integer',
+            'type'    =>'required|integer',
         ]);
         $Invitation = [];
         $req = $request->all();
