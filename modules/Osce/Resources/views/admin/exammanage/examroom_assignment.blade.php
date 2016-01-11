@@ -37,7 +37,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','url':'{{route('osce.admin.exam.getStationData')}}', 'list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
