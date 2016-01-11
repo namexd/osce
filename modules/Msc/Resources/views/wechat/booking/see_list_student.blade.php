@@ -26,8 +26,8 @@
 </div>
 <div>
     <div class="mart_5 marb_5 form_title">
-        <p>临床技能室（13-1）</p>
-        <p style="font-weight: 100">新八教</p>
+        <div><span>实验室名称：</span>临床技能室（13-1）</div>
+        <div><span>地址：</span>新八教3楼</div>
     </div>
     <div class="main_list">
         <div class="title_nav">
