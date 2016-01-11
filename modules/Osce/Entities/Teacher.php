@@ -186,6 +186,7 @@ class Teacher extends CommonModel
         $teacher    =   $this   ->  find($user  ->  id);
         if($teacher)
         {
+            //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
             $teacher->name = $data['name'];
             $teacher = $teacher->save();
             if (!$teacher) {
