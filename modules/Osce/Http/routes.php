@@ -122,17 +122,22 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/watch-status',	['uses'=>'ExamController@getWatchStatus','as'=>'osce.admin.exam.getWatchStatus']); //查询腕表是否绑定
 		Route::get('exam/bound-watch',	['uses'=>'ExamController@getBoundWatch','as'=>'osce.admin.exam.getBoundWatch']);   //绑定腕表
 		Route::get('exam/unwrap-watch',	['uses'=>'ExamController@getUnwrapWatch','as'=>'osce.admin.exam.getUnwrapWatch']); //解绑腕表
+		Route::get('exam/student-details', 	['uses'=>'ExamController@getStudentDetails','as'=>'osce.admin.machine.getStudentDetails']);
 
 		Route::get('exam/edit-exam', 	['uses'=>'ExamController@getEditExam','as'=>'osce.admin.exam.getEditExam']);	//考试基本信息编辑
 		Route::post('exam/edit-exam', 	['uses'=>'ExamController@postEditExam','as'=>'osce.admin.exam.postEditExam']);
 		Route::get('exam/examroom-assignment', 	['uses'=>'ExamController@getExamroomAssignment','as'=>'osce.admin.exam.getExamroomAssignment']); //考场安排
-		Route::get('exam/room-list-data', ['uses'=>'ExamController@getRoomListData','as'=>'osce.admin.exam.getRoomListData']);		//获取考场列表
-		Route::get('exam/station-data', ['uses'=>'ExamController@getStationData','as'=>'osce.admin.exam.getStationData']);			//获取考场对应的考站列表
+		Route::get('exam/room-list-data', ['uses'=>'ExamController@getRoomListData','as'=>'osce.admin.exam.getRoomListData']);			//获取考场列表
+		Route::get('exam/station-data', ['uses'=>'ExamController@getStationData','as'=>'osce.admin.exam.getStationData']);				//获取考场对应的考站列表
 		Route::get('exam/teacher-list-data', ['uses'=>'ExamController@getTeacherListData','as'=>'osce.admin.exam.getTeacherListData']);	//获取监考老师列表
+		Route::get('exam/import-student', ['uses'=>'ExamController@getImportStudent','as'=>'osce.admin.exam.getImportStudent']);		//excel导入考生
+		Route::post('exam/import-student', ['uses'=>'ExamController@postImportStudent','as'=>'osce.admin.exam.postImportStudent']);		//excel导入考生
 
 		Route::post('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/station-list', ['uses'=>'ExamController@getStationList','as'=>'osce.admin.exam.getStationList']);
 		Route::get('exam/exam-list-data', ['uses'=>'ExamController@getExamListData','as'=>'osce.admin.exam.getExamListData']);
+		Route::get('exam/exam-teacher-list', ['uses'=>'ExamController@getTeacherListData','as'=>'osce.admin.exam.getTeacherListData']);
+
 
 		//sp
 		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getStationList','as'=>'osce.admin.spteacher.getShow']);

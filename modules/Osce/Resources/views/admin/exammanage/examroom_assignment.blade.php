@@ -32,12 +32,46 @@
         width: 100%;
     }
     .control-label{text-align: right;}
+
+
+    /*sp老师选择*/
+    .teacher{
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .teacher>div{
+        margin-right: 5px;
+
+    }
+    .ibox-content{
+       border: none;
+    }
+    .sp-teacher select{
+        height: 31px;
+        margin: 5px;
+    }
+    .teacher{
+        margin: 5px;
+    }
+    .teacher-box{
+        width: 320px;
+    }
+    .teacher-warn{
+        background-color: #ed5565;
+        color: #fff;
+    }
+    .teacher-primary{
+        background-color: #1ab394;
+        color: #fff;
+    }
     </style>
 @stop
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','url':'{{route('osce.admin.exam.getStationData')}}', 'list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -47,7 +81,6 @@
                 
             </div>
         </div>
-    <form class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
@@ -80,10 +113,6 @@
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
                                     <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-                                    {{--<select name="room_id[1]" multiple="multiple">--}}
-                                        {{--<option value="1">123</option>--}}
-                                        {{--<option value="2">31</option>--}}
-                                    {{--</select>--}}
                                     <table class="table table-bordered" id="examroom">
                                         <thead>
                                         <tr>
@@ -112,21 +141,13 @@
                                         <tr>
                                             <th>#</th>
                                             <th>考站</th>
-                                            <th>老师</th>
+                                            <th>类型</th>
+                                            <th width="300">老师</th>
+                                            <th>SP老师</th>
+                                            <th>邀请SP老师</th>
                                         </tr>
                                         </thead>
                                         <tbody index="0">
-                                            <tr>
-                                                <td>1</td>
-                                                <td>3:00</td>
-                                                <td>
-                                                    <select class="form-control">
-                                                        <option>==请选择==</option>
-                                                        <option>李老师</option>
-                                                        <option>张老师</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
                                         </tbody>
                                     </table>
 
@@ -143,15 +164,13 @@
                                 </div>
                             </div>
 
-
-
+                        </form>
                     </div>
 
                 </div>
             </div>
 
         </div>
-    </form>
 </div>
 @stop{{-- 内容主体区域 --}}
 
