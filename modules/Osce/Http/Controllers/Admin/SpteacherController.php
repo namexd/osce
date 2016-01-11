@@ -38,6 +38,9 @@ class SpteacherController extends CommonController
     {
         //验证略
 
+
+
+
         //得到请求的病例id和已经选择的sp老师id
         $stationId = $request->input('station_id', '');
         $spteacherId = $request->input('spteacher_id', '');
@@ -45,7 +48,7 @@ class SpteacherController extends CommonController
         //得到老师的列表
         $data = $model->showTeacherData($stationId, $spteacherId);
 
-        return $this->success_data($data);
+        return  response()->json($this->success_rows(1,'获取成功',count($data),count($data),1,$data->toArray()));
     }
 
     /**
@@ -153,11 +156,11 @@ class SpteacherController extends CommonController
 
     public function  getInvitationAdd(Request $request)
     {
-        dd(1111111111);
+//        dd(1111111111);
 
         $this->validate($request, [
             'station_id' => 'required|integer',
-            'user_id' => 'required|integer',
+            'teacher_id' => 'required|integer',
             'case_id' => 'required|integer',
             'status' => 'required|integer',
         ]);
@@ -175,7 +178,6 @@ class SpteacherController extends CommonController
                 $Invitation [] = $LabDevices;
             }
         }
-
         $return = DB::connection('osce_mis')->table('invite')->insert($Invitation);
 
         if ($return) {
