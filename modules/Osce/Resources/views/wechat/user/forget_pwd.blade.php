@@ -2,11 +2,12 @@
 @section('only_head_css')
     <link href="{{asset('msc/wechat/user/css/commons.css')}}"  rel="stylesheet"/>
     <style>
-        .left{
-            width: 20%;
+        .btn{
+            margin-top: 0px;
+            margin-bottom: 10px;
         }
-        .right{
-            width: 80%;
+        .mobile-box{
+            margin-top: 10px;
         }
     </style>
 @stop
@@ -21,13 +22,9 @@
         </a>
     </div>
     <div class="text-box">
-        <div>
-            <div class="pull-left left">
-                <span>手机号</span>
-            </div>
-            <div class="pull-left right">
-                <input type="text" class="form-control">
-            </div>
+        <div class="form-group mobile-box">
+            <label for="mobile">手机号码<span>*</span></label>
+            <input type="number" class="form-control" id="mobile" name="mobile" />
         </div>
         <div>
             <div class="pull-left left">
@@ -37,5 +34,15 @@
                 <button class="btn btn-default" id="btn">发送手机验证码</button>
             </div>
         </div>
+        <div class="form-group">
+            <input type="text" name="password" class="form-control ipt_txt" placeholder="请输入验证码"/>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入原密码"/>
+        </div>
+        <div class="form-group">
+            <input type="password" name="repassword" class="form-control ipt_txt" placeholder="请输入新密码"/>
+        </div>
+        <input class="btn" type="submit"  value="提交审核" />
     </div>
 @stop

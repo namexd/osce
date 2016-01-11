@@ -119,4 +119,21 @@ class ExamRoom extends CommonModel
             ->get();
 
     }
+
+    public function getExamStation($exam_id){
+        try{
+            $result = $this -> leftJoin('room_station', function($join){
+                    $join -> on($this->table.'.room_id', '=', 'room_station.room_id');
+                })  ->leftJoin('station', function($join){
+                    $join -> on('room_station.station_id', '=', 'station.id');
+                })
+                ->where($this->table.'.exam_id','=',$exam_id)
+                ->select(['station.id', 'station.name', 'station.type'])
+                ->  get();
+
+            return $result;
+        } catch(\Exception $ex){
+            return $ex;
+        }
+    }
 }

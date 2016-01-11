@@ -550,7 +550,7 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    private function postImport(Request $request)
+    private function postImport($request)
     {
         //获得上传的数据
         $data = Common::getExclData($request,'teacher');
