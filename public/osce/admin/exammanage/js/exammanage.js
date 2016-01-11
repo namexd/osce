@@ -742,18 +742,19 @@ function makeItem(data){
     //            '毛云刚',
     //        ]
     //    };
-    var li  =   $('<li>');
-    var dl  =   $('<dl>');
-    var dt  =   $('<dt>');
-    li.append(dl);
-    dl.append(dt);
+
+    var dl  =   $('<dl class="clearfloat">');
+
     var items   =   data.items;
+    var everyHeight=data.end-data.begin;
+    dl.css("height",everyHeight/10+"px");
+    dl.bind("click",changeTwo);
     for(var i in items)
     {
         var dd  = $('<dd>').text(items[i]);
-        dt.append(dd);
+        dl.append(dd);
     }
-    return li;
+    return dl;
 }
 function makeCols(data){
     //var data    =   {
@@ -782,16 +783,21 @@ function makeCols(data){
     //
     //};
     var ul  =   $('<ul>');
+
+
     var child   =   data.child;
     var title   =   $('<li class="title">').text(data.name);
-    ul.append(title)
+    ul.append(title);
     for(var i in child)
     {
 
         var itemData    =   child[i];
+        var li  =   $('<li>');
         var item    =   makeItem(itemData);
-        ul.append(item);
+        ul.append(li);
+        li.append(item);
     }
+
     return ul;
 }
 function makeAll(data){
@@ -859,8 +865,71 @@ $(function(){
                 },
 
             ],
-        }
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':1600,
+                    'items':[
+                        '罗海华',
+                        '李治远',
+                        '毛云刚',
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        '罗海华1',
+                        '李治远1',
+                        '毛云刚1',
+                    ]
+                },
+
+            ],
+        },
+        {
+            'name':'教室403',
+            'child':[
+                {
+                    'begin':1000,
+                    'end':2000,
+                    'items':[
+
+                    ]
+                },
+                {
+                    'begin':1600,
+                    'end':2200,
+                    'items':[
+                        '罗海华1',
+                        '李治远1',
+                        '毛云刚1',
+                    ]
+                },
+
+            ],
+        },
     ];
     var dom =   makeAll(smartlist);
     $('.classroom-box').append(dom);
+    //changeTwo();
 });
+
+//点击两个表格可进行交换
+function changeTwo(){
+    if($(this).hasClass('active'))
+    {
+        $(this).removeClass('active');
+        return ;
+    }
+    $(this).addClass('active');
+    if($(".active").length-1==2){
+        console.log("已选2")
+    }
+    if($(".active").length-1==4){
+        console.log("已选4")
+    }
+}

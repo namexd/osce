@@ -22,7 +22,6 @@
             line-height: 30px;
         }
         .assign-box{
-            width: 1050px;
         }
         .classroom-box>ul>li{
             float: left;
@@ -43,13 +42,35 @@
             float: left;
         }
         .classroom-box{
-            width: 1000px;
+            width: 1002px;
         }
-        ul{
+        ul,dl{
             padding: 0;
+            margin: 0;
+        }
+        dt{
+            font-weight: inherit;
         }
         .end{
             margin-top: 460px;
+        }
+        dd{
+            float: left;
+            width: 60px;
+        }
+        /*dl:hover{
+            background-color: #f4f4f4;
+            cursor: pointer;
+        }*/
+        dl{
+            border: 1px solid #ccc;
+        }
+        .title{
+            border: 1px solid #ccc;
+            background-color: #eee;
+        }
+        .active{
+            background-color:#F00;
         }
     </style>
 @stop
