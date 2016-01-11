@@ -50,7 +50,7 @@ class InvitationController extends CommonController
         $data['end_dt']=$ExamList['end_dt'];
         $data['exam_id']=$exam_id;
 
-        dd($data);
+//        dd($data);
         $InviteModel = new Invite();
         if($InviteModel  ->  addInvite($data))
         {
@@ -68,7 +68,7 @@ class InvitationController extends CommonController
 
     /**
      * 已发布邀请列表
-     * @api GET /osce/admin/notice/list
+     * @api GET /osce/admin/invitation/list
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -91,7 +91,7 @@ class InvitationController extends CommonController
 
     /**
      *sp邀请用户的还回结果
-     * @api GET /osce/admin/notice/list
+     * @api GET /osce/admin/invitation/invitation-respond
      * @access public
      *
      * @param Request $request post请求<br><br>
