@@ -80,7 +80,7 @@ class SpteacherController extends CommonController
         if($examId){
             $ExamModel=new ExamRoom();
             $TeacherSp = $ExamModel->getStationList($examId);
-            dump($TeacherSp->toArray());
+            // dump($TeacherSp->toArray());
             $stationTeacher=[];
             foreach($TeacherSp as  $data){
                 $stationData = [];
@@ -118,15 +118,15 @@ class SpteacherController extends CommonController
                 $stationTeacher[$data['station_id']] = $stationData;
             }
 
-            dd( $stationTeacher );
+            // dd( $stationTeacher );
 
-            return view('osce.admin.spteacher. getInvitationIndex',[
+            return view('osce::admin.exammanage.sp_invitation',[
                 'data'    => $stationTeacher,
 
             ]);
         }
 //
-        return redirect()->route('osce.admin.spteacher. getInvitationIndex');//还不确定。
+        return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
 
     }
 

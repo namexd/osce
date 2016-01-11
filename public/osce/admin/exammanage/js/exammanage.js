@@ -480,15 +480,26 @@ function examroom_assignment(){
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
-                                for(var j in data[i].teacher){
+                                var typeValue = ['技能操作站','SP站'];
+                                /*for(var j in data[i].teacher){
                                     teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }
+                                }*/
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'</td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
                                                 '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                            '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right">'+
+                                                    '<select name="" class="teacher-list">'+
+                                                        '<option value="">==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
                                             '</td>'+
                                         '</tr>';
                             }
@@ -510,7 +521,7 @@ function examroom_assignment(){
                     //jsonp:'callback',
                     data:{id:e.params.data.id},
                     async:true,
-                    success:function(res){
+                    success:function(res){console.log(res);
 
                         //记录数据
                         var thisElement = $('#exam-place').find('tbody');
