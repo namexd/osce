@@ -47,7 +47,6 @@
                 
             </div>
         </div>
-    <form class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
@@ -80,10 +79,6 @@
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
                                     <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-                                    {{--<select name="room_id[1]" multiple="multiple">--}}
-                                        {{--<option value="1">123</option>--}}
-                                        {{--<option value="2">31</option>--}}
-                                    {{--</select>--}}
                                     <table class="table table-bordered" id="examroom">
                                         <thead>
                                         <tr>
@@ -143,15 +138,13 @@
                                 </div>
                             </div>
 
-
-
+                        </form>
                     </div>
 
                 </div>
             </div>
 
         </div>
-    </form>
 </div>
 @stop{{-- 内容主体区域 --}}
 

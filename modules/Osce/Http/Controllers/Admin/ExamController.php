@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -21,6 +22,7 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
+use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
 
@@ -468,15 +470,15 @@ class ExamController extends CommonController
     }
 
     /**
-     * 导入考生
-     * @api GET /osce/admin/exam/getImportExaminee
+     * Excel导入考生
+     * @api GET /osce/admin/exam/getImportStudent
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        exam_id        考试id(必须的)
      *
-     * @return object
+     * @return view
      *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
@@ -484,12 +486,31 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getImportExaminee(Request $request)
+    public function getImportStudent(Request $request){
+        $exam_id = $request->get('id');
+        return view('osce::admin.exammanage.import',['id' => $exam_id]);
+    }
+    public function postImportStudent(Request $request, Student $student)
     {
-        $this->validate($request, [
-            'id' => 'required|integer'
-        ]);
+        try {
+            //获得上传的数据
+            $exam_id = $request -> get('id');
+            $data = Common::getExclData($request, 'student');
+            //去掉sheet
+            $studentList = array_shift($data);
+            //将中文表头转为英文
+            $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
 
+            //将数组导入到模型中的addInvigilator方法
+            if ($student->addExaminee($exam_id, $examineeData)) {
+                throw new \Exception('系统出错，请重试！');
+            } else {
+                echo json_encode($this->success_data());
+            }
+
+        } catch (\Exception $ex) {
+            echo json_encode($this->fail($ex));
+        }
 
     }
 
@@ -610,9 +631,14 @@ class ExamController extends CommonController
             'id' => 'required|integer'
         ]);
         $exam_id = $request -> get('id');
+        $examRoom = new ExamRoom();
+        //获取考试id对应的考场数据
+        $examRoomData = $examRoom -> getRoomListByExam($exam_id);
+        //获取考试对应的考站数据
+        $examStationData = $examRoom -> getExamStation($exam_id);
 
 
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id]);
+        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
 
 
@@ -671,6 +697,23 @@ class ExamController extends CommonController
         );
     }
 
+    /**
+     * 获取老师列表数据 接口
+     * @api GET /osce/admin/exam/getTeacherListData
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        teacher        老师id数组(必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
     public function getTeacherListData(Request $request)
     {
         //获取老师ID数组：teacher_id
