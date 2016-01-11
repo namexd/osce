@@ -392,10 +392,10 @@
                                             <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&open_type={{@$open_type}}&status=">全部</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=0&open_type={{@$open_type}}">正常</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=1&open_type={{@$open_type}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=1&open_type={{@$open_type}}">停用</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=0&open_type={{@$open_type}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -414,7 +414,7 @@
                                     <td class="floors">{{@$v['floor']}}</td>
                                     <td class="open_type" data="{{@$v->opentype}}">{{@$v['open_type']}}</td>
                                     <td class="tname" data="{{@$v->user->id}}">{{@$v->user->name}}</td>
-                                    <td class="status" data="{{@$v['status']}}">@if($v['status'] == 0)正常@else<span class="state2">停用</span>@endif</td>
+                                    <td class="status" data="{{@$v['status']}}">@if($v['status'] == 1)正常@else<span class="state2">停用</span>@endif</td>
                                     <input type="hidden" class="short_name" value="{{@$v->short_name}}">
                                     <input type="hidden" class="enname" value="{{@$v->enname}}">
                                     <input type="hidden" class="short_enname" value="{{@$v->short_enname}}">
@@ -423,10 +423,10 @@
                                         <a href=""  data="{{$v['id']}}"  class="state1 edit update edit_lab" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                                             <span>编辑</span>
                                         </a>
-                                        @if($v->status == 0)
-                                            <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">停用</a>
+                                        @if($v->status == 1)
+                                            <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">停用</a>
                                         @else
-                                            <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">启用</a>
+                                            <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                                         @endif
                                         <a data="{{$v['id']}}" class="state2 edit_role modal-control delete">删除</a>
                                         <input type="hidden" class="setid" value="1"/>
@@ -553,8 +553,8 @@
                 <div class="col-sm-9">
                     <select id="select_Category"   class="form-control m-b sta" name="status">
                         <option value="-1">请选择状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">停用</option>
+                        <option value="1">正常</option>
+                        <option value="0">停用</option>
                     </select>
                 </div>
             </div>
@@ -670,8 +670,8 @@
                 <div class="col-sm-9">
                     <select id="select_Category"   class="form-control m-b" name="status">
                         <option value="-1">请选择状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">停用</option>
+                        <option value="1">正常</option>
+                        <option value="0">停用</option>
                     </select>
                 </div>
             </div>
