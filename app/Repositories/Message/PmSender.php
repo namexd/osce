@@ -24,18 +24,28 @@ class PmSender implements Message{
             $title=$content;
         }
 
-
-        $pm=UsersPm::create([
-            'title'             =>  $title,
-            'content'           =>  $content,
-            'accept_user_id'    =>  $accept,
-            'send_user_id'      =>  $sender,
-            'pid'               =>  $pid,
-            'module'            =>  $module
-        ]);
-
-        return $pm->id>0;
-
+        if(is_array($accept)){
+            foreach($accept as $item){
+                UsersPm::create([
+                    'title'             =>  $title,
+                    'content'           =>  $content,
+                    'accept_user_id'    =>  $item,
+                    'send_user_id'      =>  $sender,
+                    'pid'               =>  $pid,
+                    'module'            =>  $module
+                ]);
+            }
+        }
+        else{
+            UsersPm::create([
+                'title'             =>  $title,
+                'content'           =>  $content,
+                'accept_user_id'    =>  $accept,
+                'send_user_id'      =>  $sender,
+                'pid'               =>  $pid,
+                'module'            =>  $module
+            ]);
+        }
     }
 
     public function get($id){

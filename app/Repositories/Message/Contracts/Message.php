@@ -7,7 +7,7 @@ interface Message {
     /**
      * 发送消息
      *
-     * @param $accept 消息接收人
+     * @param $accept 消息接收人,一个接收人或一个接收人数组
      * @param $content 消息内容
      * @param null $title 消息标题
      * @param null $module 模块名称

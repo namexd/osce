@@ -34,7 +34,7 @@ class ExampleTest extends TestCase
          *
          */
         dd($sender->messages(1));
-        
+
         dd($sender->send(1,'验证码：'.time().'【敏行医学】'));
 
         //email
