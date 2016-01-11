@@ -83,12 +83,13 @@ class SpteacherController extends CommonController
                 ];
 //        dd( $data);
 
-                return view('Osce::admin.exammanage.sp_invitation',[
+                return view('osce::admin.exammanage.sp_invitation',[
                     'data'    => $data,
                 ]);
             }
 //
-//        return redirect()->route('osce.admin.place.getRoomCateList');//还不确定。
+//        return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
+        return view('osce::admin.exammanage.sp_invitation');
     }
 
 
