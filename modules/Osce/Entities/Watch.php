@@ -197,14 +197,15 @@ class Watch extends CommonModel implements MachineInterface
     public function getList($name='',$status=''){
         $builder =   Watch::select();
 
-        if(is_null($name))
+        if($name)
         {
             $builder =   $builder    ->  where('name','like','%'.$name.'%');
         }
-        if(is_null($status))
+        if($status || ($status==0&&$status!=''))
         {
             $builder =   $builder    ->  where('status','=',$status);
         }
+
         return  $builder ->  paginate(config('osce.page_size'));
     }
 

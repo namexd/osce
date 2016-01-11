@@ -116,7 +116,8 @@ class MachineController extends CommonController
     public function getMachineList(Request $request){
         $this   ->  validate($request,[
             'cate_id'   =>  'sometimes|integer',
-            'name'      =>  'sometimes'
+            'name'      =>  'sometimes',
+            'status'      =>  'sometimes'
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
