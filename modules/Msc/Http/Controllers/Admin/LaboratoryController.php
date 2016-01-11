@@ -365,7 +365,7 @@ class LaboratoryController extends MscController {
         $local_id = Input::get('lid');
         $local = Floor::where('id','=',$local_id)->first();
         $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
-        $where['status'] = 0;
+        $where['status'] = 1;
         $where['location_id'] = $local_id;
         $user = Auth::user();
         $role_id = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
