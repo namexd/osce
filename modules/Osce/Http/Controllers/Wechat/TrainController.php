@@ -16,7 +16,7 @@ class TrainController extends  CommonController{
     /**
      *≈‡—µ¡–±Ì
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/train-list
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -39,7 +39,7 @@ class TrainController extends  CommonController{
 
         if(!$userId){
             return response()->json(
-                $this->success_rows(404,'«Îœ»µ«¬Ω')
+                $this->success_rows(0,'false')
             );
         }
         $trainModel=new InformTrain();
@@ -55,7 +55,7 @@ class TrainController extends  CommonController{
     /**
      *–¬‘ˆ≈‡—µ
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/train-list
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -81,12 +81,12 @@ class TrainController extends  CommonController{
             'end_dt'                  =>'required',
             'teacher'                 =>'required',
             'content'                 =>'required',
-            'attachments'             =>'sometimes',
             'status'                  =>'required',
             'create_user_id'          =>'required',
         ]);
-
-        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','attachments','status','create_user_id']);
+        $attachments=$request->input('attachments');
+        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status','create_user_id']);
+        $data['attachments']=serialize($attachments);
         $result=$this->create($data);
         if($result){
             return response()->json(
@@ -101,7 +101,7 @@ class TrainController extends  CommonController{
     /**
      *±‡º≠≈‡—µªÿœ‘
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/edit-train
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -123,24 +123,40 @@ class TrainController extends  CommonController{
             'id'  => 'required|integer'
         ]);
         $id=intval($request->get('id'));
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-//        if($userId!==$creteId){
-//            return response()->json(
-//                $this->success_rows(3,'false')
-//            );
-//        }
+        $user=Auth::user();
+        $userId=$user->id;
+        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+        $manager=config('osce.manager');
+        if($userId!==$id || $creteId!==$manager[0]){
+            return response()->json(
+                $this->success_rows(3,'false')
+            );
+        }
         $list=InformTrain::find($id);
+
+        foreach($list as $item){
+          $data=[
+              'name' =>$item->name,
+              'address' =>$item->address,
+              'begin_dt' =>$item->begin_dt,
+              'end_dt' =>$item->end_dt,
+              'teacher' =>$item->teacher,
+              'content' =>$item->content,
+              'status' =>$item->status,
+              'attachments' =>$item->attachments,
+              'create_user_id' =>$item->create_user_id,
+          ];
+        }
+        $data['attachments']=unserialize($data['attachments']);
         return response()->json(
-            $this->success_data(1,'success',$list)
+            $this->success_data(1,'success',$data)
         );
     }
 
     /**
      *±£¥Ê±‡º≠≈‡—µ
-     * @method GET
-     * @url /user/
+     * @method POST
+     * @url /osce/wechat/train/edit-train
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -159,18 +175,28 @@ class TrainController extends  CommonController{
      */
     public function postEditTrain(Request $request){
         $this->validate($request,[
-            'id'  =>'required|integer',
+            'id'                      =>'required|integer',
+            'name'                    =>'required|max:64',
+            'address'                 =>'required|max:64',
+            'begin_dt'                =>'required',
+            'end_dt'                  =>'required',
+            'teacher'                 =>'required',
+            'content'                 =>'required',
+            'status'                  =>'required',
+            'create_user_id'          =>'required',
         ]);
-
-        $data=$request->only([]);
+        $attachments=$request->input('attachments');
+        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status','create_user_id']);
         $user=Auth::user();
         $userId=$user->id;
         $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
-        if($userId!==$creteId){
+        $manager=config('osce.manager');
+        if($userId!==$creteId || $creteId!==$manager[0]){
             return response()->json(
                 $this->success_rows(3,'false')
             );
         }
+        $data['attachments']=unserialize($attachments);
         $result=InformTrain::where('id',$data['id'])->update($data);
         if($result){
             return response()->json(
@@ -185,7 +211,7 @@ class TrainController extends  CommonController{
     /**
      *…æ≥˝≈‡—µ
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/del-train
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -211,7 +237,8 @@ class TrainController extends  CommonController{
         $user=Auth::user();
         $userId=$user->id;
         $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-        if($userId!==$creteId){
+        $manager=config('osce.manager');
+        if($userId!==$creteId || $creteId!==$manager[0]){
             return response()->json(
                 $this->success_rows(3,'false')
             );
