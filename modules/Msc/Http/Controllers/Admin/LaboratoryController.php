@@ -368,6 +368,7 @@ class LaboratoryController extends MscController {
         $where['status'] = 0;
         $where['location_id'] = $local_id;
         $user = Auth::user();
+        dd($user);
         $role_id = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
         $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role_id->role_id)->first();
         if($role_name->name == '超级管理员'){
@@ -579,7 +580,7 @@ class LaboratoryController extends MscController {
      * Date: 2016年1月11日11:35:27
      * 实验室预约记录审核
      */
-    public function getLabOrderCheck(){
+    public function getLabOrderList(){
 
         return view('msc::admin.labmanage.lab_maintain',[
         ]);
