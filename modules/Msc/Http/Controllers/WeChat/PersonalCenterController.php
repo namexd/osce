@@ -73,6 +73,19 @@ class PersonalCenterController extends MscWeChatController {
 	public function getInfoManage(){
 		return view('msc::wechat.index.index_infomanage');
 	}
+	/**
+	 * 我的预约（实验室）
+	 * @method	GET
+	 * @url /msc/wechat/personal-center/my-laboratory-apply
+	 * @access public
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date	2016年1月11日13:58:12
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+	public function MyLaboratoryApply(){
+
+	}
+
 
 	//我的的外借
 	public function getPersonalMyBorrow(ResourcesBorrowing $resourcesBorrowing){
