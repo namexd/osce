@@ -33,17 +33,16 @@ class Invite extends CommonModel
                 'end_dt' =>$data['end_dt'],
                 'exam_screening_id' =>$data['exam_id'],
             ];
-
-//            dd($inviteData);
             $notice  =   $this  -> firstOrcreate($inviteData);
+
 //            dd($notice);
             if($notice)
             {
                 $invitelist =$this->where('id','=',$data['teacher_id'])->first()->toArray();
                 $list=[
                     'invite_id' =>  $invitelist['id'],
-                    'exam_screening_id' =>$data['exam_id'],
-                    'case_id'     =>$data['case_id'],
+//                    'exam_screening_id' =>$data['exam_id'],
+//                    'case_id'     =>$data['case_id'],
                     'teacher_id'     =>$data['teacher_id'],
                 ];
                 //关联到考试邀请sp老师表
@@ -75,16 +74,16 @@ class Invite extends CommonModel
         {
 
 
-//            $url    =   route('osce.admin.notice.getMsg',['id'=>$notice->id]);
+//            $url    =   route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
             $msgData    =   [
                 [
                     'title' =>'邀请通知',
-                    'desc'  =>'osce考试第一期邀请',
+                    'desc'  =>$data['exam_name'].'邀请',
                     'url'=>'http://www.baidu.com'
                 ],
             ];
             $message    =   Common::CreateWeiXinMessage($msgData);
-            Common::sendWeiXin('oI7UquLMNUjVyUNaeMP0sRcF4VyU',$message);//单发
+            Common::sendWeiXin($data['openid'],$message);//单发
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
         }

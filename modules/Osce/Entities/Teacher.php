@@ -372,6 +372,7 @@ class Teacher extends CommonModel
     {
         try{
             $teacher = $this->where(['type' => 1])
+                ->whereNotIN('id', $formData)
                 ->select(['id', 'name'])->get();
 
             return $teacher;

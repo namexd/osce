@@ -343,7 +343,7 @@ function sp_invitation(){
             type:'get',
             url: pars.teacher_list,   //修改请求地址
             data:{id:id,selected:selected},
-            success:function(res){console.log(res)
+            success:function(res){
 
                 var source = [];
 
@@ -401,9 +401,17 @@ function examroom_assignment(){
             if(! current.flag){
 
                 lastArr.push(arr[i]);
-                lastArr[lastArr.length-1]['flag'] = 1;
+                if(lastArr[lastArr.length-1]['flag']==undefined){
+                    lastArr[lastArr.length-1]['flag'] = 1;
+                }else{
+                    lastArr[lastArr.length-1]['flag'] = lastArr[lastArr.length-1].flag +1;
+                }
             }else{
-                lastArr[current.id]['flag'] += 1;
+                if(lastArr[lastArr.length-1].flag==undefined){
+                    lastArr[lastArr.length-1]['flag'] = 1;
+                }else{
+                    lastArr[lastArr.length-1]['flag'] = lastArr[lastArr.length-1].flag +1;
+                }
             }
         }
         return lastArr;
@@ -420,7 +428,11 @@ function examroom_assignment(){
     }
 
 	//select2初始化
-    $(".js-example-basic-multiple").select2()
+    $(".js-example-basic-multiple").select2();
+
+    //数据选择计数器
+    var select2_data,
+        select2_data_del;
 
     /**
      * 选择必考项
@@ -442,12 +454,198 @@ function examroom_assignment(){
             $(this).parent().siblings('.necessary').text(num[current.length]);
             //选择的数据
             $(this).on("select2:select", function(e){
+
+                //让select只进入一次
+                if(select2_data!=undefined){
+                    if(select2_data.id==e.params.data.id){
+                        select2_data = null;
+                        return;
+                    }
+                    select2_data = e.params.data;
+                }else{
+                    select2_data = e.params.data;
+                }
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:pars.url,//'http://127.0.0.1:3000/getList',
-                    //dataType:'jsonp',
-                    //jsonp:'callback',
+                    url:pars.url,
+                    data:{id:e.params.data.id},
+                    async:true,
+                    success:function(res){
+
+                        //记录数据
+                        var thisElement = $('#exam-place').find('tbody');
+                        var sp_no=null;
+                        if(thisElement.attr('data')==undefined){
+                            sp_no = '{}';
+                        }
+                        else{
+                            sp_no = JSON.parse(thisElement.attr('data'));
+                        }
+
+                        if(res.code!=1){
+                            layer.alert(res.message);
+                            return;
+                        }else{
+                            var res_data = res.data,
+                                html = '',
+                                data;
+                            
+                            //thisElement.attr('data',JSON.stringify(data));
+                            //数据去重
+                            if(sp_no!='{}'){
+                                data = tab(sp_no,res_data);
+                            }else{
+                                data = tab([],res_data);
+                            }
+
+                            //准备dom
+                            for(var i in data){
+
+                                var teacher = '<option>==请选择==</option>';
+                                var typeValue = [0,'技能操作站','SP站'];
+                                /*for(var j in data[i].teacher){
+                                    teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
+                                }*/
+
+                                html += '<tr>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
+                                            '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
+                                            '<td>'+
+                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                            '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right">'+
+                                                    '<select name="" class="teacher-list js-example-basic-multiple">'+
+                                                        '<option>==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
+                                            '</td>'+
+                                            '<td><a href="">发起邀请</a></td>'+
+                                        '</tr>';
+                            }
+                            //动态插入考场安排
+                            thisElement.html(html);
+                            thisElement.attr('data',JSON.stringify(data));
+
+
+                            /**
+                             * 老师类型选择
+                             * @author mao
+                             * @version 1.0
+                             * @date    2016-01-11
+                             */
+                            $('.teacher-teach').select2({
+                                placeholder: "==请选择==",
+                                ajax:{
+                                    url: pars.teacher_list,
+                                    delay:0,
+                                    data: function (params) {
+
+                                        var ids = [];
+                                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                            var id = $(elem).find('td').eq(3).find('select option:selected').val();
+                                            if(id==null){
+                                                return;
+                                            }else{
+                                                ids.push(id);
+                                            }
+                                            //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
+                                        });
+
+                                      return {
+                                        teacher:ids
+                                      };
+                                    },
+                                    dataType: 'json',
+                                    processResults: function (res) {
+
+                                        //数据格式化
+                                        var str = [];
+                                        for(var i in res.data){
+                                            str.push({id:res_data[i].id,text:res.data[i].name});
+                                        }
+
+                                        //加载入数据
+                                        return {
+                                            results: str
+                                        };
+                                    }
+
+                                }
+                            });
+
+
+                            /**
+                             * 老师类型选择
+                             * @author mao
+                             * @version 1.0
+                             * @date    2016-01-11
+                             */
+                            $('.teacher-list').select2({
+                                placeholder: "==请选择==",
+                                ajax:{
+                                    url: pars.teacher_list,
+                                    delay:0,
+                                    data: function (params) {
+
+                                        var ids = [];
+                                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                            var id = $(elem).find('td').eq(3).find('select option:selected').val();
+                                            if(id==null){
+                                                return;
+                                            }else{
+                                                ids.push(id);
+                                            }
+                                        });
+
+                                      return {
+                                        teacher:ids
+                                      };
+                                    },
+                                    dataType: 'json',
+                                    processResults: function (res) {
+
+                                        //数据格式化
+                                        var str = [];
+                                        for(var i in res.data){
+                                            str.push({id:res_data[i].id,text:res.data[i].name});
+                                        }
+
+                                        //加载入数据
+                                        return {
+                                            results: str
+                                        };
+                                    }
+
+                                }
+                            });
+
+                        }
+                    }
+                });
+            });
+
+            //删除数据
+            $(this).on("select2:unselect", function(e){
+
+                //让select只进入一次
+                if(select2_data_del!=undefined){
+                    if(select2_data_del.id==e.params.data.id){
+                        select2_data = null;
+                        return;
+                    }
+                    select2_data_del = e.params.data;
+                }else{
+                    select2_data_del = e.params.data;
+                }
+                //考站数据请求
+                $.ajax({
+                    type:'get',
+                    url:pars.url,
                     data:{id:e.params.data.id},
                     async:true,
                     success:function(res){
@@ -466,80 +664,8 @@ function examroom_assignment(){
                             layer.alert(res.message);
                             return;
                         }else{
-                            var res_data = res.data.rows,
-                                html = '',
-                                data;
 
-                            //thisElement.attr('data',JSON.stringify(data));
-                            //数据去重
-                            if(sp_no!='{}'){
-                                data = tab(sp_no,res_data);
-                            }else{
-                                data = res_data;
-                            }
-
-                            //准备dom
-                            for(var i in data){
-
-                                var teacher = '<option>==请选择==</option>';
-                                var typeValue = ['技能操作站','SP站'];
-                                /*for(var j in data[i].teacher){
-                                    teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }*/
-
-                                html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
-                                            '<td>'+data[i].name+'</td>'+
-                                            '<td>'+typeValue[data[i].type]+'</td>'+
-                                            '<td>'+
-                                                '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
-                                            '</td>'+
-                                            '<td class="sp-teacher">'+
-                                                '<div class="teacher-box pull-left">'+
-                                                '</div>'+
-                                                '<div class="pull-right">'+
-                                                    '<select name="" class="teacher-list">'+
-                                                        '<option value="">==请选择==</option>'+
-                                                    '</select>'+
-                                                '</div>'+
-                                            '</td>'+
-                                        '</tr>';
-                            }
-                            //动态插入考场安排
-                            thisElement.html(html);
-                            thisElement.attr('data',JSON.stringify(data));
-                        }
-                    }
-                });
-            });
-
-            //删除数据
-            $(this).on("select2:unselect", function(e){
-                //考站数据请求
-                $.ajax({
-                    type:'get',
-                    url:pars.url,//'http://127.0.0.1:3000/getList',
-                    //dataType:'jsonp',
-                    //jsonp:'callback',
-                    data:{id:e.params.data.id},
-                    async:true,
-                    success:function(res){console.log(res);
-
-                        //记录数据
-                        var thisElement = $('#exam-place').find('tbody');
-                        var sp_no;
-                        if(thisElement.attr('data')==undefined){
-                            sp_no = '{}';
-                        }
-                        else{
-                            sp_no = JSON.parse(thisElement.attr('data'));
-                        }
-
-                        if(res.code!=1){
-                            layer.alert(res.message);
-                            return;
-                        }else{
-                            var res_data = res.data.rows,
+                            var res_data = res.data,
                                 html = '',
                                 data = [];
 
@@ -560,11 +686,22 @@ function examroom_assignment(){
                                 }
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'</td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                                '<select class="form-control teacher-teach" name="select['+data[i].id+']">'+teacher+'</select>'+
                                             '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right">'+
+                                                    '<select name="" class="teacher-list">'+
+                                                        '<option value="">==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
+                                            '</td>'+
+                                            '<td><a href="">发起邀请</a></td>'+
                                         '</tr>';
                             }
                             //动态插入考场安排
@@ -698,6 +835,71 @@ function examroom_assignment(){
             return;
         }
     });
+
+
+    $('#exam-place').on('change',".teacher-list",function(){
+
+        var $teacher= $(this).find('option:selected').text().split('==')[0];
+        var id = $(this).find('option:selected').val();
+        var thisElement = $(this);
+
+        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
+                '<div class="pull-left">'+$teacher+'</div>'+
+                '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+        $(this).parents(".pull-right").prev().append(sql);
+    })
+
+    //删除
+    $('#exam-place').on('click',".teacher-box i",function(){
+        $(this).parents(".teacher").remove();
+    })
+
+
+
+   /* $('#exam-place').on('click','.teacher-teach',function(){
+
+        var thisElement = $(this);
+        $.ajax({
+            type:'get',
+            url: pars.teacher_list,   //修改请求地址
+            async:true,
+            data:{teacher:[]},
+            success:function(res){
+
+                var source = [];
+
+                if(res.code!=1){
+                    layer.alert('res.message');
+                }else{
+                    var data = res.data;
+                    var html = '<option>==选择==</option>';
+                    for(var i in data){
+
+                        html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                    }
+                   thisElement.html(html);
+                }
+            }
+        });
+    });*/
+
+    $('.teacher-teach').select2({
+        placeholder: "==请选择==",
+        ajax:{
+            url: pars.teacher_list,
+            dataType: 'json',
+            data: function (term, page) {console.log(term,page)
+                return {
+                        input: term
+                    };
+            },
+            results: function (data) {
+                allOption=data;
+                   return {results:data};
+                }
+
+        }
+    })
 
 }
 
