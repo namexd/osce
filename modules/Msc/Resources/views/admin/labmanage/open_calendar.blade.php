@@ -10,6 +10,7 @@
         .add_time_list lable{ width: 10%; float: left; text-align: center;line-height: 34px;}
         .add_time_list .add_time_button{line-height: 34px;}
         #calendar .check{ background-color: #408AFF; color: #fff!important;}
+        #calendar .check span{  color: #fff!important;}
     </style>
 @stop
 @section('only_js')
@@ -25,18 +26,21 @@
             getEvent();
 //            楼栋选项卡切换
             function ban(){
-                $(".list-group-parent").click(function(){
-                    $(this).toggleClass("checked").next(".lab_num").toggle("200");
-                    $(this).children(".fa").toggleClass("deg");
+                $(".list-group-parent").unbind().click(function(){
+                    $(this).addClass("checked").parent(".list-group").siblings().children(".list-group-parent").removeClass("checked");
+                    if($(this).next(".lab_num").children(".list-group-child").size()!="0"){
+                        $(this).next(".lab_num").slideToggle("200");
+                        $(this).children(".fa").toggleClass("deg");
+                    }
                     if($(this).parent().next(".list-group").length=="1"){
                         $(this).next(".lab_num").children().last().addClass("border-bottom");
                     }
-
                 });
-                $(".list-group-child").click(function(){
+                $(".list-group-child").unbind().click(function(){
                     $(".list-group-parent").removeClass("checked");
                     $(".list-group-child").removeClass("checked");
                     $(this).addClass("checked");
+                    //getEvent(labid);
                 });
             }
  //          楼栋实验室数据绑定
@@ -107,8 +111,7 @@
                 $(this).children(".check_icon").toggleClass("check");
             });
 //      获取选择的楼栋事件
-        function getEvent(){
-
+        function getEvent(labid){
             var qj={id:"13"}
             $.ajax({
                 url:"{{ route('msc.admin.laboratory.getEditLabCleander')}}", /*${ctx}/*/
@@ -487,6 +490,7 @@
 //                                //确定之后-把已添加的数据返回并显示
 //                                //location.reload();
 //                            });
+                            load();
                             console.log(msg.data);
 
                         }else{
