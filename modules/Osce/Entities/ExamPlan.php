@@ -31,10 +31,14 @@ class ExamPlan extends CommonModel
     protected $roomStationNum   =   [];
     //考站队列
     protected $stationQueue     =   [];
+    //已结束考生
     protected $overStudent      =   [];
 
     protected $lastGroup        =   false;
 
+    protected $lastGroupList    =   [];
+
+    protected $stepLastStatus   =   false;
 
     public function IntelligenceEaxmPlan($exam){
         $studentList   =   $this   ->  getExamStudent($exam);
@@ -60,6 +64,9 @@ class ExamPlan extends CommonModel
         //获取考站流程节点清单
         $flows  =   $this   ->  getExamFlow($exam);
         $flowsIndex         =   $this   ->  groupFlowByRoom($flows);
+
+        $this   ->  setLastFlow($flowsIndex);
+
         //初始化考场考生队列
         $this   ->  initRoomQueue($exam);
         //初始化房间考生池
@@ -69,24 +76,16 @@ class ExamPlan extends CommonModel
         if($exam->sequence_mode==1)
         {
             $flowsArray =   array_shift($flowsIndex);
+            foreach($flowsArray as $flow)
+            {
+                $this   ->  putStudentToFirstRoomQueue($flow->room,$this->allSudent);
+                //$this   ->  delStudentFormPond();
+            }
             while(!$this->lastGroup)
             {
-                foreach($flowsArray as $flow)
-                {
-                    $this   ->  putStudentToFirstRoomQueue($flow->room,$this->allSudent);
-                }
-                //var_dump($this->roomQueue);
-                foreach($this->roomQueue as $item)
-                {
-                    foreach($item as $one)
-                    {
-                        echo $one->name,'<br>';
-                    }
-                }
                 $preStudentsList    =   $this   ->  stepExam($flowsIndex);
-
+                //var_dump($this->lastGroup);
                 $this   ->  setOverStudent($preStudentsList);
-                echo '123<br>';
             }
         }
         else
@@ -126,12 +125,15 @@ class ExamPlan extends CommonModel
         foreach($flows as $flow)
         {
             $examFlowRoomRelation       =   $flow   ->  examFlowRoomRelation;
+
             if(is_null($examFlowRoomRelation->  serialnumber))
             {
                 throw new \Exception('序号数据错误');
             }
             $group[$examFlowRoomRelation->  serialnumber][]=$examFlowRoomRelation;
         }
+
+        ksort($group);
         return $group;
     }
     /*
@@ -226,6 +228,7 @@ class ExamPlan extends CommonModel
             $roomList    =   $this   ->  roomQueue;
         }
         $list   =  [];
+
         foreach($roomList as $roomId=>$item)
         {
             if(!is_array($item))
@@ -274,7 +277,6 @@ class ExamPlan extends CommonModel
             throw new \Exception('考站数量不对');
         }
         //如果候考池人员小于 一次需进场的人数,并且不是最后一组，本次排列0个人，轮下一波；
-        $this->lastGroupCheck($roomStudentPond);
         if($this->lastGroup||count($roomStudentPond)<$num)
         {
             return  [];
@@ -293,6 +295,7 @@ class ExamPlan extends CommonModel
     public function arrangeStudentForRoom($room){
         //选取学生
         $studentChoosed     =   $this   ->  getStudentsForRoom($room);
+        //将考生从该房间被选池中删除
         $this               ->  delStudentFormPond($studentChoosed,$room);
         return  $studentChoosed;
     }
@@ -324,16 +327,20 @@ class ExamPlan extends CommonModel
         {
             //获取当前流程
             $flow  =   array_shift($flows);
-
             $room       =   $this   ->  getRandItem($flow);
             $chooseList =   $this   ->  roomSudent[$room->id];
             //获取本次考场新增的安排考生
             $preStudentsList        =   $this   ->  arrangeStudentForRoom($room);
-
-            $this   ->  stepExam($flows);
+            //判断当前流程是否为 当次考试最后一个考场
+            if($this  ->  isLastStep($flow))
+            {
+                //dd($this->roomQueue);
+                $this   ->lastGroupCheck($chooseList);
+            }
+            //dd($this->roomQueue);
+            //$this   ->  stepExam($flows);
 
             return  $preStudentsList;
-            //overStudent;
 
         }
         else
@@ -342,6 +349,19 @@ class ExamPlan extends CommonModel
         }
     }
 
+    public function isLastStep($flows){
+        $lastGroupList          =   $this   ->  lastGroupList;
+        $lastIds                =   array_pluck($lastGroupList,'serialnumber');
+
+        foreach($flows  as $flow)
+        {
+            if(in_array($flow->serialnumber,$lastIds))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * 给第一个考场添加候考队列
      */
@@ -364,20 +384,25 @@ class ExamPlan extends CommonModel
     }
 
     public function lastGroupCheck($thisGroup){
-        $overStudent =   $this   ->  overStudent;
-        $allSudent   =   $this   -> allSudent;
-        $overIds    =   array_pluck($overStudent,'id');
-        $allIds     =   array_pluck($allSudent,'id');
-        $thisIds     =   array_pluck($thisGroup,'id');
+        $overStudent    =   $this   ->  overStudent;
+        $allSudent      =   $this   -> allSudent;
+        $overIds        =   array_pluck($overStudent,'id');
+        $allIds         =   array_pluck($allSudent,'id');
+        $thisIds        =   array_pluck($thisGroup,'id');
 
         foreach($thisIds as $id)
         {
             $overIds[]    = $id;
         }
-
-        if(sort($allIds)===sort($allIds))
+        if(sort($allIds)===sort($overIds))
         {
             $this->lastGroup=true;
         }
+    }
+
+    public function setLastFlow($flowsIndex){
+        $last   =   array_pop($flowsIndex);
+        $this   ->  lastGroupList   =   $last;
+        return $this;
     }
 }

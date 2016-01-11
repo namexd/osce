@@ -23,6 +23,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use App\Repositories\Common;
