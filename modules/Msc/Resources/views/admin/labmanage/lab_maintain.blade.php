@@ -266,8 +266,10 @@
 
                                 if(n == $(updateobj).parent().parent().find('.floors').html()){
                                     opstr += '<option value="'+n+'" selected="selected">'+n+'楼</option>';
+                                }else{
+                                    opstr += '<option value="'+n+'">'+n+'楼</option>';
                                 }
-                                opstr += '<option value="'+n+'">'+n+'楼</option>';
+
                             });
                             $('.oldfloor').html(opstr);
                         }
