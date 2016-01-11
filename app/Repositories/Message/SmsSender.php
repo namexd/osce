@@ -14,7 +14,7 @@ class SmsSender implements Message{
         $this->config = $config;
     }
 
-    public function send($accept,$content,$title=null){
+    public function send($accept,$content,$title=null,$module=null,$sender=0,$pid=0){
 
         //$api_url='http://mb345.com/ws/BatchSend.aspx?';
         //$corp_id='LKSDK0004929';
@@ -59,4 +59,17 @@ class SmsSender implements Message{
 
     }
 
+
+    public function get($id){
+        throw new \Exception('未实现的方法');
+    }
+
+    public function messages($accept,$sender=null,$module=null,$status=1,$pageSize=10,$pageIndex=0){
+        throw new \Exception('未实现的方法');
+    }
+
+
+    public function delete($id){
+        throw new \Exception('未实现的方法');
+    }
 }
