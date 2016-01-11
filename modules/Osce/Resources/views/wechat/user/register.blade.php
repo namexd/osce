@@ -1,9 +1,9 @@
-@extends('osce::wechat.layouts.admin')
+@extends('osce::wechat.layouts.user')
 @section('only_head_css')
-    <link rel="stylesheet" href="{{asset('msc/common/css/bootstrapValidator.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/common/css/bootstrapValidator.css')}}">
 
     {{--select输入效果--}}
-    <link href="{{asset('msc/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
+    <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style rel="stylesheet">
         .select2-container--default .select2-selection--single{ height: 36px;
             border: 1px solid #ccc;}
@@ -12,58 +12,36 @@
         .form-control{
             color: #333!important;
         }
+        .user_header,.btn{background: #1ab394;}
     </style>
 @stop
 
 @section('only_head_js')
-    <script type="text/javascript" src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
-    <script src="{{asset('msc/wechat/user/js/commons.js')}}"></script>
-    <script src="{{asset('msc/wechat/user/js/register.js')}}"></script>
-    <script src="{{asset('msc/common/select2-4.0.0/js/select2.full.js')}}"></script>
+    <script type="text/javascript" src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+    <script src="{{asset('osce/wechat/user/js/commons.js')}}"></script>
+    <script src="{{asset('osce/wechat/user/js/register.js')}}"></script>
+    <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
 
 @stop
     
 @section('content')
-    <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
-            <i class="fa fa-angle-left clof font26 icon_return"></i>
-        </a>
-        用户注册
-        <a class="right header_btn" href="javascript:void(0)"></a>
-    </div>
-<div class="form-select">
-    <div class="teacher checked">
-       老师
-    </div>
-    <div class="student">
-        学生
-    </div>
-
+<div class="user_header">
+    <a class="left header_btn" href="javascript:history.back(-1)">
+        <i class="fa fa-angle-left clof font26 icon_return"></i>
+    </a>
+    用户注册
+    <a class="right header_btn" href="javascript:void(0)"></a>
 </div>
 
-<script type="text/javascript">
-    $(function(){
-        $(".radio_label").click(function(){
-            if($(this).children("input").checked=="true"){
-                $(this).children(".radio_icon").removeClass("check");
-            }else{
-                $(".radio_icon").removeClass("check");
-                $(this).children(".radio_icon").addClass("check");
-            }
-        });
-    })
-    /*
-    * " => ""
-     "Category" => ""
-     "
-     "passport" => ""
-    * */
-</script>
 <div class="clear"></div>
 <div class="container" id="container">
     <div >
         {{-- RegTeacherOp --}}
-        <form name="form" method="post" id="sourceForm" action="{{ url('/msc/wechat/user/reg-teacher-op') }}" id="frmTeacher">
+        <form name="form" method="post" id="sourceForm" action="" id="frmTeacher">
+            <div class="form-group">
+                <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span>*</span></label>
+                <input  type="text" name="nickname" class="form-control" id="name"/>
+            </div>
             <div class="form-group">
                 <label for="name">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<span>*</span></label>
                 <input  type="text" name="name" class="form-control" id="name"/>
@@ -82,16 +60,28 @@
                     </label>
                 </div>
             </div>
+            <div class="form-group card-list" style="width:35%;float: left;">
+               <select name="type" id="card-list">
+                   <option value="0">角色类型</option>
+                   <option value="1">学生</option>
+                   <option value="2">老师</option>
+               </select>
+               <label for="ipt_zjh"><span>*</span></label>
+           </div>
+
+            <div class="form-group card-list no_zjh" style="width:65%;float:right;" >
+                <input type="text" class="form-control" style="padding-left:2px;" disabled="disabled"  placeholder="请选择角色类型" />
+            </div>
+            <div class="form-group card-list ipt_zjh" style="width:65%;float:right;display: none">
+                <input style="padding-left:2px;"  class="form-control " name="idcard"   placeholder="请输入身份证号码" />
+            </div>
+            <div class="form-group card-list hz_zjh" style="width:65%;float:right;display: none">
+                <input style="padding-left:2px;"  class="form-control " disabled="disabled" name="idcard2"/>
+            </div>
+            <div class="clear"></div>
             <div class="form-group">
                 <label for="mobile">手机号码<span>*</span></label>
                 <input type="number" class="form-control" id="mobile" name="mobile" />
-            </div>
-            <div class="form-group"style="width:60%;float: left;">
-                <input type="text"  class="form-control ipt_code" id="VerificationText" placeholder="请输入验证码"/>
-            </div>
-            <div class="form-group" style="width:35%;float:right;">
-                <input type="button" class="form-control ipt_huoqu" id="getVerificationButtonOne"  value="获取验证码" />
-                <input type="hidden" name="yz_num" value="0">
             </div>
             <div class="clear"></div>
 
@@ -99,28 +89,74 @@
                 <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入密码"/>
             </div>
             <div class="form-group">
-                <input type="password" name="confirm_password" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
+                <input type="password" name="repassword" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
             <input class="btn" type="submit" id="#bling" value="提交审核" />
-			            <div class="form-group">
-                <label for="Category">类别<span>*</span></label>
-                <select  id="class" class="form-control normal_select" name="student_type">
-                    <option value="">选择类别</option>
-                    @foreach($StudentTypeList as $val)
-                        <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
-                    @endforeach
-                </select>
-
-            </div>
         </form>
 
     </div>
 </div>
 <script>
     $(document).ready(function(){
+        $(".radio_label").click(function(){
+            if($(this).children("input").checked=="true"){
+                $(this).children(".radio_icon").removeClass("check");
+            }else{
+                $(".radio_icon").removeClass("check");
+                $(this).children(".radio_icon").addClass("check");
+            }
+        });
 
-        
+
+        initcard();//表单切换
+        var url = "{{ url('api/1.0/public/msc/user/teacher-dept-list') }}";
+        $("#teacher_dept").select2({
+            ajax: {
+                url: "{{ url('api/1.0/public/msc/user/teacher-dept-list') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        keyword: params.term, // search term
+                        page: 1
+                    };
+                },
+                processResults: function (data, page) {
+                    return {
+                        results: data.data.rows
+                    }
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            templateResult: formatRepo, // omitted for brevity, see the source of this page
+            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+        });
+        $("#Professional").select2({
+            ajax: {
+                url: "{{ url('/api/1.0/public/msc/user/professional-list') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        keyword: params.term, // search term
+                        page: 1
+                    };
+                },
+                processResults: function (data, page) {
+                    return {
+                        results: data.data.rows
+                    }
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            templateResult: formatRepo, // omitted for brevity, see the source of this page
+            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+        });
 
 
     /*mao 2015-11-26
@@ -144,6 +180,19 @@
                         min: 2,
                         max: 30,
                         message: '姓名长度必须在2到30之间'
+                    }/*最后一个没有逗号*/
+                }
+            },
+            nickname: {/*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '昵称不能为空'
+                    },
+                    stringLength: {/*长度提示*/
+                        min: 2,
+                        max: 30,
+                        message: '昵称长度必须在2到30之间'
                     }/*最后一个没有逗号*/
                 }
             },
@@ -183,6 +232,17 @@
                     }
                }
             },
+            idcard: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '证件号码不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+                        message: '请输入正确的身份证号码'
+                    }
+                }
+            },
             yz_num: {
                 validators: {
                     notEmpty: {/*非空提示*/
@@ -208,7 +268,7 @@
                 }
 
             },
-            confirm_password: {
+            repassword: {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '请再次输入密码'

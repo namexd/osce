@@ -54,6 +54,7 @@
                                             <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
                                                 <input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
+                                            
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
