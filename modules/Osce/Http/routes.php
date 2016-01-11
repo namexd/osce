@@ -11,6 +11,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
 		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
+		//忘记密码
+		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.wechat.user.getForgetPassword']);
 	});
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
@@ -187,5 +189,21 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	});
 });
 
-Route::get('room/createroom', function() {return view('osce::admin.test');});  //添加的着陆页,测试用
+//TODO:测试用
+Route::get('test/test', function() {
+	$config = config('message');
+	dd($config);
+//	$config = include MESSAGE_CONFIG;
+//	$formData['default'] = 'pm';
+//	$config['default'] = 'env(\'MESSAGE_DRIVER\'， \'' . $formData['default'] . '\'' ."),\n";
+//	echo $config['default'];
+//	$num = strpos('sms_jia_pos','_');
+//	dd(substr('sms_jia_pos',$num+1));
+//	return view('osce::admin.test');
+//	dd(filter_var('http://mb345.com/ws/BatchSend.aspx?' ));
+});
+Route::post('test/test',function(\Illuminate\Http\Request $request) {
+	$test = $request->only('test');
+	dd($test);
+});
 

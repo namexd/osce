@@ -756,10 +756,11 @@ function makeItem(data){
     var items   =   data.items;
     var everyHeight=data.end-data.begin;
     dl.css("height",everyHeight/10+"px");
-    dl.bind("click",changeTwo);
+
     for(var i in items)
     {
         var dd  = $('<dd>').text(items[i]);
+        dd.bind("click",changeTwo);
         dl.append(dd);
     }
     return dl;
@@ -928,6 +929,7 @@ $(function(){
 
 //点击两个表格可进行交换
 function changeTwo(){
+
     if($(this).hasClass('active'))
     {
         $(this).removeClass('active');
@@ -935,9 +937,9 @@ function changeTwo(){
     }
     $(this).addClass('active');
     if($(".active").length-1==2){
-        console.log("已选2")
-    }
-    if($(".active").length-1==4){
-        console.log("已选4")
+        var change1=$($(".active")[1]).html();
+        var change2=$($(".active")[2]).html();
+        $($(".active")[2]).html(change1);
+        $($(".active")[1]).html(change2);
     }
 }
