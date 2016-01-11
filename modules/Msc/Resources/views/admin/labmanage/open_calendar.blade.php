@@ -9,7 +9,7 @@
         .add_time_list .fa-trash-o{font-size:24px;line-height: 34px;}
         .add_time_list lable{ width: 10%; float: left; text-align: center;line-height: 34px;}
         .add_time_list .add_time_button{line-height: 34px;}
-        #calendar .check{ background-color: #ef4f69; color: #fff!important;}
+        #calendar .check{ background-color: #408AFF; color: #fff!important;}
     </style>
 @stop
 @section('only_js')
@@ -20,8 +20,9 @@
             $(document).ajaxSuccess(function(event, request, settings) {
                 //楼栋选项卡切换
                 ban();
-                getEvent();
+
             });
+            getEvent();
 //            楼栋选项卡切换
             function ban(){
                 $(".list-group-parent").click(function(){
@@ -187,7 +188,7 @@
 
 
                         if( $contentEl.length > 0 ) {
-                            cleardate();
+                            cleardate();//清理掉下面部分的日期显示
                             var mark_morning = false;
                             var mark_noon = false;
                             var  mark_afternoon = false;
@@ -343,8 +344,11 @@
                                 });
                             }
 
+                            console.log( $contentEl.attr("class"));
+                        }else{//点击没有事件部分
 
-                        }else{
+                            $(this).parents().siblings(".fc-row").children(".fc-content").removeClass("check");
+                            console.log( $contentEl.attr("class"));
                             $(".add_time_list").children(".col-sm-10").empty();
                             $(".add_time_list").children(".col-sm-10").each(function(){
                                 var inuput_num=$(".add_time_list  .form-group").size()+1;

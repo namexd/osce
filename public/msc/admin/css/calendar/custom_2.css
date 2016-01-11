@@ -37,7 +37,7 @@
 	padding: 5px 10px 10px 20px;
 	height: 50px;
 	position: relative;
-	border-top: 5px solid #ef4f69;
+	border-top: 5px solid #408AFF;
 	border-bottom: 1px solid #ddd;
 }
 
@@ -89,7 +89,7 @@
 
 .custom-header nav span:before {
 	font-family: 'fontawesome-selected';
-	color: #ef4f69;
+	color: #408AFF;
 	position: absolute;
 	text-align: center;
 	width: 100%;
@@ -189,7 +189,7 @@
 
 .fc-calendar .fc-head {
 	background: transparent;
-	color: #ef4f69;
+	color: #408AFF;
 	font-weight: bold;
 	text-transform: uppercase;
 	font-size: 12px;
@@ -230,7 +230,7 @@
 	width: 20px;
 	margin-left: -10px;
 	position: absolute;
-	color: #DDD;
+	color: #ef4f69;
 	font-size: 70px;
 	line-height: 20px;
 	left: 50%;
