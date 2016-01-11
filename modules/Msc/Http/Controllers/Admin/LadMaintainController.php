@@ -302,7 +302,7 @@ class LadMaintainController extends MscController
             $floor = $this->getFloorNumber($local['floor_top'],$local['floor_buttom']);
 
             $labArr = [];
-            $where['status'] = 0;
+            $where['status'] = 1;
             $where['location_id'] = $local_id;
             foreach($floor as $k=>$v){
                 $where['floor'] = $v;
