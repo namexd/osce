@@ -50,7 +50,7 @@ class InvitationController extends CommonController
         $data['end_dt']=$ExamList['end_dt'];
         $data['exam_id']=$exam_id;
 
-//        dd($data);
+        dd($data);
         $InviteModel = new Invite();
         if($InviteModel  ->  addInvite($data))
         {
