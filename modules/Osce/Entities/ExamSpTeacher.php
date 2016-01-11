@@ -6,7 +6,7 @@
  * Time: 17:04
  */
 
-namespace modules\Osce\Entities;
+namespace Modules\Osce\Entities;
 
 
 
@@ -27,8 +27,9 @@ class ExamSpTeacher extends CommonModel
 
     public function addExamSp(array $list){
 //        dd($list['teacher_id']);
-        return  $this   ->  insert($list);
-//        return  $this ->where('teacher_id','=',$list['teacher_id'])->update($list);
+//        return  $this   ->  insert($list);
+
+        return  $this ->where('teacher_id','=',$list['teacher_id'])->update($list);
 //        return  $this ->where('teacher_id','=',$list['teacher_id'])-> update('invite_id','=',$list['invite_id']);
     }
 

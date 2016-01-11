@@ -14,18 +14,25 @@ class SmsSender implements Message{
         $this->config = $config;
     }
 
-    public function send($accept,$content,$title=null){
+    public function send($accept,$content,$title=null,$module=null,$sender=0,$pid=0){
 
-        //$api_url='http://mb345.com/ws/BatchSend.aspx?';
-        //$corp_id='LKSDK0004929';
-        //$api_pwd='jkwqm814@';
-        //$timestamp=time();
+        if(is_array($accept)){
+            foreach($accept as $mobile){
+                $this->sendSms($mobile,$content);
+            }
+        }
+        else{
+            $this->sendSms($accept,$content);
+        }
+    }
+
+    public function sendSms($mobile,$content){
 
         $values=[
             'CorpID'=>$this->config['username'],
             'Pwd' =>$this->config['password'],
             'Content' => iconv('UTF-8', 'GBK', $content),
-            'Mobile'=> $accept,];
+            'Mobile'=> $mobile,];
 
         $data = http_build_query($values);
         $result = file_get_contents($this->config['url'].$data);
@@ -46,7 +53,7 @@ class SmsSender implements Message{
 
             Log::error('短信发送失败',
                 [
-                    'mobile'        =>  $accept,
+                    'mobile'        =>  $mobile,
                     'body'          =>  $content,
                     'result'        =>  $result,
                     'error'         =>  $error[intval($result)]
@@ -59,4 +66,17 @@ class SmsSender implements Message{
 
     }
 
+
+    public function get($id){
+        throw new \Exception('未实现的方法');
+    }
+
+    public function messages($accept,$sender=null,$module=null,$status=1,$pageSize=10,$pageIndex=0){
+        throw new \Exception('未实现的方法');
+    }
+
+
+    public function delete($id){
+        throw new \Exception('未实现的方法');
+    }
 }

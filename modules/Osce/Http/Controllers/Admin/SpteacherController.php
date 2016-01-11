@@ -64,7 +64,8 @@ class SpteacherController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getInvitationIndex(Request $request){
+    public function getInvitationIndex(Request $request)
+    {
 
 //          $this->validate($request,[
 //              'exam_id'    =>'required|integer'
@@ -73,29 +74,29 @@ class SpteacherController extends CommonController
 //          ]);
         $examId = $request->input('id');
 
-        $inviteModel =new ExamSpTeacher();
-//        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
+        $inviteModel = new ExamSpTeacher();
+        $inviteData = $inviteModel->where('exam_screening_id', '=', $examId)->get()->keyBy('teacher_id');
 
 //        dd($inviteData);
-        if($examId){
-            $ExamModel=new ExamRoom();
+        if ($examId) {
+            $ExamModel = new ExamRoom();
             $TeacherSp = $ExamModel->getStationList($examId);
-            // dump($TeacherSp->toArray());
-            $stationTeacher=[];
-            foreach($TeacherSp as  $data){
+//             dump($TeacherSp->toArray());
+            $stationTeacher = [];
+            foreach ($TeacherSp as $data) {
                 $stationData = [];
-                if(isset($stationTeacher[$data['station_id']])){
+                if (isset($stationTeacher[$data['station_id']])) {
                     $stationData = $stationTeacher[$data['station_id']];
 //                    dd($stationData);
                     $stationData['techs'][$data['id']] = [
-                        'name' =>$data['name'],
-                        'id' =>$data['id'],
+                        'name' => $data['name'],
+                        'id' => $data['id'],
                         'status' => -1
                     ];
                 } else {
                     $stationData = [
-                        'station_id' =>$data['station_id'],
-                        'station_name' =>$data['station_name'],
+                        'station_id' => $data['station_id'],
+                        'station_name' => $data['station_name'],
                         'techs' => [
                             $data['id'] => [
                                 'name' => $data['name'],
@@ -107,29 +108,29 @@ class SpteacherController extends CommonController
                 }
                 $stationData['invited'] = [];
                 // handle invite teacher
-                if (isset($inviteData[$data['id']]) ){
+                if (isset($inviteData[$data['id']])) {
                     $stationData['techs'][$data['id']]['status'] = $inviteData[$data['id']]['status'];
                     $stationData['invited'][] = [
-                        'name'  => $data['name'],
-                        'id'    => $data['id'],
+                        'name' => $data['name'],
+                        'id' => $data['id'],
                         'status' => $inviteData[$data['id']]['status']
                     ];
                 }
                 $stationTeacher[$data['station_id']] = $stationData;
             }
 
-            // dd( $stationTeacher );
+//             dd($stationTeacher);
+            dump($stationTeacher);
 
-            return view('osce::admin.exammanage.sp_invitation',[
-                'data'    => $stationTeacher,
+            return view('osce::admin.exammanage.sp_invitation', [
+                'id' => $request->input('id'),
+                'data' => $stationTeacher,
 
             ]);
         }
-//
         return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
 
     }
-
 
 
     /**
@@ -150,23 +151,25 @@ class SpteacherController extends CommonController
      */
 
 
-    public function  getInvitationAdd(Request $request){
+    public function  getInvitationAdd(Request $request)
+    {
+        dd(1111111111);
 
-        $this->validate($request,[
-            'station_id'    =>'required|integer',
-            'user_id'    =>'required|integer',
-            'case_id'    =>'required|integer',
-            'type'    =>'required|integer',
+        $this->validate($request, [
+            'station_id' => 'required|integer',
+            'user_id' => 'required|integer',
+            'case_id' => 'required|integer',
+            'status' => 'required|integer',
         ]);
         $Invitation = [];
         $req = $request->all();
         $user = Auth::user();
-        if(is_array($req['user_id'])){
-            foreach($req['user_id'] as $v){
-                $arr = explode(",",$v);
+        if (is_array($req['user_id'])) {
+            foreach ($req['user_id'] as $v) {
+                $arr = explode(",", $v);
                 $Invitations['station_id'] = $req['station_id'];
                 $Invitations['case_id'] = $req['case_id'];
-                $Invitations['type'] = $req['type'];
+                $Invitations['status'] = $req['status'];
 //                $LabDevices['user_id'] = $arr[0];
                 $LabDevices['created_user_id'] = $user->id;
                 $Invitation [] = $LabDevices;
@@ -175,9 +178,9 @@ class SpteacherController extends CommonController
 
         $return = DB::connection('osce_mis')->table('invite')->insert($Invitation);
 
-        if($return){
+        if ($return) {
             return redirect()->back()->withInput()->withErrors('保存成功');
-        }else{
+        } else {
             return redirect()->back()->withInput()->withErrors('保存失败');
         }
 
