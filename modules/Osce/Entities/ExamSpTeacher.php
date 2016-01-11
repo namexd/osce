@@ -21,8 +21,9 @@ class ExamSpTeacher
     protected $fillable = ['invite_id', 'exam_screening_id', 'case_id', 'teacher_id', 'create_user_id'];
 
     public function addExamSp(array $list){
+//        dd($list['teacher_id'],$list['invite_id'] );
 
-        return  $this   ->  insert($list);
+        return  $this ->where('teacher_id','=',$list['teacher_id'])->update('invite_id','=',$list['invite_id']);
     }
 
 

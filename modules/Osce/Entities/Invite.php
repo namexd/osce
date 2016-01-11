@@ -27,6 +27,7 @@ class Invite extends CommonModel
         $connection     =   DB::connection($this->connection);
         $connection     ->  beginTransaction();
         try{
+
             $inviteData=[
                 'name'   =>$data['exam_name'],
                 'begin_dt' =>$data['begin_dt'],
@@ -34,23 +35,24 @@ class Invite extends CommonModel
                 'exam_screening_id' =>$data['exam_id'],
 
             ];
-//            dd($data, $inviteData);
+
 
             if($notice  =   $this  -> create($inviteData))
             {
+//                dd( $notice->id);
                 $list=[
                     'invite_id' =>  $notice->id,
-                    'exam_screening_id' =>$data['exam_id'],
-                    'case_id'     =>$data['case_id'],
+//                    'exam_screening_id' =>$data['exam_id'],
+//                    'case_id'     =>$data['case_id'],
                     'teacher_id'     =>$data['teacher_id'],
                 ];
 
-
+//                dd($notice,$data,$list);
                 //关联到考试邀请sp老师表
                 $examspModel =new ExamSpTeacher();
                 $result =$examspModel -> addExamSp($list);
+                dd($notice,$data,$list,$result);
 
-                dd($notice,$data,$list, $result);
                 //邀请用户
                 $this   ->  sendMsg($notice,$data);
                 $connection ->commit();

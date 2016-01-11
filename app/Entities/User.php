@@ -22,7 +22,7 @@ class User extends Model implements AuthenticatableContract,
     protected $table 		= 	'users';
     protected $primaryKey	=	'id';
     protected $guarded 		= 	[];
-    protected $hidden 		= 	['password','openid'];
+//    protected $hidden 		= 	['password','openid'];
     protected $fillable 	=	['username','name','password','openid','mobile','nickname','gender','qq','weixinnickname','country','province','city','adress','avatar','email','lastlogindate','idcard_type','idcard','status',]  ;
 
     // 用户性别获取器

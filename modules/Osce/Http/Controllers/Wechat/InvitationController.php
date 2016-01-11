@@ -39,7 +39,7 @@ class InvitationController extends CommonController
         ]);
         $teacher_id =   $request  -> get('teacher_id');
         $exam_id =   $request -> get('exam_id');
-        $station_id =   $request    -> get('station_id');
+//        $station_id =   $request    -> get('station_id');
         $teacher  =new Teacher();
         $data= $teacher->invitationContent($teacher_id);
 //        dd($data);

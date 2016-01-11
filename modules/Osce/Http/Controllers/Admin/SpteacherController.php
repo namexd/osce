@@ -71,10 +71,11 @@ class SpteacherController extends CommonController
 //          ],[
 ////              'exam_id.required'   => '没有考试ID'
 //          ]);
-
         $examId = $request->input('id');
+
         $inviteModel =new ExamSpTeacher();
-        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
+//        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
+
 //        dd($inviteData);
         if($examId){
             $ExamModel=new ExamRoom();
@@ -85,6 +86,7 @@ class SpteacherController extends CommonController
                 $stationData = [];
                 if(isset($stationTeacher[$data['station_id']])){
                     $stationData = $stationTeacher[$data['station_id']];
+//                    dd($stationData);
                     $stationData['techs'][$data['id']] = [
                         'name' =>$data['name'],
                         'id' =>$data['id'],
@@ -119,7 +121,7 @@ class SpteacherController extends CommonController
             dd( $stationTeacher );
 
             return view('osce.admin.spteacher. getInvitationIndex',[
-                'data'    => $data,
+                'data'    => $stationTeacher,
 
             ]);
         }
