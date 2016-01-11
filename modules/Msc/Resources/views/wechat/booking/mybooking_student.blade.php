@@ -9,11 +9,11 @@
 </style>
 @stop
 @section('only_head_js')
-    <script src="{{asset('msc/wechat/booking/mybooking_teacher.js')}}"></script>
+    <script src="{{asset('msc/wechat/booking/mybooking_student.js')}}"></script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'mybooking_teacher'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'mybooking_student'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>

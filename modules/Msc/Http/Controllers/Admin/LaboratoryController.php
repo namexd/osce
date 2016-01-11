@@ -185,7 +185,7 @@ class LaboratoryController extends MscController {
         if($id){
             $data = $laboratory->where('id','=',$id)->update(['status'=>Input::get('type')]);
             //dd(Input::get('type'));
-            if(!Input::get('type')){
+            if(Input::get('type')){
                 $name = '启用成功';
             }else{
                 $name = '停用成功';
@@ -277,12 +277,13 @@ class LaboratoryController extends MscController {
         if(Input::get('type') == 1){
             $local_id = Laboratory::where('id','=',Input::get('id'))->first();
             $floor = $floor->where('id','=',$local_id->location_id)->first();
-            //dd($floor);
+
         }else{
             $floor = $floor->where('id','=',Input::get('id'))->first();
         }
 
         $floorList = $this->get_float($floor['floor_top'],$floor['floor_buttom']);
+        //dd($floorList);
         if($floorList != false){
             return $floorList;exit;
         }else{
@@ -323,7 +324,6 @@ class LaboratoryController extends MscController {
     //查找实验室已存在的开放日历
     public function get_lab_cleander($id){
         $lid = $id;
-
         $cleaner = OpenPlan::where('lab_id','=',$lid)->where('status','=',1)->get();
         $cleaner = $cleaner->toArray();
         //dd($cleaner);
@@ -364,10 +364,13 @@ class LaboratoryController extends MscController {
         $local_id = Input::get('lid');
         $local = Floor::where('id','=',$local_id)->first();
         $floor = $this->get_float($local['floor_top'],$local['floor_buttom']);
-        $where['status'] = 0;
+        $where['status'] = 1;
         $where['location_id'] = $local_id;
         $user = Auth::user();
         $role_id = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
+        if(!$role_id){
+            return '没有该账户对应的角色';exit;
+        }
         $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role_id->role_id)->first();
         if($role_name->name == '超级管理员'){
 
@@ -377,7 +380,7 @@ class LaboratoryController extends MscController {
         foreach($floor as $k=>$v){
             $where['floor'] = $v;
             $labArr[$k]['floor'] = $v;
-            //$this->start_sql(1);
+            $this->start_sql(1);
             $labArr[$k]['lab'] = Laboratory::where($where)->get();
             //$this->end_sql(1);
         }
@@ -559,5 +562,28 @@ class LaboratoryController extends MscController {
         //當前添加的實驗室的开放日历
         $labdata = $this->get_lab_cleander(Input::get('lid'));
         return ['status'=>1,'info'=>'操作成功','data'=>$labdata];
+    }
+
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月11日11:35:27
+     * 修改实验室开放时间
+     */
+    public function postDoEditLabCleander(){
+
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月11日11:35:27
+     * 实验室预约记录审核
+     */
+    public function getLabOrderList(){
+
+        return view('msc::admin.labmanage.lab_maintain',[
+        ]);
     }
 }

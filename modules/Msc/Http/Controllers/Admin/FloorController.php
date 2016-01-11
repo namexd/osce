@@ -13,12 +13,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\Laboratory;
 use Pingpong\Modules\Routing\Controller;
+use Modules\Msc\Http\Controllers\MscController;
 use Modules\Msc\Entities\Floor;
 use Modules\Msc\Entities\School;
 use Illuminate\Http\Request;
 use URL;
 use DB;
-class FloorController extends Controller {
+class FloorController extends MscController {
 
     /**
      * Created by PhpStorm.
@@ -40,13 +41,12 @@ class FloorController extends Controller {
         $datalist = $Floor->getFilteredPaginateList($where);
         foreach($datalist as $v){
             $lab = Laboratory::where(['location_id'=>$v->id,'status'=>1])->get();
+            //var_dump($lab);
             $lab = $lab->toArray();
-            //dd($lab);
-            if($lab){
+            if(!empty($lab)){
                 $v->dtype = 1;
             }
         }
-        //dd($datalist);
         $school = DB::connection('msc_mis')->table('school')->get();
         $keyword = Input::get('keyword')?Input::get('keyword'):'';
         return view('msc::admin.labmanage.ban_maintain',[
@@ -188,7 +188,8 @@ class FloorController extends Controller {
         $id = urlencode(e(Input::get('id')));
         if($id){
             $lab = Laboratory::where(['location_id'=>$id,'status'=>1])->get();
-            if(!$lab){
+            $lab = $lab->toArray();
+            if(empty($lab)){
                 $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->delete();
             }else{
                 return redirect()->back()->withInput()->withErrors('该楼栋下有实验室，不可删除');

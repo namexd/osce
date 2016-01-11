@@ -28,7 +28,7 @@
                 var type = $(this).attr('data-type');
                 var url = "/msc/admin/laboratory/stop-lab?id="+this_id+"&type="+type;
                 var str = '';
-                if(type == 1){
+                if(type == 0){
                     str = '您确定要停用实验室？';
                 }else{
                     str = '您确定要启用实验室？';
@@ -77,9 +77,9 @@
                         }
                     },
                     floor: {
+                        message: 'The floor is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择楼层'
                             }
                         }
@@ -120,30 +120,27 @@
                 },
                 fields: {/*验证*/
                     hospital: {
+                        message: 'The hospital is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择所属分院'
                             }
-
                         }
                     },
                     building: {
+                        message: 'The building is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择教学楼'
                             }
-
                         }
                     },
                     floor: {
+                        message: 'The floor is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择楼层'
                             }
-
                         }
                     },
                     name: {/*键名username和input name值对应*/
@@ -242,13 +239,14 @@
                 $('#code').val($(this).parent().parent().find('.code').html());
                 //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
                 $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
-               // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
+                // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
                 $('#name').val($(this).parent().parent().find('.name').html());
                 $('#short_name').val($(this).parent().parent().find('.short_name').val());
                 $('#enname').val($(this).parent().parent().find('.enname').val());
                 $('#short_enname').val($(this).parent().parent().find('.short_enname').val());
                 $('#total').val($(this).parent().parent().find('.total').val());
                 $('.oldschool option').each(function(){
+                    //console.log($(this).val());
                     if($(this).val() == $(updateobj).parent().parent().find('.lname').attr('data')){
                         $(this).attr('selected','selected');
                     }
@@ -265,13 +263,35 @@
 
                                 if(n == $(updateobj).parent().parent().find('.floors').html()){
                                     opstr += '<option value="'+n+'" selected="selected">'+n+'楼</option>';
+                                }else{
+                                    opstr += '<option value="'+n+'">'+n+'楼</option>';
                                 }
-                                opstr += '<option value="'+n+'">'+n+'楼</option>';
+
                             });
                             $('.oldfloor').html(opstr);
                         }
                     }
                 });
+
+                $('.oldschool').change(function(){
+                    var id = $(this).val();
+                    var opstr = '<option value="-1">请选择教学楼</option>';
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('msc.admin.laboratory.getLocal')}}",
+                        data: {id:id},
+                        success: function(msg){
+                            if(msg){
+                                $(msg).each(function(i,k){
+
+                                    opstr += '<option value="'+k.id+'">'+k.name+'</option>';
+                                });
+                                $('.local').html(opstr);
+                            }
+                        }
+                    });
+                });
+
                 $.ajax({
                     type: "POST",
                     url: "{{route('msc.admin.laboratory.getLocal')}}",
@@ -281,7 +301,7 @@
                         var opstr = '';
                         if(msg){
                             $.each($(msg),function(i,n){
-                                if(n.id == $(updateobj).parent().parent().find('.lname').attr('data')){
+                                if(n.id == $(updateobj).parent().parent().find('.lname').attr('data-local')){
                                     opstr += '<option value="'+ n.id+'" selected="selected">'+ n.name+'</option>';
                                 }
                                 opstr += '<option value="'+ n.id+'">'+ n.name+'</option>';
@@ -290,7 +310,7 @@
                         }
                     }
                 });
-               // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
+                // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
 
                 var status = $(this).parent().parent().find('.status').attr('data');
                 $('.sta option').each(function(){
@@ -325,9 +345,9 @@
 @stop
 
 @section('content')
-	<input type="hidden" id="parameter" value="" />
-	<div class="wrapper wrapper-content animated fadeInRight">
-		<div class="row table-head-style1">
+    <input type="hidden" id="parameter" value="" />
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
@@ -347,7 +367,7 @@
                     </a>
                 </button>
             </div>
-		</div>
+        </div>
         <div class="ibox float-e-margins">
             <div class="container-fluid ibox-content">
                 <form action="" class="container-fluid" id="list_form">
@@ -392,10 +412,10 @@
                                             <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&open_type={{@$open_type}}&status=">全部</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=0&open_type={{@$open_type}}">正常</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=1&open_type={{@$open_type}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=1&open_type={{@$open_type}}">停用</a>
+                                            <a href="/msc/admin/laboratory/index?keyword={{@$keyword}}&status=0&open_type={{@$open_type}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -414,7 +434,7 @@
                                     <td class="floors">{{@$v['floor']}}</td>
                                     <td class="open_type" data="{{@$v->opentype}}">{{@$v['open_type']}}</td>
                                     <td class="tname" data="{{@$v->user->id}}">{{@$v->user->name}}</td>
-                                    <td class="status" data="{{@$v['status']}}">@if($v['status'] == 0)正常@else<span class="state2">停用</span>@endif</td>
+                                    <td class="status" data="{{@$v['status']}}">@if($v['status'] == 1)正常@else<span class="state2">停用</span>@endif</td>
                                     <input type="hidden" class="short_name" value="{{@$v->short_name}}">
                                     <input type="hidden" class="enname" value="{{@$v->enname}}">
                                     <input type="hidden" class="short_enname" value="{{@$v->short_enname}}">
@@ -423,10 +443,10 @@
                                         <a href=""  data="{{$v['id']}}"  class="state1 edit update edit_lab" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                                             <span>编辑</span>
                                         </a>
-                                        @if($v->status == 0)
-                                            <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">停用</a>
+                                        @if($v->status == 1)
+                                            <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">停用</a>
                                         @else
-                                            <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">启用</a>
+                                            <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                                         @endif
                                         <a data="{{$v['id']}}" class="state2 edit_role modal-control delete">删除</a>
                                         <input type="hidden" class="setid" value="1"/>
@@ -445,11 +465,11 @@
         <div class="btn-group pull-right">
             <?php echo $datalist->render();?>
         </div>
-	</div>
+    </div>
 @stop
 
 @section('layer_content')
-{{--编辑--}}
+    {{--编辑--}}
     <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -460,12 +480,12 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b oldschool" name="hospital">
-                        <option value="-1">请选择所属分院</option>
+                        <option value="-1">请选择</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
                             @endforeach
-                                @endif
+                        @endif
                     </select>
                 </div>
             </div>
@@ -518,7 +538,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control describe add-describe" id="total" name="total" />
                 </div>
@@ -531,7 +551,7 @@
                         @if(!empty($teacher))
                             @foreach($teacher as $tch)
                                 @if($tch->aboutUser)
-                                 <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
+                                    <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
                                 @endif
                             @endforeach
                         @endif
@@ -553,8 +573,8 @@
                 <div class="col-sm-9">
                     <select id="select_Category"   class="form-control m-b sta" name="status">
                         <option value="-1">请选择状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">停用</option>
+                        <option value="1">正常</option>
+                        <option value="0">停用</option>
                     </select>
                 </div>
             </div>
@@ -568,7 +588,7 @@
         </div>
     </form>
 
-{{--新增--}}
+    {{--新增--}}
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post" style="display:none">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -579,7 +599,7 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b school" name="hospital">
-                        <option value="-1">请选择所属分院</option>
+                        <option value="-1">请选择</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
@@ -635,7 +655,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control describe add-describe" name="total" />
                 </div>
@@ -670,8 +690,8 @@
                 <div class="col-sm-9">
                     <select id="select_Category"   class="form-control m-b" name="status">
                         <option value="-1">请选择状态</option>
-                        <option value="0">正常</option>
-                        <option value="1">停用</option>
+                        <option value="1">正常</option>
+                        <option value="0">停用</option>
                     </select>
                 </div>
             </div>

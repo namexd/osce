@@ -51,16 +51,18 @@
                             <li>
                                 <a class="J_menuItem" href="{{route('msc.admin.LadMaintain.LaboratoryList')}}">实验室资源维护</a>
                             </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-table"></i> <span class="nav-label">实验室开放日历</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
                             <li>
                                 <a class="J_menuItem" href="{{route('msc.admin.laboratory.getLabClearnder')}}">开放日历管理</a>
                             </li>
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.laboratory.getLabOrderList')}}">预约记录审核</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{{route('msc.admin.laboratory.getLabOrderShow')}}">实验室预约查看</a>
+                            </li>
                         </ul>
                     </li>
+
                     <li>
                         <a href="#"><i class="fa fa-table"></i> <span class="nav-label">系统表管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">

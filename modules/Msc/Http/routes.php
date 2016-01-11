@@ -91,6 +91,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/floor-lab', ['uses'=>'LaboratoryController@getFloorLab','as'=>'msc.admin.laboratory.getFloorLab']);
 		Route::post('laboratory/operating-lab-cleander', ['uses'=>'LaboratoryController@postOperatingLabCleander','as'=>'msc.admin.laboratory.postOperatingLabCleander']);
 		Route::get('laboratory/edit-lab-cleander', ['uses'=>'LaboratoryController@getEditLabCleander','as'=>'msc.admin.laboratory.getEditLabCleander']);
+		Route::get('laboratory/lab-order-list', ['uses'=>'LaboratoryController@getLabOrderList','as'=>'msc.admin.laboratory.getLabOrderList']);
+		Route::get('laboratory/lab-order-show', ['uses'=>'LaboratoryController@getLabOrderShow','as'=>'msc.admin.laboratory.getLabOrderShow']);
 		//资源路由
 		Route::controller('resources','ResourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
