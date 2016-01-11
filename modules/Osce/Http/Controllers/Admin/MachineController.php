@@ -794,4 +794,5 @@ class MachineController extends CommonController
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
     }
 
+    
 }

@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 
+use App\Entities\User;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScreening;
@@ -709,12 +710,12 @@ class ExamController extends CommonController
         $IsEnd=ExamScreeningStudent::where('watch_id',$id)->select('is_end')->first()->is_end;
         if($IsEnd==1){
             return response()->json(
-                $this->success_data(1,'已绑定')
+                $this->success_rows(1,'已绑定')
             );
         }
         if($IsEnd==0){
             return response()->json(
-                $this->success_data(0,'未绑定')
+                $this->success_rows(0,'未绑定')
             );
         }
     }
@@ -757,12 +758,12 @@ class ExamController extends CommonController
                 $watchModel=new WatchLog();
                 $watchModel->historyRecord($data);
                 return response()->json(
-                    $this->success_data(1,'绑定成功')
+                    $this->success_rows(1,'绑定成功')
                 );
             }
         }else{
             return response()->json(
-                $this->success_data(0,'绑定失败','false')
+                $this->success_rows(0,'绑定失败','false')
             );
         }
     }
@@ -805,13 +806,66 @@ class ExamController extends CommonController
                 $watchModel=new WatchLog();
                 $watchModel->historyRecord($data);
                 return response()->json(
-                    $this->success_data(1,'解绑成功')
+                    $this->success_rows(1,'解绑成功')
                 );
             }
         }else{
             return response()->json(
-                $this->success_data(0,'解绑失败','data')
+                $this->success_rows(0,'解绑失败')
             );
         }
+    }
+
+    /**
+     *检测学生状态
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentDetails(Request $request){
+        $this->validate($request,[
+            'id_card' => 'required'
+        ]);
+
+        $idCard=$request->get('id_card');
+
+        $students=Student::where('id_card',$idCard)->select('id','code')->get();
+        foreach($students as $item){
+            $student=[
+                'id'    =>$item->id,
+                'code'  =>$item->code,
+//                'exam_id'  =>$item->exam_id,
+            ];
+        }
+        if(!$student){
+           return response()->json(
+               $this->success_rows(2,'未找到学生相关信息')
+           );
+        }
+        $student['is_end']=ExamScreeningStudent::where('student_id',$student['id'])->select('is_end')->first()->is_end;
+//        $student['exam']=Exam::where('exam_id',$student['exam_id'])->select()->first(); //查询准考证号
+
+        if($student['is_end']==1){
+            return response()->json(
+                $this->success_data($student,0,'已绑定')
+            );
+        }
+         return response()->json(
+                 $this->success_data($student,1,'未绑定')
+                );
     }
 }
