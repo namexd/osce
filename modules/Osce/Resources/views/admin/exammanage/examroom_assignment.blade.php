@@ -97,7 +97,7 @@
             <div class="ibox float-e-margins">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 

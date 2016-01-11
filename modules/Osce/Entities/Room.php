@@ -111,4 +111,9 @@ class Room extends CommonModel
     }
 
 
+    public function showVcr($id, $type)
+    {
+        //根据id和type拿到对应的模型
+
+    }
 }

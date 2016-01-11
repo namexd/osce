@@ -23,7 +23,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::controller('room','RoomController');
         Route::get('room/room-list', ['uses'=>'RoomController@getRoomList','as'=>'osce.admin.room.getRoomList']);  //列表的着陆页
 		Route::get('room/edit-room', ['uses'=>'RoomController@getEditRoom','as'=>'osce.admin.room.getEditRoom']);  //修改的着陆页
-		Route::get('room/add-room', ['uses'=>'RoomController@getAddRoom','as'=>'osce.admin.room.getAddRoom']);  //修改的着陆页
+		Route::get('room/add-room', ['uses'=>'RoomController@getAddRoom','as'=>'osce.admin.room.getAddRoom']);  //添加的着陆页
+		Route::get('room/add-vcr', ['uses'=>'RoomController@getAddVcr','as'=>'osce.admin.room.getAddVcr']);  //房间摄像头的添加
 
 		Route::post('room/edit-room', ['uses'=>'RoomController@postEditRoom','as'=>'osce.admin.room.postEditRoom']);   //修改的业务逻辑
 		Route::post('room/create-room', ['uses'=>'RoomController@postCreateRoom','as'=>'osce.admin.room.postCreateRoom']);  //添加的业务逻辑
@@ -127,6 +128,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/edit-exam', 	['uses'=>'ExamController@getEditExam','as'=>'osce.admin.exam.getEditExam']);	//考试基本信息编辑
 		Route::post('exam/edit-exam', 	['uses'=>'ExamController@postEditExam','as'=>'osce.admin.exam.postEditExam']);
 		Route::get('exam/examroom-assignment', 	['uses'=>'ExamController@getExamroomAssignment','as'=>'osce.admin.exam.getExamroomAssignment']); //考场安排
+		Route::post('exam/examroom-assignment', 	['uses'=>'ExamController@postExamroomAssignmen','as'=>'osce.admin.exam.postExamroomAssignmen']); //考场安排
 		Route::get('exam/room-list-data', ['uses'=>'ExamController@getRoomListData','as'=>'osce.admin.exam.getRoomListData']);			//获取考场列表
 		Route::get('exam/station-data', ['uses'=>'ExamController@getStationData','as'=>'osce.admin.exam.getStationData']);				//获取考场对应的考站列表
 		Route::get('exam/teacher-list-data', ['uses'=>'ExamController@getTeacherListData','as'=>'osce.admin.exam.getTeacherListData']);	//获取监考老师列表
@@ -194,6 +196,17 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('examtrain/add-training',['uses'=>'ExamTrainController@postAddTraining','as'=>'osce.wechat.postAddTraining']);
 		Route::get('examtrain/delete-training',['uses'=>'ExamTrainController@getDeleteTraining','as'=>'osce.wechat.getDeleteTraining']);
 		Route::get('examtrain/see-training',['uses'=>'ExamTrainController@getSeeTraining','as'=>'osce.wechat.getSeeTraining']);
+
+		//登陆
+		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
+		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
+
+		//注册
+		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.user.getRegister']);
+		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
+
+		//发送重找账号
+		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 
 	});
 });

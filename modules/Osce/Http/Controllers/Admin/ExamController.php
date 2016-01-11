@@ -643,6 +643,28 @@ class ExamController extends CommonController
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
 
+    /**
+     * 保存 考场安排数据
+     * @api POST /osce/admin/exam/postExamroomAssignmen
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return redirect
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postExamroomAssignmen(Request $request)
+    {
+
+    }
+
 
     /**
      * 获取考场列表 接口

@@ -27,7 +27,12 @@
             <input type="number" class="form-control" id="mobile" name="mobile" />
         </div>
         <div>
-            <input class="btn" type="button"  value="发送手机验证码" />
+            <div class="pull-left left">
+                <input type="text" class="form-control">
+            </div>
+            <div class="pull-left right">
+                <button class="btn btn-default" id="btn">发送手机验证码</button>
+            </div>
         </div>
         <div class="form-group">
             <input type="text" name="password" class="form-control ipt_txt" placeholder="请输入验证码"/>
