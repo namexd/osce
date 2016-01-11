@@ -49,13 +49,13 @@ class RoomController extends CommonController
 
         //展示页面
         if ($type == 1) {
-            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data]);
+            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type]);
         } else if ($type == 2){
-            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data]);
+            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type]);
         }else if ($type == 3){
-            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data]);
+            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type]);
         }else{
-            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data]);
+            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type]);
         }
 
     }
@@ -77,13 +77,15 @@ class RoomController extends CommonController
     {
         //验证ID
         $this->validate($request, [
-            'id' => 'required|integer'
+            'id' => 'required|integer',
+            'type' => 'required|integer',
         ]);
 
         //取出id的值
-        $formData = $request->only('id');
+        $id = $request->get('id');
+        $type = $request->input('type');
 
-        $data = $model->showRoomList($formData);
+        $data = $model->showRoomList("",$type,$id);
 
 
         //将数据展示到页面

@@ -186,7 +186,14 @@ class Teacher extends CommonModel
         $teacher    =   $this   ->  find($user  ->  id);
         if($teacher)
         {
-            throw new \Exception('该教职员工已经存在');
+            $teacher->name = $data['name'];
+            $teacher = $teacher->save();
+            if (!$teacher) {
+                throw new \Exception('保存老师名字失败，请重试！');
+            } else {
+                return $teacher;
+            }
+//            throw new \Exception('该教职员工已经存在');
         }
         else
         {
