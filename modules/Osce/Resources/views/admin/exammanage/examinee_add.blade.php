@@ -175,7 +175,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" >身份证号:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="id_number" name="id_card"  class="form-control">
+                                    <input type="text" id="id_number" name="idcard"  class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

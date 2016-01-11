@@ -35,6 +35,6 @@ class ConfigController extends CommonController
         foreach ($array as $key=> $item) {
             $tempString .= $key . '=>' . $item . ',' . "\n";
         }
-        File::append()
+        File::append();
     }
 }

@@ -69,8 +69,7 @@ class Watch extends CommonModel implements MachineInterface
         $connection ->beginTransaction();
         try
         {
-            $machineData    =   [];
-
+//            $machineData    =   [];
             if($vcr =   $this   ->  create($data))
             {
                 $machineData=   [
@@ -195,17 +194,19 @@ class Watch extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name,$status){
-        $bulder =   $this;
-        if(!is_null($name))
+    public function getList($name='',$status=''){
+        $builder =   Watch::select();
+
+        if($name)
         {
-            $bulder =   $bulder    ->  where('name','like','%'.$name.'%');
+            $builder =   $builder    ->  where('name','like','%'.$name.'%');
         }
-        if(!is_null($status))
+        if($status || ($status==0&&$status!=''))
         {
-            $bulder =   $bulder    ->  where('status','=',$status);
+            $builder =   $builder    ->  where('status','=',$status);
         }
-        return  $bulder ->  paginate(config('osce.page_size'));
+
+        return  $builder ->  paginate(config('osce.page_size'));
     }
 
 

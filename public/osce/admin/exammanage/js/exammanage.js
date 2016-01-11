@@ -443,9 +443,9 @@ function examroom_assignment(){
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:'http://127.0.0.1:3000/getList',
-                    dataType:'jsonp',
-                    jsonp:'callback',
+                    url:pars.url,//'http://127.0.0.1:3000/getList',
+                    //dataType:'jsonp',
+                    //jsonp:'callback',
                     data:{id:e.params.data.id},
                     async:true,
                     success:function(res){
@@ -505,9 +505,9 @@ function examroom_assignment(){
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:'http://127.0.0.1:3000/getList',
-                    dataType:'jsonp',
-                    jsonp:'callback',
+                    url:pars.url,//'http://127.0.0.1:3000/getList',
+                    //dataType:'jsonp',
+                    //jsonp:'callback',
                     data:{id:e.params.data.id},
                     async:true,
                     success:function(res){

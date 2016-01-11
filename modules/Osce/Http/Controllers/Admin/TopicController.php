@@ -72,8 +72,8 @@ class TopicController extends CommonController
         ],[
             'title.required'        =>  '评分标准名称必须',
         ]);
-        $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
 
+        $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
         $data   =   [
             'title'         =>  e($request  ->  get('title')),
             'description'   =>  e($request  ->  get('description')),
