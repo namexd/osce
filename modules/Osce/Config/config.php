@@ -36,4 +36,7 @@ return [
 			'name'=>'Watch',
 		]
 	],
+	'manager'=>[
+		1
+	],
 ];

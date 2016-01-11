@@ -686,7 +686,7 @@ class ExamController extends CommonController
     /**
      *检测是否绑定
      * @method GET 接口
-     * @url exam/watch-status/{id}
+     * @url exam/watch-status
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -700,7 +700,11 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWatchStatus($id){
+    public function getWatchStatus(Request $request){
+        $this->validate($request,[
+            'id' =>'required|integer'
+        ]);
+        $id=$request->get('id');
         $IsEnd=ExamScreeningStudent::where('watch_id',$id)->select('is_end')->first()->is_end;
         if($IsEnd==1){
             return response()->json(
@@ -731,8 +735,11 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getBoundWatch($id){
-
+    public function getBoundWatch(Request $request){
+        $this->validate($request,[
+            'id' =>'required|integer'
+        ]);
+        $id=$request->get('id');
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>1]);
 
         if($result){
@@ -766,7 +773,11 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getUnwrapWatch($id){
+    public function getUnwrapWatch(Request $request){
+        $this->validate($request,[
+            'id' =>'required|integer'
+        ]);
+        $id=$request->get('id');
         $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>0]);
 
         if($result){
