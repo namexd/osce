@@ -188,7 +188,8 @@ class FloorController extends MscController {
         $id = urlencode(e(Input::get('id')));
         if($id){
             $lab = Laboratory::where(['location_id'=>$id,'status'=>1])->get();
-            if(!$lab){
+            $lab = $lab->toArray();
+            if(empty($lab)){
                 $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->delete();
             }else{
                 return redirect()->back()->withInput()->withErrors('该楼栋下有实验室，不可删除');

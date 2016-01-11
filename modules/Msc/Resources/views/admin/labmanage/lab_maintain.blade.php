@@ -61,25 +61,25 @@
                 },
                 fields: {/*验证*/
                     hospital: {
+                        message: 'The hospital is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择所属分院'
                             }
                         }
                     },
                     building: {
+                        message: 'The building is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择教学楼'
                             }
                         }
                     },
                     floor: {
+                        message: 'The floor is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择楼层'
                             }
                         }
@@ -249,6 +249,7 @@
                 $('#short_enname').val($(this).parent().parent().find('.short_enname').val());
                 $('#total').val($(this).parent().parent().find('.total').val());
                 $('.oldschool option').each(function(){
+                    //console.log($(this).val());
                     if($(this).val() == $(updateobj).parent().parent().find('.lname').attr('data')){
                         $(this).attr('selected','selected');
                     }
@@ -272,6 +273,26 @@
                         }
                     }
                 });
+
+                $('.oldschool').change(function(){
+                    var id = $(this).val();
+                    var opstr = '<option value="-1">请选择教学楼</option>';
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('msc.admin.laboratory.getLocal')}}",
+                        data: {id:id},
+                        success: function(msg){
+                            if(msg){
+                                $(msg).each(function(i,k){
+
+                                    opstr += '<option value="'+k.id+'">'+k.name+'</option>';
+                                });
+                                $('.local').html(opstr);
+                            }
+                        }
+                    });
+                });
+
                 $.ajax({
                     type: "POST",
                     url: "{{route('msc.admin.laboratory.getLocal')}}",
@@ -281,7 +302,7 @@
                         var opstr = '';
                         if(msg){
                             $.each($(msg),function(i,n){
-                                if(n.id == $(updateobj).parent().parent().find('.lname').attr('data')){
+                                if(n.id == $(updateobj).parent().parent().find('.lname').attr('data-local')){
                                     opstr += '<option value="'+ n.id+'" selected="selected">'+ n.name+'</option>';
                                 }
                                 opstr += '<option value="'+ n.id+'">'+ n.name+'</option>';
