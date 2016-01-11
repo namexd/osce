@@ -24,7 +24,7 @@
         </a>
     </div>
     <div class="mart_5">
-        <div class="mart_5 marb_5 form_title">预约信息</div>
+        <div class="mart_5 marb_5 form_title" style="font-weight: 700;">预约信息</div>
         <div id="now_borrow">
             <div class="add_main">
                 <div class="form-group">
@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-        <div class="mart_5 marb_5 form_title">审核信息</div>
+        <div class="mart_5 marb_5 form_title" style="font-weight: 700;">审核信息</div>
         <div id="now_borrow">
             <div class="add_main">
                 <div class="form-group">
