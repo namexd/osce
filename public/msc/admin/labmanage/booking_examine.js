@@ -92,7 +92,7 @@ function booking_examine(){
                 window.location.href=window.location.href;
             });
         }else{
-            
+
         }
     })
 }
