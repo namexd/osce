@@ -103,7 +103,7 @@ class LadMaintainController extends MscController
         //TODO 获取属于当前实验室的 设备ID
         $DeviceIdArr = $LadDevice->getLadDeviceId((int)$request->input('lab_id'));
         $devices = new Devices();
-        $resourceData = $devices->getDevicesList($DeviceIdArr,$keyword,$devices_cate_id);
+        $resourceData = $devices->getDevicesList($DeviceIdArr,$keyword,1,$devices_cate_id);
         $list = [];
         foreach ($resourceData as $itme) {
             $list[] = [
