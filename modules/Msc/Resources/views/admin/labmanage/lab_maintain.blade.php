@@ -120,30 +120,27 @@
                 },
                 fields: {/*验证*/
                     hospital: {
+                        message: 'The hospital is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择所属分院'
                             }
-
                         }
                     },
                     building: {
+                        message: 'The building is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择教学楼'
                             }
-
                         }
                     },
                     floor: {
+                        message: 'The floor is not valid',
                         validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
+                            notEmpty: {/*非空提示*/
                                 message: '请选择楼层'
                             }
-
                         }
                     },
                     name: {/*键名username和input name值对应*/
@@ -483,7 +480,7 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b oldschool" name="hospital">
-                        <option value="-1">请选择所属分院</option>
+
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
@@ -541,7 +538,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control describe add-describe" id="total" name="total" />
                 </div>
@@ -602,7 +599,6 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b school" name="hospital">
-                        <option value="-1">请选择所属分院</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
@@ -658,7 +654,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control describe add-describe" name="total" />
                 </div>

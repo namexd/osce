@@ -580,6 +580,7 @@ class LaboratoryController extends MscController {
      * 实验室预约记录审核
      */
     public function getLabOrderCheck(){
+
         return view('msc::admin.labmanage.lab_maintain',[
         ]);
     }
