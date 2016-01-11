@@ -132,7 +132,7 @@
                             var data = res.data.rows.LadDeviceList.data;
                             for(var i=0;i<data.length;i++){
                                 str += '<tr>' +
-                                        '<td>'+data[i].id+'</td>' +
+                                        '<td>#'+(i+1)+'</td>' +
                                         '<td class="device_name">'+data[i].device_info.name+'</td>' +
                                         '<td class="device_type">'+data[i].device_info.devices_cate_info.name+'</td>' +
                                         '<td class="total" id="DeviceNum_'+data[i].id+'">'+data[i].total+'</td>' +
@@ -323,9 +323,6 @@
                     return false;
                 }
             })
-
-
-
         })
 
 
