@@ -27,7 +27,7 @@ class Area extends CommonModel
      */
     public function areaVcr()
     {
-        return $this->belongsToMany('\Modules\Osce\Entities\Area','area_vcr','area_id','vcr_id');
+        return $this->belongsToMany('\Modules\Osce\Entities\Vcr','area_vcr','area_id','vcr_id');
     }
 
 
