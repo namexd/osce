@@ -33,10 +33,13 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">考场</a></li>
-                        <li><a href="{{route('osce.admin.room.getRoomList')}}?type=2">中控室</a></li>
-                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=3">走廊</a></li>
-                        <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=4">候考区</a></li>
+
+                        @foreach($area as $item)
+                            <li
+                            @if($item->cate == 1)
+                                class="active"
+                            @endif><a href="{{route('osce.admin.room.getRoomList')}}?type={{$item->cate}}">{{$item->name}}</a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -64,7 +67,7 @@
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
                         <td value="{{$item->id}}">
-                            <a href="{{route('osce.admin.room.getEditRoom')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                            <a href="{{route('osce.admin.room.getEditRoom')}}?id={{$item->id}}&type={{$type}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                             <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>

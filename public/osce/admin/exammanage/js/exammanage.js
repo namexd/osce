@@ -65,14 +65,14 @@ function exam_add(){
         var html = '<tr>'+
                         '<td>'+parseInt(index)+'</td>'+
                         '<td class="laydate">'+
-                            '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD')+' 00:00</span>'+
+                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
                         '</td>'+
                         '<td class="laydate">'+
-                            '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD hh:mm')+'</span>'+
+                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
                         '</td>'+
                         '<td>3:00</td>'+
                         '<td>'+
-                            '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                            '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
                         '</td>'+
                     '</tr>'+
         //记录计数
@@ -130,15 +130,15 @@ function add_basic(){
 
         var html = '<tr>'+
 	                    '<td>'+parseInt(index)+'</td>'+
-	                    '<td class="laydate">'+
-	                        '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD')+' 00:00</span>'+
-	                    '</td>'+
-	                    '<td class="laydate">'+
-	                        '<span class="laydate-icon end">'+Time.getTime('YYYY-MM-DD hh:mm')+'</span>'+
-	                    '</td>'+
+                        '<td class="laydate">'+
+                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+                        '</td>'+
+                        '<td class="laydate">'+
+                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+                        '</td>'+
 	                    '<td>3:00</td>'+
 	                    '<td>'+
-	                        '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+	                        '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
 	                    '</td>'+
 	                '</tr>';
         //记录计数
@@ -261,12 +261,12 @@ function timePicker(background){
          choose: function(date){ //选择好日期的回调
             var thisElement = $(this.elem).parent();
             if(thisElement.prev().prev().length){
-                var current = Date.parse(date) - Date.parse(thisElement.prev().find('span').text());
+                var current = Date.parse(date) - Date.parse(thisElement.prev().find('input').val());
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
                 thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
             }else{
-                var current = Date.parse(thisElement.next().find('span').text()) - Date.parse(date);
+                var current = Date.parse(thisElement.next().find('input').val()) - Date.parse(date);
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
                 thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes))); 
@@ -299,13 +299,13 @@ function timePicker(background){
      * @date    2016-01-04
      */
     $('table').on('mouseleave','.laydate',function(){
-        $(this).find('span').css('background-image','none')
+        $(this).find('input').css('background-image','none')
     });
 
     $('table').on('mouseenter','.laydate',function(){
         //图标路径
         var url = background+"/skins/default/icon2.png";
-        $(this).find('span').css('background-image','url('+url+')');
+        $(this).find('input').css('background-image','url('+url+')');
     });
 
 }
@@ -338,12 +338,11 @@ function sp_invitation(){
         thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
             selected.push($(elem).attr('value'));
         });
-
         $.ajax({
             type:'get',
             url: pars.teacher_list,   //修改请求地址
             data:{id:id,selected:selected},
-            success:function(res){
+            success:function(res){console.log(res)
 
                 var source = [];
 
@@ -445,9 +444,9 @@ function examroom_assignment(){
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:'http://127.0.0.1:3000/getList',
-                    dataType:'jsonp',
-                    jsonp:'callback',
+                    url:pars.url,//'http://127.0.0.1:3000/getList',
+                    //dataType:'jsonp',
+                    //jsonp:'callback',
                     data:{id:e.params.data.id},
                     async:true,
                     success:function(res){
@@ -482,15 +481,26 @@ function examroom_assignment(){
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
-                                for(var j in data[i].teacher){
+                                var typeValue = ['技能操作站','SP站'];
+                                /*for(var j in data[i].teacher){
                                     teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }
+                                }*/
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'</td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
                                                 '<select class="form-control" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                            '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right">'+
+                                                    '<select name="" class="teacher-list">'+
+                                                        '<option value="">==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
                                             '</td>'+
                                         '</tr>';
                             }
@@ -507,12 +517,12 @@ function examroom_assignment(){
                 //考站数据请求
                 $.ajax({
                     type:'get',
-                    url:'http://127.0.0.1:3000/getList',
-                    dataType:'jsonp',
-                    jsonp:'callback',
+                    url:pars.url,//'http://127.0.0.1:3000/getList',
+                    //dataType:'jsonp',
+                    //jsonp:'callback',
                     data:{id:e.params.data.id},
                     async:true,
-                    success:function(res){
+                    success:function(res){console.log(res);
 
                         //记录数据
                         var thisElement = $('#exam-place').find('tbody');
@@ -600,9 +610,7 @@ function examroom_assignment(){
         $.ajax({
             type:'get',
             async:true,
-            url:'http://127.0.0.1:3000/getjson',     //请求地址
-            dataType:'jsonp',
-            jsonp:'callback',
+            url:pars.list,     //请求地址
             success:function(res){
                 //数据处理
                 var str = [];
@@ -610,7 +618,7 @@ function examroom_assignment(){
                     layer.alert(res.message);
                     return;
                 }else{
-                    var data = res.data.rows;
+                    var data = res.data;
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }

@@ -8,14 +8,20 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use App\Entities\User;
+use App\Repositories\Common;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
+use DB;
 
 class InvigilatorController extends CommonController
 {
+
+
+
     public function getTest()
     {
         return view('osce::admin.exammanage.smart_assignment');
@@ -526,4 +532,71 @@ class InvigilatorController extends CommonController
             return redirect()->back()->withErrors($ex);
         }
     }
+
+    /**
+     * 导入excel的方法
+     * @api GET /osce/admin/invigilator/import
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        id        老师ID(必须的)
+     *
+     * @return redirect
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-06 10：55
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    private function postImport(Request $request)
+    {
+        //获得上传的数据
+        $data = Common::getExclData($request,'teacher');
+        //去掉sheet
+        $invigilatorList = array_shift($data);
+        //将中文表头转为英文
+        $data = Common::arrayChTOEn($invigilatorList, 'osce.importForCnToEn.teacher');
+        //返回数组
+        return $data;
+    }
+
+    /**
+     * 导入老师的数据
+     * @api GET /osce/admin/invigilator/import
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int        id        老师ID(必须的)
+     *
+     * @param Teacher $teacher
+     * @return redirect
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-09 16：48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postImportTeacher(Request $request, Teacher $teacher)
+    {
+        try {
+            //导入
+            $data = $this->postImport($request);
+            //将创建人插入到数组中
+            $createUser = Auth::user();
+            $data['create_user_id'] = $createUser->id;
+
+            //将数组导入到模型中的addInvigilator方法
+            if ($teacher->addInvigilator($data)) {
+                throw new \Exception('系统出错，请重试！');
+            } else {
+                echo json_encode($this->success_data());
+            }
+
+        } catch (\Exception $ex) {
+            echo json_encode($this->fail($ex));
+        }
+    }
+
 }

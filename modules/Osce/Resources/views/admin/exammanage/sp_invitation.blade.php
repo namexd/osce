@@ -84,11 +84,11 @@
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            <li class=""><a href="#">基础信息</a></li>
-                            <li class=""><a href="#">考场安排</a></li>
-                            <li class="active"><a href="#">邀请SP</a></li>
-                            <li class=""><a href="#">考生管理</a></li>
-                            <li class=""><a href="#">智能排考</a></li>
+                            {{--<li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>--}}
+                            {{--<li><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>--}}
+                            {{--<li class="active"><a href="{{route('osce.admin.spteacher.getInvitationIndex',['id'=>$id])}}">邀请SP</a></li>--}}
+                            {{--<li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>--}}
+                            {{--<li class=""><a href="#">智能排考</a></li> --}}
                         </ul>
                     </div>
                 </div>
@@ -108,15 +108,15 @@
                                 <td>肠胃炎考站</td>
                                 <td class="sp-teacher">
                                     <div class="teacher-box pull-left">
-                                        <div class="input-group teacher pull-left">
+                                        <div class="input-group teacher pull-left" value="1">
                                             <div class="pull-left">张老师</div>
                                             <div class="pull-left"><i class="fa fa-times"></i></div>
                                         </div>
-                                        <div class="input-group teacher pull-left teacher-primary">
+                                        <div class="input-group teacher pull-left teacher-primary" value="3">
                                             <div class="pull-left">张老师</div>
                                             <div class="pull-left"><i class="fa fa-times"></i></div>
                                         </div>
-                                        <div class="input-group teacher pull-left teacher-warn">
+                                        <div class="input-group teacher pull-left teacher-warn" value="2">
                                             <div class="pull-left">张老师</div>
                                             <div class="pull-left"><i class="fa fa-times"></i></div>
                                         </div>

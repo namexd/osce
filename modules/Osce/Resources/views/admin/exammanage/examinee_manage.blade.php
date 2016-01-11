@@ -88,9 +88,9 @@
                         <tr>
                             <td>{{$item->name}}</td>
                             <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
+                            <td>{{$item->code}}</td>
+                            <td>{{$item->idcard}}</td>
+                            <td>{{$item->mobile}}</td>
                             <td>
                                 <a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                             </td>
