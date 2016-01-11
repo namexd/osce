@@ -61,17 +61,17 @@
                 },
                 fields: {/*验证*/
                     hospital: {
-                        message: 'The hospital is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
                                 message: '请选择所属分院'
                             }
                         }
                     },
                     building: {
-                        message: 'The building is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
                                 message: '请选择教学楼'
                             }
                         }
@@ -239,7 +239,7 @@
                 $('#code').val($(this).parent().parent().find('.code').html());
                 //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
                 $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
-               // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
+                // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
                 $('#name').val($(this).parent().parent().find('.name').html());
                 $('#short_name').val($(this).parent().parent().find('.short_name').val());
                 $('#enname').val($(this).parent().parent().find('.enname').val());
@@ -310,7 +310,7 @@
                         }
                     }
                 });
-               // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
+                // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
 
                 var status = $(this).parent().parent().find('.status').attr('data');
                 $('.sta option').each(function(){
@@ -345,9 +345,9 @@
 @stop
 
 @section('content')
-	<input type="hidden" id="parameter" value="" />
-	<div class="wrapper wrapper-content animated fadeInRight">
-		<div class="row table-head-style1">
+    <input type="hidden" id="parameter" value="" />
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
@@ -367,7 +367,7 @@
                     </a>
                 </button>
             </div>
-		</div>
+        </div>
         <div class="ibox float-e-margins">
             <div class="container-fluid ibox-content">
                 <form action="" class="container-fluid" id="list_form">
@@ -465,11 +465,11 @@
         <div class="btn-group pull-right">
             <?php echo $datalist->render();?>
         </div>
-	</div>
+    </div>
 @stop
 
 @section('layer_content')
-{{--编辑--}}
+    {{--编辑--}}
     <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -480,12 +480,12 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b oldschool" name="hospital">
-
+                        <option value="-1">请选择</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
                             @endforeach
-                                @endif
+                        @endif
                     </select>
                 </div>
             </div>
@@ -551,7 +551,7 @@
                         @if(!empty($teacher))
                             @foreach($teacher as $tch)
                                 @if($tch->aboutUser)
-                                 <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
+                                    <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
                                 @endif
                             @endforeach
                         @endif
@@ -588,7 +588,7 @@
         </div>
     </form>
 
-{{--新增--}}
+    {{--新增--}}
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post" style="display:none">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -599,6 +599,7 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b school" name="hospital">
+                        <option value="-1">请选择</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
