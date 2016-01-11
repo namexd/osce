@@ -75,9 +75,7 @@ class SpteacherController extends CommonController
         $examId = $request->input('id');
         $inviteModel =new ExamSpTeacher();
         $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
-
 //        dd($inviteData);
-
         if($examId){
             $ExamModel=new ExamRoom();
             $TeacherSp = $ExamModel->getStationList($examId);
@@ -182,35 +180,5 @@ class SpteacherController extends CommonController
         }
 
     }
-
-
-
-
-    /**
-     *  发起sp邀请
-     * @method GET
-     * @url /osce/admin/spteacher/invitation-Sp
-     * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string        id       考试id(必须的)
-     *
-     * @return
-     *
-     * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getInvitationSp(){
-
-
-
-    }
-
-
-
-
-
 
 }

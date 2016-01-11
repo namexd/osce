@@ -65,42 +65,42 @@ class Teacher extends CommonModel
 
 
 
-     public  function invitationTeacherData($teacher_id){
+    //邀请老师的数据
+    public  function invitationContent($teacher_id){
 
-         $builder=$this;
-         try{
-             if ($teacher_id !== null) {
-                 $this->excludeId = $teacher_id;
-             }
-             $excludeId = $this->excludeId;
-             $excludeIds[] = $excludeId;
-             if (count($excludeId) !== 0) {
-                 $builder = $builder->leftJoin('cases',function($join){
-                     $join    ->  on('cases.id','=', 'teacher.case_id');
-             })->whereIn('id', $excludeIds);
-//                 dd($builder);
-             }
+        $builder=$this;
+        try{
+            if ($teacher_id !== null) {
+                $this->excludeId = $teacher_id;
+            }
+            $excludeId = $this->excludeId;
+            $excludeIds[] = $excludeId;
 
-             $data=$builder->select('teacher.name','cases.name as cname')->get();
-//             dd(11);
-             $openId= $this->find($data->id)->userInfo->opendid;
-             dd($openId);
-             $list=array(
-                 'openid' =>$openId,
-                 'teacher_name'=>$data->name,
-                 'teacher_id'=>$data->id,
-                 'case_name'=>$data->cname
-             );
+            if (count($excludeId) !== 0) {
+                $builder = $builder->leftJoin('cases',function($join){
+                    $join    ->  on('cases.id','=', 'teacher.case_id');
+                })->whereIn($this->table.'.id', $excludeIds);
+            }
 
+            $data=$builder->select('teacher.name','teacher.id as teacher_id','cases.name as cname','cases.id as caseId')->get()->toArray();
+//             dd($data);
+            $list=[];
+            foreach($data as $v){
+                $list['teacher_id']=$v['teacher_id'];
+                $list['teacher_name']=$v['name'];
+                $list['case_name']=$v['cname'];
+                $list['case_id']=$v['caseId'];
+            }
+//             $openId= $this->where('id', '=', $open['id'])->with('userInfo')->first()->toArray();
+            $openId= Teacher::find($list['teacher_id'])->userInfo->toArray();
+            $list['openid']=$openId['openid'];
+            return $list;
 
-             return $list;
+        }catch (\Exception $ex) {
+            throw $ex;
+        }
 
-         }catch (\Exception $ex) {
-             throw $ex;
-         }
-
-     }
-
+    }
 
 
 

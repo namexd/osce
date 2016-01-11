@@ -85,7 +85,8 @@ class Invite extends CommonModel
                     'url'=>'http://www.baidu.com'
                 ],
             ];
-            Common::sendWeiXin('oI7UquLMNUjVyUNaeMP0sRcF4VyU',$msgData);//单发
+            $message    =   Common::CreateWeiXinMessage($msgData);
+            Common::sendWeiXin('oI7UquLMNUjVyUNaeMP0sRcF4VyU',$message);//单发
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
         }
