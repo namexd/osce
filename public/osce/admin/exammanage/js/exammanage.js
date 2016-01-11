@@ -546,12 +546,13 @@ function examroom_assignment(){
 
                                         var ids = [];
                                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                                            var id = $(elem).find('td').eq(3).find('select').val();
-                                            if(id=='==请选择=='){
+                                            var id = $(elem).find('td').eq(3).find('select option:selected').val();
+                                            if(id==null){
                                                 return;
                                             }else{
                                                 ids.push(id);
                                             }
+                                            //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
                                         });
 
                                       return {
@@ -592,8 +593,8 @@ function examroom_assignment(){
 
                                         var ids = [];
                                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                                            var id = $(elem).find('td').eq(3).find('select').val();
-                                            if(id=='==请选择=='){
+                                            var id = $(elem).find('td').eq(3).find('select option:selected').val();
+                                            if(id==null){
                                                 return;
                                             }else{
                                                 ids.push(id);
@@ -848,7 +849,7 @@ function examroom_assignment(){
     })
 
     //删除
-    $(".teacher-box").delegate("i","click",function(){
+    $('#exam-place').on('click',".teacher-box i",function(){
         $(this).parents(".teacher").remove();
     })
 

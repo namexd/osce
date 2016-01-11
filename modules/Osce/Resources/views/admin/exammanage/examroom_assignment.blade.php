@@ -81,6 +81,7 @@
                 
             </div>
         </div>
+        <form method="post" class="form-horizontal container-fluid ibox-content">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
@@ -171,6 +172,7 @@
             </div>
 
         </div>
+        </form>
 </div>
 @stop{{-- 内容主体区域 --}}
 
