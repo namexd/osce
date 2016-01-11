@@ -34,7 +34,7 @@
                 <input type="text" class="form-control">
             </div>
             <div class="pull-left right">
-                <button class="btn btn-default">发送手机验证码</button>
+                <button class="btn btn-default" id="btn">发送手机验证码</button>
             </div>
         </div>
     </div>

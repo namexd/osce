@@ -48,10 +48,11 @@ class UserController  extends CommonController
      *
      */
     public function postRegister(Request $request){
+
         $this   ->validate($request,[
             'mobile'    =>  'required',
-            'password'  =>  'required',
-            'repassword'=>  'required|confirmed:password',
+            'password'  =>  'required|confirmed',
+            'password_confirmation'=>  'required',
             'name'      =>  'required',
             'type'      =>  'required',
             'gender'    =>  'sometimes',
@@ -75,6 +76,7 @@ class UserController  extends CommonController
         \DB::beginTransaction();
         try
         {
+//            dd($mobile,$password,$type,$name,$gender,$nickname,$idcard);
             if($type)
             {
                 $idcard =   $request    ->  get('idcard');
@@ -119,7 +121,7 @@ class UserController  extends CommonController
 
     /**
      * 登录表单
-     * @url GET /osce/admin/user/login
+     * @url GET /osce/wechat/user/login
      * @access public
      *
      * @return View

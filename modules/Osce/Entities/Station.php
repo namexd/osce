@@ -77,22 +77,18 @@ class Station extends CommonModel
      */
     public function addStation($formData)
     {
-
-
+        try {
             //开启事务
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
-            list($stationData, $vcrId, $caseId) = $formData;
-
+            list($stationData, $vcrId, $caseId, $roomId) = $formData;
             //将station表的数据插入station表
             $result = $this->create($stationData);
 
             //获得插入后的id
             $station_id = $result->id;
-            if ($result === false) {
-                $connection->rollBack();
-
-                return false;
+            if (!$result) {
+                throw new \Exception('将数据写入考站失败！');
             }
             //将考场摄像头的关联数据写入关联表中
             $stationVcrData = [
@@ -101,8 +97,7 @@ class Station extends CommonModel
             ];
             $result = StationVcr::create($stationVcrData);
             if ($result === false) {
-                $connection->rollBack();
-                return false;
+                throw new \Exception('将数据写入考场摄像头失败！');
             }
 
             //更改摄像机表中摄像机的状态
@@ -110,23 +105,37 @@ class Station extends CommonModel
             $vcr->status = 0;  //变更状态,但是不一定是0
             $result = $vcr->save();
             if ($result === false) {
-                $connection->rollBack();
-                return false;
+                throw new \Exception('更改摄像机表失败！');
             }
 
-            //改变考站病历表的状态
+            //添加考站病历表的状态
             $stationCaseData = [
                 'case_id'=>$caseId,
                 'station_id' => $station_id
             ];
             $result = StationCase::create($stationCaseData);
             if ($result === false) {
-                $connection->rollBack();
-                return false;
+                throw new \Exception('添加病历表失败');
+            }
+
+            //将房间相关插入关联表
+            $StationRoomData = [
+                'room_id' => $roomId,
+                'station_id' => $station_id
+            ];
+            $result = RoomStation::create($StationRoomData);
+            if (!$result) {
+                throw new \Exception('关联房间时出错，请重试！');
             }
 
             $connection->commit();
             return true;
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+
+
 
     }
 

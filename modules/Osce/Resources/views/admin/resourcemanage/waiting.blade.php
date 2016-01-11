@@ -31,20 +31,16 @@
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            <li class=""><a href="#">考场</a></li>
-                            <li><a href="{{route('osce.admin.room.getRoomList')}}?type=2">中控室</a></li>
-                            <li class=""><a href="{{route('osce.admin.room.getRoomList')}}?type=3">走廊</a></li>
-                            <li class="active"><a href="{{route('osce.admin.room.getRoomList')}}?type=4">候考区</a></li>
+                            @foreach($area as $item)
+                                <li
+                                        @if($item->cate == 4)
+                                        class="active"
+                                        @endif><a href="{{route('osce.admin.room.getRoomList')}}?type={{$item->cate}}">{{$item->name}}</a></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
 
-                <div class="input-group" style="width: 290px;margin:20px 0;">
-                    <input type="text" placeholder="请输入关键字" class="input-sm form-control" style="height: 34px">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
-                </span>
-                </div>
 
                 <table class="table table-striped" id="table-striped">
                     <thead>

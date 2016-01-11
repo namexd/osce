@@ -81,7 +81,7 @@ class StationController extends CommonController
 
 
         //获得上次的时间限制
-        $time = $request->session()->get('time', '');
+        $time = $request->session()->get('time',"");
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourcemanage.test_station_add',
             ['placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case, 'room' => $room, 'subject' => $subject, 'time' => $time]);
@@ -101,25 +101,31 @@ class StationController extends CommonController
      */
     public function postAddStation(Request $request, Station $model)
     {
-
+        try {
         //验证略
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $stationData = $request->only('name', 'type', 'mins', 'room_id', 'subject_id');
+            $stationData = $request->only('name', 'type', 'mins', 'subject_id');
             $vcrId = $request->input('vcr_id');
             $caseId = $request->input('case_id');
+            $roomId = $request->input('room_id');
 
-            $formData = [$stationData, $vcrId, $caseId];
+            $formData = [$stationData, $vcrId, $caseId, $roomId];
 
-            $result = $model->addStation($formData);
             //将当前时间限定的值放入session
             $time = $request->input('mins');
-            $request->session()->flash('time', $time);
+            $time = $request->session()->flash('time', $time);
 
-            if (!$result) {
-                return redirect()->back()->withErrors('创建考场失败！');
-            } else {
-                return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
+            $model->addStation($formData);
+
+            if (!$time) {
+                throw new \Exception('未能将时间保存！');
             }
+
+            return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
+
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
 
     }
 

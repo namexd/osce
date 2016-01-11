@@ -55,7 +55,8 @@ class Common
     }
     static public function registerUser($data,$password){
         $form_user              =   $data;
-        $form_user['username']  =   $data['mobile'];
+        $form_user['username']  =   $data['username'];
+        $form_user['mobile']    =   $data['username'];
         $form_user['openid']    =   '';
         $form_user['password']  =   bcrypt($password);
         $user=\App\Entities\User::create($form_user);

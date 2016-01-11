@@ -37,7 +37,7 @@
 <div class="container" id="container">
     <div >
         {{-- RegTeacherOp --}}
-        <form name="form" method="post" id="sourceForm" action="" id="frmTeacher">
+        <form name="form" method="post" id="sourceForm" action="{{route('osce.wechat.user.postRegister')}}" id="frmTeacher">
             <div class="form-group">
                 <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span>*</span></label>
                 <input  type="text" name="nickname" class="form-control" id="name"/>
@@ -89,7 +89,7 @@
                 <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入密码"/>
             </div>
             <div class="form-group">
-                <input type="password" name="repassword" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
+                <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
             <input class="btn" type="submit" id="#bling" value="提交审核" />
