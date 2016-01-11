@@ -16,7 +16,7 @@ class TrainController extends  CommonController{
     /**
      *≈‡—µ¡–±Ì
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/train-list
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -55,7 +55,7 @@ class TrainController extends  CommonController{
     /**
      *–¬‘ˆ≈‡—µ
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/train-list
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -101,7 +101,7 @@ class TrainController extends  CommonController{
     /**
      *±‡º≠≈‡—µªÿœ‘
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/edit-train
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -154,8 +154,8 @@ class TrainController extends  CommonController{
 
     /**
      *±£¥Ê±‡º≠≈‡—µ
-     * @method GET
-     * @url /user/
+     * @method POST
+     * @url /osce/wechat/train/edit-train
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>
@@ -209,7 +209,7 @@ class TrainController extends  CommonController{
     /**
      *…æ≥˝≈‡—µ
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/train/del-train
      * @access public
      *
      * @param Request $request post«Î«Û<br><br>

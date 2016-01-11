@@ -17,7 +17,7 @@ class DiscussionController extends  CommonController{
     /**
      *获取问题列表
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/discussion/question-list
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -64,7 +64,7 @@ class DiscussionController extends  CommonController{
     /**
      *查看问题
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/discussion/check-question
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -125,8 +125,8 @@ class DiscussionController extends  CommonController{
 
     /**
      *提交问题
-     * @method GET
-     * @url /user/
+     * @method POST
+     * @url /osce/wechat/discussion/add-question
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -172,8 +172,8 @@ class DiscussionController extends  CommonController{
 
     /**
      *提交回答
-     * @method GET
-     * @url /user/
+     * @method POST
+     * @url    /osce/wechat/discussion/add-reply
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -217,7 +217,7 @@ class DiscussionController extends  CommonController{
     /**
      *删除该问题
      * @method GET
-     * @url /user/
+     * @url /osce/wechat/discussion/del-question
      * @access public
      *
      * @param Request $request post请求<br><br>
