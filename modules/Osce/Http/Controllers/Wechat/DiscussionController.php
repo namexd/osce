@@ -99,6 +99,7 @@ class DiscussionController extends  CommonController{
                   'update_at'      =>$item->update_at,
               ];
           }
+          $countReply=Discussion::where('pid',$id)->count();
 
           //获取回复人信息
            $replys=Discussion::where('pid',$id)->select()->get();
@@ -111,11 +112,12 @@ class DiscussionController extends  CommonController{
                   'create_user'    =>$itm->getAuthor,
                   'create_at'      =>$itm->create_at,
                   'update_at'      =>$itm->update_at,
+                  'reply'          =>$countReply,//回复数量
               ];
           }
             $row=array(
-                'replys' =>$replys,
                 'question'   =>$question,
+                'replys' =>$replys,
             );
 
           return response()->json(

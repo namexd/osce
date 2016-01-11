@@ -8,6 +8,9 @@
         }
         .blank-panel .panel-heading {margin-left: -20px;}
         #start,#end{width: 160px;}
+        .btn{
+            margin: 0!important;
+        }
     </style>
 @stop
 
@@ -57,7 +60,7 @@
                             @endforelse
                         </ul>
                     </div>
-                    <button type="button" class="btn  btn-default" id="search">&nbsp;搜索&nbsp;</button>
+                    <button type="button" class="btn  btn-primary" id="search">&nbsp;搜索&nbsp;</button>
 
                 </div>
 

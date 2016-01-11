@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="input-group" style="width: 290px;margin:20px 0;">
-                    <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                    <input type="text" placeholder="请输入关键字" class="input-sm form-control" style="height: 34px">
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </span>
