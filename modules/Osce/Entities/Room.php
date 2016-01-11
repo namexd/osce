@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities;
 
 
+
 class Room extends CommonModel
 {
 
@@ -47,14 +48,21 @@ class Room extends CommonModel
     {
         try {
             //如果传入了id,就说明是编辑,那就只读取该id的数据
+            //如果传入的type是1，就说明是编辑考场
             if ($id !== "") {
+                //如果传入的type是其他值，就说明是编辑其他地点，展示对应的摄像头
+                if ($type != 1) {
+                    return Vcr::findOrFail($id);
+                }
                 $builder = $this->where('id', '=', $id);
                 $result = $builder->select('id', 'name', 'description')->first();
                 if (!$result){
                     throw new \Exception('查无此考场！');
                 }
                 return $result;
+
             }
+
 
             //判断传入的type是否合法
             $area = Area::where('area.cate', '=', $type)->first();
@@ -84,7 +92,6 @@ class Room extends CommonModel
                     throw new \Exception('系统出了问题，请重试！');
                 }
             }
-
             //如果keyword不为空，那么就进行模糊查询
             if ($keyword !== "") {
                 $builder = $builder->where($this->table . '.name', '=', '%' . $keyword . '%')
@@ -93,6 +100,9 @@ class Room extends CommonModel
 
             //判断是否是考场
             $result = empty($vcr) ? $builder->paginate(10) : $vcr;
+
+            //将区域的信息全部传回去
+            $area = Area::all();
 
             return array($area, $result);
         } catch (\Exception $ex) {

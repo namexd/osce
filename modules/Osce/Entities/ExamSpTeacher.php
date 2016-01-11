@@ -19,4 +19,11 @@ class ExamSpTeacher
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['invite_id', 'exam_screening_id', 'case_id', 'teacher_id', 'create_user_id'];
+
+    public function addExamSp(array $list){
+
+        return  $this   ->  insert($list);
+    }
+
+
 }

@@ -29,46 +29,50 @@ class ExamScreening extends CommonModel
     //根据考试id获得考站和老师数据
     public function getStationList($examId){
 
-        $builder = $this->leftJoin (
-            'room',
-            function ($join) {
-                $join->on('room.id','=',$this->table.'.room_id');
 
-            }
-        )   ->  leftJoin (
-            'station',
-            function ($join) {
-                $join->on('station.room_id','=','room.id');
-            }
-        )   ->  leftJoin (
-            'station_case',
-            function ($join) {
-                $join->on('station_case.station_id','=','station.id');
-            }
-        )   ->  leftJoin (
-            'cases',
-            function ($join) {
-                $join->on('cases.id','=','station_case.case_id');
-            }
-        )   ->  leftJoin (
-            'station_sp',
-            function ($join) {
-                $join->on('station_sp.case_id','=','cases.id');
-            }
-        )->  leftJoin (
-            'teacher',
-            function ($join) {
-                $join->on('teacher.id','=','station_sp.user_id');
-            }
-        )
-            ->  where($this->table.'.id','=',$examId)
-            ->  select([
-                'station.id as station_id',
-                'station.name as station_name',
-                'teacher.name as teacher_name',
-                'teacher.id as teacher_id'
-            ]);
-        return $builder->get();
+
+
+
+//        $builder = $this->leftJoin (
+//            'room',
+//            function ($join) {
+//                $join->on('room.id','=',$this->table.'.room_id');
+//
+//            }
+//        )   ->  leftJoin (
+//            'station',
+//            function ($join) {
+//                $join->on('station.room_id','=','room.id');
+//            }
+//        )   ->  leftJoin (
+//            'station_case',
+//            function ($join) {
+//                $join->on('station_case.station_id','=','station.id');
+//            }
+//        )   ->  leftJoin (
+//            'cases',
+//            function ($join) {
+//                $join->on('cases.id','=','station_case.case_id');
+//            }
+//        )   ->  leftJoin (
+//            'station_sp',
+//            function ($join) {
+//                $join->on('station_sp.case_id','=','cases.id');
+//            }
+//        )->  leftJoin (
+//            'teacher',
+//            function ($join) {
+//                $join->on('teacher.id','=','station_sp.user_id');
+//            }
+//        )
+//            ->  where($this->table.'.id','=',$examId)
+//            ->  select([
+//                'station.id as station_id',
+//                'station.name as station_name',
+//                'teacher.name as teacher_name',
+//                'teacher.id as teacher_id'
+//            ]);
+//        return $builder->get();
 
     }
 
