@@ -24,7 +24,7 @@
                 ban();
 
             });
-            //getEvent();
+            getEvent();
 //            楼栋选项卡切换
             function ban(){
                 $(".list-group-parent").unbind().click(function(){
@@ -42,7 +42,7 @@
                     $(".list-group-child").removeClass("checked");
                     $(this).addClass("checked");
                     var labid=$(this).attr("data-labid");
-                    getEvent(labid);
+                   // getEvent(labid);
                 });
             }
  //          楼栋实验室数据绑定
@@ -117,7 +117,7 @@
             });
 //      获取选择的楼栋事件
         function getEvent(labid){
-            var qj={id:labid}
+            var qj={id:"13"}
             $.ajax({
                 url:"{{ route('msc.admin.laboratory.getEditLabCleander')}}", /*${ctx}/*/
                 type:"get",
@@ -214,11 +214,12 @@
                    $("#calendar .fc-body .fc-row div").unbind().click(function(){
 
                        $(this).toggleClass("check");
+                       cleardate();//清理掉下面部分的日期显
+
                        if($(this).children("div").size() > 0){
-                           console.log(1);
                            $(this).siblings().removeClass("check");//去掉已选择状态
                            $(this).parents().siblings(".fc-row").children().removeClass("check");
-                           cleardate();//清理掉下面部分的日期显示
+
                            var mark_morning = false;
                            var mark_noon = false;
                            var  mark_afternoon = false;
@@ -233,16 +234,8 @@
                                if(period_type=="1"){//上午
                                    $(".morning").children().children().children(".check_icon").addClass("check");
                                    if(!mark_morning){
-                                       $(".morning").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein1" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end1" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
-                                               +'</div>'
-                                               +'</div>');
+                                       $(".morning").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein1']").val(begintime) ;
+                                       $(".morning").children().children(".overflow").children(".col-sm-8").children("input[name='time-end1']").val(endtime);
                                        mark_morning = true;
                                    }else{
                                        $(".morning").children(".col-sm-10").append('<div class=" overflow form-group">'
@@ -264,16 +257,8 @@
 
                                    $(".noon").children().children().children().addClass("check");
                                    if(!mark_noon){
-                                       $(".noon").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein2" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end2" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
-                                               +'</div>'
-                                               +'</div>');
+                                       $(".noon").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein2']").val(begintime) ;
+                                       $(".noon").children().children(".overflow").children(".col-sm-8").children("input[name='time-end2']").val(endtime);
                                        mark_noon = true;
                                    }else{
                                        $(".noon").children(".col-sm-10").append('<div class=" overflow form-group">'
@@ -295,16 +280,8 @@
                                    //下午
                                    $(".afternoon").children().children().children().addClass("check");
                                    if(!mark_afternoon){
-                                       $(".afternoon").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein3" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end3" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
-                                               +'</div>'
-                                               +'</div>');
+                                       $(".afternoon").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein3']").val(begintime) ;
+                                       $(".afternoon").children().children(".overflow").children(".col-sm-8").children("input[name='time-end3']").val(endtime);
                                        mark_afternoon = true;
                                    }else{
                                        $(".afternoon").children(".col-sm-10").append('<div class=" overflow form-group">'
@@ -324,16 +301,8 @@
                                    //晚上
                                    $(".night").children().children().children().addClass("check");
                                    if(!mark_night){
-                                       $(".night").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein4" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
-                                               +'</div>'
-                                               +'</div>');
+                                       $(".night").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein4']").val(begintime) ;
+                                       $(".night").children().children(".overflow").children(".col-sm-8").children("input[name='time-end4']").val(endtime);
                                        mark_night = true;
                                    }else{
                                        $(".night").children(".col-sm-10").append('<div class=" overflow form-group">'
@@ -375,24 +344,8 @@
                            }
 
                        }else{
-                           console.log(2);
                            $(this).siblings(".fc-content").removeClass("check");//去掉已选择状态
                            $(this).parents().siblings(".fc-row").children(".fc-content").removeClass("check");
-                           $(".add_time_list").children(".col-sm-10").empty();
-                           $(".add_time_list").children(".col-sm-10").each(function(){
-                               var inuput_num=$(".add_time_list  .form-group").size()+1;
-                               $(this).append('<div class=" overflow form-group">'
-                                       +'<div class="col-sm-8">'
-                                       +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="" placeholder="08：00"/>'
-                                       +'<lable>至</lable>'
-                                       +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value=""  placeholder="09：00"/>'
-                                       +'</div>'
-                                       +'<div class="col-sm-4">'
-                                       +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
-                                       +'</div>'
-                                       +'</div>');
-
-                           });
                            addtime()
                            $(".morning").children().children().children().removeClass("check");
                            $(".noon").children().children().children().removeClass("check");
@@ -404,10 +357,21 @@
 
 
                 function cleardate(){
-                    $(".morning").children(".col-sm-10").empty();
-                    $(".noon").children(".col-sm-10").empty();
-                    $(".afternoon").children(".col-sm-10").empty();
-                    $(".night").children(".col-sm-10").empty();
+                    $(".add_time_list").children(".col-sm-10").empty();
+                    $(".add_time_list").children(".col-sm-10").each(function(){
+                        var inuput_num=$(".add_time_list  .form-group").size()+1;
+                        $(this).append('<div class=" overflow form-group">'
+                                +'<div class="col-sm-8">'
+                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="" placeholder="08：00"/>'
+                                +'<lable>至</lable>'
+                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value=""  placeholder="09：00"/>'
+                                +'</div>'
+                                +'<div class="col-sm-4">'
+                                +'<a class="add_time_button" id="morning">添加时间段<span></span></a>'
+                                +'</div>'
+                                +'</div>');
+
+                    });
                     $(".morning").children().children().children().removeClass("check");
                     $(".noon").children().children().children().removeClass("check");
                     $(".afternoon").children().children().children().removeClass("check");
