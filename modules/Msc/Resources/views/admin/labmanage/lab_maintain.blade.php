@@ -28,7 +28,7 @@
                 var type = $(this).attr('data-type');
                 var url = "/msc/admin/laboratory/stop-lab?id="+this_id+"&type="+type;
                 var str = '';
-                if(type == 1){
+                if(type == 0){
                     str = '您确定要停用实验室？';
                 }else{
                     str = '您确定要启用实验室？';
@@ -53,6 +53,73 @@
             });
             //编辑验证
             $("#edit_from").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    hospital: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择所属分院'
+                            }
+                        }
+                    },
+                    building: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择教学楼'
+                            }
+                        }
+                    },
+                    floor: {
+                        message: 'The floor is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请选择楼层'
+                            }
+                        }
+                    },
+                    name: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '实验室名称不能为空'
+                            }
+                        }
+                    },
+                    number: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '房号不能为空'
+                            }
+                        }
+                    },
+                    total: {/*键名username和input name值对应*/
+                        validators: {
+                            regexp: {
+                                regexp: /^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,
+                                message: '请填写实验室容量'
+                            }
+                        }
+                    },
+                    type: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择状态'
+                            }
+                        }
+                    }
+                }
+            });
+//            新增验证
+            $('#add_from').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {/*输入框不同状态，显示图片的样式*/
                     valid: 'glyphicon glyphicon-ok',
@@ -100,65 +167,11 @@
                             }
                         }
                     },
-                    type: {
+                    total: {/*键名username和input name值对应*/
                         validators: {
                             regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择状态'
-                            }
-                        }
-                    }
-                }
-            });
-//            新增验证
-            $('#add_from').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    hospital: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择所属分院'
-                            }
-
-                        }
-                    },
-                    building: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择教学楼'
-                            }
-
-                        }
-                    },
-                    floor: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择楼层'
-                            }
-
-                        }
-                    },
-                    name: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '实验室名称不能为空'
-                            }
-                        }
-                    },
-                    number: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '房号不能为空'
+                                regexp: /^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,
+                                message: '请正确填写实验室容量'
                             }
                         }
                     },
@@ -242,7 +255,7 @@
                 $('#code').val($(this).parent().parent().find('.code').html());
                 //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
                 $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
-               // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
+                // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
                 $('#name').val($(this).parent().parent().find('.name').html());
                 $('#short_name').val($(this).parent().parent().find('.short_name').val());
                 $('#enname').val($(this).parent().parent().find('.enname').val());
@@ -313,7 +326,7 @@
                         }
                     }
                 });
-               // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
+                // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
 
                 var status = $(this).parent().parent().find('.status').attr('data');
                 $('.sta option').each(function(){
@@ -348,9 +361,9 @@
 @stop
 
 @section('content')
-	<input type="hidden" id="parameter" value="" />
-	<div class="wrapper wrapper-content animated fadeInRight">
-		<div class="row table-head-style1">
+    <input type="hidden" id="parameter" value="" />
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
@@ -370,7 +383,7 @@
                     </a>
                 </button>
             </div>
-		</div>
+        </div>
         <div class="ibox float-e-margins">
             <div class="container-fluid ibox-content">
                 <form action="" class="container-fluid" id="list_form">
@@ -468,11 +481,11 @@
         <div class="btn-group pull-right">
             <?php echo $datalist->render();?>
         </div>
-	</div>
+    </div>
 @stop
 
 @section('layer_content')
-{{--编辑--}}
+    {{--编辑--}}
     <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -483,12 +496,12 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b oldschool" name="hospital">
-                        <option value="-1">请选择所属分院</option>
+                        <option value="-1">请选择</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
                             @endforeach
-                                @endif
+                        @endif
                     </select>
                 </div>
             </div>
@@ -541,7 +554,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control describe add-describe" id="total" name="total" />
                 </div>
@@ -554,7 +567,7 @@
                         @if(!empty($teacher))
                             @foreach($teacher as $tch)
                                 @if($tch->aboutUser)
-                                 <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
+                                    <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
                                 @endif
                             @endforeach
                         @endif
@@ -591,7 +604,7 @@
         </div>
     </form>
 
-{{--新增--}}
+    {{--新增--}}
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post" style="display:none">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -602,7 +615,7 @@
                 <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
                 <div class="col-sm-9">
                     <select id="select_Category" class="form-control m-b school" name="hospital">
-                        <option value="-1">请选择所属分院</option>
+                        <option value="-1">请选择</option>
                         @if(!empty($school))
                             @foreach($school as $ss)
                                 <option value="{{$ss->id}}">{{$ss->name}}</option>
@@ -658,7 +671,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">容量</label>
+                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control describe add-describe" name="total" />
                 </div>

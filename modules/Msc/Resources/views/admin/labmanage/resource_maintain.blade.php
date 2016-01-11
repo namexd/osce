@@ -215,18 +215,24 @@
 
             //设备添加方法
 
-            function add(){
+            function add(cate_id){
                 var url  = "{{route('msc.admin.LadMaintain.LaboratoryListData')}}";
+                url += '?keyword='+$('#keyword').val()+'&lab_id='+$('#lab_id').val()
+                if(cate_id){
+                    url += '&devices_cate_id='+cate_id;
+                }
                 $.ajax({
                     type:"get",
-                    url:url+'?keyword='+$('#keyword').val()+'&lab_id='+$('#lab_id').val(),
+                    url:url,
                     async:true,
                     success:function(result){
-                        var html = '';
+                        var html = '<li>' +
+                                '<a href="javascript:void(0)" cate_id = "0">全部</a>'+
+                                ' </li>';
                         var list ='';
                         $(result.data.rows.deviceType).each(function(){
                             html+='<li>' +
-                                    '<a href="">'+this.name+'</a>'+
+                                    '<a href="javascript:void(0)" cate_id = "'+this.id+'">'+this.name+'</a>'+
                                     ' </li>'
                         })
                         $('#device-type').html(html);
@@ -249,7 +255,10 @@
                 })
 
             }
-
+            //根据类别筛选资源列表
+            $('#device-type').delegate('a','click',function(){
+                add($(this).attr('cate_id'))
+            })
             //保存编辑数量
             $('#saveEdit').click(function(){
                 var url = "{{route('msc.admin.LadMaintain.DevicesTotalEdit')}}";

@@ -147,10 +147,7 @@ class Laboratory extends Model
             $m = date('m',$timeInt);
             $d = date('d',$timeInt);
             return $this->where('id','=',$id)->with(['Floor','OpenPlan'=>function($OpenPlan) use ($y,$m,$d){
-                $OpenPlan->where('year','=',$y)->where('month','=',$m)->where('day','=',$d)->with(['OpenLabApply'=>function($OpenLabApply){
-                    //TODO open_lab_apply表 状态1代表 学生预约的开放实验室
-                    $OpenLabApply->where('type','=',1);
-                }]);
+                $OpenPlan->where('year','=',$y)->where('month','=',$m)->where('day','=',$d);
             },'LabApply'=>function($LabApply) use($dateTime){
                 $LabApply->where('apply_time','=',$dateTime);
             }])->first();
