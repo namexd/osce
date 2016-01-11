@@ -74,13 +74,13 @@ class SpteacherController extends CommonController
         $examId = $request->input('id');
 
         $inviteModel =new ExamSpTeacher();
-//        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
+        $inviteData=$inviteModel-> where('exam_screening_id', '=',$examId)->get()->keyBy('teacher_id');
 
 //        dd($inviteData);
         if($examId){
             $ExamModel=new ExamRoom();
             $TeacherSp = $ExamModel->getStationList($examId);
-            // dump($TeacherSp->toArray());
+//             dump($TeacherSp->toArray());
             $stationTeacher=[];
             foreach($TeacherSp as  $data){
                 $stationData = [];
@@ -118,14 +118,14 @@ class SpteacherController extends CommonController
                 $stationTeacher[$data['station_id']] = $stationData;
             }
 
-            // dd( $stationTeacher );
+//             dd($stationTeacher);
 
             return view('osce::admin.exammanage.sp_invitation',[
+                'id' => $request->input('id'),
                 'data'    => $stationTeacher,
 
             ]);
         }
-//
         return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
 
     }
@@ -156,7 +156,7 @@ class SpteacherController extends CommonController
             'station_id'    =>'required|integer',
             'user_id'    =>'required|integer',
             'case_id'    =>'required|integer',
-            'type'    =>'required|integer',
+            'status'    =>'required|integer',
         ]);
         $Invitation = [];
         $req = $request->all();
@@ -166,7 +166,7 @@ class SpteacherController extends CommonController
                 $arr = explode(",",$v);
                 $Invitations['station_id'] = $req['station_id'];
                 $Invitations['case_id'] = $req['case_id'];
-                $Invitations['type'] = $req['type'];
+                $Invitations['status'] = $req['status'];
 //                $LabDevices['user_id'] = $arr[0];
                 $LabDevices['created_user_id'] = $user->id;
                 $Invitation [] = $LabDevices;
