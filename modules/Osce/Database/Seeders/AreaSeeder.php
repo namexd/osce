@@ -22,7 +22,6 @@ class AreaSeeder extends Seeder
 
     public function area()
     {
-        $data = [];
         $data = [[
             'name' => '考场',
             'code' => '101',

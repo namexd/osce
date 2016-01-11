@@ -154,6 +154,9 @@ class Notice extends CommonModel
             throw $ex;
         }
     }
+
+
+
     public function getList(){
         return $this    ->  paginate(config('osce.page_size'));
     }
