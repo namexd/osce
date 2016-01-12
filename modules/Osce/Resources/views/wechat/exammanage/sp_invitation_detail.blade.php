@@ -36,6 +36,8 @@
     <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
 
+
+
     </script>
 
 @stop
@@ -53,20 +55,23 @@
     </div>
     <div class="detail-list">
         <ul>
+            @if(!empty($list))
+
             <li>
-                考试邀请:<span class="items">OSCE考试2015年第3期</span>
+                考试邀请:<span class="items">{{$list['exam_name']}}</span>
             </li>
             <li>
-                考试时间:<span class="items">2015-11-20~11-21</span>
+                考试时间:<span class="items">{{date('Y-m-d',strtotime($list['begin_dt']))}}~{{date('Y-m-d',strtotime($list['end_dt']))}}</span>
             </li>
             <li>
-                sp病例:<span class="items">腰酸背痛</span>
+                sp病例:<span class="items">{{$list['case_name']}}</span>
             </li>
+                @endif
         </ul>
         <p>希望你能协助考核，如有疑问，请致电：028 - 87653489  张老师</p>
         <div class="operate">
-            <button class="btn1 pull-left agree" type="button">同意</button>
-            <button class="btn1 pull-right rejected" type="button">拒绝</button>
+            <button class="btn1 pull-left agree" type="button" value="1">同意</button>
+            <button class="btn1 pull-right rejected" type="button" value="2">拒绝</button>
         </div>
     </div>
 @stop

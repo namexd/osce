@@ -72,13 +72,16 @@
                         </ul>
                     </li>
 					<li>
-						<a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">用户管理</span><span class="fa arrow"></span></a>
+						<a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
                             <li>
 								<a class="active J_menuItem" href="{{route('osce.admin.user.getStaffList')}}">用户管理</a>
                             </li>
                             <li>
                                 <a class="J_menuItem" href="{{ route('auth.AuthManage') }}">角色权限管理</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="#">系统设置</a>
                             </li>
                         </ul>
 					<li>
