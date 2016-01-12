@@ -141,7 +141,8 @@ class Teacher extends CommonModel
 
             return $builder->select([
                 'id',
-                'name'
+                'name',
+                'status'
             ])->get();
 
         } catch (\Exception $ex) {
