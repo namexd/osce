@@ -9,6 +9,8 @@
 namespace Modules\Osce\Entities;
 use App\Repositories\Common;
 use DB;
+use Modules\Osce\Http\Controllers\Wechat\InvitationController;
+
 class Invite extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -34,10 +36,8 @@ class Invite extends CommonModel
                 'end_dt' =>$data[$k]['end_dt'],
                 'exam_screening_id' =>$data[$k]['exam_id'],
             ];
-            $notice  =   $this  ->create($inviteData);
-
 //            dd($notice);
-            if($notice)
+            if($notice  =   $this  -> firstOrcreate($inviteData))
             {
                 $invitelist =$this->where('id','=',$data[$k]['teacher_id'])->first()->toArray();
                 $list=[
@@ -66,21 +66,18 @@ class Invite extends CommonModel
         }
     }
 
-
-
 //       发送邀请
 
     public function sendMsg($notice,$data){
         try
         {
-
            foreach($data as $k=>$v){}
-//            $url    =   route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
+            $url    =   route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
             $msgData    =   [
                 [
                     'title' =>'邀请通知',
                     'desc'  =>$data[$k]['exam_name'].'邀请',
-                    'url'=>'http://www.baidu.com'
+                    'url'=>  $url
                 ],
             ];
             $message    =   Common::CreateWeiXinMessage($msgData);
