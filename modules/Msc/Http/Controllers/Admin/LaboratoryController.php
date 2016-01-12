@@ -345,7 +345,7 @@ class LaboratoryController extends MscController {
         sort($array);
         foreach($array as $o=>$date){
             $arr[$o]['date'] = $date;
-            $arr[$o]['child'] = OpenPlan::where($date)->select('begintime','endtime','period_type')->get();
+            $arr[$o]['child'] = OpenPlan::where($date)->select('begintime','endtime','period_type','id')->get();
         }
         return $arr;
     }
@@ -429,6 +429,8 @@ class LaboratoryController extends MscController {
      * 添加或修改实验室开放时间
      */
     public function postOperatingLabCleander(){
+        $dataid = Input::get('dateid');
+        $count = count($dataid);
         DB::connection('msc_mis')->beginTransaction();
         $date = explode('&',trim(Input::get('date'),'&'));
         $timestr =  explode('@',trim(Input::get('timestr'),'@'));
@@ -481,7 +483,7 @@ class LaboratoryController extends MscController {
         }
        foreach($post as $aa=>$pp){
            $post[$aa]['lab_id'] = Input::get('lid');
-           $post[$aa]['created_user_id'] = $user->id;
+           $post[$aa]['created_user_id'] = "$user->id";
            $post[$aa]['created_at'] = date('Y-m-d H:i:s');
            $post[$aa]['updated_at'] = date('Y-m-d H:i:s');
        }
@@ -496,7 +498,27 @@ class LaboratoryController extends MscController {
                 $plan[$t1]['endtime'] = $endtime[1];
                 $plan[$t1]['period_type'] = $this->get_n($endtime[0]);
             }
-            OpenPlan::insert($plan);
+//            echo $count;
+//            var_dump($dataid);
+//    dd($plan);
+            //dd($dataid);
+            if($dataid){
+                //dd('qq');
+                $this->start_sql(1);
+                for($i=0;$i<$count;$i++){
+                    unset($plan[$i]['created_at']);
+
+                    OpenPlan::where('id','=',$dataid[$i])->update($plan[$i]);
+
+                }
+               // $this->end_sql(1);
+
+            }else{
+                //dd('aa');
+                $this->start_sql(1);
+                OpenPlan::insert($plan);
+                //$this->end_sql(1);
+            }
 
         } catch (Exception $e){
             DB::connection('msc_mis')->rollback();
@@ -517,7 +539,14 @@ class LaboratoryController extends MscController {
                     $plan1[$t1]['endtime'] = $endtime[1];
                     $plan1[$t1]['period_type'] = $this->get_n($endtime[0]);
                 }
-                OpenPlan::insert($plan1);
+
+                if($dataid){
+                    for($i=0;$i<$count;$i++){
+                        OpenPlan::where('id','=',$dataid[$i])->update($plan1[$i]);
+                    }
+                }else{
+                    OpenPlan::insert($plan1);
+                }
             } catch (Exception $e){
                 DB::connection('msc_mis')->rollback();
                 return ['status'=>1,'info'=>$e];exit;
@@ -535,7 +564,13 @@ class LaboratoryController extends MscController {
                     $plan2[$t1]['endtime'] = $endtime[1];
                     $plan2[$t1]['period_type'] = $this->get_n($endtime[0]);
                 }
-                OpenPlan::insert($plan2);
+                if($dataid){
+                    for($i=0;$i<$count;$i++){
+                        OpenPlan::where('id','=',$dataid[$i])->update($plan2[$i]);
+                    }
+                }else{
+                    OpenPlan::insert($plan2);
+                }
             } catch (Exception $e){
                 DB::connection('msc_mis')->rollback();
                 return ['status'=>1,'info'=>$e];exit;
@@ -553,7 +588,13 @@ class LaboratoryController extends MscController {
                     $plan3[$t1]['endtime'] = $endtime[1];
                     $plan3[$t1]['period_type'] = $this->get_n($endtime[0]);
                 }
-                OpenPlan::insert($plan3);
+                if($dataid){
+                    for($i=0;$i<$count;$i++){
+                        OpenPlan::where('id','=',$dataid[$i])->update($plan3[$i]);
+                    }
+                }else{
+                    OpenPlan::insert($plan3);
+                }
             } catch (Exception $e){
                 DB::connection('msc_mis')->rollback();
                 return ['status'=>1,'info'=>$e];exit;
