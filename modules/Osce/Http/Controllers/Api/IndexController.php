@@ -29,7 +29,7 @@ class IndexController extends CommonController
      *
      * @version 1.0
      * @author zhouchong <zhouchong@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2016-1-12 17:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getWatchStatus(Request $request){
@@ -113,7 +113,7 @@ class IndexController extends CommonController
      *
      * @version 1.0
      * @author zhouchong <zhouchong@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2016-1-12   17:35
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getUnwrapWatch(Request $request){
@@ -152,16 +152,13 @@ class IndexController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        id_card        身份证号码
      *
      * @return ${response}
      *
      * @version 1.0
      * @author zhouchong <zhouchong@misrobot.com>
-     * @date ${DATE} ${TIME}
+     * @date 2016-1-12 17:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentDetails(Request $request){
@@ -178,6 +175,7 @@ class IndexController extends CommonController
                $this->success_rows(2,'未找到学生相关信息')
            );
         }
+        $data=array('code'=>$code);
         $student_id=Student::where('id_card',$idCard)->seclct('id')->first()->id;
 
         $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first()->watch_id;
@@ -185,12 +183,12 @@ class IndexController extends CommonController
             $status=Watch::where('watch_id',$watch_id)->select('status')->first()->status;
             if($status==1){
                 return response()->json(
-                    $this->success_rows(1,'已绑定腕表')
+                    $this->success_data($data,1,'已绑定腕表')
                 );
             }
         }
          return response()->json(
-                 $this->success_data($code,0,'未绑定腕表')
+                 $this->success_data($data,0,'未绑定腕表')
                 );
     }
 
