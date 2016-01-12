@@ -50,9 +50,14 @@ class LaboratoryCotroller extends MscWeChatController
     public function LaboratoryList(Request $Request){
         $Floor = new Floor;
         $FloorData = $Floor->GetFloorData();
-        dd($FloorData);
-        $LaboratoryList = [];
-        return view();
+        $user = Auth::user();
+        //$user->user_type == 2 代表学生
+        if($user->user_type == 2){
+            return view('msc::wechat.booking.booking_student',['FloorData'=>$FloorData]);
+        //$user->user_type == 1 代表老师
+        }elseif($user->user_type == 1){
+
+        }
     }
 
     /**
