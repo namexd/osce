@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\User;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Room;
@@ -22,6 +23,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use App\Repositories\Common;
@@ -932,5 +934,40 @@ class ExamController extends CommonController
          return response()->json(
                  $this->success_data($student,1,'未绑定')
                 );
+    }
+
+    /**
+     * 智能排考接口
+     * @url GET /osce/admin/exam/intelligence-eaxm-plan
+     * @access public
+     *
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getIntelligenceEaxmPlan(Request $request){
+        $this   ->  validate($request,[
+            'id'    =>  'required|integer'
+        ]);
+
+        $id         =   $request    ->  get('id');
+
+        $exam       =   Exam::find($id);
+        if(is_null($exam))
+        {
+            throw new \Exception('没有找到该考试');
+        }
+        $ExamPlanModel   =   new ExamPlan();
+        $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
     }
 }

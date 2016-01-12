@@ -33,6 +33,9 @@ class Room extends CommonModel
     }
 
 
+    public function stations(){
+        return $this    ->  hasMany('\Modules\Osce\Entities\RoomStation','room_id','id');
+    }
     /**
      * 得到room的列表
      * @param string $keyword
