@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\User;
 use App\Repositories\Common;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Invigilator;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -352,8 +353,8 @@ class InvigilatorController extends CommonController
             $teacherModel   =   new Teacher();
             $name           =   e($request->get('name'));
             $mobile         =   e($request->get('mobile'));
-
-            if($teacherModel    ->  editInvigilator($id,$name,$mobile))
+            $type=Teacher::where('id',$id)->select('type')->first()->type;
+            if($teacherModel    ->  editInvigilator($id,$name,$mobile,$type))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             }
@@ -517,10 +518,9 @@ class InvigilatorController extends CommonController
     public function getDelInvitation(Request $request){
         $id             =   $request    ->  get('id');
         try{
-            $invigilator    =   Invigilator::find($id);
-            if(!is_null($invigilator))
+            if(!is_null($id))
             {
-                $invigilator    ->  delete();
+                    Teacher::where('id',$id)->delete();
                 return redirect()->back();
             }
             else

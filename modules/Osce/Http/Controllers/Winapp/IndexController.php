@@ -37,7 +37,6 @@ class IndexController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
-//        $isBound=WatchLog::where('watch_id',$id)->select('action')->orderBy('updated_at','DESC')->first()->action;
         $status=Watch::where('watch_id',$id)->select('status')->first()->status;
         if($status==1){
             return response()->json(
@@ -125,7 +124,7 @@ class IndexController extends CommonController
         $result=Watch::where('watch_id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
-            $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->orderBy('signin_dt','DESC')->first()->student_id;
+            $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->orderBy('updated_at','DESC')->first()->student_id;
             $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,

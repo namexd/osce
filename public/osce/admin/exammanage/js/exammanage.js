@@ -452,19 +452,61 @@ function examroom_assignment(){
         }else{
 
             $(this).parent().siblings('.necessary').text(num[current.length]);
+
             //选择的数据
             $(this).on("select2:select", function(e){
 
                 //让select只进入一次
+                var select_flag = 0;//进入计数
                 if(select2_data!=undefined){
                     if(select2_data.id==e.params.data.id){
                         select2_data = null;
-                        return;
+                        select_flag = 1;
                     }
                     select2_data = e.params.data;
                 }else{
                     select2_data = e.params.data;
                 }
+                //进入计数 返回终止
+                if(select_flag)return;
+                //检测id相同的教室 如果有就不存如返回，没有就请求并存入
+                var rooms = $('#examroom').find('tbody').attr('data');
+                var rooms_flag = 0;
+                if(rooms==null){
+                    rooms = [];
+                    rooms.push({id:select2_data.id,count:1});
+                }else{
+
+                    rooms = JSON.parse(rooms);
+                    var current = [],
+                        count = 0;
+                    for(var i in rooms){
+                        //有相同教室id
+                        if(rooms[i].id==select2_data.id){
+                            var cr = rooms[i].count+1;
+                            current.push({id:rooms[i].id,count:cr});
+                            count = 1;
+                        }else{
+                            current.push({id:rooms[i].id,count:rooms[i].count});
+                        }
+                    }
+                    //存入没有的教室id
+                    if(!count){
+                        current.push({id:select2_data.id,count:1});
+                    }
+                    //判断数据时候有变化
+                    if(current.length==rooms.length){
+                        rooms_flag = 1;
+                    }
+                    rooms = current;
+                }
+                $('#examroom').find('tbody').attr('data',JSON.stringify(rooms));
+                //相同id不请求
+                if(rooms_flag){
+                    return;
+                }
+
+
                 //考站数据请求
                 $.ajax({
                     type:'get',
@@ -475,41 +517,25 @@ function examroom_assignment(){
 
                         //记录数据
                         var thisElement = $('#exam-place').find('tbody');
-                        var sp_no=null;
-                        if(thisElement.attr('data')==undefined){
-                            sp_no = '{}';
-                        }
-                        else{
-                            sp_no = JSON.parse(thisElement.attr('data'));
-                        }
 
                         if(res.code!=1){
                             layer.alert(res.message);
                             return;
                         }else{
-                            var res_data = res.data,
-                                html = '',
-                                data;
+                            var data = res.data,
+                                html = '';
                             
-                            //thisElement.attr('data',JSON.stringify(data));
-                            //数据去重
-                            if(sp_no!='{}'){
-                                data = tab(sp_no,res_data);
-                            }else{
-                                data = tab([],res_data);
-                            }
 
                             //准备dom
+                            var station_index = parseInt(thisElement.attr('index'));
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
                                 var typeValue = [0,'技能操作站','SP站'];
-                                /*for(var j in data[i].teacher){
-                                    teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }*/
 
-                                html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                //写入dom
+                                html += '<tr class="parent-id-'+e.params.data.id+'">'+
+                                            '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
@@ -528,8 +554,9 @@ function examroom_assignment(){
                                         '</tr>';
                             }
                             //动态插入考场安排
-                            thisElement.html(html);
-                            thisElement.attr('data',JSON.stringify(data));
+                            thisElement.append(html);
+                            //计数器
+                            thisElement.attr('index',(station_index+parseInt(i)+1));
 
 
                             /**
@@ -616,7 +643,7 @@ function examroom_assignment(){
                                         //数据格式化
                                         var str = [];
                                         for(var i in res.data){
-                                            str.push({id:res_data[i].id,text:res.data[i].name});
+                                            str.push({id:res.data[i].id,text:res.data[i].name});
                                         }
 
                                         //加载入数据
@@ -637,17 +664,55 @@ function examroom_assignment(){
             $(this).on("select2:unselect", function(e){
 
                 //让select只进入一次
+                var select_flag = 0;
                 if(select2_data_del!=undefined){
                     if(select2_data_del.id==e.params.data.id){
                         select2_data = null;
-                        return;
+                        select_flag = 1;
                     }
                     select2_data_del = e.params.data;
                 }else{
                     select2_data_del = e.params.data;
                 }
+
+                if(select_flag)return;
+                //检测id相同的教室 如果有就不存如返回，没有就请求并存入
+                var rooms = JSON.parse($('#examroom').find('tbody').attr('data'));
+                var current = [];
+                for(var i in rooms){
+
+                    if(rooms[i].id==select2_data_del.id){
+                        if(rooms[i].count>1){
+                            rooms[i].count -= 1;
+                            current.push({id:rooms[i].id,count:rooms[i].count});
+                        }else{
+                            //删除dom
+                            var str = rooms[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                station_count = key + 1;
+                                $(elem).find('td').eq(0).text(station_count);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
+                    }else{
+                        current.push({id:rooms[i].id,count:rooms[i].count});
+                    }
+                }
+                
+                $('#examroom').find('tbody').attr('data',JSON.stringify(current));
+
+                //相同id不请求
+                /*if(rooms_flag){
+                    return;
+                }*/
+
+
                 //考站数据请求
-                $.ajax({
+                /*$.ajax({
                     type:'get',
                     url:pars.url,
                     data:{id:e.params.data.id},
@@ -716,7 +781,7 @@ function examroom_assignment(){
                             thisElement.attr('data',JSON.stringify(data));
                         }
                     }
-                });
+                });*/
 
             });
 
