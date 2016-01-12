@@ -24,7 +24,6 @@
                 ban();
 
             });
-            getEvent();
 //            楼栋选项卡切换
             function ban(){
                 $(".list-group-parent").unbind().click(function(){
@@ -42,7 +41,7 @@
                     $(".list-group-child").removeClass("checked");
                     $(this).addClass("checked");
                     var labid=$(this).attr("data-labid");
-                   // getEvent(labid);
+                    getEvent(labid);
                 });
             }
  //          楼栋实验室数据绑定
@@ -117,7 +116,7 @@
             });
 //      获取选择的楼栋事件
         function getEvent(labid){
-            var qj={id:"13"}
+            var qj={id:labid}
             $.ajax({
                 url:"{{ route('msc.admin.laboratory.getEditLabCleander')}}", /*${ctx}/*/
                 type:"get",
@@ -140,7 +139,7 @@
                         eventime= this.date.month+"-"+this.date.day+"-"+this.date.year;
 
                         $(this.child).each(function(){
-                            event=event+"<div class='timesave' begintime='" +this.begintime
+                            event=event+"<div class='timesave' data-id='"+this.id+"' begintime='" +this.begintime
                                             +"' endtime='"+this.endtime
                                     +"' period_type='"+this.period_type+ "'></div>";
 
@@ -453,10 +452,22 @@
                     layer.alert('请选择实验室');
                     return false;
                 }
+                var dateid = {};
+                $('.fc-row .check').children('div').children().each(function(i){
+                            dateid[i] = $(this).attr('data-id');
+                });
+                //console.log(dateid.length);
+                if(dateid.length <= 0){
+                    layer.msg('请选择日期', {icon: 2,time: 2000});
+                    return false;
+                }
+                //return false;
+               // console.log(timestr);
+                //console.log(datestr);return false;
                 $.ajax({
                     type: "POST",
                     url: "{{route('msc.admin.laboratory.postOperatingLabCleander')}}",
-                    data: {date:datestr,timestr:timestr,lid:$('.labid').val()},
+                    data: {date:datestr,timestr:timestr,lid:$('.labid').val(),dateid:dateid},
                     success: function(msg){
                         if(msg.status){
 
@@ -469,7 +480,6 @@
 //                                //location.reload();
 //                            });
                             load();
-                            console.log(msg.data);
 
                         }else{
                             layer.msg(msg.info, {icon: 2,time: 1000});
