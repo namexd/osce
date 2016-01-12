@@ -59,6 +59,7 @@
 			this.today = new Date();
 			this.month = ( isNaN( this.options.month ) || this.options.month == null) ? this.today.getMonth() : this.options.month - 1;
 			this.year = ( isNaN( this.options.year ) || this.options.year == null) ? this.today.getFullYear() : this.options.year;
+
 			this.caldata = this.options.caldata || {};
 			this._generateTemplate();
 			this._initEvents();
@@ -181,7 +182,6 @@
 					if( content !== '' ) {
 						cellClasses += 'fc-content';
 					}
-
 					html += cellClasses !== '' ? '<div class="' + cellClasses + '">' : '<div>';
 					html += inner;
 					html += '</div>';
