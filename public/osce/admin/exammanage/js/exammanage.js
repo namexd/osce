@@ -892,7 +892,7 @@ function examroom_assignment(){
         var thisElement = $(this);
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
-                '<input type="hidden" name="name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
+                '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
                 '<div class="pull-left">'+$teacher+'</div>'+
                 '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);

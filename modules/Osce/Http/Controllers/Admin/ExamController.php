@@ -676,14 +676,30 @@ class ExamController extends CommonController
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
 
+
+//            $flows = new Flows();
+//            if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)) {
+//                throw new \Exception('考场安排保存失败，请重试！');
+//            }
+            //查询 考试id是否有对应的考场数据
+            $examRoom = new ExamRoom();
+            $examRoomData = $examRoom -> getExamRoomData($exam_id);
+            //判断是否存在已有数据
             $flows = new Flows();
-            if(!$result = $flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
-                throw new \Exception('考场安排保存失败，请重试！');
+            if(count($examRoomData) != 0){
+                if(!$flows -> editExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    throw new \Exception('考场安排保存失败，请重试！');
+                }
+
+            }else{
+                if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    throw new \Exception('考场安排保存失败，请重试！');
+                }
             }
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
         } catch(\Exception $ex){
-            return redirect()->back()->withError($ex);
+            return redirect()->back()->withErrors($ex);
         }
 
     }
