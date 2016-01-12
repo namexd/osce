@@ -22,7 +22,8 @@ return [
 			//暂时空置
 		],
 		'student'=>[
-			//暂时空置
+
+
 		],
 	],
 	'machine_category'=>[

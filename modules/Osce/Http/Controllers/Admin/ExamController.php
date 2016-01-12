@@ -492,12 +492,17 @@ class ExamController extends CommonController
      *
      */
     public function getImportStudent(Request $request){
+
         $exam_id = $request->get('id');
         return view('osce::admin.exammanage.import',['id' => $exam_id]);
     }
+
+
     public function postImportStudent(Request $request, Student $student)
     {
         try {
+
+
             //获得上传的数据
             $exam_id = $request -> get('id');
             $data = Common::getExclData($request, 'student');
@@ -505,6 +510,9 @@ class ExamController extends CommonController
             $studentList = array_shift($data);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
+
+            die(json_decode($examineeData));
+
 
             //将数组导入到模型中的addInvigilator方法
             if ($student->addExaminee($exam_id, $examineeData)) {
