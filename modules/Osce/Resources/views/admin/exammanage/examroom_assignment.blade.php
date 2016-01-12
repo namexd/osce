@@ -125,7 +125,18 @@
                                         </tr>
                                         </thead>
                                         <tbody index="0">
-
+                                            <tr class="pid-'+index+'">
+                                                <td>'+index+'</td>
+                                                <td width="498">
+                                                    <select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+'][]"></select>
+                                                </td>
+                                                <td class="necessary">必考</td>
+                                                <td>
+                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
 
@@ -150,6 +161,36 @@
                                         </tr>
                                         </thead>
                                         <tbody index="0">
+                                            <tr class="parent-id-'+e.params.data.id+'">
+                                                <td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>
+                                                <td>'+data[i].name+'</td>
+                                                <td>'+typeValue[data[i].type]+'</td>
+                                                <td>
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>
+                                                </td>
+                                                <td class="sp-teacher">
+                                                    <div class="teacher-box pull-left">
+                                                        <div class="input-group teacher pull-left" value="1">
+                                                            <div class="pull-left">张老师</div>
+                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                        </div>
+                                                        <div class="input-group teacher pull-left teacher-primary" value="3">
+                                                            <div class="pull-left">张老师</div>
+                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                        </div>
+                                                        <div class="input-group teacher pull-left teacher-warn" value="2">
+                                                            <div class="pull-left">张老师</div>
+                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pull-right" value="'+(parseInt(i)+1)+'">
+                                                        <select name="" class="teacher-list js-example-basic-multiple">
+                                                            <option>==请选择==</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
+                                            </tr>
                                         </tbody>
                                     </table>
 
