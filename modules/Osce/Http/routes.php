@@ -174,6 +174,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('index/index',['uses'=>'IndexController@getIndex','as'=>'osce.wechat.index.getIndex']);
 		//通知
 		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
+		Route::get('notice/view',['uses'=>'NoticeController@getView','as'=>'osce.wechat.notice.getView']);
 		//sp邀请
 		Route::get('invitation/invitation-list',['uses'=>'InvitationController@getInvitationList','as'=>'osce.wechat.invitation.getInvitationList']);
 		Route::get('invitation/invitation-respond',['uses'=>'InvitationController@getInvitationRespond','as'=>'osce.wechat.invitation.getInvitationRespond']);
@@ -213,6 +214,29 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 	});
 });
+
+
+/**
+ * WindowsAPP接口
+ */
+Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\Http\Controllers','middleware' => ['oauth'],], function()
+{
+	Route::group(['prefix'=>'watch','namespace'=>'Api'],function(){
+
+		Route::get('watch-status',	['uses'=>'IndexController@getWatchStatus']); //查询腕表是否绑定
+		Route::get('bound-watch',	['uses'=>'IndexController@getBoundWatch']);   //绑定腕表
+		Route::get('unwrap-watch',	['uses'=>'IndexController@getUnwrapWatch']); //解绑腕表
+		Route::get('student-details', 	['uses'=>'IndexController@getStudentDetails']);
+
+		Route::get('add',['uses'=>'IndexController@getAddWatch']);
+		Route::get('update',['uses'=>'IndexController@getUpdateWatch']);
+		Route::get('delete',['uses'=>'IndexController@getDeleteWatch']);
+
+	});
+
+});
+
+
 
 //TODO:测试用
 Route::get('test/test', function() {

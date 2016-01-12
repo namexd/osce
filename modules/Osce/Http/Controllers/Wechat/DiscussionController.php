@@ -43,20 +43,8 @@ class DiscussionController extends  CommonController{
           $pagination				=	$discussionModel	->	getDiscussionPagination();
           $list=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
 
-            $data=[];
-            foreach($list as $item){
-               $data[]=[
-                   'id'             =>$item->id,
-                   'title'          =>$item->title,
-                   'context'        =>$item->context,
-                   'create_user'    =>$item->getAuthor,
-                   'create_at'      =>$item->create_at,
-                   'update_at'      =>$item->update_at,
-               ];
-            }
-
           return response()->json(
-              $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$data)
+              $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
           );
       }
 
@@ -103,21 +91,21 @@ class DiscussionController extends  CommonController{
 
           //获取回复人信息
            $replys=Discussion::where('pid',$id)->select()->get();
-           $data=[];
-          foreach($replys as $itm){
-              $data[]=[
-                  'id'             =>$itm->id,
-                  'title'          =>$itm->title,
-                  'context'        =>$itm->context,
-                  'create_user'    =>$itm->getAuthor,
-                  'create_at'      =>$itm->create_at,
-                  'update_at'      =>$itm->update_at,
-                  'reply'          =>$countReply,//回复数量
-              ];
-          }
+//           $data=[];
+//          foreach($replys as $itm){
+//              $data[]=[
+//                  'id'             =>$itm->id,
+//                  'title'          =>$itm->title,
+//                  'context'        =>$itm->context,
+//                  'create_user'    =>$itm->getAuthor,
+//                  'create_at'      =>$itm->create_at,
+//                  'update_at'      =>$itm->update_at,
+//              ];
+//          }
             $row=array(
                 'question'   =>$question,
                 'replys' =>$replys,
+                'countReply' =>$countReply,
             );
 
           return response()->json(

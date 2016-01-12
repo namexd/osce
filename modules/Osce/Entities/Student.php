@@ -57,10 +57,10 @@ class Student extends CommonModel
 
             //如果keyword不为空，那么就进行模糊查询
             if ($keyword['keyword'] !== null) {
-                $result = $result->where($this->table . '.name', '=', '%' . $keyword['keyword'] . '%')
-                    ->orWhere($this->table . '.idcard', '=', '%' . $keyword['keyword'] . '%')
-                    ->orWhere($this->table . '.mobile', '=', '%' .$keyword['keyword'] . '%')
-                    ->orWhere($this->table . '.code', '=', '%' .$keyword['keyword'] . '%');
+                $result = $result->where($this->table . '.name', 'like', '%' . $keyword['keyword'] . '%')
+                    ->orWhere($this->table . '.idcard', 'like', '%' . $keyword['keyword'] . '%')
+                    ->orWhere($this->table . '.mobile', 'like', '%' . $keyword['keyword'] . '%')
+                    ->orWhere($this->table . '.code', 'like', '%' . $keyword['keyword'] . '%');
             }
 
             return $result->paginate(10);
@@ -125,7 +125,7 @@ class Student extends CommonModel
                 }
 
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
-                $password   =   Common::getRandStr(6);
+                $password   =   '123456';
                 $user       =   $this   ->  registerUser($examineeData,$password);
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);
             }

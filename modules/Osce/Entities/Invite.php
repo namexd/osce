@@ -9,6 +9,8 @@
 namespace Modules\Osce\Entities;
 use App\Repositories\Common;
 use DB;
+use Modules\Osce\Http\Controllers\Wechat\InvitationController;
+
 class Invite extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -26,24 +28,23 @@ class Invite extends CommonModel
 //        $connection     =   DB::connection($this->connection);
 //        $connection     ->  beginTransaction();
         try{
+            foreach($data as $k=>$v){}
             $inviteData=[
-                'id'  =>$data['teacher_id'],
-                'name'   =>$data['exam_name'],
-                'begin_dt' =>$data['begin_dt'],
-                'end_dt' =>$data['end_dt'],
-                'exam_screening_id' =>$data['exam_id'],
+                'id'  =>$data[$k]['teacher_id'],
+                'name'   =>$data[$k]['exam_name'],
+                'begin_dt' =>$data[$k]['begin_dt'],
+                'end_dt' =>$data[$k]['end_dt'],
+                'exam_screening_id' =>$data[$k]['exam_id'],
             ];
-            $notice  =   $this  -> firstOrcreate($inviteData);
-
 //            dd($notice);
-            if($notice)
+            if($notice  =   $this  -> firstOrcreate($inviteData))
             {
-                $invitelist =$this->where('id','=',$data['teacher_id'])->first()->toArray();
+                $invitelist =$this->where('id','=',$data[$k]['teacher_id'])->first()->toArray();
                 $list=[
                     'invite_id' =>  $invitelist['id'],
-//                    'exam_screening_id' =>$data['exam_id'],
-//                    'case_id'     =>$data['case_id'],
-                    'teacher_id'     =>$data['teacher_id'],
+                    'exam_screening_id' =>$data[$k]['exam_id'],
+                    'case_id'     =>$data[$k]['case_id'],
+                    'teacher_id'     =>$data[$k]['teacher_id'],
                 ];
                 //关联到考试邀请sp老师表
                 $examspModel =new ExamSpTeacher();
@@ -65,25 +66,22 @@ class Invite extends CommonModel
         }
     }
 
-
-
 //       发送邀请
 
     public function sendMsg($notice,$data){
         try
         {
-
-
-//            $url    =   route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
+           foreach($data as $k=>$v){}
+            $url    =   route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
             $msgData    =   [
                 [
                     'title' =>'邀请通知',
-                    'desc'  =>$data['exam_name'].'邀请',
-                    'url'=>'http://www.baidu.com'
+                    'desc'  =>$data[$k]['exam_name'].'邀请',
+                    'url'=>  $url
                 ],
             ];
             $message    =   Common::CreateWeiXinMessage($msgData);
-            Common::sendWeiXin($data['openid'],$message);//单发
+            Common::sendWeiXin($data[$k]['openid'],$message);//单发
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
         }

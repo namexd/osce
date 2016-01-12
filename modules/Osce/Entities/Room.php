@@ -8,7 +8,7 @@
 
 namespace Modules\Osce\Entities;
 
-
+use DB;
 
 class Room extends CommonModel
 {
@@ -68,7 +68,8 @@ class Room extends CommonModel
 
 
             //判断传入的type是否合法
-            $area = Area::where('area.cate', '=', $type)->first();
+            $area = Area::where('area.cate', '=', $type)->get();
+//            dd($area);
             if (!$area) {
                 throw new \Exception('传入的场所区域不合法！');
             }
@@ -117,6 +118,39 @@ class Room extends CommonModel
     public function showVcr($id, $type)
     {
         //根据id和type拿到对应的模型
+
+    }
+
+    /**
+     * 房间的删除
+     * @param $id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function deleteData($id)
+    {
+        try {
+            $connection = DB::connection($this->connection);
+            $connection->beginTransaction();
+            //根据id在关联表中寻找，如果有的话，就报错，不允许删除
+            if (RoomStation::where('room_id',$id)->first()) {
+                $connection->rollBack();
+                throw new \Exception('该房间已经与考站相关联，无法删除！');
+            };
+
+            if (RoomVcr::where('room_id',$id)->first()) {
+                $connection->rollBack();
+                throw new \Exception('该房间已经与摄像头相关联，无法删除');
+            }
+
+            if ($result = $this->where('id',$id)->delete()) {
+                $connection->commit();
+                return $result;
+            }
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
 
     }
 }

@@ -52,6 +52,25 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">考站描述</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="description" name="description" value="{{$rollmsg['description']}}">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">考站编号</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="code" name="code" value="{{$rollmsg['code']}}">
+                                </div>
+                            </div>
+
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">时间限制</label>
 
                                 <div class="col-sm-10">

@@ -69,7 +69,7 @@
             border: 1px solid #ccc;
             background-color: #eee;
         }
-        .active{
+        .dd-active{
             background-color:#ccc;
         }
         .error{

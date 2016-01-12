@@ -71,7 +71,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -81,6 +81,7 @@
                 
             </div>
         </div>
+    <div class="container-fluid ibox-content">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
@@ -98,6 +99,7 @@
                 <div class="row">
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
+                            <input type="hidden" name="id" value="{{$id}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 
@@ -122,8 +124,28 @@
                                             <th>操作</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="0">
-
+                                        <tbody index="{{count($examRoomData)}}">
+                                        <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
+                                        @forelse($examRoomData as $item)
+                                            <tr class="pid-{{$k1++}}">
+                                                <td>{{$key++}}</td>
+                                                <td width="498">
+                                                    <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
+                                                        @forelse($item as $value)
+                                                        <option value="{{$value->room_id}}" selected="selected">{{$value->name}}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
+                                                </td>
+                                                <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
+                                                <td>
+                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
                                         </tbody>
                                     </table>
 
@@ -134,7 +156,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">考场安排</label>
+                                <label class="col-sm-2 control-label">监考老师</label>
                                 <div class="col-sm-10">
                                     <table class="table table-bordered" id="exam-place">
                                         <thead>
@@ -147,7 +169,42 @@
                                             <th>邀请SP老师</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="0">
+                                        <tbody index="{{count($examStationData)}}">
+                                        @forelse($examStationData as $key => $item)
+                                            <tr class="parent-id-'+e.params.data.id+'">
+                                                <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->id}}"/></td>
+                                                <td>{{$item->name}}</td>
+                                                <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
+                                                <td>
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station[{{$key+1}}][teacher_id]">
+                                                        <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
+                                                    </select>
+                                                </td>
+                                                <td class="sp-teacher">
+                                                    <div class="teacher-box pull-left">
+                                                        <div class="input-group teacher pull-left" value="1">
+                                                            <div class="pull-left">张老师</div>
+                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                        </div>
+                                                        <div class="input-group teacher pull-left teacher-primary" value="3">
+                                                            <div class="pull-left">张老师</div>
+                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                        </div>
+                                                        <div class="input-group teacher pull-left teacher-warn" value="2">
+                                                            <div class="pull-left">张老师</div>
+                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pull-right" value="'+(parseInt(i)+1)+'">
+                                                        <select name="" class="teacher-list js-example-basic-multiple">
+                                                            <option>==请选择==</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
                                         </tbody>
                                     </table>
 
@@ -159,7 +216,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <button class="btn btn-white" type="button">取消</button>
+                                    <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 
                                 </div>
                             </div>
@@ -171,6 +228,7 @@
             </div>
 
         </div>
+    </div>
 </div>
 @stop{{-- 内容主体区域 --}}
 

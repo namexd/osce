@@ -28,6 +28,7 @@
         .gray-bg {
             background-color: #f3f7f8;
         }
+        .nav-tabs>li.active>a{border-bottom: 1px solid #fff!important}
     </style>
 @show
 @section('body_attr') class="fixed-sidebar full-height-layout gray-bg"@stop

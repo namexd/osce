@@ -11,7 +11,9 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Invite;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\ExamScreening;
@@ -41,7 +43,6 @@ class InvitationController extends CommonController
 
     public function getInvitationList(Request $request)
     {
-        //验证略
         $this->validate($request, [
             'teacher_id' => 'required|integer',
             'exam_id' => 'required|integer',
@@ -58,14 +59,19 @@ class InvitationController extends CommonController
 //        dd($data);
         $ExamModel = new Exam();
         $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
-        $data['exam_name'] = $ExamList['name'];
-        $data['begin_dt'] = $ExamList['begin_dt'];
-        $data['end_dt'] = $ExamList['end_dt'];
-        $data['exam_id'] = $exam_id;
+//        dd($ExamList);
+            foreach($data as $k=>$v){
+                $data[$k]['exam_name'] = $ExamList['name'];
+                $data[$k]['begin_dt'] = $ExamList['begin_dt'];
+                $data[$k]['end_dt'] = $ExamList['end_dt'];
+                $data[$k]['exam_id'] = $exam_id;
+            }
+
+//        dd($data);
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
 //            dd(11111);
-            return redirect()->route('osce.wechat.invitation.getList');
+//            return redirect()->route('osce.wechat.invitation.getList');
         } else {
             throw new \Exception('邀请创建失败');
         }
@@ -117,31 +123,54 @@ class InvitationController extends CommonController
 
     public function getInvitationRespond(Request $request, Teacher $teacher)
     {
-//        dd(1111);
+        dd(1111);
         $this->validate($request, [
             'status' => 'required|integer',
             'id' => 'required|integer'
         ]);
         $status = $request->get('status');
-        $teacher_id = $request->get('status');
+        $teacher_id = $request->get('id');
 
-        $result = $teacher->where('id', '=', $teacher_id)->update('status', '=', 3-$status);
+        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update('status', '=', 3-$status);
 
         if ($result) {
-
             throw new \Exception('操作成功');
         } else {
             throw new \Exception('操作失败');
         }
     }
 
-
-    //邀请详情页面
+    /**
+     *sp邀请详情页面
+     * @api GET /osce/wechat/invitation/msg
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id        教师id(必须的)
+     * @return   view
+     ** @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getMsg()
     {
+        $id = intval(Input::get('id'));//老师的id
+          $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt')->first();
+         $caseId =ExamSpTeacher::where('teacher_id','=',$id)->select('case_id')->first()->case_id;
+         $caseModel =CaseModel:: where('id','=',$caseId)->select('name')->first()->name;
+//         dd($inviteModel->name);
+        $list=[
+             'exam_name' =>$inviteModel->name,
+             'begin_dt' =>$inviteModel->begin_dt,
+             'end_dt' =>$inviteModel->end_dt,
+             'case_name' =>$caseModel,
+        ];
+//          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [
-
-            'id' => $id = urlencode(e(Input::get('id')))
+            'id' => $id,
+            'list'=>$list
         ]);
     }
 
