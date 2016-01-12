@@ -585,18 +585,18 @@ function examroom_assignment(){
                              * @version 1.0
                              * @date    2016-01-11
                              */
-                            $('.teacher-list').select2({
+                            var select2_Object;
+                            select2_Object = $('.teacher-list').select2({
                                 placeholder: "==请选择==",
                                 ajax:{
-                                    url: pars.teacher_list,
+                                    url: pars.spteacher_list,
                                     delay:0,
                                     data: function (elem) {
 
-                                        console.log($(this));
-
+                                        //老师id
                                         var ids = [];
-                                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                                            var id = $(elem).find('td').eq(3).find('select option:selected').val();
+                                        $(select2_Object).parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+                                            var id = $(elem).attr('value');
                                             if(id==null){
                                                 return;
                                             }else{
@@ -604,8 +604,10 @@ function examroom_assignment(){
                                             }
                                         });
 
+                                      //请求参数
                                       return {
-                                        teacher:ids
+                                        spteacher_id:ids,
+                                        station_id:$(select2_Object).parent().attr('value')
                                       };
                                     },
                                     dataType: 'json',
