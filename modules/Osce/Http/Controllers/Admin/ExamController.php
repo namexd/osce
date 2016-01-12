@@ -510,6 +510,7 @@ class ExamController extends CommonController
             $studentList = array_shift($data);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
+            dd($examineeData);
 
             die(json_decode($examineeData));
 
@@ -646,12 +647,20 @@ class ExamController extends CommonController
         $exam_id = $request -> get('id');
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
-        $examRoomData = $examRoom -> getRoomListByExam($exam_id);
+        $examRoomData = $examRoom -> getExamRoomData($exam_id);
+        if(count($examRoomData) != 0){
+            foreach ($examRoomData as $index => $item) {
+                $result[$item->serialnumber][]  =   $item;
+            }
+        }else{
+            $result = [];
+        }
 
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
+//        dd($examStationData);
 
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
+        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $result, 'examStationData' => $examStationData]);
     }
 
     /**
@@ -679,10 +688,20 @@ class ExamController extends CommonController
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
 
-            $flows = new Flows();
-            if(!$result = $flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
-                throw new \Exception('考场安排保存失败，请重试！');
+            //查询 考试id是否有对应的考场数据
+            $examRoom = new ExamRoom();
+            $examRoomData = $examRoom -> getExamRoomData($exam_id);
+            if(count($examRoomData) != 0){
+//                dd($roomData);
+                dd($stationData);
+
+            }else{
+                $flows = new Flows();
+                if(!$result = $flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    throw new \Exception('考场安排保存失败，请重试！');
+                }
             }
+
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
         } catch(\Exception $ex){

@@ -121,7 +121,7 @@ class ExamRoom extends CommonModel
     }
 
     /**
-     * 获取 考试对应的 考场、考站、老师数据
+     * 获取 考试对应的 考站、老师数据
      * @return mixed
      * @throws \Exception
      */
@@ -145,5 +145,33 @@ class ExamRoom extends CommonModel
         } catch(\Exception $ex){
             return $ex;
         }
+    }
+
+    /**
+     * 获取 考试对应的 考场数据
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getExamRoomData($exam_id)
+    {
+        try{
+            $result = $this -> leftJoin('room', function($join){
+                $join -> on($this->table.'.room_id', '=', 'room.id');
+            })
+//                ->leftJoin('exam_flow', function($join){
+//                $join -> on($this->table.'.exam_id', '=', 'exam_flow.exam_id');
+//            })
+                ->leftJoin('exam_flow_room', function($join){
+                $join -> on($this->table.'.room_id', '=', 'exam_flow_room.room_id');
+            })
+            ->where($this->table.'.exam_id', '=', $exam_id)
+            ->select(['room.id', 'room.name', 'exam_flow_room.serialnumber'])
+            -> get();
+
+            return $result;
+        } catch(\Exception $ex){
+            return $ex;
+        }
+
     }
 }

@@ -532,15 +532,15 @@ function examroom_assignment(){
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
-                                var typeValue = [0,'技能操作站','SP站'];
+                                var typeValue = [0,'技能操作站','SP站','理论操作站'];
 
                                 //写入dom
                                 html += '<tr class="parent-id-'+e.params.data.id+'">'+
-                                            '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                            '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                             '</td>'+
                                             '<td class="sp-teacher">'+
                                                 '<div class="teacher-box pull-left">'+
