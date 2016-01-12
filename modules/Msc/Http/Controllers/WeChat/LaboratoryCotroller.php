@@ -175,7 +175,7 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDevice($id)
         ];
-        dd($data);
+        return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
     /**
