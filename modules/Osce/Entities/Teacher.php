@@ -114,21 +114,23 @@ class Teacher extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showTeacherData($station_id, array $spteacherId)
+    public function showTeacherData($stationId, array $spteacherId)
     {
+//        dd($stationId);
         try {
             //将传入的$spteacherId插进数组中
             if ($spteacherId !== null) {
                 $this->excludeId = $spteacherId;
             }
 
-            if ($station_id === null) {
+            if ($stationId === null) {
                 throw new \Exception('系统发生了错误，请重试！');
             }
 
             //通过传入的$station_id得到病例id
-            $case_id = StationCase::where('station_case.station_id', '=', $station_id)
+            $case_id = StationCase::where('station_case.station_id', '=', $stationId)
                 ->select('case_id')->first()->case_id;
+//            dd($case_id);
 
             $builder = $this->where('type' , '=' , 2); //查询教师类型为指定类型的教师
             $builder = $builder->where('case_id' , '=' , $case_id); //查询符合病例的教师
@@ -141,7 +143,8 @@ class Teacher extends CommonModel
 
             return $builder->select([
                 'id',
-                'name'
+                'name',
+                'status'
             ])->get();
 
         } catch (\Exception $ex) {
@@ -371,10 +374,15 @@ class Teacher extends CommonModel
     public function getTeacherList($formData)
     {
         try{
-            $teacher = $this->where(['type' => 1])
-                ->whereNotIN('id', $formData)
-                ->select(['id', 'name'])->get();
-
+            $teacher = $this->whereIn('type', [1,3]);
+                if(!empty($formData)){
+                    if(count($formData) == 1){
+                        $teacher->where('id', '<>', implode(',', $formData));
+                    }else{
+                        $teacher->whereNotIn('id', $formData);
+                    }
+                }
+            $teacher = $teacher->select(['id', 'name'])->get();
             return $teacher;
 
         } catch (\Exception $ex) {

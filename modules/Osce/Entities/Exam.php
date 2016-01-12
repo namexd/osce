@@ -27,9 +27,40 @@ class Exam extends CommonModel
      */
     public function examScreening()
     {
-        return $this->hasMany('\Modules\Osce\Entities\ExamScreening','exam_id','id');
+        return $this    ->  hasMany('\Modules\Osce\Entities\ExamScreening','exam_id','id');
     }
 
+    /**
+     *  考生关联
+     * @access public
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function students(){
+        return $this    ->  hasMany('\Modules\Osce\Entities\Student','exam_id','id');
+    }
+
+    /**
+     * 考试流程节点关联
+     * @access public
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function flows(){
+        return $this    ->  hasMany('\Modules\Osce\Entities\ExamFlow','exam_id','id');
+    }
     /**
      * 展示考试列表的方法
      * @return mixed

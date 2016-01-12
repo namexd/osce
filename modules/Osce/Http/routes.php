@@ -128,6 +128,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/edit-exam', 	['uses'=>'ExamController@getEditExam','as'=>'osce.admin.exam.getEditExam']);	//考试基本信息编辑
 		Route::post('exam/edit-exam', 	['uses'=>'ExamController@postEditExam','as'=>'osce.admin.exam.postEditExam']);
 		Route::get('exam/examroom-assignment', 	['uses'=>'ExamController@getExamroomAssignment','as'=>'osce.admin.exam.getExamroomAssignment']); //考场安排
+		Route::post('exam/examroom-assignment', 	['uses'=>'ExamController@postExamroomAssignmen','as'=>'osce.admin.exam.postExamroomAssignmen']); //考场安排
 		Route::get('exam/room-list-data', ['uses'=>'ExamController@getRoomListData','as'=>'osce.admin.exam.getRoomListData']);			//获取考场列表
 		Route::get('exam/station-data', ['uses'=>'ExamController@getStationData','as'=>'osce.admin.exam.getStationData']);				//获取考场对应的考站列表
 		Route::get('exam/teacher-list-data', ['uses'=>'ExamController@getTeacherListData','as'=>'osce.admin.exam.getTeacherListData']);	//获取监考老师列表
@@ -140,8 +141,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-teacher-list', ['uses'=>'ExamController@getTeacherListData','as'=>'osce.admin.exam.getTeacherListData']);
 
 
+		//智能排考
+		Route::get('exam/intelligence-eaxm-plan', ['uses'=>'ExamController@getIntelligenceEaxmPlan','as'=>'osce.admin.exam.getIntelligenceEaxmPlan']);
+
 		//sp
-		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getStationList','as'=>'osce.admin.spteacher.getShow']);
+		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getShow','as'=>'osce.admin.spteacher.getShow']);
 		Route::get('/spteacher/invitation-index', ['uses'=>'SpteacherController@getInvitationIndex','as'=>'osce.admin.spteacher.getInvitationIndex']);
 		Route::get('/spteacher/invitation-add', ['uses'=>'SpteacherController@getInvitationAdd','as'=>'osce.admin.spteacher.getInvitationAdd']);
 
@@ -206,6 +210,18 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//发送重找账号
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
+
+	});
+});
+
+
+//WindowsAPP接口
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
+	Route::group(['prefix'=>'winapp','namespace'=>'WinApp'],function(){
+		Route::get('exam/watch-status',	['uses'=>'IndexController@getWatchStatus','as'=>'osce.admin.exam.getWatchStatus']); //查询腕表是否绑定
+		Route::get('exam/bound-watch',	['uses'=>'IndexController@getBoundWatch','as'=>'osce.admin.exam.getBoundWatch']);   //绑定腕表
+		Route::get('exam/unwrap-watch',	['uses'=>'IndexController@getUnwrapWatch','as'=>'osce.admin.exam.getUnwrapWatch']); //解绑腕表
+		Route::get('exam/student-details', 	['uses'=>'IndexController@getStudentDetails','as'=>'osce.admin.machine.getStudentDetails']);
 
 	});
 });

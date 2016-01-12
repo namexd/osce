@@ -11,7 +11,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
-use Modules\Osce\Entities\Train;
+use Modules\Osce\Entities\InformTrain;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 
@@ -20,47 +20,65 @@ class ExamTrainController extends CommonController
 
 
     /**
-     *¿¼Ç°ÅàÑµÁĞ±í
-     * @api GET /osce/admin/examtrain/exam-training-index
+     *è€ƒå‰åŸ¹è®­åˆ—è¡¨
+     * @api GET /osce/wechat/examtrain/exam-training-index
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     * 'name', 'address','begin_dt','end_dt','teacher','content','attachments','status','create_user_id'
      */
-        public  function  getExamTrainingIndex( Request $request,Train $train){
-            $id = urlencode(e(Input::get('id')));
-            $message= [];
-            if($id){
-                $user= DB::connection('sys_mis')->table('users')->where('id','=',$id)->select('name')->get();
-                $message['user_name'] = $user->name;
-                $list = $train->get()->toArray();
-                foreach($list as $data){
-                    $message['name'] = $data['name'];
-                    $message['place'] = $data['place'];
-                    $message['begin_dt'] = $data['begin_dt'];
-                    $message['end_dt'] = $data['end_dt'];
-                }
-            }else{
-                throw new \Exception('ÇëÖØĞÂµÇÂ½£¡£¡£¡£¡');
-            }
-            return  view();
-        }
+    public function  getExamTrainingIndex(Request $request, InformTrain $train)
+    {
+        $user=Auth::user();
+        $userId=$user->id;
 
+        if(!$userId){
+            return response()->json(
+                $this->success_rows(0,'false')
+            );
+        }
+        $trainModel=new InformTrain();
+        $pagination=$trainModel->getPaginate();
+
+        $list=InformTrain::select()->orderBy('begin_dt')->get();
+
+        return response()->json(
+            $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
+        );
+    }
+
+
+    //é™„ä»¶ä¸Šä¼ 
+    public function postExamTrainingUpload()
+    {
+
+
+    }
+
+
+    //é™„ä»¶ç‚¹å‡»ä¸‹è½½
+    public function getTrainDownload()
+    {
+
+
+    }
 
     /**
-     *¿¼Ç°ÅàÑµÌí¼Ó
-     * @api GET /osce/admin/examtrain/add-training
+     *è€ƒå‰åŸ¹è®­æ·»åŠ 
+     * @api GET /osce/wechat/examtrain/add-training
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -68,42 +86,50 @@ class ExamTrainController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public  function postAddTraining(Request $request ,Train $train){
-            $this->validate($request,[
-                'name' => 'required',
-                'place' => 'required',
-                'begin_dt' => 'required',
-                'end_dt' => 'required',
-                'teacher_name' => 'required',
-                'remark' => 'required',
-                'accessory' =>'required'
-            ]);
-        $data=[
-            'name'=> Input::get('name'),
-            'place'=> Input::get('place'),
-            'begin_dt'=> Input::get('begin_dt'),
-            'end_dt'=> Input::get('end_dt'),
-            'teacher_name'=> Input::get('teacher_name'),
-            'remark'=> Input::get('remark'),
-            'accessory'=> Input::get('accessory'),
-        ];
+    public function postAddTraining(Request $request, InformTrain $train)
+    {
+        dd(1111111);
+        $this->validate($request, [
+            'name' => 'required',
+            'address' => 'required',
+            'begin_dt' => 'required',
+            'end_dt' => 'required',
+            'teacher' => 'required',
+            'content' => 'required',
+            'attachments' => 'required',
+            'create_user_id' => 'required',
+            'status' => 'required'
+        ]);
 
-        $add=Train::create();
-        if($data != fasle){
-            return redirect()->back()->withInput()->withErrors('Ìí¼Ó³É¹¦');
-        }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+        $data = [
+            'name' => Input::get('name'),
+            'address' => Input::get('address'),
+            'begin_dt' => Input::get('begin_dt'),
+            'end_dt' => Input::get('end_dt'),
+            'teacher' => Input::get('teacher'),
+            'content' => Input::get('content'),
+            'attachments' => Input::get('attachments'),
+            'create_user_id' => Input::get('create_user_id'),
+        ];
+        $attachments  = Input::get('attachments');
+        $data['attachments']=serialize($attachments);
+        $add = InformTrain::create($data);
+        if ($add != false) {
+
+            return redirect()->back()->withInput()->withErrors('æ·»åŠ æˆåŠŸ');
+        } else {
+            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
     }
 
     /**
-     *¿¼Ç°ÅàÑµÉ¾³ı
-     * @api GET /osce/admin/examtrain/delete-training
+     *è€ƒå‰åŸ¹è®­åˆ é™¤
+     * @api GET /osce/wechat/examtrain/delete-training
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -112,30 +138,43 @@ class ExamTrainController extends CommonController
      */
 
 
-      public  function getDeleteTraining(Request $request){
-          $id = urlencode(e(Input::get('id')));
-          if($id){
-              $data = DB::connection('osce_mis')->table('train')->where('id','=',$id)->delete();
-              if($data != fasle){
-                  return redirect()->back()->withInput()->withErrors('É¾³ı³É¹¦');
-              }else{
-                  return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
-              }
-          }else{
-              return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
-          }
+    public function getDeleteTraining(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+        $id = intval($request->get('id'));
+        $user = Auth::user();
+        $userId = $user->id;
+        $creteId = InformTrain::where('id', $id)->select()->first()->create_user_id;
+        $manager = config('osce.manager');
+        if ($userId !== $creteId || $creteId !== $manager[0]) {
+            return response()->json(
+                $this->success_rows(3, 'false')
+            );
+        }
+        $result = InformTrain::where('id', $id)->delete();
+        if ($result) {
+            return response()->json(
+                $this->success_rows(1, 'success')
+            );
+        }
+        return response()->json(
+            $this->success_rows(0, 'false')
+        );
 
       }
 
 
     /**
-     *¿¼Ç°ÅàÑµ²é¿´
-     * @api GET /osce/admin/examtrain/see-training
+     *è€ƒå‰åŸ¹è®­æŸ¥çœ‹
+     * @api GET /osce/wechat/examtrain/see-training
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        id        ½ÌÊ¦id(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
      * @return   view
      ** @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -144,21 +183,51 @@ class ExamTrainController extends CommonController
      */
     public  function   getSeeTraining(Request $request){
         $id = urlencode(e(Input::get('id')));
+
         if($id){
-            $data = DB::connection('osce_mis')->table('train')->where('id','=',$id)->first()->toArray();
+            $data = DB::connection('osce_mis')->table('inform_training')->where('id','=',$id)->get()->toArray();
+            dd($data);
+            $list =[
+                'name' =>$data['name'],
+                'address' =>$data['address'],
+                'begin_dt' =>$data['begin_dt'],
+                'end_dt' =>$data['end_dt'],
+                'teacher' =>$data['teacher'],
+                'content' =>$data['content'],
+                'attachments' =>$data['attachments'],
+            ];
         }else{
-            return redirect()->back()->withInput()->withErrors('ÏµÍ³Òì³£');
+            throw new \Exception('æŸ¥çœ‹å¤±è´¥ï¼è¯·é‡è¯•');
+//            return redirect()->back()->withInput()->withErrors('ç³»ç»Ÿå¼‚å¸¸');
         }
-        $list =[
-            'name' =>$data['name'],
-            'place' =>$data['place'],
-            'begin_dt' =>$data['begin_dt'],
-            'end_dt' =>$data['end_dt'],
-            'teacher_name' =>$data['teacher_name'],
-            'remark' =>$data['remark'],
-            'accessory' =>$data['accessory'],
-        ];
+
+
+        dd($list);
            die(json_encode($list));
     }
+
+    /**
+     *è€ƒå‰åŸ¹è®­ç¼–è¾‘
+     * @api GET /osce/wechat/examtrain/edit-training
+     * @access public
+     *
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        id        æ•™å¸ˆid(å¿…é¡»çš„)
+     * @return   view
+     ** @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+     public function getEditTraining(Request $request){
+         $id = urlencode(e(Input::get('id')));
+         if($id){
+
+         }
+
+
+     }
+
 
 }
