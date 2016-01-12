@@ -13,6 +13,7 @@ $(function(){
         case "exam_notice_add":exam_notice_add();break;
         case "smart_assignment":smart_assignment();break;
         case "examinee_manage":examinee_manage();break;
+        case "examinee_add":examinee_add();break;
     }
 });
 
@@ -1220,46 +1221,45 @@ $(function(){
 //点击两个表格可进行交换
 function changeTwo(){
 
-    if($(this).hasClass('active'))
+    if($(this).hasClass('dd-active'))
     {
-        $(this).removeClass('active');
+        $(this).removeClass('dd-active');
         return ;
     }
-    $(this).addClass('active');
-    if($(".active").length-1==2){
-        var change1=$($(".active")[1]).html();
-        var change2=$($(".active")[2]).html();
-        $($(".active")[2]).html(change1);
-        $($(".active")[1]).html(change2);
+    $(this).addClass('dd-active');
+    if($(".dd-active").length==2){
+        var change1=$($(".dd-active")[0]).html();
+        var change2=$($(".dd-active")[1]).html();
+        $($(".dd-active")[1]).html(change1);
+        $($(".dd-active")[0]).html(change2);
         if($(".error").length==0){
         }else{
 
         }
-        console.log($($(".active")[1]).parent().parent().parent().parent().attr("class"))
-        console.log($($(".active")[2]).parent().parent().parent().parent().attr("class"))
+        console.log($($(".dd-active")[1]).parent().parent().parent().parent().attr("class"))
         $.ajax({
             url:"",
             type:"get",
             dataType:"json",
             data:{
-                    id1:$($(".active")[1]).attr("sid"),
-                    id2:$($(".active")[2]).attr("sid"),
-                    row1:$($(".active")[1]).parent().parent().attr("class"),
-                    row2:$($(".active")[2]).parent().parent().attr("class"),
-                    col1:$($(".active")[1]).parent().parent().parent().parent().attr("class"),
-                    col2:$($(".active")[2]).parent().parent().parent().parent().attr("class")
+                    id1:$($(".dd-active")[0]).attr("sid"),
+                    id2:$($(".dd-active")[1]).attr("sid"),
+                    row1:$($(".dd-active")[0]).parent().parent().attr("class"),
+                    row2:$($(".dd-active")[1]).parent().parent().attr("class"),
+                    col1:$($(".dd-active")[0]).parent().parent().parent().parent().attr("class"),
+                    col2:$($(".dd-active")[1]).parent().parent().parent().parent().attr("class")
             },
             success: function(result) {
                 console.log(result);
-                $("dd").removeClass("active");
+                $("dd").removeClass("dd-active");
                 var status=1//冲突状态
                 if(status==1){
-                    $($(".active")[1]).addClass("error");
-                    $($(".active")[2]).addClass("error");
+                    $($(".dd-active")[0]).addClass("error");
+                    $($(".dd-active")[1]).addClass("error");
                     $(".save").attr("disabled");
                 }else{
-                    $($(".active")[1]).removeClass("error");
-                    $($(".active")[2]).removeClass("error");
+                    $($(".dd-active")[0]).removeClass("error");
+                    $($(".dd-active")[1]).removeClass("error");
                     $(".save").removeAttr("disabled");
                 }
             }})
@@ -1270,9 +1270,15 @@ function changeTwo(){
 
 
 
-//文件导入
+
+/*
+ * 考生管理
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-12
+ */
 function examinee_manage(){
-    alert(pars.excel);
+    //导入考生
     $("#file1").change(function(){
         $.ajaxFileUpload
         ({
@@ -1283,96 +1289,13 @@ function examinee_manage(){
             dataType: 'text',//
             success: function (data, status)
             {
+
                 data    =   data.replace('<pre>','').replace('</pre>','');
                 data    =   eval('('+data+')');
-
+                console.log(data.code);
                 if(data.code == 1){
-                    layer.alert('导入成功！');
-
-                    /*/!**
-                     * 数据导入
-                     * @author mao
-                     * @version 1.0
-                     * @date    2016-01-08
-                     *!/
-                     var html = '';
-                     var res = data.data;
-                     var index = parseInt($('tbody').attr('index'));
-
-                     for(var i in res){
-                     if(res[i].level==1){
-
-                     index++;
-                     //添加父级dom
-                     html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
-                     '<td>'+index+'</td>'+
-                     '<td>'+
-                     '<div class="form-group">'+
-                     '<label class="col-sm-2 control-label">考核点:</label>'+
-                     '<div class="col-sm-10">'+
-                     '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+res[i].sort+'][title]"/>'+
-                     '</div>'+
-                     '</div>'+
-                     '</td>'+
-                     '<td>'+
-                     '<select class="form-control" name="score['+index+'][total]">'+
-                     '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
-                     '<option value="1">1</option>'+
-                     '<option value="2">2</option>'+
-                     '<option value="3">3</option>'+
-                     '<option value="4">4</option>'+
-                     '</select>'+
-                     '</td>'+
-                     '<td>'+
-                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                     '</td>'+
-                     '</tr>';
-
-                     for(var j in res){
-                     if(res[j].level==2&&res[j].pid==res[i].sort){
-
-                     //处理子级dom
-                     html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
-                     '<td>'+index+'-'+res[j].sort+'</td>'+
-                     '<td>'+
-                     '<div class="form-group">'+
-                     '<label class="col-sm-2 control-label">考核项:</label>'+
-                     '<div class="col-sm-10">'+
-                     '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+res[i].score+']['+res[j].sort+']"/>'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="form-group">'+
-                     '<label class="col-sm-2 control-label">评分标准:</label>'+
-                     '<div class="col-sm-10">'+
-                     '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+res[i].score+']['+res[j].sort+']"/>'+
-                     '</div>'+
-                     '</div>'+
-                     '</td>'+
-                     '<td>'+
-                     '<select class="form-control" name="score['+index+']['+res[j].sort+']">'+
-                     '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
-                     '<option value="1">1</option>'+
-                     '<option value="2">2</option>'+
-                     '<option value="3">3</option>'+
-                     '<option value="4">4</option>'+
-                     '</select>'+
-                     '</td>'+
-                     '<td>'+
-                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
-                     '</td>'+
-                     '</tr>';
-                     }
-                     }
-                     }
-                     }
-                     $('tbody').attr('index',index);
-                     $('tbody').append(html);*/
-
-
-
+                    //layer.alert('导入成功！');
+                    location.reload();
                 }
             },
             error: function (data, status, e)
@@ -1380,6 +1303,26 @@ function examinee_manage(){
                 layer.alert('导入失败！');
             }
         });
+
     }) ;
+    //删除考生
+    $(".delete").click(function(){
+        var sid=$(this).attr("sid");
+        var examId=$(this).attr("examid");
+        layer.alert('确认删除？',function(){
+            location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
+        });
+    })
 }
 
+/*
+ * 新增考生
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-12
+ */
+function examinee_add(){
+    $(".return-pre").click(function() {
+        location.href=pars.preUrl;
+    })
+}
