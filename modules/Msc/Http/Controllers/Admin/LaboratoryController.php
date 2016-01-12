@@ -373,7 +373,7 @@ class LaboratoryController extends MscController {
             $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role_id->role_id)->first();
         }
 
-        if($role_name->name == '超级管理员'){
+        if(@$role_name->name == '超级管理员'){
 
         }else{
             $where['manager_user_id'] = $user['id'];
