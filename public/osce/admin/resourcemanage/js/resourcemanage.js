@@ -66,6 +66,7 @@ function examroom(){
  * @param   {string}   url 请求地址
  */
 function deleteItem(url){
+    console.debug(url);
 	$('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
