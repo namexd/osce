@@ -8,8 +8,10 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\InformTrain;
 use Modules\Osce\Http\Controllers\CommonController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TrainController extends  CommonController{
 
@@ -46,7 +48,22 @@ class TrainController extends  CommonController{
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
-
+        $data=[];
+        foreach($list as $item){
+          $data[]=[
+              'id' =>$item->id,
+              'name' =>$item->name,
+              'address' =>$item->address,
+              'begin_dt' =>$item->begin_dt,
+              'end_dt' =>$item->end_dt,
+              'teacher' =>$item->teacher,
+              'content' =>$item->content,
+              'status' =>$item->status,
+              'attachments' =>$item->attachments,
+              'create_user_id' =>$item->create_user_id,
+          ];
+        }
+        $data['attachments']=unserialize($data['attachments']);
         return response()->json(
             $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
         );
@@ -84,7 +101,7 @@ class TrainController extends  CommonController{
             'status'                  =>'required',
             'create_user_id'          =>'required',
         ]);
-        $attachments=$request->input('attachments');
+        $attachments=$this->postUploadFile();
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status','create_user_id']);
         $data['attachments']=serialize($attachments);
         $result=$this->create($data);
@@ -185,7 +202,7 @@ class TrainController extends  CommonController{
             'status'                  =>'required',
             'create_user_id'          =>'required',
         ]);
-        $attachments=$request->input('attachments');
+        $attachments=$this->postUploadFile();
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status','create_user_id']);
         $user=Auth::user();
         $userId=$user->id;
@@ -253,4 +270,27 @@ class TrainController extends  CommonController{
             $this->success_rows(0,'false')
         );
     }
+
+     public function postUploadFile(){
+        $user=Auth::user;
+        $userId=$user->id;
+         $file=\Input::file('file');
+         if(\Input::hasFile('file')){
+             return array();
+         }
+         $fileName=$file->getFilename();
+         $file_ex=$file->getClientOriginalExtension();
+//         $file_size=round($file->getSize() /1024);
+//         $file_mime=$file->getMimeType();
+         $uploadDir='uploads';
+         if(!$uploadDir){
+             mkdir('uploads',777,true);
+         }
+         if (!in_array($file_ex, array('doc', 'xlsx'))) return \Redirect::to('/')->withErrors('上传类型为doc,xlsx');
+         $newname=date('Ymd').'-'.$fileName.$userId;
+         if(\Request::file('file')){
+             \Request::file()->move($uploadDir,$newname);
+         }
+         $path[]=\Input::file('file')->getRealPath();
+     }
 }
