@@ -49,22 +49,7 @@ class TrainController extends  CommonController{
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
-        $data=[];
-        foreach($list as $item){
-          $data[]=[
-              'id' =>$item->id,
-              'name' =>$item->name,
-              'address' =>$item->address,
-              'begin_dt' =>$item->begin_dt,
-              'end_dt' =>$item->end_dt,
-              'teacher' =>$item->teacher,
-              'content' =>$item->content,
-              'status' =>$item->status,
-              'attachments' =>$item->attachments,
-              'create_user_id' =>$item->create_user_id,
-          ];
-        }
-        $data['attachments']=unserialize($data['attachments']);
+
         return response()->json(
             $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
         );
