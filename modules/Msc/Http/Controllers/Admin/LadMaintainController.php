@@ -61,10 +61,18 @@ class LadMaintainController extends MscController
      */
 
     public function getLaboratoryDeviceList(){
-
-
         $lab_id = Input::get('lab_id');
+        $page = Input::get('page',1);
         $LadDevice = new LadDevice;
+
+
+        //TODO 解决AJAX 翻页传递过来的页码过大  无法查询出来数据的问题
+        $total = $LadDevice->where('lab_id','=',$lab_id)->count();
+        $total_page = (int)ceil($total/config('msc.page_size',10));
+        if($total_page<$page){
+            return redirect()->route('msc.admin.LadMaintain.LaboratoryDeviceList', ['lab_id' => $lab_id,'page'=>$total_page]);
+        }
+
         $LadDeviceList = $LadDevice->GetLadDevice($lab_id);
         return response()->json(
             $this->success_rows(1,'获取成功',$LadDeviceList->total(),config('msc.page_size',10),$LadDeviceList->currentPage(),array('LadDeviceList'=>$LadDeviceList->toArray()))
@@ -122,7 +130,7 @@ class LadMaintainController extends MscController
             'deviceType'  => $deviceType
         ];
         return response()->json(
-            $this->success_rows(1,'获取成功',1,10,0,$data)
+            $this->success_rows(1,'获取成功',$resourceData->total(),config('msc.page_size',10),$resourceData->currentPage(),$data)
         );
 
     }
