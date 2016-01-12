@@ -39,8 +39,8 @@ class ExamTrainController extends CommonController
         public  function  getExamTrainingIndex( Request $request,InformTrain $train){
             $message= [];
             $informModel= new InformTrain();
-                $list = $informModel->getInformList();
-                dd($list);
+                $list = $informModel->get()->toArray();
+//                dd($list);
                 foreach($list as $data){
                     $message['name'] = $data['name'];
                     $message['address'] = $data['address'];
@@ -82,8 +82,6 @@ class ExamTrainController extends CommonController
                 'attachments' =>'required',
                 'status' =>'required'
             ]);
-             
-
 
         $data=[
             'name'=> Input::get('name'),
@@ -120,10 +118,9 @@ class ExamTrainController extends CommonController
 
 
       public  function getDeleteTraining(Request $request){
-          dd(111111);
           $id = urlencode(e(Input::get('id')));
           if($id){
-              $data = DB::connection('osce_mis')->table('train')->where('id','=',$id)->delete();
+              $data = DB::connection('osce_mis')->table('inform_training')->where('id','=',$id)->delete();
               if($data != fasle){
                   return redirect()->back()->withInput()->withErrors('删除成功');
               }else{
@@ -151,22 +148,24 @@ class ExamTrainController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public  function   getSeeTraining(Request $request){
-        dd(11111);
         $id = urlencode(e(Input::get('id')));
         if($id){
-            $data = DB::connection('osce_mis')->table('train')->where('id','=',$id)->first()->toArray();
+            $data = DB::connection('osce_mis')->table('inform_training')->where('id','=',$id)->get();
+            dd($data);
         }else{
             return redirect()->back()->withInput()->withErrors('系统异常');
         }
-        $list =[
-            'name' =>$data['name'],
-            'address' =>$data['address'],
-            'begin_dt' =>$data['begin_dt'],
-            'end_dt' =>$data['end_dt'],
-            'teacher' =>$data['teacher'],
-            'content' =>$data['content'],
-            'attachments' =>$data['attachments'],
-        ];
+
+            $list =[
+                'name' =>$data[0]['name'],
+                'address' =>$data['address'],
+                'begin_dt' =>$data['begin_dt'],
+                'end_dt' =>$data['end_dt'],
+                'teacher' =>$data['teacher'],
+                'content' =>$data['content'],
+                'attachments' =>$data['attachments'],
+            ];
+        dd($list);
            die(json_encode($list));
     }
 
