@@ -37,15 +37,22 @@ class IndexController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
-        $isBound=WatchLog::where('watch_id',$id)->select('action')->orderBy('updated_at','DESC')->first()->action;
-        if($isBound=='绑定'){
+//        $isBound=WatchLog::where('watch_id',$id)->select('action')->orderBy('updated_at','DESC')->first()->action;
+        $status=Watch::where('watch_id',$id)->select('status')->first()->status;
+        if($status==1){
             return response()->json(
                 $this->success_rows(1,'已绑定')
             );
-        }
+        }elseif($status==0){
             return response()->json(
                 $this->success_rows(0,'未绑定')
             );
+        }else{
+            return response()->json(
+                $this->success_rows(2,'腕表损坏或者正在维修')
+            );
+        }
+
     }
 
     /**
@@ -176,15 +183,15 @@ class IndexController extends CommonController
 
         $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first()->watch_id;
         if($watch_id){
-            $isBound=WatchLog::where('watch_id',$watch_id)->select('action')->orderBy('updated_at','DESC')->first()->action;
-            if($isBound=='绑定'){
+            $status=Watch::where('watch_id',$watch_id)->select('status')->first()->status;
+            if($status==1){
                 return response()->json(
-                    $this->success_rows(1,'已绑定')
+                    $this->success_rows(1,'已绑定腕表')
                 );
             }
         }
          return response()->json(
-                 $this->success_data($code,0,'未绑定')
+                 $this->success_data($code,0,'未绑定腕表')
                 );
     }
 }
