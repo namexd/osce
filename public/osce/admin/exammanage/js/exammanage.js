@@ -13,6 +13,7 @@ $(function(){
         case "exam_notice_add":exam_notice_add();break;
         case "smart_assignment":smart_assignment();break;
         case "examinee_manage":examinee_manage();break;
+        case "examinee_add":examinee_add();break;
     }
 });
 
@@ -452,19 +453,61 @@ function examroom_assignment(){
         }else{
 
             $(this).parent().siblings('.necessary').text(num[current.length]);
+
             //选择的数据
             $(this).on("select2:select", function(e){
 
                 //让select只进入一次
+                var select_flag = 0;//进入计数
                 if(select2_data!=undefined){
                     if(select2_data.id==e.params.data.id){
                         select2_data = null;
-                        return;
+                        select_flag = 1;
                     }
                     select2_data = e.params.data;
                 }else{
                     select2_data = e.params.data;
                 }
+                //进入计数 返回终止
+                if(select_flag)return;
+                //检测id相同的教室 如果有就不存如返回，没有就请求并存入
+                var rooms = $('#examroom').find('tbody').attr('data');
+                var rooms_flag = 0;
+                if(rooms==null){
+                    rooms = [];
+                    rooms.push({id:select2_data.id,count:1});
+                }else{
+
+                    rooms = JSON.parse(rooms);
+                    var current = [],
+                        count = 0;
+                    for(var i in rooms){
+                        //有相同教室id
+                        if(rooms[i].id==select2_data.id){
+                            var cr = rooms[i].count+1;
+                            current.push({id:rooms[i].id,count:cr});
+                            count = 1;
+                        }else{
+                            current.push({id:rooms[i].id,count:rooms[i].count});
+                        }
+                    }
+                    //存入没有的教室id
+                    if(!count){
+                        current.push({id:select2_data.id,count:1});
+                    }
+                    //判断数据时候有变化
+                    if(current.length==rooms.length){
+                        rooms_flag = 1;
+                    }
+                    rooms = current;
+                }
+                $('#examroom').find('tbody').attr('data',JSON.stringify(rooms));
+                //相同id不请求
+                if(rooms_flag){
+                    return;
+                }
+
+
                 //考站数据请求
                 $.ajax({
                     type:'get',
@@ -475,41 +518,25 @@ function examroom_assignment(){
 
                         //记录数据
                         var thisElement = $('#exam-place').find('tbody');
-                        var sp_no=null;
-                        if(thisElement.attr('data')==undefined){
-                            sp_no = '{}';
-                        }
-                        else{
-                            sp_no = JSON.parse(thisElement.attr('data'));
-                        }
 
                         if(res.code!=1){
                             layer.alert(res.message);
                             return;
                         }else{
-                            var res_data = res.data,
-                                html = '',
-                                data;
+                            var data = res.data,
+                                html = '';
                             
-                            //thisElement.attr('data',JSON.stringify(data));
-                            //数据去重
-                            if(sp_no!='{}'){
-                                data = tab(sp_no,res_data);
-                            }else{
-                                data = tab([],res_data);
-                            }
 
                             //准备dom
+                            var station_index = parseInt(thisElement.attr('index'));
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
                                 var typeValue = [0,'技能操作站','SP站'];
-                                /*for(var j in data[i].teacher){
-                                    teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }*/
 
-                                html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                //写入dom
+                                html += '<tr class="parent-id-'+e.params.data.id+'">'+
+                                            '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
@@ -528,8 +555,9 @@ function examroom_assignment(){
                                         '</tr>';
                             }
                             //动态插入考场安排
-                            thisElement.html(html);
-                            thisElement.attr('data',JSON.stringify(data));
+                            thisElement.append(html);
+                            //计数器
+                            thisElement.attr('index',(station_index+parseInt(i)+1));
 
 
                             /**
@@ -616,7 +644,7 @@ function examroom_assignment(){
                                         //数据格式化
                                         var str = [];
                                         for(var i in res.data){
-                                            str.push({id:res_data[i].id,text:res.data[i].name});
+                                            str.push({id:res.data[i].id,text:res.data[i].name});
                                         }
 
                                         //加载入数据
@@ -637,17 +665,55 @@ function examroom_assignment(){
             $(this).on("select2:unselect", function(e){
 
                 //让select只进入一次
+                var select_flag = 0;
                 if(select2_data_del!=undefined){
                     if(select2_data_del.id==e.params.data.id){
                         select2_data = null;
-                        return;
+                        select_flag = 1;
                     }
                     select2_data_del = e.params.data;
                 }else{
                     select2_data_del = e.params.data;
                 }
+
+                if(select_flag)return;
+                //检测id相同的教室 如果有就不存如返回，没有就请求并存入
+                var rooms = JSON.parse($('#examroom').find('tbody').attr('data'));
+                var current = [];
+                for(var i in rooms){
+
+                    if(rooms[i].id==select2_data_del.id){
+                        if(rooms[i].count>1){
+                            rooms[i].count -= 1;
+                            current.push({id:rooms[i].id,count:rooms[i].count});
+                        }else{
+                            //删除dom
+                            var str = rooms[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                station_count = key + 1;
+                                $(elem).find('td').eq(0).text(station_count);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
+                    }else{
+                        current.push({id:rooms[i].id,count:rooms[i].count});
+                    }
+                }
+                
+                $('#examroom').find('tbody').attr('data',JSON.stringify(current));
+
+                //相同id不请求
+                /*if(rooms_flag){
+                    return;
+                }*/
+
+
                 //考站数据请求
-                $.ajax({
+                /*$.ajax({
                     type:'get',
                     url:pars.url,
                     data:{id:e.params.data.id},
@@ -716,7 +782,7 @@ function examroom_assignment(){
                             thisElement.attr('data',JSON.stringify(data));
                         }
                     }
-                });
+                });*/
 
             });
 
@@ -1228,46 +1294,45 @@ $(function(){
 //点击两个表格可进行交换
 function changeTwo(){
 
-    if($(this).hasClass('active'))
+    if($(this).hasClass('dd-active'))
     {
-        $(this).removeClass('active');
+        $(this).removeClass('dd-active');
         return ;
     }
-    $(this).addClass('active');
-    if($(".active").length-1==2){
-        var change1=$($(".active")[1]).html();
-        var change2=$($(".active")[2]).html();
-        $($(".active")[2]).html(change1);
-        $($(".active")[1]).html(change2);
+    $(this).addClass('dd-active');
+    if($(".dd-active").length==2){
+        var change1=$($(".dd-active")[0]).html();
+        var change2=$($(".dd-active")[1]).html();
+        $($(".dd-active")[1]).html(change1);
+        $($(".dd-active")[0]).html(change2);
         if($(".error").length==0){
         }else{
 
         }
-        console.log($($(".active")[1]).parent().parent().parent().parent().attr("class"))
-        console.log($($(".active")[2]).parent().parent().parent().parent().attr("class"))
+        console.log($($(".dd-active")[1]).parent().parent().parent().parent().attr("class"))
         $.ajax({
             url:"",
             type:"get",
             dataType:"json",
             data:{
-                    id1:$($(".active")[1]).attr("sid"),
-                    id2:$($(".active")[2]).attr("sid"),
-                    row1:$($(".active")[1]).parent().parent().attr("class"),
-                    row2:$($(".active")[2]).parent().parent().attr("class"),
-                    col1:$($(".active")[1]).parent().parent().parent().parent().attr("class"),
-                    col2:$($(".active")[2]).parent().parent().parent().parent().attr("class")
+                    id1:$($(".dd-active")[0]).attr("sid"),
+                    id2:$($(".dd-active")[1]).attr("sid"),
+                    row1:$($(".dd-active")[0]).parent().parent().attr("class"),
+                    row2:$($(".dd-active")[1]).parent().parent().attr("class"),
+                    col1:$($(".dd-active")[0]).parent().parent().parent().parent().attr("class"),
+                    col2:$($(".dd-active")[1]).parent().parent().parent().parent().attr("class")
             },
             success: function(result) {
                 console.log(result);
-                $("dd").removeClass("active");
+                $("dd").removeClass("dd-active");
                 var status=1//冲突状态
                 if(status==1){
-                    $($(".active")[1]).addClass("error");
-                    $($(".active")[2]).addClass("error");
+                    $($(".dd-active")[0]).addClass("error");
+                    $($(".dd-active")[1]).addClass("error");
                     $(".save").attr("disabled");
                 }else{
-                    $($(".active")[1]).removeClass("error");
-                    $($(".active")[2]).removeClass("error");
+                    $($(".dd-active")[0]).removeClass("error");
+                    $($(".dd-active")[1]).removeClass("error");
                     $(".save").removeAttr("disabled");
                 }
             }})
@@ -1278,9 +1343,15 @@ function changeTwo(){
 
 
 
-//文件导入
+
+/*
+ * 考生管理
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-12
+ */
 function examinee_manage(){
-    alert(pars.excel);
+    //导入考生
     $("#file1").change(function(){
         $.ajaxFileUpload
         ({
@@ -1291,96 +1362,13 @@ function examinee_manage(){
             dataType: 'text',//
             success: function (data, status)
             {
+
                 data    =   data.replace('<pre>','').replace('</pre>','');
                 data    =   eval('('+data+')');
-
+                console.log(data.code);
                 if(data.code == 1){
-                    layer.alert('导入成功！');
-
-                    /*/!**
-                     * 数据导入
-                     * @author mao
-                     * @version 1.0
-                     * @date    2016-01-08
-                     *!/
-                     var html = '';
-                     var res = data.data;
-                     var index = parseInt($('tbody').attr('index'));
-
-                     for(var i in res){
-                     if(res[i].level==1){
-
-                     index++;
-                     //添加父级dom
-                     html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
-                     '<td>'+index+'</td>'+
-                     '<td>'+
-                     '<div class="form-group">'+
-                     '<label class="col-sm-2 control-label">考核点:</label>'+
-                     '<div class="col-sm-10">'+
-                     '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+res[i].sort+'][title]"/>'+
-                     '</div>'+
-                     '</div>'+
-                     '</td>'+
-                     '<td>'+
-                     '<select class="form-control" name="score['+index+'][total]">'+
-                     '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
-                     '<option value="1">1</option>'+
-                     '<option value="2">2</option>'+
-                     '<option value="3">3</option>'+
-                     '<option value="4">4</option>'+
-                     '</select>'+
-                     '</td>'+
-                     '<td>'+
-                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                     '</td>'+
-                     '</tr>';
-
-                     for(var j in res){
-                     if(res[j].level==2&&res[j].pid==res[i].sort){
-
-                     //处理子级dom
-                     html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
-                     '<td>'+index+'-'+res[j].sort+'</td>'+
-                     '<td>'+
-                     '<div class="form-group">'+
-                     '<label class="col-sm-2 control-label">考核项:</label>'+
-                     '<div class="col-sm-10">'+
-                     '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+res[i].score+']['+res[j].sort+']"/>'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="form-group">'+
-                     '<label class="col-sm-2 control-label">评分标准:</label>'+
-                     '<div class="col-sm-10">'+
-                     '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+res[i].score+']['+res[j].sort+']"/>'+
-                     '</div>'+
-                     '</div>'+
-                     '</td>'+
-                     '<td>'+
-                     '<select class="form-control" name="score['+index+']['+res[j].sort+']">'+
-                     '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
-                     '<option value="1">1</option>'+
-                     '<option value="2">2</option>'+
-                     '<option value="3">3</option>'+
-                     '<option value="4">4</option>'+
-                     '</select>'+
-                     '</td>'+
-                     '<td>'+
-                     '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
-                     '</td>'+
-                     '</tr>';
-                     }
-                     }
-                     }
-                     }
-                     $('tbody').attr('index',index);
-                     $('tbody').append(html);*/
-
-
-
+                    //layer.alert('导入成功！');
+                    location.reload();
                 }
             },
             error: function (data, status, e)
@@ -1388,6 +1376,26 @@ function examinee_manage(){
                 layer.alert('导入失败！');
             }
         });
+
     }) ;
+    //删除考生
+    $(".delete").click(function(){
+        var sid=$(this).attr("sid");
+        var examId=$(this).attr("examid");
+        layer.alert('确认删除？',function(){
+            location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
+        });
+    })
 }
 
+/*
+ * 新增考生
+ * @author lizhiyuan
+ * @version 2.0
+ * @date    2016-01-12
+ */
+function examinee_add(){
+    $(".return-pre").click(function() {
+        location.href=pars.preUrl;
+    })
+}

@@ -12,6 +12,7 @@
 @section('only_js')
     <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
     <script>
         $(function() {
             $(".img_box").delegate(".del_img","click",function(){
@@ -128,6 +129,7 @@
 @stop
 
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'examinee_add','preUrl':'{{route('osce.admin.exam.getExamineeManage')}}?id={{$id}}'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
@@ -204,7 +206,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <button class="btn btn-white cancel" type="button">取消</button>
+                                    <button class="btn btn-white return-pre" type="button">取消</button>
                                 </div>
                             </div>
                         </div>

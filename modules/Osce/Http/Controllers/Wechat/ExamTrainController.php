@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
 use Modules\Osce\Entities\InformTrain;
@@ -37,19 +38,18 @@ class ExamTrainController extends CommonController
      */
     public function  getExamTrainingIndex(Request $request, InformTrain $train)
     {
-        $user=Auth::user();
-        $userId=$user->id;
 
-        if(!$userId){
-            return response()->json(
-                $this->success_rows(0,'false')
-            );
-        }
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        if(!$userId){
+//            return response()->json(
+//                $this->success_rows(0,'false')
+//            );
+//        }
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
 
-        $list=InformTrain::select()->orderBy('begin_dt')->get();
-
+        $list=InformTrain::select()->orderBy('begin_dt')->get()->toArray();
         return response()->json(
             $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
         );
@@ -59,6 +59,8 @@ class ExamTrainController extends CommonController
     //附件上传
     public function postExamTrainingUpload()
     {
+
+
 
 
     }
@@ -108,7 +110,6 @@ class ExamTrainController extends CommonController
             'end_dt' => Input::get('end_dt'),
             'teacher' => Input::get('teacher'),
             'content' => Input::get('content'),
-            'attachments' => Input::get('attachments'),
             'create_user_id' => Input::get('create_user_id'),
         ];
         $attachments  = Input::get('attachments');

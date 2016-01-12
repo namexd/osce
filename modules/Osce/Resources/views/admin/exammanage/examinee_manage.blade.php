@@ -30,19 +30,21 @@
         .operate button:first-child{
             margin-right: 20px;
         }
+        .delete{
+            cursor: pointer;
+        }
     </style>
 @stop
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'examinee_manage','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}','excel':'{{route('osce.admin.exam.postImportStudent')}}'}"/>
+    <input type="hidden" id="parameter" value="{'pagename':'examinee_manage',
+    'background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}',
+    'excel':'{{route('osce.admin.exam.postImportStudent')}}','deleteUrl':'{{route('osce.admin.exam.getDelStudent')}}'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考试安排</h5>
-            </div>
-            <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -94,7 +96,8 @@
                             <td>{{$item->idcard}}</td>
                             <td>{{$item->mobile}}</td>
                             <td>
-                                <a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                {{--<a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>--}}
+                                <span class="read  state2 delete" sid="{{$item->id}}" examid="{{$id}}"><i class="fa fa-trash-o fa-2x"></i></span>
                             </td>
                         </tr>
                     @empty
