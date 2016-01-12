@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Osce\Http\Controllers\WinApp;
+namespace Modules\Osce\Http\Controllers\Api;
 
 
 use Illuminate\Http\Request;
@@ -174,6 +174,9 @@ class IndexController extends CommonController
         $idCard=$request->get('id_card');
 
         $students=Student::where('id_card',$idCard)->select('id','code')->get();
+
+
+
         foreach($students as $item){
             $student=[
                 'id'    =>$item->id,
@@ -197,6 +200,145 @@ class IndexController extends CommonController
          return response()->json(
                  $this->success_data($student,1,'未绑定')
                 );
+    }
+
+
+
+    /**
+     * 添加腕表接口
+     *
+     * @api GET /api/1.0/private/osce/watch/add
+     * @access private
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string		code			设备编码(必须的)
+     * * int		user_id			操作人编号(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author limingyao <limingyao@misrobot.com>
+     * @date 2016-01-12
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAddWatch(Request $request){
+
+        $this->validate($request,[
+            'code'          =>  'required',
+            'user_id'       =>  'required|integer'
+        ]);
+
+        try{
+            $watch=Watch::create([
+                'code'          =>  $request->get('code'),
+                'name'          =>  $request->get('name',''),
+                'status'        =>  $request->get('status',1),
+                'description'   =>  $request->get('description',''),
+                'factory'       =>  $request->get('factory',''),
+                'sp'            =>  $request->get('sp',''),
+                'created_user_id'=> $request->get('user_id'),
+            ]);
+
+            if($watch->id>0){
+                return response()->json(
+                    $this->success_data()
+                );
+            }
+
+            return response()->json(
+                $this->fail(new \Exception('添加腕表失败'))
+            );
+        }
+        catch( \Exception $ex){
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+
+    }
+
+
+    /**
+     * 删除腕表接口
+     *
+     * @api GET /api/1.0/private/osce/watch/delete
+     * @access private
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int		id			设备id(必须的)
+     * * int		user_id			操作人编号(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author limingyao <limingyao@misrobot.com>
+     * @date 2016-01-12
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDeleteWatch(Request $request){
+
+        $this->validate($request,[
+            'id'            =>  'required|integer',
+            'user_id'       =>  'required|integer'
+        ]);
+
+        $count=Watch::destroy($request->get('id'));
+
+        if($count>0){
+            return response()->json(
+                $this->success_data()
+            );
+        }
+
+        return response()->json(
+            $this->fail(new \Exception('删除腕表失败'))
+        );
+    }
+
+
+
+    /**
+     * 更新腕表状态接口
+     *
+     * @api GET /api/1.0/private/osce/watch/delete
+     * @access private
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * int		id			设备id(必须的)
+     * * int        status      状态
+     * * int		user_id		操作人编号(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author limingyao <limingyao@misrobot.com>
+     * @date 2016-01-12
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getUpdateWatch(Request $request){
+
+        $this->validate($request,[
+            'id'            =>  'required|integer',
+            'status'        =>  'required|integer',
+            'user_id'       =>  'required|integer'
+        ]);
+
+
+        $count=Watch::where('id','=',$request->get('id'))
+            ->update(['status'=>$request->get('status')]);
+
+        if($count>0){
+            return response()->json(
+                $this->success_data()
+            );
+        }
+
+        return response()->json(
+            $this->fail(new \Exception('更新腕表失败'))
+        );
     }
 
 
