@@ -52,6 +52,7 @@ class SpteacherController extends CommonController
 
 
         $data = $model->showTeacherData($stationIds, $spteacherIds);
+        dd( $data);
 
         return  response()->json($this->success_rows(1,'获取成功',count($data),count($data),1,$data->toArray()));
     }

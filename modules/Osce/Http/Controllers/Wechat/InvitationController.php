@@ -41,7 +41,6 @@ class InvitationController extends CommonController
 
     public function getInvitationList(Request $request)
     {
-        //验证略
         $this->validate($request, [
             'teacher_id' => 'required|integer',
             'exam_id' => 'required|integer',
@@ -58,10 +57,15 @@ class InvitationController extends CommonController
 //        dd($data);
         $ExamModel = new Exam();
         $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
-        $data['exam_name'] = $ExamList['name'];
-        $data['begin_dt'] = $ExamList['begin_dt'];
-        $data['end_dt'] = $ExamList['end_dt'];
-        $data['exam_id'] = $exam_id;
+//        dd($ExamList);
+            foreach($data as $k=>$v){
+                $data[$k]['exam_name'] = $ExamList['name'];
+                $data[$k]['begin_dt'] = $ExamList['begin_dt'];
+                $data[$k]['end_dt'] = $ExamList['end_dt'];
+                $data[$k]['exam_id'] = $exam_id;
+            }
+
+//        dd($data);
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
 //            dd(11111);
