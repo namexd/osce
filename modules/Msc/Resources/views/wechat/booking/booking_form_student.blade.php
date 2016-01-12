@@ -59,10 +59,10 @@
                 </div>
             </div>
         </div>
-        <div class="w_94" id="Reason_detail" >
+        <div class="" id="Reason_detail" >
             <div class="mart_10 marb_10 font16">预约原因</div>
             <div class="Reason">
-                <textarea name="detail" placeholder="请输入预约原因" class="reason_txt">爱的方式的发生的公司法规的法规的发挥的恢复供货方根据非黄金护肤</textarea>
+                <textarea name="detail" class="reason_txt">爱的方式的发生的公司法规的法规的发挥的恢复供货方根据非黄金护肤</textarea>
             </div>
             <input class="btn2 mart_10 marb_10" type="submit" value="提交预约">
         </div>
