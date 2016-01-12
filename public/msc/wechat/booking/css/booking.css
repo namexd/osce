@@ -1,0 +1,35 @@
+.main_list  .title_nav .title{    width: 25%;}
+.detail_list ul li div{   width: 25%;}
+
+.detail_list .Time_slot p{
+    line-height: 20px; height:18px;
+}
+.detail_list .Time_slot p span{color:#6595e1; }
+.attention  a{color:#6595e1;}
+
+#borrow_history  .State1{ color:#6595e1;}
+#borrow_history  .State2{ color:#ff0000;}
+#borrow_history  .State3{ color:#a2a2a2;}
+
+/*确认使用申请表*/
+#apply_info  p{ line-height:30px; font-size: 16px;color: #333;}
+.check_info .title{
+    font-size: 16px;line-height:40px;
+    height:40px; border-top:1px solid #DCE0E4; border-bottom: 1px solid #DCE0E4; background: #fff; width:100%; padding: 0 3%;}
+
+.check_info .title .i_right{float:right;margin:8px 0px 0 0;font-size:26px;color:#ccc;}
+.phone_box{border-bottom: 1px solid #DCE0E4;}
+.check_info textarea{ border: none;}
+.check_info select{ border: none; padding-left: 90px;}
+.course_name input{ border-radius: 4px;}
+
+.Reason  textarea{
+    width: 100%;border:1px solid #dce0e4;
+    height: 100px;
+    line-height: 20px;
+    border-radius: 4px;
+    padding:10px 5px;
+}
+
+
+

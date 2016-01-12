@@ -1,5 +1,5 @@
 /*table_list*/
-
+/*buttonÊ†∑Âºè*/
 .btn1
 { background-color:#6595e1; font-size:18px;
     width:100%; height:36px;
@@ -35,6 +35,7 @@
     border:none;border-radius:0.4em;
     font-weight: 300;
 }
+/*selectÊ†∑Âºè*/
 .select1{
     height:36px; width: 100%;font-size:14px;
     border-radius:0.4em;font-weight: 300;
@@ -44,7 +45,7 @@
     border: 1px solid #dce0e4!important;}
 .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px!important;}
 
-
+/*selectÊ†∑Âºèend*/
 .add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
 .add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
     padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
@@ -61,13 +62,13 @@
 .add_main .form-group .more{position:absolute;right:6%;top:12px;font-size:26px;color:#999}
 
 
-/*±Ìµ•—È÷§*/
+/*Ë°®ÂçïÈ™åËØÅ*/
 .select2-container--default .select2-selection--single{ height: 36px;
     border: 1px solid #ccc;}
 .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px;}
 .has-feedback label~.form-control-feedback {top: 2px;}
 
-/*¡–±Ì“≥√Ê—˘ Ω2*/
+/*ÂàóË°®È°µÈù¢Ê†∑Âºè2*/
 
 .main_list  a{ color: #676a6c;}
 .main_list {
@@ -137,13 +138,52 @@
 }
 
 
-/*œ‘ æ∏¸∂‡µƒœ¬¿≠º˝Õ∑∞¥≈•*/
-#leibie_list{position:fixed;top:0;right:-100%;width:100%;height:100%;z-index:99;background:rgba(0,0,0,.5)}
-.check_tit{line-height:40px;text-align: center}
-.leibie_left{float:left;width:20%;height:100%;}
-.leibie_box{float:right;width:80%;height:100%;background:#fff;}
-.leibie_box li{line-height:40px;text-indent:10px;border-bottom:1px solid #DCE0E4;position:relative}
-.leibie_box .more_li li{background:#F8F8F8;line-height:30px;padding:6px 10px 6px 15px;border:none;position:relative}
-.leibie_box .more_li i{position:absolute;right:10px; top:10px;}
+/*‰æßËæπÊ†èÊªëÂá∫ÈöêËóèÂ±Ç right:-100%;*/
+#sidepopup_layer{position:fixed;top:0;width:100%;height:100%;z-index:99;background:rgba(0,0,0,.5)}
+
+.box_hidden{float:left;width:10%;height:100%;}
+.box_content{float:right;width:90%;height:100%;background:#fff;}
+.box_content .title{ line-height: 40px; text-align: center;}
+.box_content li{line-height:40px;text-indent:10px;border-bottom:1px solid #DCE0E4;position:relative}
+.box_content .more_li li{background:#F8F8F8;line-height:30px;padding:6px 10px 6px 15px;border:none;position:relative}
+.box_content .more_li i{position:absolute;right:10px; top:10px;}
 .icon_return{display:inline-block;width:18px;height:18px;margin-top:10px}
 
+
+/*Êó∂Èó¥ËÆæÁΩÆ*/
+.time_select {overflow: hidden;}
+.time_select .left{width:82%; margin-top: 10px;}
+.time_select .right{width:15%}
+.time_select { overflow: hidden;}
+.time_select  input{ width: 100%; float: left; border:1px solid #dce0e4; border-radius: 4px;
+    line-height: 26px; height:36px;
+    padding-left:25px; font-size: 12px;
+    background:url("../../common/img/Calendar.png") no-repeat #fff 6px 9px;
+    background-size: 15px;}
+
+.detail_list ul li{ line-height: 18px;}
+.Time_slot p{ font-size: 12px;}
+.time_select .left2{width:72%; margin-top: 10px; float: left;}
+.time_select .right2{width:25%; margin-top: 10px; float: right;}
+
+/*radio_labelÈÄâÊã©Ê°Ü*/
+.course_student_type{overflow: hidden;}
+.radio_box{width:100%;height:20px;color:#333;margin: 5px 0;}
+.radio_label{position:relative;width:100px;}
+.radio_label .left{color:#333;}
+.radio_icon{width:16px;height:16px;margin:2px 5px;background:url("../../common/img/checkbox.png") no-repeat;background-size:100% auto; background-position:0 0}
+.radio_icon.check{background-position:0 -21px}
+.radio_label input{position:absolute;left:-999px;top:0;opacity:0}
+
+
+/*ÂàóË°®Ê†∑Âºè1*/
+.manage_list{
+    width:100%;margin-top:10px;overflow:hidden;
+    background:#fff;border-bottom:1px solid #DCE0E4;
+    box-shadow: 0 1px 4px #DCE0E4;}
+
+.manage_list div p:last-child{padding:0 8px 2px 8px;}
+.manage_list .all_list{ overflow: hidden;border-top:1px solid #dce0e4}
+.manage_list .all_list p{padding: 5px 8px 0 8px;}
+.manage_list .all_list p span{color: #9c9c9c; font-size: 12px;  }
+.manage_list .all_list .i_right{float:right;margin:10px 15px 0 0;font-size:26px;color:#ccc;}

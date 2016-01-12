@@ -39,7 +39,7 @@ class LaboratoryCotroller extends MscWeChatController
     /**
      * 待预约列表
      * @method  GET
-     * @url /msc/wechat/Laboratory/laboratory-list
+     * @url /msc/wechat/laboratory/laboratory-list
      * @access public
      * @param Request $Request
      * @return \Illuminate\View\View
@@ -52,9 +52,10 @@ class LaboratoryCotroller extends MscWeChatController
         $FloorData = $Floor->GetFloorData();
         $user = Auth::user();
         //$user->user_type == 2 代表学生
+
         if($user->user_type == 2){
             return view('msc::wechat.booking.booking_student',['FloorData'=>$FloorData]);
-        //$user->user_type == 1 代表老师
+        //$user->user_type == 1 代表老师$val
         }elseif($user->user_type == 1){
 
         }
