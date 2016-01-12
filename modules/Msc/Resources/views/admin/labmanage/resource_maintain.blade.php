@@ -129,33 +129,7 @@
                         var str = '';
                         if(res.code == 1){
                             var data = res.data.rows.LadDeviceList.data;
-                            if(res.data.total>0){
-                                var sum = Math.ceil(res.data.total/res.data.pagesize);
-                                var string = '';
-                                //TODO 拼凑上一页的按钮
-                                if(res.data.page == 1){
-                                    string += '<li class="disabled"><span>«</span></li>';
-                                }else{
-                                    string += '<li rel="prev" page="'+(res.data.page-1)+'" ><a href="javascript:void(0)">«</a></li>';
-                                }
-
-                                for(var i = 0;i<sum;i++){
-                                    if(res.data.page == (i+1)){
-                                        string += '<li class="active"><span>'+(i+1)+'</span></li>';
-                                    }else{
-                                        string += '<li page="'+(i+1)+'"><a href="javascript:void(0)">'+(i+1)+'</a></li>';
-                                    }
-                                }
-
-                                //TODO 拼凑下一页的按钮
-                                if(res.data.page == sum){
-                                    string += '<li class="disabled"><span>»</span></li>';
-                                }else{
-                                    string += '<li rel="next" page="'+(res.data.page+1)+'" ><a href="javascript:void(0)">»</a></li>';
-                                }
-
-                                $('.pagination').html(string);
-                            }
+                            $('#paginationOne').html(createPageDom(res.data.total,res.data.pagesize,res.data.page));
                             for(var i=0;i<data.length;i++){
                                 str += '<tr>' +
                                         '<td>#'+(i+1)+'</td>' +
@@ -177,7 +151,7 @@
             }
 
             //和实验室有关的 资源的翻页
-            $('.pagination').delegate('a','click',function(){
+            $('#paginationOne').delegate('a','click',function(){
                 var page = $(this).parents('li').attr('page');
                 updateLabDeviceList($('#lab_id').val(),page);
             })
@@ -247,11 +221,14 @@
 
             //设备添加方法
 
-            function add(cate_id){
+            function add(cate_id,page){
                 var url  = "{{route('msc.admin.LadMaintain.LaboratoryListData')}}";
                 url += '?keyword='+$('#keyword').val()+'&lab_id='+$('#lab_id').val()
                 if(cate_id){
                     url += '&devices_cate_id='+cate_id;
+                }
+                if(page){
+                    url += '&page='+page;
                 }
                 $.ajax({
                     type:"get",
@@ -268,7 +245,8 @@
                                     ' </li>'
                         })
                         $('#device-type').html(html);
-                        $(result.data.rows.list).each(function(){
+                        $('#paginationTwo').html(createPageDom(result.data.total,result.data.pagesize,result.data.page));
+                        $(result.data.rows.list).each(function($item){
                             list+='<tr>' +
                                     '<td>' +
                                     '<label class="check_label checkbox_input check_one"> ' +
@@ -276,17 +254,25 @@
                                     '</div> <input type="hidden" name="" value="'+this.id+'">' +
                                     '</label>' +
                                     '</td>' +
-                                    ' <td>'+this.id+'</td>' +
+                                    ' <td>#'+($item+1)+'</td>' +
                                     ' <td> <input type="number" class="deviceNum" value="1"></td>' +
                                     ' <td>'+this.name+'</td> ' +
                                     '<td>'+this.catename+'</td> ' +
                                     '</tr> '
                         })
                         $('#addition tbody').html(list);
+                        $('#addition').find('.check_real').removeClass('check');
                     }
                 })
 
             }
+
+            //资源的翻页
+            $('#paginationTwo').delegate('a','click',function(){
+                var page = $(this).parents('li').attr('page');
+                add('',page);
+            })
+
             //根据类别筛选资源列表
             $('#device-type').delegate('a','click',function(){
                 add($(this).attr('cate_id'))
@@ -355,6 +341,35 @@
                     return false;
                 }
             })
+
+            function createPageDom(total,pagesize,page){
+                var string = '';
+                if(total>0){
+                    var sum = Math.ceil(total/pagesize);
+                    //TODO 拼凑上一页的按钮
+                    if(page == 1){
+                        string += '<li class="disabled"><span>«</span></li>';
+                    }else{
+                        string += '<li rel="prev" page="'+(page-1)+'" ><a href="javascript:void(0)">«</a></li>';
+                    }
+
+                    for(var i = 0;i<sum;i++){
+                        if(page == (i+1)){
+                            string += '<li class="active"><span>'+(i+1)+'</span></li>';
+                        }else{
+                            string += '<li page="'+(i+1)+'"><a href="javascript:void(0)">'+(i+1)+'</a></li>';
+                        }
+                    }
+
+                    //TODO 拼凑下一页的按钮
+                    if(page == sum){
+                        string += '<li class="disabled"><span>»</span></li>';
+                    }else{
+                        string += '<li rel="next" page="'+(page+1)+'" ><a href="javascript:void(0)">»</a></li>';
+                    }
+                }
+                return  string;
+            }
         })
 
 
@@ -400,7 +415,7 @@
                     </div>
                     <input type="button" class="btn btn_pl btn-success right" data-toggle="modal" data-target="#myModal" disabled="disabled" value="新增设备" id="add_device">
                 </div>
-                <div class="ibox-content">
+                <div class="ibox-content overflow">
                     <table class="table table-striped" id="table-striped">
                         <thead>
                         <tr>
@@ -414,9 +429,11 @@
                         <tbody>
 
                         </tbody>
-                    </table>
+                    </table><div class="clear">
+
+                    </div>
                     <div class="btn-group pull-right">
-                        <ul class="pagination">
+                        <ul class="pagination" id="paginationOne">
 
                         </ul>
                     </div>
@@ -433,7 +450,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">添加设备</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body overflow">
             <div class="row" style="padding: 12px 0">
                 <div class="col-xs-12 col-md-12">
                     <form action="" method="get">
@@ -474,6 +491,14 @@
 
                 </tbody>
             </table>
+            <div class="overflow">
+                <div class="btn-group pull-right">
+                    <ul class="pagination" id="paginationTwo" style="margin: 0;">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="clear"></div>
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-2 right">
