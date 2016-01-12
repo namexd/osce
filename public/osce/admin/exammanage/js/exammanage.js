@@ -550,7 +550,7 @@ function examroom_assignment(){
                                                     '</select>'+
                                                 '</div>'+
                                             '</td>'+
-                                            '<td><a href="">发起邀请</a></td>'+
+                                            '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
                                         '</tr>';
                             }
                             //动态插入考场安排
@@ -631,6 +631,10 @@ function examroom_assignment(){
                                             }
                                         });
 
+                                      //动态往邀请中加入老师id
+                                      /*var invitation = $(select2_Object).parent().parent().next().find('a');
+                                      invitation.attr('href',invitation.attr('href')+'&teacher_id='+ids);*/
+
                                       //请求参数
                                       return {
                                         spteacher_id:ids,
@@ -642,8 +646,8 @@ function examroom_assignment(){
 
                                         //数据格式化
                                         var str = [];
-                                        for(var i in res.data){
-                                            str.push({id:res.data[i].id,text:res.data[i].name});
+                                        for(var i in res.data.rows){
+                                            str.push({id:res.data.rows[i].id,text:res.data.rows[i].name});
                                         }
 
                                         //加载入数据
@@ -653,12 +657,61 @@ function examroom_assignment(){
                                     }
 
                                 }
-                            });
+                            });/*.change(function(){
+                                alert($(this).val());
+                                var haven   =   $(this).attr('data-choose');
+                                $(this).attr('data-choose',$(this).val());
+
+                                // var thisElement = $(this);
+                                // var ids = [];
+                                // thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+                                //     var id = $(elem).attr('value');
+                                //     if(id==null){
+                                //         return;
+                                //     }else{
+                                //         ids.push(id);
+                                //     }
+                                // });
+                                // $.ajax({
+                                //     url:pars.spteacher_list,
+                                //     type:'get',
+                                //     data:{spteacher_id:ids,station_id:$(select2_Object).parent().attr('value')},
+                                //     success:function(res){
+                                //         var str = [];
+                                //         var ids = [];
+                                //         for(var i in res.data.rows){
+                                //             str.push({id:res.data.rows[i].id,text:res.data.rows[i].name});
+                                //         }
+                                //         thisElement.select2({data:str});
+                                        
+                                //     }
+                                // })
+                                //console.log($(this).parent().html());
+                            });*/
 
                         }
                     }
                 });
             });
+
+            
+            $('#exam-place').on('click','.invitaion-teacher',function(){
+
+                var thisElement = $(this);
+
+                //老师id
+                var ids = [];
+                thisElement.parent().prev().find('.teacher-box').find('.teacher').each(function(key,elem){
+                    var id = $(elem).attr('value');
+                    if(id==null){
+                        return;
+                    }else{
+                        ids.push(id);
+                    }
+                });
+                location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
+            })
+            
 
             //删除数据
             $(this).on("select2:unselect", function(e){
@@ -704,84 +757,6 @@ function examroom_assignment(){
                 }
                 
                 $('#examroom').find('tbody').attr('data',JSON.stringify(current));
-
-                //相同id不请求
-                /*if(rooms_flag){
-                    return;
-                }*/
-
-
-                //考站数据请求
-                /*$.ajax({
-                    type:'get',
-                    url:pars.url,
-                    data:{id:e.params.data.id},
-                    async:true,
-                    success:function(res){
-
-                        //记录数据
-                        var thisElement = $('#exam-place').find('tbody');
-                        var sp_no;
-                        if(thisElement.attr('data')==undefined){
-                            sp_no = '{}';
-                        }
-                        else{
-                            sp_no = JSON.parse(thisElement.attr('data'));
-                        }
-
-                        if(res.code!=1){
-                            layer.alert(res.message);
-                            return;
-                        }else{
-
-                            var res_data = res.data,
-                                html = '',
-                                data = [];
-
-                            //数据去重 删除数据
-                            for(var i in sp_no){
-                                for(var j in res_data){
-                                    if(sp_no[i].id==res_data[j].id){sp_no[i].flag--}
-                                }
-                                if(sp_no[i].flag!=0)data.push(sp_no[i]);
-                            }
-
-                            //准备dom
-                            for(var i in data){
-
-                                var teacher = '<option>==请选择==</option>';
-                                var typeValue = [0,'技能操作站','SP站'];
-
-                                var teacher = '<option>==请选择==</option>';
-                                for(var j in data[i].teacher){
-                                    teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
-                                }
-
-                                html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
-                                            '<td>'+data[i].name+'</td>'+
-                                            '<td>'+typeValue[data[i].type]+'</td>'+
-                                            '<td>'+
-                                                '<select class="form-control teacher-teach" name="station['+(parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
-                                            '</td>'+
-                                            '<td class="sp-teacher">'+
-                                                '<div class="teacher-box pull-left">'+
-                                                '</div>'+
-                                                '<div class="pull-right" value="'+(parseInt(i)+1)+'">'+
-                                                    '<select name="" class="teacher-list">'+
-                                                        '<option value="">==请选择==</option>'+
-                                                    '</select>'+
-                                                '</div>'+
-                                            '</td>'+
-                                            '<td><a href="">发起邀请</a></td>'+
-                                        '</tr>';
-                            }
-                            //动态插入考场安排
-                            thisElement.html(html);
-                            thisElement.attr('data',JSON.stringify(data));
-                        }
-                    }
-                });*/
 
             });
 
