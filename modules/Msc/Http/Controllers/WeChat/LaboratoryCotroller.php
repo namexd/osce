@@ -1,5 +1,6 @@
 <?php
 /**
+ * 微信端实验室控制器
  * Created by PhpStorm.
  * @author tangjun <tangjun@misrobot.com>
  * @date 2016-01-04 11:19
@@ -54,7 +55,7 @@ class LaboratoryCotroller extends MscWeChatController
         //$user->user_type == 2 代表学生
         if($user->user_type == 2){
             return view('msc::wechat.booking.booking_student',['FloorData'=>$FloorData]);
-        //$user->user_type == 1 代表老师
+            //$user->user_type == 1 代表老师
         }elseif($user->user_type == 1){
 
         }
@@ -144,7 +145,7 @@ class LaboratoryCotroller extends MscWeChatController
         $id = Input::get('id');
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,1);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
@@ -168,7 +169,7 @@ class LaboratoryCotroller extends MscWeChatController
         $id = Input::get('id');
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,2);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
