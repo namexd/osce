@@ -260,7 +260,7 @@ small.help-block{border-color: #ed5565!important;}
 .state_btn2{border-radius: 50px 0 0 50px;position: absolute;top: 10px;right: -2px;height: 30px;width: 60px;background-color: #ed5565;line-height: 30px;text-align: center;color: #fff;}
 .state_btn3{border-radius: 50px 0 0 50px;position: absolute;top: 10px;right: -2px;height: 30px;width: 60px;background-color: #c2c2c2;line-height: 30px;text-align: center;color: #fff;}
 /*展示标题*/
-.form_title{padding: 0 6% 0;}
+.form_title{padding: 0 8px 0;}
 /*表格标题*/
 .title_number{width: 20%}
 .title_name{width: 40%}
