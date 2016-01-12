@@ -45,22 +45,6 @@
     border: 1px solid #dce0e4!important;}
 .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px!important;}
 
-/*select样式end*/
-.add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
-.add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
-    padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
-.add_main .form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:16px;padding-left:95px}
-.add_main .form-group .xuan_type{padding-left:95px;text-align:left!important;color:#999}
-.add_main .form-group .set_text{padding-left:105px;text-align:left!important;color:#333;}
-.add_main .form-group .gn_txt{width:100%;min-height:24px;overflow:hidden;height:30px;line-height:24px;margin-bottom:10px;padding:6px 20px 6px  90px;font-size:16px;position:relative}
-.add_main .form-group .txt{width:100%;min-height:36px;line-height:24px;padding:6px 20px 6px  90px;
-    font-size:16px;word-wrap: break-word;}
-.more_txt{position:absolute;right:5px; top: 8px;width:18px;height:18px;line-height:18px;text-align: center}
-.add_main{width:100%;background:#fff;padding:0px 3% 0;position:relative;margin-bottom: 10px;border-bottom:1px solid #DCE0E4;}
-.add_main .form-group:last-child{ border-bottom: none;}
-.submit_box{margin-bottom:20px}
-.add_main .form-group .more{position:absolute;right:6%;top:12px;font-size:26px;color:#999}
-
 
 /*表单验证*/
 .select2-container--default .select2-selection--single{ height: 36px;
@@ -187,3 +171,20 @@
 .manage_list .all_list p{padding: 5px 8px 0 8px; color:#3c3c3c;}
 .manage_list .all_list p span{color: #9c9c9c; font-size: 12px;  }
 .manage_list .all_list .i_right{float:right;margin:10px 15px 0 0;font-size:26px;color:#ccc;}
+
+/*select样式2*/
+.add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
+.add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
+    padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
+.add_main .form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:16px;padding-left:95px}
+.add_main .form-group .xuan_type{padding-left:95px;text-align:left!important;color:#999}
+.add_main .form-group .set_text{padding-left:105px;text-align:left!important;color:#333;}
+.add_main .form-group .gn_txt{width:100%;min-height:24px;overflow:hidden;height:30px;line-height:24px;margin-bottom:10px;padding:6px 20px 6px  90px;font-size:16px;position:relative}
+.add_main .form-group .txt{width:100%;min-height:36px;line-height:24px;padding:6px 20px 6px  90px;
+    font-size:16px;word-wrap: break-word;}
+.more_txt{position:absolute;right:5px; top: 8px;width:18px;height:18px;line-height:18px;text-align: center}
+.add_main{width:100%;background:#fff;padding:0px 3% 0;position:relative;margin-bottom: 10px;border-bottom:1px solid #DCE0E4;}
+.add_main .form-group:last-child{ border-bottom: none;}
+.submit_box{margin-bottom:20px}
+.add_main .form-group .more{position:absolute;right:6%;top:12px;font-size:26px;color:#999}
+

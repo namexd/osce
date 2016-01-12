@@ -34,7 +34,6 @@
                 $("#sidepopup_layer").animate({right:"-100%"});
             });
             $("#submit_layer").click(function(){
-                alert(1);
                 $("#sidepopup_layer").animate({right:"-100%"});
             });
         }
@@ -79,13 +78,13 @@
                     if(result.code==1){
                         $(".manage_list").empty();
                         $(result.data.rows.ClassroomApplyList.data).each(function(){
-                            $(".manage_list").append('<div class="all_list">'
-                                    +'<a href="'+target_url+'?DateTime='+qj.DateTime+'&id='+this.id+'">'
+                            $(".manage_list").append('<a href="'+target_url+'?DateTime='+qj.DateTime+'&id='+this.id+'">'
+                                    +'<div class="all_list">'
                                     +'<div class="w85 left">'
                                     +'<p>'+this.floor.name+'</p>'
                                     +'<p><span>'+this.floor.address+'</span></p></div>'
                                     +'<div class="w15 right"><i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>'
-                                    +'</div></a></div>');
+                                    +'</div></div></a>');
                         })
                     }else{
 
