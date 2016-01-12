@@ -369,10 +369,10 @@ class LaboratoryController extends MscController {
         $where['location_id'] = $local_id;
         $user = Auth::user();
         $role_id = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
-        if(!$role_id){
-            return '没有该账户对应的角色';exit;
+        if($role_id){
+            $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role_id->role_id)->first();
         }
-        $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role_id->role_id)->first();
+
         if($role_name->name == '超级管理员'){
 
         }else{
@@ -624,9 +624,32 @@ class LaboratoryController extends MscController {
      * 实验室预约记录审核
      */
     public function getLabOrderList(LabApply $LabApply){
-        $LabOrderList = $LabApply->get_check_list();
-        dd($LabOrderList);
+        $type = Input::get('type');
+        $LabOrderList = $LabApply->get_check_list($type);
+       // dd($LabOrderList);
         return view('msc::admin.labmanage.booking_examine',[
+            'LabOrderList' => $LabOrderList,
         ]);
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月11日11:35:27
+     * 实验室预约记录审核
+     */
+    public function getLabOrderCheck(LabApply $LabApply){
+        $id = Input::get('id');
+        $type = Input::get('type');
+        if($id){
+            $do = $LabApply->where('id','=',$id)->update(['status'=>$type]);
+            if($do){
+                return redirect()->back()->withInput()->withErrors('操作成功');
+            }else{
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+        }else{
+            return redirect()->back()->withInput()->withErrors('系统异常');
+        }
     }
 }

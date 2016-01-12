@@ -30,8 +30,8 @@
             <div class="ibox-content">
                 <div class="tabs-container">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">待处理</a></li>
-                        <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">已处理</a></li>
+                        <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true" data="1">待处理</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false" data="2">已处理</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane active">
@@ -76,6 +76,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                            @if(!empty($LabOrderList))
+                                                @foreach($LabOrderList as $k=>$list)
                                                 <tr>
                                                     <td>
                                                         <label class="check_label checkbox_input check_one marb_none">
@@ -83,49 +85,41 @@
                                                             <input type="hidden" name="" value="">
                                                         </label>
                                                     </td>
-                                                    <td class="code">1</td>
-                                                    <td class="name">临床技能实验室</td>
+                                                    <td class="code">{{@$k+1}}</td>
+                                                    <td class="name">{{@$list->labname}}</td>
                                                     <td class="status">临床教学楼3楼3-13</td>
                                                     <td>
-                                                        2015-1-12
+                                                        {{@$list->apply_time}}
                                                     </td>
-                                                    <td class="code">
-                                                        <p>8:00-10:00</p>
-                                                        <p>10:00-12:00</p>
-                                                    </td>
-                                                    <td class="name">张三</td>
-                                                    <td class="status">2015-1-1</td>
+                                                    @if(empty(@$list->begintime) && empty(@$list->endtime))
+                                                        <td class="code">
+                                                            <p>8:00-10:00</p>
+                                                            <p>10:00-12:00</p>
+                                                        </td>
+                                                    @else
+                                                        <td class="code">
+                                                            <p>{{@$list->begintime}}</p>
+                                                            <p>{{@$list->endtime}}</p>
+                                                        </td>
+                                                    @endif
+                                                    <td class="name">{{@$list->name}}</td>
+                                                    <td class="status">{{@$list->created_at}}</td>
                                                     <td class="opera">
-                                                        <a class="state1 pass" style="text-decoration: none"><span>通过</span></a>
-                                                        <a class="state2 refuse" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>不通过</span></a>
+                                                        @if($list->status == 1)
+                                                            <a class="state1 pass" style="text-decoration: none" data-id="{{@$list->id}}"><span>通过</span></a>
+                                                            <a class="state2 refuse" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>不通过</span></a>
+                                                            @else
+                                                                @if($list->status == 2)
+                                                                    <a class="state1" style="text-decoration: none" data-id="{{@$list->id}}"><span>已通过</span></a>
+                                                                    @else
+                                                                         <a class="state2 refuse" style="text-decoration: none" data-toggle="modal"><span>未通过</span></a>
+                                                                    @endif
+                                                        @endif
                                                         <a class="state1 detail" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>详情</span></a>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label class="check_label checkbox_input check_one marb_none">
-                                                            <div class="check_real check_icon display_inline"></div>
-                                                            <input type="hidden" name="" value="">
-                                                        </label>
-                                                    </td>
-                                                    <td class="code">1</td>
-                                                    <td class="name">临床技能实验室</td>
-                                                    <td class="status">临床教学楼3楼3-13</td>
-                                                    <td>
-                                                        2015-1-12
-                                                    </td>
-                                                    <td class="code">
-                                                        <p>8:00-10:00</p>
-                                                        <p>10:00-12:00</p>
-                                                    </td>
-                                                    <td class="name">张三</td>
-                                                    <td class="status">2015-1-1</td>
-                                                    <td class="opera">
-                                                        <a class="state1 pass" style="text-decoration: none"><span>通过</span></a>
-                                                        <a class="state2 refuse" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>不通过</span></a>
-                                                        <a class="state1 detail" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>详情</span></a>
-                                                    </td>
-                                                </tr>
+                                                @endforeach
+                                            @endif
                                             </tbody>
                                         </table>
                                     </form>
@@ -165,46 +159,50 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td class="code">1</td>
-                                                <td class="name">临床技能实验室</td>
-                                                <td class="status">临床教学楼3楼3-13</td>
-                                                <td>
-                                                    2015-1-12
-                                                </td>
-                                                <td class="code">
-                                                    <p>8:00-10:00</p>
-                                                    <p>10:00-12:00</p>
-                                                </td>
-                                                <td class="name">张三</td>
-                                                <td class="status">2015-1-1</td>
-                                                <td class="opera">
-                                                    <span class="state1">已通过</span>
-                                                </td>
-                                                <td class="opera">
-                                                    <a class="state1 detail" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>详情</span></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="code">1</td>
-                                                <td class="name">临床技能实验室</td>
-                                                <td class="status">临床教学楼3楼3-13</td>
-                                                <td>
-                                                    2015-1-12
-                                                </td>
-                                                <td class="code">
-                                                    <p>8:00-10:00</p>
-                                                    <p>10:00-12:00</p>
-                                                </td>
-                                                <td class="name">张三</td>
-                                                <td class="status">2015-1-1</td>
-                                                <td class="opera">
-                                                    <span class="state2">未通过</span>
-                                                </td>
-                                                <td>
-                                                    <a class="state1 detail" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>详情</span></a>
-                                                </td>
-                                            </tr>
+                                            @if(!empty($LabOrderList))
+                                                @foreach($LabOrderList as $k=>$list)
+                                                    <tr>
+                                                        <td>
+                                                            <label class="check_label checkbox_input check_one marb_none">
+                                                                <div class="check_real check_icon display_inline"></div>
+                                                                <input type="hidden" name="" value="">
+                                                            </label>
+                                                        </td>
+                                                        <td class="code">{{@$k+1}}</td>
+                                                        <td class="name">{{@$list->labname}}</td>
+                                                        <td class="status">临床教学楼3楼3-13</td>
+                                                        <td>
+                                                            {{@$list->apply_time}}
+                                                        </td>
+                                                        @if(empty(@$list->begintime) && empty(@$list->endtime))
+                                                            <td class="code">
+                                                                <p>8:00-10:00</p>
+                                                                <p>10:00-12:00</p>
+                                                            </td>
+                                                        @else
+                                                            <td class="code">
+                                                                <p>{{@$list->begintime}}</p>
+                                                                <p>{{@$list->endtime}}</p>
+                                                            </td>
+                                                        @endif
+                                                        <td class="name">{{@$list->name}}</td>
+                                                        <td class="status">{{@$list->created_at}}</td>
+                                                        <td class="opera">
+                                                            @if($list->status == 1)
+                                                                <a class="state1 pass" style="text-decoration: none" data-id="{{@$list->id}}"><span>通过</span></a>
+                                                                <a class="state2 refuse" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>不通过</span></a>
+                                                            @else
+                                                                @if($list->status == 2)
+                                                                    <a class="state1" style="text-decoration: none" data-id="{{@$list->id}}"><span>已通过</span></a>
+                                                                @else
+                                                                    <a class="state2 refuse" style="text-decoration: none" data-toggle="modal"><span>未通过</span></a>
+                                                                @endif
+                                                            @endif
+                                                            <a class="state1 detail" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>详情</span></a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                             </tbody>
                                         </table>
                                     </form>

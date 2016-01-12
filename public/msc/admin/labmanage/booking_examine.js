@@ -35,11 +35,21 @@ function booking_examine(){
     });
     //通过弹窗
     $(".pass").click(function(){
-        var url="";
+        var id = $(this).attr('data-id');
+        var url="/msc/admin/laboratory/lab-order-check?id="+id+"&type=2";
         layer.confirm("确定通过预约？", {
             btn: ['确定','取消'] //按钮
         }, function(){
             window.location.href=url;
+        });
+    });
+    //tab切换传值
+    $('.nav-tabs li').click(function(){
+        var type = $(this).children('a').attr('data');
+        $.ajax({
+            type: "GET",
+            url: "/msc/admin/laboratory/lab-order-list",
+            data: {type:type},
         });
     });
     //不通过弹窗
