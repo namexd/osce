@@ -383,7 +383,7 @@ class LaboratoryController extends MscController {
             $labArr[$k]['floor'] = $v;
             $this->start_sql(1);
             $labArr[$k]['lab'] = Laboratory::where($where)->get();
-            //$this->end_sql(1);
+            $this->end_sql(1);
         }
         return $labArr;
     }

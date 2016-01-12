@@ -46,10 +46,14 @@ function booking_examine(){
     //tab切换传值
     $('.nav-tabs li').click(function(){
         var type = $(this).children('a').attr('data');
+        var url="/msc/admin/laboratory/lab-order-list?type="+type;
         $.ajax({
-            type: "GET",
-            url: "/msc/admin/laboratory/lab-order-list",
+            type: "POST",
+            url: "{{route(')}}",
             data: {type:type},
+            success: function(msg){
+                alert( "Data Saved: " + msg );
+            }
         });
     });
     //不通过弹窗
