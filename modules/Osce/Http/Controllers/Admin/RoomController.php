@@ -127,6 +127,11 @@ class RoomController extends CommonController
     public function postEditRoom(Request $request)
     {
         //验证数据，暂时省略
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'name' => 'required',
+            'description' => 'required'
+        ]);
 
         $formData = $request->only('name', 'description');
         $id = $request->input('id');
@@ -177,6 +182,14 @@ class RoomController extends CommonController
      */
     public function postCreateRoom(Request $request, Room $room)
     {
+        //验证
+        $this->validate($request, [
+            'name' => 'required',
+            'nfc' => 'required',
+            'address' => 'required',
+            'code' => 'required',
+            'description' => 'required'
+        ]);
         $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
 
         DB::connection('osce_mis')->beginTransaction();
@@ -207,7 +220,10 @@ class RoomController extends CommonController
     public function postDelete(Request $request, Room $room)
     {
         try {
-        //验证略
+            //验证略
+            $this->validate($request, [
+                'id' => 'required|integer'
+            ]);
             DB::connection('osce_mis')->beginTransaction();
             $id = $request->input('id');
             if (!$id) {

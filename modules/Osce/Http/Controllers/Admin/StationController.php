@@ -105,12 +105,23 @@ class StationController extends CommonController
         try {
             DB::connection('osce_mis')->beginTransaction();
             //验证略
+            $this->validate($request, [
+                'name' => 'required',
+                'type' => 'required|integer',
+                'mins' => 'required|integer',
+                'subject_id' => 'required|integer',
+                'description' => 'required',
+                'code' => 'required',
+                'vcr_id' => 'required|integer',
+                'case_id' => 'required|integer',
+                'room_id' => 'required|integer',
+            ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'description', 'code');
             $vcrId = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
-
+            //将参数放进一个数组中，方便传送
             $formData = [$stationData, $vcrId, $caseId, $roomId];
 
             //将当前时间限定的值放入session
@@ -177,9 +188,21 @@ class StationController extends CommonController
     public function postEditStation(Request $request, Station $model)
     {
         //验证数据，暂时省略
+        $this->validate($request, [
+            'name' => 'required',
+            'type' => 'required|integer',
+            'mins' => 'required|integer',
+            'subject_id' => 'required|integer',
+            'description' => 'required',
+            'code' => 'required',
+            'vcr_id' => 'required|integer',
+            'case_id' => 'required|integer',
+            'room_id' => 'required|integer',
+            'id' => 'required|integer',
+        ]);
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'type', 'mins', 'subject_id');
+            $placeData = $request->only('name', 'type', 'mins', 'subject_id', 'description', 'code');
             $vcrId = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
