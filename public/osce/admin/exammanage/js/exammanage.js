@@ -738,7 +738,7 @@ function examroom_assignment(){
         var html = '<tr class="pid-'+index+'">'+
                     '<td>'+index+'</td>'+
                     '<td width="498">'+
-                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+']"></select>'+
+                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+'][]"></select>'+
                     '</td>'+
                     '<td class="necessary">必考</td>'+
                     '<td>'+
