@@ -47,7 +47,6 @@
                 <h5 class="title-label">考试安排</h5>
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form">
             <div class="panel blank-panel">
                 <div class="panel-heading">
                     <div class="panel-options">
@@ -61,18 +60,23 @@
                     </div>
                 </div>
                 <div class="row ope-box">
-                    <div class="input-group search pull-left">
-                        <input type="text" placeholder="姓名、学号、身份证、电话" class="input-md form-control">
+                    <form action="{{route('osce.admin.exam.getExamineeManage')}}" method="get">
+
+                        <div class="input-group search pull-left">
+                            <input type="text" placeholder="姓名、学号、身份证、电话" class="form-control" name="keyword">
+                            <input type="hidden" name="id" value="{{$id}}">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-md btn-primary" id="search">搜索</button>
+                            <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                         </span>
-                    </div>
+                        </div>
+                    </form>
                     <div class="operate pull-right">
                         <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}">
                             <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
                         </a>
+                        导入考生
                         <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
-                            <input type="file" name="topic" id="file0" multiple="multiple" />
+                            <input type="file" name="student" id="file0" multiple="multiple" />
                         </a>
                     </div>
                 </div>
@@ -111,14 +115,11 @@
 
 
             </div>
-        </form>
     </div>
 @stop{{-- 内容主体区域 --}}
 
 @section('only_js')
-
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
-
 @stop
