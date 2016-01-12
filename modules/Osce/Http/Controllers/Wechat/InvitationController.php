@@ -140,20 +140,32 @@ class InvitationController extends CommonController
         }
     }
 
-
-    //邀请详情页面
+    /**
+     *sp邀请详情页面
+     * @api GET /osce/wechat/invitation/msg
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id        教师id(必须的)
+     * @return   view
+     ** @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getMsg()
     {
-        $id = intval(Input::get('id'));
-         $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt')->first();
-        $caseId =ExamSpTeacher::where('teacher_id','=',$id)->select('case_id')->first()->case_id;
-        $caseModel =CaseModel:: where('id','=',$caseId)->select('name')->first()->name;
+        $id = intval(Input::get('id'));//老师的id
+          $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt')->first();
+         $caseId =ExamSpTeacher::where('teacher_id','=',$id)->select('case_id')->first()->case_id;
+         $caseModel =CaseModel:: where('id','=',$caseId)->select('name')->first()->name;
 //         dd($inviteModel->name);
         $list=[
-            'exam_name' =>$inviteModel->name,
-            'begin_dt' =>$inviteModel->begin_dt,
-            'end_dt' =>$inviteModel->end_dt,
-            'case_name' =>$caseModel,
+             'exam_name' =>$inviteModel->name,
+             'begin_dt' =>$inviteModel->begin_dt,
+             'end_dt' =>$inviteModel->end_dt,
+             'case_name' =>$caseModel,
         ];
 //          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [

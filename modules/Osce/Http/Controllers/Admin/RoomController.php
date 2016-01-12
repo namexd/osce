@@ -40,10 +40,12 @@ class RoomController extends CommonController
             'keyword' => 'sometimes',
             'type' => 'sometimes|integer'
         ]);
+
         //获取各字段
         $keyword = e($request->input('keyword', ''));
         $type = $request->input('type', 1);
         $id = $request->input('id', '');
+//        dd($type);
         //获取当前场所的类
         list($area,$data) = $room->showRoomList($keyword, $type, $id);
 //        dd($data);

@@ -36,7 +36,37 @@
     <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
 
+        $(function(){
+             $('.agree').click(function(){
+                   var id =$(this).attr('data');
+                   var status = $(this).val();
+                   var url ='/osce/wechat/invitation/invitation-respond';
+                 $.ajax({
+                     url:url,
+                     type:get,
+                     dataType:"json",
+                     data:{
+                         id:id,
+                         status:status,
+                     },
+                     success:function(result){
+                         if(resule.code==1){
+                             location.reload();
+                         }else{
+                             layer.alert((result.message).split(":")[1],function(){
+                                 location.reload();
+                             })
+                         }
 
+                     }
+
+
+
+                 })
+             })
+
+
+        })
 
     </script>
 
@@ -70,8 +100,8 @@
         </ul>
         <p>希望你能协助考核，如有疑问，请致电：028 - 87653489  张老师</p>
         <div class="operate">
-            <button class="btn1 pull-left agree" type="button" value="1">同意</button>
-            <button class="btn1 pull-right rejected" type="button" value="2">拒绝</button>
+            <button class="btn1 pull-left agree" type="button" value="1"  data={{$id}}>同意</button>
+            <button class="btn1 pull-right rejected" type="button" value="2" data={{$id}} >拒绝</button>
         </div>
     </div>
 @stop
