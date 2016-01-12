@@ -7,6 +7,7 @@
  */
 namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\InformTrain;
@@ -286,11 +287,15 @@ class TrainController extends  CommonController{
          if(!$uploadDir){
              mkdir('uploads',777,true);
          }
-         if (!in_array($file_ex, array('doc', 'xlsx'))) return \Redirect::to('/')->withErrors('上传类型为doc,xlsx');
-         $newname=date('Ymd').'-'.$fileName.$userId;
+         if (!in_array($file_ex, array('doc', 'xlsx'))) return \Redirect::to('/')->withErrors('上传类型不合法');
+         $newname=date('Ymdhis').'-'.$fileName.$userId;
          if(\Request::file('file')){
-             \Request::file()->move($uploadDir,$newname);
+            $result= \Request::file()->move($uploadDir,$newname);
+            if(!$result){
+                return \Response::json('false',400);
+            }
          }
          $path[]=\Input::file('file')->getRealPath();
+         return $path;
      }
 }
