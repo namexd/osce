@@ -71,7 +71,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -99,6 +99,7 @@
                 <div class="row">
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
+                            <input type="hidden" name="id" value="{{$id}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 

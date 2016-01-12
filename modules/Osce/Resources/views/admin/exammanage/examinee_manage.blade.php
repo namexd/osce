@@ -30,22 +30,23 @@
         .operate button:first-child{
             margin-right: 20px;
         }
+        .delete{
+            cursor: pointer;
+        }
     </style>
 @stop
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'examinee_manage','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}','excel':'{{route('osce.admin.exam.postImportStudent')}}'}"/>
+    <input type="hidden" id="parameter" value="{'pagename':'examinee_manage',
+    'background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}',
+    'excel':'{{route('osce.admin.exam.postImportStudent')}}','deleteUrl':'{{route('osce.admin.exam.getDelStudent')}}'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考试安排</h5>
             </div>
-            <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-            </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form">
             <div class="panel blank-panel">
                 <div class="panel-heading">
                     <div class="panel-options">
@@ -59,18 +60,23 @@
                     </div>
                 </div>
                 <div class="row ope-box">
-                    <div class="input-group search pull-left">
-                        <input type="text" placeholder="姓名、学号、身份证、电话" class="input-md form-control">
+                    <form action="{{route('osce.admin.exam.getExamineeManage')}}" method="get">
+
+                        <div class="input-group search pull-left">
+                            <input type="text" placeholder="姓名、学号、身份证、电话" class="form-control" name="keyword">
+                            <input type="hidden" name="id" value="{{$id}}">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-md btn-primary" id="search">搜索</button>
+                            <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                         </span>
-                    </div>
+                        </div>
+                    </form>
                     <div class="operate pull-right">
                         <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}">
                             <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
                         </a>
+                        导入考生
                         <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
-                            <input type="file" name="topic" id="file0" multiple="multiple" />
+                            <input type="file" name="student" id="file0" multiple="multiple" />
                         </a>
                     </div>
                 </div>
@@ -94,7 +100,8 @@
                             <td>{{$item->idcard}}</td>
                             <td>{{$item->mobile}}</td>
                             <td>
-                                <a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                {{--<a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>--}}
+                                <span class="read  state2 delete" sid="{{$item->id}}" examid="{{$id}}"><i class="fa fa-trash-o fa-2x"></i></span>
                             </td>
                         </tr>
                     @empty
@@ -108,14 +115,11 @@
 
 
             </div>
-        </form>
     </div>
 @stop{{-- 内容主体区域 --}}
 
 @section('only_js')
-
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
-
 @stop

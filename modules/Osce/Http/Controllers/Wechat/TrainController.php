@@ -49,22 +49,7 @@ class TrainController extends  CommonController{
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
-        $data=[];
-        foreach($list as $item){
-          $data[]=[
-              'id' =>$item->id,
-              'name' =>$item->name,
-              'address' =>$item->address,
-              'begin_dt' =>$item->begin_dt,
-              'end_dt' =>$item->end_dt,
-              'teacher' =>$item->teacher,
-              'content' =>$item->content,
-              'status' =>$item->status,
-              'attachments' =>$item->attachments,
-              'create_user_id' =>$item->create_user_id,
-          ];
-        }
-        $data['attachments']=unserialize($data['attachments']);
+
         return response()->json(
             $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
         );
@@ -272,30 +257,69 @@ class TrainController extends  CommonController{
         );
     }
 
+    /**
+     *上传文件
+     * @method GET
+     * @url /osce/wechat/train/upload-file
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
      public function postUploadFile(){
-        $user=Auth::user;
-        $userId=$user->id;
-         $file=\Input::file('file');
-         if(\Input::hasFile('file')){
-             return array();
-         }
+         $user=Auth::user();
+         $userId=$user->id;
+         $file=\Input::file('doc');
+
          $fileName=$file->getFilename();
          $file_ex=$file->getClientOriginalExtension();
 //         $file_size=round($file->getSize() /1024);
 //         $file_mime=$file->getMimeType();
-         $uploadDir='uploads';
-         if(!$uploadDir){
+         $uploadDir='/uploads/doc';
+         if(!dir($uploadDir)){
              mkdir('uploads',777,true);
          }
-         if (!in_array($file_ex, array('doc', 'xlsx'))) return \Redirect::to('/')->withErrors('上传类型不合法');
+         if (!in_array($file_ex, array('doc', 'xlsx'))) {
+             return \Redirect::to('/')->withErrors('上传类型不合法');
+         }
          $newname=date('Ymdhis').'-'.$fileName.$userId;
-         if(\Request::file('file')){
-            $result= \Request::file()->move($uploadDir,$newname);
+         if(\Request::file('doc')){
+            $result= \Request::file()->move(base_path().$uploadDir.'/',$newname);
             if(!$result){
                 return \Response::json('false',400);
             }
          }
-         $path[]=\Input::file('file')->getRealPath();
+         $path['doc']=\Input::file('doc')->getRealPath();
+
+         $file=\Input::file('xlsx');
+         $fileName=$file->getFilename();
+         $file_ex=$file->getClientOriginalExtension();
+         $uploadDir='/uploads/xlsx';
+         if(!dir($uploadDir)){
+             mkdir('uploads',777,true);
+         }
+         if (!in_array($file_ex, array('doc', 'xlsx'))) {
+             return \Redirect::to('/')->withErrors('上传类型不合法');
+         }
+         $newname=date('Ymdhis').'-'.$fileName.$userId;
+         if(\Request::file('xlsx')){
+             $result= \Request::file()->move(base_path().$uploadDir.'/',$newname);
+             if(!$result){
+                 return \Response::json('false',400);
+             }
+         }
+         $path['xlsx']=\Input::file('xlsx')->getRealPath();
          return $path;
      }
 }
