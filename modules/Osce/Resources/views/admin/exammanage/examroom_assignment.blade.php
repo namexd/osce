@@ -81,6 +81,7 @@
                 
             </div>
         </div>
+    <div class="container-fluid ibox-content">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
@@ -134,7 +135,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">考场安排</label>
+                                <label class="col-sm-2 control-label">监考老师</label>
                                 <div class="col-sm-10">
                                     <table class="table table-bordered" id="exam-place">
                                         <thead>
@@ -159,7 +160,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <button class="btn btn-white" type="button">取消</button>
+                                    <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 
                                 </div>
                             </div>
@@ -171,6 +172,7 @@
             </div>
 
         </div>
+    </div>
 </div>
 @stop{{-- 内容主体区域 --}}
 

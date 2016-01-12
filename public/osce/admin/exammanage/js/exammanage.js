@@ -509,16 +509,16 @@ function examroom_assignment(){
                                 }*/
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                             '</td>'+
                                             '<td class="sp-teacher">'+
                                                 '<div class="teacher-box pull-left">'+
                                                 '</div>'+
-                                                '<div class="pull-right">'+
+                                                '<div class="pull-right" value="'+(parseInt(i)+1)+'">'+
                                                     '<select name="" class="teacher-list js-example-basic-multiple">'+
                                                         '<option>==请选择==</option>'+
                                                     '</select>'+
@@ -580,7 +580,7 @@ function examroom_assignment(){
 
 
                             /**
-                             * 老师类型选择
+                             * sp老师选择
                              * @author mao
                              * @version 1.0
                              * @date    2016-01-11
@@ -590,7 +590,9 @@ function examroom_assignment(){
                                 ajax:{
                                     url: pars.teacher_list,
                                     delay:0,
-                                    data: function (params) {
+                                    data: function (elem) {
+
+                                        console.log($(this));
 
                                         var ids = [];
                                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
@@ -681,21 +683,24 @@ function examroom_assignment(){
                             for(var i in data){
 
                                 var teacher = '<option>==请选择==</option>';
+                                var typeValue = [0,'技能操作站','SP站'];
+
+                                var teacher = '<option>==请选择==</option>';
                                 for(var j in data[i].teacher){
                                     teacher += '<option value="'+data[i].teacher[j].id+'">'+data[i].teacher[j].name+'</option>'
                                 }
 
                                 html += '<tr>'+
-                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" value="'+data[i].id+'"/></td>'+
+                                            '<td>'+(parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control teacher-teach" name="select['+data[i].id+']">'+teacher+'</select>'+
+                                                '<select class="form-control teacher-teach" name="station['+(parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                             '</td>'+
                                             '<td class="sp-teacher">'+
                                                 '<div class="teacher-box pull-left">'+
                                                 '</div>'+
-                                                '<div class="pull-right">'+
+                                                '<div class="pull-right" value="'+(parseInt(i)+1)+'">'+
                                                     '<select name="" class="teacher-list">'+
                                                         '<option value="">==请选择==</option>'+
                                                     '</select>'+
@@ -731,7 +736,7 @@ function examroom_assignment(){
         var html = '<tr class="pid-'+index+'">'+
                     '<td>'+index+'</td>'+
                     '<td width="498">'+
-                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="select['+index+']"></select>'+
+                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+']"></select>'+
                     '</td>'+
                     '<td class="necessary">必考</td>'+
                     '<td>'+
@@ -844,6 +849,7 @@ function examroom_assignment(){
         var thisElement = $(this);
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
+                '<input type="hidden" name="name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
                 '<div class="pull-left">'+$teacher+'</div>'+
                 '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
