@@ -297,6 +297,7 @@ class Teacher extends CommonModel
     public function editInvigilator($id,$name,$mobile,$type){
         //教务人员信息变更
         $teacher    =   $this   ->  find($id);
+
         if(!$teacher)
         {
             throw new   \Exception('没有找到该教务人员');
@@ -321,7 +322,7 @@ class Teacher extends CommonModel
         }
         if($userInfo->mobile!==$mobile)
         {
-            $userInfo   ->mobile  =$name;
+            $userInfo   ->mobile  =$mobile;
         }
         if(!$userInfo->save())
         {
@@ -357,7 +358,7 @@ class Teacher extends CommonModel
         }
         if($userInfo->mobile!==$mobile)
         {
-            $userInfo   ->mobile  =$name;
+            $userInfo   ->mobile  =$mobile;
         }
         if(!$userInfo->save())
         {
