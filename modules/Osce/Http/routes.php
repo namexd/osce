@@ -145,7 +145,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/intelligence-eaxm-plan', ['uses'=>'ExamController@getIntelligenceEaxmPlan','as'=>'osce.admin.exam.getIntelligenceEaxmPlan']);
 
 		//sp
-		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getStationList','as'=>'osce.admin.spteacher.getShow']);
+		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getShow','as'=>'osce.admin.spteacher.getShow']);
 		Route::get('/spteacher/invitation-index', ['uses'=>'SpteacherController@getInvitationIndex','as'=>'osce.admin.spteacher.getInvitationIndex']);
 		Route::get('/spteacher/invitation-add', ['uses'=>'SpteacherController@getInvitationAdd','as'=>'osce.admin.spteacher.getInvitationAdd']);
 

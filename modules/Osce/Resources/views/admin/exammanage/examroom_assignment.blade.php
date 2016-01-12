@@ -88,7 +88,7 @@
                     <ul class="nav nav-tabs">
                         <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
                         <li class="active"><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
-                        <li class=""><a href="{{route('osce.admin.spteacher.getInvitationIndex',['id'=>$id])}}">邀请SP</a></li>
+                        <li class=""><a href="{{route('osce.admin.spteacher.getShow',['id'=>$id])}}">邀请SP</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="#">智能排考</a></li>
                     </ul>
@@ -132,7 +132,7 @@
                                                 <td width="498">
                                                     <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
                                                         @forelse($item as $value)
-                                                        <option value="{{$value->room_id}}" selected="selected">{{$value->name}}</option>
+                                                            <option value="{{$value->id}}" selected="selected">{{$value->name}}</option>
                                                         @empty
                                                         @endforelse
                                                     </select>
@@ -171,7 +171,7 @@
                                         </thead>
                                         <tbody index="{{count($examStationData)}}">
                                         @forelse($examStationData as $key => $item)
-                                            <tr class="parent-id-'+e.params.data.id+'">
+                                            <tr class="parent-id-{{$item->id}}">
                                                 <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->id}}"/></td>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
@@ -195,7 +195,7 @@
                                                             <div class="pull-left"><i class="fa fa-times"></i></div>
                                                         </div>
                                                     </div>
-                                                    <div class="pull-right" value="'+(parseInt(i)+1)+'">
+                                                    <div class="pull-right" value="{{$key+1}}">
                                                         <select name="" class="teacher-list js-example-basic-multiple">
                                                             <option>==请选择==</option>
                                                         </select>
