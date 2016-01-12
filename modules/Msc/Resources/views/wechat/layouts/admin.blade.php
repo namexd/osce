@@ -5,11 +5,6 @@
 @section('head_css')
     <link href="{{asset('msc/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
     <link href="{{asset('msc/wechat/common/css/font-awesome/css/font-awesome.css')}}" rel="stylesheet"/>
-    <link href="{{asset('msc/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
-    <link href="{{asset('msc/admin/plugins/css/style.min.css?v=3.0.0')}}" rel="stylesheet"> <!--H+模板通用CSS未使用-->
-    <link href="{{asset('msc/wechat/html5-boilerplate/dist/css/normalize.css')}}" rel="stylesheet"/>
-	<link href="{{asset('msc/wechat/html5-boilerplate/dist/css/main.css')}}" rel="stylesheet"/>
-	<link href="{{asset('msc/wechat/jquery-confirm/jquery-confirm.css')}}"  rel="stylesheet"/>
 	<link href="{{asset('msc/wechat/common/css/commons.css')}}"  rel="stylesheet"/>
     <link href="{{asset('msc/wechat/common/css/table_commons.css')}}"  rel="stylesheet"/>
 @stop
@@ -19,17 +14,9 @@
     <script src="{{asset('msc/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
 
-    <script src="{{asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>   <!--菜单插件未使用-->
-    <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未使用-->
-    <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script><!--弹框插件未使用-->
-	<script src="{{asset('msc/wechat/common/js/jquery.cookie.js')}}"></script><!--会话添加插件插件未使用-->
-
-	<script src="{{asset('msc/wechat/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js')}}"></script>
-	<script src="{{asset('msc/wechat/jquery-confirm/jquery-confirm.js')}}"></script>
-	<script src="{{asset('msc/wechat/common/js/iscroll.js')}}"></script>
+    <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未-->
+    <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script><!--弹框插件-->
   	<script src="{{asset('msc/wechat/validate/jquery.validate.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/validate/jquery.metadata.js')}}"></script>
-    <script src="{{asset('msc/wechat/validate/messages_zh.min.js')}}"></script>
     <script type="text/javascript">
         var totalpages="0";
         var　page_height = "0";
