@@ -15,6 +15,7 @@ use Modules\Osce\Entities\Exam;
 
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\Flows;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
@@ -638,9 +639,9 @@ class ExamController extends CommonController
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
         $examRoomData = $examRoom -> getRoomListByExam($exam_id);
+
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
-
 
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
@@ -664,6 +665,21 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
+        try{
+            //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+            $exam_id        = $request  ->  get('id');
+            $roomData       = $request  ->  get('room');        //考场数据
+            $stationData    = $request  ->  get('station');     //考站数据
+
+            $flows = new Flows();
+            if(!$result = $flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
+                throw new \Exception('考场安排保存失败，请重试！');
+            }
+            return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
+
+        } catch(\Exception $ex){
+            return redirect()->back()->withError($ex);
+        }
 
     }
 
