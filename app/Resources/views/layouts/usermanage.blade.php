@@ -16,7 +16,7 @@
 <script src="{{asset('msc/admin/plugins/js/jquery-ui-1.10.4.min.js')}}"></script>
 <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
 <script src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
-<!-- ×Ô¶¨Òåjs -->
+<!-- ï¿½Ô¶ï¿½ï¿½ï¿½js -->
 <script src="{{asset('msc/wechat/jquery-confirm/jquery-confirm.js')}}"></script>
 @stop
 @section('head_style')
@@ -29,13 +29,13 @@
 @section('body')
 
 @section('content')
-@show{{-- ÄÚÈÝÖ÷ÌåÇøÓò --}}
+@show{{-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ --}}
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             @section('layer_content')
-            @show{{-- ÄÚÈÝÖ÷ÌåÇøÓò --}}
+            @show{{-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ --}}
         </div>
     </div>
 </div>
@@ -43,34 +43,34 @@
 @show
 
 @section('footer_js')
-<!--È«¾ÖCss×Ô¶¨Òå²¿·Ö-->
+<!--È«ï¿½ï¿½Cssï¿½Ô¶ï¿½ï¿½å²¿ï¿½ï¿½-->
 <link href="{{asset('msc/admin/css/common.css')}}" rel="stylesheet">
-<!-- È«¾Öjs -->
+<!-- È«ï¿½ï¿½js -->
 
 <script src="{{asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
 <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 
-<!-- ×Ô¶¨Òåjs -->
+<!-- ï¿½Ô¶ï¿½ï¿½ï¿½js -->
 <script src="{{asset('msc/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
 <script type="text/javascript" src="{{asset('msc/admin/plugins/js/contabs.min.js')}}"></script>
 <script src="{{asset('msc/admin/plugins/js/content.min.js')}}"></script>
-<!-- µÚÈý·½²å¼þ -->
+<!-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -->
 <script src="{{asset('msc/admin/plugins/js/plugins/pace/pace.min.js')}}"></script>
 
-@show{{-- footerÇøÓòjavscript½Å±¾ --}}
+@show{{-- footerï¿½ï¿½ï¿½ï¿½javscriptï¿½Å±ï¿½ --}}
 
-{{-- ÒýÈë¶îÍâÒÀÀµJS²å¼þ --}}
+{{-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½JSï¿½ï¿½ï¿½ --}}
 <script type="text/javascript">
     $(document).ready(function(){
         <!--highlight main-sidebar-->
         @section('filledScript')
-        @show{{-- ÔÚdocument ready ÀïÃæÌî³äÒ»Ð©JS´úÂë --}}
+        @show{{-- ï¿½ï¿½document ready ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ð©JSï¿½ï¿½ï¿½ï¿½ --}}
     });
 
 </script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('jk/js/jk.js') }}" type="text/javascript"></script>
 @section('extraSection')
-@show{{-- ²¹³ä¶îÍâµÄÒ»Ð©¶«¶«£¬²»Ò»¶¨ÊÇJS£¬¿ÉÄÜÊÇHTML --}}
+@show{{-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½JSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½HTML --}}
 @stop
