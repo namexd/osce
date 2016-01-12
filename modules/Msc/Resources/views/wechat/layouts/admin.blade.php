@@ -21,16 +21,16 @@
         var　page_height = "0";
         var away_top= "0";
         var window_height= "0";
-        var today;
+        var nextday;
         $(document).ready(function(){
-            today = getFormattedDate(); //获取当前日期
+            nextday = getFormattedDate(); //获取当前日期
         });
         function getFormattedDate(date) { //获取当前日期
             var date=new Date();
             var year = date.getFullYear();
             var month = (1 + date.getMonth()).toString();
             month = month.length > 1 ? month : '0' + month;
-            var day = date.getDate().toString();
+            var day = (date.getDate()+1).toString();
             day = day.length > 1 ? day : '0' + day;
             return year + '-' + month + '-' + day;
         }
@@ -71,20 +71,7 @@
     @section('layer_loading')
     <div id="layer_loading" style="display: none;">
         <div class="more_show_txt">
-            <div class="sk-spinner sk-spinner-fading-circle">
-                <div class="sk-circle1 sk-circle"></div>
-                <div class="sk-circle2 sk-circle"></div>
-                <div class="sk-circle3 sk-circle"></div>
-                <div class="sk-circle4 sk-circle"></div>
-                <div class="sk-circle5 sk-circle"></div>
-                <div class="sk-circle6 sk-circle"></div>
-                <div class="sk-circle7 sk-circle"></div>
-                <div class="sk-circle8 sk-circle"></div>
-                <div class="sk-circle9 sk-circle"></div>
-                <div class="sk-circle10 sk-circle"></div>
-                <div class="sk-circle11 sk-circle"></div>
-                <div class="sk-circle12 sk-circle"></div>
-            </div>
+            <img src="{{asset('msc/wechat/common/img/loading.gif')}}"/>
             <p>加载中请稍后</p>
         </div>
     </div>

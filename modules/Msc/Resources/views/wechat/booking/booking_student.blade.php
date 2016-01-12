@@ -11,22 +11,31 @@
 @section('only_head_js')
     <Script type="text/javascript">
     $(document).ready(function(){
-        select_ban();
+        $("#order_time").val(nextday);
+        var qj={DateTime:nextday};
+        getlist(qj);
+        //加载入页面的时候，自动加载隔天的实验室
+        $("#order_time").change(function(){
+            var qj=getqj();
+            getlist(qj);
+        });
+
         $("#select_submit").click(function(){
+            select_ban();
             get_layer();
 
         });
-
         function get_layer(){
-            $("#sidepopup_layer").animate({right:"0"});//将左边弹出
+            $("#sidepopup_layer").animate({right:"0"});//将右边弹出
             hide_layer();
         }
-        function hide_layer(){
+        function hide_layer(){//将右边隐藏
             $(".box_hidden").click(function(){
                 $("#sidepopup_layer").animate({right:"-100%"});
             });
-            $("#comfirm_student").click(function(){
-                $("#submit_layer").animate({right:"-100%"});
+            $("#submit_layer").click(function(){
+                alert(1);
+                $("#sidepopup_layer").animate({right:"-100%"});
             });
         }
         //弹出层选择楼层
@@ -35,6 +44,7 @@
                 var floor_top =$(this).find("option:selected").attr("floor_top");
                 var floor_bottom = parseInt($(this).find("option:selected").attr("floor_buttom"));
                 $("#floor").empty();
+                $("#floor").append('<option value="">全部楼层</option>');
                 for(var i=1;i<=floor_bottom;i++){
                     $("#floor").append('<option value="-'+i+'">-'+i+' 楼</option>');
                 }
@@ -46,24 +56,43 @@
         }
         function submit_select(){
             $("#submit_layer").click(function(){
-                var floor_id= $("#ban").find("option:selected").attr("value");
-                var floor_num= $("#floor").find("option:selected").attr("value");
-                var DateTime=$("#order_time").val();
-                var qj={floor_id:floor_id,floor_num:floor_num,DateTime:DateTime}
+                getlist(qj);
+            });
+        }
+        function getqj(){//得到所有的查询条件内容
+            var floor_id= $("#ban").find("option:selected").attr("value");
+            var floor_num= $("#floor").find("option:selected").attr("value");
+            var DateTime=$("#order_time").val();
+            var qj={floor_id:floor_id,floor_num:floor_num,DateTime:DateTime}
+            return qj;
+        }
 
-                $.ajax({
-                    url:"{{ route('msc.Laboratory.OpenLaboratoryListData') }}", /*${ctx}/*/
-                    type: "post",
-                    dataType: "json",
-                    cache: false,
-                    data:qj,
-                    success: function (result) {
-                       console.log(result);
-
+        function  getlist(qj){ //查询ajax查询
+            var target_url = "{{ route('msc.Laboratory.ApplyOpenLaboratory') }}"
+            $.ajax({
+                url:"{{ route('msc.Laboratory.OpenLaboratoryListData') }}", /*${ctx}/*/
+                type: "get",
+                dataType: "json",
+                cache: false,
+                data:qj,
+                success: function (result) {
+                    if(result.code==1){
+                        $(".manage_list").empty();
+                        $(result.data.rows.ClassroomApplyList.data).each(function(){
+                            $(".manage_list").append('<div class="all_list">'
+                                    +'<a href="'+target_url+'?DateTime='+qj.DateTime+'&id='+this.id+'">'
+                                    +'<div class="w85 left">'
+                                    +'<p>'+this.floor.name+'</p>'
+                                    +'<p><span>'+this.floor.address+'</span></p></div>'
+                                    +'<div class="w15 right"><i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>'
+                                    +'</div></a></div>');
+                        })
+                    }else{
 
                     }
-                })
-            });
+
+                }
+            })
         }
 
     })
@@ -84,36 +113,8 @@
             <button class="btn4" id="select_submit">筛选</button>
         </div>
     </div>
-
-
     <div class="manage_list">
-        <div class="all_list">
-            <div class="w85 left">
-                <p>临床技能室</p>
-                <p><span>临床教学楼13-1</span></p>
-            </div>
-            <div class="w15 right">
-                <i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>
-            </div>
-        </div>
-        <div class="all_list">
-            <div class="w85 left">
-                <p>临床技能室</p>
-                <p><span>临床教学楼13-1</span></p>
-            </div>
-            <div class="w15 right">
-                <i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>
-            </div>
-        </div>
-        <div class="all_list">
-            <div class="w85 left">
-                <p>临床技能室</p>
-                <p><span>临床教学楼13-1</span></p>
-            </div>
-            <div class="w15 right">
-                <i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>
-            </div>
-        </div>
+
     </div>
 
 </div>
@@ -126,14 +127,14 @@
         <p class="font16 title">请选择具体楼栋或楼层</p>
         <div class="w_96">
             <select   class="select1" id="ban"  style="width:100%;">
-                <option value="-99" >请选择楼栋</option>
+                <option value="" >全部楼栋</option>
                 @foreach($FloorData as $val)
                     <option value="{{@$val['id']}}" floor_top="{{ @$val['floor_top'] }}" floor_buttom="{{ @$val['floor_bottom'] }}">{{@$val['name']}}</option>
                 @endforeach
             </select>
 
-            <select   class="select1 mart_10"  id="floor"  style="width:100%; ">
-
+            <select   class="select1 mart_10"  id="floor"  style="width:100%;">
+                <option value="">全部楼层</option>
             </select>
             <button id="submit_layer" type="button" class="btn1">确定</button>
         </div>
