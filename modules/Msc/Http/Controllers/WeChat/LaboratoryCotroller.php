@@ -39,7 +39,7 @@ class LaboratoryCotroller extends MscWeChatController
     /**
      * 待预约列表
      * @method  GET
-     * @url /msc/wechat/Laboratory/laboratory-list
+     * @url /msc/wechat/laboratory/laboratory-list
      * @access public
      * @param Request $Request
      * @return \Illuminate\View\View
@@ -52,9 +52,10 @@ class LaboratoryCotroller extends MscWeChatController
         $FloorData = $Floor->GetFloorData();
         $user = Auth::user();
         //$user->user_type == 2 代表学生
+
         if($user->user_type == 2){
             return view('msc::wechat.booking.booking_student',['FloorData'=>$FloorData]);
-        //$user->user_type == 1 代表老师
+        //$user->user_type == 1 代表老师$val
         }elseif($user->user_type == 1){
 
         }
@@ -144,7 +145,7 @@ class LaboratoryCotroller extends MscWeChatController
         $id = Input::get('id');
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,1);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
@@ -168,13 +169,13 @@ class LaboratoryCotroller extends MscWeChatController
         $id = Input::get('id');
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,2);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDevice($id)
         ];
-        dd($data);
+        return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
     /**
