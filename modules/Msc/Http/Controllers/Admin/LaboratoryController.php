@@ -63,6 +63,7 @@ class LaboratoryController extends MscController {
         $teacher = new Teacher();
         $teacher =  $teacher->getdata();
         //dd($teacher);
+        //dd($teacher);
         return view('msc::admin.labmanage.lab_maintain',[
             'datalist'=>$datalist,
             'school'=>$school,
@@ -383,7 +384,7 @@ class LaboratoryController extends MscController {
             $labArr[$k]['floor'] = $v;
             $this->start_sql(1);
             $labArr[$k]['lab'] = Laboratory::where($where)->get();
-            $this->end_sql(1);
+            //$this->end_sql(1);
         }
         return $labArr;
     }
