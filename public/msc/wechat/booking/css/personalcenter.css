@@ -88,19 +88,9 @@ a{ color: #000;}
 .user_tx p{ color: #fff;text-align: center; line-height: 40px; font-size: 16px;}
 
 .nav_list{ position: relative;}
-.manage_list{width:100%;margin-top:10px;overflow:hidden;background:#fff;border-bottom:1px solid #DCE0E4}
-.manage_list li:last-child{border:none}
-.manage_list li{height:44px;line-height:44px;border-bottom:1px solid #dce0e4}
-.manage_list li a{color:#333;font-size:16px}
-.manage_list li span{float:left;display:block;width:85%;}
-.manage_list li:last-child span{border:none}
-.manage_list li .icon{float:left;width:15%;height:44px;background:url("../img/personalcenter.png") no-repeat;background-size:24px;}
-.manage_list li .icon1{background-position:center 10px}
-.manage_list li .icon2{background-position:center -54px}
-.manage_list li .icon3{background-position:center -116px}
-.manage_list li .icon4{background-position:center -193px}
 
 
 
 
-.i_right{float:right;margin:10px 15px 0 0;font-size:26px;color:#ccc;}
+
+

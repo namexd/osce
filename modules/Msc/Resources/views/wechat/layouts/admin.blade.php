@@ -3,7 +3,7 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 @stop
 @section('head_css')
-    <link href="{{asset('msc/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
+    <link href="{{asset('msc/admin/plugins/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('msc/wechat/common/css/font-awesome/css/font-awesome.css')}}" rel="stylesheet"/>
 	<link href="{{asset('msc/wechat/common/css/commons.css')}}"  rel="stylesheet"/>
     <link href="{{asset('msc/wechat/common/css/table_commons.css')}}"  rel="stylesheet"/>
@@ -12,8 +12,7 @@
 @section('head_js')
 	<!-- 全局js -->
     <script src="{{asset('msc/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
-
+    <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未-->
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script><!--弹框插件-->
   	<script src="{{asset('msc/wechat/validate/jquery.validate.min.js')}}"></script>
@@ -97,13 +96,8 @@
 
 
 <!-- 新增 -->
-    
 
-    <!-- 自定义js -->
-    <script src="{{asset('msc/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
-    <script type="text/javascript" src="{{asset('msc/admin/plugins/js/contabs.min.js')}}"></script>
-    <!-- 第三方插件 -->
-    <script src="{{asset('msc/admin/plugins/js/plugins/pace/pace.min.js')}}"></script>
+
 @show{{-- footer区域javscript脚本 --}}
 
 {{-- 引入额外依赖JS插件 --}}
@@ -115,8 +109,7 @@
     });
 
 </script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('jk/js/jk.js') }}" type="text/javascript"></script>
+
 @section('extraSection')
 @show{{-- 补充额外的一些东东，不一定是JS，可能是HTML --}}
 @stop

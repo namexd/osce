@@ -2,7 +2,7 @@
 
 @section('only_head_css')
 <link href="{{asset('msc/wechat/resourcemanage/css/information.css')}}" rel="stylesheet" type="text/css" />
-<link href="{{asset('msc/wechat/resourcemanage/resourcemanage/reourcemanage.css')}}" rel="stylesheet" type="text/css" />
+
 <style>
     .detail_list .name img{width: 55%;float: left;}
     .detail_list .name span{width: 45%;float: left;text-align: left;}
@@ -20,8 +20,8 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        查看设备清单
-        <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
-            <i class="fa fa-home clof font26 icon_return"></i>
+        <a class="right header_btn" href="#">
+
         </a>
     </div>
     <div>
