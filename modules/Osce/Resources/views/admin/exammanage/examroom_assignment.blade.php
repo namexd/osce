@@ -124,19 +124,28 @@
                                             <th>操作</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="0">
-                                            <tr class="pid-'+index+'">
-                                                <td>'+index+'</td>
+                                        <tbody index="{{count($examRoomData)}}">
+                                        <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
+                                        @forelse($examRoomData as $item)
+                                            <tr class="pid-{{$k1++}}">
+                                                <td>{{$key++}}</td>
                                                 <td width="498">
-                                                    <select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+'][]"></select>
+                                                    <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
+                                                        @forelse($item as $value)
+                                                        <option value="{{$value->room_id}}" selected="selected">{{$value->name}}</option>
+                                                        @empty
+                                                        @endforelse
+                                                    </select>
                                                 </td>
-                                                <td class="necessary">必考</td>
+                                                <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
                                                 </td>
                                             </tr>
+                                        @empty
+                                        @endforelse
                                         </tbody>
                                     </table>
 
@@ -160,13 +169,16 @@
                                             <th>邀请SP老师</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="0">
+                                        <tbody index="{{count($examStationData)}}">
+                                        @forelse($examStationData as $key => $item)
                                             <tr class="parent-id-'+e.params.data.id+'">
-                                                <td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>
-                                                <td>'+data[i].name+'</td>
-                                                <td>'+typeValue[data[i].type]+'</td>
+                                                <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->id}}"/></td>
+                                                <td>{{$item->name}}</td>
+                                                <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station[{{$key+1}}][teacher_id]">
+                                                        <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
+                                                    </select>
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
@@ -191,6 +203,8 @@
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
                                             </tr>
+                                        @empty
+                                        @endforelse
                                         </tbody>
                                     </table>
 

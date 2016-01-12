@@ -97,10 +97,10 @@ class Flows extends CommonModel
                 //考站-老师关系表 数据
                 $stationTeacher = [
                     'station_id'        =>  $item['id'],
-                    'user_id'           =>  empty($item['spteacher_id'])? $item['teacher_id']:$item['spteacher_id'],
+                    'user_id'           =>  empty($item['teacher_id'])? 3:$item['teacher_id'],
                     'case_id'           =>  StationCase::where('station_id', $item['id'])->first()->case_id,
                     'created_user_id'   =>  $user ->id,
-                    'type'              =>  empty($item['spteacher_id'])? 1:2
+                    'type'              =>  empty($item['teacher_id'])? 2:1
                 ];
                 if(!$result = StationTeacher::create($stationTeacher)){
                     throw new \Exception('考站-老师关系添加失败！');
