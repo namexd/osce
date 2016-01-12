@@ -1,5 +1,6 @@
 <?php
 /**
+ * 实验室预约和日历的关联模型
  * Created by PhpStorm.
  * @author tangjun <tangjun@misrobot.com>
  * @date 2016-01-06 10:05
@@ -10,11 +11,11 @@ namespace Modules\Msc\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OpenLabApply extends Model
+class PlanApply extends Model
 {
     protected $connection	=	'msc_mis';
-    protected $table 		= 	'open_lab_apply';
+    protected $table 		= 	'plan_apply';
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
-    protected $fillable 	=	['lab_id', 'type','lab_plan_id','status','apply_user_id','description'];
+    protected $fillable 	=	['lab_id', 'apply_id','open_plan_id'];
 }

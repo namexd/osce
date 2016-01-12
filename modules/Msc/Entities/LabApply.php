@@ -30,9 +30,20 @@ class LabApply  extends Model
         //return
     }
 
+    /**
+     * @access public
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月12日16:37:15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function PlanApply(){
+        return  $this->hasMany('Modules\Msc\Entities\PlanApply','apply_id','id');
+    }
+
 
     //后台获取审核列表
-    public function get_check_list($keyword="",$status=0){
+    public function get_check_list($keyword="",$type=0){
         $userDb    = config('database.connections.sys_mis.database');
         $userTable = $userDb.'.users';
 
@@ -46,43 +57,30 @@ class LabApply  extends Model
         $lab_applyTable = $lab_applyDb.'.lab_apply';
 
         $labDb    = config('database.connections.msc_mis.database');
-        $labTable = $labDb.'.lab_apply';
+        $labTable = $labDb.'.lab';
 
-//        $builder = $this
-//                    ->leftJoin($userTable, $userTable.'.id', '=', $lab_applyTable.'.apply_user_id')
-//                    ->get();
-//
-//        dd($builder);
+        $plan_applyDb    = config('database.connections.msc_mis.database');
+        $plan_applyTable = $plan_applyDb.'.plan_apply';
+        if($type == 1){
+            $builder = $this->where($lab_applyTable.'.status','=',1);
+        }else{
+            $builder = $this->where($lab_applyTable.'.status','>',1);
+        }
+        //dd($builder);
 
-        $builder = $this->leftJoin($userTable, function($join) use($userTable, $lab_applyTable) {
-            $join->on($userTable.'.id', '=', $lab_applyTable.'.apply_user_id');
+        $builder = $builder->leftJoin($userTable, function($join) use($lab_applyTable) {
+            $join->on($join->table.'.id', '=', $lab_applyTable.'.apply_user_id');
+        })->leftJoin($labTable, function($join) use($lab_applyTable) {
+            $join->on($join->table.'.id', '=', $lab_applyTable.'.lab_id');
+        })->leftJoin($plan_applyTable, function($join) use($lab_applyTable) {
+            $join->on($join->table.'.apply_id', '=', $lab_applyTable.'.id');
+        })->leftJoin($open_planTable, function($join) use($plan_applyTable) {
+            $join->on($join->table . '.id', '=', $plan_applyTable . '.open_plan_id');
         });
-
-//        $builder = $this->leftJoin($open_planTable, function($join) use($open_planTable, $lab_applyTable) {
-//            $join->on($open_planTable.'.id', '=', $lab_applyTable.'.apply_id');
-//        });
-//
-//        $builder = $this->leftJoin($labTable, function($join) use($labTable, $open_planTable) {
-//            $join->on($labTable.'.id', '=', $open_planTable.'.lab_id');
-//        });
-//        if($keyword){
-//
-//        }
-        return $builder//->select([
-//            $plan_applyTable.'.id as id',
-//            $studentTable.'.name as name',
-//            $studentTable.'.code as code',
-//            $studentTable.'.grade as grade',
-//            $studentTable.'.student_type as student_type',
-//            $studentTable.'.professional as professional',
-//            //$userTable.'.mobile as mobile',
-//            //$userTable.'.idcard as idcard',
-//            //$userTable.'.gender as gender',
-//            //$userTable.'.status as status',
-//        ])
-           // ->orderBy($studentTable.'.id')
-            ->paginate(config('msc.page_size',10));
-        dd($builder);
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$plan_applyTable.'.open_plan_id',$open_planTable.'.begintime as obegintime',$open_planTable.'.endtime as oendtime')
+            ->orderby($lab_applyTable.'.apply_time')->paginate(config('msc.page_size',10));
+        dd($data);
+        return $data;
 
     }
 }
