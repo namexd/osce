@@ -51,14 +51,14 @@
     <div class="history-box">
         <ul class="history-list">
             <li>
-                <p class="title">OSCE考试2015年第3期考试考前通知</p>
-                <p class="time"><span class="year">2015-12-1</span><span>12:00:00</span></p>
+                <p class="title">{{  $notice->name }}</p>
+                <p class="time"><span class="year"> {{ $notice->created_at }}</span></p>
                 <div>
                     <div>
                         <img src="" alt="">
                     </div>
                     <div>
-                        6月12日，由我院承办的2014届临床医学专业本科实习生临床实践技能考试顺利结束。本次考试历时2天，包括滨州医学院附属医院、山东大学第二医院、沾化县人民医院、桓台县人民医
+                      {{  $notice->content  }}
                     </div>
                 </div>
             </li>

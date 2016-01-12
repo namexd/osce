@@ -50,14 +50,12 @@
     </div>
     <div class="history-box">
         <ul class="history-list">
+            @foreach($list as $item)
             <li>
-                <p class="title">OSCE考试2015年第3期考试考前通知</p>
-                <p class="time"><span class="year">2015-12-1</span><span>12:00:00</span></p>
+                <p class="title">{{ $item->name  }}</p>
+                <p class="time"><span class="year">{{  $item->created_at }}</span></p>
             </li>
-            <li>
-                <p class="title">OSCE考试2015年第3期考试考前通知</p>
-                <p class="time"><span class="year">2015-12-1</span><span>12:00:00</span></p>
-            </li>
+            @endforeach
         </ul>
     </div>
 @stop
