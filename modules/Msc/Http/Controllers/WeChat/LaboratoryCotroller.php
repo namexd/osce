@@ -145,7 +145,7 @@ class LaboratoryCotroller extends MscWeChatController
         $id = Input::get('id');
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,1);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
@@ -169,7 +169,7 @@ class LaboratoryCotroller extends MscWeChatController
         $id = Input::get('id');
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime);
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,2);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
