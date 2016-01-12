@@ -125,7 +125,7 @@ class Student extends CommonModel
                 }
 
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
-                $password   =   Common::getRandStr(6);
+                $password   =   '123456';
                 $user       =   $this   ->  registerUser($examineeData,$password);
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);
             }

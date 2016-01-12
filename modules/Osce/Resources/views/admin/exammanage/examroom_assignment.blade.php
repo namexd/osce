@@ -99,6 +99,7 @@
                 <div class="row">
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
+                            <input type="hidden" name="id" value="{{$id}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 

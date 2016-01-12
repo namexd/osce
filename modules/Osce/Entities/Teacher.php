@@ -65,7 +65,7 @@ class Teacher extends CommonModel
 
 
 
-    //邀请老师的数据
+    //邀请sp老师的数据
     public  function invitationContent($teacher_id){
         $builder=$this;
         try{
@@ -82,19 +82,18 @@ class Teacher extends CommonModel
             }
             $data=$builder->select('teacher.name','teacher.id','cases.name as cname','cases.id as caseId')->get()->toArray();
             $list=[];
-            foreach($data as $v){
-                $list['teacher_id']=$v['id'];
-                $list['teacher_name']=$v['name'];
-                $list['case_name']=$v['cname'];
-                $list['case_id']=$v['caseId'];
+            foreach($data as $k=>$v){
+                $list[$k]['teacher_id']=$v['id'];
+                $list[$k]['teacher_name']=$v['name'];
+                $list[$k]['case_name']=$v['cname'];
+                $list[$k]['case_id']=$v['caseId'];
             }
-
-
-//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
-            $openId= Teacher::find($list['teacher_id'])->userInfo->toArray();
-            $list['openid']=$openId['openid'];
 //            dd($list);
+//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
+            $openId= Teacher::find($list[$k]['teacher_id'])->userInfo->toArray();
 
+            $list[$k]['openid']=$openId['openid'];
+//            dd($list);
             return $list;
 
         }catch (\Exception $ex) {
