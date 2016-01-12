@@ -42,4 +42,5 @@ return [
 	'manager'=>[
 		1
 	],
+	'prepare'	=>	10
 ];

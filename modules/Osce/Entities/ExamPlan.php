@@ -19,96 +19,66 @@ class ExamPlan extends CommonModel
     public $timestamps	    =	true;
     protected $fillable 	=	['exam_id','exam_screening_id','student_id','station_id','room_id','begin_dt','end_dt','status','created_user_id'];
 
-    //考生池
-    protected   $allSudent      =   [];
-    //考场考生池
-    protected   $roomSudent     =   [];
-    //学生时间轴
-    protected $studentTimeList  =   [];
-    //考场队列
-    protected $roomQueue        =   [];
-    //考场下考站数量
-    protected $roomStationNum   =   [];
-    //考站队列
-    protected $stationQueue     =   [];
-    //已结束考生
-    protected $overStudent      =   [];
-
-    protected $lastGroup        =   false;
-
-    protected $lastGroupList    =   [];
-
-    protected $stepLastStatus   =   false;
+    protected $stationNum;
 
     public function IntelligenceEaxmPlan($exam){
-        $studentList   =   $this   ->  getExamStudent($exam);
-//        `sequence_cate` tinyint(1) NOT NULL DEFAULT '1' COMMENT '排序方式',//随机还是顺序
-//        `sequence_mode` tinyint(2) NOT NULL DEFAULT '1' COMMENT '考试排序模式',//考站还是考场
-        $this   ->  initStudentTimeList($studentList);
-        $this   ->  initAllSudent($studentList);
-        $this   ->  indexArrange($exam);
-
-    }
-    /*
-     * 获取报考学生
-     */
-    public function getExamStudent($exam){
-        return  $students   =   $exam   ->  students;
+        $examScreeningTotal =   $this   ->  groupStudent($exam);
+        $this->allStudent   =   $this   ->  getExamStudent($exam);
+        $studentGroup   =[];
+        foreach($examScreeningTotal as $screeningId =>  $studentNum)
+        {
+            $studentGroup[$screeningId]=$this   ->  getStudentByNum($studentNum);
+        }
+        dd($this->getStationCombination($exam));
     }
 
-    /*
-     * 顺序排考
-     */
-    public function indexArrange($exam){
-    //获取考站顺序
-        //获取考站流程节点清单
+    public function groupStudent($exam){
+        //计算单批次时间
+        $oneTotal   =   $this   ->  oneFlowsTime($exam);
+        $stationList   =   $this   ->  getBatchAllStation($exam);
+        $examScreeningTotal  =   [];
+        //计算批次数量
+        foreach($exam   ->  examScreening as $screening)
+        {
+            $startTime  =   strtotime($screening ->  begin_dt);
+            $endTime    =   strtotime($screening ->  end_dt);
+            if($startTime==false||$endTime==false)
+            {
+                throw new \Exception('开始/结束时间格式不对');
+            }
+            if($endTime<$startTime)
+            {
+                throw new \Exception('考试的开始时间大于结束时间，请确认设置');
+            }
+            $totalTime  =   intval(($endTime-$startTime)/60);
+            $batch      =   intval($totalTime/$oneTotal);
+            $totalStudent   =   $batch  *   $this->stationNum;
+            $examScreeningTotal[$screening->id]   = $totalStudent;
+        }
+
+        return $examScreeningTotal;
+    }
+    public function oneFlowsTime($exam){
         $flows  =   $this   ->  getExamFlow($exam);
         $flowsIndex         =   $this   ->  groupFlowByRoom($flows);
-
-        $this   ->  setLastFlow($flowsIndex);
-
-        //初始化考场考生队列
-        $this   ->  initRoomQueue($exam);
-        //初始化房间考生池
-        $this   ->  initRoomSudents();
-
-        //节点按照顺序分组
-        if($exam->sequence_mode==1)
+        $list         =   $this   ->  getStationCombination($exam);
+        $total              =   0;
+        $stationNum     =   0;
+        foreach($flowsIndex as $group)
         {
-            $flowsArray =   array_shift($flowsIndex);
-            foreach($flowsArray as $flow)
+            $longestTime    =   0;
+            foreach($group as $examFlowRoom)
             {
-                $this   ->  putStudentToFirstRoomQueue($flow->room,$this->allSudent);
-                //$this   ->  delStudentFormPond();
+                $time           =   $examFlowRoom->getRoomStaionTime($examFlowRoom);
+                $stationNum     +=   $examFlowRoom->getRoomStationNum($examFlowRoom);
+                $longestTime    =   $time>$longestTime? $time:$longestTime;
             }
-            while(!$this->lastGroup)
-            {
-                $preStudentsList    =   $this   ->  stepExam($flowsIndex);
-                //var_dump($this->lastGroup);
-                $this   ->  setOverStudent($preStudentsList);
-            }
+            $groupTime  =ceil($longestTime/count($group));
+            $groupTime    =   intval($this   ->  totalPrepare($groupTime));
+            $total+=$groupTime;
         }
-        else
-        {
-            $flowsIndex =   $this   ->  groupFlowByStation($flows);
-        }
-    }
-
-    public function setOverStudent($preStudentsList){
-        $overStudents        =   $this   ->  overStudent;
-        foreach($preStudentsList as $student)
-        {
-            $overStudents[$student->id] =   $student;
-        }
-        $this   ->  overStudent =   $overStudents;
-        return $this;
-    }
-    /*
-     * 随机排考
-     */
-    public function randArrange(){
-        //获取空闲教室清单
-
+        $this   ->  stationNum  =   $stationNum;
+        return $total;
     }
 
     /*
@@ -125,7 +95,6 @@ class ExamPlan extends CommonModel
         foreach($flows as $flow)
         {
             $examFlowRoomRelation       =   $flow   ->  examFlowRoomRelation;
-
             if(is_null($examFlowRoomRelation->  serialnumber))
             {
                 throw new \Exception('序号数据错误');
@@ -136,273 +105,64 @@ class ExamPlan extends CommonModel
         ksort($group);
         return $group;
     }
-    /*
-     * 根据考站分组流程
-     */
-    public function groupFlowByStation($flows){
 
+    public function totalPrepare($time){
+        return $time+config('osce.prepare',0);
     }
 
-    /*
-     * 初始化 学生开考相对时间
-     */
-    protected function initStudentTimeList($studentList){
-        $studentTimeList    =   [];
-        foreach($studentList as $student)
-        {
-            $studentTimeList[$student->id]  =   0;
-        }
-        $this   ->  studentTimeList =   $studentTimeList;
-        return $this;
-    }
-    /*
-     *
-     *（重要）
-     *
-     *
-     * 为考场 - 随机 方式 初始化 考场 池
-     */
-    protected  function initRoomQueue($exam){
-        $roomQueue              =   [];
-        $roomList               =   $this   ->  getExamRoomList($exam->id);
-        foreach($roomList as $room)
-        {
-            //初始化考场下考站数量
-            $this   ->initRoomStationNum($room->id,count($room->    room    ->stations));
-            //初始化考场下考站考生队列
-            $roomQueue[$room->id]    =  [];
-        }
-
-        $this   ->  roomQueue   =   $roomQueue;
-        return $this;
-    }
-
-    /*
-     * 初始化考站队列数据
-     */
-    protected  function initStationQueue($exam){
-
-    }
-
-    protected function initRoomStationNum($roomId,$num){
-        $data           =   $this   ->  roomStationNum;
-        $data[$roomId]  =   $num;
-        $this   ->  roomStationNum  =   $data;
-        return $this;
-    }
-
-    /*
-     * 初始化考试考生池
-     */
-    protected function initAllSudent($studentList){
+    public function getStudentByNum($num){
+        $allStudent =   $this->allStudent;
+        shuffle($allStudent);
         $data   =   [];
-        foreach($studentList as $student)
-        {
-            $data[$student->id] =   $student;
-        }
-        $this   -> allSudent    =   $data;
-        return $this;
-    }
-
-    /*
-     * 初始化考场考生池
-     */
-    protected function initRoomSudents($roomList=[],$studentList=[]){
-        //学生列表
-        if(empty($studentList))
-        {
-            $data    =   $this   ->  allSudent;
-        }
-        else
-        {
-            $data   =   [];
-            foreach($studentList as $student)
-            {
-                $data[$student->id] =   $student;
-            }
-        }
-
-        //房间列表
-        if(empty($roomList))
-        {
-            $roomList    =   $this   ->  roomQueue;
-        }
-        $list   =  [];
-
-        foreach($roomList as $roomId=>$item)
-        {
-            if(!is_array($item))
-            {
-                $roomId     =   $item->id;
-            }
-            $list[$roomId]  =   $data;
-        }
-        $this   -> roomSudent    =   $list;
-        return $this;
-    }
-
-    protected function getExamRoomList($exam_id){
-        return  ExamRoom::where('exam_id','=',$exam_id)->get();
-    }
-
-    /*
-     * 随机从集合中 获取一个元素
-     */
-    protected function getRandItem($collect){
-        $collect    =   empty($collect)? []:$collect;
-        $num    =   count($collect);
-        $index  =   rand(1,$num)-1;
-        $item   =   null;
-        //dd($collect);
-
-        foreach($collect as $key    =>  $item)
-        {
-            if($key===$index)
-            {
-                return $item;
-            }
-        }
-
-        return $item;
-    }
-
-    /*
-     * 为考站获取查找是需要数量的学生
-     */
-    public function getStudentsForRoom($room){
-        $roomStudentPond    =   $this   ->  roomSudent[$room->id];
-        $num            =   $this   ->  roomStationNum[$room->id];
-        if($num<0)
-        {
-            throw new \Exception('考站数量不对');
-        }
-        //如果候考池人员小于 一次需进场的人数,并且不是最后一组，本次排列0个人，轮下一波；
-        if($this->lastGroup||count($roomStudentPond)<$num)
-        {
-            return  [];
-        }
-        $thisGroup  =   [];
         for($i=0;$i<$num;$i++)
         {
-            $thisGroup[]    =   $this->getRandItem($roomStudentPond);
+            $data[] =array_pop($allStudent);
         }
-        return $thisGroup;
+        $this->allStudent   =   $allStudent;
+        return $data;
     }
-
     /*
-     * 为考场安排一波学生
+     * 获取报考学生
      */
-    public function arrangeStudentForRoom($room){
-        //选取学生
-        $studentChoosed     =   $this   ->  getStudentsForRoom($room);
-        //将考生从该房间被选池中删除
-        $this               ->  delStudentFormPond($studentChoosed,$room);
-        return  $studentChoosed;
-    }
-
-    /*
-     * 从房间学生池中删除已选择学生
-     */
-    public function delStudentFormPond($studentChoosed,$room){
-        $idlist =   array_pluck($studentChoosed,'id');
-        $roomStudentPondList    =   $this   ->  roomSudent;
-        $roomStudentPond    =   $roomStudentPondList[$room->id];
-        foreach($idlist as $id)
+    public function getExamStudent($exam){
+        $data   =   [];
+        foreach($exam   ->  students as $student)
         {
-            unset($roomStudentPond[$id]);
+            $data[] =$student;
         }
-        $roomStudentPondList[$room->id] =   $roomStudentPond;
-        return $this;
+        return  $data;
     }
-
-    /**
-     * 把学生放进 考场 队列
-     */
-    public function putStudentToRoomQueue($student,$room){
-
-    }
-
-    public function stepExam($flows){
-        if(!empty($flows))
+    public function getBatchAllStation($exam){
+        $examFlowRoomModel   =   new ExamFlowRoom();
+        $list   =   $examFlowRoomModel  ->  where('room_id','=',$exam->id)->get();
+        $stationsList   =[];
+        foreach($list as $roomRelation)
         {
-            //获取当前流程
-            $flow  =   array_shift($flows);
-            $room       =   $this   ->  getRandItem($flow);
-            $chooseList =   $this   ->  roomSudent[$room->id];
-            //获取本次考场新增的安排考生
-            $preStudentsList        =   $this   ->  arrangeStudentForRoom($room);
-            //判断当前流程是否为 当次考试最后一个考场
-            if($this  ->  isLastStep($flow))
+            $room   =   $roomRelation->room;
+            $station    =   [];
+            if(is_null($room))
             {
-                //dd($this->roomQueue);
-                $this   ->lastGroupCheck($chooseList);
+                throw new \Exception('房间不存在');
             }
-            //dd($this->roomQueue);
-            //$this   ->  stepExam($flows);
-
-            return  $preStudentsList;
-
-        }
-        else
-        {
-            return '';
-        }
-    }
-
-    public function isLastStep($flows){
-        $lastGroupList          =   $this   ->  lastGroupList;
-        $lastIds                =   array_pluck($lastGroupList,'serialnumber');
-
-        foreach($flows  as $flow)
-        {
-            if(in_array($flow->serialnumber,$lastIds))
+            else
             {
-                return true;
+                $stations    =   $room->stations;
+                foreach($stations as $station)
+                {
+                    $stationsList[]     =   $station;
+                }
             }
         }
-        return false;
-    }
-    /**
-     * 给第一个考场添加候考队列
-     */
-    public function putStudentToFirstRoomQueue($room,$allSudent=[]){
-        if(empty($allSudent))
-        {
-            $allSudent  =   $this->allSudent;
-        }
-        return  $this->addRoomQueue($room,$allSudent);
+        return $stationsList;
     }
 
-    /*
-     * 模拟添加候考队列
-     */
-    public function addRoomQueue($room,$students){
-        $roomQueue  =   $this   ->  roomQueue;
-        $roomQueue[$room->id]   =   $students;
-        $this   ->  roomQueue   =   $roomQueue;
-        return $this;
+    public function getStationCombination($exam){
+        $flows  =   $this   ->  getExamFlow($exam);
+        $flowsIndex         =   $this   ->  groupFlowByRoom($flows);
+
+    }
+    public function makeCombination($flowsIndex){
+
     }
 
-    public function lastGroupCheck($thisGroup){
-        $overStudent    =   $this   ->  overStudent;
-        $allSudent      =   $this   -> allSudent;
-        $overIds        =   array_pluck($overStudent,'id');
-        $allIds         =   array_pluck($allSudent,'id');
-        $thisIds        =   array_pluck($thisGroup,'id');
-
-        foreach($thisIds as $id)
-        {
-            $overIds[]    = $id;
-        }
-        if(sort($allIds)===sort($overIds))
-        {
-            $this->lastGroup=true;
-        }
-    }
-
-    public function setLastFlow($flowsIndex){
-        $last   =   array_pop($flowsIndex);
-        $this   ->  lastGroupList   =   $last;
-        return $this;
-    }
 }
