@@ -18,7 +18,7 @@ class IndexController extends CommonController
     /**
      *检测是否绑定
      * @method GET 接口
-     * @url exam/watch-status
+     * @url /api/1.0/private/osce/watch-status
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -57,7 +57,7 @@ class IndexController extends CommonController
     /**
      *绑定腕表
      * @method GET 接口
-     * @url exam/bound-watch
+     * @url /api/1.0/private/osce/bound-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -102,7 +102,7 @@ class IndexController extends CommonController
     /**
      *解除绑定腕表
      * @method GET 接口
-     * @url exam/unwrap-watch
+     * @url /api/1.0/private/osce/unwrap-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -147,7 +147,7 @@ class IndexController extends CommonController
     /**
      *检测学生状态
      * @method GET
-     * @url /user/
+     * @url /api/1.0/private/osce/student-details
      * @access public
      *
      * @param Request $request post请求<br><br>
