@@ -17,6 +17,7 @@ use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
+use DB;
 
 class StationController extends CommonController
 {
@@ -102,9 +103,10 @@ class StationController extends CommonController
     public function postAddStation(Request $request, Station $model)
     {
         try {
-        //验证略
+            DB::connection('osce_mis')->beginTransaction();
+            //验证略
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $stationData = $request->only('name', 'type', 'mins', 'subject_id');
+            $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'description', 'code');
             $vcrId = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
@@ -113,14 +115,18 @@ class StationController extends CommonController
 
             //将当前时间限定的值放入session
             $time = $request->input('mins');
-            $time = $request->session()->flash('time', $time);
-
-            $model->addStation($formData);
-
-            if (!$time) {
+            $request->session()->flash('time', $time);
+            if (!($request->session()->has('time'))) {
+                DB::connection('osce_mis')->rollBack();
                 throw new \Exception('未能将时间保存！');
             }
 
+            if (!($model->addStation($formData))) {
+                DB::connection('osce_mis')->rollBack();
+                throw new \Exception('未能将考站保存！');
+            };
+
+            DB::connection('osce_mis')->commit();
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
 
         } catch (\Exception $ex) {
@@ -150,7 +156,7 @@ class StationController extends CommonController
         $id = $request->input('id');
         //获取编辑考场的数据
         $rollMsg = $model->rollmsg($id);
-        list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList();
+        list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList($id);
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourcemanage.test_station_edit',
             ['placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case, 'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg]);
@@ -173,28 +179,36 @@ class StationController extends CommonController
         //验证数据，暂时省略
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'type', 'mins', 'room_id', 'subject_id');
+            $placeData = $request->only('name', 'type', 'mins', 'subject_id');
             $vcrId = $request->input('vcr_id');
             $caseId = $request->input('case_id');
+            $roomId = $request->input('room_id');
             $id = $request->input('id');
-            $formData = [$placeData, $vcrId, $caseId];
-            $result = $model->updateStation($formData, $id);
+            $formData = [$placeData, $vcrId, $caseId,$roomId];
+            $model->updateStation($formData, $id);
 
+            return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
 
-            if (!$result) {
-                throw new \Exception('编辑考场失败,请重试!');
-            } else {
-                return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
-            }
         } catch (\Exception $ex) {
-            echo $ex;
-//            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
+    /**
+     * 考场删除的业务逻辑
+     * @api       POST /osce/admin/station/delete
+     * @access    public
+     * @param Request $request post请求<br><br>
+     * @param Station $station
+     * @return view
+     * @internal param Station $model Station
+     * @version   1.0
+     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function postDelete(Request $request, Station $station)
     {
-//        try {
+        try {
             //获取删除的id
             $id = $request->input('id');
             if (!$id) {
@@ -203,24 +217,38 @@ class StationController extends CommonController
             //将id传入删除的方法
             $result = $station->deleteData($id);
             if ($result) {
-                return redirect()->route('osce::admin.resourcemanage.test_station');
+                return json_encode($this->success_data(['删除成功！']));
             }
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withErrors($ex);
-//        }
+        } catch (\Exception $ex) {
+            return json_encode($this->fail($ex));
+        }
     }
 
     /**
      * 下拉菜单，单独封装成了一个方法
+     * $id为考场id
+     * @param string $id
      * @return array
      */
-    private function dropDownList()
+    private function dropDownList($id = "")
     {
         //将下拉菜单的数据查出
         $placeCate = ['0' => '请选择类别', '1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
-        $vcr = Vcr::where('status', 1)
-            ->select(['id', 'name'])
-            ->get();     //关联摄像机
+        if ($id == "") {
+            $vcr = Vcr::where('status', 1)
+                ->select(['id', 'name'])
+                ->get();     //关联摄像机
+        } else {
+            //根据station的id找到对应的vcr的id
+            $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
+
+            $vcr = Vcr::where('status', 1)
+                ->orWhere(function($query) use($vcrId){
+                    $query->where('id','=',$vcrId);
+                })
+                ->select(['id', 'name'])
+                ->get();     //关联摄像机
+        }
         $case = CaseModel::all(['id', 'name']);
         $room = Room::all(['id', 'name']);  //房间
         $subject = Subject::all(['id', 'title']);

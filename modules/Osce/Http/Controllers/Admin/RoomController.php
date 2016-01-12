@@ -140,7 +140,7 @@ class RoomController extends CommonController
                 return redirect()->route('osce.admin.room.getRoomList');
             }
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
 
     }
@@ -198,6 +198,7 @@ class RoomController extends CommonController
      * @param Request $request post请求<br><br>
      *                         <b>get请求字段：</b>
      *                         array           id            主键ID
+     * @param Room $room
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
@@ -205,22 +206,25 @@ class RoomController extends CommonController
      */
     public function postDelete(Request $request, Room $room)
     {
+        try {
         //验证略
+            DB::connection('osce_mis')->beginTransaction();
+            $id = $request->input('id');
+            if (!$id) {
+                throw new \Exception('没有该房间！');
+            }
 
-        $id = $request->input('id');
-        if (!$id) {
-            throw new \Exception('没有该房间！');
-        }
+            $result = $room->deleteData($id);
+            if (!$result) {
+                throw new \Exception('系统错误，请重试！');
+            }
 
-        DB::connection('osce_mis')->beginTransaction();
-        $result = $room->deleteData($id);
-        if (!$result) {
+            DB::connection('osce_mis')->commit();
+            return json_encode($this->success_data(['删除成功！']));
+        } catch (\Exception $ex) {
             DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withErrors('系统异常');
+            return json_encode($this->fail($ex));
         }
-
-        DB::connection('osce_mis')->commit();
-        return redirect()->route('osce.admin.Room.getRoomList');
     }
 
 
