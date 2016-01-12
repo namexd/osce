@@ -37,17 +37,15 @@ class IndexController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
-        $IsEnd=ExamScreeningStudent::where('watch_id',$id)->select('is_end')->first()->is_end;
-        if($IsEnd==1){
+        $isBound=WatchLog::where('watch_id',$id)->select('action')->orderBy('updated_at','DESC')->first()->action;
+        if($isBound=='绑定'){
             return response()->json(
                 $this->success_rows(1,'已绑定')
             );
         }
-        if($IsEnd==0){
             return response()->json(
                 $this->success_rows(0,'未绑定')
             );
-        }
     }
 
     /**
@@ -72,28 +70,25 @@ class IndexController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
-        $action='绑定';
-        $userId=ExamScreeningStudent::where('watch_id',$id)->select()->first()->student_id;
-        $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>1]);
+        $result=Watch::where('id',$id)->update(['status'=>1]);
         if($result){
-            $signinDt=ExamScreeningStudent::where('watch_id',$id)->select()->first()->signin_dt;
-            $result=Watch::where('id',$id)->update(['status'=>1]);
-            if($result){
+            $action='绑定';
+            $student_id=ExamScreeningStudent::where('watch_id',$id)->select()->orderBy('signin_dt','DESC')->first()->student_id;
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select()->orderBy('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,
                     'action'         =>$action,
-                    'context'        =>array('time'=>$signinDt,'is_end'=>1,'status'=>1),
-                    'create_user_id' =>$userId,
+                    'context'        =>array('time'=>$updated_at,'status'=>1),
+                    'student_id'     =>$student_id,
                 );
                 $watchModel=new WatchLog();
                 $watchModel->historyRecord($data);
                 return response()->json(
                     $this->success_rows(1,'绑定成功')
                 );
-            }
         }else{
             return response()->json(
-                $this->success_rows(0,'绑定失败','false')
+                $this->success_rows(0,'绑定失败')
             );
         }
     }
@@ -120,25 +115,22 @@ class IndexController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
-        $action='解绑';
-        $userId=ExamScreeningStudent::where('watch_id',$id)->select()->first()->student_id;
-        $result=ExamScreeningStudent::where('watch_id',$id)->update(['is_end'=>0]);
+        $result=Watch::where('watch_id',$id)->update(['status'=>0]);
         if($result){
-            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->first()->updated_at;
-            $result=Watch::where('id',$id)->update(['status'=>0]);
-            if($result){
+            $action='解绑';
+            $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->orderBy('signin_dt','DESC')->first()->student_id;
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,
                     'action'         =>$action,
-                    'context'        =>array('time'=>$updated_at,'is_end'=>0,'status'=>0),
-                    'create_user_id' =>$userId,
+                    'context'        =>array('time'=>$updated_at,'status'=>0),
+                    'student_id'     =>$student_id,
                 );
                 $watchModel=new WatchLog();
                 $watchModel->historyRecord($data);
                 return response()->json(
                     $this->success_rows(1,'解绑成功')
                 );
-            }
         }else{
             return response()->json(
                 $this->success_rows(0,'解绑失败')
@@ -173,31 +165,26 @@ class IndexController extends CommonController
 
         $idCard=$request->get('id_card');
 
-        $students=Student::where('id_card',$idCard)->select('id','code')->get();
-        foreach($students as $item){
-            $student=[
-                'id'    =>$item->id,
-                'code'  =>$item->code,
-//                'exam_id'  =>$item->exam_id,
-            ];
-        }
-        if(!$student){
+        $code=Student::where('id_card',$idCard)->select('code')->first()->code;
+
+        if(!$code){
            return response()->json(
                $this->success_rows(2,'未找到学生相关信息')
            );
         }
-        $student['is_end']=ExamScreeningStudent::where('student_id',$student['id'])->select('is_end')->first()->is_end;
-//        $student['exam']=Exam::where('exam_id',$student['exam_id'])->select()->first(); //查询准考证号
+        $student_id=Student::where('id_card',$idCard)->seclct('id')->first()->id;
 
-        if($student['is_end']==1){
-            return response()->json(
-                $this->success_data($student,0,'已绑定')
-            );
+        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first()->watch_id;
+        if($watch_id){
+            $isBound=WatchLog::where('watch_id',$watch_id)->select('action')->orderBy('updated_at','DESC')->first()->action;
+            if($isBound=='绑定'){
+                return response()->json(
+                    $this->success_rows(1,'已绑定')
+                );
+            }
         }
          return response()->json(
-                 $this->success_data($student,1,'未绑定')
+                 $this->success_data($code,0,'未绑定')
                 );
     }
-
-
 }
