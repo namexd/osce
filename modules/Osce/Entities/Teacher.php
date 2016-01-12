@@ -65,7 +65,7 @@ class Teacher extends CommonModel
 
 
 
-    //邀请老师的数据
+    //邀请sp老师的数据
     public  function invitationContent($teacher_id){
         $builder=$this;
         try{
@@ -82,19 +82,18 @@ class Teacher extends CommonModel
             }
             $data=$builder->select('teacher.name','teacher.id','cases.name as cname','cases.id as caseId')->get()->toArray();
             $list=[];
-            foreach($data as $v){
-                $list['teacher_id']=$v['id'];
-                $list['teacher_name']=$v['name'];
-                $list['case_name']=$v['cname'];
-                $list['case_id']=$v['caseId'];
+            foreach($data as $k=>$v){
+                $list[$k]['teacher_id']=$v['id'];
+                $list[$k]['teacher_name']=$v['name'];
+                $list[$k]['case_name']=$v['cname'];
+                $list[$k]['case_id']=$v['caseId'];
             }
-
-
-//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
-            $openId= Teacher::find($list['teacher_id'])->userInfo->toArray();
-            $list['openid']=$openId['openid'];
 //            dd($list);
+//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
+            $openId= Teacher::find($list[$k]['teacher_id'])->userInfo->toArray();
 
+            $list[$k]['openid']=$openId['openid'];
+//            dd($list);
             return $list;
 
         }catch (\Exception $ex) {
@@ -114,21 +113,23 @@ class Teacher extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showTeacherData($station_id, array $spteacherId)
+    public function showTeacherData($stationId, array $spteacherId)
     {
+//        dd($stationId);
         try {
             //将传入的$spteacherId插进数组中
             if ($spteacherId !== null) {
                 $this->excludeId = $spteacherId;
             }
 
-            if ($station_id === null) {
+            if ($stationId === null) {
                 throw new \Exception('系统发生了错误，请重试！');
             }
 
             //通过传入的$station_id得到病例id
-            $case_id = StationCase::where('station_case.station_id', '=', $station_id)
+            $case_id = StationCase::where('station_case.station_id', '=', $stationId)
                 ->select('case_id')->first()->case_id;
+//            dd($case_id);
 
             $builder = $this->where('type' , '=' , 2); //查询教师类型为指定类型的教师
             $builder = $builder->where('case_id' , '=' , $case_id); //查询符合病例的教师
@@ -141,7 +142,8 @@ class Teacher extends CommonModel
 
             return $builder->select([
                 'id',
-                'name'
+                'name',
+                'status'
             ])->get();
 
         } catch (\Exception $ex) {
@@ -294,6 +296,7 @@ class Teacher extends CommonModel
     public function editInvigilator($id,$name,$mobile,$type){
         //教务人员信息变更
         $teacher    =   $this   ->  find($id);
+
         if(!$teacher)
         {
             throw new   \Exception('没有找到该教务人员');
@@ -318,7 +321,7 @@ class Teacher extends CommonModel
         }
         if($userInfo->mobile!==$mobile)
         {
-            $userInfo   ->mobile  =$name;
+            $userInfo   ->mobile  =$mobile;
         }
         if(!$userInfo->save())
         {
@@ -354,7 +357,7 @@ class Teacher extends CommonModel
         }
         if($userInfo->mobile!==$mobile)
         {
-            $userInfo   ->mobile  =$name;
+            $userInfo   ->mobile  =$mobile;
         }
         if(!$userInfo->save())
         {

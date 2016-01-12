@@ -71,7 +71,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -81,6 +81,7 @@
                 
             </div>
         </div>
+    <div class="container-fluid ibox-content">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
@@ -98,6 +99,7 @@
                 <div class="row">
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
+                            <input type="hidden" name="id" value="{{$id}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 
@@ -134,7 +136,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">考场安排</label>
+                                <label class="col-sm-2 control-label">监考老师</label>
                                 <div class="col-sm-10">
                                     <table class="table table-bordered" id="exam-place">
                                         <thead>
@@ -159,7 +161,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <button class="btn btn-white" type="button">取消</button>
+                                    <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 
                                 </div>
                             </div>
@@ -171,6 +173,7 @@
             </div>
 
         </div>
+    </div>
 </div>
 @stop{{-- 内容主体区域 --}}
 
