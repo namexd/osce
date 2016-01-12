@@ -61,6 +61,8 @@ class ExamTrainController extends CommonController
     {
 
 
+
+
     }
 
 
@@ -108,7 +110,6 @@ class ExamTrainController extends CommonController
             'end_dt' => Input::get('end_dt'),
             'teacher' => Input::get('teacher'),
             'content' => Input::get('content'),
-            'attachments' => Input::get('attachments'),
             'create_user_id' => Input::get('create_user_id'),
         ];
         $attachments  = Input::get('attachments');
