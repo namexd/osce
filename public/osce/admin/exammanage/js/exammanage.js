@@ -534,13 +534,15 @@ function examroom_assignment(){
                                 var teacher = '<option>==请选择==</option>';
                                 var typeValue = [0,'技能操作站','SP站','理论操作站'];
 
-                                //写入dom
-                                html += '<tr class="parent-id-'+e.params.data.id+'">'+
+                                //写入dom 筛选操作，sp、理论、技能
+                                if(data[i].type==2){
+
+                                    html += '<tr class="parent-id-'+e.params.data.id+'">'+
                                             '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
                                             '<td>'+data[i].name+'</td>'+
                                             '<td>'+typeValue[data[i].type]+'</td>'+
                                             '<td>'+
-                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" disabled="disabled">'+teacher+'</select>'+
                                             '</td>'+
                                             '<td class="sp-teacher">'+
                                                 '<div class="teacher-box pull-left">'+
@@ -553,6 +555,28 @@ function examroom_assignment(){
                                             '</td>'+
                                             '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
                                         '</tr>';
+                                }else{
+
+                                    html += '<tr class="parent-id-'+e.params.data.id+'">'+
+                                            '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                            '<td>'+data[i].name+'</td>'+
+                                            '<td>'+typeValue[data[i].type]+'</td>'+
+                                            '<td>'+
+                                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                            '</td>'+
+                                            '<td class="sp-teacher">'+
+                                                '<div class="teacher-box pull-left">'+
+                                                '</div>'+
+                                                '<div class="pull-right" value="'+(parseInt(i)+1)+'">'+
+                                                    '<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
+                                                        '<option>==请选择==</option>'+
+                                                    '</select>'+
+                                                '</div>'+
+                                            '</td>'+
+                                            '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
+                                        '</tr>';
+                                }
+        
                             }
                             //动态插入考场安排
                             thisElement.append(html);
@@ -892,7 +916,7 @@ function examroom_assignment(){
         var thisElement = $(this);
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
-                '<input type="hidden" name="name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
+                '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
                 '<div class="pull-left">'+$teacher+'</div>'+
                 '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);

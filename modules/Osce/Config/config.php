@@ -28,7 +28,7 @@ return [
 			'身份证号'	=>	'idcard',
 			'联系电话'	=>	'mobile',
 			'电子邮箱'	=>	'email',
-			'头像'		=>	'avatar',
+			'头像'		=>	'avator',
 			'备注'		=>	'level'
 		],
 	],

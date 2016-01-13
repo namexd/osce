@@ -119,6 +119,7 @@ class Common{
 
 
     public static function getExclData($request,$name,$cnHeader=true){
+
         $excl=$request->file($name);
         if(empty($excl))
         {
