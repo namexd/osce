@@ -9,7 +9,7 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/systemtable/title_table.js')}}"></script>
+    <script src="{{asset('msc/admin/systemtable/systemtable.js')}}"></script>
 @stop
 
 @section('content')
