@@ -6,7 +6,7 @@
  * Time: 13:55
  */
 
-namespace modules\Osce\Entities;
+namespace Modules\Osce\Entities;
 
 
 class Config extends CommonModel

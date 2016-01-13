@@ -5,7 +5,9 @@
 <style type="text/css">
 	.ibox-title h5{margin-top:10px;}
 	.control-label{text-align: right;height:34px;line-height:34px;font-weight: 100;}
-	.form-control-feedback{right:15px;}
+	.form-control-feedback{right:25px;}
+	.checkbox_input{margin:10px 10px 0 0;font-weight:100;cursor:pointer;}
+	.check_name{padding:0;height:16px;position: relative;top:-3px;}
 </style>
 @stop
 
@@ -13,6 +15,13 @@
 	<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script type="text/javascript">
     	$(function(){
+    		$(".checkbox_input").click(function(){
+    			if($(this).find("input").is(':checked')){
+					$(this).find(".check_icon ").addClass("check");
+				}else{
+					$(this).find(".check_icon").removeClass("check");
+				}
+    		})
    			/**
 		     * 下面是进行插件初始化
 		     * 你只需传入相应的键值对
@@ -77,10 +86,43 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#">媒体设置</a></li>
                         <li class=""><a href="#">场所类型</a></li>
-                        <a href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                     </ul>
                 </div>
                 <div class="ibox float-e-margins">
+                	<div class="ibox-title" style="border:none;">
+			            <h5>媒体设置</h5>
+			        </div>
+			        <div class="ibox-content">
+			            <div class="row">
+			                <div class="col-md-12 ">
+		                        <div class="clearfix form-group">
+		                            <label class="col-sm-2 control-label">通知方式：</label>
+		                            <div class="col-sm-10">
+		                            	<label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">微信</span>
+			                            </label>
+			                            <label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">短信</span>
+			                            </label>
+			                            <label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">邮件</span>
+			                            </label>
+			                            <label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">系统消息</span>
+			                            </label>
+		                            </div>
+		                        </div>
+			                </div>
+			            </div>
+			        </div>
 			        <div class="ibox-title" style="border:none;">
 			            <h5>媒体分享</h5>
 			        </div>
@@ -90,7 +132,7 @@
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label">分享媒体1：</label>
 		                            <div class="col-sm-4">
-		                            	<input class="form-control" type="text" name="name" id="" value="" />
+		                            	<input class="form-control" type="text" name="name" id="" placeholder="微信好友"  value="" />
 		                            </div>
 		                        </div>
 			                </div>
@@ -146,7 +188,7 @@
 		                            <div class="col-sm-4">
 		                            	<select class="form-control" name="country2">
 		                            		<option value="">--请选择--</option>
-		                            		<option value="1">POP3</option>
+		                            		<option value="1" selected="selected">POP3</option>
 		                            		<option value="2">2</option>
 		                            		<option value="3">3</option>
 		                            		<option value="4">4</option>
@@ -164,7 +206,7 @@
 		                            <div class="col-sm-4">
 		                            	<select class="form-control" name="country3">
 		                            		<option value="">--请选择--</option>
-		                            		<option value="1">SMTP</option>
+		                            		<option value="1" selected="selected">SMTP</option>
 		                            		<option value="2">2</option>
 		                            		<option value="3">3</option>
 		                            		<option value="4">4</option>
