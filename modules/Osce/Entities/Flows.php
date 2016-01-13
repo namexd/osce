@@ -8,10 +8,10 @@
 
 namespace Modules\Osce\Entities;
 
-use Illuminate\Support\Facades\DB;
 use Modules\Osce\Entities\CommonModel;
 //use Overtrue\Wechat\Auth;
 use Auth;
+use DB;
 
 class Flows extends CommonModel
 {
@@ -93,11 +93,12 @@ class Flows extends CommonModel
                 }
             }
             //保存  考站监考老师、sp老师安排数据
+            dd($stationData);
             foreach ($stationData as $item) {
                 //考站-老师关系表 数据
                 $stationTeacher = [
                     'station_id'        =>  $item['id'],
-                    'user_id'           =>  empty($item['teacher_id'])? 3:$item['teacher_id'],
+                    'user_id'           =>  empty($item['teacher_id'])? $value['spteacher_id']:$item['teacher_id'],
                     'case_id'           =>  StationCase::where('station_id', $item['id'])->first()->case_id,
                     'created_user_id'   =>  $user ->id,
                     'type'              =>  empty($item['teacher_id'])? 2:1
@@ -105,6 +106,7 @@ class Flows extends CommonModel
                 if(!$result = StationTeacher::create($stationTeacher)){
                     throw new \Exception('考站-老师关系添加失败！');
                 }
+
             }
 
             $connection->commit();

@@ -170,7 +170,7 @@ class ExamRoom extends CommonModel
 
             return $result;
         } catch(\Exception $ex){
-            return $ex;
+            throw $ex;
         }
 
     }

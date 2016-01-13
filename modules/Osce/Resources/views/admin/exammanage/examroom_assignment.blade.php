@@ -126,15 +126,15 @@
                                         </thead>
                                         <tbody index="{{count($examRoomData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
+
                                         @forelse($examRoomData as $item)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
                                                     <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
-                                                        @forelse($item as $value)
+                                                        @foreach($item as $value)
                                                             <option value="{{$value->id}}" selected="selected">{{$value->name}}</option>
-                                                        @empty
-                                                        @endforelse
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
