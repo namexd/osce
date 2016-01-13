@@ -21,16 +21,32 @@ class Standard extends CommonModel
     protected $fillable = ['subject_id', 'content', 'sort', 'score', 'created_user_id','pid','level','answer'];
     public $search = [];
 
+    //创建人用户关联
+    public function user(){
+        return $this->hasOne('App\Entities\User','created_user_id','id');
+    }
 
     //父级考核点
     public function parent(){
-        return $this->hasOne('Modules\Osce\Entities\Subject','id','pid');
+        return $this->hasOne('Modules\Osce\Entities\Standard','id','pid');
     }
 
+    public function childrens(){
+        return $this->hasMany('Modules\Osce\Entities\Standard','pid','id');
+    }
 
-    public function ItmeList(){
-
-
+    public function ItmeList($subjectId){
+        $prointList =   $this->where('subject_id','=',$subjectId)->where('pid','=',0)->get();
+        $data       =   [];
+        foreach($prointList as $proint)
+        {
+            $data[] =   $proint;
+            foreach($proint->childrens as $option)
+            {
+                $data[]=$option;
+            }
+        }
+        return $data;
     }
 
 
