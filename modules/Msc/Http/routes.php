@@ -124,9 +124,9 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
-	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){
+	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
 
-		Route::controller('user', 'UserController');
+
 		Route::get('user/check-code-register',['uses'=>'UserController@getCheckCodeRegister','as'=>'msc.user.getCheckCodeRegister']);
 		Route::controller('personal-center', 'PersonalCenterController');
 		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
@@ -164,8 +164,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		// /msc/wechat/personal-center/index
 	});
 	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){
-
 		Route::controller('user', 'UserController');
+		Route::get('/user/user-login',['uses'=>'UserCotroller@getUserLogin','as'=>'msc.User.getUserLogin']);
 		// /msc/wechat/personal-center/index
 	});
 });

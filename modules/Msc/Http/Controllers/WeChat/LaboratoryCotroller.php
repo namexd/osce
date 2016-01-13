@@ -17,7 +17,6 @@ use Modules\Msc\Entities\OpenPlan;
 use Modules\Msc\Entities\LadDevice;
 use Modules\Msc\Entities\Floor;
 use Illuminate\Support\Facades\Auth;
-use Modules\Msc\Entities\OpenLabApply;
 use DB;
 class LaboratoryCotroller extends MscWeChatController
 {

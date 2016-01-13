@@ -1,6 +1,9 @@
 <?php namespace Modules\Msc\Http\Controllers;
 
 use Pingpong\Modules\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Modules\Msc\Entities\Student;
+use Modules\Msc\Entities\Teacher;
 use DB;
 class MscController extends Controller {
 
@@ -95,5 +98,21 @@ class MscController extends Controller {
 			dd(DB::connection("sys_mis")->getQueryLog());
 		}
 
+	}
+	//判斷學生類別
+	public function checkUserType($user_id){
+
+		$uid = $user_id;
+		$stu = Student::where('id','=',$uid)->first();
+		if($stu){
+			return 2;
+		}else{
+			$tea = Teacher::where('id','=',$uid)->first();
+			if($tea){
+				return  1;
+			}else{
+				return '';
+			}
+		}
 	}
 }
