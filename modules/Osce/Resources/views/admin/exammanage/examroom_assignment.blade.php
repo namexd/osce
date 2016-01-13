@@ -52,12 +52,12 @@
         height: 31px;
         margin: 5px;
     }
-    .pull-right{width: 120px;}
+    .pull-right>select{width: 120px;}
     .teacher{
-        margin: 5px;
+        margin: 0 5px;
     }
     .teacher-box{
-        width: 320px;
+        width: 254px;
     }
     .teacher-warn{
         background-color: #ed5565;
