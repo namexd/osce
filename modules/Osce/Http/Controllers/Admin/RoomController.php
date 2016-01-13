@@ -36,29 +36,28 @@ class RoomController extends CommonController
     {
         //验证规则，暂时留空
         $this->validate($request,[
-            'id' => 'sometimes|integer',
-            'keyword' => 'sometimes',
-            'type' => 'sometimes|integer'
+            'id'        => 'sometimes|integer',
+            'type'      => 'sometimes|integer',
+            'keyword'   => 'sometimes'
         ]);
 
         //获取各字段
         $keyword = e($request->input('keyword', ''));
-        $type = $request->input('type', 1);
-        $id = $request->input('id', '');
-//        dd($type);
+        $type    = $request ->input('type', 1);
+        $id      = $request ->input('id', '');
+
         //获取当前场所的类
         list($area,$data) = $room->showRoomList($keyword, $type, $id);
-//        dd($data);
 
         //展示页面
         if ($type == 1) {
-            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         } else if ($type == 2){
-            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         }else if ($type == 3){
-            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         }else{
-            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         }
 
     }
