@@ -112,95 +112,17 @@
                 </div>
                 <div class="detail_list">
                     <ul class="inner-content">
-                        <li style="line-height: 28px">
-                            <span class="title_number left">1</span>
-                            <span class="title_name left">听诊器</span>
-                            <span class="title_number left">耗材</span>
-                            <span class="title_number left">30</span>
-                        </li>
-                        <li style="line-height: 28px">
-                            <span class="title_number left">2</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li>
-                        <li>
-                            <span class="title_number left">3</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li>
-                        <li style="line-height: 28px">
-                            <span class="title_number left">4</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li>
-                        <li style="line-height: 28px">
-                            <span class="title_number left">5</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">6</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li>
-                        <li style="line-height: 28px">
-                            <span class="title_number left">7</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">8</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">2</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">2</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">2</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
 
-                        </li>
-                        <li style="line-height: 28px">
-                            <span class="title_number left">7</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">8</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">2</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">2</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
-                        </li><li style="line-height: 28px">
-                            <span class="title_number left">2</span>
-                            <span class="title_name left">假体模型</span>
-                            <span class="title_number left">模型</span>
-                            <span class="title_number left">20</span>
+                        @foreach($data['LadDeviceList'] as $k => $val)
 
-                        </li>
+                            <li>
+                                <span class="title_number left">#{{@($k+1)}}</span>
+                                <span class="title_name left">{{ @$val['DeviceInfo']['name'] }}</span>
+                                <span class="title_number left">{{ @$val['devicesCateInfo']['name'] }}耗材</span>
+                                <span class="title_number left">{{ @$val['total']}}</span>
+                            </li>
+                        @endforeach
+
                     </ul>
                 </div>
             </div>

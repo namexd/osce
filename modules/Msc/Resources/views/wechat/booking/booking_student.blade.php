@@ -69,16 +69,15 @@
                         $(result.data.rows.ClassroomApplyList.data).each(function(){
                             $(".manage_list").append('<a href="'+target_url+'?DateTime='+qj.DateTime+'&id='+this.id+'">'
                                     +'<div class="all_list">'
-                                    +'<div class="w85 left">'
-                                    +'<p>'+this.floor.name+'</p>'
-                                    +'<p><span>'+this.floor.address+'</span></p></div>'
-                                    +'<div class="w15 right"><i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>'
+                                    +'<div class="w_85 left">'
+                                    +'<p>'+this.name+'</p>'
+                                    +'<p><span>'+this.floor.address+this.floor.name+this.code+this.floor.address+'</span></p></div>'
+                                    +'<div class="w_15 right"><i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>'
                                     +'</div></div></a>');
                         })
                     }else{
 
                     }
-
                 }
             })
         }
