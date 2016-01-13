@@ -40,10 +40,10 @@ class ProfessionController extends MscController
    public function getProfessionList(Request $request){
       $this->validate($request, [
          'keyword '   =>    'sometimes',
-         'status'  =>   'sometimes|in:0,1'
+         'status'  =>   'sometimes|in:0,1,2'
       ]);
       $keyword  =   urldecode(e($request->input('keyword')));
-      $status  = (int)$request->input('status');
+      $status  = (int)$request->input('status',2);
 //       dd($keyword);
       $profession = new StdProfessional();
       $pagination=$profession-> getprofessionList( $keyword,$status);

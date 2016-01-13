@@ -9,7 +9,7 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/systemtable/resource_table.js')}}"></script>
+    <script src="{{asset('msc/admin/systemtable/systemtable.js')}}"></script>
 @stop
 
 @section('content')
@@ -28,7 +28,7 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button href=""   id="addResources"    class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增资源</button>
+                <button href="" id="addResources" class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增资源</button>
             </div>
 		</div>
         <div class="ibox float-e-margins">
@@ -120,106 +120,110 @@
 @stop
 
 @section('layer_content')
-  
-    {{--新增--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate"  action="{{ route('msc.admin.resources.ResourcesAdd') }}" method="post">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            
-            <h4 class="modal-title" id="myModalLabel">新增资源</h4>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="name" value="" />
+    <input type="hidden" value="" id="">
+    <div id="form_box">
+        {{--新增--}}
+        <input type="hidden" value="{{ route('msc.admin.resources.ResourcesAdd') }}" id="addUrl">
+        <form class="form-horizontal" id="add_from" novalidate="novalidate"  action="{{ route('msc.admin.resources.ResourcesAdd') }}" method="post">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title" id="myModalLabel">新增资源</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="name" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b cate add_select" name="devices_cate_id">
+                            <option value="-1">请选择类型</option>
+                            @if(!empty($devicetype))
+                                @foreach($devicetype as $type)
+                                    <option value="{{$type->id}}">{{$type->name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">说明</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control add-name detail" name="detail" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category"   class="form-control m-b state" name="status">
+                            <option value="-1">请选择状态</option>
+                            <option value="1">正常</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2 right">
+                        <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
-                <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b cate" name="devices_cate_id">
-                        <option value="-1">请选择类型</option>
-                        @if(!empty($devicetype))
-                            @foreach($devicetype as $type)
-                                <option value="{{$type->id}}">{{$type->name}}</option>
-                            @endforeach
-                        @endif
-                    </select>
+        </form>
+        {{--编辑--}}
+        <input type="hidden" value="{{route("msc.admin.resources.ResourcesSave")}}" id="editUrl">
+        <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route("msc.admin.resources.ResourcesSave")}}" method="post">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">编辑资源</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="name" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b cate edit_select" name="devices_cate_id">
+                            @if(!empty($devicetype))
+                                @foreach($devicetype as $type)
+                                    <option value="{{$type->id}}">{{$type->name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">说明</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="detail" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category"   class="form-control m-b state" name="status">
+                            <option value="1">正常</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2 right">
+                        <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">说明</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control add-name detail" name="detail" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b state" name="status">
-                        <option value="-1">请选择状态</option>
-                        <option value="1">正常</option>
-                        <option value="0">禁用</option>
-                    </select>
-                </div>
-            </div>
-            <div class="hr-line-dashed"></div>
-            <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                </div>
-            </div>
-        </div>
-    </form>
-{{--编辑--}}
-    <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route("msc.admin.resources.ResourcesSave")}}" method="post">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">编辑资源</h4>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="name" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
-                <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b cate" name="devices_cate_id">
-                        @if(!empty($devicetype))
-                            @foreach($devicetype as $type)
-                                <option value="{{$type->id}}">{{$type->name}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">说明</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="detail" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b state" name="status">
-                        <option value="1">正常</option>
-                        <option value="0">禁用</option>
-                    </select>
-                </div>
-            </div>
-            <div class="hr-line-dashed"></div>
-            <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 @stop

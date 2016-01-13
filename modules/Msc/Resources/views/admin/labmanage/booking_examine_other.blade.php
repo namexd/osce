@@ -24,32 +24,28 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'booking_examine'}"/>
+    <input type="hidden" id="parameter" value="{'pagename':'booking_examine_other'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
                 <div class="tabs-container">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="/msc/admin/laboratory/lab-order-list?type=1">待处理</a></li>
-                        <li><a href="/msc/admin/laboratory/lab-order-list?type=2">已处理</a></li>
+                        <li><a href="/msc/admin/laboratory/lab-order-list?type=1">待处理</a></li>
+                        <li class="active"><a href="/msc/admin/laboratory/ajax-data?type=2">已处理</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div id="tab-1" class="tab-pane active">
+                        <div id="tab-2" class="tab-pane active">
                             <div class="wrapper wrapper-content animated fadeInRight">
                                 <div class="row table-head-style1 ">
                                     <div class="col-xs-6 col-md-3">
                                         <form action="" method="get">
                                             <div class="input-group">
                                                 <input type="text" id="keyword" name="keyword" placeholder="请输入关键字" class="input-sm form-control" value="">
-                                        <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
-                                        </span>
+                                                <span class="input-group-btn">
+                                                    <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
+                                                </span>
                                             </div>
                                         </form>
-                                    </div>
-                                    <div class="col-xs-6 col-md-9 user_btn">
-                                        <button class="right btn btn-success all_refuse">批量不通过</button>
-                                        <button class="right btn btn-success all_pass" style="margin-right: 10px">批量通过</button>
                                     </div>
                                 </div>
                             </div>
@@ -58,66 +54,61 @@
                                     <form action="" class="wait_handle" id="list_form">
                                         <table class="table table-striped" id="table-striped">
                                             <thead>
-                                                <tr>
-                                                    <th>
-                                                        <label class="check_label checkbox_input check_all marb_none">
-                                                            <div class="check_real check_icon display_inline"></div>
-                                                            <input type="hidden" name="" value="">
-                                                        </label>
-                                                    </th>
-                                                    <th>序号</th>
-                                                    <th>实验室名称</th>
-                                                    <th>地址</th>
-                                                    <th>预约日期</th>
-                                                    <th>预约时段</th>
-                                                    <th>申请人</th>
-                                                    <th>申请时间</th>
-                                                    <th>操作</th>
-                                                </tr>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>实验室名称</th>
+                                                <th>地址</th>
+                                                <th>预约日期</th>
+                                                <th>预约时段</th>
+                                                <th>申请人</th>
+                                                <th>申请时间</th>
+                                                <th>状态</th>
+                                                <th>操作</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
                                             @if(!empty($LabOrderList))
                                                 @foreach($LabOrderList as $k=>$list)
-                                                <tr>
-                                                    <td>
-                                                        <label class="check_label checkbox_input check_one marb_none">
-                                                            <div class="check_real check_icon display_inline"></div>
-                                                            <input type="hidden" name="" value="">
-                                                        </label>
-                                                    </td>
-                                                    <td class="code">{{@$k+1}}</td>
-                                                    <td class="name">{{@$list->labname}}</td>
-                                                    <td class="status">{{@$list->address}}</td>
-                                                    <td>
-                                                        {{@$list->apply_time}}
-                                                    </td>
-                                                    @if(empty(@$list->begintime) && empty(@$list->endtime))
-                                                        <td class="code">
-                                                            <p>8:00-10:00</p>
-                                                            <p>10:00-12:00</p>
+                                                    <tr>
+                                                        <td>
+                                                            <label class="check_label checkbox_input check_one marb_none">
+                                                                <div class="check_real check_icon display_inline"></div>
+                                                                <input type="hidden" name="" value="">
+                                                            </label>
                                                         </td>
-                                                    @else
-                                                        <td class="code">
-                                                            <p>{{@$list->begintime}}</p>
-                                                            <p>{{@$list->endtime}}</p>
+                                                        <td class="code">{{@$k+1}}</td>
+                                                        <td class="name">{{@$list->labname}}</td>
+                                                        <td class="status">临床教学楼3楼3-13</td>
+                                                        <td>
+                                                            {{@$list->apply_time}}
                                                         </td>
-                                                    @endif
-                                                    <td class="name">{{@$list->name}}</td>
-                                                    <td class="status">{{@$list->created_at}}</td>
-                                                    <td class="opera">
-                                                        @if($list->status == 1)
-                                                            <a class="state1 pass" style="text-decoration: none" data-id="{{@$list->id}}"><span>通过</span></a>
-                                                            <a class="state2 refuse" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>不通过</span></a>
+                                                        @if(empty(@$list->begintime) && empty(@$list->endtime))
+                                                            <td class="code">
+                                                                <p>8:00-10:00</p>
+                                                                <p>10:00-12:00</p>
+                                                            </td>
+                                                        @else
+                                                            <td class="code">
+                                                                <p>{{@$list->begintime}}</p>
+                                                                <p>{{@$list->endtime}}</p>
+                                                            </td>
+                                                        @endif
+                                                        <td class="name">{{@$list->name}}</td>
+                                                        <td class="status">{{@$list->created_at}}</td>
+                                                        <td class="opera">
+                                                            @if($list->status == 1)
+                                                                <a class="state1 pass" style="text-decoration: none" data-id="{{@$list->id}}"><span>通过</span></a>
+                                                                <a class="state2 refuse" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>不通过</span></a>
                                                             @else
                                                                 @if($list->status == 2)
                                                                     <a class="state1" style="text-decoration: none" data-id="{{@$list->id}}"><span>已通过</span></a>
-                                                                    @else
-                                                                         <a class="state2 refuse" style="text-decoration: none" data-toggle="modal"><span>未通过</span></a>
-                                                                    @endif
-                                                        @endif
-                                                        <a class="state1 detail" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>详情</span></a>
-                                                    </td>
-                                                </tr>
+                                                                @else
+                                                                    <a class="state2 refuse" style="text-decoration: none" data-toggle="modal"><span>未通过</span></a>
+                                                                @endif
+                                                            @endif
+                                                            <a class="state1 detail" style="text-decoration: none" data-toggle="modal" data-target="#myModal"><span>详情</span></a>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
                                             @endif
                                             </tbody>

@@ -625,11 +625,24 @@ class LaboratoryController extends MscController {
      * 实验室预约记录审核
      */
     public function getLabOrderList(LabApply $LabApply){
-        $type = Input::get('type');
-        $LabOrderList = $LabApply->get_check_list($type);
-       // dd($LabOrderList);
-        return view('msc::admin.labmanage.booking_examine',[
+        $type = Input::get('type')?Input::get('type'):1;
+        $LabOrderList = $LabApply->get_check_list('',$type);
+        foreach($LabOrderList as $v){
+            $v->address = $v->labname.$v->floor.'楼'.$v->code;
+            foreach($v->PlanApply as $plan){
+                $v->playdate =  $plan->OpenPlan->begintime.'-'.$plan->OpenPlan->endtime;
+            }
+        }
+        dd($LabOrderList);
+       // exit;
+        if($type == 1){
+            $view = 'booking_examine';
+        }else{
+            $view = 'booking_examine_other';
+        }
+        return view('msc::admin.labmanage.'.$view,[
             'LabOrderList' => $LabOrderList,
+            'type' => $type
         ]);
     }
 
