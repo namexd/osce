@@ -113,11 +113,11 @@ class Student extends CommonModel
             $user = User::where(['username' => $examineeData['mobile']])->first();
             //如果查找到了，对用户信息 进行编辑处理
             if(count($user) != 0){
-                var_dump('##');
+                //var_dump('##');
                 $user -> name   = $examineeData['name'];    //姓名
                 $user -> gender = $examineeData['gender'];  //性别
                 $user -> mobile = $examineeData['mobile'];  //手机号
-                $user -> avatar = $examineeData['avatar'];  //头像
+                //$user -> avator = $examineeData['avator'];  //头像
                 $user -> idcard = $examineeData['idcard'];  //身份证号
                 $user -> email  = $examineeData['email'];   //邮箱
                 if(!($user->save())){      //跟新用户
@@ -133,7 +133,6 @@ class Student extends CommonModel
             //根据用户ID和考试号查找考生
             $student = $this->where('user_id', '=', $user->id)
                 ->where('exam_id', '=', $exam_id)->first();
-
             //存在考生信息,则更新数据, 否则新增
             if($student){
                 //跟新考生数据
@@ -149,7 +148,7 @@ class Student extends CommonModel
             }else{
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
-                $examineeData['avator'] = $examineeData['avatar'];
+                $examineeData['avator'] = $examineeData['avator'];
                 $examineeData['create_user_id'] = $operator->id;
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');

@@ -22,7 +22,14 @@ return [
 			//暂时空置
 		],
 		'student'=>[
-			//暂时空置
+			'姓名'		=>	'name',
+			'性别'		=>	'gender',
+			'学号'		=>	'code',
+			'身份证号'	=>	'idcard',
+			'联系电话'	=>	'mobile',
+			'电子邮箱'	=>	'email',
+			'头像'		=>	'avator',
+			'备注'		=>	'level'
 		],
 	],
 	'machine_category'=>[
@@ -42,4 +49,5 @@ return [
 	'manager'=>[
 		1
 	],
+	'prepare'	=>	10
 ];

@@ -68,7 +68,8 @@ class Room extends CommonModel
 
 
             //判断传入的type是否合法
-            $area = Area::where('area.cate', '=', $type)->first();
+            $area = Area::where('area.cate', '=', $type)->get();
+//            dd($area);
             if (!$area) {
                 throw new \Exception('传入的场所区域不合法！');
             }

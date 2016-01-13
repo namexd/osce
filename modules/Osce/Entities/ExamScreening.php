@@ -24,6 +24,9 @@ class ExamScreening extends CommonModel
         return $this->hasOne('Modules\Osce\Entities\exam','id','exam_id');
     }
 
+    public function roomsRelation(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamRoom','exam_id','exam_id');
+    }
 
 
     //根据考试id获得考站和老师数据

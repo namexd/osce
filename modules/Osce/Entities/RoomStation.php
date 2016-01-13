@@ -20,6 +20,13 @@ class RoomStation extends CommonModel
     protected $hidden = [];
     protected $fillable = ['room_id', 'station_id', 'create_user_id'];
 
+    public function room(){
+        return $this->hasOne('\Modules\Osce\Entities\Room','id','room_id');
+    }
+
+    public function station(){
+        return $this->hasOne('\Modules\Osce\Entities\Station','id','station_id');
+    }
 
     /**
      * 获取考场对应的考站数据

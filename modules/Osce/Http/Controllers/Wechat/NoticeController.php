@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\InformInfo;
 use Modules\Osce\Entities\Notice;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -34,10 +35,9 @@ class NoticeController extends CommonController
      *
      */
     public function getSystemList(Request $request){
-        $notice =   new Notice();
+        $notice =   new InformInfo();
         $list   =   $notice ->  getList();
-
-        //return view('',['list'=>$list]);
+        return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
     }
 
     /**
@@ -63,7 +63,7 @@ class NoticeController extends CommonController
         ]);
 
         $id     =   $request    ->  get('id');
-        $notice =   Notice::find($id);
+        $notice =   InformInfo::find($id);
 
         if(is_null($notice))
         {
@@ -71,6 +71,6 @@ class NoticeController extends CommonController
             abort(404,'你要查看的通知不存在');
         }
 
-        //return view('',['item'=>$notice]);
+        return view('osce::wechat.exammanage.exam_notice_detail',['notice'=>$notice]);
     }
 }
