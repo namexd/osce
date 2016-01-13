@@ -92,7 +92,14 @@ a{-webkit-touch-callout:none;}
 #QuickNav li i{display:inline-block;font-size:14px;position:absolute;right:8px;top:10px;cursor:pointer}
 #QuickNav li.tag{position:relative;bottom:-1px;}
 #QuickNav li.tag a{background:#fff;color:#333;}
-
+.check_label{position:relative}
+.check_icon{width:16px;height:16px;background:url("../images/green.png") no-repeat;background-size:auto 16px}
+.check_label:hover .check_icon,.check_icon.hover{background-position:-16px 0}
+.check_icon.check{background-position:-32px 0}
+.check_label:hover .check_icon.check{background-position:-32px 0}
+.check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
+.display_inline{display: inline-block;}
+.check_name{font-weight: normal;float: right;text-indent: 6px;}
 
 /*验证*/
 .has-error .form-control{border-color: #ed5565!important;}
