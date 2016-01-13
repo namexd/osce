@@ -66,7 +66,6 @@ class Exam extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-
     public function showExamList($formData='')
     {
         try {
