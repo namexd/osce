@@ -178,18 +178,17 @@ class IndexController extends CommonController
 
         $idCard=$request->get('id_card');
 
-        $code=Student::where('id_card',$idCard)->select('code')->first()->code;
+        $student_id=Student::where('idcard',$idCard)->select('id')->first()->id;
 
-        if(!$code){
+        if(!$student_id){
            return response()->json(
                $this->success_rows(2,'未找到学生相关信息')
            );
         }
-        $data=array('code'=>$code);
-        $student_id=Student::where('id_card',$idCard)->seclct('id')->first()->id;
+        $data=array('code'=>$student_id);
 
-        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first()->watch_id;
-        if($watch_id){
+        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first();
+        if(count($watch_id)>0){
             $status=Watch::where('watch_id',$watch_id)->select('status')->first()->status;
             if($status==1){
                 return response()->json(
