@@ -129,12 +129,15 @@
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
 
                                         @forelse($examRoomData as $item)
+
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
+
                                                     <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
                                                         @foreach($item as $value)
-                                                            <option value="{{$value->id}}" selected="selected">{{$value->name}}</option>
+
+                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
