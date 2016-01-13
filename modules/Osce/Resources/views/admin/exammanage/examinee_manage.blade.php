@@ -40,7 +40,8 @@
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'examinee_manage',
     'background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}',
-    'excel':'{{route('osce.admin.exam.postImportStudent')}}','deleteUrl':'{{route('osce.admin.exam.getDelStudent')}}'}"/>
+    'excel':'{{route('osce.admin.exam.postImportStudent')}}',
+    'deleteUrl':'{{route('osce.admin.exam.getDelStudent')}}'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -75,7 +76,7 @@
                             <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
                         </a>
                         导入考生
-                        <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
+                        <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="2" style="height:34px;padding:5px;width:184px;">
                             <input type="file" name="student" id="file0" multiple="multiple" />
                         </a>
                     </div>
