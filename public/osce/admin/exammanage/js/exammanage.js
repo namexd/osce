@@ -1340,17 +1340,21 @@ function changeTwo(){
 function examinee_manage(){
     //导入考生
     $("#file1").change(function(){
-        console.log($(this).attr("examId"));
+
+        var id=pars.id;
         $.ajaxFileUpload
         ({
             url:pars.excel,
-            type:post,
+            type:'post',
             secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
-            dataType: 'text',//
-            data:$(this).attr("examId"),
+            dataType: 'json',
+            data:{
+                id:id,
+            },
             success: function (data, status)
             {
+                layer.alert('导入成功！');
                 data    =   data.replace('<pre>','').replace('</pre>','');
                 data    =   eval('('+data+')');
                 console.log(data.code);
@@ -1361,6 +1365,7 @@ function examinee_manage(){
             },
             error: function (data, status, e)
             {
+                console.log(data);
                 layer.alert('导入失败！');
             }
         });
