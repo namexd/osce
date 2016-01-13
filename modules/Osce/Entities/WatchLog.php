@@ -18,6 +18,9 @@ class WatchLog extends CommonModel{
    public function historyRecord($data){
           $data['context']=serialize($data['context']);
           WatchLog::insert($data);
-
    }
+
+
+
+
 }

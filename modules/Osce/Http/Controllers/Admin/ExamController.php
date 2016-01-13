@@ -502,7 +502,9 @@ class ExamController extends CommonController
     {
         try {
             //获得上传的数据
-            $exam_id = $request -> get('id');
+            $exam_id = $request ->input('id');
+              var_dump($exam_id);
+//                $exam_id= 1;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
             $studentList = array_shift($data);
