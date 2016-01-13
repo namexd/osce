@@ -63,7 +63,7 @@
                     <form action="{{route('osce.admin.exam.getExamineeManage')}}" method="get">
 
                         <div class="input-group search pull-left">
-                            <input type="text" placeholder="姓名、学号、身份证、电话" class="form-control" name="keyword">
+                            <input type="text" placeholder="姓名、学号、身份证、电话" class="form-control" name="keyword" value="{{$keyword}}">
                             <input type="hidden" name="id" value="{{$id}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>

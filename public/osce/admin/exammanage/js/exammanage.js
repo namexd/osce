@@ -1360,6 +1360,7 @@ function examinee_manage(){
             secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'text',//
+
             success: function (data, status)
             {
 
