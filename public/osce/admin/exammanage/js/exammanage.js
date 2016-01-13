@@ -538,7 +538,7 @@ function examroom_assignment(){
                                     '<td class="sp-teacher">'+
                                         '<div class="teacher-box pull-left">'+
                                         '</div>'+
-                                        '<div class="pull-right" value="'+(parseInt(i)+1)+'">'+
+                                        '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
                                             '<select name="" class="teacher-list js-example-basic-multiple">'+
                                                 '<option>==请选择==</option>'+
                                             '</select>'+
@@ -558,7 +558,7 @@ function examroom_assignment(){
                                     '<td class="sp-teacher">'+
                                         '<div class="teacher-box pull-left">'+
                                         '</div>'+
-                                        '<div class="pull-right" value="'+(parseInt(i)+1)+'">'+
+                                        '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
                                             '<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
                                                 '<option>==请选择==</option>'+
                                             '</select>'+
@@ -631,6 +631,7 @@ function examroom_assignment(){
                     var select2_Object;
                     select2_Object = $('.teacher-list').select2({
                         placeholder: "==请选择==",
+                        minimumResultsForSearch: Infinity,
                         ajax:{
                             url: pars.spteacher_list,
                             delay:0,
@@ -673,7 +674,40 @@ function examroom_assignment(){
                             }
 
                         }
-                    });
+
+
+                    })/*.on('select2:select', function(e){
+
+                        var thisElement = $(this);
+                        //获取老师id
+                        var ids = [];
+                        thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+                                    var id = $(elem).attr('value');
+                                    if(id==null){
+                                        return;
+                                    }else{
+                                        ids.push(id);
+                                    }
+                                });
+                        $.ajax({
+                            url: pars.spteacher_list,
+                            type:'get',
+                            data:{id:ids,station_id:$(select2_Object).parent().attr('value')},
+                            success:function(res){
+                                console.log(res,ids)
+                                //数据格式化
+                                var str = [];
+                                for(var i in res.data.rows){
+                                    str.push({id:res.data.rows[i].id,text:res.data.rows[i].name});
+                                }
+                                console.log(str)
+
+                                thisElement.select2('destroy');
+                                thisElement.select2({data:str});
+                            }
+                        });
+
+                    });*/
 
                 }
             }
@@ -1306,17 +1340,21 @@ function changeTwo(){
 function examinee_manage(){
     //导入考生
     $("#file1").change(function(){
-        console.log($(this).attr("examId"));
+
+        var id=pars.id;
         $.ajaxFileUpload
         ({
             url:pars.excel,
-            type:post,
+            type:'post',
             secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
-            dataType: 'text',//
-            data:$(this).attr("examId"),
+            dataType: 'json',
+            data:{
+                id:id,
+            },
             success: function (data, status)
             {
+                layer.alert('导入成功！');
                 data    =   data.replace('<pre>','').replace('</pre>','');
                 data    =   eval('('+data+')');
                 console.log(data.code);
@@ -1327,6 +1365,7 @@ function examinee_manage(){
             },
             error: function (data, status, e)
             {
+                console.log(data);
                 layer.alert('导入失败！');
             }
         });
