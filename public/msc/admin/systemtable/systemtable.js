@@ -306,11 +306,44 @@ function title_table(){
     //编辑
     $('.edit').click(function () {
         $("#add_from").hide();
-        $("#edit_from").show();
+        $("#edit_from").remove();
+        $('#formBox').append('<form class="form-horizontal" id="edit_from" novalidate="novalidate" action="'+$('#editUrl').val()+'" method="post">' +
+            '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+            '<h4 class="modal-title" id="myModalLabel">编辑职称</h4>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<div class="form-group">' +
+            '<label class="col-sm-3 control-label"><span class="dot">*</span>职称名称</label>' +
+            '<div class="col-sm-9">' +
+            '<input type="text" class="form-control name add-name" name="name" value="" />' +
+            '</div>' +
+            '</div>' +
+            '<div class="form-group"> ' +
+            '<label class="col-sm-3 control-label">职称描述</label> ' +
+            '<div class="col-sm-9"> ' +
+            '<input type="text" class="form-control describe add-describe" name="description" /> ' +
+            '</div> ' +
+            '</div> ' +
+            '<div class="form-group"> ' +
+            '<label class="col-sm-3 control-label"><span class="dot">*</span>状态</label> ' +
+            '<div class="col-sm-9"> ' +
+            '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
+            '<option value="1">正常</option> ' +
+            '<option value="0">禁用</option> ' +
+            '</select> ' +
+            '</div> ' +
+            '</div> ' +
+            '<div class="hr-line-dashed"></div> ' +
+            '<div class="form-group"> ' +
+            '<div class="col-sm-4 col-sm-offset-2 right"> ' +
+            '<button class="btn btn-primary sure_btn"  type="submit" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button> ' +
+            '<button class="btn btn-white2 right" type="button" data-dismiss="modal" id="close">关&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;闭</button> ' +
+            '</div> ' +
+            '</div> ' +
+            '</div> ' +
+            '</form>');
         edit_from();
-//            去除为空样式
-        $(".sure_btn").removeAttr("disabled");
-        $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
         if($(this).attr("data")){
             $('input[name=name]').val($(this).parent().parent().find('.name').html());
             $('input[name=description]').val($(this).parent().parent().find('.describe').html());
