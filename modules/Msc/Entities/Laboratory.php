@@ -156,7 +156,14 @@ class Laboratory extends Model
             return $this->where('id','=',$id)->with(['Floor','OpenPlan'=>function($OpenPlan) use ($y,$m,$d){
                 $OpenPlan->where('year','=',$y)->where('month','=',$m)->where('day','=',$d)->with('PlanApply');
             },'LabApply'=>function($LabApply) use($dateTime,$type){
-                $LabApply->where('apply_time','=',$dateTime)->where('type','=',$type)->with('PlanApply');
+                //TODO 开放实验室预约记录
+                if($type == 2){
+                    $LabApply->where('apply_time','=',$dateTime)->where('type','=',$type)->where('user_type','=',2)->with('PlanApply');
+                //TODO 普通实验室预约记录
+                }else{
+                    $LabApply->where('apply_time','=',$dateTime)->where('type','=',$type);
+                }
+
             }])->first();
         }else{
             return  false;
