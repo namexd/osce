@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword">
+                <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword" value="{{(isset($keyword)?$keyword:'')}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                 </span>
