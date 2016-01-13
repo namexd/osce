@@ -6,11 +6,11 @@
  * Time: 18:48
  */
 
-namespace modules\Osce\Http\Controllers\Admin;
+namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
-use modules\Osce\Entities\Config;
+use Modules\Osce\Entities\Config;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 
