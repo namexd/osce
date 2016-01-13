@@ -76,7 +76,7 @@
                             <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
                         </a>
                         导入考生
-                        <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="2" style="height:34px;padding:5px;width:184px;">
+                        <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="" style="height:34px;padding:5px;width:184px;">
                             <input type="file" name="student" id="file0" multiple="multiple" />
                         </a>
                     </div>
