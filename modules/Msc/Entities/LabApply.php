@@ -30,20 +30,12 @@ class LabApply  extends Model
         //return
     }
 
-    /**
-     * @access public
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年1月12日16:37:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
     public function PlanApply(){
         return  $this->hasMany('Modules\Msc\Entities\PlanApply','apply_id','id');
     }
 
-
     //后台获取审核列表
-    public function get_check_list($keyword="",$type=0){
+    public function get_check_list($keyword="",$type=1,$id=''){
         $userDb    = config('database.connections.sys_mis.database');
         $userTable = $userDb.'.users';
 
@@ -61,25 +53,105 @@ class LabApply  extends Model
 
         $plan_applyDb    = config('database.connections.msc_mis.database');
         $plan_applyTable = $plan_applyDb.'.plan_apply';
-        if($type == 1){
-            $builder = $this->where($lab_applyTable.'.status','=',1);
+
+        if(!empty($keyword)){
+            $builder = $this->where($userTable.'.name','like','%'.$keyword.'%');
         }else{
-            $builder = $this->where($lab_applyTable.'.status','>',1);
+            $builder = $this;
         }
-        //dd($builder);
+
+        if($type == 1){
+            $builder = $builder->where($lab_applyTable.'.status','=',1);
+        }else{
+            $builder = $builder->where($lab_applyTable.'.status','<>',1);
+        }
+        if(!empty($id)){
+            $builder = $builder->where($labTable.'.manager_user_id','=',$id);
+        }
+        $builder = $builder->leftJoin($userTable, function($join) use($lab_applyTable) {
+            $join->on($join->table.'.id', '=', $lab_applyTable.'.apply_user_id');
+        })->leftJoin($labTable, function($join) use($lab_applyTable) {
+            $join->on($join->table.'.id', '=', $lab_applyTable.'.lab_id');
+        })->with(['PlanApply'=>function($PlanApply){
+            $PlanApply->with('OpenPlan');
+        }]);
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code')
+            ->orderby($lab_applyTable.'.apply_time')->paginate(config('msc.page_size',10));
+        //dd($data);
+        return $data;
+
+    }
+
+    //后台获取审核列表单条信息
+    public function getonelaborderdetail($id){
+        $userDb    = config('database.connections.sys_mis.database');
+        $userTable = $userDb.'.users';
+
+        $plan_applyDb    = config('database.connections.msc_mis.database');
+        $plan_applyTable = $plan_applyDb.'.plan_apply';
+
+        $open_planDb    = config('database.connections.msc_mis.database');
+        $open_planTable = $open_planDb.'.open_plan';
+
+        $lab_applyDb    = config('database.connections.msc_mis.database');
+        $lab_applyTable = $lab_applyDb.'.lab_apply';
+
+        $labDb    = config('database.connections.msc_mis.database');
+        $labTable = $labDb.'.lab';
+
+        $plan_applyDb    = config('database.connections.msc_mis.database');
+        $plan_applyTable = $plan_applyDb.'.plan_apply';
+        $builder = $this->where($lab_applyTable.'.id','=',$id);
+        $builder = $builder->leftJoin($userTable, function($join) use($lab_applyTable) {
+            $join->on($join->table.'.id', '=', $lab_applyTable.'.apply_user_id');
+        })->leftJoin($labTable, function($join) use($lab_applyTable) {
+            $join->on($join->table.'.id', '=', $lab_applyTable.'.lab_id');
+        })->with(['PlanApply'=>function($PlanApply){
+            $PlanApply->with('OpenPlan');
+        }]);
+
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$labTable.'.total')
+            ->first();
+        return $data;
+
+    }
+
+    //根据预约ID查找批量选择的所有相关数据
+    public function getonelaborderdata($arr=''){
+        $userDb    = config('database.connections.sys_mis.database');
+        $userTable = $userDb.'.users';
+
+        $plan_applyDb    = config('database.connections.msc_mis.database');
+        $plan_applyTable = $plan_applyDb.'.plan_apply';
+
+        $open_planDb    = config('database.connections.msc_mis.database');
+        $open_planTable = $open_planDb.'.open_plan';
+
+        $lab_applyDb    = config('database.connections.msc_mis.database');
+        $lab_applyTable = $lab_applyDb.'.lab_apply';
+
+        $labDb    = config('database.connections.msc_mis.database');
+        $labTable = $labDb.'.lab';
+
+        $plan_applyDb    = config('database.connections.msc_mis.database');
+        $plan_applyTable = $plan_applyDb.'.plan_apply';
+
+        if(!empty($arr)){
+            $builder = $this->where($userTable.'.name','like','%'.$keyword.'%');
+        }else{
+            $builder = $this;
+        }
 
         $builder = $builder->leftJoin($userTable, function($join) use($lab_applyTable) {
             $join->on($join->table.'.id', '=', $lab_applyTable.'.apply_user_id');
         })->leftJoin($labTable, function($join) use($lab_applyTable) {
             $join->on($join->table.'.id', '=', $lab_applyTable.'.lab_id');
-        })->leftJoin($plan_applyTable, function($join) use($lab_applyTable) {
-            $join->on($join->table.'.apply_id', '=', $lab_applyTable.'.id');
-        })->leftJoin($open_planTable, function($join) use($plan_applyTable) {
-            $join->on($join->table . '.id', '=', $plan_applyTable . '.open_plan_id');
-        });
-        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$plan_applyTable.'.open_plan_id',$open_planTable.'.begintime as obegintime',$open_planTable.'.endtime as oendtime')
+        })->with(['PlanApply'=>function($PlanApply){
+            $PlanApply->with('OpenPlan');
+        }]);
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code')
             ->orderby($lab_applyTable.'.apply_time')->paginate(config('msc.page_size',10));
-        dd($data);
+        //dd($data);
         return $data;
 
     }
