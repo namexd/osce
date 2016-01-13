@@ -117,7 +117,7 @@ class Student extends CommonModel
                 $user -> name   = $examineeData['name'];    //姓名
                 $user -> gender = $examineeData['gender'];  //性别
                 $user -> mobile = $examineeData['mobile'];  //手机号
-                //$user -> avator = $examineeData['avator'];  //头像
+//                $user -> avator = $examineeData['avator'];  //头像
                 $user -> idcard = $examineeData['idcard'];  //身份证号
                 $user -> email  = $examineeData['email'];   //邮箱
                 if(!($user->save())){      //跟新用户
@@ -133,6 +133,7 @@ class Student extends CommonModel
             //根据用户ID和考试号查找考生
             $student = $this->where('user_id', '=', $user->id)
                 ->where('exam_id', '=', $exam_id)->first();
+
             //存在考生信息,则更新数据, 否则新增
             if($student){
                 //跟新考生数据
@@ -146,6 +147,7 @@ class Student extends CommonModel
                     throw new \Exception('新增考生失败！');
                 }
             }else{
+                var_dump(11111);
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
                 $examineeData['avator'] = $examineeData['avator'];
@@ -181,5 +183,24 @@ class Student extends CommonModel
     }
     public function sendRegisterEms($mobile,$password){
         //发送短消息
+    }
+
+    /**
+     * 考生身份验证
+     * @param $watch_id
+     * @return bool
+     */
+
+    public  function studentList($watch_id){
+        return Student::leftjoin('watch_log',function($join){
+            $join ->on('student.id','=','watch_log.student_id');
+        })->where('watch_log.id','=',$watch_id)
+          ->select([
+              'student.name as name',
+              'student.code as code',
+              'student.idcard as idcard',
+              'student.mobile as mobile'
+          ])
+            ->get();
     }
 }

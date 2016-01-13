@@ -502,7 +502,9 @@ class ExamController extends CommonController
     {
         try {
             //获得上传的数据
-            $exam_id = $request -> get('id');
+            $exam_id = $request ->input('id');
+              var_dump($exam_id);
+//                $exam_id= 1;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
             $studentList = array_shift($data);
@@ -556,7 +558,6 @@ class ExamController extends CommonController
          $examModel= new Exam();
         //从模型得到数据
         $data=$examModel->getList($formData);
-
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }

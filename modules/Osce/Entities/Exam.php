@@ -237,10 +237,8 @@ class Exam extends CommonModel
 
     //考生查询
     public function getList($formData=''){
-         $builder=$this->Join(
-             'student','student.id','=','exam.student_id'
-         );
-         if($formData['exam_name']){
+         $builder=$this->Join('student','student.exam_id','=','exam.id');
+        if($formData['exam_name']){
             $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'');
          }
         if($formData['student_name']){
@@ -250,13 +248,17 @@ class Exam extends CommonModel
         $builder->select([
             'exam.name as exam_name',
             'student.name as student_name',
-            'student.gender as gender',
             'student.code as code',
-            'student.id_card as idCard',
+            'student.idcard as idCard',
             'student.mobile as mobile',
+            'student.user_id as user_id',
         ]);
 
         $builder->orderBy('exam.begin_dt');
         return $builder->paginate(10);
+    }
+
+    public function getTodayList($time){
+
     }
 }
