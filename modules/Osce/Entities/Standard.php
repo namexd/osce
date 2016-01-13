@@ -12,7 +12,7 @@ namespace Modules\Osce\Entities;
 class Standard extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'subject_item';
+    protected $table = 'standard';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
@@ -22,7 +22,16 @@ class Standard extends CommonModel
     public $search = [];
 
 
+    //¸¸¼¶¿¼ºËµã
+    public function parent(){
+        return $this->hasOne('Modules\Osce\Entities\Subject','id','pid');
+    }
 
+
+    public function ItmeList(){
+
+
+    }
 
 
 
