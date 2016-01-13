@@ -1306,16 +1306,17 @@ function changeTwo(){
 function examinee_manage(){
     //导入考生
     $("#file1").change(function(){
+        console.log($(this).attr("examId"));
         $.ajaxFileUpload
         ({
-
             url:pars.excel,
+            type:post,
             secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'text',//
+            data:$(this).attr("examId"),
             success: function (data, status)
             {
-
                 data    =   data.replace('<pre>','').replace('</pre>','');
                 data    =   eval('('+data+')');
                 console.log(data.code);
