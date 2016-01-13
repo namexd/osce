@@ -16,14 +16,14 @@ class IndexController extends CommonController
 
 
     /**
-     *检测是否绑定
+     *检测腕表是否存在
      * @method GET 接口
      * @url /api/1.0/private/osce/watch-status
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        id        腕表Id(必须的)
+     * * int        code        腕表code必须的)
      *
      * @return ${response}
      *
@@ -34,22 +34,29 @@ class IndexController extends CommonController
      */
     public function getWatchStatus(Request $request){
         $this->validate($request,[
-            'id' =>'required|integer'
+            'code' =>'required|integer'
         ]);
-        $id=$request->get('id');
-        $status=Watch::where('watch_id',$id)->select('status')->first()->status;
-        if($status==1){
+        $code=$request->get('code');
+        $id=Watch::where('code',$code)->select()->first()->id;
+        if(!$id){
             return response()->json(
-                $this->success_rows(1,'已绑定')
-            );
-        }elseif($status==0){
-            return response()->json(
-                $this->success_rows(0,'未绑定')
+                $this->success_rows(3,'该腕表不存在')
             );
         }else{
-            return response()->json(
-                $this->success_rows(2,'腕表损坏或者正在维修')
-            );
+            $status=Watch::where('id',$id)->select()->first()->status;
+            if($status==1){
+                return response()->json(
+                    $this->success_rows(1,'已绑定')
+                );
+            }elseif($status==0){
+                return response()->json(
+                    $this->success_rows(0,'未绑定')
+                );
+            }else{
+                return response()->json(
+                    $this->success_rows(2,'腕表损坏或者正在维修')
+                );
+            }
         }
 
     }
@@ -63,7 +70,7 @@ class IndexController extends CommonController
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * int        id        腕表id(必须的)
-     *
+     * * string     id_card   身份证号码(必须的)
      * @return ${response}
      *
      * @version 1.0
@@ -73,13 +80,15 @@ class IndexController extends CommonController
      */
     public function getBoundWatch(Request $request){
         $this->validate($request,[
-            'id' =>'required|integer'
+            'id'      =>'required|integer',
+            'id_card' =>'required'
         ]);
         $id=$request->get('id');
+        $id_card=$request->get('id_card');
         $result=Watch::where('id',$id)->update(['status'=>1]);
         if($result){
             $action='绑定';
-            $student_id=ExamScreeningStudent::where('watch_id',$id)->select()->orderBy('signin_dt','DESC')->first()->student_id;
+            $student_id=ExamScreeningStudent::where('idcard',$id_card)->select()->first()->id;
             $updated_at=ExamScreeningStudent::where('watch_id',$id)->select()->orderBy('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,
@@ -121,10 +130,11 @@ class IndexController extends CommonController
             'id' =>'required|integer'
         ]);
         $id=$request->get('id');
+        $id_card=$request->get('id_card');
+        $student_id=ExamScreeningStudent::where('idcard',$id_card)->select()->first()->id;
         $result=Watch::where('watch_id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
-            $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->orderBy('updated_at','DESC')->first()->student_id;
             $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,

@@ -14,6 +14,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//忘记密码
 		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.wechat.user.getForgetPassword']);
 	});
+
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
@@ -165,7 +166,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
 
 	});
+
 });
+
+
 //微信端路由
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::group(['prefix'=>'wechat','namespace'=>'Wechat'],function(){
@@ -212,6 +216,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 
 	});
+
 });
 
 
@@ -231,7 +236,14 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('update',['uses'=>'IndexController@getUpdateWatch']);
 		Route::get('delete',['uses'=>'IndexController@getDeleteWatch']);
 
+
+		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
+			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr','as'=>'osce.admin.vcr.getRoomVcr']);
+
+		});
 	});
+
+
 
 });
 
