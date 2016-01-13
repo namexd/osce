@@ -6,11 +6,11 @@
  * Time: 18:48
  */
 
-namespace modules\Osce\Http\Controllers\Admin;
+namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
-use modules\Osce\Entities\Config;
+use Modules\Osce\Entities\Config;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 
@@ -34,10 +34,10 @@ class ConfigController extends CommonController
     public function getIndex()
     {
         //从文件获取配置数组
-        $tempConfig = config(message);
+        $tempConfig = config('message');
         //从数据库获取配置
         $tempDB = Config::all();
-        return view('', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
+        return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
     }
 
     /**
