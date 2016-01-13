@@ -558,11 +558,6 @@ class ExamController extends CommonController
          $examModel= new Exam();
         //从模型得到数据
         $data=$examModel->getList($formData);
-        $eaxm=new Exam();
-        $start=time();
-
-        $list=$eaxm->getTodayList($start);
-        dd($list->toSql());
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }

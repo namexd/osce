@@ -119,7 +119,26 @@ class PadController extends  CommonController{
              );
        }
 
-
+    /**
+     *
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
        public function getTimingList(Request $request){
             $this->validate($request,[
                  'vcr_id' =>'required|integer',
