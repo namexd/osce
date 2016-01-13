@@ -52,6 +52,7 @@
         height: 31px;
         margin: 5px;
     }
+    .pull-right{width: 120px;}
     .teacher{
         margin: 5px;
     }
@@ -100,7 +101,7 @@
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
                             <input type="hidden" name="id" value="{{$id}}">
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 
                                 <div class="col-sm-10">
@@ -109,7 +110,7 @@
                                         <option value="顺序">顺序</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考场安排</label>
@@ -158,6 +159,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">监考老师</label>
                                 <div class="col-sm-10">
+                                    <br/>
                                     <table class="table table-bordered" id="exam-place">
                                         <thead>
                                         <tr>
