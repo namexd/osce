@@ -80,7 +80,6 @@ class StationController extends CommonController
 
         list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList();
 
-
         //获得上次的时间限制
         $time = $request->session()->get('time',"");
         //将下拉菜单的数据传到页面上
@@ -106,21 +105,22 @@ class StationController extends CommonController
             DB::connection('osce_mis')->beginTransaction();
             //验证略
             $this->validate($request, [
-                'name' => 'required',
-                'type' => 'required|integer',
-                'mins' => 'required|integer',
-                'subject_id' => 'required|integer',
-                'description' => 'required',
-                'code' => 'required',
-                'vcr_id' => 'required|integer',
-                'case_id' => 'required|integer',
-                'room_id' => 'required|integer',
+                'name'          => 'required',
+                'type'          => 'required|integer',
+                'description'   => 'required',
+                'code'          => 'required',
+                'mins'          => 'required',
+                'vcr_id'        => 'required|integer',
+                'room_id'       => 'required|integer',
+                'case_id'       => 'required|integer',
+                'subject_id'    => 'required|integer'
             ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'description', 'code');
-            $vcrId = $request->input('vcr_id');
+            $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
+
             //将参数放进一个数组中，方便传送
             $formData = [$stationData, $vcrId, $caseId, $roomId];
 
@@ -170,8 +170,9 @@ class StationController extends CommonController
         list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList($id);
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourcemanage.test_station_edit',
-            ['placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case, 'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg]);
-
+            [   'placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case,
+                'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg
+            ]);
     }
 
     /**
@@ -189,25 +190,27 @@ class StationController extends CommonController
     {
         //验证数据，暂时省略
         $this->validate($request, [
-            'name' => 'required',
-            'type' => 'required|integer',
-            'mins' => 'required|integer',
-            'subject_id' => 'required|integer',
-            'description' => 'required',
-            'code' => 'required',
-            'vcr_id' => 'required|integer',
-            'case_id' => 'required|integer',
-            'room_id' => 'required|integer',
-            'id' => 'required|integer',
+            'id'            => 'required|integer',
+            'name'          => 'required',
+            'type'          => 'required|integer',
+            'mins'          => 'required|integer',
+            'subject_id'    => 'required|integer',
+            'description'   => 'required',
+            'code'          => 'required',
+            'vcr_id'        => 'required|integer',
+            'case_id'       => 'required|integer',
+            'room_id'       => 'required|integer',
         ]);
+
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'type', 'mins', 'subject_id', 'description', 'code');
-            $vcrId = $request->input('vcr_id');
+            $placeData = $request->only('name', 'code', 'type', 'description', 'subject_id', 'mins');
+            $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
-            $id = $request->input('id');
-            $formData = [$placeData, $vcrId, $caseId,$roomId];
+            $id     = $request->input('id');
+            $formData = [$placeData, $vcrId, $caseId, $roomId];
+
             $model->updateStation($formData, $id);
 
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
@@ -265,16 +268,17 @@ class StationController extends CommonController
             //根据station的id找到对应的vcr的id
             $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
 
-            $vcr = Vcr::where('status', 1)
-                ->orWhere(function($query) use($vcrId){
-                    $query->where('id','=',$vcrId);
-                })
-                ->select(['id', 'name'])
-                ->get();     //关联摄像机
+            $vcr  = Vcr::where('status', 1)
+                    ->orWhere(function($query) use($vcrId){
+                        $query->where('id','=',$vcrId);
+                    })
+                    ->select(['id', 'name'])
+                    ->get();     //关联摄像机
         }
-        $case = CaseModel::all(['id', 'name']);
-        $room = Room::all(['id', 'name']);  //房间
-        $subject = Subject::all(['id', 'title']);
+        $case   = CaseModel::all(['id', 'name']);
+        $room   = Room::all(['id', 'name']);        //房间
+        $subject= Subject::all(['id', 'title']);
+
         return array($placeCate, $vcr, $case, $room, $subject);  //评分标准
     }
 }

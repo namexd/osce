@@ -787,7 +787,7 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
-        $watch    =   Watch::find($id);
+        $watch  =   Watch::find($id);
 
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
     }

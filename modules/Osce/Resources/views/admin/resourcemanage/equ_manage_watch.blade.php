@@ -90,7 +90,11 @@
                 </table>
 
                 <div class="btn-group pull-right">
-
+                    <nav>
+                        <ul class="pagination">
+                            {!! $list->appends($_GET)->render() !!}
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </form>
