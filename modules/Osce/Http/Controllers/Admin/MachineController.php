@@ -109,7 +109,7 @@ class MachineController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Luohaihua <Luohaihua@misrobot.com> Zhoufuxiang 2016-01-13 15:21:48
      * @date 2015-12-30 11:45
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
@@ -118,14 +118,14 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'cate_id'   =>  'sometimes|integer',
             'name'      =>  'sometimes',
-            'status'      =>  'sometimes'
+            'status'    =>  'sometimes'
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
         $cate_id    =   $cate_id==0? 1:$cate_id;
         $name       =   intval($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
-        $cate   =   config('osce.machine_category');
+        $cate       =   config('osce.machine_category');
         if(is_null($cate))
         {
             abort(404,'设备类别不存在，请检查数据或联系管理员');
@@ -135,20 +135,18 @@ class MachineController extends CommonController
             abort(404,'设备类别不存在，请检查数据或联系管理员');
         }
         $model  =   $this   ->  getMachineModel($cate_id);
-        $list   =   $model  ->  getList($name,$status);
+        $list   =   $model  ->  getList($name, $status);
 
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)
         {
-            case 1:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
-                break;
             case 2:
                 return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
             case 3:
                 return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
                 break;
+            case 1:
             default:
                 return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
         }

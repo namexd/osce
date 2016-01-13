@@ -75,9 +75,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @forelse($list as $item)
+                    @forelse($list as $key => $item)
                         <tr>
-                            <td>{{$item->id}}</td>
+                            <td>{{$key+1}}</td>
                             <td>{{$item->code}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$machineStatuValues[$item->status]}}</td>
