@@ -1,7 +1,7 @@
 <?php namespace Modules\Msc\Http\Controllers\WeChat;
 
 use Illuminate\Support\Facades\Input;
-use Modules\Msc\Http\Controllers\MscWeChatController;
+use Modules\Msc\Http\Controllers\MscController;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use App\Extensions\OAuth\PasswordGrantVerifier;
@@ -11,7 +11,7 @@ use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use App\Entities\User;
 use Modules\Msc\Entities\ProfessionalTitle;
-class UserController extends MscWeChatController {
+class UserController extends MscController {
 
 	/**
 	 * 用户登录
