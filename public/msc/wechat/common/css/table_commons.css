@@ -22,7 +22,7 @@
 }
 
 .btn4
-{ background-color:#6595e1; font-size:16px;
+{ background-color:#6595e1; font-size:14px;
     width:100%; height:34px;
     color:#fff; text-align:center;
     border:none;border-radius:4px;
@@ -45,81 +45,31 @@
     border: 1px solid #dce0e4!important;}
 .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px!important;}
 
+/*textarea样式*/
+.textarea1{
+    width: 100%;border:1px solid #dce0e4;
+    height: 100px;
+    line-height: 20px;
+    border-radius: 4px;
+    padding:10px 5px;
+}
 
+/*check_label样式*/
+.check_label{position:relative}
+.check_icon{width:16px;height:16px;background:url("../img/green.png") no-repeat;background-size:auto 16px}
+.check_label:hover .check_icon,.check_icon.hover{background-position:-16px 0}
+.check_icon.check{background-position:-32px 0}
+.check_label:hover .check_icon.check{background-position:-32px 0}
+.check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
+.display_inline{display: inline-block;}
+.check_name{font-weight: normal;float: right;text-indent: 6px;}
 /*表单验证*/
 .select2-container--default .select2-selection--single{ height: 36px;
     border: 1px solid #ccc;}
 .select2-container--default .select2-selection--single .select2-selection__arrow{top:3px;}
 .has-feedback label~.form-control-feedback {top: 2px;}
 
-/*列表页面样式2*/
 
-.main_list  a{ color: #676a6c;}
-.main_list {
-    display: inline-block;
-    border:1px solid #dce0e4; /*border-radius: 4px;*/
-    background-color: #fff;
-    width: 100%
-
-}
-.title_nav{
-    overflow: hidden;
-}
-.main_list  .title_nav .title{
-    float:left;
-    color:#a2a2a2; font-size: 14px;
-    text-align: center; height: 30px; line-height: 30px;
-    border-bottom: 1px solid #eff3f6;
-}
-.main_list .title_nav .name{
-    width: 60%;
-}
-
-.main_list .title_nav .number{
-    width: 40%;
-}
-.detail_list{
-    width:100%;
-    display: table;
-    padding:0px 3% 0;
-
-}
-.detail_list ul li{
-    float:left;
-    width: 100%;
-    text-align: center; height: 30px; line-height: 30px;
-    border-bottom: 1px solid #eff3f6;
-    display: table;
-}
-.detail_list ul li:last-child{ border-bottom: none;}
-.detail_list ul li div{ float: left; margin: 10px 0;}
-.detail_list .name{
-    width: 60%; font-size: 16px;
-}
-.detail_list .name img{
-    width:70px;
-}
-.detail_list .number{
-    width: 40%; font-size: 16px; vertical-align: middle; line-height: 46px;
-    border-left: 1px solid #eff3f6;
-}
-
-.main_list .search_none{
-    width:100px;   margin: 0 auto; overflow: hidden; margin-bottom: 20px; margin-top: 20px;
-}
-.main_list .btn_search{
-    display: inline-block;
-    width: 100px;
-    height: 100px;
-    padding: 10px 16px;
-    border-radius:50px;
-    font-size: 50px;
-    line-height: 1.33;
-    background-color: #bbcce7;
-    border-color: #bbcce7;
-    color: #FFFFFF;
-    text-align: center;
-}
 
 
 /*侧边栏滑出隐藏层 */
@@ -166,13 +116,13 @@
     background:#fff;border-bottom:1px solid #DCE0E4;
     box-shadow: 0 1px 4px #DCE0E4;}
 
-.manage_list div p:last-child{padding:0 8px 2px 8px;}
+.manage_list div p:last-child{padding:0 8px 2px 3%;}
 .manage_list .all_list{ overflow: hidden;border-top:1px solid #dce0e4}
-.manage_list .all_list p{padding: 5px 8px 0 8px; color:#3c3c3c;}
+.manage_list .all_list p{padding: 5px 8px 0 3%; color:#3c3c3c;}
 .manage_list .all_list p span{color: #9c9c9c; font-size: 12px;  }
 .manage_list .all_list .i_right{float:right;margin:10px 15px 0 0;font-size:26px;color:#ccc;}
 
-/*select样式2*/
+/*列表样式2列表样式1*/
 .add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
 .add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
     padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
@@ -187,4 +137,46 @@
 .add_main .form-group:last-child{ border-bottom: none;}
 .submit_box{margin-bottom:20px}
 .add_main .form-group .more{position:absolute;right:6%;top:12px;font-size:26px;color:#999}
+
+/*列表样式3*/
+
+.main_list  a{ color: #676a6c;}
+.main_list {
+    display: inline-block;
+    border:1px solid #dce0e4; /*border-radius: 4px;*/
+    background-color: #fff;
+    width: 100%
+
+}
+.main_list .title_nav{  overflow: hidden;  }
+.main_list .title_nav .title{
+    float:left;
+    color:#a2a2a2; font-size: 14px;
+    text-align: center; height: 30px; line-height: 30px;
+    border-bottom: 1px solid #eff3f6;
+}
+.main_list .title_nav .name{ width: 60%;  }
+.main_list .title_nav .number{  width: 40%;  }
+.detail_list{  width:100%;  display: table;}
+.detail_list ul li{
+    float:left;width: 100%;
+    text-align: center; height: 30px; line-height: 30px;
+    border-bottom: 1px solid #eff3f6; display: table;
+}
+.detail_list ul li:last-child{ border-bottom: none;}
+.detail_list ul li div{ float: left; margin: 10px 0;}
+.detail_list .name{ width: 60%; font-size: 16px;  }
+.detail_list .name img{width:70px;  }
+.detail_list .number{
+    width: 40%; font-size: 16px; vertical-align: middle; line-height: 46px;
+    border-left: 1px solid #eff3f6;
+}
+.main_list .search_none{
+    width:100px;   margin: 0 auto; overflow: hidden; margin-bottom: 20px; margin-top: 20px;
+}
+.main_list .btn_search{
+    display: inline-block; width: 100px; height: 100px; padding: 10px 16px; border-radius:50px; font-size: 50px;
+    line-height: 1.33;  background-color: #bbcce7; border-color: #bbcce7;
+    color: #FFFFFF; text-align: center;
+}
 

@@ -91,8 +91,8 @@
 
 @section('layer_content')
 <div id="formBox">
-    <input type="hidden" id="addUrl" value="{{ route('msc.admin.professionaltitle.HolderAdd') }}">
     <!--新增-->
+    <input type="hidden" id="addUrl" value="{{ route('msc.admin.professionaltitle.HolderAdd') }}">
     <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{ route('msc.admin.professionaltitle.HolderAdd') }}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -131,6 +131,7 @@
         </div>
     </form>
     <!--编辑-->
+    <input type="hidden" id="editUrl" value="{{route("msc.admin.professionaltitle.HolderSave")}}">
     <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route("msc.admin.professionaltitle.HolderSave")}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

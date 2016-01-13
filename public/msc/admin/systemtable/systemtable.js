@@ -40,7 +40,6 @@ function resource_table(){
 
                 str = '您确定要停用资源？';
             }
-
             //询问框
             layer.confirm( str, {
                 btn: ['确定','取消'] //按钮
@@ -49,118 +48,143 @@ function resource_table(){
             });
         });
 //            新增验证
-        $('#add_from').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                devices_cate_id: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '资源类型不能为空'
-                        }
-                    }
+        function add_form(){
+            $('#add_from').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
                 },
-                name: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '资源名称不能为空'
+                fields: {/*验证*/
+                    devices_cate_id: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '资源类型不能为空'
+                            }
                         }
-                    }
-                },
-                status: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '请选择状态'
+                    },
+                    name: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '资源名称不能为空'
+                            }
                         }
-                    }
-                },
-                detail: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '说明不能为空'
+                    },
+                    status: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请选择状态'
+                            }
+                        }
+                    },
+                    detail: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '说明不能为空'
+                            }
                         }
                     }
                 }
-            }
-        });
-
+            });
+        }
         //            编辑验证
-        $('#edit_from').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                devices_cate_id: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '资源类型不能为空'
-                        }
-                    }
+        function edit_form(){
+            $('#edit_from').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
                 },
-                name: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '资源名称不能为空'
+                fields: {/*验证*/
+                    devices_cate_id: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '资源类型不能为空'
+                            }
                         }
-                    }
-                },
-                status: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '请选择状态'
+                    },
+                    name: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '资源名称不能为空'
+                            }
                         }
-                    }
-                },
-                detail: {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '说明不能为空'
+                    },
+                    status: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请选择状态'
+                            }
+                        }
+                    },
+                    detail: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '说明不能为空'
+                            }
                         }
                     }
                 }
-            }
-        });
-        $(".sure_btn").click(function(){
-            var name=$("#add_from .name").val();
-            var cate=$("#add_from .cate").val();
-            var detail=$("#add_from .detail").val();
-            var state=$("#add_from .state").val();
-            if(name.trim()==""){
-                $("#add_from .name").focus();
-                return false;
-            }
-            if(cate.trim()==""){
-                $("#add_from .cate").focus();
-                return false;
-            }
-            if(detail.trim()==""){
-                $("#add_from .detail").focus();
-                return false;
-            }
-            if(state.trim()==""){
-                $("#add_from .state").focus();
-                return false;
-            }
-        });
+            });
+        }
+        var $edit_select=$(".edit_select").html();
         $('.edit').click(function () {
             $("#add_from").hide();
-            $("#edit_from").show();
-            //            解决再次点击样式问题
-            //$(".sure_btn").removeAttr("disabled");
-           // $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
+            var $editUrl=$("#editUrl").val();
+            $("#edit_from").remove();
+            $("#form_box").append('<form class="form-horizontal" id="edit_from" novalidate="novalidate" action='+$editUrl+' method="post"> ' +
+                '<div class="modal-header"> ' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> ' +
+                '<h4 class="modal-title" id="myModalLabel">编辑资源</h4> ' +
+                '</div> ' +
+                '<div class="modal-body"> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<input type="text" class="form-control name add-name" name="name" value="" /> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<select id="select_Category"   class="form-control m-b cate edit_select" name="devices_cate_id"> ' + $edit_select+
+                '</select>' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label">说明</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<input type="text" class="form-control name add-name" name="detail" value="" /> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label"><span class="dot">*</span>状态</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
+                '<option value="1">正常</option> ' +
+                '<option value="0">禁用</option> ' +
+                '</select> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="hr-line-dashed"></div> ' +
+                '<div class="form-group"> ' +
+                '<div class="col-sm-4 col-sm-offset-2 right"> ' +
+                '<button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button> ' +
+                '<button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button> ' +
+                '</div> ' +
+                '</div> ' +
+                '</div> ' +
+                '</form>');
+            edit_form();
             if($(this).attr("data")){
                 $('input[name=name]').val($(this).parent().parent().find('.name').html());
 //                $('input[name=]').val($(this).parent().parent().find('.floor').attr('data'));
@@ -187,15 +211,55 @@ function resource_table(){
                 $('#edit_from').append('<input type="hidden" name="id" value="'+id+'">');
             }
         });
-
+        var $add_select=$(".add_select").html();
         $('#addResources').click(function(){
-            $("#add_from").show();
             $("#edit_from").hide();
-            //            解决再次点击样式问题
-            //$(".sure_btn").removeAttr("disabled");
-           // $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
-            $("input,textarea,select").val("");
-            
+            var $addUrl=$("#addUrl").val();
+            $("#add_from").remove();
+            $("#form_box").append('<form class="form-horizontal" id="add_from" novalidate="novalidate" action='+$addUrl+' method="post"> ' +
+                '<div class="modal-header"> ' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> ' +
+                '<h4 class="modal-title" id="myModalLabel">新增资源</h4> ' +
+                '</div> ' +
+                '<div class="modal-body"> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<input type="text" class="form-control name add-name" name="name" value="" /> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<select id="select_Category"   class="form-control m-b cate edit_select" name="devices_cate_id"> ' + $add_select+
+                '</select>' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label">说明</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<input type="text" class="form-control name add-name" name="detail" value="" /> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-sm-3 control-label"><span class="dot">*</span>状态</label> ' +
+                '<div class="col-sm-9"> ' +
+                '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
+                '<option value="1">正常</option> ' +
+                '<option value="0">禁用</option> ' +
+                '</select> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="hr-line-dashed"></div> ' +
+                '<div class="form-group"> ' +
+                '<div class="col-sm-4 col-sm-offset-2 right"> ' +
+                '<button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button> ' +
+                '<button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button> ' +
+                '</div> ' +
+                '</div> ' +
+                '</div> ' +
+                '</form>');
+            add_form();
         })
     })
 }
@@ -306,11 +370,44 @@ function title_table(){
     //编辑
     $('.edit').click(function () {
         $("#add_from").hide();
-        $("#edit_from").show();
+        $("#edit_from").remove();
+        $('#formBox').append('<form class="form-horizontal" id="edit_from" novalidate="novalidate" action="'+$('#editUrl').val()+'" method="post">' +
+            '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+            '<h4 class="modal-title" id="myModalLabel">编辑职称</h4>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<div class="form-group">' +
+            '<label class="col-sm-3 control-label"><span class="dot">*</span>职称名称</label>' +
+            '<div class="col-sm-9">' +
+            '<input type="text" class="form-control name add-name" name="name" value="" />' +
+            '</div>' +
+            '</div>' +
+            '<div class="form-group"> ' +
+            '<label class="col-sm-3 control-label">职称描述</label> ' +
+            '<div class="col-sm-9"> ' +
+            '<input type="text" class="form-control describe add-describe" name="description" /> ' +
+            '</div> ' +
+            '</div> ' +
+            '<div class="form-group"> ' +
+            '<label class="col-sm-3 control-label"><span class="dot">*</span>状态</label> ' +
+            '<div class="col-sm-9"> ' +
+            '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
+            '<option value="1">正常</option> ' +
+            '<option value="0">禁用</option> ' +
+            '</select> ' +
+            '</div> ' +
+            '</div> ' +
+            '<div class="hr-line-dashed"></div> ' +
+            '<div class="form-group"> ' +
+            '<div class="col-sm-4 col-sm-offset-2 right"> ' +
+            '<button class="btn btn-primary sure_btn"  type="submit" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button> ' +
+            '<button class="btn btn-white2 right" type="button" data-dismiss="modal" id="close">关&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;闭</button> ' +
+            '</div> ' +
+            '</div> ' +
+            '</div> ' +
+            '</form>');
         edit_from();
-//            去除为空样式
-        $(".sure_btn").removeAttr("disabled");
-        $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
         if($(this).attr("data")){
             $('input[name=name]').val($(this).parent().parent().find('.name').html());
             $('input[name=description]').val($(this).parent().parent().find('.describe').html());

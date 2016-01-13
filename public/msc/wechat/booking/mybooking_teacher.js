@@ -14,7 +14,7 @@ function mybooking_teacher(){
     now_index="0";
     initcard();
     function initcard(){//±íµ¥ÇÐ»»
-        $("#thelist2 li").unbind("click").click(function(){
+        $("#mybooking li").unbind("click").click(function(){
             $(this).addClass("check").siblings().removeClass("check");
             now_index=$(this).index();
             $("#info_list>div").eq(now_index).show().siblings("div").hide();
