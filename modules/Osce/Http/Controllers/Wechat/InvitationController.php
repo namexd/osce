@@ -27,7 +27,7 @@ class InvitationController extends CommonController
 {
 
     /**
-     * 已发布邀请列表
+     *sp邀请
      * @api GET /osce/wechat/invitation/invitation-list
      * @access public
      *
@@ -71,7 +71,7 @@ class InvitationController extends CommonController
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
 //            dd(11111);
-//            return redirect()->route('osce.wechat.invitation.getList');
+            return redirect()->back('osce::admin.exammanage.examroom_assignment');
         } else {
             throw new \Exception('邀请创建失败');
         }
@@ -123,7 +123,7 @@ class InvitationController extends CommonController
 
     public function getInvitationRespond(Request $request, Teacher $teacher)
     {
-        dd(1111);
+//        dd(1111);
         $this->validate($request, [
             'status' => 'required|integer',
             'id' => 'required|integer'
@@ -131,7 +131,7 @@ class InvitationController extends CommonController
         $status = $request->get('status');
         $teacher_id = $request->get('id');
 
-        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update('status', '=', 3-$status);
+        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update('status', '=', 4-$status);
 
         if ($result) {
             throw new \Exception('操作成功');
