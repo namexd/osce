@@ -121,9 +121,13 @@
             //更新和当前实验室相关的列表数据
             function updateLabDeviceList(lab_id,page){
                 var url = "{{ route('msc.admin.LadMaintain.LaboratoryDeviceList')}}";
+                url += '?lab_id='+lab_id;
+                if(!isNaN(page)){
+                    url += '&page='+page;
+                }
                 $.ajax({
                     type:"get",
-                    url:url+'?lab_id='+lab_id+'&page='+page,
+                    url:url,
                     async:true,
                     success:function(res){
                         var str = '';
@@ -227,7 +231,7 @@
                 if(cate_id){
                     url += '&devices_cate_id='+cate_id;
                 }
-                if(page){
+                if(!isNaN(page)){
                     url += '&page='+page;
                 }
                 $.ajax({

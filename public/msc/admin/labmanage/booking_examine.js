@@ -6,6 +6,7 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "booking_examine":booking_examine();break; //预约记录审核页面
+        case "booking_examine_other":booking_examine_other();break; //预约记录审核已处理页面
     }
 });
 //预约记录审核页面
@@ -43,21 +44,11 @@ function booking_examine(){
             window.location.href=url;
         });
     });
-    //tab切换传值
-    $('.nav-tabs li').click(function(){
-        var type = $(this).children('a').attr('data');
-        var url="/msc/admin/laboratory/lab-order-list?type="+type;
-        $.ajax({
-            type: "POST",
-            url: "{{route(')}}",
-            data: {type:type},
-            success: function(msg){
-                alert( "Data Saved: " + msg );
-            }
-        });
-    });
+
     //不通过弹窗
     $(".refuse").click(function(){
+        var id = $(this).attr('data-id');
+        $('#refuse_from').append('<input type="hidden" name="id" value="'+id+'">');
         $("#refuse_from").show();
         $("#detail_from").hide();
     });
@@ -82,6 +73,29 @@ function booking_examine(){
     });
     //详情弹窗
     $(".detail").click(function(){
+        var id = $(this).attr('data-id');
+        $.ajax({
+            type: "POST",
+            url: "/msc/admin/laboratory/lab-order-detail",
+            data: {id:id},
+            success: function(msg){
+                $('.labname').val(msg.labname);
+                $('.address').val(msg.labname+msg.floor+'楼'+msg.code);
+                $('.ordertime').val(msg.apply_time);
+                if(!msg.begintime && !msg.endtime){
+                    $('.orderdate').val(msg.playdate);
+                }else{
+                    $('.orderdate').val(msg.begintime+'~'+msg.endtime);
+                }
+
+                $('.total').val(msg.total);
+                $('.class').val(msg.course_name);
+                $('.player').val(msg.name);
+                $('.reason').val(msg.description);
+                $('.applytime').val(msg.created_at);
+
+            }
+        });
         $("#refuse_from").hide();
         $("#detail_from").show();
     });
@@ -106,7 +120,51 @@ function booking_examine(){
                 window.location.href=window.location.href;
             });
         }else{
+            var idstr = '';
+            $(".check_label").children(".check").each(function(i){
+                if($(this).attr('data-id')){
+                    idstr += $(this).attr('data-id')+',';
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/msc/admin/laboratory/lab-order-allcheck",
+                data: {idstr:idstr},
+                success: function(msg){
 
+                }
+            });
         }
     })
+}
+//预约记录审核已处理页面
+function booking_examine_other(){
+    //详情弹窗
+    $(".detail").click(function(){
+        var id = $(this).attr('data-id');
+        $.ajax({
+            type: "POST",
+            url: "/msc/admin/laboratory/lab-order-detail",
+            data: {id:id},
+            success: function(msg){
+                $('.labname').val(msg.labname);
+                $('.address').val(msg.labname+msg.floor+'楼'+msg.code);
+                $('.ordertime').val(msg.apply_time);
+                if(!msg.begintime && !msg.endtime){
+                    $('.orderdate').val(msg.playdate);
+                }else{
+                    $('.orderdate').val(msg.begintime+'~'+msg.endtime);
+                }
+
+                $('.total').val(msg.total);
+                $('.class').val(msg.course_name);
+                $('.player').val(msg.name);
+                $('.reason').val(msg.description);
+                $('.applytime').val(msg.created_at);
+
+            }
+        });
+        $("#refuse_from").hide();
+        $("#detail_from").show();
+    });
 }

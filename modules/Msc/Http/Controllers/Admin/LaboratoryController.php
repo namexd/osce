@@ -103,9 +103,7 @@ class LaboratoryController extends MscController {
         $user = Auth::user();
         $data = [
             'name'=>Input::get('name'),
-            'short_name'=>Input::get('short_name'),
-            'enname'=>Input::get('enname'),
-            'short_enname'=>Input::get('short_enname'),
+            
             'location_id'=>Input::get('building'),
             'open_type'=>Input::get('open_type'),
             'manager_user_id'=>Input::get('manager_user_id'),
@@ -138,9 +136,7 @@ class LaboratoryController extends MscController {
     public function getEditLabInsert(Request $Request,Laboratory $laboratory){
         $this->validate($Request, [
             'name'      => 'required',
-            'short_name'       => 'required',
-            'enname'        => 'required',
-            'short_enname' => 'required',
+
             'open_type' =>'required',
             'manager_user_id' => 'required|integer',
             'status' => 'required',
@@ -625,15 +621,24 @@ class LaboratoryController extends MscController {
      * 实验室预约记录审核
      */
     public function getLabOrderList(LabApply $LabApply){
+        $keyword = Input::get('keyword')?Input::get('keyword'):'';
         $type = Input::get('type')?Input::get('type'):1;
-        $LabOrderList = $LabApply->get_check_list('',$type);
+        $user = Auth::user();
+        $LabOrderList = $LabApply->get_check_list($keyword,$type,$user->id);
         foreach($LabOrderList as $v){
             $v->address = $v->labname.$v->floor.'楼'.$v->code;
-            foreach($v->PlanApply as $plan){
-                $v->playdate =  $plan->OpenPlan->begintime.'-'.$plan->OpenPlan->endtime;
+            if(empty($v->begintime) && empty($v->endtime)){
+                foreach($v->PlanApply as $plan){
+                    $v->playdate .=  date('H:i',strtotime($plan->OpenPlan->begintime)).' ~ '.date('H:i',strtotime($plan->OpenPlan->endtime)).'<br>';
+                    $v->playyear =  date('Y',strtotime($plan->OpenPlan->year)).'-'.date('m',strtotime($plan->OpenPlan->month)).'-'.date('d',strtotime($plan->OpenPlan->day));
+                }
+            }else{
+                $v->begintime = date('H:i',strtotime($v->begintime));
+                $v->endtime = date('H:i',strtotime($v->endtime));
             }
+            //$v->playdate = htmlentities($v->playdate);
         }
-        dd($LabOrderList);
+        //dd($LabOrderList);
        // exit;
         if($type == 1){
             $view = 'booking_examine';
@@ -650,13 +655,19 @@ class LaboratoryController extends MscController {
      * Created by PhpStorm.
      * User: weihuiguo
      * Date: 2016年1月11日11:35:27
-     * 实验室预约记录审核
+     * 实验室预约记录审核通过
      */
     public function getLabOrderCheck(LabApply $LabApply){
         $id = Input::get('id');
-        $type = Input::get('type');
+        $data['status'] = Input::get('type');
+        if(Input::get('description')){
+            $data['description'] = Input::get('description');
+        }
         if($id){
-            $do = $LabApply->where('id','=',$id)->update(['status'=>$type]);
+            //dd($data);
+            //$this->start_sql(1);
+            $do = $LabApply->where('id','=',$id)->update($data);
+            //$this->end_sql(1);
             if($do){
                 return redirect()->back()->withInput()->withErrors('操作成功');
             }else{
@@ -665,5 +676,39 @@ class LaboratoryController extends MscController {
         }else{
             return redirect()->back()->withInput()->withErrors('系统异常');
         }
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月11日11:35:27
+     * 实验室预约记录详情
+     */
+    public function getLabOrderdetail(LabApply $LabApply){
+        $id = Input::get('id');
+        $laborderdetail = $LabApply->getonelaborderdetail($id);
+        if(empty($laborderdetail->begintime) && empty($laborderdetail->endtime) && !empty($laborderdetail->PlanApply)){
+            foreach($laborderdetail->PlanApply as $plan){
+                @$laborderdetail->playdate .=  date('H:i',strtotime($plan->OpenPlan->begintime)).' ~ '.date('H:i',strtotime($plan->OpenPlan->endtime)).' , ';
+                @$laborderdetail->playyear =  date('Y',strtotime($plan->OpenPlan->year)).'-'.date('m',strtotime($plan->OpenPlan->month)).'-'.date('d',strtotime($plan->OpenPlan->day));
+            }
+
+
+        }else{
+            $laborderdetail->begintime = date('H:i',strtotime($laborderdetail->begintime));
+            $laborderdetail->endtime = date('H:i',strtotime($laborderdetail->endtime));
+        }
+        return $laborderdetail;
+    }
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月11日11:35:27
+     * 实验室预约记录批量审核
+     */
+    public function postLabOrderallcheck(LabApply $LabApply){
+        $str = trim(Input::get('idstr'),',');
+        $arr = explode(',',$str);
+
     }
 }
