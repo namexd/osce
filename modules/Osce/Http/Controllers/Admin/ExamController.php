@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use App\Entities\User;
+use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 
@@ -1006,6 +1007,14 @@ class ExamController extends CommonController
             throw new \Exception('没有找到该考试');
         }
         $ExamPlanModel   =   new ExamPlan();
-        $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+        $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+        $user   =   Auth::user();
+        Cache::forget('plan_'.$exam->id.'_'.$user->id);
+        $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
+            return $plan;
+        });
+        return response()->json(
+            $this->success_data($plan)
+        );
     }
 }
