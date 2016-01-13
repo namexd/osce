@@ -133,7 +133,7 @@ class Laboratory extends Model
         }elseif($type == 2){
             $thisBuilder = $thisBuilder->whereIn('id',$IdRrr);
         }
-        $thisBuilder = $thisBuilder->with('Floor');
+        $thisBuilder = $thisBuilder->with('FloorInfo');
         return  $thisBuilder->paginate(config('msc.page_size',10));
     }
 
@@ -149,7 +149,7 @@ class Laboratory extends Model
      */
     public function GetLaboratoryInfo($id,$dateTime,$type){
         if(!empty($dateTime)){
-            return $this->where('id','=',$id)->with(['Floor','LabApply'=>function($LabApply) use ($dateTime,$type){
+            return $this->where('id','=',$id)->with(['FloorInfo','LabApply'=>function($LabApply) use ($dateTime,$type){
                 if($type == 1){
                     $LabApply->where('apply_time','=',$dateTime)->whereIn('status',[1,2])->where('type','=',$type);
                 }
