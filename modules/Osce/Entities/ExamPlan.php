@@ -160,9 +160,24 @@ class ExamPlan extends CommonModel
         $flows  =   $this   ->  getExamFlow($exam);
         $flowsIndex         =   $this   ->  groupFlowByRoom($flows);
 
+        $data   =   $flowsIndex;
+//        foreach($flowsIndex as $ser =>$item)
+//        {
+//            $data[$ser+count($flowsIndex)]=$item;
+//        }
+        dd($this->makeCombination($flowsIndex));
     }
-    public function makeCombination($flowsIndex){
+    public function makeCombination($flowsIndex,$ser=1,$data=[]){
+        if(array_key_exists($ser,$flowsIndex)) {
+            foreach($flowsIndex[$ser] as $room)
+            {
+                $data[$room->room_id][$room->serialnumber] =   $room;
+            }
+        }
+        return $data;
+    }
+
+    public function getItem($info,$ser=1){
 
     }
-
 }
