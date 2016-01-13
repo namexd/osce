@@ -168,12 +168,22 @@ class LaboratoryCotroller extends MscWeChatController
         $id = Input::get('id');
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
-        $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,2);
+        $LaboratoryInfo = $this->Laboratory->GetLaboratoryOpenInfo($id,$DateTime,2);
+        if(!empty($LaboratoryInfo['OpenPlan'])){
+            foreach($LaboratoryInfo['OpenPlan'] as $key => $val){
+                $LaboratoryInfo['OpenPlan'][$key]['Apply_num'] = count($val['PlanApply']);
+                if(count($val['PlanApply'])>0){
+
+                }
+            }
+        }
+        //dd($LaboratoryInfo);
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDevice($id)
         ];
+        dd($LaboratoryInfo->toArray());
         return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 

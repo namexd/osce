@@ -25,12 +25,22 @@ class PlanApply extends Model
     protected $fillable 	=	['id','apply_id','open_plan_id'];
 
     /**
-     * @content£º
-     * @author£º
-     * @createDate£º
+     * @content
+     * @author
+     * @createDate
      */
     public function OpenPlan(){
-        return  $this->hasOne('Modules\Msc\Entities\OpenPlan','id','open_plan_id');
+        return  $this->hasMany('Modules\Msc\Entities\OpenPlan','id','open_plan_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016å¹´1æœˆ13æ—¥11:29:19
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LabApply(){
+        return  $this->hasOne('Modules\Msc\Entities\LabApply','id','apply_id');
     }
 
 }
