@@ -9,11 +9,11 @@ $(function(){
     }
 });
 
-//�ҵ�ԤԼ����ʦ��
+
 function mybooking_student(){
     now_index="0";
     initcard();
-    function initcard(){//���л�
+    function initcard(){//顶部切换
         $("#thelist2 li").unbind("click").click(function(){
             $(this).addClass("check").siblings().removeClass("check");
             now_index=$(this).index();

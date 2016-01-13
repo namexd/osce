@@ -4,8 +4,9 @@
 
 <link href="{{asset('msc/wechat/personalcenter/css/personalcenter.css')}}" rel="stylesheet" type="text/css" />
 <style>
+    /*实验室名字超出长度修改*/
     .add_main .form-group label{width: 95px;}
-    .add_main .form-group .txt{padding-left: 100px;}
+    .add_main .form-group .txt {padding-left:105px;}
 </style>
 @stop
 @section('only_head_js')
@@ -54,7 +55,7 @@
                             2016.1.1
                         </div>
                         <div class="submit_box">
-                            <a  class="btn2" href="">取消</a>
+                            <a  class="btn4" href="">取消</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -88,7 +89,7 @@
                         2016.1.2
                     </div>
                     <div class="submit_box">
-                        <a  class="btn2" href="">取消</a>
+                        <a  class="btn4" href="">取消</a>
                     </div>
                 </div>
                 <div class="form-group">

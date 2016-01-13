@@ -13,7 +13,8 @@
 	<!-- 全局js -->
     <script src="{{asset('msc/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未-->
+    <script src="{{asset('msc/wechat/common/js/commons.js')}}"></script>
+    <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件-->
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script><!--弹框插件-->
   	<script src="{{asset('msc/wechat/validate/jquery.validate.min.js')}}"></script>
     <script type="text/javascript">

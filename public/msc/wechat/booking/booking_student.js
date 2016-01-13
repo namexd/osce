@@ -22,6 +22,10 @@ function booking_student(){
             $(this).children(".check_icon").addClass("check");
         }
     });
+    //弹出资源清单
+    $(".submit_box button").click(function () {
+        get_layer();
+    })
 }
 //老师预约开放实验室详情页
 function open_teacher_detail(){

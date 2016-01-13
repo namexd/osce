@@ -16,7 +16,7 @@ class OpenPlan  extends  Model
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
     public $incrementing	=	true;
-    protected $fillable 	=	['name','level','year','month','week','day','begintime','endtime','status','created_user_id','lab_id'];
+    protected $fillable 	=	['name','level','year','month','week','day','begintime','endtime','status','created_user_id','lab_id','period_type'];
 
     /**
      * @param $DateTime

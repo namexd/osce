@@ -97,7 +97,7 @@ class Laboratory extends Model
      * @date    2016年1月5日16:17:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function Floor(){
+    public function FloorInfo(){
         return  $this->hasOne('Modules\Msc\Entities\Floor','id','location_id');
     }
 
@@ -133,12 +133,12 @@ class Laboratory extends Model
         }elseif($type == 2){
             $thisBuilder = $thisBuilder->whereIn('id',$IdRrr);
         }
-        $thisBuilder = $thisBuilder->with('Floor');
+        $thisBuilder = $thisBuilder->with('FloorInfo');
         return  $thisBuilder->paginate(config('msc.page_size',10));
     }
 
     /**
-     * 获取实验室相关信息，以及日历安排（普通实验室填写表单页面、开放实验室展示日历安排页面）
+     * 获取普通实验室相关信息，以及日历安排（普通实验室填写表单页面）
      * @param $id
      * @param $dateTime
      * @param $type 1、普通实验室。2、开放实验室
@@ -149,27 +149,46 @@ class Laboratory extends Model
      */
     public function GetLaboratoryInfo($id,$dateTime,$type){
         if(!empty($dateTime)){
-            $timeInt = strtotime($dateTime);
-            $y = date('Y',$timeInt);
-            $m = date('m',$timeInt);
-            $d = date('d',$timeInt);
-            return $this->where('id','=',$id)->with(['Floor','OpenPlan'=>function($OpenPlan) use ($y,$m,$d){
-                $OpenPlan->where('year','=',$y)->where('month','=',$m)->where('day','=',$d)->with('PlanApply');
-            },'LabApply'=>function($LabApply) use($dateTime,$type){
-                //TODO 开放实验室预约记录
-                if($type == 2){
-                    $LabApply->where('apply_time','=',$dateTime)->where('type','=',$type)->where('user_type','=',2)->with('PlanApply');
-                //TODO 普通实验室预约记录
-                }else{
-                    $LabApply->where('apply_time','=',$dateTime)->where('type','=',$type);
+            return $this->where('id','=',$id)->with(['FloorInfo','LabApply'=>function($LabApply) use ($dateTime,$type){
+                if($type == 1){
+                    $LabApply->where('apply_time','=',$dateTime)->whereIn('status',[1,2])->where('type','=',$type);
                 }
-
             }])->first();
         }else{
             return  false;
         }
     }
 
+    /**
+     * 获取开放实验室相关信息，以及日历安排（开放实验室展示日历安排页面）
+     * @param $id
+     * @param $dateTime
+     * @param $type 1、普通实验室。2、开放实验室
+     * @return Array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月5日16:19:46
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetLaboratoryOpenInfo($id,$dateTime,$type){
+        if(!empty($dateTime)){
+            $timeInt = strtotime($dateTime);
+            $y = date('Y',$timeInt);
+            $m = date('m',$timeInt);
+            $d = date('d',$timeInt);
+           return $this->where('id','=',$id)->with(['FloorInfo','OpenPlan'=>function($OpenPlan) use ($y,$m,$d,$dateTime,$type){
+                $OpenPlan->where('year','=',$y)->where('month','=',$m)->where('day','=',$d)->with(['PlanApply'=>function($PlanApply) use ($dateTime,$type){
+                    $PlanApply->with(['LabApply'=>function($LabApply) use ($dateTime,$type){
+                        //TODO 开放实验室预约记录
+                        if($type == 2){
+                            $LabApply->where('apply_time','=',$dateTime)->whereIn('status',[1,2])->where('type','=',$type);
+                        }
+                    }]);
+                }]);
+            }])->first();
+        }else{
+            return  false;
+        }
+    }
     /**
      * @access public
      * @param $LabId
