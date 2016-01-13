@@ -67,9 +67,9 @@
                      <tr>
                          <td>{{ $item->exam_name  }}</td>
                          <td>{{ $item-> student_name }}</td>
-                         @if( $item-> gender==0)
+                         @if( $item-> getUser->gender==2)
                          <td>女</td>
-                         @else
+                         @elseif($item-> getUser->gender==1)
                          <td>男</td>
                          @endif
                          <td>{{ $item-> code }}</td>
