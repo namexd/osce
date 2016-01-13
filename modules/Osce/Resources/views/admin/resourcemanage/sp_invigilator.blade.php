@@ -32,23 +32,19 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>
-                    姓名
-                </th>
+                <th>姓名</th>
                 <th>联系电话</th>
                 <th>最后登录时间</th>
-                <th>
-                    操作
-                </th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            @forelse($list as  $item)
+            @forelse($list as $key => $item)
                 <tr>
-                    <td>{{$item->id}}</td>
+                    <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->userInfo->mobile or '-'}}</td>
-                    <td>{{is_null($item->userInfo)? $item->userInfo->lastlogindate:'-'}}</td>
+                    <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
                     <td>
                         <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
                         <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>

@@ -353,8 +353,10 @@ class InvigilatorController extends CommonController
             $teacherModel   =   new Teacher();
             $name           =   e($request->get('name'));
             $mobile         =   e($request->get('mobile'));
-            $type=Teacher::where('id',$id)->select('type')->first()->type;
-            if($teacherModel    ->  editInvigilator($id,$name,$mobile,$type))
+            $type           =   e($request->get('type'));
+//            $type = Teacher::where('id',$id)->select('type')->first()->type;
+
+            if($result = $teacherModel ->  editInvigilator($id,$name,$mobile,$type))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             }

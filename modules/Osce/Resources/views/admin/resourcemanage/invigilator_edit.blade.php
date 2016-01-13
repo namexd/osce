@@ -101,7 +101,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">手机号</label>
+                                <label class="col-sm-2 control-label">老师</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" name="type">
                                         <option value="1" {{$item->type==1? 'selected="selected"':''}}>监考老师</option>

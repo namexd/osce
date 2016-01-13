@@ -301,28 +301,18 @@ class Teacher extends CommonModel
         {
             throw new   \Exception('没有找到该教务人员');
         }
-        if($teacher->name!==$name)
-        {
-            $teacher    ->  name    =   $name;
-        }
-        if($teacher->type!==$type)
-        {
-            $teacher    ->  type    =   $type;
-        }
+        $teacher    ->  name    =   $name;
+        $teacher    ->  type    =   $type;
+
         if(!$teacher->save())
         {
             throw new   \Exception('教务人员名称变更失败');
         }
         //教务人员用户信息变更
         $userInfo   =   $teacher->userInfo;
-        if($userInfo->name!==$name)
-        {
-            $userInfo   ->name  =$name;
-        }
-        if($userInfo->mobile!==$mobile)
-        {
-            $userInfo   ->mobile  =$mobile;
-        }
+        $userInfo   ->  name    =$name;
+        $userInfo   ->  mobile  =$mobile;
+
         if(!$userInfo->save())
         {
             throw new   \Exception('教务人员用户信息变更失败');
@@ -337,28 +327,16 @@ class Teacher extends CommonModel
         {
             throw new   \Exception('没有找到该教务人员');
         }
-        if($teacher->name!==$name)
-        {
-            $teacher    ->  name    =   $name;
-        }
-        if($teacher->case_id!==$caseId)
-        {
-            $teacher    ->  case_id    =   $caseId;
-        }
+        $teacher    ->  name    =   $name;
+        $teacher    ->  case_id =   $caseId;
         if(!$teacher->save())
         {
             throw new   \Exception('教务人员名称变更失败');
         }
         //教务人员用户信息变更
         $userInfo   =   $teacher->userInfo;
-        if($userInfo->name!==$name)
-        {
-            $userInfo   ->name  =$name;
-        }
-        if($userInfo->mobile!==$mobile)
-        {
-            $userInfo   ->mobile  =$mobile;
-        }
+        $userInfo   ->  name    =   $name;
+        $userInfo   ->  mobile  =   $mobile;
         if(!$userInfo->save())
         {
             throw new   \Exception('教务人员用户信息变更失败');

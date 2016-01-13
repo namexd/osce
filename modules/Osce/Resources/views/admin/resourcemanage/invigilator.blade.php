@@ -32,20 +32,16 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>
-                        姓名
-                    </th>
+                    <th>姓名</th>
                     <th>联系电话</th>
                     <th>最后登录时间</th>
-                    <th>
-                        操作
-                    </th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($list as  $item)
+                @forelse($list as $key => $item)
                 <tr>
-                    <td>{{$item->id}}</td>
+                    <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->userInfo->mobile or '-'}}</td>
                     <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
@@ -60,7 +56,7 @@
         </table>
         <div class="row">
             <div class="pull-left">
-                共2条
+                共{{$list->total()}}条
             </div>
             <div class="pull-right">
                 <nav>
