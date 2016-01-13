@@ -164,6 +164,7 @@ class LaboratoryCotroller extends MscWeChatController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ApplyOpenLaboratory(){
+        $user = Auth::user();
         $DateTime = Input::get('DateTime');
         $id = Input::get('id');
         $LadDevice = new LadDevice;
@@ -173,17 +174,25 @@ class LaboratoryCotroller extends MscWeChatController
             foreach($LaboratoryInfo['OpenPlan'] as $key => $val){
                 $LaboratoryInfo['OpenPlan'][$key]['Apply_num'] = count($val['PlanApply']);
                 if(count($val['PlanApply'])>0){
-
+                    foreach($val['PlanApply'] as $k => $v){
+                        if(!empty($v['LabApply'])){
+                            //TODO 自己已经预约
+                            if($v['LabApply']['apply_user_id'] == $user->id){
+                                $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 1;
+                            }elseif($v['LabApply']['user_type'] == 2){//TODO 老师预约
+                                $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 2;
+                            }
+                        }
+                    }
                 }
             }
         }
-        //dd($LaboratoryInfo);
         $data = [
+            'user_type'=>$user->type,
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDevice($id)
         ];
-        dd($LaboratoryInfo->toArray());
         return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
