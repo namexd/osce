@@ -4,6 +4,7 @@ namespace Modules\Osce\Http\Controllers\Api;
 
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Watch;
@@ -185,6 +186,7 @@ class IndexController extends CommonController
                $this->success_rows(2,'未找到学生相关信息')
            );
         }
+
         $data=array('code'=>$student_id);
 
         $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first();
@@ -338,5 +340,20 @@ class IndexController extends CommonController
         );
     }
 
+    public function getExamList(){
+        $exam=new Exam();
+        $time=time();
+        $Ymd=date('Y-m-d H:i:s',$time);
+        dd();
+        $examList=$exam->getTodayList($time);
+        if(count($examList)){
+             return response()->json(
+                 $this->success_rows(1,'success',count($examList),$pagesize=1,count($examList),$examList)
+             );
+        }
+        return response()->json(
+            $this->fail(new \Exception('今日无考试场次'))
+        );
 
+    }
 }
