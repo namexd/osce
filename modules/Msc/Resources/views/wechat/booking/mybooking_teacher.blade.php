@@ -2,10 +2,11 @@
 
 @section('only_head_css')
 
-<link href="{{asset('msc/wechat/personalcenter/css/personalcenter.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('msc/wechat/booking/css/booking.css')}}" rel="stylesheet" type="text/css" />
 <style>
+    /*实验室名字超出长度修改*/
     .add_main .form-group label{width: 95px;}
-    .add_main .form-group .txt{padding-left: 100px;}
+    .add_main .form-group .txt {padding-left: 105px;}
 </style>
 @stop
 @section('only_head_js')
@@ -19,12 +20,12 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        我的预约
-        <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
-            <i class="fa fa-home clof font26 icon_return"></i>
+        <a class="right header_btn" href="#">
+
         </a>
     </div>
-    <div id="wrapper2">
-        <ul id="thelist2">
+    <div id="mybooking">
+        <ul>
             <li class="check"> <span >待审核</span></li>
             <li> <span>待使用</span></li>
             <li> <span>已完成</span></li>
@@ -54,7 +55,7 @@
                             2016.1.1
                         </div>
                         <div class="submit_box">
-                            <a  class="btn2" href="">取消</a>
+                            <button class="btn2">取消</button>
                         </div>
                     </div>
                     <div class="form-group">
@@ -64,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-        </div>
+         </div>
         <div id="borrow_attention" style="display: none;">
             <div class="add_main">
                 <div class="form-group">
@@ -88,7 +89,7 @@
                         2016.1.2
                     </div>
                     <div class="submit_box">
-                        <a  class="btn2" href="">取消</a>
+                        <button  class="btn2">取消</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -99,7 +100,7 @@
                 </div>
             </div>
         </div>
-        <div class="main_list"  style="display: none;">
+        <div  style="display: none;">
             <div class="add_main">
                 <div class="form-group">
                     <label for="">实验室名称</label>
@@ -129,7 +130,7 @@
                     </div>
                 </div>
             </div>
-            <div class="add_main">
+            <div class="add_main mart_5">
                 <div class="form-group">
                     <label for="">实验室名称</label>
                     <div class="txt">

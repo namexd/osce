@@ -2,11 +2,11 @@
 
 @section('only_head_css')
 
-<link href="{{asset('msc/wechat/personalcenter/css/personalcenter.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('msc/wechat/booking/css/booking.css')}}" rel="stylesheet" type="text/css" />
 <style>
+    /*实验室名字超出长度修改*/
     .add_main .form-group label{width: 95px;}
-    .add_main .form-group .txt{padding-left: 100px;}
-    .width10{width: 100px!important;}
+    .add_main .form-group .txt {padding-left: 100px;}
 </style>
 @stop
 @section('only_head_js')
@@ -44,8 +44,8 @@
                     <div class="txt">
                         2016.1.1
                     </div>
-                    <div class="submit_box width10">
-                        <a  class="btn2" href="" style="font-size: 14px">查看资源清单</a>
+                    <div class="submit_box">
+                        <button  class="btn4 get_list_detail">查看资源清单</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -57,7 +57,7 @@
             </div>
         </div>
     </div>
-    <form action="" method="post" class="w_96" id="myform">
+    <form action="" method="post" id="myform">
         <div class="add_main">
             <div class="form-group">
                 <label for="">教学课程</label>
@@ -68,10 +68,10 @@
                 <input type="number" class="form-control stu_num" value="" name="num">
             </div>
         </div>
-        <div id="Reason_detail" >
-            <div class="mart_10 marb_10 font16">备注</div>
+        <div class="w_94" >
+            <div class="form_title">备注</div>
             <div class="Reason">
-                <textarea class="reason_txt" style="width: 100%;height: 100px;border-radius: 4px;">爱的方式的发生的公司法规的法规的发挥的恢复供货方根据非黄金护肤</textarea>
+                <textarea class="textarea1" style="width: 100%;height: 100px;border-radius: 4px;">爱的方式的发生的公司法规的法规的发挥的恢复供货方根据非黄金护肤</textarea>
             </div>
             <input class="btn2 mart_10 marb_10" type="submit" value="提交预约">
         </div>

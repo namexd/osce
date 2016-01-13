@@ -2,10 +2,10 @@
 
 @section('only_head_css')
 
-<link href="{{asset('msc/wechat/personalcenter/css/personalcenter.css')}}" rel="stylesheet" type="text/css" />
 <style>
+    /*实验室名字超出长度修改*/
     .add_main .form-group label{width: 95px;}
-    .add_main .form-group .txt{padding-left: 100px;}
+    .add_main .form-group .txt {padding-left:105px;}
 </style>
 @stop
 @section('only_head_js')
@@ -19,12 +19,12 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        预约记录查看
-        <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
-            <i class="fa fa-home clof font26 icon_return"></i>
+        <a class="right header_btn" href="#">
+
         </a>
     </div>
     <div class="mart_5">
-        <div class="mart_5 marb_5 form_title" style="font-weight: 700;">预约信息</div>
+        <div class="weight7">预约信息</div>
         <div id="now_borrow">
             <div class="add_main">
                 <div class="form-group">
@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-        <div class="mart_5 marb_5 form_title" style="font-weight: 700;">审核信息</div>
+        <div class="form_title">审核信息</div>
         <div id="now_borrow">
             <div class="add_main">
                 <div class="form-group">

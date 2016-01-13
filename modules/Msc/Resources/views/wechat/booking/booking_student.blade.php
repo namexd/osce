@@ -25,18 +25,7 @@
             get_layer();
 
         });
-        function get_layer(){
-            $("#sidepopup_layer").animate({right:"0"});//将右边弹出
-            hide_layer();
-        }
-        function hide_layer(){//将右边隐藏
-            $(".box_hidden").click(function(){
-                $("#sidepopup_layer").animate({right:"-100%"});
-            });
-            $("#submit_layer").click(function(){
-                $("#sidepopup_layer").animate({right:"-100%"});
-            });
-        }
+
         //弹出层选择楼层
         function select_ban(){
             $("#ban").change(function(){
@@ -138,6 +127,5 @@
             <button id="submit_layer" type="button" class="btn1">确定</button>
         </div>
     </div>
-
 </div>
 @stop
