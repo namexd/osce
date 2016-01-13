@@ -71,7 +71,7 @@
                                     +'<div class="all_list">'
                                     +'<div class="w_85 left">'
                                     +'<p>'+this.name+'</p>'
-                                    +'<p><span>'+this.floor.address+this.floor.name+this.code+this.floor.address+'</span></p></div>'
+                                    +'<p><span>'+this.floor_info.address+this.floor_info.name+this.floor+"楼"+this.code+'</span></p></div>'
                                     +'<div class="w_15 right"><i class="fa fa-angle-right i_right" style="margin-top: 10px"></i>'
                                     +'</div></div></a>');
                         })

@@ -26,6 +26,26 @@ function booking_student(){
     $(".submit_box button").click(function () {
         get_layer();
     })
+    //添加去除筛选时段
+    $(".check_label").click(function(){
+       var labid= $(this).parents().parents().attr("id");
+        var make = false;
+        var dateDocArr = $('.date_list').find('input');
+        if(dateDocArr.length>0){
+            dateDocArr.each(function(){
+
+                if(labid == $(this).val()){
+                    $(this).remove();
+                    make = true;
+                    return false;
+                }
+            })
+        }
+        if(make){
+            return false;
+        }
+        $('.date_list').append('<input type="hidden" name="open_plan_id[]" class="labid" value="'+labid+'">');
+    })
 }
 //老师预约开放实验室详情页
 function open_teacher_detail(){

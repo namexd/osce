@@ -207,9 +207,9 @@
 		_isValidDate : function( date ) {
 
 			date = date.replace(/-/gi,'');
-			var month = parseInt( date.substring( 6, 8 ), 10 ),
-				day = parseInt( date.substring( 8, 10 ), 10 ),
-				year = parseInt( date.substring( 0, 4 ), 10 );
+			var month = parseInt( date.substring( 0, 2 ), 10 ),
+				day = parseInt( date.substring( 2, 4 ), 10 ),
+				year = parseInt( date.substring( 4, 8 ), 10 );
 
 			if( ( month < 1 ) || ( month > 12 ) ) {
 				return false;

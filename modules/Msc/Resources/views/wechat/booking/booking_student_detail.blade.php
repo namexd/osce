@@ -6,6 +6,9 @@
         /*实验室名字超出长度修改*/
         .add_main .form-group label{width: 95px;}
         .add_main .form-group .txt {padding-left:105px;}
+
+        .manage_list .all_list p{padding:5px 8px 0 8%;}
+        .manage_list div p:last-child{padding:5px 8px 5px 8%;}
 </style>
 @stop
 
@@ -14,6 +17,16 @@
 @stop
 
 @section('content')
+    <?php
+    $errorsInfo =(array)$errors->getMessages();
+    if(!empty($errorsInfo))
+    {
+        $errorsInfo = array_shift($errorsInfo);
+        echo '<pre>';
+        var_dump($errorsInfo);die;
+    }
+
+    ?>
     <input type="hidden" id="parameter" value="{'pagename':'booking_student'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
@@ -41,56 +54,54 @@
             <div class="form-group">
                 <label for="">预约日期</label>
                 <div class="txt">
-                    2016.1.1
+                    {{ $data['ApplyTime']}}
                 </div>
                 <div class="submit_box">
                     <button  class="btn4 get_list_detail">查看资源清单</button>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="">预约时段</label>
-                <div class="txt">
-                    8:00-10:00;10:00-12:00
-                </div>
-            </div>
         </div>
     </div>
-    <form action="" method="post">
+    <form action="{{route('msc.Laboratory.OpenLaboratoryForm')}}" method="post" id="datelist_set">
+        <div class="date_list">
 
+        </div>
+        <input name="date_time" value="{{ $data['ApplyTime']}}" type="hidden"/>
+        <input name="lab_id" value="{{ $data['LaboratoryInfo']['id']}}" type="hidden"/>
         <div class="manage_list">
-            <div class="all_list">
-                <div class="w_85 left">
-                    <p>时段：<span>8:00-10:00</span></p>
-                    <p>已预约/容量：<span class="have_booking">0</span><span>/</span><span class="capacity">30</span></p>
+            @foreach($data['LaboratoryInfo']['OpenPlan'] as $val)
+                <div class="all_list" id="{{ @$val['id']}}">
+
+                    @if(empty($val['Apply_status']))
+                    <div class="w_70 left">
+                        <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
+                        <p>已预约/容量：<span>{{ @$val['Apply_num']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
+                    </div>
+                    <div class="w_30 right mart_10">
+                        <label class="check_label checkbox_input check_one">
+                            <div class="check_real check_icon display_inline"></div>
+                        </label>
+                    </div>
+                    @elseif($val['Apply_status'] == 1)
+                    <div class="w_70 left">
+                        <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
+
+                        <p>已预约/容量：<span>{{ @$val['Apply_num']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
+                    </div>
+                    <div class="w_30 right mart_10 red">
+                        您已预约
+                    </div>
+                    @elseif($val['Apply_status'] == 2)
+                        <div class="w_70 left">
+                            <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
+                            <p>已预约/容量：<span>{{$data['LaboratoryInfo']['total']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
+                        </div>
+                        <div class="w_30 right mart_10">
+                        </div>
+                    @endif
                 </div>
-                <div class="w_15 right mart_10">
-                    <label class="check_label checkbox_input check_one">
-                        <div class="check_real check_icon display_inline"></div>
-                    </label>
-                </div>
-            </div>
-            <div class="all_list">
-                <div class="w_85 left">
-                    <p>时段：<span>8:00-10:00</span></p>
-                    <p>已预约/容量：<span class="have_booking">0</span><span>/</span><span class="capacity">30</span></p>
-                </div>
-                <div class="w_15 right mart_10">
-                    <label class="check_label checkbox_input check_one">
-                        <div class="check_real check_icon display_inline"></div>
-                    </label>
-                </div>
-            </div>
-            <div class="all_list">
-                <div class="w_85 left">
-                    <p>时段：<span>8:00-10:00</span></p>
-                    <p>已预约/容量：<span class="have_booking">0</span><span>/</span><span class="capacity">30</span></p>
-                </div>
-                <div class="w_15 right mart_10">
-                    <label class="check_label checkbox_input check_one">
-                        <div class="check_real check_icon display_inline"></div>
-                    </label>
-                </div>
-            </div>
+            @endforeach
+
         </div>
         <div class="w_94">
             <input class="btn2 mart_10 marb_10" type="submit" value="确认预约">

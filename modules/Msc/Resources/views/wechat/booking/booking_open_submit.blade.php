@@ -42,7 +42,7 @@
                 <div class="form-group">
                     <label for="">预约日期</label>
                     <div class="txt">
-                        2016.1.1
+
                     </div>
                     <div class="submit_box">
                         <button  class="btn4">查看资源清单</button>
@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    <form action="" method="post" id="myform">
+    <form action="{{route('msc.Laboratory.OpenLaboratoryForm')}}" method="post" id="myform">
         <div class="add_main">
             <div class="form-group">
                 <label for="">开始使用</label>

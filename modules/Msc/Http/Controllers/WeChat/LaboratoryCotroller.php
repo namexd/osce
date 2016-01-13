@@ -208,6 +208,7 @@ class LaboratoryCotroller extends MscWeChatController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function OpenLaboratoryForm(Request $Request){
+
         $this->validate($Request,[
             'lab_id'   => 'required|integer',
             'open_plan_id'   => 'required',
