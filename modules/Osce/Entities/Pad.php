@@ -180,7 +180,7 @@ class Pad extends CommonModel implements MachineInterface
      */
     public function getList($name, $status){
         $bulder =   $this;
-        if(!is_null($name))
+        if($name != '')
         {
             $bulder =   $bulder    ->  where('name', 'like', '%'.$name.'%');
         }

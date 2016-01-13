@@ -206,14 +206,16 @@ class Vcr extends CommonModel implements MachineInterface
      */
     public function getList($name,$status){
         $bulder =   $this;
-        if(!is_null($name))
+        if($name != '')
         {
-            $bulder =   $bulder    ->  where('name','like','%'.$name.'%');
+            $bulder =   $bulder    ->  where('name', 'like', '%'.$name.'%');
         }
-        if($status!=='')
+        if($status !='')
         {
-            $bulder =   $bulder    ->  where('status','=',$status);
+            $bulder =   $bulder    ->  where('status', '=', $status);
         }
+        $bulder = $bulder -> select(['id', 'name', 'status']);
+
         return  $bulder ->  paginate(config('osce.page_size'));
     }
 }

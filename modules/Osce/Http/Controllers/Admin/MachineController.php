@@ -123,7 +123,7 @@ class MachineController extends CommonController
 
         $cate_id    =   intval($request   ->  get('cate_id'));
         $cate_id    =   $cate_id==0? 1:$cate_id;
-        $name       =   intval($request   ->  get('name'));
+        $name       =   e($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
         $cate       =   config('osce.machine_category');
         if(is_null($cate))
