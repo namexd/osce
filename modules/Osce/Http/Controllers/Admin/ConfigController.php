@@ -35,6 +35,8 @@ class ConfigController extends CommonController
     {
         //从文件获取配置数组
         $tempConfig = config('message');
+		dd($tempConfig);
+		//dd($tempConfig);
         //从数据库获取配置
         $tempDB = Config::all();
         return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
@@ -59,12 +61,12 @@ class ConfigController extends CommonController
      */
     public function postStore(Request $request, Config $config)
     {
+    	//dd($request->all());
         try {
             DB::beginTransaction();
             //验证
             $this->validate($request, [
                 'type' => 'array',
-                'share' => 'array',
                 'sms_cnname' => 'required',
                 'sms_url' => 'required|url',
                 'sms_username' => 'required',
@@ -76,16 +78,17 @@ class ConfigController extends CommonController
                 'wechat_encoding_key' => 'required',
                 'email_server' => 'required',
                 'email_port' => 'required|int',
-                'email_ssl' => 'required|boolean',
+                'email_protocol' =>'required',
+                'email_ssl' => 'required',
                 'email_username' => 'required',
                 'email_password' => 'required'
             ]);
 
             //获取输入值
-            $formData = $request->only('type', 'share');
+            $formData = $request->input('type');
             $file = $request->only('sms_cnname', 'sms_url', 'sms_username', 'sms_password', 'wechat_use_alias',
                 'wechat_app_id'
-                , 'wechat_secret', 'wechat_token', 'wechat_encoding_key', 'email_server', 'email_port', 'email_ssl',
+                , 'wechat_secret', 'wechat_token', 'wechat_encoding_key', 'email_server', 'email_port', 'email_protocol', 'email_ssl',
                 'email_username', 'email_password');
 
             //将拿到的数组分别作处理
@@ -96,7 +99,7 @@ class ConfigController extends CommonController
             }
 
             //如果是要插入配置文件
-            $result = $config->config();
+            $result = $config->config($file);
             if (!$result) {
                 DB::rollBack();
             }
@@ -104,7 +107,7 @@ class ConfigController extends CommonController
             DB::commit();
             return redirect()->route('');
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 }
