@@ -12,11 +12,15 @@ namespace Modules\Osce\Entities;
 class RoomVcr extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'station_case';
+    protected $table = 'room_vcr';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['room_id', 'vcr_id', 'create_user_id'];
+    protected $fillable = ['id','room_id', 'vcr_id', 'create_user_id'];
+
+    public function getVcr(){
+        return $this->hasOne('\Modules\Osce\Entities\Vcr','id','vcr_id');
+    }
 }

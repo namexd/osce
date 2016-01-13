@@ -182,4 +182,8 @@ class Student extends CommonModel
     public function sendRegisterEms($mobile,$password){
         //发送短消息
     }
+
+    public function getUser(){
+        return $this->belongsTo('\app\Entities\User');
+    }
 }
