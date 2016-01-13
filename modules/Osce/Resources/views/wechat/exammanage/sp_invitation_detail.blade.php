@@ -53,9 +53,9 @@
                          if(resule.code==1){
                              location.reload();
                          }else{
-                             layer.alert((result.message).split(":")[1],function(){
-                                 location.reload();
-                             })
+//                             layer.alert((result.message).split(":")[1],function(){
+//                                 location.reload();
+//                             })
                          }
 
                      }

@@ -27,6 +27,7 @@ return [
         'email'             =>  [
             'driver'        =>  'email',
             'server'        =>  '',//smtp.xx.xx
+            'protocol'      =>  'POP3',  //IMAP
             'port'          =>  '25',
             'ssl'           =>  false,
             'username'      =>  '',

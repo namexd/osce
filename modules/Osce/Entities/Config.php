@@ -6,7 +6,7 @@
  * Time: 13:55
  */
 
-namespace modules\Osce\Entities;
+namespace Modules\Osce\Entities;
 
 
 class Config extends CommonModel
@@ -74,7 +74,7 @@ class Config extends CommonModel
             $config = include MESSAGE_CONFIG;
 
             //将每一项改写读取到的数组
-            $config['default'] = 'env(\'MESSAGE_DRIVER\'， \'' . $formData['default'] . '\'' . "),\n";
+//          $config['default'] = 'env(\'MESSAGE_DRIVER\'， \'' . $formData['default'] . '\'' . "),\n";
             $config['messages']['sms']['cnname'] = "'" . $formData['sms_cnname'] . "',\n";
             $config['messages']['sms']['url'] = "'" . $formData['sms_url'] . "',\n";
             $config['messages']['sms']['username'] = "'" . $formData['sms_username'] . "',\n";

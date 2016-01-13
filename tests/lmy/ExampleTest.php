@@ -50,7 +50,7 @@ class ExampleTest extends TestCase
 
     public function testApi(){
         $response = $this->call('POST',
-            'http://192.168.1.253/api/1.0/public/oauth/access_token',
+            'http://192.168.1.205/api/1.0/public/oauth/access_token',
         [
             'username'=>'13699456588',
             'password'=>'123456',
@@ -70,7 +70,7 @@ class ExampleTest extends TestCase
 
 
 /*        $response = $this->call('GET',
-            'http://192.168.1.253/api/1.0/private/osce/winapp/test',
+            'http://192.168.1.205/api/1.0/private/osce/winapp/test',
             [
                 'access_token'=>$token,
             ],
@@ -93,7 +93,7 @@ class ExampleTest extends TestCase
         'sp'            =>  $request->get('sp',''),
         'created_user_id'=> $request->get('user_id'),
          */
-        $url='http://192.168.1.253/api/1.0/private/osce/winapp/add-watch';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/add-watch';
 
         /**
          * 三个字段必须的
@@ -101,19 +101,19 @@ class ExampleTest extends TestCase
         'status'        =>  'required|integer',
         'user_id'       =>  'required|integer'
          */
-        $url='http://192.168.1.253/api/1.0/private/osce/winapp/update-watch';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/update-watch';
 
         /**
          * 2个字段必须的
          *      * id int 设备id
          * user_id int 操作用户编号
          */
-        $url='http://192.168.1.253/api/1.0/private/osce/winapp/delete-watch';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/delete-watch';
 
-        $url='http://192.168.1.253/api/1.0/private/osce/winapp/watch-status';
-        $url='http://192.168.1.253/api/1.0/private/osce/winapp/bound-watch';
-        $url='http://192.168.1.253/api/1.0/private/osce/winapp/unwrap-watch';
-        $url='http://192.168.1.253/api/1.0/private/osce/winapp/student-details';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/watch-status';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/bound-watch';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/unwrap-watch';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/student-details';
 
 
 
