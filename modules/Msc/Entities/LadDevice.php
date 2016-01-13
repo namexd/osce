@@ -37,7 +37,7 @@ class LadDevice extends Model
     public function GetLadDevice($lab_id){
         return $this->where('lab_id','=',$lab_id)->with(['DeviceInfo'=>function($DeviceInfo){
             $DeviceInfo->with('devicesCateInfo');
-        }])->paginate(config('msc.page_size',10));
+        }])->get();
     }
 
     /**
