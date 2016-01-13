@@ -53,6 +53,11 @@
         </table>
 
         <div class="btn-group pull-right">
+            <nav>
+                <ul class="pagination">
+                    {!! $data->appends($_GET)->render() !!}
+                </ul>
+            </nav>
            
         </div>
     </form>
