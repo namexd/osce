@@ -42,7 +42,7 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        考试邀请
-        <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
+        <a class="right header_btn" href="">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>

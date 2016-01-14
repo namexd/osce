@@ -22,6 +22,7 @@
             line-height: 30px;
         }
         .assign-box{
+            margin-top: 20px;
         }
         .classroom-box>ul>li{
             float: left;
@@ -42,7 +43,8 @@
             float: left;
         }
         .classroom-box{
-            width: 1002px;
+            width: 1402px;
+
         }
         ul,dl{
             padding: 0;
@@ -68,12 +70,20 @@
         .title{
             border: 1px solid #ccc;
             background-color: #eee;
+            text-align: center;
         }
         .dd-active{
             background-color:#ccc;
         }
         .error{
             background-color:#ff0000;
+        }
+        .operate{
+            width: 600px;
+            margin: 20px auto;
+        }
+        .operate button{
+            margin-left: 50px;
         }
     </style>
 @stop
@@ -95,10 +105,10 @@
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
-                            <li class="active"><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
-                            <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
-                            <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
+                            <li class=""><a href="">基础信息</a></li>
+                            <li class=""><a href="">考场安排</a></li>
+                            <li class=""><a href="">考生管理</a></li>
+                            <li class="active"><a href="">智能排考</a></li>
                         </ul>
                     </div>
                 </div>
@@ -112,7 +122,7 @@
 
                 </div>
             </div>
-            <div>
+            <div class="operate">
                 <button class="btn btn-default" type="button">智能排考</button>
                 <button class="btn btn-default save" type="button">保存方案</button>
                 <button class="btn btn-default" type="button">导出excel</button>

@@ -34,7 +34,7 @@
 	                validating: 'glyphicon glyphicon-refresh'
 	            },
 	            fields: {/*验证*/
-	           		'type[]': {/*键名username和input name值对应*/
+	           		'message_type[]': {/*键名username和input name值对应*/
 	                    validators: {
 	                        notEmpty: {/*非空提示*/
 	                            message: '请至少选择一个'
@@ -191,22 +191,22 @@
 		                            <div class="col-sm-10">
 		                            	<label class="check_label checkbox_input">
 			                                <div class="check_icon check" style="display: inline-block"></div>
-			                                <input type="checkbox" checked="checked" name="message_type[]" value="微信">
+			                                <input type="checkbox" checked="checked" name="message_type[]" value="1">
 			                                <span class="check_name">微信</span>
 			                            </label>
 			                            <label class="check_label checkbox_input">
 			                                <div class="check_icon" style="display: inline-block"></div>
-			                                <input type="checkbox" name="message_type[]" value="短信" >
+			                                <input type="checkbox" name="message_type[]" value="2" >
 			                                <span class="check_name">短信</span>
 			                            </label>
 			                            <label class="check_label checkbox_input">
 			                                <div class="check_icon" style="display: inline-block"></div>
-			                                <input type="checkbox" name="message_type[]" value="邮件">
+			                                <input type="checkbox" name="message_type[]" value="3">
 			                                <span class="check_name">邮件</span>
 			                            </label>
 			                            <label class="check_label checkbox_input">
 			                                <div class="check_icon" style="display: inline-block"></div>
-			                                <input type="checkbox" name="message_type[]" value="系统消息">
+			                                <input type="checkbox" name="message_type[]" value="4">
 			                                <span class="check_name">系统消息</span>
 			                            </label>
 		                            </div>

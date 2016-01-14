@@ -18,10 +18,10 @@ class Discussion extends CommonModel{
     public      $search    =   [];
 
     public function getAuthor(){
-        return $this->hasMany('App\Entities\User','id','create_user_id');
+        return $this->belongsTo('App\Entities\User','create_user_id','id');
     }
 
     public function getDiscussionPagination(){
-        return $this->paginate(config('msc.page_size'));
+        return $this->where('pid',0)->paginate(config('msc.page_size'));
     }
 }

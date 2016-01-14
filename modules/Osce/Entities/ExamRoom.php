@@ -210,7 +210,7 @@ class ExamRoom extends CommonModel
               $result=$result ->where($this->table.'.exam_id', '=', $id);
             }
             if($room_id){
-               $result= $result ->where('room_station','.room_id', '=', $room_id);
+               $result= $result ->where('room_station.room_id', '=', $room_id);
             }
             $result->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port'])
             -> get();
