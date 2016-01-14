@@ -14,6 +14,9 @@ use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 
+use Modules\Osce\Entities\ExamFlow;
+use Modules\Osce\Entities\ExamFlowRoom;
+use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
@@ -22,6 +25,7 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
@@ -87,19 +91,74 @@ class ExamController extends CommonController
 
         try {
             //获取id
-            $id = $request->input('id');
+            $id = $request->input('id');  //id为考试id
+
+            //开启事务
+            DB::beginTransaction();
 
             //进入模型逻辑
-            $result = $exam->deleteData($id);
+            //删除与考场相关的流程
+            $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get(); //获得流程的id
+            if (!Flows::whereIn('id',$flowIds)->delete()) {
+                DB::rollback();
+                throw new \Exception('删除流程失败，请重试！');
 
-            if ($result !== true) {
-                throw new \Exception('删除考试失败，请重试！');
-            } else {
-                return redirect()->route('osce.admin.exam.getExamList');
             }
 
+            //删除考试本体
+            $result = $exam->deleteData($id);
+            if ($result !== true) {
+                DB::rollback();
+                throw new \Exception('删除考试失败，请重试！');
+
+            }
+
+            //删除考试考场关联
+            if (ExamRoom::where('exam_id',$id)->first()) {
+                if (!ExamRoom::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考场关联失败，请重试！');
+                }
+            }
+
+            //删除考试流程关联
+            if (ExamFlow::where('exam_id',$id)->first()) {
+                if (!ExamFlow::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试流程关联失败，请重试！');
+                }
+            }
+
+            //删除考试考场流程关联
+            if (ExamFlowRoom::where('exam_id',$id)->first()) {
+                if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考场流程关联失败，请重试！');
+                }
+            }
+
+            //通过考试流程-考站关系表得到考站信息
+
+            $station = ExamFlowStation::whereIn('flow_id',$flowIds);
+            $stationIds = $station->select('station_id')->get();
+            if ($stationIds) {
+                //删除考试流程-考站关系表信息
+                if (!$station->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考站流程关联失败，请重试！');
+                }
+
+                //通过考站id找到对应的考站-老师关系表
+                if (!StationTeacher::whereIn('station_id',$stationIds)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考站老师关联失败，请重试！');
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('osce.admin.exam.getExamList');
         } catch (\Exception $ex) {
-            return redirect()->back()->withError($ex);
+            return redirect()->back()->withError($ex->getMessage());
         }
     }
 
@@ -649,6 +708,7 @@ class ExamController extends CommonController
 
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
+//        dd($examStationData);
 
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
