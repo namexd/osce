@@ -25,7 +25,7 @@ class InvigilatorController extends CommonController
 
     public function getTest()
     {
-        return view('osce::admin.exammanage.smart_assignment');
+//        return view('osce::admin.exammanage.smart_assignment');
     }
     /**
      * 获取SP考教师列表

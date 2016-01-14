@@ -581,10 +581,10 @@ class ExamController extends CommonController
 
 
             }
-            return response()->json(
-                $this->success_data(['result' => true, 'code' => 1])
-            );
-//            return json_encode(['result' => true, 'data' =>['code'=>1] ]);
+//            return response()->json(
+//                $this->success_data(['result' => true, 'code' => 1])
+//            );
+         echo json_encode(['result' => true, 'data' =>['code'=>1] ]);
 //            echo json_encode($this->success_data());
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
@@ -1114,8 +1114,7 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-
-        return view('',['exam'=>$exam]);
+        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam]);
     }
 
     /**
