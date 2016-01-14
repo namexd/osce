@@ -9,6 +9,9 @@
 namespace Modules\Osce\Repositories;
 
 
+use App\Entities\User;
+use DB;
+
 class Common
 {
     /**
@@ -48,7 +51,7 @@ class Common
 
         for($i=0;$i<$length;$i++)
         {
-            $randNum    =   rand(0,strlen($word))-1;
+            $randNum    =   rand(0,strlen($word)-1);
             $str        .=   $word[$randNum];
         }
         return $str;
@@ -68,5 +71,67 @@ class Common
         {
             throw new \Exception('创建用户失败');
         }
+    }
+
+    public function getUserList(){
+        return User::leftJoin('sys_user_role',function($join){
+            $join->on('users.id','=','sys_user_role.user_id');
+        })
+            ->  where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
+            ->  paginate(config('osce.page_size'));
+    }
+
+    public function createAdminUser($data){
+        if(config('APP_DEBUG'))
+        {
+            $password   =  123456;
+        }
+        else
+        {
+            $password   =   Common::getRandStr(6);
+        }
+
+        DB::beginTransaction();
+        try{
+            $user   =   Common::registerUser(['username'=>$data['mobile'],],$password);
+            if(is_null($user))
+            {
+                throw new \Exception('创建用户失败');
+            }
+            $user   ->  name    =   $data['name'];
+            $user   ->  gender  =   $data['gender'];
+            DB::table('sys_user_role')->insert(
+                [
+                    'role_id'=>config('osce.adminRoleId',3),
+                    'user_id'=>$user->id,
+                    'created_at'=>time(),
+                    'updated_at'=>time(),
+                ]
+            );
+            if(!$user   ->  save())
+            {
+                throw new \Exception('初始化资料失败');
+            }
+            DB::commit();
+            $this   ->  sendRegisterEms($data['mobile'],$password);
+            return  $user;
+        }
+        catch(\Exception $ex)
+        {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    public function updateAdminUser($id,$data){
+        $user   =   User::find($id);
+        foreach($data as $feild =>  $value)
+        {
+            $user   ->  $feild  =   $value;
+        }
+        return  $user->save();
+    }
+    static public function sendRegisterEms($mobile,$password){
+
     }
 }

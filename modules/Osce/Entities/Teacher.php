@@ -230,6 +230,14 @@ class Teacher extends CommonModel
             if(!$user){
                 $password   =   Common::getRandStr(6);
                 $user       =   $this   ->  registerUser($data,$password);
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'=>$data['role_id'],
+                        'user_id'=>$user->id,
+                        'created_at'=>time(),
+                        'updated_at'=>time(),
+                    ]
+                );
                 $this       ->  sendRegisterEms($mobile,$password);
             }
             $teacher    =   $this   ->  find($user  ->  id);
@@ -273,6 +281,7 @@ class Teacher extends CommonModel
     }
     public function sendRegisterEms($mobile,$password){
         //发送短消息
+        Common::sendRegisterEms($mobile,$password);
     }
 
     /**

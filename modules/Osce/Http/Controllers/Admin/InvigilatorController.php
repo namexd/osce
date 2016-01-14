@@ -166,9 +166,11 @@ class InvigilatorController extends CommonController
             'code'              =>  e($request->get('code')),
             'case_id'           =>  intval($request->get('case_id')),
             'status'            =>  1,
-            'create_user_id'    =>  $user->id
+            'create_user_id'    =>  $user->id,
+            'role_id'           =>  config('osce.invigilatorRoleId',1)
         ];
-
+//        'spRoleId'		=>	4,
+//	'invigilatorRoleId'	=>	1,
         $Invigilator    =   new Teacher();
         try{
             if($Invigilator    ->  addInvigilator($data)){
@@ -230,7 +232,8 @@ class InvigilatorController extends CommonController
                 'code'              =>  e($request->get('code')),
                 'case_id'           =>  intval($request->get('case_id')),
                 'status'            =>  1,
-                'create_user_id'    =>  $user->id
+                'create_user_id'    =>  $user->id,
+                'role_id'           =>  config('osce.spRoleId',4)
             ];
 
             $Invigilator    =   new Teacher();

@@ -29,41 +29,22 @@
             <h5 class="title-label">用户新增</h5>
         </div>
     </div>
-    <form class="form-horizontal" id="Form3" novalidate="novalidate" action="/msc/admin/user/teacher-save" method="post" style="display: none;">
+    <form class="form-horizontal" id="Form3" novalidate="novalidate" action="{{route('osce.admin.user.postAddUser')}}" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">编辑</h4>
+            <h4 class="modal-title" id="myModalLabel">用户新增</h4>
         </div>
         <div class="modal-body">
             <div class="form-group">
                 <label class="col-sm-2 control-label">姓名</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control name edit-name" value="" name="name" />
-                    <input type="hidden" class="edit-hidden-name" value="" name="id"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">胸牌号</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control code edit-code" name="code" />
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2" style="padding-left: 15px;">
                     <input type="radio" class="check_icon edit-man" name="gender"  value="1"/> <span style="padding-right: 40px;">男</span>
-                    <input type="radio" class="check_icon edit-woman" name="gender" value="0" /> <span>女</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">科室</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control edit-dept_name" name="dept_name" id=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">角色</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control edit-role" name="role" id="" />
+                    <input type="radio" class="check_icon edit-woman" name="gender" value="2" /> <span>女</span>
                 </div>
             </div>
             <div class="form-group">
@@ -74,7 +55,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2">
-                    <button type="button" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
+                    <button type="submit" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
                 </div>
             </div>
         </div>

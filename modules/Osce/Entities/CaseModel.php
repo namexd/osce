@@ -36,7 +36,7 @@ class CaseModel extends CommonModel
             'id',
             'name',
             'description'
-        ])->paginate($paginate);
+        ])->paginate(config('osce.page_size'));
 
         return $builder;
     }

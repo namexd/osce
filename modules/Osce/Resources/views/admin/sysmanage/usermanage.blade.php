@@ -28,7 +28,7 @@
             <h5 class="title-label">用户管理</h5>
         </div>
         <div class="col-xs-6 col-md-2" style="float: right;">
-            <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
+            <a  href="{{route('osce.admin.user.getAddUser')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
         </div>
     </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -49,15 +49,14 @@
                 @forelse($list as $item)
                 <tr>
                     <td>{{$item->id}}</td>
-                    <td>{{$item->code}}</td>
+                    <td>{{$item->username}}</td>
                     <td>{{$item->name}}</td>
                     <td>-</td>
-                    <td>{{$item->user->mobile}}</td>
-                    <td>{{$item->user->lastlogindate}}</td>
+                    <td>{{$item->mobile}}</td>
+                    <td>{{$item->lastlogindate}}</td>
                     <td>
-                        <a href="#" class="status1" id="look" data-toggle="modal" data-target="#myModal">查看</a>
-                        <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}" class="status1" id="edit" data-toggle="modal" >编辑</a>
-                        <a href="#" class="status3" id="del" data-toggle="modal" data-target="#myModal">删除</a>
+                        <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}" class="status1" >编辑</a>
+                        <a href="{{route('osce.admin.user.getDelUser',['id'=>$item->id])}}" class="status3" onclick="return confirm('确认删除');" >删除</a>
                     </td>
                 </tr>
                 @empty
