@@ -16,7 +16,7 @@ class LabApply  extends Model
     protected $table 		= 	'lab_apply';
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
-    protected $fillable 	=	['lab_id', 'type','status','apply_user_id','description','apply_time','course_name'];
+    protected $fillable 	=	['lab_id', 'type','begintime','endtime','description','apply_user_id','course_name','apply_time','status','user_type'];
 
     /**
      * @param $where
@@ -138,7 +138,7 @@ class LabApply  extends Model
         $plan_applyTable = $plan_applyDb.'.plan_apply';
 
         if(!empty($arr)){
-            $builder = $this->whereIn($plan_applyTable``.'.id',$arr);
+            $builder = $this->whereIn($plan_applyTable.'.id',$arr);
         }else{
             $builder = $this;
         }
