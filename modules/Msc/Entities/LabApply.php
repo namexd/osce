@@ -51,8 +51,6 @@ class LabApply  extends Model
         $labDb    = config('database.connections.msc_mis.database');
         $labTable = $labDb.'.lab';
 
-        $plan_applyDb    = config('database.connections.msc_mis.database');
-        $plan_applyTable = $plan_applyDb.'.plan_apply';
 
         if(!empty($keyword)){
             $builder = $this->where($userTable.'.name','like','%'.$keyword.'%');
@@ -76,7 +74,7 @@ class LabApply  extends Model
             $PlanApply->with('OpenPlan');
         }]);
         $data = $builder
-            ->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$open_planTable.'.year',$open_planTable.'.month',$open_planTable.'.day',$open_planTable.'.begintime',$open_planTable.'.endtime')
+            ->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code')
             ->orderby($lab_applyTable.'.apply_time')->paginate(config('msc.page_size',10));
         //dd($data);
         return $data;
@@ -100,8 +98,6 @@ class LabApply  extends Model
         $labDb    = config('database.connections.msc_mis.database');
         $labTable = $labDb.'.lab';
 
-        $plan_applyDb    = config('database.connections.msc_mis.database');
-        $plan_applyTable = $plan_applyDb.'.plan_apply';
         $builder = $this->where($lab_applyTable.'.id','=',$id);
         $builder = $builder->leftJoin($userTable, function($join) use($lab_applyTable) {
             $join->on($join->table.'.id', '=', $lab_applyTable.'.apply_user_id');
@@ -111,8 +107,9 @@ class LabApply  extends Model
             $PlanApply->with('OpenPlan');
         }]);
 
-        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$open_planTable.'.year',$open_planTable.'.month',$open_planTable.'.day',$open_planTable.'.begintime',$open_planTable.'.endtime')
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.total',$labTable.'.floor',$labTable.'.code')
             ->first();
+        //,$open_planTable.'.year',$open_planTable.'.month',$open_planTable.'.day',$open_planTable.'.begintime',$open_planTable.'.endtime'
         return $data;
 
     }
@@ -134,11 +131,9 @@ class LabApply  extends Model
         $labDb    = config('database.connections.msc_mis.database');
         $labTable = $labDb.'.lab';
 
-        $plan_applyDb    = config('database.connections.msc_mis.database');
-        $plan_applyTable = $plan_applyDb.'.plan_apply';
 
         if(!empty($arr)){
-            $builder = $this->whereIn($plan_applyTable.'.id',$arr);
+            $builder = $this->whereIn($lab_applyTable.'.id',$arr);
         }else{
             $builder = $this;
         }
@@ -150,22 +145,20 @@ class LabApply  extends Model
         })->with(['PlanApply'=>function($PlanApply){
             $PlanApply->with('OpenPlan');
         }]);
-        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$open_planTable.'.year',$open_planTable.'.month',$open_planTable.'.day',$open_planTable.'.begintime',$open_planTable.'.endtime',$open_planTable.'.apply_num')->get();
-        //dd($data);
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.total',$labTable.'.floor',$labTable.'.code')->get();
         return $data;
 
     }
 
     /**
-     * @param $status 1.待审核 2.待使用（已经审核通过了的）
      * @param $uid
-     * @return Array
+     * @return mixed
      * @author tangjun <tangjun@misrobot.com>
      * @date   2016年1月14日17:21:30
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function MyApplyList($status,$uid){
-        return  $this->where('status','=',$status)->where('type','=',2)->where('apply_user_id','=',$uid)->with(['PlanApply'=>function($PlanApply){
+    public function MyApplyList($uid){
+        return  $this->where('status','=',1)->where('type','=',2)->where('apply_user_id','=',$uid)->with(['PlanApply'=>function($PlanApply){
             $PlanApply->with(['OpenPlan']);
         }])->get();
     }
