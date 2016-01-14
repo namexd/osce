@@ -34,7 +34,7 @@
 	                validating: 'glyphicon glyphicon-refresh'
 	            },
 	            fields: {/*验证*/
-	           		'type[]': {/*键名username和input name值对应*/
+	           		'message_type[]': {/*键名username和input name值对应*/
 	                    validators: {
 	                        notEmpty: {/*非空提示*/
 	                            message: '请至少选择一个'
