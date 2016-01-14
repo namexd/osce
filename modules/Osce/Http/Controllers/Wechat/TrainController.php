@@ -50,9 +50,7 @@ class TrainController extends  CommonController{
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
 
-        return response()->json(
-            $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
-        );
+       return view()->with(['list'=>$list,'pagination'=>$pagination]);
     }
 
 
