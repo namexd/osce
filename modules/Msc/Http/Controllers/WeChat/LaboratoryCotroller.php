@@ -318,8 +318,14 @@ class LaboratoryCotroller extends MscWeChatController
                     ];
                 }
                 if($MscMis->table('plan_apply')->insert($PlanApplyData)){
-                    $MscMis->commit();
-                    dd('添加成功');
+
+                    if($MscMis->table('users')->whereIn('id',$open_plan_id)->increment('apply_num',1)){
+                        $MscMis->commit();
+                        dd('添加成功');
+                    }else{
+                        $MscMis->rollBack();
+                        dd('添加失败');
+                    }
                 }else{
                     $MscMis->rollBack();
                     dd('添加失败');
