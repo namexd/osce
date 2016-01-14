@@ -6,6 +6,7 @@
 @section('only_js')
     <script>
         $(function(){
+
             $('#sourceForm').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -23,7 +24,7 @@
                             }
                         }
                     },
-                    moblie: {
+                    mobile: {
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '手机号码不能为空'
