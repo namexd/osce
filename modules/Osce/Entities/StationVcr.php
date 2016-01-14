@@ -44,7 +44,7 @@ class StationVcr extends CommonModel
         );
         if($startTime){
             $list=$list->whereRaw(
-                'unix_timestamp('.$this->table.'.begin_dt) < ?',
+                'unix_timestamp('.$this->table.'.begin_dt) <= ?',
                 [
                     $startTime
                 ]
@@ -53,7 +53,7 @@ class StationVcr extends CommonModel
 
         if($endTime){
             $list=$list->whereRaw(
-                'unix_timestamp('.$this->table.'.end_dt) > ?',
+                'unix_timestamp('.$this->table.'.end_dt) => ?',
                 [
                     $endTime
                 ]
