@@ -12,10 +12,11 @@ namespace Modules\Msc\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\ProfessionalTitle;
+use Modules\Msc\Http\Controllers\MscController;
 use Pingpong\Modules\Routing\Controller;
 use URL;
 use DB;
-class ProfessionalTitleController extends Controller
+class ProfessionalTitleController extends MscController
 {
 
     /**
@@ -63,6 +64,7 @@ class ProfessionalTitleController extends Controller
             'list'         =>       $list,
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',
+            'number'=>$this->getNumber()
         ]);
     }
 

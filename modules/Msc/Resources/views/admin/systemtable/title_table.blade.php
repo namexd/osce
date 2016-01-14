@@ -60,7 +60,7 @@
                 @if(!empty($list))
                     @foreach($list as $k => $val)
                         <tr>
-                            <td class="number">{{ ($k+1) }}</td>
+                            <td class="number">{{ ($number+$k) }}</td>
                             <td class="name">{{ @$val['name'] }}</td>
                             <td class="describe">{{ @$val['description'] }}</td>
                             <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)正常@else<span class="state2">停用</span>@endif</td>

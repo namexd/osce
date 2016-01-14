@@ -65,7 +65,8 @@ class ProfessionController extends MscController
         'list'         =>       $list,
         'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
         'status'=>$request->input('status')?$request->input('status'):'',
-        'ProfessionStatus'=>$ProfessionStatus
+        'ProfessionStatus'=>$ProfessionStatus,
+        'number'=>$this->getNumber()
     ]);
    }
 

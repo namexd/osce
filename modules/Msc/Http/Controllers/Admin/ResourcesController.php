@@ -60,6 +60,7 @@ class ResourcesController extends MscController
                 'status' => is_null($itme->status) ? '-' : $itme->status,
             ];
         }
+
         $devicetype = DB::connection('msc_mis')->table('device_cate')->get();
         return view('msc::admin.systemtable.resource_table',[
             'pagination'=>$pagination,
@@ -67,6 +68,8 @@ class ResourcesController extends MscController
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',
             'devicetype' =>  $devicetype,
+            'devices_cate_id'=>$request->input('devices_cate_id')?$request->input('devices_cate_id'):'',
+            'number'=>$this->getNumber()
         ]);
     }
 

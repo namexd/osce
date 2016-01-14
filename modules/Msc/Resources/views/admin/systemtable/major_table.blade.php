@@ -146,7 +146,7 @@
                        @if(!empty($list))
                            @foreach($list as $k => $list)
                         <tr>
-                            <td>{{($k+1)}}</td>
+                            <td>{{($number+$k)}}</td>
                             <td class="code">{{$list['code']}}</td>
                             <td class="name">{{$list['name']}}</td>
                             <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">停用</span>@endif</td>
