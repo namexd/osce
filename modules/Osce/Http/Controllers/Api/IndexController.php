@@ -454,85 +454,92 @@ class IndexController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWatchList(Request $request){
-        $this  ->validate($request,[
-            'code'  =>  'sometimes|integer'
+    public function getWatchList(Request $request)
+    {
+        $this->validate($request, [
+            'code' => 'sometimes|integer'
         ]);
 
-        $code=intval($request->get('code'));
+        $code = intval($request->get('code'));
 
-        if($code){
-            $list=Watch::where('code','like','%'.$code.'%');
-        }else{
-            $list=Watch::select()->get();
-        }
+        try{
+            if ($code) {
+                $list = Watch::where('code', 'like', '%' . $code . '%');
+            } else {
+                $list = Watch::select()->get();
+            }
 
-        $data=[];
-        foreach($list as $item){
-            $data[]=[ 'id'      =>$item->id,
-                'status'  =>$item->status,
-                'name'    =>$item->name,
-                'code'    =>$item->code,
-            ];
+            $data = [];
+            foreach ($list as $item) {
+                $data[] = ['id' => $item->id,
+                    'status' => $item->status,
+                    'name' => $item->name,
+                    'code' => $item->code,
+                ];
 
-        }
-        $row=[];
-        foreach($data as $itm){
-            if($itm['status']==1){
-                $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first();
-                if(!$studentId){
-                    $row[]=[
-                        'id'             =>$itm['id'],
-                        'status'         =>$itm['status'],
-                        'name'           =>$itm['name'],
-                        'code'           =>$itm['name'],
-                        'studentId'      =>'',
+            }
+            $row = [];
+            foreach ($data as $itm) {
+                if ($itm['status'] == 1) {
+                    $studentId = ExamScreeningStudent::where('id', $itm['id'])->select('student_id')->first();
+                    if (!$studentId) {
+                        $row[] = [
+                            'id' => $itm['id'],
+                            'status' => $itm['status'],
+                            'name' => $itm['name'],
+                            'code' => $itm['name'],
+                            'studentId' => '',
+                        ];
+                    } else {
+                        $row[] = [
+                            'id' => $itm['id'],
+                            'status' => $itm['status'],
+                            'name' => $itm['name'],
+                            'code' => $itm['code'],
+                            'studentId' => $studentId->student_id,
+                        ];
+                    }
+
+                } else {
+                    $row[] = [
+                        'id' => $itm['id'],
+                        'status' => $itm['status'],
+                        'name' => $itm['name'],
+                        'code' => $itm['code'],
+                        'studentId' => '',
                     ];
-                }else{
-                    $row[]=[
-                        'id'             =>$itm['id'],
-                        'status'         =>$itm['status'],
-                        'name'           =>$itm['name'],
-                        'code'           =>$itm['code'],
-                        'studentId'      =>$studentId->student_id,
+                }
+            }
+            $list = [];
+
+            foreach ($row as $v) {
+                if ($v['studentId']) {
+                    $studentName = Student::where('id', $v['studentId'])->select('name')->first()->name;
+                    $list[] = [
+                        'id' => $v['id'],
+                        'status' => $v['status'],
+                        'name' => $v['name'],
+                        'code' => $v['code'],
+                        'studentName' => $studentName,
+                    ];
+                } else {
+                    $list[] = [
+                        'id' => $v['id'],
+                        'status' => $v['status'],
+                        'name' => $v['name'],
+                        'code' => $v['code']
                     ];
                 }
 
-            }else{
-                $row[]=[
-                    'id'         =>$itm['id'],
-                    'status'     =>$itm['status'],
-                    'name'       =>$itm['name'],
-                    'code'       =>$itm['code'],
-                    'studentId'  =>'',
-                ];
             }
-        }
-        $list=[];
+            return response()->json(
+                $this->success_data($list, 1, 'success')
+            );
+        } catch( \Exception $ex){
+            return response()->json(
+                $this->fail($ex)
+            );
+        };
 
-        foreach($row as $v){
-            if($v['studentId']) {
-                $studentName = Student::where('id', $v['studentId'])->select('name')->first()->name;
-                $list[]=[
-                    'id'             =>$v['id'],
-                    'status'         =>$v['status'],
-                    'name'           =>$v['name'],
-                    'code'           =>$v['code'],
-                    'studentName'    =>$studentName,
-                ];
-            }else{
-                $list[]=[
-                    'id'             =>$v['id'],
-                    'status'         =>$v['status'],
-                    'name'           =>$v['name'],
-                    'code'           =>$v['code']
-                ];
-            }
-
-        }
-        return response()->json(
-            $this->success_data($list,1,'success')
-        );
     }
-
 }
