@@ -89,9 +89,8 @@
                     <ul class="nav nav-tabs">
                         <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
                         <li class="active"><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
-                        <li class=""><a href="{{route('osce.admin.spteacher.getShow',['id'=>$id])}}">邀请SP</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
-                        <li class=""><a href="#">智能排考</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
                     </ul>
                 </div>
             </div>
