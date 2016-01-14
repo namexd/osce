@@ -81,27 +81,26 @@
     <div class="box_content" >
         <p class="font16 title">资源清单</p>
 
-        <div class="main_list">
+        <div class="main_list" id="inner-content">
             <div class="title_nav">
                 <div class="title_number title">序号</div>
                 <div class="title_name title">资源名称</div>
                 <div class="title_number title">资源类型</div>
                 <div class="title_number title">数量</div>
             </div>
-            <div class="detail_list" style="padding: 0;">
-                <ul>
-                    <li style="line-height: 28px">
-                        <span class="title_number left">1</span>
-                        <span class="title_name left">听诊器</span>
-                        <span class="title_number left">耗材</span>
-                        <span class="title_number left">30</span>
-                    </li>
-                    <li style="line-height: 28px">
-                        <span class="title_number left">2</span>
-                        <span class="title_name left">假体模型</span>
-                        <span class="title_number left">模型</span>
-                        <span class="title_number left">20</span>
-                    </li>
+            <div class="detail_list">
+                <ul class="inner-content">
+
+                    @foreach($data['LadDeviceList'] as $k => $val)
+
+                        <li>
+                            <span class="title_number left">#{{@($k+1)}}</span>
+                            <span class="title_name left">{{ @$val['DeviceInfo']['name'] }}</span>
+                            <span class="title_number left">{{ @$val['devicesCateInfo']['name'] }}耗材</span>
+                            <span class="title_number left">{{ @$val['total']}}</span>
+                        </li>
+                    @endforeach
+
                 </ul>
             </div>
         </div>
