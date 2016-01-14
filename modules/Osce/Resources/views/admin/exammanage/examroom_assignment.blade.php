@@ -3,6 +3,7 @@
 @section('only_css')
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style>
+    .table-head-style1{border-bottom: 1px solid #e7eaec;}
     button.btn.btn-white.dropdown-toggle {
         border: none;
         font-weight: bolder;
@@ -78,7 +79,7 @@
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row table-head-style1 ">
+        <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考场安排</h5>
             </div>
@@ -132,16 +133,13 @@
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
 
                                         @forelse($examRoomData as $item)
-
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
-
                                                     <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
-                                                        @foreach($item as $value)
 
-                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
-                                                        @endforeach
+                                                        <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+
                                                     </select>
                                                 </td>
                                                 <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
@@ -185,7 +183,9 @@
                                                 <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
                                                     <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station[{{$key+1}}][teacher_id]">
-                                                        <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
+                                                        @if($item->teacher_type == 1)
+                                                            <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
+                                                        @endif
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">

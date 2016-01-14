@@ -29,7 +29,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.sysmanage.system_settings_media');
+        return view('osce::wechat.discussion.discussion_detail');
     }
 
     /**

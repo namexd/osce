@@ -27,7 +27,7 @@ return array (
       'protocol' => 'POP3',
       'port' => '25',
       'ssl' => 'flase',
-      'username' => '123',
+      'username' => '1234',
       'password' => '123',
     ),
     'pm' => 

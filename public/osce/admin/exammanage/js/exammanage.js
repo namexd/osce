@@ -53,6 +53,31 @@ function exam_add(){
 	//时间选择
 	timePicker(pars.background_img);
 
+
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: '考试名称不能为空'
+                    }
+                }
+            },
+            code: {
+                validators: {
+                    notEmpty: {
+                        message: '考试地点不能为空'
+                    }
+                }
+            }
+        }
+    });
 	/**
      * 新增一条
      * @author  mao
@@ -118,6 +143,49 @@ function exam_add(){
 function add_basic(){
 	//时间选择
 	timePicker(pars.background_img);
+
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('.container-fluid.ibox-content').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: '考试名称不能为空'
+                    }
+                }
+            },
+            code: {
+                validators: {
+                    notEmpty: {
+                        message: '考试地点不能为空'
+                    }
+                }
+            },
+            sequence_cate: {
+                validators: {
+                    notEmpty: {
+                        message: '考试顺序不能为空'
+                    }
+                }
+            },
+            sequence_mode: {
+                validators: {
+                    notEmpty: {
+                        message: '排序方式不能为空'
+                    }
+                }
+            }
+        }
+    });
 
 	/**
      * 新增一条
@@ -958,9 +1026,11 @@ function exam_notice_add(){
  * @version 2.0
  * @date    2016-01-09
 */
+
 function smart_assignment(){
-
-
+    var testData={"code":1,"message":"success","data":{"1":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[]},"2":{"begin":"1452557715","end":1452558615,"items":[]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}}},"2":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}}},"4":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}}},"5":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}}}}}
+    testData=eval(testData);
+    var liwidth=0;//表格的列宽
         //模拟数据
 
         //var everyli=1000/smartlist.length;
@@ -978,330 +1048,349 @@ function smart_assignment(){
         //
         //    }
         //}
+    function makeItem(data){
+        //var data    ={
+        //        'begin':1000,
+        //        'end':1600,
+        //        'items':[
+        //            {
+        //                id:1,
+        //                name:'李治远3'
+        //            },
+        //            {
+        //                id:2,
+        //                name:'李治远2'
+        //            },
+        //            {
+        //                id:3,
+        //                name:'李治远1'
+        //            }
+        //        ]
+        //    };
 
+        var dl  =   $('<dl class="clearfloat">');
 
-}
-function makeItem(data){
-    //var data    ={
-    //        'begin':1000,
-    //        'end':1600,
-    //        'items':[
-    //            {
-    //                id:1,
-    //                name:'李治远3'
-    //            },
-    //            {
-    //                id:2,
-    //                name:'李治远2'
-    //            },
-    //            {
-    //                id:3,
-    //                name:'李治远1'
-    //            }
-    //        ]
-    //    };
+        var items   =   data.items;
+        console.log(data)
+        var everyHeight=data.end-data.begin;
+        console.log(everyHeight);
+        dl.css("height",everyHeight/10+"px");
 
-    var dl  =   $('<dl class="clearfloat">');
-
-    var items   =   data.items;
-    var everyHeight=data.end-data.begin;
-    dl.css("height",everyHeight/10+"px");
-
-    for(var i in items)
-    {
-        var dd  = $('<dd>').text(items[i].name);
-        dd.attr("sid",items[i].id);
-
-        dd.bind("click",changeTwo);
-        dl.append(dd);
-    }
-    return dl;
-}
-function makeCols(data){
-    //var data    =   {
-    //    'name':'教室404',
-    //    'child':[
-    //        {
-    //            'begin':1000,
-    //            'end':1500,
-    //            'items':[
-    //                '罗海华2',
-    //                '李治远3',
-    //                '毛云刚5',
-    //            ]
-    //        },
-    //        {
-    //            'begin':1500,
-    //            'end':2800,
-    //            'items':[
-    //                '罗海华6',
-    //                '李治远7',
-    //                '毛云刚6',
-    //            ]
-    //        },
-    //
-    //    ],
-    //
-    //};
-    var ul  =   $('<ul>');
-
-
-    var child   =   data.child;
-    var title   =   $('<li class="title">').text(data.name);
-    ul.append(title);
-    for(var i in child)
-    {
-
-        var itemData    =   child[i];
-        var li  =   $('<li>');
-        li.addClass("rows"+i);
-        var item    =   makeItem(itemData);
-        ul.append(li);
-        li.append(item);
-    }
-
-    return ul;
-}
-function makeAll(data){
-    var ul =    $('<ul class="clearfloat">');
-    var liWidth=1000/data.length;
-    for(var i in data)
-    {
-
-        var colData     =   data[i];
-        var colul       =   makeCols(colData);
-        var li          =   $('<li>');
-        li.append(colul);
-        li.css("width",liWidth+"px");
-        li.addClass("cols"+i);
-        ul.append(li);
-    }
-    return ul;
-}
-$(function(){
-    var smartlist=[
+        for(var i in items)
         {
-            'name':'教室404',
-            'child':[
-                {
-                    'begin':1000,
-                    'end':1500,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
-                {
-                    'begin':1500,
-                    'end':2800,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
+            var dd  = $('<dd>').text(items[i].name);
+            dd.attr("sid",items[i].id);
 
-            ],
-
-        },
-        {
-            'name':'教室403',
-            'child':[
-                {
-                    'begin':1000,
-                    'end':1600,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
-                {
-                    'begin':1600,
-                    'end':2200,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
-
-            ],
-        },
-        {
-            'name':'教室403',
-            'child':[
-                {
-                    'begin':1000,
-                    'end':1600,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
-                {
-                    'begin':1600,
-                    'end':2200,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
-
-            ],
-        },
-        {
-            'name':'教室403',
-            'child':[
-                {
-                    'begin':1000,
-                    'end':2000,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
-                {
-                    'begin':1600,
-                    'end':2200,
-                    'items':[
-                        {
-                            id:1,
-                            name:'李治远3'
-                        },
-                        {
-                            id:2,
-                            name:'李治远2'
-                        },
-                        {
-                            id:3,
-                            name:'李治远1'
-                        }
-                    ]
-                },
-
-            ],
-        },
-    ];
-    var dom =   makeAll(smartlist);
-    $('.classroom-box').append(dom);
-    //changeTwo();
-});
-
-//点击两个表格可进行交换
-function changeTwo(){
-
-    if($(this).hasClass('dd-active'))
-    {
-        $(this).removeClass('dd-active');
-        return ;
+            dd.bind("click",changeTwo);
+            dl.append(dd);
+        }
+        return dl;
     }
-    $(this).addClass('dd-active');
-    if($(".dd-active").length==2){
-        var change1=$($(".dd-active")[0]).html();
-        var change2=$($(".dd-active")[1]).html();
-        $($(".dd-active")[1]).html(change1);
-        $($(".dd-active")[0]).html(change2);
-        if($(".error").length==0){
-        }else{
+    function makeCols(data){
+        //var data    =   {
+        //    'name':'教室404',
+        //    'child':[
+        //        {
+        //            'begin':1000,
+        //            'end':1500,
+        //            'items':[
+        //                '罗海华2',
+        //                '李治远3',
+        //                '毛云刚5',
+        //            ]
+        //        },
+        //        {
+        //            'begin':1500,
+        //            'end':2800,
+        //            'items':[
+        //                '罗海华6',
+        //                '李治远7',
+        //                '毛云刚6',
+        //            ]
+        //        },
+        //
+        //    ],
+        //
+        //};
+
+        var ul  =   $('<ul>');
+
+
+        var child   =   data.child;
+        var title   =   $('<li class="title">').text(data.name);
+        ul.append(title);
+        for(var i in child)
+        {
+
+            var itemData    =   child[i];
+            var li  =   $('<li>');
+            li.addClass("rows"+i);
+            var item    =   makeItem(itemData);
+            ul.append(li);
+            li.append(item);
+        }
+
+        return ul;
+    }
+    function makeAll(data){
+        var liNums=0;
+        var ul =    $('<ul class="clearfloat table">');
+
+
+        for(var i in data)
+        {
+
+            var colData     =   data[i];
+            var colul       =   makeCols(colData);
+            var li          =   $('<li>');
+            li.append(colul);
+            li.addClass("cols"+i);
+            ul.append(li);
+            liNums++;
 
         }
-        console.log($($(".dd-active")[1]).parent().parent().parent().parent().attr("class"))
-        $.ajax({
-            url:"",
-            type:"get",
-            dataType:"json",
-            data:{
+        liwidth=1400/liNums;
+
+        return ul;
+    }
+
+    function maketotal(data){
+        for (var i in data){
+            var groupData=data[i];
+            var dom =   makeAll(groupData);
+            $('.classroom-box').append(dom);
+        }
+    }
+        var smartlist=[
+            {
+                'name':'教室404',
+                'child':[
+                    {
+                        'begin':1000,
+                        'end':1500,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+                    {
+                        'begin':1500,
+                        'end':2800,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+
+                ],
+
+            },
+            {
+                'name':'教室403',
+                'child':[
+                    {
+                        'begin':1000,
+                        'end':1600,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+                    {
+                        'begin':1600,
+                        'end':2200,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+
+                ],
+            },
+            {
+                'name':'教室403',
+                'child':[
+                    {
+                        'begin':1000,
+                        'end':1600,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+                    {
+                        'begin':1600,
+                        'end':2200,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+
+                ],
+            },
+            {
+                'name':'教室403',
+                'child':[
+                    {
+                        'begin':1000,
+                        'end':2000,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+                    {
+                        'begin':1600,
+                        'end':2200,
+                        'items':[
+                            {
+                                id:1,
+                                name:'李治远3'
+                            },
+                            {
+                                id:2,
+                                name:'李治远2'
+                            },
+                            {
+                                id:3,
+                                name:'李治远1'
+                            }
+                        ]
+                    },
+
+                ],
+            }
+        ];
+        var totalData=[
+            smartlist,
+            smartlist,
+            smartlist
+        ]
+    maketotal(testData.data);
+    $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+
+
+//点击两个表格可进行交换
+    function changeTwo(){
+
+        if($(this).hasClass('dd-active'))
+        {
+            $(this).removeClass('dd-active');
+            return ;
+        }
+        $(this).addClass('dd-active');
+        if($(".dd-active").length==2){
+            var change1=$($(".dd-active")[0]).html();
+            var change2=$($(".dd-active")[1]).html();
+            $($(".dd-active")[1]).html(change1);
+            $($(".dd-active")[0]).html(change2);
+            if($(".error").length==0){
+            }else{
+
+            }
+            console.log($($(".dd-active")[1]).parent().parent().parent().parent().attr("class"))
+            $.ajax({
+                url:"",
+                type:"get",
+                dataType:"json",
+                data:{
                     id1:$($(".dd-active")[0]).attr("sid"),
                     id2:$($(".dd-active")[1]).attr("sid"),
                     row1:$($(".dd-active")[0]).parent().parent().attr("class"),
                     row2:$($(".dd-active")[1]).parent().parent().attr("class"),
                     col1:$($(".dd-active")[0]).parent().parent().parent().parent().attr("class"),
                     col2:$($(".dd-active")[1]).parent().parent().parent().parent().attr("class")
-            },
-            success: function(result) {
-                console.log(result);
-                $("dd").removeClass("dd-active");
-                var status=1//冲突状态
-                if(status==1){
-                    $($(".dd-active")[0]).addClass("error");
-                    $($(".dd-active")[1]).addClass("error");
-                    $(".save").attr("disabled");
-                }else{
-                    $($(".dd-active")[0]).removeClass("error");
-                    $($(".dd-active")[1]).removeClass("error");
-                    $(".save").removeAttr("disabled");
-                }
-            }})
+                },
+                success: function(result) {
+                    console.log(result);
+                    $("dd").removeClass("dd-active");
+                    var status=1//冲突状态
+                    if(status==1){
+                        $($(".dd-active")[0]).addClass("error");
+                        $($(".dd-active")[1]).addClass("error");
+                        $(".save").attr("disabled");
+                    }else{
+                        $($(".dd-active")[0]).removeClass("error");
+                        $($(".dd-active")[1]).removeClass("error");
+                        $(".save").removeAttr("disabled");
+                    }
+                }})
+        }
     }
+
 }
+
 
 
 
@@ -1319,30 +1408,31 @@ function examinee_manage(){
     $("#file1").change(function(){
 
         var id=pars.id;
+        var url = pars.excel;
+        url += '/'+id;
         $.ajaxFileUpload
         ({
-            url:pars.excel,
+            url:url,
             type:'post',
-            secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
-            data:{
-                id:id,
-            },
             success: function (data, status)
             {
-                layer.alert('导入成功！');
-                data    =   data.replace('<pre>','').replace('</pre>','');
-                data    =   eval('('+data+')');
-                console.log(data.code);
+                //data    =   data.replace('<pre>','').replace('</pre>','');
+                //data    =   eval('('+data+')');
+                //console.log(data);
                 if(data.code == 1){
-                    //layer.alert('导入成功！');
+                    console.log(data.code);
+                    layer.alert('导入成功！');
                     location.reload();
                 }
+                //layer.alert('导入成功！');
+
+
             },
             error: function (data, status, e)
             {
-                console.log(data);
+                //console.log(data);
                 layer.alert('导入失败！');
             }
         });
