@@ -28,4 +28,42 @@ class StationVcr extends CommonModel
     {
         return $this->belongsTo('Modules\Osce\Entities\Vcr', 'vcr_id', 'id');
     }
+
+    public function getTime($vcr_id,$startTime,$endTime){
+        $startTime=strtotime($startTime);
+        $endTime=strtotime($endTime);
+        $list=$this->select(DB::raw(
+            implode(',',[
+                $this->table.'.id as id',
+                $this->table.'.station_id as station_id',
+                $this->table.'.begin_dt as begin_dt',
+                $this->table.'.end_dt as end_dt',
+                $this->table.'.created_at as created_at',
+            ])
+        )
+        );
+        if($startTime){
+            $list=$list->whereRaw(
+                'unix_timestamp('.$this->table.'.begin_dt) <= ?',
+                [
+                    $startTime
+                ]
+            );
+        }
+
+        if($endTime){
+            $list=$list->whereRaw(
+                'unix_timestamp('.$this->table.'.end_dt) => ?',
+                [
+                    $endTime
+                ]
+            );
+        }
+
+        if($vcr_id){
+            $list=$list->where('vcr_id',$vcr_id);
+        }
+        return $list;
+
+    }
 }

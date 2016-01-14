@@ -1387,30 +1387,31 @@ function examinee_manage(){
     $("#file1").change(function(){
 
         var id=pars.id;
+        var url = pars.excel;
+        url += '/'+id;
         $.ajaxFileUpload
         ({
-            url:pars.excel,
+            url:url,
             type:'post',
-            secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
-            data:{
-                id:id,
-            },
             success: function (data, status)
             {
-                layer.alert('导入成功！');
-                data    =   data.replace('<pre>','').replace('</pre>','');
-                data    =   eval('('+data+')');
-                console.log(data.code);
+                //data    =   data.replace('<pre>','').replace('</pre>','');
+                //data    =   eval('('+data+')');
+                //console.log(data);
                 if(data.code == 1){
-                    //layer.alert('导入成功！');
+                    console.log(data.code);
+                    layer.alert('导入成功！');
                     location.reload();
                 }
+                //layer.alert('导入成功！');
+
+
             },
             error: function (data, status, e)
             {
-                console.log(data);
+                //console.log(data);
                 layer.alert('导入失败！');
             }
         });

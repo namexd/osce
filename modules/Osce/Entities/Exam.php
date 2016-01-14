@@ -262,7 +262,6 @@ class Exam extends CommonModel
               implode(',',[
                   $this->table.'.id as id',
                   $this->table.'.name as exam_name',
-                  $this->table.'.name as exam_name',
                   $this->table.'.begin_dt as begin_dt',
                   $this->table.'.end_dt as end_dt',
                   $this->table.'.description as description',

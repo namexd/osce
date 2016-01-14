@@ -15,14 +15,14 @@ use Modules\Osce\Http\Controllers\CommonController;
 class DiscussionController extends  CommonController{
 
     /**
-     *»ñÈ¡ÎÊÌâÁĞ±í
+     *è·å–é—®é¢˜åˆ—è¡¨
      * @method GET
      * @url /osce/wechat/discussion/question-list
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return ${response}
      *
@@ -31,12 +31,12 @@ class DiscussionController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-
       public function getQuestionList(){
           $user=Auth::user();
-          if(!$user){
+          $userId=$user->id;
+          if(!$userId){
               return response()->json(
-                  $this->success_rows(2,'ÇëÏÈµÇÂ¼')
+                  $this->success_rows(2,'è¯·å…ˆç™»å½•')
               );
           }
           $discussionModel	=	new Discussion();
@@ -49,15 +49,17 @@ class DiscussionController extends  CommonController{
       }
 
 
+
+
     /**
-     *²é¿´ÎÊÌâ
+     *æŸ¥çœ‹é—®é¢˜
      * @method GET
      * @url /osce/wechat/discussion/check-question
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return ${response}
      *
@@ -68,10 +70,9 @@ class DiscussionController extends  CommonController{
      */
       public function getCheckQuestion(Request $request){
           $user=Auth::user();
-          if(!$user){
-              return response()->json(
-                  $this->success_rows(2,'ÇëÏÈµÇÂ¼')
-              );
+          $userId=$user->id;
+          if(!$userId){
+              return \Response::json(array('code'=>2));
           }
           $id    =   intval($request   ->  get('id'));
           $list=Discussion::where('id',$id)->select()->get();
@@ -89,7 +90,7 @@ class DiscussionController extends  CommonController{
           }
           $countReply=Discussion::where('pid',$id)->count();
 
-          //»ñÈ¡»Ø¸´ÈËĞÅÏ¢
+          //è·å–å›å¤äººä¿¡æ¯
            $replys=Discussion::where('pid',$id)->select()->get();
 //           $data=[];
 //          foreach($replys as $itm){
@@ -113,18 +114,19 @@ class DiscussionController extends  CommonController{
           );
       }
 
+
     /**
-     *Ìá½»ÎÊÌâ
+     *æäº¤é—®é¢˜
      * @method POST
      * @url /osce/wechat/discussion/add-question
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return ${response}
      *
@@ -134,44 +136,40 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function postAddQuestion(Request $request){
-          //ÑéÖ¤¹æÔò
+          //éªŒè¯è§„åˆ™
           $this->validate($request,[
                'title'    =>'required|max:256',
                'content'  =>'required',
           ]);
           $user=Auth::user();
-          if(!$user){
-            return response()->json(
-                $this->success_data(2,'ÇëÏÈµÇÂ¼')
-            );
-          }
           $userId=$user->id;
+//          if(!$userId){
+//              return response()->json(
+//                  $this->success_rows(2,'è¯·å…ˆç™»å½•')
+//              );
+//          }
           $data=$request->only(['title','content']);
           $data['user_id']=$userId;
           $discussionModel= new Discussion();
           $result=$discussionModel->save($data);
           if($result){
-              return response()->json(
-                  $this->success_data(1,'success')
-              );
+              return \Response::json(array('code'=>1));
           }
-          return response()->json(
-              $this->success_data(0,'false')
-          );
+          return \Response::json(array('code'=>0));
       }
 
     /**
-     *Ìá½»»Ø´ğ
+     *æäº¤å›ç­”
      * @method POST
      * @url    /osce/wechat/discussion/add-reply
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return ${response}
      *
@@ -185,37 +183,33 @@ class DiscussionController extends  CommonController{
                'pid'      => 'required|integer',
                'content'  => 'required|integer',
           ]);
-          $user=Auth::users();
-          if(!$user){
-              return response()->json(
-                  $this->success_data(2,'ÇëÏÈµÇÂ¼')
-              );
-          }
+          $user=Auth::user();
           $userId=$user->id;
+//          if(!$userId){
+//              return response()->json(
+//                  $this->success_rows(2,'è¯·å…ˆç™»å½•')
+//              );
+//          }
           $data=$request->only(['pid','content']);
           $result=Discussion::insert(['content'=>$data['content'],'pid'=>$data['pid'],'create_user_id'=>$userId]);
           if($result){
-              return response()->json(
-                  $this->success_data($data,1,'success')
-              );
+              return \Response::json(array('code'=>1));
           }
-          return response()->json(
-              $this->success_data($data,0,'false')
-          );
+          return \Response::json(array('code'=>0));
       }
 
     /**
-     *É¾³ı¸ÃÎÊÌâ
+     *åˆ é™¤è¯¥é—®é¢˜
      * @method GET
      * @url /osce/wechat/discussion/del-question
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return ${response}
      *
@@ -228,28 +222,23 @@ class DiscussionController extends  CommonController{
           $this->validate($request,[
               'id'  =>'required|integer'
           ]);
-         $user=Auth::users();
-         if(!$user){
-             return response()->json(
-                 $this->success_data($user,2,'false')
-             );
-         }
-         $userId=$user->id;
+//         $user=Auth::user();
+//         $userId=$user->id;
+//         if(!$userId){
+//             return response()->json(
+//                 $this->success_rows(2,'è¯·å…ˆç™»å½•')
+//             );
+//         }
+
          $id=$request->get('id');
-         $manager=config('osce.manager');
-         if($userId!==$id || $id!==$manager[0]){
-              return response()->json(
-                  $this->success_data($user,3,'false')
-              );
-         }
+//         $manager=config('osce.manager');
+//         if($userId!==$id || $id!==$manager[0]){
+//             return \Response::json(array('code'=>3));
+//         }
          $result=Discussion::where('id',$id)->delete();
          if($result){
-             return response()->json(
-                 $this->success_rows(1,'success')
-             );
+             return \Response::json(array('code'=>1));
          }
-         return response()->json(
-             $this->success_rows(0,'false')
-         );
+         return \Response::json(array('code'=>0));
      }
 }

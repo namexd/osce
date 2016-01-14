@@ -122,10 +122,9 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        vcr_id           摄像机ID(必须的)
+     * * datetime   startTime        开始标记点(必须的)
+     * * datetime   EndTime          结束标记点(必须的)
      *
      * @return ${response}
      *
@@ -137,12 +136,15 @@ class PadController extends  CommonController{
        public function getTimingList(Request $request){
             $this->validate($request,[
                  'vcr_id' =>'required|integer',
-                 'time'   =>'required',
+                 'startTime'   =>'required',
+                 'endTime'   =>'required',
             ]);
             $vcr_id=$request->get('vcr_id');
-            $time=$request->get('time');
+            $startTime=$request->get('startTime');
+            $endTime=$request->get('endTime');
            try{
-               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time',$time)->select()->get();
+               $stationVcr=new StationVcr();
+               $vcrs=$stationVcr->getTime($vcr_id,$startTime,$endTime);
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );

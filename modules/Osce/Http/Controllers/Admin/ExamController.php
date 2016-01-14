@@ -559,13 +559,12 @@ class ExamController extends CommonController
     }
 
 
-    public function postImportStudent(Request $request, Student $student)
+    public function postImportStudent($id,Request $request, Student $student)
     {
         try {
+
             //获得上传的数据
-            $exam_id = $request ->input('id');
-              var_dump($exam_id);
-//                $exam_id= 1;
+                $exam_id= $id;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
             $studentList = array_shift($data);
@@ -580,8 +579,13 @@ class ExamController extends CommonController
                     throw new \Exception('学生导入数据失败，请稍后重试');
                 }
 
+
             }
-            echo json_encode($this->success_data());
+            return response()->json(
+                $this->success_data(['result' => true, 'code' => 1])
+            );
+//            return json_encode(['result' => true, 'data' =>['code'=>1] ]);
+//            echo json_encode($this->success_data());
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
         }
