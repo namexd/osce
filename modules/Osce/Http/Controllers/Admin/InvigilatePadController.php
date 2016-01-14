@@ -16,6 +16,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -73,10 +74,10 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     station_id    考站id   (必须的)
-     * * string     exam_id       考试id   (必须的)
+     * * int    station_id    考站id   (必须的)
+     * * int     exam_id       考试id   (必须的)
      *
-     * @return view
+     * @return json
      *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -159,10 +160,12 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     station_id    考站id   (必须的)
-     * * string     exam_id       考试id   (必须的)
+     * * int     subject_id    考试项目id  (必须的)
+     * * int     standard_id  评分标准 id   (必须的)
+     * * int     score       根据评分标准所得的分值
+     * * string         evaluate     评价内容
      *
-     * @return view
+     * @return  json
      *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -174,6 +177,7 @@ class InvigilatePadController extends CommonController
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
             'score' =>'required',
+            'evaluate'=>'required'
         ],[
             'subject_id.required'=>'请检查考试项目',
             'standard_id.required'=>'请检查评分标准',
@@ -252,13 +256,30 @@ class InvigilatePadController extends CommonController
             $this->validate($request,[
                'station_id'=>'required|integer'
             ]);
-
-              
-
-
+             $stationId = Input::get('station_id');
+             $stationvcrModel = new StationVcr();
+             $list = $stationvcrModel->vcrlist($stationId);
+          $vcrdata= [
+              'name'=>$list->name,
+              'code'=>$list->code,
+              'ip'=>$list->ip,
+              'username'=>$list->username,
+              'port'=>$list->port,
+              'channel'=>$list->channel,
+          ];
+          if($list->status==0){
+              return response()->json(
+                  $this->success_data(0,'摄像头损坏')
+              );
+          }else{
+              return response()->json(
+                  $this->success_data($vcrdata,1,'摄像头可用')
+              );
+          }
 
 
       }
+
 
 
 

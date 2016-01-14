@@ -19,6 +19,6 @@ class ExamScore extends  CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['exam_result_id', 'subject_id', 'standard_id', 'score', 'create_user_id'];
+    protected $fillable = ['exam_result_id', 'subject_id', 'standard_id', 'score', 'evaluate','create_user_id'];
 
 }
