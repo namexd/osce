@@ -52,6 +52,9 @@
             </tbody>
         </table>
 
+        <div class="pull-left">
+            共{{$data->total()}}条
+        </div>
         <div class="btn-group pull-right">
             <nav>
                 <ul class="pagination">

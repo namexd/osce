@@ -48,7 +48,7 @@
                             <label class="col-sm-2 control-label">病例名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" value="" name="name">
+                                <input type="text" required class="form-control" id="name" name="name" value="">
                             </div>
                         </div>
 
@@ -70,7 +70,8 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
-                                <a href="{{route('osce.admin.case.getCaseList')}}" class="btn btn-white">取消</a>
+                                <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
+                                {{--<a href="{{route('osce.admin.case.getCaseList')}}" class="btn btn-white">取消</a>--}}
                             </div>
                         </div>
 

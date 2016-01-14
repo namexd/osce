@@ -77,6 +77,9 @@ class CaseController extends CommonController
     public function postCreateCase(Request $request, CaseModel $caseModel)
     {
         //验证略过
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
 
         //获得提交的字段
         $formData = $request->only('name', 'description');
