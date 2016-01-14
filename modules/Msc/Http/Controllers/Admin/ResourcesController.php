@@ -40,14 +40,11 @@ class ResourcesController extends MscController
     {
         $this->validate($request, [
             'keyword' => 'sometimes',
-            'status' => 'sometimes|in:0,1,2',
+            'status' => 'sometimes|in:1,2,3',
             'devices_cate_id' => 'sometimes|integer'
         ]);
         $keyword = urldecode(e($request->input('keyword')));
-        $status = (int)$request->input('status',2);
-        if($status == null){
-            $status = 2;
-        }
+        $status = (int)$request->input('status',3);
         $devices_cate_id = (int)$request->input('devices_cate_id');
         $devices = new Devices();
         $pagination = $devices->getDevicesList([],$keyword, $status, $devices_cate_id);
@@ -63,6 +60,7 @@ class ResourcesController extends MscController
                 'status' => is_null($itme->status) ? '-' : $itme->status,
             ];
         }
+
         $devicetype = DB::connection('msc_mis')->table('device_cate')->get();
         return view('msc::admin.systemtable.resource_table',[
             'pagination'=>$pagination,
@@ -70,6 +68,8 @@ class ResourcesController extends MscController
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',
             'devicetype' =>  $devicetype,
+            'devices_cate_id'=>$request->input('devices_cate_id')?$request->input('devices_cate_id'):'',
+            'number'=>$this->getNumber()
         ]);
     }
 
