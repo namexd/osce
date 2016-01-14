@@ -10,16 +10,11 @@
 @stop
 
 @section('only_head_js')
-    <script>
-        $(document).ready(function() {
-            $(".submit_box button").click(function () {
-                get_layer();
-            })
-        });
-    </script>
+    <script src="{{asset('msc/wechat/booking/booking_student.js')}}"></script>
 @stop
 
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'booking_student_form'}" />
 <div class="user_header">
     <a class="left header_btn" href="javascript:history.back(-1)">
         <i class="fa fa-angle-left clof font26 icon_return"></i>
@@ -35,40 +30,40 @@
         <div class="form-group">
             <label for="">实验室名称</label>
             <div class="txt">
-                临床实验室
+                {{ $data['LaboratoryOpenPlanData']['name']}}
             </div>
         </div>
         <div class="form-group">
             <label for="">地址</label>
             <div class="txt">
-                新八教
+                {{ $data['LaboratoryOpenPlanData']['FloorInfo']['address']}} {{ $data['LaboratoryOpenPlanData']['FloorInfo']['name']}}{{ $data['LaboratoryOpenPlanData']['floor']}}楼{{ $data['LaboratoryOpenPlanData']['code']}}
             </div>
         </div>
         <div class="form-group">
             <label for="">预约日期</label>
             <div class="txt">
-                2016.1.1
+                {{ $data['ApplyTime']}}
             </div>
             <div class="submit_box">
-                <button  class="btn4" >查看资源清单</button>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="">预约时段</label>
-            <div class="txt">
-                8:00-10:00
+                <button  class="btn4 get_list_detail">查看资源清单</button>
             </div>
         </div>
     </div>
 </div>
 
-<form action="" class=" marb_10" method="post">
+<form action="{{route('msc.Laboratory.OpenLaboratoryFormOp')}}" id="booking_student_form" method="post" class=" marb_10">
+    <input name="date_time" value="{{ $data['ApplyTime']}}" type="hidden"/>
+    <input name="lab_id" value="{{ $data['LaboratoryOpenPlanData']['id']}}" type="hidden"/>
+    @foreach($data['LaboratoryOpenPlanData'] ['OpenPlan']as $val)
+        <input name="open_plan_id[]" value="{{ @$val['id']}}" type="hidden"/>
+    @endforeach
+
         <div class="w_94" id="Reason_detail" >
             <div class="form_title">预约原因</div>
             <div class="Reason">
-                <textarea name="detail" class="textarea1">爱的方式的发生的公司法规的法规的发挥的恢复供货方根据非黄金护肤</textarea>
+                <textarea name="description" class="textarea1"></textarea>
             </div>
-            <input class="btn2 mart_10 marb_10" type="submit" value="提交预约">
+            <input class="btn2 mart_10 marb_10"  type="submit" value="提交预约">
         </div>
     </div>
 </form>

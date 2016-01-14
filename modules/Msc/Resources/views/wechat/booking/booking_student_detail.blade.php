@@ -42,13 +42,13 @@
             <div class="form-group">
                 <label for="">实验室名称</label>
                 <div class="txt">
-                    临床技能室（13-1）
+                    {{ $data['LaboratoryInfo']['name']}}
                 </div>
             </div>
             <div class="form-group">
                 <label for="">地址</label>
                 <div class="txt">
-                    新八教
+                    {{ $data['LaboratoryInfo']['FloorInfo']['address']}} {{ $data['LaboratoryInfo']['FloorInfo']['name']}}{{ $data['LaboratoryInfo']['floor']}}楼{{ $data['LaboratoryInfo']['code']}}
                 </div>
             </div>
             <div class="form-group">

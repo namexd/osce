@@ -194,6 +194,7 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
+        //dd($data);
         return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
@@ -232,7 +233,8 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryOpenPlanData'=>$LaboratoryOpenPlanData,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($LabId)
         ];
-        //return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
+        //dd($data);
+        return  view('msc::wechat.booking.booking_student_form',['data'=>$data]);
     }
 
     /**
