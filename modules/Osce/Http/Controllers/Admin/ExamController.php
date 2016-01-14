@@ -1114,8 +1114,7 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-
-        return view('',['exam'=>$exam]);
+        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam]);
     }
 
     /**
