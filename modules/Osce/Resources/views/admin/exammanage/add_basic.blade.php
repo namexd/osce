@@ -1,6 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
     <style>
     button.btn.btn-white.dropdown-toggle {
         border: none;
@@ -18,7 +19,6 @@
     }
     .form-group {
         margin: 15px;
-        height: 30px;
         line-height: 30px;
     }
     </style>
@@ -54,7 +54,7 @@
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postEditExam')}}">
                             <input type="hidden" name="exam_id" value="{{$id}}">
-                            <div class="form-group">
+                            <div class="form-group clearfix">
                                 <label class="col-sm-2 control-label">考试名称</label>
 
                                 <div class="col-sm-10">
@@ -156,6 +156,7 @@
 @section('only_js')
 
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
+<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 
 @stop
