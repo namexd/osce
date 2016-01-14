@@ -32,6 +32,9 @@ class ExamPlan extends CommonModel
     protected $startTime    =   [];
     protected $screeningId  =   0;
 
+    //流程组 组内 考场优先级
+    protected $flowGroupInnerPriority   =   [];
+
     public function IntelligenceEaxmPlan($exam){
         $this   ->  initStartTime($exam);
         $this->allStudent   =   $this   ->  getExamStudent($exam);
@@ -80,11 +83,15 @@ class ExamPlan extends CommonModel
                         $batchPlan[$roomId] =   [];
                     }
                     $endTime    =   $this->getRoomTime($roomId) +   $this   ->  getFlowTimeByRoomId($roomId);
-                    $roomData[$screeningId][$roomId][$batch]    =   [
-                        'start'      =>  $this->getRoomTime($roomId),
+                    $batchInfo =[
+                        'begin'     =>  $this->getRoomTime($roomId),
                         'end'       =>  $endTime,
-                        'student'   =>  $student,
+                        'items'     =>  $student,
                     ];
+//                    $roomInfo['name']   =   '测试教室001';
+                    $roomData[$screeningId][$roomId]['name']             =   '测试教室001';
+                    $roomData[$screeningId][$roomId]['child'][$batch]    =   $batchInfo;
+                    //$roomData[$screeningId][$roomId][$batch]    =     $batch;
                 }
                 $screeningPlan[$batch]=$batchPlan;
             }

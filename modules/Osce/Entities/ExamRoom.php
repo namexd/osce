@@ -171,4 +171,28 @@ class ExamRoom extends CommonModel
         }
 
     }
+
+    public function getStionVcr($id,$room_id){
+        try{
+            $result = $this -> leftJoin('room_station', function($join){
+                $join -> on($this->table.'.room_id', '=', 'room_station.room_id');
+            })  ->leftJoin('station_vcr', function($join){
+                $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
+            })   ->leftJoin('vcr', function($join){
+                $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
+            });
+            if($id){
+              $result=$result ->where($this->table.'.exam_id', '=', $id);
+            }
+            if($room_id){
+               $result= $result ->where('room_station','.room_id', '=', $room_id);
+            }
+            $result->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port'])
+            -> get();
+
+            return $result;
+        } catch(\Exception $ex){
+            return $ex;
+        }
+    }
 }
