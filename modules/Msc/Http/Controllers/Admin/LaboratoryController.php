@@ -103,7 +103,7 @@ class LaboratoryController extends MscController {
         $user = Auth::user();
         $data = [
             'name'=>Input::get('name'),
-            
+
             'location_id'=>Input::get('building'),
             'open_type'=>Input::get('open_type'),
             'manager_user_id'=>Input::get('manager_user_id'),
@@ -629,8 +629,8 @@ class LaboratoryController extends MscController {
             $v->address = $v->labname.$v->floor.'楼'.$v->code;
             if(empty($v->begintime) && empty($v->endtime)){
                 foreach($v->PlanApply as $plan){
-                    $v->playdate .=  date('H:i',strtotime($plan->OpenPlan->begintime)).' ~ '.date('H:i',strtotime($plan->OpenPlan->endtime)).'<br>';
-                    $v->playyear =  date('Y',strtotime($plan->OpenPlan->year)).'-'.date('m',strtotime($plan->OpenPlan->month)).'-'.date('d',strtotime($plan->OpenPlan->day));
+                    $v->playdate .=  date('H:i',strtotime(@$plan->OpenPlan->begintime)).' ~ '.date('H:i',strtotime(@$plan->OpenPlan->endtime)).'<br>';
+                    $v->playyear =  date('Y',strtotime(@$plan->OpenPlan->year)).'-'.date('m',strtotime(@$plan->OpenPlan->month)).'-'.date('d',strtotime(@$plan->OpenPlan->day));
                 }
             }else{
                 $v->begintime = date('H:i',strtotime($v->begintime));
@@ -707,8 +707,15 @@ class LaboratoryController extends MscController {
      * 实验室预约记录批量审核
      */
     public function postLabOrderallcheck(LabApply $LabApply){
-        $str = trim(Input::get('idstr'),',');
-        $arr = explode(',',$str);
+//        $str = trim(Input::get('idstr'),',');
+//        $arr = explode(',',$str);
+        $arr = [
+            3,
+            4
+        ];
+        $data = $LabApply->getonelaborderdata($arr);
+        foreach($data as $LabApply){
 
+        }
     }
 }
