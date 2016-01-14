@@ -115,4 +115,12 @@ class MscController extends Controller {
 			}
 		}
 	}
+
+	public function error($status=0,$info='error'){
+		$data = [
+			'status'			=>	$status,
+			'info'		=>	$info,
+		];
+		return $data;
+	}
 }
