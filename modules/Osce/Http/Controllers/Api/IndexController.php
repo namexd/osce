@@ -486,7 +486,7 @@ class IndexController extends CommonController
                         'status'         =>$itm['status'],
                         'name'           =>$itm['name'],
                         'code'           =>$itm['name'],
-                        'studentId'      =>$studentId->student_id,
+                        'studentId'      =>'',
                     ];
                 }else{
                     $row[]=[
