@@ -30,7 +30,7 @@ class PlanApply extends Model
      * @createDate
      */
     public function OpenPlan(){
-        return  $this->hasMany('Modules\Msc\Entities\OpenPlan','id','open_plan_id');
+        return  $this->hasOne('Modules\Msc\Entities\OpenPlan','id','open_plan_id');
     }
 
     /**

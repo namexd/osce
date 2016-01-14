@@ -155,4 +155,17 @@ class LabApply  extends Model
         return $data;
 
     }
+
+    /**
+     * @param $uid
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date   2016年1月14日17:21:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function MyApplyList($uid){
+        return  $this->where('status','=',1)->where('type','=',2)->where('apply_user_id','=',$uid)->with(['PlanApply'=>function($PlanApply){
+            $PlanApply->with(['OpenPlan']);
+        }])->get();
+    }
 }
