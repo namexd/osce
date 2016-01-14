@@ -32,22 +32,19 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getQuestionList(){
-          $user=Auth::user();
-          $userId=$user->id;
-          if(!$userId){
-              return response()->json(
-                  $this->success_rows(2,'请先登录')
-              );
-          }
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        if(!$userId){
+//            return response()->json(
+//                $this->success_rows(2,'请先登录')
+//            );
+//        }
+
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
           $list=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
-
-          return view()->with(['list'=>$list,'pagination'=>$pagination]);
+          return view('osce::wechat.discussion.discussion_quiz')->with(['list'=>$list,'pagination'=>$pagination]);
       }
-
-
-
 
     /**
      *查看问题
@@ -67,11 +64,11 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getCheckQuestion(Request $request){
-          $user=Auth::user();
-          $userId=$user->id;
-          if(!$userId){
-              return \Response::json(array('code'=>2));
-          }
+          // $user=Auth::user();
+          // $userId=$user->id;
+          // if(!$userId){
+          //     return \Response::json(array('code'=>2));
+          // }
           $id    =   intval($request   ->  get('id'));
           $list=Discussion::where('id',$id)->select()->get();
           $discussionModel	=	new Discussion();
@@ -102,12 +99,12 @@ class DiscussionController extends  CommonController{
 //              ];
 //          }
             $row=array(
-                'question'   =>$question,
+                // 'question'   =>$question,
                 'replys' =>$replys,
                 'countReply' =>$countReply,
             );
 
-          return view()->with(['row'=>$row,'pagination'=>$pagination]);
+          return view('osce::wechat.discussion.discussion_detail')->with(['row'=>$row,'pagination'=>$pagination]);
 
       }
 

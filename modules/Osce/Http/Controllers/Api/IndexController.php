@@ -36,27 +36,66 @@ class IndexController extends CommonController
      */
     public function getWatchStatus(Request $request){
         $this->validate($request,[
-            'code' =>'required|integer'
+            'code' =>'required'
         ]);
-        $code=$request->get('code');
-        $id=Watch::where('code',$code)->select()->first()->id;
-        if(!$id){
-            return \Response::json(array('code'=>3));
-        }else{
-            $status=Watch::where('id',$id)->select()->first()->status;
-            if($status==1){
-                $student_id=ExamScreeningStudent::where('watch_id',$id)->select()->orderBy('updated_at','desc')->first()->id;
-                $idcard=Student::where('id',$student_id)->select('idcard')->first()->idcard;
-                $data=array('idcard'=>$idcard);
-                return response()->json(
-                    $this->success_data($data,1,'已绑定腕表')
-                );
-            }elseif($status==0){
-                return \Response::json(array('code'=>0));
-            }else{
-                return \Response::json(array('code'=>2));
-            }
-        }
+           $code=$request->get('code');
+           $id = Watch::where('code', $code)->select()->first();
+           if (!$id) {
+               return \Response::json(array('code' => 3));
+           } else {
+               $id=$id->id;
+               $status = Watch::where('id', $id)->select()->first()->status;
+               $student_id = ExamScreeningStudent::where('watch_id', $id)->select()->first();
+               if ($status == 1) {
+                   if(!$student_id){
+                      $data=array('student_id'=>'','status'=>$status);
+                       return response()->json(
+                           $this->success_data($data,4, '该腕表已绑定')
+                       );
+                   }
+                   $code = Student::where('id', $student_id->id)->select('code')->first();
+                   if(!$code){
+                       $data = array('code' => '','status'=>$status,'student_id'=>$student_id->id);
+                   }else{
+                       $data = array('code' => $code,'status'=>$status,'student_id'=>$student_id->id);
+                   }
+                   return response()->json(
+                       $this->success_data($data,1, '该腕表已绑定')
+                   );
+               } elseif ($status == 0) {
+                   if(!$student_id){
+                       $data=array('student_id'=>'','status'=>$status);
+                       return response()->json(
+                           $this->success_data($data,0, '未绑定')
+                       );
+                   }
+                   $code = Student::where('id', $student_id->id)->select('code')->first();
+                   if(!$code){
+                       $data = array('code' => '','status'=>$status,'student_id'=>$student_id->id);
+                   }else{
+                       $data = array('code' => $code,'status'=>$status,'student_id'=>$student_id->id);
+                   }
+                   return response()->json(
+                       $this->success_data($data, 0, '未绑定')
+                   );
+               } else {
+                   if(!$student_id){
+                       $data=array('student_id'=>'','status'=>$status);
+                       return response()->json(
+                           $this->success_data($data,2, '该腕表已损坏')
+                       );
+                   }
+                   $code = Student::where('id', $student_id->id)->select('code')->first();
+                   if(!$code){
+                       $data = array('code' => '','status'=>$status,'student_id'=>$student_id->id);
+                   }else{
+                       $data = array('code' => $code,'status'=>$status,'student_id'=>$student_id->id);
+                   }
+                   return response()->json(
+                       $this->success_data($data, 2, '该腕表已损坏')
+                   );
+               }
+           }
 
     }
 
@@ -87,9 +126,17 @@ class IndexController extends CommonController
         $id_card=$request->get('id_card');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=Student::where('idcard',$id_card)->select()->first()->id;
+        $student_id=Student::where('idcard',$id_card)->select()->first();
+        if(!$student_id){
+            return \Response::json(array('code' => 3));
+        }
+        $student_id=$student_id->id;
         $screen_id=ExamScreening::where('exam_id',$exam_id)->select('id')->get();
-        $exam_screen_id=ExamScreeningStudent::whereIn('exam_screening_id',$screen_id)->where('student_id',$student_id)->select()->first()->id;
+        $exam_screen_id=ExamScreeningStudent::whereIn('exam_screening_id',$screen_id)->where('student_id',$student_id)->select()->first();
+        if(!$exam_screen_id){
+            return \Response::json(array('code' =>4));
+        }
+        $exam_screen_id=$exam_screen_id->id;
         if($exam_screen_id) {
             $result = ExamScreeningStudent::where('id', $exam_screen_id)->where('student_id', $student_id)->update(['watch_id' => $id]);
 
@@ -138,7 +185,16 @@ class IndexController extends CommonController
         ]);
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->first()->student_id;
+        $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->first();
+        if(!$student_id){
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                return \Response::json(array('code'=>2));
+            }else{
+                return \Response::json(array('code'=>0));
+            }
+        }
+        $student_id=$student_id->student_id;
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
@@ -181,7 +237,7 @@ class IndexController extends CommonController
 
         $idCard=$request->get('id_card');
 
-        $student_id=Student::where('idcard',$idCard)->select('id')->first();
+        $student_id=Student::where('idcard',$idCard)->select('id')->first()->id;
 
         if(!$student_id){
            return response()->json(
@@ -189,13 +245,14 @@ class IndexController extends CommonController
            );
         }
 
-        $data=array('code'=>$student_id->id);
+        $data=array('code'=>$student_id);
 
         $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select('watch_id')->first();
 
         if($watch_id){
             $watch_id=$watch_id->watch_id;
             $status=Watch::where('id',$watch_id)->select('status')->first()->status;
+
             if($status==1){
                 return response()->json(
                     $this->success_data($data,1,'已绑定腕表')
