@@ -25,8 +25,7 @@
                         hospital: {
                             message: 'The hospital is not valid',
                             validators: {
-                                regexp: {
-                                    regexp: /^(?!-1).*$/,
+                                notEmpty: {/*非空提示*/
                                     message: '所属分院不能为空'
                                 }
                             }
@@ -34,8 +33,7 @@
                         building: {
                             message: 'The building is not valid',
                             validators: {
-                                regexp: {
-                                    regexp: /^(?!-1).*$/,
+                                notEmpty: {/*非空提示*/
                                     message: '教学楼不能为空'
                                 }
                             }
@@ -43,8 +41,7 @@
                         floor: {
                             message: 'The floor is not valid',
                             validators: {
-                                regexp: {
-                                    regexp: /^(?!-1).*$/,
+                                notEmpty: {/*非空提示*/
                                     message: '楼层不能为空'
                                 }
                             }
@@ -73,7 +70,7 @@
                                 },
                                 regexp: {
                                     regexp: /^(?:[1-9]\d?|[1234]\d{2}|500)$/,
-                                    message: '请正确填写实验室容量'
+                                    message: '容量最大为500人'
                                 }
                             }
                         },
@@ -165,7 +162,7 @@
                                 },
                                 regexp: {
                                     regexp: /^(?:[1-9]\d?|[1234]\d{2}|500)$/,
-                                    message: '请正确填写实验室容量'
+                                    message: '容量最大为500人'
                                 }
                             }
                         },
@@ -386,7 +383,6 @@
                         '<label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label> ' +
                         '<div class="col-sm-9"> ' +
                         '<select id="select_Category" class="form-control m-b oldlocal local" name="building"> ' +
-                        '<option value="-1">请选择教学楼</option> ' +
                         '</select> ' +
                         '</div> ' +
                         '</div> ' +
@@ -394,7 +390,6 @@
                         '<label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label> ' +
                         '<div class="col-sm-9"> ' +
                         '<select id="select_Category" class="form-control m-b oldfloor floor" name="floor"> ' +
-                        '<option value="-1">请选择楼层</option> ' +
                         '</select> ' +
                         '</div> ' +
                         '</div> ' +
