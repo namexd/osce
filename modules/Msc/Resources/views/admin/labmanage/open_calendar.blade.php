@@ -216,10 +216,9 @@
                 function calendar_lick(){
                     $("#calendar .fc-body .fc-row div").unbind().click(function(){
 
-                        $(this).toggleClass("check");
-                        cleardate();//清理掉下面部分的日期显
-
                         if($(this).children("div").size() > 0){
+                            $(this).toggleClass("check");
+                            cleardate();//清理掉下面部分的日期显
                             $(this).siblings().removeClass("check");//去掉已选择状态
                             $(this).parents().siblings(".fc-row").children().removeClass("check");
 
@@ -347,13 +346,17 @@
                             }
 
                         }else{
-                            $(this).siblings(".fc-content").removeClass("check");//去掉已选择状态
-                            $(this).parents().siblings(".fc-row").children(".fc-content").removeClass("check");
-                            addtime()
-                            $(".morning").children().children().children().removeClass("check");
-                            $(".noon").children().children().children().removeClass("check");
-                            $(".afternoon").children().children().children().removeClass("check");
-                            $(".night").children().children().children().removeClass("check");
+                           if($(this).children("span").size()!=0){
+                               $(this).toggleClass("check");
+                               cleardate();//清理掉下面部分的日期显
+                               $(this).siblings(".fc-content").removeClass("check");//去掉已选择状态
+                               $(this).parents().siblings(".fc-row").children(".fc-content").removeClass("check");
+                               addtime()
+                               $(".morning").children().children().children().removeClass("check");
+                               $(".noon").children().children().children().removeClass("check");
+                               $(".afternoon").children().children().children().removeClass("check");
+                               $(".night").children().children().children().removeClass("check");
+                           }
                         }
                     })
                 }
@@ -399,12 +402,13 @@
                 var name = '';
                 var timeBrr = '';
                 if(!$('.dataarr').val()){
-                    layer.alert('请选择日期');
+
+                    layer.msg("请选择日期", {icon: 2,time: 1000});
                     return false;
                 }
 
                 if(!$('.check_real').hasClass('check')){
-                    layer.alert('未勾选时间段');
+                    layer.msg("未勾选时间段", {icon: 2,time: 1000});
                     return false;
                 }
                 $('.dataarr').each(function(){
@@ -429,7 +433,7 @@
                                 }else if(type == 'night'){
                                     name = '晚上';
                                 }
-                                layer.alert(name+'的时间段未填写完整');
+                                layer.msg(name+'的时间段未填写完整', {icon: 2,time: 1000});
                                 return false;
                             }
 
@@ -450,7 +454,7 @@
                     }
                 });
                 if(!$('.labid').val()){
-                    layer.alert('请选择实验室');
+                    layer.msg("请选择实验室", {icon: 2,time: 1000});
                     return false;
                 }
                 var dateid = {};
