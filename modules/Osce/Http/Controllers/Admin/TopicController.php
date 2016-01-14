@@ -67,24 +67,24 @@ class TopicController extends CommonController
      */
     public function postAddTopic(Request $request){
         $this   ->  validate($request,[
-            'title' =>  'required',
-            'description' =>  'sometimes',
+            'title'         =>  'required',
+            'description'   =>  'sometimes',
         ],[
-            'title.required'        =>  '评分标准名称必须',
+            'title.required'    =>  '评分标准名称必须',
         ]);
 
-        $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
+        $content = $request->get('content');
+        $score   = $request->get('score');
+        $formData = SubjectItem::builderItemData($content, $score);
         $data   =   [
             'title'         =>  e($request  ->  get('title')),
             'description'   =>  e($request  ->  get('description')),
         ];
+
         $subjectModel   =   new Subject();
-        if($subjectModel->  addSubject($data,$formData))
-        {
+        if($subjectModel->  addSubject($data,$formData)){
             return redirect()->route('osce.admin.topic.getList');
-        }
-        else
-        {
+        } else{
             return  redirect()->back()->withErrors(new \Exception('新增失败'));
         }
     }

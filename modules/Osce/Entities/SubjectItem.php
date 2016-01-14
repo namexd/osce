@@ -116,14 +116,11 @@ class SubjectItem extends CommonModel
      */
     static public function builderItemData($content,$score){
         $data   =   [];
-        foreach($content as $prointIndex    =>  $item)
-        {
+        foreach($content as $prointIndex    =>  $item){
             $child  =   [];
             $itemScore  =   $score[$prointIndex];
-            foreach($item as $contentIndex  =>  $content)
-            {
-                if($contentIndex=='title')
-                {
+            foreach($item as $contentIndex  =>  $content){
+                if($contentIndex=='title'){
                     continue;
                 }
                 $content    =   [
