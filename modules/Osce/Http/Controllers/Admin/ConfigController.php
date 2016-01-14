@@ -35,8 +35,6 @@ class ConfigController extends CommonController
     {
         //从文件获取配置数组
         $tempConfig = config('message');
-		dd($tempConfig);
-		//dd($tempConfig);
         //从数据库获取配置
         $tempDB = Config::all();
         return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
@@ -66,7 +64,7 @@ class ConfigController extends CommonController
             DB::beginTransaction();
             //验证
             $this->validate($request, [
-                'type' => 'array',
+                'message_type' => 'array',
                 'sms_cnname' => 'required',
                 'sms_url' => 'required|url',
                 'sms_username' => 'required',
@@ -85,7 +83,7 @@ class ConfigController extends CommonController
             ]);
 
             //获取输入值
-            $formData = $request->input('type');
+            $formData = $request->only('message_type');
             $file = $request->only('sms_cnname', 'sms_url', 'sms_username', 'sms_password', 'wechat_use_alias',
                 'wechat_app_id'
                 , 'wechat_secret', 'wechat_token', 'wechat_encoding_key', 'email_server', 'email_port', 'email_protocol', 'email_ssl',
@@ -105,7 +103,7 @@ class ConfigController extends CommonController
             }
 
             DB::commit();
-            return redirect()->route('');
+            return redirect()->route('osce.admin.config.getIndex');
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

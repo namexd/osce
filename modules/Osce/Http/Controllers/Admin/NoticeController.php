@@ -39,9 +39,8 @@ class NoticeController extends CommonController
      */
     public function getList(){
         $notice =   new Notice();
-
         $list   =   $notice ->  getList();
-        //return view('',['list'=>$list]);
+        return view('osce::admin.exammanage.exam_notice',['list'=>$list]);
     }
 
     /**

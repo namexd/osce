@@ -14,6 +14,9 @@ use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 
+use Modules\Osce\Entities\ExamFlow;
+use Modules\Osce\Entities\ExamFlowRoom;
+use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
@@ -22,6 +25,7 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\Watch;
@@ -31,6 +35,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
+use DB;
 
 class ExamController extends CommonController
 {
@@ -86,19 +91,74 @@ class ExamController extends CommonController
 
         try {
             //获取id
-            $id = $request->input('id');
+            $id = $request->input('id');  //id为考试id
+
+            //开启事务
+            DB::beginTransaction();
 
             //进入模型逻辑
-            $result = $exam->deleteData($id);
+            //删除与考场相关的流程
+            $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get(); //获得流程的id
+            if (!Flows::whereIn('id',$flowIds)->delete()) {
+                DB::rollback();
+                throw new \Exception('删除流程失败，请重试！');
 
-            if ($result !== true) {
-                throw new \Exception('删除考试失败，请重试！');
-            } else {
-                return redirect()->route('osce.admin.exam.getExamList');
             }
 
+            //删除考试本体
+            $result = $exam->deleteData($id);
+            if ($result !== true) {
+                DB::rollback();
+                throw new \Exception('删除考试失败，请重试！');
+
+            }
+
+            //删除考试考场关联
+            if (ExamRoom::where('exam_id',$id)->first()) {
+                if (!ExamRoom::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考场关联失败，请重试！');
+                }
+            }
+
+            //删除考试流程关联
+            if (ExamFlow::where('exam_id',$id)->first()) {
+                if (!ExamFlow::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试流程关联失败，请重试！');
+                }
+            }
+
+            //删除考试考场流程关联
+            if (ExamFlowRoom::where('exam_id',$id)->first()) {
+                if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考场流程关联失败，请重试！');
+                }
+            }
+
+            //通过考试流程-考站关系表得到考站信息
+
+            $station = ExamFlowStation::whereIn('flow_id',$flowIds);
+            $stationIds = $station->select('station_id')->get();
+            if ($stationIds) {
+                //删除考试流程-考站关系表信息
+                if (!$station->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考站流程关联失败，请重试！');
+                }
+
+                //通过考站id找到对应的考站-老师关系表
+                if (!StationTeacher::whereIn('station_id',$stationIds)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考站老师关联失败，请重试！');
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('osce.admin.exam.getExamList');
         } catch (\Exception $ex) {
-            return redirect()->back()->withError($ex);
+            return redirect()->back()->withError($ex->getMessage());
         }
     }
 
@@ -633,13 +693,12 @@ class ExamController extends CommonController
      * @api GET /osce/admin/exam/getExamroomAssignment
      * * string        参数英文名        参数中文名(必须的)
      *
+     * @param Request $request
      * @return object
-     *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getExamroomAssignment(Request $request)
     {
@@ -649,10 +708,11 @@ class ExamController extends CommonController
         $exam_id = $request -> get('id');
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
-        $examRoomData = $examRoom -> getRoomListByExam($exam_id);
+        $examRoomData = $examRoom -> getExamRoomData($exam_id);
 
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
+//        dd($examStationData);
 
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
@@ -677,12 +737,12 @@ class ExamController extends CommonController
     public function postExamroomAssignmen(Request $request)
     {
         try{
+            DB::beginTransaction();
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
-
-
+//            dd($request->all());
 //            $flows = new Flows();
 //            if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)) {
 //                throw new \Exception('考场安排保存失败，请重试！');
@@ -694,18 +754,21 @@ class ExamController extends CommonController
             $flows = new Flows();
             if(count($examRoomData) != 0){
                 if(!$flows -> editExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
 
             }else{
                 if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
             }
+            DB::commit();
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
 
     }
@@ -1020,5 +1083,60 @@ class ExamController extends CommonController
         return response()->json(
             $this->success_data($plan)
         );
+    }
+
+    /**
+     * 智能排考着陆页
+     * @url GET /osce/admin/exam/intelligence
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        id        考试ID(必须的)
+     *
+     * @return View {'id':$exam->id}
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getIntelligence(Request $request){
+        $this->validate($request,[
+            'id'    =>  'required|integer'
+        ]);
+
+        $id         =   $request    ->  get('id');
+
+        $exam       =   Exam::find($id);
+        if(is_null($exam))
+        {
+            throw new \Exception('没有找到该考试');
+        }
+
+        return view('',['exam'=>$exam]);
+    }
+
+    /**
+     * 保存当前智能排考方案
+     * @url POST /osce/admin/exam/intelligence
+     * @access public
+     *
+     * <b>get请求字段：</b>
+     * * string        id        考试ID(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postIntelligence(Request $request){
+        $this->validate($request,[
+            'id'    =>  'required|integer'
+        ]);
     }
 }
