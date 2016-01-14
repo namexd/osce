@@ -66,7 +66,6 @@ class Exam extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-
     public function showExamList($formData='')
     {
         try {
@@ -257,8 +256,32 @@ class Exam extends CommonModel
         $builder->orderBy('exam.begin_dt');
         return $builder->paginate(10);
     }
+//
+    public function getTodayList($startTime){
+          $list=$this->select(DB::raw(
+              implode(',',[
+                  $this->table.'.id as id',
+                  $this->table.'.name as exam_name',
+                  $this->table.'.name as exam_name',
+                  $this->table.'.begin_dt as begin_dt',
+                  $this->table.'.end_dt as end_dt',
+                  $this->table.'.description as description',
+              ])
+            )
+          );
+         $list=$list->whereRaw(
+             'unix_timestamp('.$this->table.'.begin_dt) > ?',
+             [
+                 $startTime
+             ]
+         );
+         $list=$list->whereRaw(
+             'unix_timestamp('.$this->table.'.end_dt) < ?',
+             [
+                 $startTime
+             ]
+         );
 
-    public function getTodayList($time){
-
+          return $list;
     }
 }

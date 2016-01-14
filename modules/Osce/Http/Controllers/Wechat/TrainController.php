@@ -293,7 +293,7 @@ class TrainController extends  CommonController{
          if (!in_array($file_ex, array('doc', 'xlsx'))) {
              return \Redirect::to('/')->withErrors('上传类型不合法');
          }
-         $newname=date('Ymdhis').'-'.$fileName.$userId;
+         $newname=strtotime(date('Ymd')).'-'.$fileName.$userId;
          if(\Request::file('doc')){
             $result= \Request::file()->move(base_path().$uploadDir.'/',$newname);
             if(!$result){
@@ -312,14 +312,14 @@ class TrainController extends  CommonController{
          if (!in_array($file_ex, array('doc', 'xlsx'))) {
              return \Redirect::to('/')->withErrors('上传类型不合法');
          }
-         $newname=date('Ymdhis').'-'.$fileName.$userId;
+         $newname=strtotime(date('Ymd')).'-'.$fileName.$userId;
          if(\Request::file('xlsx')){
              $result= \Request::file()->move(base_path().$uploadDir.'/',$newname);
              if(!$result){
                  return \Response::json('false',400);
              }
          }
-         $path['xlsx']=\Input::file('xlsx')->getRealPath();
+         $path['xlsx']=base_path().$uploadDir.'/'.$newname;
          return $path;
      }
 }

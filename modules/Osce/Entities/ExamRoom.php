@@ -158,14 +158,11 @@ class ExamRoom extends CommonModel
             $result = $this -> leftJoin('room', function($join){
                 $join -> on($this->table.'.room_id', '=', 'room.id');
             })
-//                ->leftJoin('exam_flow', function($join){
-//                $join -> on($this->table.'.exam_id', '=', 'exam_flow.exam_id');
-//            })
                 ->leftJoin('exam_flow_room', function($join){
                 $join -> on($this->table.'.room_id', '=', 'exam_flow_room.room_id');
             })
             ->where($this->table.'.exam_id', '=', $exam_id)
-            ->select(['room.id', 'room.name', 'exam_flow_room.serialnumber'])
+            ->select(['room.id', 'room.name', 'exam_flow_room.serialnumber',$this->table.'.room_id'])
             -> get();
 
             return $result;

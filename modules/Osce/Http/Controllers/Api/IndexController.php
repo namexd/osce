@@ -340,11 +340,26 @@ class IndexController extends CommonController
         );
     }
 
+    /**
+     *获取当日考试列表
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getExamList(){
         $exam=new Exam();
         $time=time();
-        $Ymd=date('Y-m-d H:i:s',$time);
-        dd();
         $examList=$exam->getTodayList($time);
         if(count($examList)){
              return response()->json(
