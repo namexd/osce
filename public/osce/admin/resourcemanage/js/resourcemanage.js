@@ -78,8 +78,13 @@ function deleteItem(url){
                 async:true,
                 url:url,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(res){
-                    location.reload();
+                success:function(data){
+                    if(data.code==1){
+                        location.reload();
+                    }else{
+                        layer.alert(data.message);
+                    }
+
                 },
                 error:function(){
                     console.log("错误")
@@ -424,17 +429,17 @@ function categories(){
 
 function invigilator(){
     $(".delete").click(function(){
-        
+
         var thisElement=$(this);
         layer.alert('确认删除？',function(){
             $.ajax({
                 type:'get',
-                async:true,
+                async:false,
                 url:pars.deletes,
                 data:{id:thisElement.attr('value')},
                 success:function(data){
-                    //location.reload();
-                    console.log(data);
+                    
+                    location.reload();
                 }
             })
         });
