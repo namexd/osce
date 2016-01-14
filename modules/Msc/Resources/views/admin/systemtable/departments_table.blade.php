@@ -239,12 +239,14 @@
                         toggle();
                         $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
                         $("#hidden_this_id").val(result.data.total.id);//将右侧编辑框的隐藏域内容更新
+                        $("#submit").hide();
+                        $("#edit_save").show();//按钮显示隐藏功能
                     }
                 })
             })
         }
         function editall(){
-            $("#edit_save").click(function(){
+            $("#edit_save").unbind().click(function(){
                 var thisid=$("#hidden_this_id").val();
                 var name=$(".add-name").val();
                 var describe=$(".add-describe").val();
@@ -337,6 +339,8 @@
                                 layer.msg(result.message, {icon: 1,time: 1000});
                                 $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
                                 $("#hidden_this_id").val(result.data.total.id);
+                                $("#submit").hide();
+                                $("#edit_save").show();//按钮显示隐藏功能
                                 addChild();
                                 addChildgroup();
                                 deleteall();
@@ -418,7 +422,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <div class=" right">
+                            <div class="col-sm-9" style="float:right; text-align: right;">
                                 <button class="btn btn-primary"  type="button" id="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认</button>
                                 <button class="btn btn-primary"  type="button" id="edit_save" style="display:none" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
                             </div>
