@@ -43,9 +43,7 @@ class DiscussionController extends  CommonController{
           $pagination				=	$discussionModel	->	getDiscussionPagination();
           $list=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
 
-          return response()->json(
-              $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$list)
-          );
+          return view()->with(['list'=>$list,'pagination'=>$pagination]);
       }
 
 
@@ -109,9 +107,8 @@ class DiscussionController extends  CommonController{
                 'countReply' =>$countReply,
             );
 
-          return response()->json(
-              $this->success_rows(1,'success',$pagination->total(),config('osce.page_size'),$pagination->currentPage(),$row)
-          );
+          return view()->with(['row'=>$row,'pagination'=>$pagination]);
+
       }
 
 
@@ -153,9 +150,9 @@ class DiscussionController extends  CommonController{
           $discussionModel= new Discussion();
           $result=$discussionModel->save($data);
           if($result){
-              return \Response::json(array('code'=>1));
+              return view()->with('success','提交成功');
           }
-          return \Response::json(array('code'=>0));
+          return redirect()->back()->withInput()->withErrors('提交失败');
       }
 
     /**
@@ -193,9 +190,9 @@ class DiscussionController extends  CommonController{
           $data=$request->only(['pid','content']);
           $result=Discussion::insert(['content'=>$data['content'],'pid'=>$data['pid'],'create_user_id'=>$userId]);
           if($result){
-              return \Response::json(array('code'=>1));
+              return view()->with('success','回复成功');
           }
-          return \Response::json(array('code'=>0));
+          return redirect()->back()->withInput()->withErrors('回复失败');
       }
 
     /**
@@ -237,8 +234,8 @@ class DiscussionController extends  CommonController{
 //         }
          $result=Discussion::where('id',$id)->delete();
          if($result){
-             return \Response::json(array('code'=>1));
+             return view()->with('success','删除成功');
          }
-         return \Response::json(array('code'=>0));
+         return redirect()->back()->withInput()->withErrors('删除失败');
      }
 }
