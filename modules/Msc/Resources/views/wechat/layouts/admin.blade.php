@@ -7,6 +7,7 @@
     <link href="{{asset('msc/wechat/common/css/font-awesome/css/font-awesome.css')}}" rel="stylesheet"/>
 	<link href="{{asset('msc/wechat/common/css/commons.css')}}"  rel="stylesheet"/>
     <link href="{{asset('msc/wechat/common/css/table_commons.css')}}"  rel="stylesheet"/>
+    <link href="{{asset('msc/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 @stop
 
 @section('head_js')
@@ -16,7 +17,7 @@
     <script src="{{asset('msc/wechat/common/js/commons.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件-->
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script><!--弹框插件-->
-  	<script src="{{asset('msc/wechat/validate/jquery.validate.min.js')}}"></script>
+    <script src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script><!--表单验证插件-->
     <script type="text/javascript">
         var totalpages="0";
         var　page_height = "0";
