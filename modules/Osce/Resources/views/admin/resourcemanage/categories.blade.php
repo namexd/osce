@@ -41,7 +41,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="description"/>
+                                <input id="select_Category" required  class="form-control m-b" name="desc"/>
                             </div>
                         </div>
                         <div class="row">
@@ -54,7 +54,7 @@
                                             <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
                                                 <input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
-                                            
+                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;下载模板&nbsp;&nbsp;</a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>

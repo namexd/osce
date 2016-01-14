@@ -70,22 +70,21 @@ class TopicController extends CommonController
             'title'         =>  'required',
             'content'       =>  'required',
             'score'         =>  'required',
-            'description'   =>  'sometimes',
+            'desc'   =>  'sometimes',
         ],[
             'title.required'    =>  '评分标准名称必须',
             'content.required'  =>  '评分标准必须',
             'score.required'    =>  '评分必须',
         ]);
 
-        $content = $request->get('content');
-        $score   = $request->get('score');
-
+        $content        = $request->get('content');
+        $score          = $request->get('score');
         $formData = SubjectItem::builderItemData($content, $score);
+
         $data   =   [
             'title'         =>  e($request  ->  get('title')),
-            'description'   =>  e($request  ->  get('description')),
+            'description'   =>  e($request  ->  get('desc')),
         ];
-
         $subjectModel   =   new Subject();
         if($subjectModel->  addSubject($data,$formData)){
             return redirect()->route('osce.admin.topic.getList');
@@ -119,7 +118,7 @@ class TopicController extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
             'title' =>  'required',
-            'description' =>  'sometimes',
+            'desc' =>  'sometimes',
         ],[
             'id.required'       =>  '课题ID必须',
             'title.required'    =>  '课题名称必须',
@@ -268,5 +267,35 @@ class TopicController extends CommonController
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
         }
+    }
+
+    /**
+     * 下载考核点导入模板
+     * @url GET /osce/admin/topic/toppic-tpl
+     * @access public
+     *
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getToppicTpl(){
+        $this->downloadfile('topic.xlsx',public_path('download').'/topic.xlsx');
+    }
+
+    private function downloadfile($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
     }
 }
