@@ -17,6 +17,7 @@ use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class InvigilatePadController extends CommonController
@@ -59,8 +60,11 @@ class InvigilatePadController extends CommonController
                 'mobile' => $itme->mobile
             ];
         }
+
         dd($list);
-        return $list;
+        return response()->json(
+            $this->success_data($list,1,'验证完成')
+        );
     }
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
@@ -94,16 +98,62 @@ class InvigilatePadController extends CommonController
         $examId = $request->get('exam_id');
         //根据考站id查询出下面所有的考试项目
         $station    =   Station::find($stationId);
+        //考试标准时间
+        $mins = $station->mins;
         $exam =Exam::find($examId);
         $StandardModel  =   new Standard();
         $standardList   =   $StandardModel->ItmeList($station->subject_id);
+        $temp=array();
 
+        $data=array();
 
-        dd($standardList);
+        //首先找pid为0的
+
+        foreach($standardList as $v){
+
+            if($v["pid"]==0){
+
+                $temp[]=$v;
+
+            }
+
+        }
+
+        while($temp){
+            $now = array_pop($temp);
+                //设置非顶级元素的level=父类的level+1
+                foreach($data as $v){
+
+                    if($v["id"]==$now["pid"]){
+
+                        $now["level"]=$v["level"]+1;
+                    }
+
+                }
+            //找直接子类
+
+            foreach($standardList as $v){
+
+                if($v["pid"]==$now["id"]){
+
+                    $temp[]=$v;
+
+                }
+
+            }
+
+            //移动到最终结果数组
+
+            array_push($data,$now);
+
+        }
+
+        echo json_encode($data);
+        return $data;
 
     }
     /**
-     * 成绩详情保存
+     * 提交成绩详情
      * @method GET
      * @url /osce/admin/invigilatepad/save-exam-Result
      * @access public
@@ -121,22 +171,21 @@ class InvigilatePadController extends CommonController
      */
     public function  getSaveExamResult(Request $request){
         $this->validate($request,[
-            'exam_result_id' =>'required|integer',
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
             'score' =>'required',
         ],[
-            'exam_result_id.required'=>'请检查是否得到考生的信息',
             'subject_id.required'=>'请检查考试项目',
             'standard_id.required'=>'请检查评分标准',
             'score.required'=>'请检查评分标准分值',
         ]);
         $data =[
-            'exam_result_id'=>Input::get('exam_result_id'),
             'subject_id'=>Input::get('subject_id'),
             'standard_id'=>Input::get('standard_id'),
             'score'=>Input::get('score'),
         ];
+        $ResultModel = new TestResult();    //获取考试结果id
+//        $data['exam_result_id'] = $ResultModel-> //获取考试结果方法
         $Save =ExamScore::create($data);
         if($Save){
             return response()->json(
@@ -151,9 +200,9 @@ class InvigilatePadController extends CommonController
     }
 
     /**
-     * 成绩详情查看
+     * 提交评价
      * @method GET
-     * @url /osce/admin/invigilatepad/see-exam-details
+     * @url /osce/admin/invigilatepad/see-exam-evaluate
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -167,7 +216,7 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-      public  function getSeeExamDetails(Request $request){
+      public  function getSeeExamEvaluate(Request $request){
            $this->validate($request,[
                'station_id'=>'required|integer',
                'student_id'=>'required|integer',
@@ -180,6 +229,36 @@ class InvigilatePadController extends CommonController
 
       }
 
+
+    /**
+     *  查看现场视屏
+     * @method GET
+     * @url /osce/admin/invigilatepad/see-exam-evaluate
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     station_id    考站id   (必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+
+      public  function getLocale(Request $request){
+            $this->validate($request,[
+               'station_id'=>'required|integer'
+            ]);
+
+              
+
+
+
+
+      }
 
 
 
