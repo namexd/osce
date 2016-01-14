@@ -90,7 +90,7 @@
                 </table>
 
                 <div class="btn-group pull-right">
-
+                    {!! $list->appends($_GET)->render() !!}
                 </div>
             </div>
         </form>

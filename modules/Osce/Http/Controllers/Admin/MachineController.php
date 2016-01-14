@@ -220,31 +220,22 @@ class MachineController extends CommonController
         try{
             switch($cate_id)
             {
-                case 1:
-                    $machine    =     $this   ->  addCameras($request);
-                    break;
-                case 2:
-                    $machine    =     $this   ->  addPad($request);
-                    break;
-                case 3:
-                    $machine    =     $this   ->  addWatch($request);
-                    break;
-
+                case 1: $machine    =     $this   ->  addCameras($request);
+                        break;
+                case 2: $machine    =     $this   ->  addPad($request);
+                        break;
+                case 3: $machine    =     $this   ->  addWatch($request);
+                        break;
                 default :
-                    $machine    =     $this   ->  addCameras($request);
+                        $machine    =     $this   ->  addCameras($request);
             }
-            if($machine)
-            {
+            if($machine){
                 return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增设备失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex) {
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -282,31 +273,22 @@ class MachineController extends CommonController
         try{
             switch($cate_id)
             {
-                case 1:
-                    $machine    =     $this   ->  editCameras($request);
-                    break;
-                case 2:
-                    $machine    =     $this   ->  editPad($request);
-                    break;
-                case 3:
-                    $machine    =     $this   ->  editWatch($request);
-                    break;
-
+                case 1: $machine    =     $this   ->  editCameras($request);
+                        break;
+                case 2: $machine    =     $this   ->  editPad($request);
+                        break;
+                case 3: $machine    =     $this   ->  editWatch($request);
+                        break;
                 default :
-                    $machine    =     $this   ->  editCameras($request);
+                        $machine    =     $this   ->  editCameras($request);
             }
-            if($machine)
-            {
-                return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
-            }
-            else
-            {
+            if($machine) {
+                return redirect() ->route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
+            } else{
                 throw new \Exception('编辑设备失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex) {
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -368,18 +350,13 @@ class MachineController extends CommonController
         try{
 
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($cameras =   $model  ->  addMachine($data))
-            {
+            if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增摄像头失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -437,18 +414,13 @@ class MachineController extends CommonController
         $cate_id    =   $request    ->  get('cate_id');
         try{
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($cameras =   $model  ->  editMachine($data))
-            {
+            if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('编辑摄像头失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -515,7 +487,6 @@ class MachineController extends CommonController
      *
      */
     private function addPad(Request $request){
-
         $this   ->  validate($request,[
             'name'          =>  'required',
             'code'          =>  'required',
@@ -525,9 +496,9 @@ class MachineController extends CommonController
             'code.required'     =>  '设备编号必填',
             'status.required'   =>  '设备状态必填',
         ]);
+
         $user   =   Auth::user();
-        if(empty($user))
-        {
+        if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
@@ -537,21 +508,17 @@ class MachineController extends CommonController
             'create_user_id'=>  $user       ->  id
         ];
         $cate_id    =   $request    ->  get('cate_id');
-        try{
 
+        try{
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($pad =   $model  ->  addMachine($data))
-            {
+            if($pad =   $model  ->  addMachine($data)){
                 return $pad;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增PAD失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -574,20 +541,17 @@ class MachineController extends CommonController
             'status'        =>  $request    ->  get('status'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
+
         try{
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($cameras =   $model  ->  editMachine($data))
-            {
+            if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
+            } else {
+                throw new \Exception('编辑摄像机失败');
             }
-            else
-            {
-                throw new \Exception('编辑摄像头失败');
-            }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex) {
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -665,8 +629,7 @@ class MachineController extends CommonController
         ]);
 
         $user   =   Auth::user();
-        if(empty($user))
-        {
+        if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
 
@@ -679,10 +642,8 @@ class MachineController extends CommonController
 
         $cate_id    =   $request    ->  get('cate_id');
         try{
-
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($watch =   $model  ->  addMachine($data))
-            {
+            if($watch =   $model  ->  addMachine($data)){
 //                $action='新增';
 //                $data=array(
 //                    'create_user_id'=>$data['create_user_id'],
@@ -692,15 +653,12 @@ class MachineController extends CommonController
 //                $watchModel=new WatchLog();
 //                $watchModel->historyRecord($data);
                 return $watch;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增腕表失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
     private function editWatch(Request $request){
@@ -736,15 +694,12 @@ class MachineController extends CommonController
 //                $watchModel=new WatchLog();
 //                $watchModel->historyRecord($data);
                 return $cameras;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('编辑摄像头失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
