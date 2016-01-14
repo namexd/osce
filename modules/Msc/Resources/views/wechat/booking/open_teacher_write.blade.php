@@ -62,18 +62,17 @@
         <div class="add_main">
             <div class="form-group">
                 <label for="">教学课程</label>
-                <input type="text" class="form-control" value="" name="course" />
+                <input type="text" class="form-control" value="" name="course">
             </div>
             <div class="form-group">
                 <label for="">学生人数</label>
-                <input type="number" class="form-control stu_num" value="" name="num" />
-
+                <input type="number" class="form-control stu_num" value="" name="num">
             </div>
         </div>
         <div class="w_94" >
             <div class="form_title">备注</div>
-            <div class="form-group">
-                <textarea name="description" class=" form-control textarea1" >爱的方式的发生的公司法规的法规的发挥的恢复供货方根据非黄金护肤</textarea>
+            <div class="Reason">
+                <textarea class="textarea1" style="width: 100%;height: 100px;border-radius: 4px;">爱的方式的发生的公司法规的法规的发挥的恢复供货方根据非黄金护肤</textarea>
             </div>
             <input class="btn2 mart_10 marb_10" type="submit" value="提交预约">
         </div>

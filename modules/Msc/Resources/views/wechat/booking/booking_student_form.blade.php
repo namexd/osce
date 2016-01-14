@@ -6,7 +6,6 @@
     /*实验室名字超出长度修改*/
     .add_main .form-group label{width: 95px;}
     .add_main .form-group .txt {padding-left:105px;}
-    .form-group .form-control{ height: 100px;}
 </style>
 @stop
 
@@ -60,9 +59,9 @@
     @endforeach
 
         <div class="w_94" id="Reason_detail" >
-            <div class="form_title">预约理由</div>
-            <div class="form-group">
-                <textarea name="description" class=" form-control textarea1" ></textarea>
+            <div class="form_title">预约原因</div>
+            <div class="Reason">
+                <textarea name="description" class="textarea1"></textarea>
             </div>
             <input class="btn2 mart_10 marb_10"  type="submit" value="提交预约">
         </div>

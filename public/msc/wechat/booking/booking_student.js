@@ -62,19 +62,19 @@ function booking_student_form(){
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {/*验证*/
-            description: {/*键名和input name值对应*/
-                message: 'The username is not valid',
+            description: {
+                message: 'The hospital is not valid',
                 validators: {
                     notEmpty: {/*非空提示*/
-                        message: '申请理由不能为空'
-                    },
-                    stringLength: {/*长度提示*/
-                        min: 1,
-                        max: 512,
-                        message: '申请理由不能超过512个字符'
-                    }/*最后一个没有逗号*/
+                        message: '课程名不能为空'
+                    }
+                },
+                stringLength: {/*长度提示*/
+                    min: 1,
+                    max:512,
+                    message: '申请原因不得超过512个字符'
                 }
-            }
+            },
         }
     })
 
@@ -121,19 +121,6 @@ function open_teacher_write(){
                     notEmpty: {/*非空提示*/
                         message: '学生人数不能为空'
                     }
-                }
-            },
-            description: {/*键名和input name值对应*/
-                message: 'The username is not valid',
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '申请理由不能为空'
-                    },
-                    stringLength: {/*长度提示*/
-                        min: 1,
-                        max: 512,
-                        message: '申请理由不能超过512个字符'
-                    }/*最后一个没有逗号*/
                 }
             }
         }

@@ -157,14 +157,15 @@ class LabApply  extends Model
     }
 
     /**
+     * @param $status 1.待审核 2.待使用（已经审核通过了的）
      * @param $uid
-     * @return mixed
+     * @return Array
      * @author tangjun <tangjun@misrobot.com>
      * @date   2016年1月14日17:21:30
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function MyApplyList($uid){
-        return  $this->where('status','=',1)->where('type','=',2)->where('apply_user_id','=',$uid)->with(['PlanApply'=>function($PlanApply){
+    public function MyApplyList($status,$uid){
+        return  $this->where('status','=',$status)->where('type','=',2)->where('apply_user_id','=',$uid)->with(['PlanApply'=>function($PlanApply){
             $PlanApply->with(['OpenPlan']);
         }])->get();
     }
