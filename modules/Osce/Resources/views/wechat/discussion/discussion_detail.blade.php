@@ -72,7 +72,7 @@
             color: #333!important;
         }
         .btn.btn-default{
-            background: #42b2b1;
+            background: #1ab394;
             color: #fff!important;
         }
     </style>
@@ -106,7 +106,8 @@
                 confirmButton: '确定',
                 cancelButton: '取消',
                 confirm: function(){
-                    location.href = $this.attr('url');
+                    var id = (location.href).split('=')[1];
+                    location.href = $this.attr('url')+'?id='+id;
                 },
                 cancel: function(){
                     $('.option').fadeOut();
