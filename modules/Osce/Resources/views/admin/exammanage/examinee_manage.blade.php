@@ -49,13 +49,13 @@
                 <h5 class="title-label">考试安排</h5>
             </div>
         </div>
+        <div class="container-fluid ibox-content">
             <div class="panel blank-panel">
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
                             <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment', ['id'=>$id])}}">考场安排</a></li>
-                            <li class=""><a href="#">邀请SP</a></li>
                             <li class="active"><a href="#">考生管理</a></li>
                             <li class=""><a href="#">智能排考</a></li>
                         </ul>
@@ -73,9 +73,7 @@
                         </div>
                     </form>
                     <div class="operate pull-right">
-                        <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}">
-                            <button type="button" class="btn btn-md btn-white" id="">新增考生</button>
-                        </a>
+                        <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}" class="btn btn-outline btn-default">新增考生</a>
                         导入考生
                         <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="{{$id}}" style="height:34px;padding:5px;width:184px;">
                             <input type="file" name="student" id="file0" multiple="multiple" />
@@ -117,6 +115,7 @@
 
 
             </div>
+        </div>
     </div>
 @stop{{-- 内容主体区域 --}}
 
