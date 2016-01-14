@@ -18,6 +18,10 @@
             padding: 15px;
             border-bottom: 1px solid #eee;
         }
+        .history-list li textarea{
+            width: 100%;
+            height: 120px;
+        }
         /*header*/
         .item-l,.item-c,.item-r{
             float: left;
@@ -62,40 +66,25 @@
             line-height: 30px;
             text-align: center;
         }
+        .btn2{background: #42b2b1}
     </style>
 @stop
 @section('only_head_js')
-    <script>
-      $(function(){
-        $('.right').click(function(){
-            $('.option').show();
-        });
-
-        $('.content-box').click(function(){
-            $('.option').fadeOut();
-        })
-
-        $('.history-list').click(function(){
-            $('.option').fadeOut();
-        })
-
-      })
-    </script>
-
+    
 @stop
 
 
 @section('content')
     <ul class="option">
-        <li><a href="{{route('osce.wechat.postAddReply')}}">回复</a></li>
-        <li><a href="{{route('osce.wechat.postAddReply')}}">编辑</a></li>
-        <li><a href="{{route('osce.wechat.getDelQuestion')}}">删除</a></li>
+        <li><a href="">回复</a></li>
+        <li><a href="#">编辑</a></li>
+        <li><a href="">删除</a></li>
     </ul>
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-       查看
+       回复
         <a class="right header_btn" href="javascript:void(0)">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
@@ -119,26 +108,8 @@
     </div>
     <ul class="history-list">
         <li>
-            <div class="content-header">
-                <div class="content-l">
-                    <span>1F</span>.
-                    <span class="student">李同学</span>.
-                    <span class="time">3天前</span>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <p>这个可以咨询下教导处，电话XXXXXXXXXXXX</p>
-        </li>
-        <li>
-            <div class="content-header">
-                <div class="content-l">
-                    <span>1F</span>.
-                    <span class="student">王同学</span>.
-                    <span class="time">3天前</span>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <p>这个可以咨询下教导处，电话XXXXXXXXXXXX</p>
+            <textarea placeholder="请在此输入"></textarea>
+            <input type="submit" value="提交" class="btn2" />
         </li>
     </ul>
 @stop
