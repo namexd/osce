@@ -41,6 +41,10 @@
         border-radius: 5px;
         cursor: pointer;
     }
+    .teacher-list{
+        height: 34px!important;
+        width: 120px!important;
+    }
     .teacher>div{
         margin-right: 5px;
 
