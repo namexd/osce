@@ -314,7 +314,6 @@
                     var name=$(".add-name").val();
                     validate (name);//添加验证
                     if(mark){
-                        alert(202);
                         return false;
                     }
                     var describe=$(".add-describe").val();
