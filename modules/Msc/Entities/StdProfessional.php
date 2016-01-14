@@ -35,7 +35,7 @@ class StdProfessional extends Model
        }
 
 
-       return $builder->select(['id','name','code','status'])->orderBy('id')->paginate(config('msc.page_size',10));
+       return $builder->select(['id','name','code','status'])->orderBy('status','desc')->paginate(config('msc.page_size',10));
    }
 
 
