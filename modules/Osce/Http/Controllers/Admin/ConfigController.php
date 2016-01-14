@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Area;
 use Modules\Osce\Entities\Config;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
@@ -108,4 +109,86 @@ class ConfigController extends CommonController
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
+
+    /**
+     * 场所类型的配置的着陆页
+     * @api GET /osce/admin/invigilator/index
+     * @access public
+     * @return redirect
+     * @internal param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     *
+     * @internal param Teacher $teacher
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-11 11：48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getArea()
+    {
+        //从数据库之中获取配置
+        $data = Area::all();
+
+        return view('osce::admin.sysmanage.system_settings_room', ['data' => $data]);
+
+    }
+
+    /**
+     * 场所类型的配置的添加着陆页
+     * @api GET /osce/admin/invigilator/index
+     * @access public
+     * @return redirect
+     * @internal param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     *
+     * @internal param Teacher $teacher
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-11 11：48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAreaStore()
+    {
+        return view('osce::admin.sysmanage.system_add');
+    }
+
+    /**
+     * 场所类型的配置的添加逻辑
+     * @api GET /osce/admin/invigilator/index
+     * @access public
+     * @param Request $request
+     * @return redirect
+     * @internal param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     *
+     * @internal param Teacher $teacher
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-11 11：48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postAreaStore(Request $request)
+    {
+        //验证
+        $this->validate($request, [
+            'name' => 'required',
+            'description' => 'required',
+            'cate' => 'required|integer',
+            'code' => 'required'
+        ]);
+
+        //接受数据
+        $formData = $request->all();
+        $formData['created_user_id'] = \Auth::user()->id;
+        try {
+            if (!Area::create($formData)) {
+                throw new \Exception('数据保存失败！请重试');
+            }
+
+            return redirect()->route('osce.admin.config.getArea');
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
 }

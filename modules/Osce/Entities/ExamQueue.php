@@ -37,7 +37,6 @@ class ExamQueue extends  CommonModel{
                     $time
                 ]
             );
-            dd($builder->take(10)->get());
           return  $builder->take(10)->get();
         }elseif($mode==2){
             $builder=$builder->Join('station','exam_queue.station_id','=','station.id')
