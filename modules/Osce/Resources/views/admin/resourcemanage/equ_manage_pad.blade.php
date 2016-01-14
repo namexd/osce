@@ -47,16 +47,23 @@
                     <div class="btn-group" style="margin-right: 10px;">
                         <button type="button" class="btn btn-default dropdown-toggle"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
-                            状态<span class="caret"></span>
+                            @if(array_key_exists('status',$_GET))
+                                @forelse($machineStatuValues as $status=>$machineStatuValue)
+                                    @if($_GET['status']==$status)
+                                        {{$machineStatuValue}}
+                                    @endif
+                                @empty
+                                @endforelse
+                            @else
+                                状态
+                            @endif
+                            <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
+                            <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>2])}}">全部</a></li>
                             @forelse($machineStatuValues as $status=>$machineStatuValue)
-                                @if(array_key_exists('status',$_GET))
-                                    <?php unset($_GET['status']) ?>
-                                @endif
-                                <li><a href="{{route('osce.admin.machine.getMachineList',array_add($_GET,'status',$status))}}">{{$machineStatuValue}}</a></li>
+                                <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>2,'status'=>$status])}}">{{$machineStatuValue}}</a></li>
                             @empty
-                                <li><a>请选择</a></li>
                             @endforelse
                         </ul>
                     </div>
