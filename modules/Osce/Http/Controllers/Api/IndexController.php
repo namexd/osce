@@ -189,7 +189,8 @@ class IndexController extends CommonController
 
         $data=array('code'=>$student_id);
 
-        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first()->watch_id;
+        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select('watch_id')->first();
+
         if($watch_id){
             $status=Watch::where('id',$watch_id)->select('status')->first()->status;
             if($status==1){
