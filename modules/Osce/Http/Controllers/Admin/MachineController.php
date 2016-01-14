@@ -269,16 +269,15 @@ class MachineController extends CommonController
             'cate_id'   =>  'required|integer'
         ]);
 
-        $cate_id    =   $request    ->  get('cate_id');
+        $cate_id    =   intval($request    ->  get('cate_id'));
         try{
             switch($cate_id)
             {
-                case 1: $machine    =     $this   ->  editCameras($request);
-                        break;
                 case 2: $machine    =     $this   ->  editPad($request);
                         break;
                 case 3: $machine    =     $this   ->  editWatch($request);
                         break;
+                case 1:
                 default :
                         $machine    =     $this   ->  editCameras($request);
             }
@@ -410,6 +409,7 @@ class MachineController extends CommonController
             'port'          =>  $request    ->  get('port'),
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
+            'status'        =>  $request    ->  get('status'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
         try{

@@ -22,8 +22,10 @@ class Pad extends CommonModel implements MachineInterface
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '损坏',
-        1   =>  '正常',
+        0   =>  '未使用',
+        1   =>  '使用中',
+        2   =>  '维修',
+        3   =>  '报废',
     ];
 
     public function getMachineStatuValues(){

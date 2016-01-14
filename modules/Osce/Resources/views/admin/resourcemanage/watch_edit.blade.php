@@ -108,9 +108,8 @@
                                     <select id="" required  class="form-control m-b" name="status">
                                         <option value="0" {{($item['status']==0)?'selected="selected"':''}}>未使用</option>
                                         <option value="1" {{($item['status']==1)?'selected="selected"':''}}>使用中</option>
-                                        <option value="2" {{($item['status']==2)?'selected="selected"':''}}>报废</option>
-                                        <option value="3" {{($item['status']==3)?'selected="selected"':''}}>损坏</option>
-                                        <option value="4" {{($item['status']==4)?'selected="selected"':''}}>维修</option>
+                                        <option value="2" {{($item['status']==2)?'selected="selected"':''}}>维修</option>
+                                        <option value="3" {{($item['status']==3)?'selected="selected"':''}}>报废</option>
                                     </select>
                                 </div>
                             </div>

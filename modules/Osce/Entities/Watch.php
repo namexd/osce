@@ -25,9 +25,8 @@ class Watch extends CommonModel implements MachineInterface
     protected $statuValues  =   [
         0   =>  '未使用',
         1   =>  '使用中',
-        2   =>  '报废',
-        3   =>  '损坏',
-        4   =>  '维修',
+        2   =>  '维修',
+        3   =>  '报废',
     ];
 
     /**
