@@ -3,6 +3,7 @@
 @section('only_css')
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style>
+    .table-head-style1{border-bottom: 1px solid #e7eaec;}
     button.btn.btn-white.dropdown-toggle {
         border: none;
         font-weight: bolder;
@@ -78,7 +79,7 @@
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row table-head-style1 ">
+        <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考场安排</h5>
             </div>
