@@ -49,9 +49,6 @@ class TrainController extends  CommonController{
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
-
-       return view()->with(['list'=>$list,'pagination'=>$pagination]);
+       return view('')->with(['list'=>$list,'pagination'=>$pagination]);
     }
-
-
 }

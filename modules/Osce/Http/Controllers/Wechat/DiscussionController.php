@@ -32,22 +32,18 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getQuestionList(){
-          $user=Auth::user();
-          $userId=$user->id;
-          if(!$userId){
-              return response()->json(
-                  $this->success_rows(2,'请先登录')
-              );
-          }
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        if(!$userId){
+//            return response()->json(
+//                $this->success_rows(2,'请先登录')
+//            );
+//        }
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
           $list=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
-
-          return view()->with(['list'=>$list,'pagination'=>$pagination]);
+          return view('osce::wechat.discussion.discussion_quiz')->with(['list'=>$list,'pagination'=>$pagination]);
       }
-
-
-
 
     /**
      *查看问题
