@@ -7,6 +7,7 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "ban_maintain":ban_maintain();break; //楼栋管理页面
+        case "lab_maintain":lab_maintain();break; //实验室管理页面
     }
 
 });
@@ -349,4 +350,37 @@ function ban_maintain(){
         });
 
     })
+}
+//实验室管理页面
+function lab_maintain(){
+    //            删除
+    $(".delete").click(function(){
+        var this_id = $(this).attr('data');
+        var url = "/msc/admin/laboratory/delete-lab?id="+this_id;
+        //询问框
+        layer.confirm('您确定要删除该实验室？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            window.location.href=url;
+        });
+    });
+//            停用
+    $(".stop").click(function(){
+        var this_id = $(this).attr('data');
+        var type = $(this).attr('data-type');
+        var url = "/msc/admin/laboratory/stop-lab?id="+this_id+"&type="+type;
+        var str = '';
+        if(type == 0){
+            str = '您确定要停用实验室？';
+        }else{
+            str = '您确定要启用实验室？';
+        }
+        //询问框
+        layer.confirm(str, {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            window.location.href=url;
+        });
+    });
+
 }

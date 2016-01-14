@@ -9,260 +9,469 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/labmanage/labmanage.js')}}"></script>
     <script>
         $(function(){
-//            删除
-            $(".delete").click(function(){
-                var this_id = $(this).attr('data');
-                var url = "/msc/admin/laboratory/delete-lab?id="+this_id;
-                //询问框
-                layer.confirm('您确定要删除该实验室？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    window.location.href=url;
-                });
-            });
-//            停用
-            $(".stop").click(function(){
-                var this_id = $(this).attr('data');
-                var type = $(this).attr('data-type');
-                var url = "/msc/admin/laboratory/stop-lab?id="+this_id+"&type="+type;
-                var str = '';
-                if(type == 0){
-                    str = '您确定要停用实验室？';
-                }else{
-                    str = '您确定要启用实验室？';
-                }
-                //询问框
-                layer.confirm(str, {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    window.location.href=url;
-                });
-            });
-//            新增编辑弹出层切换
-            $("#add_lab").click(function(){
-                $("#add_from").show();
-                $("#edit_from").hide();
-                $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
-            });
-            $(".edit_lab").click(function(){
-                $("#add_from").hide();
-                $("#edit_from").show();
-                $(".form-group").removeClass("has-success").removeClass("has-error").children(".col-sm-9").children("i").css("display","none").siblings("small").css("display","none");
-            });
             //编辑验证
-            $("#edit_from").bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    hospital: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择所属分院'
-                            }
-                        }
+            function edit_form(){
+                $("#edit_from").bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
                     },
-                    building: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择教学楼'
+                    fields: {/*验证*/
+                        hospital: {
+                            message: 'The hospital is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '所属分院不能为空'
+                                }
                             }
-                        }
-                    },
-                    floor: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择楼层'
+                        },
+                        building: {
+                            message: 'The building is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '教学楼不能为空'
+                                }
                             }
-                        }
-                    },
-                    name: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '实验室名称不能为空'
+                        },
+                        floor: {
+                            message: 'The floor is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '楼层不能为空'
+                                }
                             }
-                        }
-                    },
-                    number: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '房号不能为空'
+                        },
+                        name: {/*键名username和input name值对应*/
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '实验室名称不能为空'
+                                }
                             }
-                        }
-                    },
-                    total: {/*键名username和input name值对应*/
-                        validators: {
-                            regexp: {
-                                regexp: /^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,
-                                message: '请填写实验室容量'
+                        },
+                        code: {/*键名username和input name值对应*/
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '房号不能为空'
+                                }
                             }
-                        }
-                    },
-                    type: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择状态'
+                        },
+                        total: {/*键名username和input name值对应*/
+                            validators: {
+                                notEmpty: {
+                                    /*非空提示*/
+                                    message: '实验室容量不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^(?:[1-9]\d?|[1234]\d{2}|500)$/,
+                                    message: '容量最大为500人'
+                                }
+                            }
+                        },
+                        manager_user_id:{
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '管理员不能为空'
+                                }
+                            }
+                        },
+                        open_type:{
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '实验室性质不能为空'
+                                }
+                            }
+                        },
+                        status: {
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '状态不能为空'
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
 //            新增验证
-            $('#add_from').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    hospital: {
-                        message: 'The hospital is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '请选择所属分院'
-                            }
-                        }
+            function add_form(){
+                $('#add_from').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
                     },
-                    building: {
-                        message: 'The building is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '请选择教学楼'
+                    fields: {/*验证*/
+                        hospital: {
+                            message: 'The hospital is not valid',
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '所属分院不能为空'
+                                }
                             }
-                        }
-                    },
-                    floor: {
-                        message: 'The floor is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '请选择楼层'
+                        },
+                        building: {
+                            message: 'The building is not valid',
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '教学楼不能为空'
+                                }
                             }
-                        }
-                    },
-                    name: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '实验室名称不能为空'
+                        },
+                        floor: {
+                            message: 'The floor is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '楼层不能为空'
+                                }
                             }
-                        }
-                    },
-                    number: {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '房号不能为空'
+                        },
+                        name: {/*键名username和input name值对应*/
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '实验室名称不能为空'
+                                }
                             }
-                        }
-                    },
-                    total: {/*键名username和input name值对应*/
-                        validators: {
-                            regexp: {
-                                regexp: /^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,
-                                message: '请正确填写实验室容量'
+                        },
+                        code: {/*键名username和input name值对应*/
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '房号不能为空'
+                                }
                             }
-                        }
-                    },
-                    type: {
-                        validators: {
-                            regexp: {
-                                regexp: /^(?!-1).*$/,
-                                message: '请选择状态'
+                        },
+                        total: {/*键名username和input name值对应*/
+                            validators: {
+                                notEmpty: {
+                                    /*非空提示*/
+                                    message: '实验室容量不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^(?:[1-9]\d?|[1234]\d{2}|500)$/,
+                                    message: '容量最大为500人'
+                                }
                             }
-
-                        }
-                    }
-
-                }
-            });
-
-            $('.school').change(function(){
-                var id = $(this).val();
-                var opstr = '<option value="-1">请选择教学楼</option>';
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('msc.admin.laboratory.getLocal')}}",
-                    data: {id:id},
-                    success: function(msg){
-                        if(msg){
-                            $(msg).each(function(i,k){
-
-                                opstr += '<option value="'+k.id+'">'+k.name+'</option>';
-                            });
-                            $('.local').html(opstr);
-                        }
-                    }
-                });
-            });
-
-            $('#add_from').delegate('.local','change',function(){
-                var id = $(this).val();
-                var opstr = '<option value="-1">请选择楼层</option>';
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('msc.admin.laboratory.getFloor')}}",
-                    data: {id:id},
-                    success: function(msg){
-                        //console.log(msg);
-                        if(msg){
-
-                            $.each($(msg),function(i,n){
-                                //console.log(n);
-                                opstr += '<option value="'+n+'">'+n+'楼</option>';
-                            });
-                            //console.log(opstr);
-                            $('.floor').html(opstr);
+                        },
+                        manager_user_id:{
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '管理员不能为空'
+                                }
+                            }
+                        },
+                        open_type:{
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '实验室性质不能为空'
+                                }
+                            }
+                        },
+                        status: {
+                            validators: {
+                                regexp: {
+                                    regexp: /^(?!-1).*$/,
+                                    message: '状态不能为空'
+                                }
+                            }
                         }
                     }
                 });
-            });
-            $('.oldlocal').change(function(){
-                var id = $(this).val();
-                var opstr = '<option value="-1">请选择楼层</option>';
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('msc.admin.laboratory.getFloor')}}",
-                    data: {id:id},
-                    success: function(msg){
-                        //console.log(msg);
-                        if(msg){
+            }
 
-                            $.each($(msg),function(i,n){
-                                //console.log(n);
-                                opstr += '<option value="'+n+'">'+n+'楼</option>';
-                            });
-                            //console.log(opstr);
-                            $('.floor').html(opstr);
+            //            新增
+            var add_hospital=$(".add_hospital").html();
+            var add_master=$(".add_master").html();
+            $("#add_lab").click(function(){
+                var $addUrl=$("#addUrl").val();
+                $("#edit_from").hide();
+                $("#add_from").remove();
+                $("#form_box").append('<form class="form-horizontal" id="add_from" novalidate="novalidate" action="'+$addUrl+'" method="post"> ' +
+                        '<div class="modal-header"> ' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> ' +
+                        '<h4 class="modal-title" id="myModalLabel">新增实验室</h4> ' +
+                        '</div> ' +
+                        '<div class="modal-body"> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b oldschool edit_hospital school" name="hospital"> ' +
+                        '<option value="-1">请选择所属分院</option> ' +add_hospital+
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b oldlocal local" name="building"> ' +
+                        '<option value="-1">请选择教学楼</option> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b oldfloor floor" name="floor"> ' +
+                        '<option value="-1">请选择楼层</option> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="name" name="name" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">简称</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="short_name" name="short_name" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">英文全称</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="enname" name="enname" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">英文缩写</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="short_enname" name="short_enname" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>房号</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="code" name="code" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>容量</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control describe add-describe" id="total" name="total" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">管理员</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b teacher edit_master" name="manager_user_id"> ' +
+                        '<option value="-1">点击选择</option> ' +add_master+
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">实验室性质</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b opentype" name="open_type"> ' +
+                        '<option value="-1">点击选择</option> ' +
+                        '<option value="1">实验室</option> ' +
+                        '<option value="2">准备间</option> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>状态</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category"   class="form-control m-b sta" name="status"> ' +
+                        '<option value="-1">请选择状态</option> ' +
+                        '<option value="1">正常</option> ' +
+                        '<option value="0">停用</option> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="hr-line-dashed"></div> ' +
+                        '<div class="form-group"> ' +
+                        '<div class="col-sm-4 col-sm-offset-2 right"> ' +
+                        '<button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button> ' +
+                        '<button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '</form>');
+                $('#add_from').delegate('.school','change',function(){
+                    var id = $(this).val();
+                    var opstr = '<option value="-1">请选择教学楼</option>';
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('msc.admin.laboratory.getLocal')}}",
+                        data: {id:id},
+                        success: function(msg){
+                            if(msg){
+                                $(msg).each(function(i,k){
+                                    opstr += '<option value="'+k.id+'">'+k.name+'</option>';
+                                });
+                                $('.local').html(opstr);
+                            }
                         }
-                    }
+                    });
                 });
-            });
+                $('#add_from').delegate('.local','change',function(){
+                    var id = $(this).val();
+                    var opstr = '<option value="-1">请选择楼层</option>';
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('msc.admin.laboratory.getFloor')}}",
+                        data: {id:id},
+                        success: function(msg){
+                            if(msg){
 
+                                $.each($(msg),function(i,n){
+                                    opstr += '<option value="'+n+'">'+n+'楼</option>';
+                                });
+                                $('.floor').html(opstr);
+                            }
+                        }
+                    });
+                });
+                $('.oldlocal').change(function(){
+                    var id = $(this).val();
+                    var opstr = '<option value="-1">请选择楼层</option>';
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('msc.admin.laboratory.getFloor')}}",
+                        data: {id:id},
+                        success: function(msg){
+                            if(msg){
+
+                                $.each($(msg),function(i,n){
+                                    opstr += '<option value="'+n+'">'+n+'楼</option>';
+                                });
+                                $('.floor').html(opstr);
+                            }
+                        }
+                    });
+                });
+                add_form();
+            });
+//            编辑
+            var edit_hospital=$(".edit_hospital").html();
+            var edit_master=$(".edit_master").html();
             $('.update').click(function () {
+                var $editUrl=$("#editUrl").val();
+                $("#add_from").hide();
+                $("#edit_from").remove();
+                $("#form_box").append('<form class="form-horizontal" id="edit_from" novalidate="novalidate" action="'+$editUrl+'" method="post"> " ' +
+                        '<div class="modal-header"> ' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> ' +
+                        '<h4 class="modal-title" id="myModalLabel">编辑实验室</h4> ' +
+                        '</div> ' +
+                        '<div class="modal-body"> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b oldschool edit_hospital" name="hospital"> ' +edit_hospital+
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b oldlocal local" name="building"> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b oldfloor floor" name="floor"> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="name" name="name" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">简称</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="short_name" name="short_name" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">英文全称</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="enname" name="enname" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">英文缩写</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="short_enname" name="short_enname" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>房号</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control name add-name" id="code" name="code" value="" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>容量</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<input type="text" class="form-control describe add-describe" id="total" name="total" /> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">管理员</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b teacher edit_master" name="manager_user_id"> ' +edit_master+
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label">实验室性质</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category" class="form-control m-b opentype" name="open_type"> ' +
+                        '<option value="1">实验室</option> ' +
+                        '<option value="2">准备间</option> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-sm-3 control-label"><span class="dot">*</span>状态</label> ' +
+                        '<div class="col-sm-9"> ' +
+                        '<select id="select_Category"   class="form-control m-b sta" name="status"> ' +
+                        '<option value="1">正常</option> ' +
+                        '<option value="0">停用</option> ' +
+                        '</select> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<div class="hr-line-dashed"></div> ' +
+                        '<div class="form-group"> ' +
+                        '<div class="col-sm-4 col-sm-offset-2 right"> ' +
+                        '<button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button> ' +
+                        '<button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '</form>');
+                edit_form();
                 var updateobj = $(this);
                 $('#code').val($(this).parent().parent().find('.code').html());
-                //$('input[name=floor_top]').val($(this).parent().parent().find('.lname').attr('data'));
                 $('input[name=floor]').val($(this).parent().parent().find('.floors').attr('data-b'));
-                // $('input[name=open_type]').val($(this).parent().parent().find('.open_type').html());
                 $('#name').val($(this).parent().parent().find('.name').html());
                 $('#short_name').val($(this).parent().parent().find('.short_name').val());
                 $('#enname').val($(this).parent().parent().find('.enname').val());
                 $('#short_enname').val($(this).parent().parent().find('.short_enname').val());
                 $('#total').val($(this).parent().parent().find('.total').val());
                 $('.oldschool option').each(function(){
-                    //console.log($(this).val());
                     if($(this).val() == $(updateobj).parent().parent().find('.lname').attr('data')){
                         $(this).attr('selected','selected');
                     }
@@ -276,19 +485,16 @@
                         var opstr = '';
                         if(msg){
                             $.each($(msg),function(i,n){
-
                                 if(n == $(updateobj).parent().parent().find('.floors').html()){
                                     opstr += '<option value="'+n+'" selected="selected">'+n+'楼</option>';
                                 }else{
                                     opstr += '<option value="'+n+'">'+n+'楼</option>';
                                 }
-
                             });
                             $('.oldfloor').html(opstr);
                         }
                     }
                 });
-
                 $('.oldschool').change(function(){
                     var id = $(this).val();
                     var opstr = '<option value="-1">请选择教学楼</option>';
@@ -307,7 +513,6 @@
                         }
                     });
                 });
-
                 $.ajax({
                     type: "POST",
                     url: "{{route('msc.admin.laboratory.getLocal')}}",
@@ -328,15 +533,12 @@
                         }
                     }
                 });
-                // var str = '<option value="'+$('.lname').attr('data-local')+'">'+$('.lname').html()+'</option>';
-
                 var status = $(this).parent().parent().find('.status').attr('data');
                 $('.sta option').each(function(){
                     if($(this).val() == status){
                         $(this).attr('selected','selected');
                     }
                 });
-
                 var teach = $(this).parent().parent().find('.tname').attr('data');
                 $('.teacher option').each(function(){
                     if($(this).val() == teach){
@@ -351,19 +553,14 @@
                         }
                     });
                 }
-
-                $('#edit_from').attr('action','{{route("msc.admin.laboratory.getEditLabInsert")}}');
-                $('#myModalLabel').html('编辑实验室');
-
                 $('#edit_from').append('<input type="hidden" name="id" value="'+id+'">');
             });
-
         })
     </script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="" />
+    <input type="hidden" id="parameter" value="{'pagename':'lab_maintain'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
@@ -397,7 +594,6 @@
                             <th>房号</th>
                             <th>教学楼</th>
                             <th>楼层</th>
-                            {{--<th>容量</th>--}}
                             <th>
                                 <div class="btn-group Examine">
                                     <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle">
@@ -472,11 +668,9 @@
                                 </tr>
                             @endforeach
                         @endif
-
                         </tbody>
                     </table>
                 </form>
-
             </div>
         </div>
         {{--分页--}}
@@ -487,239 +681,240 @@
 @stop
 
 @section('layer_content')
-    {{--编辑--}}
-    <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">编辑实验室</h4>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b oldschool" name="hospital">
-                        <option value="-1">请选择</option>
-                        @if(!empty($school))
-                            @foreach($school as $ss)
-                                <option value="{{$ss->id}}">{{$ss->name}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
+    <div id="form_box">
+        {{--编辑--}}
+        <input type="hidden" value="{{route("msc.admin.laboratory.getEditLabInsert")}}" id="editUrl">
+        <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">编辑实验室</h4>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b oldlocal local" name="building">
-                        <option value="-1">请选择教学楼</option>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b oldschool edit_hospital" name="hospital">
+                            @if(!empty($school))
+                                @foreach($school as $ss)
+                                    <option value="{{$ss->id}}">{{$ss->name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b oldlocal local" name="building">
+                            <option value="-1">请选择教学楼</option>
 
-                    </select>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b oldfloor floor" name="floor">
-                        <option value="-1">请选择楼层</option>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b oldfloor floor" name="floor">
+                            <option value="-1">请选择楼层</option>
 
-                    </select>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" id="name" name="name" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">简称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" id="short_name" name="short_name" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">英文全称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" id="enname" name="enname" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">英文缩写</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" id="short_enname" name="short_enname" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" id="code" name="code" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control describe add-describe" id="total" name="total" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">管理员</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b teacher edit_master" name="manager_user_id">
+                            @if(!empty($teacher))
+                                @foreach($teacher as $tch)
+                                    @if($tch->aboutUser)
+                                        <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">实验室性质</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b opentype" name="open_type">
+                            <option value="-1">点击选择</option>
+                            <option value="1">实验室</option>
+                            <option value="2">准备间</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category"   class="form-control m-b sta" name="status">
+                            <option value="-1">请选择状态</option>
+                            <option value="1">正常</option>
+                            <option value="0">停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2 right">
+                        <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" id="name" name="name" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>简称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" id="short_name" name="short_name" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>英文全称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" id="enname" name="enname" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>英文缩写</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" id="short_enname" name="short_enname" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" id="code" name="code" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control describe add-describe" id="total" name="total" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">管理员</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b teacher" name="manager_user_id">
-                        <option value="-1">点击选择</option>
-                        @if(!empty($teacher))
-                            @foreach($teacher as $tch)
-                                @if($tch->aboutUser)
-                                    <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
-                                @endif
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">实验室性质</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b opentype" name="open_type">
-                        <option value="-1">点击选择</option>
-                        <option value="1">实验室</option>
-                        <option value="2">准备间</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b sta" name="status">
-                        <option value="-1">请选择状态</option>
-                        <option value="1">正常</option>
-                        <option value="0">停用</option>
-                    </select>
-                </div>
-            </div>
-            <div class="hr-line-dashed"></div>
-            <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
 
-    {{--新增--}}
-    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post" style="display:none">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增实验室</h4>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b school" name="hospital">
-                        <option value="-1">请选择</option>
-                        @if(!empty($school))
-                            @foreach($school as $ss)
-                                <option value="{{$ss->id}}">{{$ss->name}}</option>
-                            @endforeach
-                        @endif
-                    </select>
+        {{--新增--}}
+        <input type="hidden" value="{{route('msc.admin.laboratory.getAddLabInsert')}}" id="addUrl">
+        <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.laboratory.getAddLabInsert')}}" method="post" style="display:none">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新增实验室</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>所属分院</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b school add_hospital" name="hospital">
+                            @if(!empty($school))
+                                @foreach($school as $ss)
+                                    <option value="{{$ss->id}}">{{$ss->name}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b local" name="building">
+                            <option value="-1">请选择教学楼</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b floor" name="floor">
+                            <option value="-1">请选择楼层</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="name" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">简称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="short_name" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">英文全称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="enname" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">英文缩写</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="short_enname" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control name add-name" name="code" value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control describe add-describe" name="total" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">管理员</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b add_master" name="manager_user_id">
+                            @if(!empty($teacher))
+                                @foreach($teacher as $tch)
+                                    @if($tch->aboutUser)
+                                        <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">实验室性质</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category" class="form-control m-b" name="open_type">
+                            <option value="-1">点击选择</option>
+                            <option value="1">实验室</option>
+                            <option value="2">准备间</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                    <div class="col-sm-9">
+                        <select id="select_Category"   class="form-control m-b" name="status">
+                            <option value="-1">请选择状态</option>
+                            <option value="1">正常</option>
+                            <option value="0">停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2 right">
+                        <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>教学楼</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b local" name="building">
-                        <option value="-1">请选择教学楼</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b floor" name="floor">
-                        <option value="-1">请选择楼层</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>实验室名称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="name" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>简称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="short_name" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>英文全称</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="enname" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>英文缩写</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="short_enname" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>房号</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control name add-name" name="code" value="" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>容量</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control describe add-describe" name="total" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">管理员</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="manager_user_id">
-                        <option value="-1">点击选择</option>
-                        @if(!empty($teacher))
-                            @foreach($teacher as $tch)
-                                @if($tch->aboutUser)
-                                    <option value="{{$tch->aboutUser->id}}">{{$tch->aboutUser->name}}</option>
-                                @endif
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">实验室性质</label>
-                <div class="col-sm-9">
-                    <select id="select_Category" class="form-control m-b" name="open_type">
-                        <option value="-1">点击选择</option>
-                        <option value="1">实验室</option>
-                        <option value="2">准备间</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                <div class="col-sm-9">
-                    <select id="select_Category"   class="form-control m-b" name="status">
-                        <option value="-1">请选择状态</option>
-                        <option value="1">正常</option>
-                        <option value="0">停用</option>
-                    </select>
-                </div>
-            </div>
-            <div class="hr-line-dashed"></div>
-            <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
+
 @stop

@@ -17,6 +17,8 @@ use Modules\Msc\Entities\OpenPlan;
 use Modules\Msc\Entities\LadDevice;
 use Modules\Msc\Entities\Floor;
 use Illuminate\Support\Facades\Auth;
+use Modules\Msc\Entities\LabApply;
+use Modules\Msc\Entities\LabPlan;
 use DB;
 class LaboratoryCotroller extends MscWeChatController
 {
@@ -192,7 +194,6 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
-        dd($LaboratoryInfo);
         return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
@@ -247,39 +248,84 @@ class LaboratoryCotroller extends MscWeChatController
         $this->validate($Request,[
             'lab_id'   => 'required|integer',
             'open_plan_id'   => 'required',
-            'description'=>'required|max:512'
+            'description'=>'required|max:512',
+            'date_time' => 'required|date'
         ],[
             'lab_id.required'=>'实验室id必填',
             'lab_id.integer'=>'实验室id必须为数字',
             'open_plan_id.required'=>'日历id必填',
             'description.required'=>'预约日期必填',
-            'description.max'=>'预约原因最长不能超过512个字节'
+            'description.max'=>'预约原因最长不能超过512个字节',
+            'date_time.required'=>'预约日期必填',
+            'date_time.date'=>'预约日期必须为标准的日期格式'
         ]);
         $req = $Request->all();
         $user = Auth::user();
-        $insertArr = [];
+        $open_plan_id = $req['open_plan_id'];
+
         $data = [
             'lab_id'=>$req['lab_id'],
-            'type'=>($user->user_type == 1)?2:1,
+            'type'=>2,
             'description'=>$req['description'],
             'apply_user_id'=>$user->id,
-            'created_at'=>date('Y-m-d H:i:s',time()),
-            'updated_at'=>date('Y-m-d H:i:s',time()),
+            'apply_time'=>$req['date_time'],
+            'user_type'=>($user->user_type == 1)?2:1,
         ];
-        //TODO 拼凑插入数组
-        if(is_array($req['open_plan_id'])){
-            foreach($req['open_plan_id'] as $v){
-                $data['lab_plan_id'] = $v;
-                $insertArr [] = $data;
+
+        //TODO 新建数据库对象 准备事物操作
+        $MscMis = DB::connection('msc_mis');
+        $MscMis->beginTransaction();
+        $LabApply = new LabApply;
+        $rew = $LabApply->create($data);
+        if (!empty($rew->id)) {
+
+            $begin_endtime = '';
+            $OpenPlan = new OpenPlan;
+            //TODO 根据日历id 数组 查询日历表数据 (为插入计划表做准备)
+            $OpenPlanInfo = $OpenPlan->whereIn('id',$open_plan_id)->get();
+            if(!empty($OpenPlanInfo->toArray())){
+                foreach($OpenPlanInfo as $v){
+                    if(empty($begin_endtime)){
+                        $begin_endtime .= $v['begintime'].'-'.$v['endtime'];
+                    }else{
+                        $begin_endtime .= (','.$v['begintime'].'-'.$v['endtime']);
+                    }
+                }
             }
-        }
+            //TODO 构建计划表数据
+            $LabPlanData = [
+                'begin_endtime' => $begin_endtime,
+                'user_id' => $user->id,
+                'type' => 2,
+                'lab_id' => $rew->lab_id,
+                'plan_time' => $rew->apply_time,
+                'lab_apply_id' => $rew->id
+            ];
+            $LabPlan = new LabPlan;
+            $LabPlanInfo = $LabPlan->create($LabPlanData);
 
-        $return = DB::connection('msc_mis')->table('open_lab_apply')->insert($insertArr);
-
-        if($return){
-            dd('申请成功');
-        }else{
-            dd('申请失败');
+            //TODO 计划插入成功 之后生成预约和日历的中间表数据
+            if (!empty($LabPlanInfo->id)) {
+                $PlanApplyData = [];
+                foreach($open_plan_id as $v){
+                    $PlanApplyData [] = [
+                        'apply_id'=>$rew->id,
+                        'open_plan_id'=>$v,
+                        'created_at'=>date('Y-m-d H:i:s',time()),
+                        'updated_at'=>date('Y-m-d H:i:s',time())
+                    ];
+                }
+                if($MscMis->table('plan_apply')->insert($PlanApplyData)){
+                    $MscMis->commit();
+                    dd('添加成功');
+                }else{
+                    $MscMis->rollBack();
+                    dd('添加失败');
+                }
+            }else{
+                $MscMis->rollBack();
+                dd('添加失败');
+            }
         }
 
     }

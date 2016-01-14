@@ -16,7 +16,7 @@ class LabApply  extends Model
     protected $table 		= 	'lab_apply';
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
-    protected $fillable 	=	['lab_id', 'type','status','apply_user_id','description','apply_time','course_name'];
+    protected $fillable 	=	['lab_id', 'type','begintime','endtime','description','apply_user_id','course_name','apply_time','status','user_type'];
 
     /**
      * @param $where
@@ -75,7 +75,8 @@ class LabApply  extends Model
         })->with(['PlanApply'=>function($PlanApply){
             $PlanApply->with('OpenPlan');
         }]);
-        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code')
+        $data = $builder
+            ->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$open_planTable.'.year',$open_planTable.'.month',$open_planTable.'.day',$open_planTable.'.begintime',$open_planTable.'.endtime')
             ->orderby($lab_applyTable.'.apply_time')->paginate(config('msc.page_size',10));
         //dd($data);
         return $data;
@@ -110,7 +111,7 @@ class LabApply  extends Model
             $PlanApply->with('OpenPlan');
         }]);
 
-        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$labTable.'.total')
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$open_planTable.'.year',$open_planTable.'.month',$open_planTable.'.day',$open_planTable.'.begintime',$open_planTable.'.endtime')
             ->first();
         return $data;
 
@@ -137,7 +138,7 @@ class LabApply  extends Model
         $plan_applyTable = $plan_applyDb.'.plan_apply';
 
         if(!empty($arr)){
-            $builder = $this->where($userTable.'.name','like','%'.$keyword.'%');
+            $builder = $this->whereIn($plan_applyTable.'.id',$arr);
         }else{
             $builder = $this;
         }
@@ -149,8 +150,7 @@ class LabApply  extends Model
         })->with(['PlanApply'=>function($PlanApply){
             $PlanApply->with('OpenPlan');
         }]);
-        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code')
-            ->orderby($lab_applyTable.'.apply_time')->paginate(config('msc.page_size',10));
+        $data = $builder->select($userTable.'.name',$lab_applyTable.'.*',$labTable.'.name as labname',$labTable.'.floor',$labTable.'.code',$open_planTable.'.year',$open_planTable.'.month',$open_planTable.'.day',$open_planTable.'.begintime',$open_planTable.'.endtime',$open_planTable.'.apply_num')->get();
         //dd($data);
         return $data;
 

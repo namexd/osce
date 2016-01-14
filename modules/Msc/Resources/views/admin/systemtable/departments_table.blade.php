@@ -412,9 +412,9 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">职称描述</label>
+                            <label class="col-sm-3 control-label">描述</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control describe add-describe" name="describe" placeholder="请输入职称描述" />
+                                <input type="text" class="form-control describe add-describe" name="describe" placeholder="请输入描述" />
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
