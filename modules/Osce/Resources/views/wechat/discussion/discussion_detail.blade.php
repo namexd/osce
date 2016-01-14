@@ -62,6 +62,19 @@
             line-height: 30px;
             text-align: center;
         }
+        .jconfirm.white .jconfirm-box .buttons{
+            float: none;
+            margin-left: 28%;
+        }
+        .jconfirm.white .jconfirm-box .buttons .btn:last-child{
+            background: #fff;
+            border: 1px solid #ccc;
+            color: #333!important;
+        }
+        .btn.btn-default{
+            background: #42b2b1;
+            color: #fff!important;
+        }
     </style>
 @stop
 @section('only_head_js')
@@ -73,11 +86,34 @@
 
         $('.content-box').click(function(){
             $('.option').fadeOut();
-        })
+        });
 
         $('.history-list').click(function(){
             $('.option').fadeOut();
-        })
+        });
+
+        /**
+         * 删除操作
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-14
+         */
+        $('#del').click(function(){
+            $this = $(this);
+            $.confirm({
+                title: '提示!',
+                content: '是否删除？',
+                confirmButton: '确定',
+                cancelButton: '取消',
+                confirm: function(){
+                    location.href = $this.attr('url');
+                },
+                cancel: function(){
+                    $('.option').fadeOut();
+                }
+            });
+        });
+
 
       })
     </script>
@@ -88,8 +124,8 @@
 @section('content')
     <ul class="option">
         <li><a href="{{route('osce.wechat.postAddReply')}}">回复</a></li>
-        <li><a href="{{route('osce.wechat.postAddReply')}}">编辑</a></li>
-        <li><a href="{{route('osce.wechat.getDelQuestion')}}">删除</a></li>
+        <li><a href="#">编辑</a></li>
+        <li><a href="javascript:void(0)" url="{{route('osce.wechat.getDelQuestion')}}" id="del">删除</a></li>
     </ul>
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
