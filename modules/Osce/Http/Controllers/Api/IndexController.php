@@ -5,6 +5,7 @@ namespace Modules\Osce\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Watch;
@@ -19,7 +20,7 @@ class IndexController extends CommonController
     /**
      *检测腕表是否存在
      * @method GET 接口
-     * @url /api/1.0/private/osce/watch-status
+     * @url /api/1.0/private/osce/watch/watch-status
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -40,23 +41,20 @@ class IndexController extends CommonController
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select()->first()->id;
         if(!$id){
-            return response()->json(
-                $this->success_rows(3,'该腕表不存在')
-            );
+            return \Response::json(array('code'=>3));
         }else{
             $status=Watch::where('id',$id)->select()->first()->status;
             if($status==1){
+                $student_id=ExamScreeningStudent::where('watch_id',$id)->select()->orderBy('updated_at','desc')->first()->id;
+                $idcard=Student::where('id',$student_id)->select('idcard')->first()->idcard;
+                $data=array('idcard'=>$idcard);
                 return response()->json(
-                    $this->success_rows(1,'已绑定')
+                    $this->success_data($data,1,'已绑定腕表')
                 );
             }elseif($status==0){
-                return response()->json(
-                    $this->success_rows(0,'未绑定')
-                );
+                return \Response::json(array('code'=>0));
             }else{
-                return response()->json(
-                    $this->success_rows(2,'腕表损坏或者正在维修')
-                );
+                return \Response::json(array('code'=>2));
             }
         }
 
@@ -65,7 +63,7 @@ class IndexController extends CommonController
     /**
      *绑定腕表
      * @method GET 接口
-     * @url /api/1.0/private/osce/bound-watch
+     * @url /api/1.0/private/osce/watch/bound-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -81,38 +79,46 @@ class IndexController extends CommonController
      */
     public function getBoundWatch(Request $request){
         $this->validate($request,[
-            'id'      =>'required|integer',
-            'id_card' =>'required'
+            'code'      =>'required|integer',
+            'id_card' =>'required',
+            'exam_id' =>'required'
         ]);
-        $id=$request->get('id');
+        $code=$request->get('code');
         $id_card=$request->get('id_card');
-        $result=Watch::where('id',$id)->update(['status'=>1]);
-        if($result){
-            $action='绑定';
-            $student_id=ExamScreeningStudent::where('idcard',$id_card)->select()->first()->id;
-            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select()->orderBy('updated_at','DESC')->first()->updated_at;
-                $data=array(
-                    'watch_id'       =>$id,
-                    'action'         =>$action,
-                    'context'        =>array('time'=>$updated_at,'status'=>1),
-                    'student_id'     =>$student_id,
+        $exam_id=$request->get('exam_id');
+        $id=Watch::where('code',$code)->select('id')->first()->id;
+        $student_id=Student::where('idcard',$id_card)->select()->first()->id;
+        $screen_id=ExamScreening::where('exam_id',$exam_id)->select('id')->get();
+        $exam_screen_id=ExamScreeningStudent::whereIn('exam_screening_id',$screen_id)->where('student_id',$student_id)->select()->first()->id;
+        if($exam_screen_id) {
+            $result = ExamScreeningStudent::where('id', $exam_screen_id)->where('student_id', $student_id)->update(['watch_id' => $id]);
+
+            if (!$result) {
+                return \Response::json(array('code' => 2));
+            }
+            $result = Watch::where('id', $id)->update(['status' => 1]);
+            if ($result) {
+                $action = '绑定';
+                $updated_at = ExamScreeningStudent::where('watch_id', $id)->select()->orderBy('updated_at', 'DESC')->first()->updated_at;
+                $data = array(
+                    'watch_id' => $id,
+                    'action' => $action,
+                    'context' => array('time' => $updated_at, 'status' => 1),
+                    'student_id' => $student_id,
                 );
-                $watchModel=new WatchLog();
+                $watchModel = new WatchLog();
                 $watchModel->historyRecord($data);
-                return response()->json(
-                    $this->success_rows(1,'绑定成功')
-                );
-        }else{
-            return response()->json(
-                $this->success_rows(0,'绑定失败')
-            );
+                return \Response::json(array('code' => 1));
+            } else {
+                return \Response::json(array('code' => 0));
+            }
         }
     }
 
     /**
      *解除绑定腕表
      * @method GET 接口
-     * @url /api/1.0/private/osce/unwrap-watch
+     * @url /api/1.0/private/osce/watch/unwrap-watch
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -128,15 +134,15 @@ class IndexController extends CommonController
      */
     public function getUnwrapWatch(Request $request){
         $this->validate($request,[
-            'id' =>'required|integer'
+            'code' =>'required|integer'
         ]);
-        $id=$request->get('id');
-        $id_card=$request->get('id_card');
-        $student_id=ExamScreeningStudent::where('idcard',$id_card)->select()->first()->id;
-        $result=Watch::where('watch_id',$id)->update(['status'=>0]);
+        $code=$request->get('code');
+        $id=Watch::where('code',$code)->select('id')->first()->id;
+        $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->first()->student_id;
+        $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
-            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at','DESC')->first()->updated_at;
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,
                     'action'         =>$action,
@@ -145,20 +151,16 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->historyRecord($data);
-                return response()->json(
-                    $this->success_rows(1,'解绑成功')
-                );
+            return \Response::json(array('code'=>1));
         }else{
-            return response()->json(
-                $this->success_rows(0,'解绑失败')
-            );
+            return \Response::json(array('code'=>0));
         }
     }
 
     /**
      *检测学生状态
      * @method GET
-     * @url /api/1.0/private/osce/student-details
+     * @url /api/1.0/private/osce/watch/student-details
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -179,7 +181,7 @@ class IndexController extends CommonController
 
         $idCard=$request->get('id_card');
 
-        $student_id=Student::where('idcard',$idCard)->select('id')->first()->id;
+        $student_id=Student::where('idcard',$idCard)->select('id')->first();
 
         if(!$student_id){
            return response()->json(
@@ -187,11 +189,13 @@ class IndexController extends CommonController
            );
         }
 
-        $data=array('code'=>$student_id);
+        $data=array('code'=>$student_id->id);
 
-        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select()->first();
-        if(count($watch_id)>0){
-            $status=Watch::where('watch_id',$watch_id)->select('status')->first()->status;
+        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select('watch_id')->first();
+
+        if($watch_id){
+            $watch_id=$watch_id->watch_id;
+            $status=Watch::where('id',$watch_id)->select('status')->first()->status;
             if($status==1){
                 return response()->json(
                     $this->success_data($data,1,'已绑定腕表')
@@ -343,7 +347,7 @@ class IndexController extends CommonController
     /**
      *获取当日考试列表
      * @method GET
-     * @url /user/
+     * @url /api/1.0/private/osce/watch/exam-list
      * @access public
      *
      * @param Request $request post请求<br><br>

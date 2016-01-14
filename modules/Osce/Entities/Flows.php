@@ -69,11 +69,12 @@ class Flows extends CommonModel
                     if(!$result = $this->create($flowsData)){
                         throw new \Exception('考试流程添加失败！');
                     }
+                    $flowId = $result->id;
 
                     //考试流程关联表 数据
                     $examFlow = [
                         'exam_id'           =>  $exam_id,
-                        'flow_id'           =>  $result->id,
+                        'flow_id'           =>  $flowId,
                         'created_user_id'   =>  $user ->id
                     ];
                     if(!$result = ExamFlow::create($examFlow)){
@@ -84,7 +85,7 @@ class Flows extends CommonModel
                     $examFlowRoom = [
                         'serialnumber'      =>  $key,
                         'room_id'           =>  $room_id,
-                        'flow_id'           =>  $result->id,
+                        'flow_id'           =>  $flowId,
                         'created_user_id'   =>  $user ->id
                     ];
                     if(!$result = ExamFlowRoom::create($examFlowRoom)){
@@ -92,9 +93,21 @@ class Flows extends CommonModel
                     }
                 }
             }
+
             //保存  考站监考老师、sp老师安排数据
 
-            foreach ($stationData as $item) {
+            foreach ($stationData as $key => $item) {
+                $examFlowStationData = [
+                    'serialnumber' => $key,
+                    'station_id' => $item['id'],
+                    'flow_id' => $flowId,
+                    'created_user_id' => $user->id
+                ];
+                if (!ExamFlowStation::create($examFlowStationData)) {
+                    throw new \Exception('考试流程-考站关系添加失败！');
+                }
+
+
                 if (isset($item['spteacher_id'])) {
                     foreach ($item['spteacher_id'] as $value) {
                         //考站-老师关系表 数据

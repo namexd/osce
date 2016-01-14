@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <style>
 input.laydate-icon{
     border: 0;
@@ -93,5 +94,6 @@ input.laydate-icon{
 
 @section('only_js')
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
+<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 @stop

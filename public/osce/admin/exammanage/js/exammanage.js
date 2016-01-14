@@ -53,6 +53,31 @@ function exam_add(){
 	//时间选择
 	timePicker(pars.background_img);
 
+
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: '考试名称不能为空'
+                    }
+                }
+            },
+            code: {
+                validators: {
+                    notEmpty: {
+                        message: '考试地点不能为空'
+                    }
+                }
+            }
+        }
+    });
 	/**
      * 新增一条
      * @author  mao
@@ -118,6 +143,49 @@ function exam_add(){
 function add_basic(){
 	//时间选择
 	timePicker(pars.background_img);
+
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('.container-fluid.ibox-content').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: '考试名称不能为空'
+                    }
+                }
+            },
+            code: {
+                validators: {
+                    notEmpty: {
+                        message: '考试地点不能为空'
+                    }
+                }
+            },
+            sequence_cate: {
+                validators: {
+                    notEmpty: {
+                        message: '考试顺序不能为空'
+                    }
+                }
+            },
+            sequence_mode: {
+                validators: {
+                    notEmpty: {
+                        message: '排序方式不能为空'
+                    }
+                }
+            }
+        }
+    });
 
 	/**
      * 新增一条
@@ -1340,30 +1408,31 @@ function examinee_manage(){
     $("#file1").change(function(){
 
         var id=pars.id;
+        var url = pars.excel;
+        url += '/'+id;
         $.ajaxFileUpload
         ({
-            url:pars.excel,
+            url:url,
             type:'post',
-            secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
-            data:{
-                id:id,
-            },
             success: function (data, status)
             {
-                layer.alert('导入成功！');
-                data    =   data.replace('<pre>','').replace('</pre>','');
-                data    =   eval('('+data+')');
-                console.log(data.code);
+                //data    =   data.replace('<pre>','').replace('</pre>','');
+                //data    =   eval('('+data+')');
+                //console.log(data);
                 if(data.code == 1){
-                    //layer.alert('导入成功！');
+                    console.log(data.code);
+                    layer.alert('导入成功！');
                     location.reload();
                 }
+                //layer.alert('导入成功！');
+
+
             },
             error: function (data, status, e)
             {
-                console.log(data);
+                //console.log(data);
                 layer.alert('导入失败！');
             }
         });

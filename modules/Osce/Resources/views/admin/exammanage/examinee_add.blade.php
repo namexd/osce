@@ -45,7 +45,7 @@
                             }
                         }
                     },
-                    id_number: {
+                    idcard: {
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '身份证号不能为空'

@@ -142,12 +142,12 @@ class Student extends CommonModel
                 $student->idcard  = $examineeData['idcard'];
                 $student->mobile  = $examineeData['mobile'];
                 $student->code    = $examineeData['code'];
-                $student->avator  = $examineeData['avatar'];
+                //$student->avator  = $examineeData['avatar'];
                 if (!($student->save())) {
                     throw new \Exception('新增考生失败！');
                 }
             }else{
-                var_dump(11111);
+//                var_dump(11111);
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
                 $examineeData['avator'] = $examineeData['avator'];
