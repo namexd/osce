@@ -216,7 +216,7 @@ class MachineController extends CommonController
             'cate_id'   =>  'required|integer'
         ]);
 
-        $cate_id    =   $request    ->  get('cate_id');
+        $cate_id    =   intval($request    ->  get('cate_id'));
         try{
             switch($cate_id)
             {

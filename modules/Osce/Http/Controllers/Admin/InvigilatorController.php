@@ -156,6 +156,9 @@ class InvigilatorController extends CommonController
             'moblie.required'   =>  '监考教师手机必填'
         ]);
         $user   =   Auth::user();
+        if(empty($user)){
+            throw new \Exception('未找到当前操作人信息');
+        }
         $data   =   [
             'name'              =>  e($request->get('name')),
             'type'              =>  intval($request->get('type')),
@@ -163,24 +166,18 @@ class InvigilatorController extends CommonController
             'code'              =>  e($request->get('code')),
             'case_id'           =>  intval($request->get('case_id')),
             'status'            =>  1,
-            'create_user_id'    => $user->id
+            'create_user_id'    =>  $user->id
         ];
 
         $Invigilator    =   new Teacher();
-        try
-        {
-            if($Invigilator    ->  addInvigilator($data))
-            {
+        try{
+            if($Invigilator    ->  addInvigilator($data)){
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex){
+            return response()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -221,9 +218,11 @@ class InvigilatorController extends CommonController
             'mobile.required'   =>  '监考教师手机必填',
             'case_id.required'  =>  '监考教师病例必填'
         ]);
-        try
-        {
+        try{
             $user   =   Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
             $data   =   [
                 'name'              =>  e($request->get('name')),
                 'type'              =>  intval($request->get('type')),
@@ -231,22 +230,17 @@ class InvigilatorController extends CommonController
                 'code'              =>  e($request->get('code')),
                 'case_id'           =>  intval($request->get('case_id')),
                 'status'            =>  1,
-                'create_user_id'    => $user->id
+                'create_user_id'    =>  $user->id
             ];
 
             $Invigilator    =   new Teacher();
-            if($Invigilator    ->  addInvigilator($data))
-            {
+            if($Invigilator ->  addInvigilator($data)){
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex){
+            return response()->back()->withErrors($ex->getMessage());
         }
     }
 

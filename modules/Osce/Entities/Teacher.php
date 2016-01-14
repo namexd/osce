@@ -221,40 +221,38 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addInvigilator($data){
-        $mobile =   $data['mobile'];
-        $user   =   User::where('username','=',$mobile)->first();
+    public function addInvigilator($data)
+    {
+        try{
+            $mobile =   $data['mobile'];
+            $user   =   User::where('username', '=', $mobile)->first();
 
-        if(!$user)
-        {
-            $password   =   Common::getRandStr(6);
-            $user       =   $this   ->  registerUser($data,$password);
-            $this       ->  sendRegisterEms($mobile,$password);
-        }
-        $teacher    =   $this   ->  find($user  ->  id);
-        if($teacher)
-        {
-            //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
-            $teacher->name = $data['name'];
-            $teacher = $teacher->save();
-            if (!$teacher) {
-                throw new \Exception('保存老师名字失败，请重试！');
-            } else {
-                return $teacher;
+            if(!$user){
+                $password   =   Common::getRandStr(6);
+                $user       =   $this   ->  registerUser($data,$password);
+                $this       ->  sendRegisterEms($mobile,$password);
             }
+            $teacher    =   $this   ->  find($user  ->  id);
+            if($teacher){
+                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
+                $teacher->name = $data['name'];
+                $teacher = $teacher->save();
+                if (!$teacher) {
+                    throw new \Exception('保存老师名字失败，请重试！');
+                } else {
+                    return $teacher;
+                }
 //            throw new \Exception('该教职员工已经存在');
-        }
-        else
-        {
-            $data['id'] =   $user    ->  id;
-            if($teacher =   $this   ->  create($data))
-            {
-                return $teacher;
+            } else{
+                $data['id'] =   $user   ->  id;
+                if($teacher =   $this   ->  create($data)){
+                    return $teacher;
+                } else{
+                    throw new \Exception('教职员工创建失败');
+                }
             }
-            else
-            {
-                throw new \Exception('教职员工创建失败');
-            }
+        } catch(\Exception $ex){
+            return response()->back()->withErrors($ex->getMessage());
         }
     }
 
