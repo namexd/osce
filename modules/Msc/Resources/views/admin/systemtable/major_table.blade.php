@@ -17,7 +17,7 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('msc/admin/js/ajaxupload.js')}}"></script>
     <script src="{{asset('msc/admin/systemtable/systemtable.js')}}"></script>
     <script>
         $(function(){
@@ -68,7 +68,9 @@
                         success: function (data, status){
                             if(data.status = true){
                                 layer.msg("导入成功，有"+data.dataHavenInfo.count+"条已有数据未被导入", {icon: 1,time: 4000});
-                                window.location.href = window.location.href;
+                                setTimeout(function(){
+                                    window.location.href = window.location.href;
+                                },3500)
                             }else{
                                 layer.msg("导入失败", {icon: 1,time: 1000});
                             }
