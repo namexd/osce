@@ -41,6 +41,10 @@
         border-radius: 5px;
         cursor: pointer;
     }
+    .teacher-list{
+        height: 34px!important;
+        width: 120px!important;
+    }
     .teacher>div{
         margin-right: 5px;
 
@@ -89,9 +93,8 @@
                     <ul class="nav nav-tabs">
                         <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
                         <li class="active"><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
-                        <li class=""><a href="{{route('osce.admin.spteacher.getShow',['id'=>$id])}}">邀请SP</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
-                        <li class=""><a href="#">智能排考</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
                     </ul>
                 </div>
             </div>
@@ -127,15 +130,18 @@
                                         </thead>
                                         <tbody index="{{count($examRoomData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
+
                                         @forelse($examRoomData as $item)
+
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
+
                                                     <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
-                                                        @forelse($item as $value)
-                                                            <option value="{{$value->id}}" selected="selected">{{$value->name}}</option>
-                                                        @empty
-                                                        @endforelse
+                                                        @foreach($item as $value)
+
+                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>

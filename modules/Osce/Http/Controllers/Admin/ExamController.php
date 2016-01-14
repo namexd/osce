@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use App\Entities\User;
+use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 
@@ -30,6 +31,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
+use DB;
 
 class ExamController extends CommonController
 {
@@ -628,13 +630,12 @@ class ExamController extends CommonController
      * @api GET /osce/admin/exam/getExamroomAssignment
      * * string        参数英文名        参数中文名(必须的)
      *
+     * @param Request $request
      * @return object
-     *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getExamroomAssignment(Request $request)
     {
@@ -644,7 +645,7 @@ class ExamController extends CommonController
         $exam_id = $request -> get('id');
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
-        $examRoomData = $examRoom -> getRoomListByExam($exam_id);
+        $examRoomData = $examRoom -> getExamRoomData($exam_id);
 
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
@@ -672,12 +673,12 @@ class ExamController extends CommonController
     public function postExamroomAssignmen(Request $request)
     {
         try{
+            DB::beginTransaction();
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
-
-
+//            dd($request->all());
 //            $flows = new Flows();
 //            if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)) {
 //                throw new \Exception('考场安排保存失败，请重试！');
@@ -689,18 +690,21 @@ class ExamController extends CommonController
             $flows = new Flows();
             if(count($examRoomData) != 0){
                 if(!$flows -> editExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
 
             }else{
                 if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
             }
+            DB::commit();
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
 
     }
@@ -1006,6 +1010,69 @@ class ExamController extends CommonController
             throw new \Exception('没有找到该考试');
         }
         $ExamPlanModel   =   new ExamPlan();
-        $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+        $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+        $user   =   Auth::user();
+        Cache::forget('plan_'.$exam->id.'_'.$user->id);
+        $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
+            return $plan;
+        });
+        return response()->json(
+            $this->success_data($plan)
+        );
+    }
+
+    /**
+     * 智能排考着陆页
+     * @url GET /osce/admin/exam/intelligence
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        id        考试ID(必须的)
+     *
+     * @return View {'id':$exam->id}
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getIntelligence(Request $request){
+        $this->validate($request,[
+            'id'    =>  'required|integer'
+        ]);
+
+        $id         =   $request    ->  get('id');
+
+        $exam       =   Exam::find($id);
+        if(is_null($exam))
+        {
+            throw new \Exception('没有找到该考试');
+        }
+
+        return view('',['exam'=>$exam]);
+    }
+
+    /**
+     * 保存当前智能排考方案
+     * @url POST /osce/admin/exam/intelligence
+     * @access public
+     *
+     * <b>get请求字段：</b>
+     * * string        id        考试ID(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postIntelligence(Request $request){
+        $this->validate($request,[
+            'id'    =>  'required|integer'
+        ]);
     }
 }
