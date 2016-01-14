@@ -10,6 +10,8 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\StationVcr;
@@ -20,15 +22,12 @@ class PadController extends  CommonController{
     /**
      *根据场所ID获取摄像机列表
      * @method GET
-     * @url /user/
+     * @url api/1.0/private/osce/pad/room-vcr
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        id        场所ID
      *
      * @return ${response}
      *
@@ -52,15 +51,12 @@ class PadController extends  CommonController{
     /**
      *根据摄像机ID 获取摄像机设置信息
      * @method GET
-     * @url /user/
+     * @url api/1.0/private/osce/pad/vcr
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        id        摄像机ID(必须的)
      *
      * @return ${response}
      *
@@ -75,7 +71,7 @@ class PadController extends  CommonController{
            ]);
 
            $id=$request->get('id');
-           $data=Vcr::where('id',$id)->select();
+           $data=Vcr::find($id);
            return response()->json(
                $this->success_data($data,1,'success')
            );
@@ -84,15 +80,13 @@ class PadController extends  CommonController{
     /**
      *根据考场ID和考试ID获取考场和考站的摄像头列表
      * @method GET
-     * @url /user/
+     * @url api/1.0/private/osce/pad/student-vcr
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        room_id        考场ID(必须的)
+     * * int        exam_id           考试ID(必须的)
      *
      * @return ${response}
      *
@@ -103,16 +97,17 @@ class PadController extends  CommonController{
      */
        public function getStudentVcr(Request $request){
              $this->validate($request,[
-                'station_id' => 'required|integer',
-                'room_id'    => 'required|integer'
+                'room_id' => 'required|integer',
+                'exam_id'    => 'required|integer'
              ]);
-             $stationId=$request->get('station_id');
              $room_id=$request->get('room_id');
-             $stationVcrs=StationVcr::where('station_id',$stationId)->select()->get();
-             $rooms=RoomVcr::where('room_id',$room_id)->select()->get();
+             $exam_id=$request->get('exam_id');
+//             $examVcrs=RoomVcr::where('room_id',$room_id)->select()->get();
+             $examModel=new ExamRoom();
+             $stationVcrs=$examModel->getStionVcr($exam_id,$room_id);
              $data=array(
+//                 'exam_vcr'  =>$examVcrs,
                  'station_vcr'  =>$stationVcrs,
-                 'room_vcr'  =>$rooms,
              );
              return response()->json(
                  $this->success_data($data,1,'success')
@@ -120,9 +115,9 @@ class PadController extends  CommonController{
        }
 
     /**
-     *
+     *根据时间段和摄像机ID 获取标记点列表
      * @method GET
-     * @url /user/
+     * @url api/1.0/private/osce/pad/timing-vcr
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -147,7 +142,7 @@ class PadController extends  CommonController{
             $vcr_id=$request->get('vcr_id');
             $time=$request->get('time');
            try{
-               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time','<',$time)->select()->get();
+               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time',$time)->select()->get();
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );

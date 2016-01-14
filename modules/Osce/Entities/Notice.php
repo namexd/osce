@@ -18,16 +18,13 @@ use DB;
 class Notice extends CommonModel
 {
     protected $connection	=	'osce_mis';
-    protected $table 		= 	'notice';
+    protected $table 		= 	'inform_info';
     public $incrementing	=	true;
     public $timestamps	    =	true;
     protected $fillable 	=	['title','content','create_user_id','exam_id'];
 
     public function exam(){
         return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
-    }
-    public function receivers(){
-        return $this->hasManyThrough('App\Entities\User','Modules\Osce\Entities\NoticeTo','id','notice_id','id');
     }
     public function addNotice(array $data,array $to){
         $connection     =   DB::connection($this->connection);

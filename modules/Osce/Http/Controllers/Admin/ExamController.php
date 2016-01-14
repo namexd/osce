@@ -1080,4 +1080,59 @@ class ExamController extends CommonController
             $this->success_data($plan)
         );
     }
+
+    /**
+     * 智能排考着陆页
+     * @url GET /osce/admin/exam/intelligence
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        id        考试ID(必须的)
+     *
+     * @return View {'id':$exam->id}
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getIntelligence(Request $request){
+        $this->validate($request,[
+            'id'    =>  'required|integer'
+        ]);
+
+        $id         =   $request    ->  get('id');
+
+        $exam       =   Exam::find($id);
+        if(is_null($exam))
+        {
+            throw new \Exception('没有找到该考试');
+        }
+
+        return view('',['exam'=>$exam]);
+    }
+
+    /**
+     * 保存当前智能排考方案
+     * @url POST /osce/admin/exam/intelligence
+     * @access public
+     *
+     * <b>get请求字段：</b>
+     * * string        id        考试ID(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postIntelligence(Request $request){
+        $this->validate($request,[
+            'id'    =>  'required|integer'
+        ]);
+    }
 }
