@@ -22,6 +22,6 @@ class Discussion extends CommonModel{
     }
 
     public function getDiscussionPagination(){
-        return $this->paginate(config('msc.page_size'));
+        return $this->where('pid',0)->paginate(config('msc.page_size'));
     }
 }

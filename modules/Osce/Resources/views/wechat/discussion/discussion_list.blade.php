@@ -27,6 +27,7 @@
     <ul id="discussion_ul">
 		@foreach($list as $list)
         <li>
+			<input type="hidden" value="{{ $list['id'] }}" name="id">
         	<a class="nou" href="#">
         		<p class="font14 fontb clo3 p_title">{{  $list['title']  }}</p>
         		<p class="font12 clo9 main_txt">{{  $list['content']  }}</p>
@@ -40,4 +41,16 @@
         </li>
 		@endforeach
     </ul>
+	<div class="row">
+		<div class="pull-left">
+			共{{$pagination->total()}}条
+		</div>
+		<div class="pull-right">
+			<nav>
+				<ul class="pagination">
+					{!! $pagination->render() !!}
+				</ul>
+			</nav>
+		</div>
+	</div>
 @stop
