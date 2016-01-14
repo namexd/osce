@@ -66,7 +66,7 @@
             line-height: 30px;
             text-align: center;
         }
-        .btn2{background: #42b2b1}
+        .btn2{background: #1ab394}
     </style>
 @stop
 @section('only_head_js')
