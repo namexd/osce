@@ -256,12 +256,12 @@
                     cache: false,
                     data:qj,
                     success: function (result) {
-                        if(result.message=="更新成功"){
+                        if(result.code==1){
                             $("#"+thisid+" b").text(name);
                             $("#"+thisid).children(".description").val(describe);
                             layer.msg(result.message, {icon: 1,time: 1000});
                         } else{
-                            layer.msg(result.message, {icon: 1,time: 1000});
+                            layer.msg(result.message, {icon: 2,time: 1000});
                         }
                     }
                 })
@@ -286,7 +286,7 @@
                         cache: false,
                         data:qj,
                         success: function (result) {
-                            if(result.message=="删除成功"){
+                            if(result.code==1){
                                 $(result.data.rows).each(function(){
                                     $("#"+this).remove();
                                     $("#add_department input").val("");
@@ -327,7 +327,7 @@
                         cache: false,
                         data:qj,
                         success: function (result) {
-                            if(result.message=="添加成功"){
+                            if(result.code==1){
                                 $(".treeview ul").append(
                                         '<li class="list-group-item parent" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
                                         + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
