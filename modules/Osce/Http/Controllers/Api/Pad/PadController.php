@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
@@ -154,5 +155,17 @@ class PadController extends  CommonController{
                );
            }
 
+       }
+
+
+       public function getWriteStudent(Request $request){
+           $this->validate($request,[]);
+
+           $time=time();
+           $examQueue=new ExamQueue();
+           $students=$examQueue->getStudent($time);
+           return response()->json(
+               $this->success_data($students,1,'success')
+           );
        }
 }
