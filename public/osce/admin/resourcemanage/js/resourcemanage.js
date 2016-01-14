@@ -9,6 +9,7 @@ $(function(){
         case "examroom":examroom();break;
         case "clinicalcase":clinicalcase();break;
         case "categories":categories();break;
+        case "invigilator":invigilator();break;
     }
 });
 
@@ -66,19 +67,29 @@ function examroom(){
  * @param   {string}   url 请求地址
  */
 function deleteItem(url){
-    console.debug(url);
+
 	$('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
+        console.log(thisElement.parent().parent().parent().attr('value'));
         layer.alert('确认删除？',function(){
             $.ajax({
                 type:'post',
                 async:true,
                 url:url,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(res){
-                    location.reload();
+                success:function(data){
+                    if(data.code==1){
+                        location.reload();
+                    }else{
+                        layer.alert(data.message);
+                    }
+
+                },
+                error:function(){
+                    console.log("错误")
                 }
+
             })
         });
     })
@@ -414,4 +425,23 @@ function categories(){
         }) ;
 
 
+}
+
+function invigilator(){
+    $(".delete").click(function(){
+
+        var thisElement=$(this);
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'get',
+                async:false,
+                url:pars.deletes,
+                data:{id:thisElement.attr('value')},
+                success:function(data){
+                    
+                    location.reload();
+                }
+            })
+        });
+    })
 }

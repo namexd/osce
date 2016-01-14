@@ -68,13 +68,18 @@ class TopicController extends CommonController
     public function postAddTopic(Request $request){
         $this   ->  validate($request,[
             'title'         =>  'required',
+            'content'       =>  'required',
+            'score'         =>  'required',
             'description'   =>  'sometimes',
         ],[
             'title.required'    =>  '评分标准名称必须',
+            'content.required'  =>  '评分标准必须',
+            'score.required'    =>  '评分必须',
         ]);
 
         $content = $request->get('content');
         $score   = $request->get('score');
+
         $formData = SubjectItem::builderItemData($content, $score);
         $data   =   [
             'title'         =>  e($request  ->  get('title')),

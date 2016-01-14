@@ -13,8 +13,10 @@
     </style>
 @stop
 @section('only_js')
+    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 @stop
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'invigilator','deletes':'{{route('osce.admin.invigilator.getDelInvitation')}}'}" />
     <div class="ibox-title header">
         <div class="pull-left">
             <h3>人员管理</h3>
@@ -47,7 +49,7 @@
                     <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                     <td>
                         <a href="{{route('osce.admin.invigilator.postEditInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
                     </td>
                 </tr>
                 @empty
