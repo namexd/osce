@@ -9,6 +9,7 @@ $(function(){
         case "examroom":examroom();break;
         case "clinicalcase":clinicalcase();break;
         case "categories":categories();break;
+        case "invigilator":invigilator();break;
     }
 });
 
@@ -79,7 +80,11 @@ function deleteItem(url){
                 data:{id:thisElement.parent().parent().parent().attr('value')},
                 success:function(res){
                     location.reload();
+                },
+                error:function(){
+                    console.log("错误")
                 }
+
             })
         });
     })
@@ -415,4 +420,23 @@ function categories(){
         }) ;
 
 
+}
+
+function invigilator(){
+    $(".delete").click(function(){
+        
+        var thisElement=$(this);
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'get',
+                async:true,
+                url:pars.deletes,
+                data:{id:thisElement.attr('value')},
+                success:function(data){
+                    //location.reload();
+                    console.log(data);
+                }
+            })
+        });
+    })
 }

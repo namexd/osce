@@ -70,8 +70,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
-                                <button class="btn btn-white" type="submit">取消</button>
-
+                                <a href="{{route('osce.admin.case.getCaseList')}}" class="btn btn-white">取消</a>
                             </div>
                         </div>
 
