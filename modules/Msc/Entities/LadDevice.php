@@ -34,12 +34,31 @@ class LadDevice extends Model
         return $this->hasOne('Modules\Msc\Entities\Devices','id','device_id');
     }
 
+    /**
+     * @param $lab_id
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月13日18:30:58
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function GetLadDevice($lab_id){
+        return $this->where('lab_id','=',$lab_id)->with(['DeviceInfo'=>function($DeviceInfo){
+            $DeviceInfo->with('devicesCateInfo');
+        }])->paginate(config('msc.page_size',10));
+    }
+
+    /**
+     * @param $lab_id
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月13日18:30:58
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetLadDeviceAll($lab_id){
         return $this->where('lab_id','=',$lab_id)->with(['DeviceInfo'=>function($DeviceInfo){
             $DeviceInfo->with('devicesCateInfo');
         }])->get();
     }
-
     /**
      * @param $lab_id
      * @return mixed

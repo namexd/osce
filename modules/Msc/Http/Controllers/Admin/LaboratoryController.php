@@ -87,9 +87,6 @@ class LaboratoryController extends MscController {
     public function getAddLabInsert(Request $Request){
         $this->validate($Request, [
             'name'      => 'required',
-            'short_name'       => 'required',
-            'enname'        => 'required',
-            'short_enname' => 'required',
             'open_type' =>'required',
             'manager_user_id' => 'required|integer',
             'status' => 'required',

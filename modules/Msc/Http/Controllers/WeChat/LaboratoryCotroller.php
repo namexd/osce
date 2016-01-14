@@ -148,7 +148,7 @@ class LaboratoryCotroller extends MscWeChatController
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
-            'LadDeviceList'=>$LadDevice->GetLadDevice($id)
+            'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
         dd($data);
     }
@@ -188,11 +188,11 @@ class LaboratoryCotroller extends MscWeChatController
             }
         }
         $data = [
-            'user_type'=>$user->type,
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
-            'LadDeviceList'=>$LadDevice->GetLadDevice($id)
+            'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
+        dd($LaboratoryInfo);
         return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
@@ -208,6 +208,7 @@ class LaboratoryCotroller extends MscWeChatController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function OpenLaboratoryForm(Request $Request){
+
         $this->validate($Request,[
             'lab_id'   => 'required|integer',
             'open_plan_id'   => 'required',
@@ -228,10 +229,9 @@ class LaboratoryCotroller extends MscWeChatController
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryOpenPlanData'=>$LaboratoryOpenPlanData,
-            'LadDeviceList'=>$LadDevice->GetLadDevice($LabId)
+            'LadDeviceList'=>$LadDevice->GetLadDeviceAll($LabId)
         ];
-        dd($data);
-        //return  view();
+        //return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
     /**
