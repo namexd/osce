@@ -132,8 +132,7 @@
                         floor: {
                             message: 'The floor is not valid',
                             validators: {
-                                regexp: {
-                                    regexp: /^(?!-1).*$/,
+                                notEmpty: {/*非空提示*/
                                     message: '楼层不能为空'
                                 }
                             }
