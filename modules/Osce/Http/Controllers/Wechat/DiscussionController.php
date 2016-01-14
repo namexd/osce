@@ -42,8 +42,43 @@ class DiscussionController extends  CommonController{
 
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
-          $list=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
-          return view('osce::wechat.discussion.discussion_quiz')->with(['list'=>$list,'pagination'=>$pagination]);
+          $row=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
+          $list=[];
+          foreach($row as $item){
+              $countReply=Discussion::where('pid',$item->id)->count();
+              $time=time()-strtotime($item->created_at);
+              if ($time < 0) {
+                 $time = $time;
+              } else {
+                  if ($time < 60) {
+                      $time= $time . '秒前';
+                  } else {
+                      if ($time < 3600) {
+                          $time=  floor($time / 60) . '分钟前';
+                      } else {
+                          if ($time < 86400) {
+                              $time= floor($time / 3600) . '小时前';
+                          } else {
+                              if ($time < 259200) {//3天内
+                                  $time= floor($time / 86400) . '天前';
+                              } else {
+                                  $time =  $time;
+                              }
+                          }
+                      }
+                  }
+              }
+              $list[]=[
+                'id' =>$item->id,
+                'title' =>$item->title,
+                'content' =>$item->content,
+                'create_at' =>$item->created_at,
+                'name'   =>$item->getAuthor,
+                'time' =>$time,
+                'count' =>$countReply,
+            ];
+          }
+          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
       }
 
     /**
@@ -144,6 +179,7 @@ class DiscussionController extends  CommonController{
 //          }
           $data=$request->only(['title','content']);
           $data['user_id']=$userId;
+          $data['pdi']=0;
           $discussionModel= new Discussion();
           $result=$discussionModel->save($data);
           if($result){

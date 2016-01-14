@@ -25,41 +25,19 @@
         <a class="right header_btn nou clof header_a" href="#">提问</a>
     </div>
     <ul id="discussion_ul">
+		@foreach($list as $list)
         <li>
         	<a class="nou" href="#">
-        		<p class="font14 fontb clo3 p_title">关于麻醉学基础知识中,麻醉的几个不能使用的场合</p>
-        		<p class="font12 clo9 main_txt">关于麻醉学基础知识中,麻醉的几个不能使用的场合,听了不太明白，能否解释一下？</p>
+        		<p class="font14 fontb clo3 p_title">{{  $list['title']  }}</p>
+        		<p class="font12 clo9 main_txt">{{  $list['content']  }}</p>
         		<p class="font12 p_bottom">
-        			<span class="student_name">王同学</span>
+        			<span class="student_name">{{ $list['name']  }}</span>
         			<span class="clo0">·</span>
-        			<span class="clo9">3分钟前</span>
-        			<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;99+</span>
+        			<span class="clo9">{{ $list['time']  }}</span>
+        			<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;{{ $list['count']  }}</span>
         		</p>
         	</a>
         </li>
-        <li>
-        	<a class="nou" href="#">
-        		<p class="font14 fontb clo3 p_title">关于麻醉学基础知识中,麻醉的几个不能使用的场合</p>
-        		<p class="font12 clo9 main_txt">关于麻醉学基础知识中,麻醉的几个不能使用的场合,听了不太明白，能否解释一下？</p>
-        		<p class="font12 p_bottom">
-        			<span class="student_name">王同学</span>
-        			<span class="clo0">·</span>
-        			<span class="clo9">3分钟前</span>
-        			<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;55</span>
-        		</p>
-        	</a>
-        </li>
-        <li>
-        	<a class="nou" href="#">
-        		<p class="font14 fontb clo3 p_title">关于麻醉学基础知识中,麻醉的几个不能使用的场合</p>
-        		<p class="font12 clo9 main_txt">关于麻醉学基础知识中,麻醉的几个不能使用的场合,听了不太明白，能否解释一下？</p>
-        		<p class="font12 p_bottom">
-        			<span class="student_name">王同学</span>
-        			<span class="clo0">·</span>
-        			<span class="clo9">3分钟前</span>
-        			<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;99+</span>
-        		</p>
-        	</a>
-        </li>
+		@endforeach
     </ul>
 @stop

@@ -432,4 +432,107 @@ class IndexController extends CommonController
         );
 
     }
+
+
+    /**
+     *查询腕表数据
+     * @method GET
+     * @url   /api/1.0/private/osce/watch/list
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchList(Request $request){
+        $this  ->validate($request,[
+            'code'  =>  'sometimes|integer'
+        ]);
+
+        $code=intval($request->get('code'));
+
+        if($code){
+            $list=Watch::where('code','like','%'.$code.'%');
+        }else{
+            $list=Watch::select()->get();
+        }
+
+        $data=[];
+        foreach($list as $item){
+            $data[]=[ 'id'      =>$item->id,
+                'status'  =>$item->status,
+                'name'    =>$item->name,
+                'code'    =>$item->code,
+            ];
+
+        }
+        $row=[];
+        foreach($data as $itm){
+            if($itm['status']==1){
+                $studentId=ExamScreeningStudent::where('id',$itm['id'])->select('student_id')->first();
+                if(!$studentId){
+                    $row[]=[
+                        'id'             =>$itm['id'],
+                        'status'         =>$itm['status'],
+                        'name'           =>$itm['name'],
+                        'code'           =>$itm['name'],
+                        'studentId'      =>$studentId->student_id,
+                    ];
+                }else{
+                    $row[]=[
+                        'id'             =>$itm['id'],
+                        'status'         =>$itm['status'],
+                        'name'           =>$itm['name'],
+                        'code'           =>$itm['code'],
+                        'studentId'      =>$studentId->student_id,
+                    ];
+                }
+
+            }else{
+                $row[]=[
+                    'id'         =>$itm['id'],
+                    'status'     =>$itm['status'],
+                    'name'       =>$itm['name'],
+                    'code'       =>$itm['code'],
+                    'studentId'  =>'',
+                ];
+            }
+        }
+        $list=[];
+
+        foreach($row as $v){
+            if($v['studentId']) {
+                $studentName = Student::where('id', $v['studentId'])->select('name')->first()->name;
+                $list[]=[
+                    'id'             =>$v['id'],
+                    'status'         =>$v['status'],
+                    'name'           =>$v['name'],
+                    'code'           =>$v['code'],
+                    'studentName'    =>$studentName,
+                ];
+            }else{
+                $list[]=[
+                    'id'             =>$v['id'],
+                    'status'         =>$v['status'],
+                    'name'           =>$v['name'],
+                    'code'           =>$v['code']
+                ];
+            }
+
+        }
+        return response()->json(
+            $this->success_data($list,1,'success')
+        );
+    }
+
 }
