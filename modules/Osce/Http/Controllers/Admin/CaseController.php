@@ -174,10 +174,10 @@ class CaseController extends CommonController
             //将id传入删除的方法
             $result = $caseModel->deleteData($id);
             if ($result) {
-                return redirect()->json($this->success_data(['删除成功！']));
+                return $this->success_data(['删除成功！']);
             }
         } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 }
