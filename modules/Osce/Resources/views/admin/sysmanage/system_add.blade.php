@@ -19,66 +19,72 @@
 @section('content')
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
-        <li><a href="#">资源管理</a></li>
-        <li class="route-active">场所管理</li>
+        <li><a href="#">系统设置</a></li>
+        <li class="route-active">添加场所类别</li>
     </ol>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">场所管理</h5>
+                <h5 class="title-label">添加场所类别</h5>
             </div>
-            <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-            </div>
+
         </div>
-    <form class="container-fluid ibox-content" id="list_form">
-        <div class="panel blank-panel">
-            <div class="panel-heading">
-                <div class="panel-options">
-                    <ul class="nav nav-tabs">
-                        <li><a href="#">考场</a></li>
-                        <li class="active"><a href="#">中控室</a></li>
-                        <li class=""><a href="#">走廊</a></li>
-                        <li class=""><a href="#">候考室</a></li>
-                    </ul>
+    <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.config.postAreaStore')}}" method="post">
+
+
+        <div class="col-md-9 col-sm-9">
+            <div class="hr-line-dashed"></div>
+            <div class="hr-line-dashed"></div>
+
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">场所类别:</label>
+                <div class="col-sm-10">
+                    <input type="text"  id="name" name="name" class="form-control">
                 </div>
             </div>
-            
-            <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
-                </span>
+            <div class="hr-line-dashed"></div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">描述:</label>
+
+                <div class="col-sm-10">
+                    <input type="text"  id="description" name="description" class="form-control">
+                </div>
             </div>
 
-            <table class="table table-striped" id="table-striped">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>场所名称</th>
-                    <th>描述</th>
-                    <th>操作</th>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">类别:</label>
 
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>反对撒法</td>
-                        <td>fgs</td>
-                        <td>
-                            <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                <div class="col-sm-10">
+                    <input type="text"  id="cate" name="cate" class="form-control">
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">代码:</label>
+
+                <div class="col-sm-10">
+                    <input type="text"  id="code" name="code" class="form-control">
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存</button>
+                    <button class="btn btn-white return-pre" type="button">取消</button>
+                </div>
+            </div>
+        </div>
+
 
             <div class="btn-group pull-right">
                
             </div>
-        </div>
     </form>
 </div>
 @stop{{-- 内容主体区域 --}}

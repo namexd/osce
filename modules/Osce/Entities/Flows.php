@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Entities;
 
+use Modules\Msc\Entities\Teacher;
 use Modules\Osce\Entities\CommonModel;
 //use Overtrue\Wechat\Auth;
 use Auth;
@@ -95,7 +96,7 @@ class Flows extends CommonModel
             }
 
             //保存  考站监考老师、sp老师安排数据
-
+//            dd($stationData->all());
             foreach ($stationData as $key => $item) {
                 $examFlowStationData = [
                     'serialnumber' => $key,
@@ -113,12 +114,13 @@ class Flows extends CommonModel
                         //考站-老师关系表 数据
                         $stationTeacher = [
                             'station_id'        =>  $item['id'],
-                            'user_id'           =>  empty($item['teacher_id'])? $value : $item['teacher_id'],
+                            'user_id'           =>  empty($item['teacher_id']) ? $value : $item['teacher_id'],
                             'case_id'           =>  StationCase::where('station_id', $item['id'])->first()->case_id,
+                            'exam_id'           =>  $exam_id,
                             'created_user_id'   =>  $user ->id,
-                            'type'              =>  empty($item['teacher_id'])? 2:1
+                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
                         ];
-                        if(!$result = StationTeacher::create($stationTeacher)){
+                        if(!$StationTeachers = StationTeacher::create($stationTeacher)){
                             throw new \Exception('考站-老师关系添加失败！');
                         }
                     }
@@ -148,18 +150,65 @@ class Flows extends CommonModel
                     }
                 }
             }
-            $examFlow = ExamFlow::where('exam_id', $exam_id)->get();
-            if(count($examFlow) !=0){
-                foreach ($examFlow as  $item) {
-                    if(!$result = ExamFlowRoom::where('flow_id', $item->flow_id)->delete()){
-                        throw new \Exception('考试流程-房间关系删除失败！');
+//            $examFlow = ExamFlow::where('exam_id', $exam_id)->get();
+//            if(count($examFlow) !=0){
+//                foreach ($examFlow as  $item) {
+//                    if(!$result = ExamFlowRoom::where('flow_id', $item->flow_id)->delete()){
+//                        throw new \Exception('考试流程-房间关系删除失败！');
+//                    }
+//                    if(!$result = ExamFlow::where('id', $item->id)->delete()){
+//                        throw new \Exception('考试-流程关联删除失败！');
+//                    }
+//                    if(!$result = $this->where('id', $item->flow_id)->delete()){
+//                        throw new \Exception('考试流程删除失败！');
+//                    }
+//                }
+//            }
+            $id = $exam_id;
+            $examScreening = ExamScreening::where('exam_id',$id);
+
+
+            //删除考试考场学生表
+            foreach ($examScreening->select('id')->get() as $item) {
+
+                if (count(ExamScreeningStudent::where('exam_screening_id',$item->id)->get()) != 0) {
+                    if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->delete()) {
+                        DB::rollback();
+                        throw new \Exception('删除考试考场学生关系表失败，请重试！');
                     }
-                    if(!$result = ExamFlow::where('id', $item->id)->delete()){
-                        throw new \Exception('考试-流程关联删除失败！');
-                    }
-                    if(!$result = $this->where('id', $item->flow_id)->delete()){
-                        throw new \Exception('考试流程删除失败！');
-                    }
+                }
+            }
+
+            //删除考试考场关联表
+            if (count($examScreening-> get())) {
+                if (!$examScreening-> first() ->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考场关系表失败，请重试！');
+                }
+            }
+
+            //删除考试考场关联
+            if (ExamRoom::where('exam_id',$id)->first()) {
+                if (!ExamRoom::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考场关联失败，请重试！');
+                }
+            }
+
+
+            //删除考试流程关联
+            if (ExamFlow::where('exam_id',$id)->first()) {
+                if (!ExamFlow::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试流程关联失败，请重试！');
+                }
+            }
+
+            //删除考试考场流程关联
+            if (ExamFlowRoom::where('exam_id',$id)->first()) {
+                if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
+                    DB::rollback();
+                    throw new \Exception('删除考试考场流程关联失败，请重试！');
                 }
             }
 
@@ -221,6 +270,7 @@ class Flows extends CommonModel
                     'station_id'        =>  $item['id'],
                     'user_id'           =>  empty($item['teacher_id'])? 3:$item['teacher_id'],
                     'case_id'           =>  StationCase::where('station_id', $item['id'])->first()->case_id,
+                    'exam_id'           =>  $exam_id,
                     'created_user_id'   =>  $user ->id,
                     'type'              =>  empty($item['teacher_id'])? 2:1
                 ];
