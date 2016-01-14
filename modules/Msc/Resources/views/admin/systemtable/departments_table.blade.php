@@ -102,14 +102,10 @@
         function   listclick(){//dom之后添加事件
             $(".list-group-item").unbind().click(function(){
                 $("#submit").hide();
-                $("#edit_save").show();
-                var listId = $(this).attr("id");//获取点击时该栏目的ID
-                var thispid=$(this).attr("pid");
+                $("#edit_save").show();//按钮显示隐藏功能
                 var level=$(this).attr("level");
-                var thisneme=$(this).text();
-                console.log(thispid);
-                $("#hidden_this_id").val(listId);
-                $(".add-name").val(thisneme);
+                $("#hidden_this_id").val($(this).attr("id"));//获取点击时该栏目的ID
+                $(".add-name").val($(this).text());
                 $(".add-describe").val($(this).children(".description").val());
                 if(level=="1"){
                     $(".add-parent").val("");//上级科室
@@ -121,7 +117,7 @@
                     $(".add-parent").val(parent_name);//上级科室
                 }
                 $(this).addClass("checked").siblings().removeClass("checked");//表单切换
-                addChild(listId,level,thisneme);//添加子科室功能
+                addChild();//添加子科室功能
             });
         }
         function  toggle(){//dom之后添加事件
@@ -163,10 +159,22 @@
                 }
             })
         }
-        function  addChild(listId,level,thisneme){
-            var name=$(".add-name").val();
+        function  addChild(){
+            var listId;//
+            var level;
             $("#new-add-child").unbind().click(function(){
-                if(level>=3){
+                $(".list-group").find(".list-group-item").each(function(){//获取被选中的栏目
+                    if($(this).hasClass("checked")==true){
+                        listId = $(this).attr("id");//获取点击时该栏目的ID
+                        level=$(this).attr("level");
+                        $(".add-parent").val($(this).text());
+                    }
+                })
+                if(!level){
+                    layer.msg("您尚未选择上一级科室", {icon: 2,time: 1000});
+                    return false;
+                }
+                else if(level>=3){
                     layer.msg("无法再添加子科室", {icon: 2,time: 1000});
                     return false;
                 }
@@ -174,7 +182,6 @@
                 $("#submit").show();
                 $(".add-name").val("");
                 $(".add-describe").val("");
-                $(".add-parent").val(thisneme);
                 level++;
                 addChildgroup(level,listId);
 
@@ -226,16 +233,20 @@
                             );
                             $("#"+listId+" .toggel").val("1");
                         }else{
+                            $("#"+listId+" .glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
                             $("#"+listId).nextUntil(".parent").show();
                         }
                         toggle();
                         $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
+                        $("#hidden_this_id").val(result.data.total.id);//将右侧编辑框的隐藏域内容更新
+                        $("#submit").hide();
+                        $("#edit_save").show();//按钮显示隐藏功能
                     }
                 })
             })
         }
         function editall(){
-            $("#edit_save").click(function(){
+            $("#edit_save").unbind().click(function(){
                 var thisid=$("#hidden_this_id").val();
                 var name=$(".add-name").val();
                 var describe=$(".add-describe").val();
@@ -247,12 +258,12 @@
                     cache: false,
                     data:qj,
                     success: function (result) {
-                        if(result.message=="更新成功"){
+                        if(result.code==1){
                             $("#"+thisid+" b").text(name);
                             $("#"+thisid).children(".description").val(describe);
                             layer.msg(result.message, {icon: 1,time: 1000});
                         } else{
-                            layer.msg(result.message, {icon: 1,time: 1000});
+                            layer.msg(result.message, {icon: 2,time: 1000});
                         }
                     }
                 })
@@ -261,8 +272,13 @@
         function deleteall(){
             $("#delete").unbind().click(function(){
                 var thisid=$("#hidden_this_id").val();
+                var attetioninfo='您确定要删除该科室？';
+                if($("#"+thisid).next().attr("level")>1){
+                    attetioninfo='该科室下有子科室，您确定要删除该科室？';
+                }
                 var qj={id:thisid};
-                layer.confirm('您确定要删除该科室？', {
+
+                layer.confirm(attetioninfo, {
                     btn: ['确定','取消'] //按钮
                 }, function(){
                     $.ajax({
@@ -272,9 +288,11 @@
                         cache: false,
                         data:qj,
                         success: function (result) {
-                            if(result.message=="删除成功"){
+                            if(result.code==1){
                                 $(result.data.rows).each(function(){
                                     $("#"+this).remove();
+                                    $("#add_department input").val("");
+                                    $("#hidden_this_id").val();
                                 });
                                 layer.msg(result.message, {icon: 1,time: 1000});
                             } else{
@@ -298,7 +316,6 @@
                     var name=$(".add-name").val();
                     validate (name);//添加验证
                     if(mark){
-                        alert(202);
                         return false;
                     }
                     var describe=$(".add-describe").val();
@@ -311,7 +328,7 @@
                         cache: false,
                         data:qj,
                         success: function (result) {
-                            if(result.message=="添加成功"){
+                            if(result.code==1){
                                 $(".treeview ul").append(
                                         '<li class="list-group-item parent" id="'+result.data.total.id+'"pid="'+result.data.total.pid+'" level="'+result.data.total.level+'">'
                                         + '<input type="hidden" class="description" value=" '+result.data.total.description+'"/>'
@@ -321,9 +338,11 @@
                                 );//第一层添加
                                 layer.msg(result.message, {icon: 1,time: 1000});
                                 $("#"+result.data.total.id).addClass("checked").siblings().removeClass("checked");//表单切换
-                                var level=result.data.total.level;
-                                var listId=result.data.total.id;
-                                addChildgroup(level,listId);
+                                $("#hidden_this_id").val(result.data.total.id);
+                                $("#submit").hide();
+                                $("#edit_save").show();//按钮显示隐藏功能
+                                addChild();
+                                addChildgroup();
                                 deleteall();
                             } else{
                                 layer.msg(result.message, {icon: 2,time: 1000});
@@ -403,7 +422,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <div class=" right">
+                            <div class="col-sm-9" style="float:right; text-align: right;">
                                 <button class="btn btn-primary"  type="button" id="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认</button>
                                 <button class="btn btn-primary"  type="button" id="edit_save" style="display:none" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>
                             </div>
