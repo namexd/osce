@@ -131,10 +131,10 @@
                                             <a href="{{ route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword])}}">全部</a>
                                         </li>
                                         <li>
-                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
+                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'2'])}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
+                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'1'])}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -144,9 +144,9 @@
                         </thead>
                         <tbody>
                        @if(!empty($list))
-                           @foreach($list as $list)
+                           @foreach($list as $k => $list)
                         <tr>
-                            <td>{{$list['id']}}</td>
+                            <td>{{($k+1)}}</td>
                             <td class="code">{{$list['code']}}</td>
                             <td class="name">{{$list['name']}}</td>
                             <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">停用</span>@endif</td>
@@ -170,7 +170,7 @@
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
-            <?php echo $pagination->render();?>
+            <?php echo $pagination->appends(['keyword'=>$keyword,'status'=>$status])->render();?>
         </div>
     </div>
 

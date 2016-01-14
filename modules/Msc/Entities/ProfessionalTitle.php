@@ -33,8 +33,8 @@ class ProfessionalTitle extends Model
         {
             $builder = $builder->where('name','like','%'.$keyword.'%');
         }
-        if(in_array($status,[0,1])){
-            $builder = $builder->where('status','=',$status);
+        if(in_array($status,[1,2])){
+            $builder = $builder->where('status','=',$status-1);
         }
 
 

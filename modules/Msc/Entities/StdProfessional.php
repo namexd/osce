@@ -30,8 +30,8 @@ class StdProfessional extends Model
        {
            $builder = $builder->where($this->table.'.name','like','%'.$keyword.'%');
        }
-       if(in_array($status,[0,1])){
-           $builder = $builder->where($this->table.'.status',$status);
+       if(in_array($status,[1,2])){
+           $builder = $builder->where($this->table.'.status',$status-1);
        }
 
 

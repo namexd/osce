@@ -136,7 +136,7 @@
                             $('#paginationOne').html(createPageDom(res.data.total,res.data.pagesize,res.data.page));
                             for(var i=0;i<data.length;i++){
                                 str += '<tr>' +
-                                        '<td>#'+(i+1)+'</td>' +
+                                        '<td>'+(i+1)+'</td>' +
                                         '<td class="device_name">'+data[i].device_info.name+'</td>' +
                                         '<td class="device_type">'+data[i].device_info.devices_cate_info.name+'</td>' +
                                         '<td class="total" id="DeviceNum_'+data[i].id+'">'+data[i].total+'</td>' +
@@ -258,7 +258,7 @@
                                     '</div> <input type="hidden" name="" value="'+this.id+'">' +
                                     '</label>' +
                                     '</td>' +
-                                    ' <td>#'+($item+1)+'</td>' +
+                                    ' <td>'+($item+1)+'</td>' +
                                     ' <td> <input type="number" class="deviceNum" value="1"></td>' +
                                     ' <td>'+this.name+'</td> ' +
                                     '<td>'+this.catename+'</td> ' +
