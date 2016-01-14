@@ -129,16 +129,13 @@
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
 
                                         @forelse($examRoomData as $item)
-
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
-
                                                     <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
-                                                        @foreach($item as $value)
 
-                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
-                                                        @endforeach
+                                                        <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+
                                                     </select>
                                                 </td>
                                                 <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
@@ -182,7 +179,9 @@
                                                 <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
                                                     <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station[{{$key+1}}][teacher_id]">
-                                                        <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
+                                                        @if($item->teacher_type == 1)
+                                                            <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
+                                                        @endif
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">
