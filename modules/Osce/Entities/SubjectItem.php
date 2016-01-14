@@ -16,13 +16,13 @@ use Illuminate\Database\Eloquent\Collection;
 class SubjectItem extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'subject_item';
+    protected $table = 'standard';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['subject_id', 'content', 'order', 'score', 'created_user_id','pid','level'];
+    protected $fillable = ['subject_id', 'content', 'sort', 'score', 'pid', 'level', 'created_user_id', 'answer'];
     public $search = [];
 
     //创建人用户关联
@@ -57,7 +57,7 @@ class SubjectItem extends CommonModel
             $data   =   [
                 'subject_id'        =>  $subject->id,
                 'content'           =>  $point['content'],
-                'order'             =>  $point['order'],
+                'sort'             =>  $point['sort'],
                 'score'             =>  $point['score'],
                 'created_user_id'   =>  $user->id,
                 'pid'               =>  0,
@@ -79,7 +79,7 @@ class SubjectItem extends CommonModel
             $data   =   [
                 'subject_id'        =>  $subject->id,
                 'content'           =>  $point['content'],
-                'order'             =>  $point['order'],
+                'sort'             =>  $point['sort'],
                 'score'             =>  $point['score'],
                 'created_user_id'   =>  $user->id,
                 'pid'               =>  $parent->id,
@@ -116,7 +116,7 @@ class SubjectItem extends CommonModel
      */
     static public function builderItemData($content,$score){
         $data   =   [];
-        foreach($content as $prointIndex    =>  $item){
+        foreach($content as $prointIndex => $item){
             $child  =   [];
             $itemScore  =   $score[$prointIndex];
             foreach($item as $contentIndex  =>  $content){
@@ -126,14 +126,14 @@ class SubjectItem extends CommonModel
                 $content    =   [
                     'content'   =>  $content,
                     'score'     =>  $itemScore[$contentIndex],
-                    'order'     =>  $contentIndex,
+                    'sort'     =>  $contentIndex,
                 ];
                 $child[]=$content;
             }
             $item   =   [
                 'content'   =>  $item['title'],
                 'score'     =>  $itemScore['total'],
-                'order'     =>  $prointIndex,
+                'sort'     =>  $prointIndex,
                 'child'     =>  $child
             ];
             $data[]=$item;
@@ -173,7 +173,7 @@ class SubjectItem extends CommonModel
             $data[]     =   $item;
             $childItem  =   $child[$item->id];
 
-            $indexArray =   array_pluck($childItem,'order');
+            $indexArray =   array_pluck($childItem,'sort');
             array_multisort($indexArray, SORT_ASC, $childItem);
 
             foreach($childItem as $chilren)
