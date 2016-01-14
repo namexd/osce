@@ -591,7 +591,7 @@ class ExamController extends CommonController
         try {
 
             //获得上传的数据
-                $exam_id= $id;
+            $exam_id= $id;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
             $studentList = array_shift($data);
@@ -608,11 +608,8 @@ class ExamController extends CommonController
 
 
             }
-//            return response()->json(
-//                $this->success_data(['result' => true, 'code' => 1])
-//            );
 //               echo json_encode(['result' => true, 'data' =>['code'=>1] ]);
-            echo json_encode($this->success_data());
+            echo json_encode($this->success_data(['code'=>1]));
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
         }
