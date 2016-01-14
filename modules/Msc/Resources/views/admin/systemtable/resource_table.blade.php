@@ -68,13 +68,13 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         
-                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'2'])}}">全部</a>
+                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'3','devices_cate_id'=>$devices_cate_id])}}">全部</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'2','devices_cate_id'=>$devices_cate_id])}}">正常</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
+                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1','devices_cate_id'=>$devices_cate_id])}}">停用</a>
                                     </li>
                                 </ul>
                             </div>
@@ -84,9 +84,9 @@
                     </thead>
                     <tbody>
                     @if(!empty($list))
-                        @foreach($list as $val)
+                        @foreach($list as $k => $val)
                     <tr>
-                        <td>{{$val['id']}}</td>
+                        <td>{{($number+$k)}}</td>
                         <td class="name">{{$val['name']}}</td>
 
                         <td class="catename"   data="{{$val['devices_cate_id']}}">{{$val['catename']}}</td>
@@ -114,7 +114,7 @@
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
-            <?php  echo $pagination->render()?>
+            <?php  echo $pagination->appends(['keyword'=>$keyword,'status'=>$status,'devices_cate_id'=>$devices_cate_id])->render()?>
         </div>
 	</div>
 @stop

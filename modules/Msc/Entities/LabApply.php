@@ -16,7 +16,7 @@ class LabApply  extends Model
     protected $table 		= 	'lab_apply';
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
-    protected $fillable 	=	['lab_id', 'type','status','apply_user_id','description','apply_time','course_name'];
+    protected $fillable 	=	['lab_id', 'type','begintime','endtime','description','apply_user_id','course_name','apply_time','status','user_type'];
 
     /**
      * @param $where
@@ -138,7 +138,7 @@ class LabApply  extends Model
         $plan_applyTable = $plan_applyDb.'.plan_apply';
 
         if(!empty($arr)){
-            $builder = $this->whereIn($plan_applyTable``.'.id',$arr);
+            $builder = $this->whereIn($plan_applyTable.'.id',$arr);
         }else{
             $builder = $this;
         }
@@ -154,5 +154,18 @@ class LabApply  extends Model
         //dd($data);
         return $data;
 
+    }
+
+    /**
+     * @param $uid
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date   2016年1月14日17:21:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function MyApplyList($uid){
+        return  $this->where('status','=',1)->where('type','=',2)->where('apply_user_id','=',$uid)->with(['PlanApply'=>function($PlanApply){
+            $PlanApply->with(['OpenPlan']);
+        }])->get();
     }
 }

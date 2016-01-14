@@ -12,6 +12,7 @@ use Modules\Msc\Entities\ResourcesBorrowing;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use App\Entities\User;
+use Modules\Msc\Entities\LabApply;
 
 class PersonalCenterController extends MscWeChatController {
 	public function getTest(){
@@ -83,7 +84,15 @@ class PersonalCenterController extends MscWeChatController {
 	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 	public function MyLaboratoryApply(){
+		$LabApply = new LabApply;
+		$user = Auth::user();
+		$user->user_type;
+		if($user->user_type == 1){//TODO 老师
 
+		}elseif($user->user_type == 2){//TODO 学生
+			$MyApplyList = $LabApply->MyApplyList($user->id);
+			dd($MyApplyList);
+		}
 	}
 
 
