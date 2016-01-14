@@ -533,7 +533,7 @@ function examroom_assignment(){
                                     '<td>'+data[i].name+'</td>'+
                                     '<td>'+typeValue[data[i].type]+'</td>'+
                                     '<td>'+
-                                        '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" disabled="disabled">'+teacher+'</select>'+
+                                        '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple">'+teacher+'</select>'+
                                     '</td>'+
                                     '<td class="sp-teacher">'+
                                         '<div class="teacher-box pull-left">'+
@@ -648,9 +648,6 @@ function examroom_assignment(){
                                     }
                                 });
 
-                              //动态往邀请中加入老师id
-                              /*var invitation = $(select2_Object).parent().parent().next().find('a');
-                              invitation.attr('href',invitation.attr('href')+'&teacher_id='+ids);*/
 
                               //请求参数
                               return {
@@ -676,38 +673,13 @@ function examroom_assignment(){
                         }
 
 
-                    })/*.on('select2:select', function(e){
+                    });
+                    
 
-                        var thisElement = $(this);
-                        //获取老师id
-                        var ids = [];
-                        thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
-                                    var id = $(elem).attr('value');
-                                    if(id==null){
-                                        return;
-                                    }else{
-                                        ids.push(id);
-                                    }
-                                });
-                        $.ajax({
-                            url: pars.spteacher_list,
-                            type:'get',
-                            data:{id:ids,station_id:$(select2_Object).parent().attr('value')},
-                            success:function(res){
-                                console.log(res,ids)
-                                //数据格式化
-                                var str = [];
-                                for(var i in res.data.rows){
-                                    str.push({id:res.data.rows[i].id,text:res.data.rows[i].name});
-                                }
-                                console.log(str)
 
-                                thisElement.select2('destroy');
-                                thisElement.select2({data:str});
-                            }
-                        });
 
-                    });*/
+                    //});
+                    
 
                 }
             }
@@ -896,7 +868,12 @@ function examroom_assignment(){
         }
     });
 
-
+    /**
+     * 选择老师
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-14
+     */
     $('#exam-place').on('change',".teacher-list",function(){
 
         var $teacher= $(this).find('option:selected').text().split('==')[0];

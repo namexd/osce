@@ -31,6 +31,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
+use DB;
 
 class ExamController extends CommonController
 {
@@ -629,13 +630,12 @@ class ExamController extends CommonController
      * @api GET /osce/admin/exam/getExamroomAssignment
      * * string        参数英文名        参数中文名(必须的)
      *
+     * @param Request $request
      * @return object
-     *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getExamroomAssignment(Request $request)
     {
@@ -645,7 +645,7 @@ class ExamController extends CommonController
         $exam_id = $request -> get('id');
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
-        $examRoomData = $examRoom -> getRoomListByExam($exam_id);
+        $examRoomData = $examRoom -> getExamRoomData($exam_id);
 
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
@@ -673,12 +673,12 @@ class ExamController extends CommonController
     public function postExamroomAssignmen(Request $request)
     {
         try{
+            DB::beginTransaction();
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
-
-
+//            dd($request->all());
 //            $flows = new Flows();
 //            if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)) {
 //                throw new \Exception('考场安排保存失败，请重试！');
@@ -690,18 +690,21 @@ class ExamController extends CommonController
             $flows = new Flows();
             if(count($examRoomData) != 0){
                 if(!$flows -> editExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
 
             }else{
                 if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
+                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
             }
+            DB::commit();
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
 
     }
