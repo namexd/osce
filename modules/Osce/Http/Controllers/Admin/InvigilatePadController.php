@@ -105,7 +105,7 @@ class InvigilatePadController extends CommonController
     /**
      * 成绩详情保存
      * @method GET
-     * @url /osce/admin/invigilatepad/Save-exam-Result
+     * @url /osce/admin/invigilatepad/save-exam-Result
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -153,12 +153,11 @@ class InvigilatePadController extends CommonController
     /**
      * 成绩详情查看
      * @method GET
-     * @url /osce/admin/invigilatepad/Save-exam-Result
+     * @url /osce/admin/invigilatepad/see-exam-details
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
      * * string     station_id    考站id   (必须的)
-     * * string     exam_id       考试id   (必须的)
      *
      * @return view
      *
@@ -168,7 +167,18 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
+      public  function getSeeExamDetails(Request $request){
+           $this->validate($request,[
+               'station_id'=>'required|integer',
+               'student_id'=>'required|integer',
+           ]);
+          $stationId= Input::get('station_id');
+          $studenId = Input::get('student_id');
+//          $ExamScore =
 
+
+
+      }
 
 
 
