@@ -55,6 +55,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('invigilator/edit-sp-invigilator', 	['uses'=>'InvigilatorController@postEditSpInvigilator','as'=>'osce.admin.invigilator.postEditSpInvigilator']);
 		
 		Route::get('config/index',  ['uses'=>'ConfigController@getIndex','as'=>'osce.admin.config.getIndex']);
+		Route::post('config/store',  ['uses'=>'ConfigController@postStore','as'=>'osce.admin.config.postStore']);
 
 
 		Route::get('invigilator/del-invitation', 	['uses'=>'InvigilatorController@getDelInvitation','as'=>'osce.admin.invigilator.getDelInvitation']);
@@ -161,14 +162,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('notice/del-notice', 	['uses'=>'NoticeController@getDelNotice','as'=>'osce.admin.notice.getDelNotice']);
 		Route::post('notice/edit-notice', 	['uses'=>'NoticeController@postEditNotice','as'=>'osce.admin.notice.postEditNotice']);
 
-
-
-
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.admin.invigilatepad.getAuthentication']);
-
-
-
+		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.admin.invigilatepad.getExamGrade']);
 
 
 		//测试
@@ -248,8 +244,10 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 
 
 		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
-			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr','as'=>'osce.admin.vcr.getRoomVcr']);
-
+			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
+			Route::get('vcr',['uses'=>'PadController@getVcr']);
+			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
 		});
 	});
 

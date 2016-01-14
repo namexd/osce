@@ -31,6 +31,7 @@ class Config extends CommonModel
         try {
             //$key就是字段名,$item为键值数组，有必要再遍历一次，将每个值都插入数据库
             foreach ($formData as $key => $item) {
+
                 //如果$item是数组的话，就说明是多选
                 $cate = strstr($key, '_', true);  //从传入的字段表里获取cate
                 $nameLen = strpos($key, '_'); //获取_在字符串中第一次出现的位置
@@ -53,7 +54,7 @@ class Config extends CommonModel
                 if ($result = $this->create($data)) {
                     return $result;
                 } else {
-                    throw new \Exception('系统错误，请重试!');
+                    throw new \Exception('配置插入数据库失败！');
                 }
             }
 
@@ -74,24 +75,37 @@ class Config extends CommonModel
             $config = include MESSAGE_CONFIG;
 
             //将每一项改写读取到的数组
-            $config['default'] = 'env(\'MESSAGE_DRIVER\'， \'' . $formData['default'] . '\'' . "),\n";
-            $config['messages']['sms']['cnname'] = "'" . $formData['sms_cnname'] . "',\n";
-            $config['messages']['sms']['url'] = "'" . $formData['sms_url'] . "',\n";
-            $config['messages']['sms']['username'] = "'" . $formData['sms_username'] . "',\n";
-            $config['messages']['sms']['password'] = "'" . $formData['sms_password'] . "',\n";
-            $config['messages']['wechat']['use_alias'] = 'env(\'WECHAT_USE_ALIAS\'， \'' . $formData['wechat_use_alias'] . '\'' . "),\n";
-            $config['messages']['wechat']['app_id'] = 'env(\'WECHAT_APPID\'， \'' . $formData['wechat_app_id'] . '\'' . "),\n";
-            $config['messages']['wechat']['secret'] = 'env(\'WECHAT_SECRET\'， \'' . $formData['wechat_secret'] . '\'' . "),\n";
-            $config['messages']['wechat']['token'] = 'env(\'WECHAT_TOKEN\'， \'' . $formData['wechat_token'] . '\'' . "),\n";
-            $config['messages']['wechat']['encoding_key'] = 'env(\'WECHAT_ENCODING_KEY\'， \'' . $formData['wechat_encoding_key'] . '\'' . "),\n";
-            $config['messages']['email']['server'] = "'" . $formData['email_server'] . "',\n";
-            $config['messages']['email']['port'] = "'" . $formData['email_port'] . "',\n";
-            $config['messages']['email']['ssl'] = "'" . $formData['email_ssl'] . "',\n";
-            $config['messages']['email']['username'] = "'" . $formData['email_username'] . "',\n";
-            $config['messages']['email']['password'] = "'" . $formData['email_password'] . "',\n";
+//          $config['default'] = 'env(\'MESSAGE_DRIVER\'， \'' . $formData['default'] . '\'' . "),\n";
+            $config['messages']['sms']['cnname'] = $formData['sms_cnname'];
+            $config['messages']['sms']['url'] = $formData['sms_url'];
+            $config['messages']['sms']['username'] = $formData['sms_username'];
+            $config['messages']['sms']['password'] = $formData['sms_password'];
+
+            $config['messages']['wechat']['use_alias'] =
+                <<<EOT
+env('WECHAT_USE_ALIAS', $formData[wechat_use_alias])
+EOT;
+            $config['messages']['wechat']['app_id'] = "env('WECHAT_APP_ID','"  . $formData['wechat_app_id'] . "')," . '//必填';
+            $config['messages']['wechat']['secret'] = "env('WECHAT_SECRET','"  . $formData['wechat_secret'] . "')," . '//必填';
+            $config['messages']['wechat']['token'] = "env('WECHAT_TOKEN','"  . $formData['wechat_token'] . "')," . '// 必填,http://good-doctor.cn/hx/wx_sample.php';
+            $config['messages']['wechat']['encoding_key'] = "env('WECHAT_ENCODING_KEY','"  . $formData['wechat_encoding_key'] . "')," . '// 加密模式需要，其它模式不需要';
+
+            $config['messages']['email']['server'] = $formData['email_server'];
+            $config['messages']['email']['port'] = $formData['email_port'] ;
+            $config['messages']['email']['ssl'] = $formData['email_ssl'];
+            $config['messages']['email']['username'] = $formData['email_username'];
+            $config['messages']['email']['password'] = $formData['email_password'];
+
 
             //将修改后的数据重新写回文件
-            file_put_contents(MESSAGE_CONFIG, "<?php\nreturn [\n" . var_export($config) . "\n];");
+            $str    =   "<?php\nreturn " . var_export($config,true).";";
+            $str    =   str_replace("'env(",'env(',$str);
+            $str    =   str_replace(")',",'),',$str);
+
+            $str    =   stripslashes($str);
+            if( !file_put_contents(MESSAGE_CONFIG, $str)) {
+                throw new \Exception('配置插入文件失败！');
+            };
         } catch (\Exception $ex) {
             throw $ex;
         }
