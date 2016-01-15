@@ -18,6 +18,7 @@
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'topic','del':'{{route('osce.admin.topic.getDelTopic')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -29,12 +30,14 @@
         </div>
     <form class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
+          <form method="post" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control">
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </span>
             </div>
+          </form>
 
             <table class="table table-striped" id="table-striped">
                 <thead>
