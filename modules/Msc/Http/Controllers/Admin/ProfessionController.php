@@ -93,13 +93,12 @@ class ProfessionController extends MscController
      */
     public function postProfessionAdd(Request $request){
     $this->validate($request,[
-        'name'   => 'required|max:50|unique:msc_mis.student_professional,name,code,""',
+        'name'   => 'required|max:50',
         'code'   =>  'required|max:32|unique:msc_mis.student_professional,code,name,""',
         'status' =>   'required|in:0,1'
     ],[
         'name.required'=>'专业名称必填',
         'name.max'=>'专业名称最长50个字节',
-        'name.name'=>'专业名称不能重复添加',
 
         'code.required'=>'专业专业代码必填',
         'code.max'=>'专业代码最长32个字节',
@@ -181,13 +180,12 @@ class ProfessionController extends MscController
     public  function postProfessionSave(Request $request){
         $this->validate($request,[
             'id' => 'sometimes|min:0|max:10',
-            'name'   => 'required|max:50|unique:msc_mis.student_professional,name,code,""',
-            'code'   =>  'required|max:32|unique:msc_mis.student_professional,code,name,""',
+            'name'   => 'required|max:50',
+            'code'   =>  'required|max:32',
             'status' =>   'required|in:0,1'
         ],[
             'name.required'=>'专业名称必填',
             'name.max'=>'专业名称最长50个字节',
-            'name.name'=>'专业名称不能重复添加',
 
             'code.required'=>'专业专业代码必填',
             'code.max'=>'专业代码最长32个字节',
