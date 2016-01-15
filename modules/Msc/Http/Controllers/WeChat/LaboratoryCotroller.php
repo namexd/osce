@@ -57,7 +57,7 @@ class LaboratoryCotroller extends MscWeChatController
             return view('msc::wechat.booking.booking_student',['FloorData'=>$FloorData]);
         //$user->user_type == 1 代表老师$val
         }elseif($user->user_type == 1){
-            return view('msc::wechat.booking.booking_teacher',['FloorData'=>$FloorData]);
+            return view('msc::wechat.booking.booking_teacher_choice');
         }
     }
 
