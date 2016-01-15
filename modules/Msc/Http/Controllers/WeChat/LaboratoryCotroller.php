@@ -168,7 +168,7 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
-        dd($data);
+        return  view('msc::wechat.booking.booking_teacher_ordinary_form',['data'=>$data]);
     }
     /**
      * 根据id 和 日期 开放实验室日历列表页面
@@ -199,6 +199,8 @@ class LaboratoryCotroller extends MscWeChatController
                                 $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 1;
                             }elseif($v['LabApply']['user_type'] == 2){//TODO 老师预约
                                 $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 2;
+                            }elseif($val['apply_num'] >= $LaboratoryInfo['total']){ //TODO 已经预约满
+                                $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 3;
                             }
                         }
                     }
