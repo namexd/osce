@@ -22,7 +22,7 @@
                     <ul class="nav nav-tabs">
                         <li><a href="#">媒体设置</a></li>
                         <li class="active"><a href="#">场所类型</a></li>
-                        <a href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                        <a href="{{route('osce.admin.config.getAreaStore')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                     </ul>
                     
                 </div>
@@ -35,20 +35,15 @@
 		                </tr>
 	                </thead>
 	                <tbody>
+					@foreach($data as $item)
 	                    <tr>
-	                        <td>考场</td>
-	                        <td>考试时的房间</td>
+	                        <td>{{$item->name}}</td>
+	                        <td>{{$item->description}}</td>
 	                        <td>
 	                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
 	                        </td>
 	                    </tr>
-	                    <tr>
-	                        <td>中控室</td>
-	                        <td>负责考试安排及相关工作</td>
-	                        <td>
-	                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-	                        </td>
-	                    </tr>
+					@endforeach
 	                </tbody>
 	            </table>
             </div>

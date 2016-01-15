@@ -18,7 +18,7 @@ class StationVcr extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['station_id', 'vcr_id'];
+    protected $fillable = ['station_id', 'vcr_id','begind_dt','end_dt','updated_at'];
     public $search = [];
 
     /**
@@ -66,4 +66,24 @@ class StationVcr extends CommonModel
         return $list;
 
     }
+
+    //获取vcr信息
+    public  function vcrlist($stationId){
+           return Vcr::leftJoin('station_vcr',function($join){
+                 $join->    on('vcr.id','=','station_vcr.vcr_id');
+           }) ->where('station_vcr.station_id','=',$stationId)
+               ->select([
+                   'vcr.name as name',
+                   'vcr. code as code',
+                   'vcr.ip` as ip`',
+                   'vcr.username as username',
+                   'vcr.port as port',
+                   'vcr.channel as channel',
+                   'vcr.status as status',
+               ])
+               ->get();;
+    }
+
+
+
 }

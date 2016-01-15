@@ -283,4 +283,29 @@ class Exam extends CommonModel
 
           return $list;
     }
+
+    public function getExamRoomData($exam_id)
+    {
+        try {
+            return $this->leftJoin( 'exam_room',
+                function ($join) {
+                    $join->on($this->table . '.id' , '=' , 'exam_room.exam_id');
+                })->leftJoin ( 'exam_flow_room',
+                function ($join) {
+                    $join->on('exam_flow_room.room_id' , '=' , 'exam_room.room_id');
+                })->leftJoin( 'room',
+                function ($join) {
+                    $join->on('room.id' , '=' , 'exam_room.room_id');
+                })->where($this->table.'.id', '=', $exam_id)
+                ->select([
+                    'room.id',
+                    'room.name',
+                    'exam_flow_room.serialnumber as serialnumber',
+                    'exam_flow_room.flow_id as flow_id'
+                ])->get();
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
