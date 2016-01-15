@@ -350,9 +350,9 @@ class IndexController extends CommonController
             'create_user_id'       =>  'required|integer'
         ]);
 
-        $resutl=Watch::where('code',$request->get('code'))->delete();
+        $result=Watch::where('code',$request->get('code'))->delete();
 
-        if($resutl){
+        if($result){
             return response()->json(
                 $this->success_data()
             );
@@ -420,17 +420,14 @@ class IndexController extends CommonController
     }
 
     /**
-     *
+     *编辑返回设备信息
      * @method GET
      * @url /api/1.0/private/osce/watch/watch-detail
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        code       设备编码(必须的)
      *
      * @return ${response}
      *
@@ -498,10 +495,8 @@ class IndexController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        code        设备编码(必须的)
+     * * string        status      状态(必须的)
      *
      * @return ${response}
      *
