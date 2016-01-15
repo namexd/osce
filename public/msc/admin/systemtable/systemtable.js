@@ -172,7 +172,7 @@ function resource_table(){
                 '<div class="col-sm-9"> ' +
                 '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
                 '<option value="1">正常</option> ' +
-                '<option value="0">禁用</option> ' +
+                '<option value="0">停用</option> ' +
                 '</select> ' +
                 '</div> ' +
                 '</div> ' +
@@ -247,7 +247,7 @@ function resource_table(){
                 '<div class="col-sm-9"> ' +
                 '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
                 '<option value="1">正常</option> ' +
-                '<option value="0">禁用</option> ' +
+                '<option value="0">停用</option> ' +
                 '</select> ' +
                 '</div> ' +
                 '</div> ' +
@@ -395,7 +395,7 @@ function title_table(){
             '<div class="col-sm-9"> ' +
             '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
             '<option value="1">正常</option> ' +
-            '<option value="0">禁用</option> ' +
+            '<option value="0">停用</option> ' +
             '</select> ' +
             '</div> ' +
             '</div> ' +
@@ -452,7 +452,7 @@ function title_table(){
             '<div class="col-sm-9"> ' +
             '<select id="select_Category"   class="form-control m-b state" name="status"> ' +
             '<option value="1">正常</option> ' +
-            '<option value="0">禁用</option> ' +
+            '<option value="0">停用</option> ' +
             '</select> ' +
             '</div> ' +
             '</div> ' +
@@ -636,7 +636,7 @@ function major_table(){
             '<div class="col-sm-9">' +
             '<select id="select_Category"   class="form-control m-b state" name="status">' +
             '<option value="1">正常</option>' +
-            '<option value="0">禁用</option>' +
+            '<option value="0">停用</option>' +
             '</select>' +
             '</div>' +
             '</div>' +
@@ -699,7 +699,7 @@ function major_table(){
             '<div class="col-sm-9">' +
             '<select id="select_Category"   class="form-control m-b state" name="status">' +
             '<option value="1">正常</option>' +
-            '<option value="0">禁用</option>' +
+            '<option value="0">停用</option>' +
             '</select>' +
             '</div>' +
             '</div>' +
