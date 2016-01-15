@@ -48,7 +48,7 @@
 /*textarea样式*/
 .textarea1{
     width: 100%;border:1px solid #dce0e4;
-    height: 100px;
+    height: 100px!important;
     line-height: 20px;
     border-radius: 4px;
     padding:10px 5px;

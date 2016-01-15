@@ -14,7 +14,7 @@
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'booking_teacher','url':'{{ route('msc.Laboratory.OpenLaboratoryListData') }}','type':'{{$type}}',
-    'target_url':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}','url2':'{{ route('msc.Laboratory.LaboratoryListData') }}','target_url2':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}'}" />
+    'target_url':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}','url2':'{{ route('msc.Laboratory.LaboratoryListData') }}','target_url2':'{{ route('msc.Laboratory.ApplyLaboratory') }}'}" />
     <div class="user_header">
         预约实验室
     </div>

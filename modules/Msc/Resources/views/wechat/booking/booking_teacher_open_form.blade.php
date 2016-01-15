@@ -7,6 +7,7 @@
     /*实验室名字超出长度修改*/
     .add_main .form-group label{width: 95px;}
     .add_main .form-group .txt {padding-left: 100px;}
+    .add_main .form-group input {padding-left: 100px;}
 </style>
 @stop
 @section('only_head_js')
@@ -52,7 +53,7 @@
         </div>
     </div>
 
-    <form action="{{route('msc.Laboratory.OpenLaboratoryFormOp')}}" id="booking_student_form" method="post" class=" marb_10">
+    <form action="{{route('msc.Laboratory.OpenLaboratoryFormTeacherOp')}}" id="booking_student_form" method="post" class=" marb_10">
         <input name="date_time" value="{{ $data['ApplyTime']}}" type="hidden"/>
         <input name="lab_id" value="{{ $data['LaboratoryOpenPlanData']['id']}}" type="hidden"/>
         @foreach($data['LaboratoryOpenPlanData'] ['OpenPlan']as $val)
@@ -60,13 +61,14 @@
         @endforeach
         <div class="add_main">
             <div class="form-group">
-                <label for="">教学课程</label>
-                <input type="text" class="form-control" value="" name="course">
+                <label for="" style="width: 86px">教学课程</label>
+                <input type="text" class="form-control" value="" name="course_name">
             </div>
             <div class="form-group">
-                <label for="">学生人数</label>
-                <input type="number" class="form-control stu_num" value="" name="num">
+                <label for="" style="width: 86px">学生人数</label>
+                <input type="number" class="form-control stu_num" value="" name="total">
             </div>
+
         </div>
         <div class="w_94" id="Reason_detail" >
             <div class="form_title">预约理由</div>

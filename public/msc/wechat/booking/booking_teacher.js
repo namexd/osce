@@ -9,7 +9,6 @@ $(function(){
         case "booking_teacher_open_detail":booking_teacher_open_detail();break; //老师预约开放实验室详情页
         case "booking_teacher_open_form":booking_teacher_open_form();break; //老师预约开放实验室填写页
         case "booking_teacher_ordinary_form":booking_teacher_ordinary_form();break; //老师预约普通实验室填写页
-        case "booking_student_form":booking_student_form();break;//学生申请表单填写
     }
 });
 
@@ -90,8 +89,8 @@ function booking_teacher(){
         })
     }
 }
-//预约实验室（学生）详情页
-function booking_student_detail(){
+//预约实验室（老师）详情页
+function booking_teacher_open_detail(){
     var $check_one=$(".check_one");
     $check_one.click(function(){
         if($(this).children(".check_icon").hasClass("check")){
@@ -124,9 +123,31 @@ function booking_student_detail(){
         }
         $('.date_list').append('<input type="hidden" name="open_plan_id[]" class="labid" value="'+labid+'">');
     })
+    $("#submit").click(function(){
+        if($(".date_list").children("input").size()=="0"){
+
+            $.alert({
+                title: '提示：',
+                content: '您尚未选择时间段!',
+                confirmButton: '确定',
+                confirm: function(){
+
+                }
+            });
+            return false;
+        }
+    })
+
 }
-//预约实验室（学生）提交表单
+//老师预约开放实验室填写页
 function booking_teacher_open_form(){
+
+    var $stu_num=$(".stu_num");
+    $stu_num.change(function(){
+        if($stu_num.val()<=0){
+            $stu_num.val("1");
+        }
+    });
     $(".submit_box button").click(function () {
         get_layer();
     })
@@ -139,11 +160,27 @@ function booking_teacher_open_form(){
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {/*验证*/
-            description: {
+            course_name: {
                 message: 'The hospital is not valid',
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '课程名不能为空'
+                    }
+                }
+            },
+            total: {
+                message: 'The hospital is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '学生人数不能为空'
+                    }
+                }
+            },
+            description: {
+                message: 'The hospital is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '申请原因不能为空'
                     }
                 },
                 stringLength: {/*长度提示*/
@@ -167,42 +204,7 @@ function open_teacher_detail(){
         }
     });
 }
-//老师预约开放实验室填写页
-function open_teacher_write(){
-    var $stu_num=$(".stu_num");
-    $stu_num.change(function(){
-        if($stu_num.val()<=0){
-            $stu_num.val("1");
-        }
-    });
-    //表单验证
-    $("#myform").bootstrapValidator({
-        message: 'This value is not valid',
-        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {/*验证*/
-            course: {
-                message: 'The hospital is not valid',
-                    validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '课程名不能为空'
-                    }
-                }
-            },
-            num: {
-                message: 'The hospital is not valid',
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '学生人数不能为空'
-                    }
-                }
-            }
-        }
-    })
-}
+
 //老师预约普通实验室填写页
 function booking_teacher_ordinary_form(){
     var $stu_num=$(".stu_num");
