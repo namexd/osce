@@ -190,7 +190,7 @@ class LaboratoryCotroller extends MscWeChatController
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryOpenInfo($id,$DateTime,2);
         if(!empty($LaboratoryInfo['OpenPlan'])){
             foreach($LaboratoryInfo['OpenPlan'] as $key => $val){
-                //$LaboratoryInfo['OpenPlan'][$key]['Apply_num'] = count($val['PlanApply']);
+                $LaboratoryInfo['OpenPlan'][$key]['Apply_num'] = $val['apply_num'];
                 if(count($val['PlanApply'])>0){
                     foreach($val['PlanApply'] as $k => $v){
                         if(!empty($v['LabApply'])){
@@ -199,8 +199,6 @@ class LaboratoryCotroller extends MscWeChatController
                                 $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 1;
                             }elseif($v['LabApply']['user_type'] == 2){//TODO 老师预约
                                 $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 2;
-                            }elseif($val['apply_num'] >= $LaboratoryInfo['total']){ //TODO 已经预约满
-                                $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 3;
                             }
                         }
                     }
