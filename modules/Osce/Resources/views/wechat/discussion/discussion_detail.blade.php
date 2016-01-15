@@ -124,9 +124,9 @@
 
 @section('content')
     <ul class="option">
-        <li><a href="{{route('osce.wechat.postAddReply')}}">回复</a></li>
-        <li><a href="#">编辑</a></li>
-        <li><a href="javascript:void(0)" url="{{route('osce.wechat.getDelQuestion')}}" id="del">删除</a></li>
+        <li><a href="{{route('osce.wechat.postAddReply',array('id'=>$row['question']['id']))}}">回复</a></li>
+        <li><a href="{{route('osce.wechat.postEditQuestion',array('id'=>$row['question']['id']))}}">编辑</a></li>
+        <li><a href="javascript:void(0)" url="{{route('osce.wechat.getDelQuestion') }}" id="del">删除</a></li>
     </ul>
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
@@ -139,43 +139,43 @@
     </div>
     <div class="content-box">
         <div>
-            <h2 class="title">关于OSEC考试2015第三期考试的疑问</h2>
+            <h2 class="title">{{  $row['question']['title'] }}</h2>
             <div class="title-footer">
-                <div class="item-l">学生1</div>
-                <div class="item-c">2015-12-23 12:23:34</div>
+                <div class="item-l">{{  $row['question']['name']->name }}</div>
+                <div class="item-c">{{  $row['question']['create_at'] }}</div>
                 <div class="item-r">&nbsp;</div>
                 <div class="clearfix"></div>
             </div>
             <div class="title-con">
-                <p>关于2015年第3期技能培训考场安排，存在下面3方面的疑问，麻烦帮忙解答下，谢谢！</p>
-                <p>1、XXXXXXXXXXXXXXXXXXXXXXXXXX安排；</p> 
-                <p>2、XXXXXXXXXXXXXXXXXXXXXXXXXXx的安排；</p>
-                <p>3、XXXXXXXXXXXXXXXXXXXXXXXXXX的安排</p>
+                <p>{{  $row['question']['content'] }}</p>
             </div>
         </div>
     </div>
     <ul class="history-list">
+        @foreach($data as $data)
         <li>
             <div class="content-header">
                 <div class="content-l">
                     <span>1F</span>.
-                    <span class="student">李同学</span>.
-                    <span class="time">3天前</span>
+                    <span class="student">{{  $data['name']->name }}</span>.
+                    <span class="time">{{  $data['time'] }}</span>
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <p>这个可以咨询下教导处，电话XXXXXXXXXXXX</p>
+            <p>{{  $data['content'] }}</p>
         </li>
-        <li>
-            <div class="content-header">
-                <div class="content-l">
-                    <span>1F</span>.
-                    <span class="student">王同学</span>.
-                    <span class="time">3天前</span>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <p>这个可以咨询下教导处，电话XXXXXXXXXXXX</p>
-        </li>
+           @endforeach
     </ul>
+    <div class="row">
+        <div class="pull-left">
+            共{{$pagination->total()}}条
+        </div>
+        <div class="pull-right">
+            <nav>
+                <ul class="pagination">
+                    {!! $pagination->render() !!}
+                </ul>
+            </nav>
+        </div>
+    </div>
 @stop

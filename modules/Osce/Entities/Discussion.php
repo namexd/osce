@@ -14,7 +14,7 @@ class Discussion extends CommonModel{
     protected $table 		= 	'bbs_topic';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['title','content','pid','create_user_id'];
+    protected   $fillable 	=	['title','content','pid','create_user_id','created_at'];
     public      $search    =   [];
 
     public function getAuthor(){
@@ -23,5 +23,8 @@ class Discussion extends CommonModel{
 
     public function getDiscussionPagination(){
         return $this->where('pid',0)->paginate(config('msc.page_size'));
+    }
+    public function getReplyPagination($id){
+        return $this->where('pid',$id)->paginate(config('msc.page_size'));
     }
 }

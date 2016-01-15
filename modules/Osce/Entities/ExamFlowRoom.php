@@ -66,4 +66,22 @@ class ExamFlowRoom extends CommonModel
         }
         return $mins;
     }
+
+    public function getRoomStationsByFlow($examFlowRoom){
+        $stationsData   =   [];
+        foreach($examFlowRoom as $one)
+        {
+            $room   =   $one    ->  room;
+            if(is_null($room))
+            {
+                throw new \Exception('房间不存在');
+            }
+            $stations   =   $room->stations;
+            foreach($stations as $station)
+            {
+                $stationsData[] =   $station->station;
+            }
+        }
+        return $stationsData;
+    }
 }

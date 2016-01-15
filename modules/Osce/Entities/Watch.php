@@ -209,5 +209,24 @@ class Watch extends CommonModel implements MachineInterface
         return  $builder ->  paginate(config('osce.page_size'));
     }
 
+    //返回全部数据
+    public function getWatch($code='',$status=''){
+        $builder=$this->select();
 
+        if($code)
+        {
+            $builder =   $builder    ->  where('code','like','%'.$code.'%');
+        }
+        if($status )
+        {
+
+            $builder =   $builder    ->  where('status','=',$status);
+        }
+        if($status==-1)
+        {
+
+            $builder =   $builder    ->  where('status','=',0);
+        }
+        return $builder->get();
+    }
 }
