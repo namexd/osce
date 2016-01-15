@@ -168,7 +168,6 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
-        dd($LaboratoryInfo);
         return  view('msc::wechat.booking.booking_teacher_ordinary_form',['data'=>$data]);
     }
 
@@ -204,6 +203,7 @@ class LaboratoryCotroller extends MscWeChatController
             'begintime.required'=>'预约开始时间段必填',
             'endtime.required'=>'预约结束时间段必填'
         ]);
+
         $req = $Request->all();
         $user = Auth::user();
         $data = [

@@ -151,7 +151,7 @@ class Laboratory extends Model
         if(!empty($dateTime)){
             return $this->where('id','=',$id)->with(['FloorInfo','LabApply'=>function($LabApply) use ($dateTime,$type){
                 if($type == 1){
-                    $LabApply->where('apply_time','=',$dateTime)->whereIn('status',[1,2])->where('type','=',$type);
+                    $LabApply->where('apply_time','=',$dateTime)->whereIn('status',[1,2])->where('type','=',$type)->with('user');
                 }
             }])->first();
         }else{
