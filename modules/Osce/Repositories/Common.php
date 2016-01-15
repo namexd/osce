@@ -76,7 +76,7 @@ class Common
     public function getUserList(){
         return User::leftJoin('sys_user_role',function($join){
             $join->on('users.id','=','sys_user_role.user_id');
-        })
+        })  ->  select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile', 'users.lastlogindate')
             ->  where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
             ->  paginate(config('osce.page_size'));
     }
