@@ -20,11 +20,11 @@
             <div class="col-sm-6 column">
                 <div class="normal_background ">
                     <span class="manageindex_icon icon1"></span>
-                    <a  href="{{ route('msc.Laboratory.LaboratoryTeacherList') }}" ><span>普通实验室预约</span></a>
+                    <a  href="{{ route('msc.Laboratory.LaboratoryTeacherList',['type'=>'ordinary']) }}" ><span>普通实验室预约</span></a>
                 </div>
             </div>
             <div class="col-sm-6 column">
-                <a href="{{ route('msc.Laboratory.LaboratoryTeacherList') }}">
+                <a href="{{ route('msc.Laboratory.LaboratoryTeacherList',['type'=>'open']) }}">
                     <div class="normal_background">
                         <span class="manageindex_icon icon2"></span>
                         <span>开放实验室预约</span>
