@@ -1194,13 +1194,9 @@ function smart_assignment(){
         //    };
 
         var dl  =   $('<dl class="clearfloat">');
-
         var items   =   data.items;
-        console.log(data)
-        var everyHeight=data.end-data.begin;
-        console.log(everyHeight);
-        dl.css("height",everyHeight/10+"px");
-
+        var everyHeight=data.end-data.start;
+        dl.css("height",everyHeight+"px");
         for(var i in items)
         {
             var dd  = $('<dd>').text(items[i].name);
@@ -1283,187 +1279,23 @@ function smart_assignment(){
         for (var i in data){
             var groupData=data[i];
             var dom =   makeAll(groupData);
+            $('.classroom-box').html('');
             $('.classroom-box').append(dom);
         }
     }
-        var smartlist=[
-            {
-                'name':'教室404',
-                'child':[
-                    {
-                        'begin':1000,
-                        'end':1500,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
-                    {
-                        'begin':1500,
-                        'end':2800,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
 
-                ],
 
-            },
-            {
-                'name':'教室403',
-                'child':[
-                    {
-                        'begin':1000,
-                        'end':1600,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
-                    {
-                        'begin':1600,
-                        'end':2200,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
+    function makePlan(){
+        $.get(pars.makePlanUrl,function(testData){
+            console.log(testData.data);
+            maketotal(testData.data);
+            $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+            $('#makePlan').one('click',makePlan);
+        });
+    }
+    $('#makePlan').one('click',makePlan);
 
-                ],
-            },
-            {
-                'name':'教室403',
-                'child':[
-                    {
-                        'begin':1000,
-                        'end':1600,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
-                    {
-                        'begin':1600,
-                        'end':2200,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
 
-                ],
-            },
-            {
-                'name':'教室403',
-                'child':[
-                    {
-                        'begin':1000,
-                        'end':2000,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
-                    {
-                        'begin':1600,
-                        'end':2200,
-                        'items':[
-                            {
-                                id:1,
-                                name:'李治远3'
-                            },
-                            {
-                                id:2,
-                                name:'李治远2'
-                            },
-                            {
-                                id:3,
-                                name:'李治远1'
-                            }
-                        ]
-                    },
-
-                ],
-            }
-        ];
-        var totalData=[
-            smartlist,
-            smartlist,
-            smartlist
-        ]
-    maketotal(testData.data);
-    $(".table>li").css("width",liwidth+"px");//给表格设置列宽
 
 
 //点击两个表格可进行交换
@@ -1547,7 +1379,7 @@ function examinee_manage(){
                 //data    =   eval('('+data+')');
                 //console.log(data);
                 if(data.code == 1){
-                    console.log(data.code);
+
                     layer.alert('导入成功！');
                     location.reload();
                 }

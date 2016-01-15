@@ -257,6 +257,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('delete',['uses'=>'IndexController@getDeleteWatch']);
 		Route::get('exam-list',['uses'=>'IndexController@getExamList']);
 		Route::get('list',['uses'=>'IndexController@getWatchList']);
+		Route::get('watch-detail',['uses'=>'IndexController@getWatchDetail']);
 
 
 		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){

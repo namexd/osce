@@ -287,7 +287,7 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
-            'created_user_id'       =>  'required|integer',
+            'create_user_id'        =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
@@ -302,7 +302,7 @@ class IndexController extends CommonController
                 'description'   =>  $request->get('description',''),
                 'factory'       =>  $request->get('factory',''),
                 'sp'            =>  $request->get('sp',''),
-                'created_user_id'=> $request->get('created_user_id'),
+                'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
@@ -346,13 +346,13 @@ class IndexController extends CommonController
     public function getDeleteWatch(Request $request){
 
         $this->validate($request,[
-            'id'                    =>  'required|integer',
-            'created_user_id'       =>  'required|integer'
+            'code'                    =>  'required',
+            'create_user_id'       =>  'required|integer'
         ]);
 
-        $count=Watch::destroy($request->get('id'));
+        $resutl=Watch::where('code',$request->get('code'))->delete();
 
-        if($count>0){
+        if($resutl){
             return response()->json(
                 $this->success_data()
             );
@@ -387,10 +387,9 @@ class IndexController extends CommonController
     public function getUpdateWatch(Request $request){
 
         $this->validate($request,[
-            'id'            =>  'required|integer',
             'code'                  =>  'required',
             'status'                =>  'required',
-            'created_user_id'       =>  'required|integer',
+            'create_user_id'       =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
@@ -398,15 +397,14 @@ class IndexController extends CommonController
         ]);
 
 
-        $count=Watch::where('id','=',$request->get('id'))
+        $count=Watch::where('code'   ,'=', $request->get('code'))
             ->update([
-                'code'          =>  $request->get('code'),
                 'name'          =>  $request->get('name',''),
                 'status'        =>  $request->get('status'),
                 'description'   =>  $request->get('description'),
                 'factory'       =>  $request->get('factory'),
                 'sp'            =>  $request->get('sp'),
-                'created_user_id'=> $request->get('created_user_id'),
+                'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
@@ -420,6 +418,44 @@ class IndexController extends CommonController
             $this->fail(new \Exception('更新腕表失败'))
         );
     }
+
+    /**
+     *
+     * @method GET
+     * @url /api/1.0/private/osce/watch/watch-detail
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchDetail(Request $request){
+        $this->validate($request,[
+            'code'  =>  'required'
+        ]);
+
+       try{
+       $list=Watch::where('code',$request->get('code'))->select()->get();
+        return response()->json(
+            $this->success_data($list,1,'success')
+        );}
+            catch( \Exception $ex){
+            return response()->json(
+            $this->fail($ex)
+            );
+      }
+    }
+
 
     /**
      *获取当日考试列表

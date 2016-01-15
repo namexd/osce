@@ -31,7 +31,9 @@ class Station extends CommonModel
         return $this->belongsToMany('\Modules\Osce\Entities\room','room_station','station_id','room_id');
     }
 
-
+    public function roomStation(){
+        return $this->hasOne('\Modules\Osce\Entities\RoomStation','station_id','id');
+    }
 
     /**
      * 与摄像机_考站表的关联
