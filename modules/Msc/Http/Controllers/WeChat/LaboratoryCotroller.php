@@ -321,7 +321,7 @@ class LaboratoryCotroller extends MscWeChatController
 
                     if($MscMis->table('open_plan')->whereIn('id',$open_plan_id)->increment('apply_num',1)){
                         $MscMis->commit();
-                        dd('添加成功');
+                        return  view('msc::wechat.index.index_success' ,['success_msg'=>'预约成功']);
                     }else{
                         $MscMis->rollBack();
                         dd('添加失败');
