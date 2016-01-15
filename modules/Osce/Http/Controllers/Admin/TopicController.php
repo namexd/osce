@@ -70,7 +70,7 @@ class TopicController extends CommonController
             'title'         =>  'required',
             'content'       =>  'required',
             'score'         =>  'required',
-            'desc'   =>  'sometimes',
+            'desc'          =>  'sometimes',
         ],[
             'title.required'    =>  '评分标准名称必须',
             'content.required'  =>  '评分标准必须',
@@ -79,11 +79,24 @@ class TopicController extends CommonController
 
         $content        = $request->get('content');
         $score          = $request->get('score');
-        $formData = SubjectItem::builderItemData($content, $score);
 
+        $formData = SubjectItem::builderItemData($content, $score);
+        $totalData   =  0;
+        foreach($score as $index=>$socrdata)
+        {
+            foreach($socrdata as $key=>$socre)
+            {
+                if($key=='total')
+                {
+                    continue;
+                }
+                $totalData  +=  $socre;
+            }
+        }
         $data   =   [
             'title'         =>  e($request  ->  get('title')),
             'description'   =>  e($request  ->  get('desc')),
+            'score'         =>  $totalData,
         ];
         $subjectModel   =   new Subject();
         if($subjectModel->  addSubject($data,$formData)){
