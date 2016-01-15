@@ -747,5 +747,47 @@ class MachineController extends CommonController
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
     }
 
+    /**
+     * 监考设备的删除
+     * @api       POST /osce/admin/machine/postMachineDelete
+     * @access    public
+     * @param Request $request post请求<br><br>
+     * @param Machine $machine
+     * @return view
+     * @internal param Machine $model Machine
+     * @version   1.0
+     * @author    Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postMachineDelete(Request $request)
+    {
+        try {
+            $this->validate($request,[
+                'id'        =>  'required|integer',
+                'cate_id'   =>  'required|integer'
+            ]);
+            //获取删除的id
+            $id      = $request->input('id');
+            $cate_id = $request->input('cate_id');
+            switch($cate_id){
+                case 1: $model = new Vcr();
+                        break;
+                case 2: $model = new Pad();
+                        break;
+                case 3: $model = new Watch();
+                        break;
+                default: throw new \Exception('监考设备类型错误');
+            }
+            //通过id删除相应的设备
+            if($result = $model->where('id', $id)->deleted()) {
+                return json_encode($this->success_data(['删除成功！']));
+            }else{
+                throw new \Exception('该设备已于其他设备关联,无法删除');
+            }
+        } catch (\Exception $ex){
+            return json_encode($this->fail($ex));
+        }
+    }
+
 
 }

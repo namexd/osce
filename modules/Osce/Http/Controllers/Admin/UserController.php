@@ -106,10 +106,9 @@ class UserController extends CommonController
         try{
             $user   =   $common     ->  createAdminUser($data);
             return redirect()->route('osce.admin.user.getStaffList');
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -146,6 +145,7 @@ class UserController extends CommonController
         ]);
         $id =   intval($request    ->  get('id'));
         $user   =   User::find($id);
+        dd($user);
         if($user->delete())
         {
             return redirect()->route('osce.admin.user.getStaffList');

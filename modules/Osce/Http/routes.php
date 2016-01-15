@@ -53,6 +53,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilator/edit-sp-invigilator',['uses'=>'InvigilatorController@getEditSpInvigilator','as'=>'osce.admin.invigilator.getEditSpInvigilator']);
 		Route::post('invigilator/add-sp-invigilator', 	['uses'=>'InvigilatorController@postAddSpInvigilator','as'=>'osce.admin.invigilator.postAddSpInvigilator']);
 		Route::post('invigilator/edit-sp-invigilator', 	['uses'=>'InvigilatorController@postEditSpInvigilator','as'=>'osce.admin.invigilator.postEditSpInvigilator']);
+
+		Route::post('invigilator/select-teacher',	['uses'=>'InvigilatorController@postSelectTeacher', 'as'=>'osce.admin.invigilator.postSelectTeacher']);
 		
 		Route::get('config/index',  ['uses'=>'ConfigController@getIndex','as'=>'osce.admin.config.getIndex']);
 
@@ -74,6 +76,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		Route::get('machine/add-watch', ['uses'=>'MachineController@getAddWatch','as'=>'osce.admin.machine.getAddWatch']);
 		Route::get('machine/edit-watch', 	['uses'=>'MachineController@getEditWatch','as'=>'osce.admin.machine.getEditWatch']);
+		Route::post('machine/machine-delete', 	['uses'=>'MachineController@postMachineDelete','as'=>'osce.admin.machine.postMachineDelete']);
 
 
 		//考核点

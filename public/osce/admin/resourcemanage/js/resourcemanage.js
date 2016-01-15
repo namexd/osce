@@ -10,7 +10,11 @@ $(function(){
         case "clinicalcase":clinicalcase();break;
         case "categories":categories();break;
         case "invigilator":invigilator();break;
+<<<<<<< HEAD
         case "topic":topic();break;
+=======
+        case "sp_invigilator":sp_invigilator();break;
+>>>>>>> e809829418e2fa3e506177eca2cc63f9652b5039
     }
 });
 
@@ -508,10 +512,12 @@ function invigilator(){
                 url:pars.deletes,
                 data:{id:thisElement.attr('value')},
                 success:function(data){
-                    location.reload();
+                    //location.reload();
+                    console.log(data);
                 }
             })
         });
+
     })
 }
 
@@ -539,5 +545,11 @@ function topic(){
             })
         });
     }) 
+
+
+}
+
+function sp_invigilator(){
+
 
 }
