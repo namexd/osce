@@ -43,7 +43,8 @@
 
                 <div class="input-group" style="margin: 20px 0">
                     <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
-                        <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;" name="name">
+                        <input type="hidden" name="cate_id" value="1">
+                        <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;" name="name" value="{{(empty($name)?'':$name)}}">
                         <div class="btn-group" style="margin-right: 10px;">
                             <button type="button" class="btn btn-default dropdown-toggle"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
@@ -51,6 +52,7 @@
                                     @forelse($machineStatuValues as $status=>$machineStatuValue)
                                         @if($_GET['status']==$status)
                                             {{$machineStatuValue}}
+                                            <input type="hidden" name="status" value="{{$status}}">
                                         @endif
                                     @empty
                                     @endforelse
