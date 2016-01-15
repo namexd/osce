@@ -42,7 +42,18 @@
                     }
                 }
             });
-            
+            //键盘事件不停检测输入的手机号
+            $("#mobile").keyup(function(){
+                $.ajax({
+                    type:'post',
+                    async:false,
+                    url:url,
+                    data:{mobile:$(this).val()},
+                    success:function(data){
+                        console.log(data);
+                    }
+                })
+            })
         })
 
     </script>
@@ -74,7 +85,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">手机号</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="mobile">
+                                <input type="text" class="form-control" name="mobile" id="mobile">
                             </div>
 
                         </div>
