@@ -79,6 +79,8 @@ class CaseController extends CommonController
         //验证略过
         $this->validate($request, [
             'name' => 'required'
+        ],[
+            'name.required'     =>  '病例名称不能为空'
         ]);
 
         //获得提交的字段
@@ -143,6 +145,11 @@ class CaseController extends CommonController
     public function postEditCase(Request $request, CaseModel $caseModel)
     {
         //验证,略过
+        $this->validate($request, [
+            'name' => 'required'
+        ],[
+            'name.required'     =>  '病例名称不能为空'
+        ]);
 
         $id = $request->input('id');
         $formData = $request->only('name', 'description');
