@@ -8,7 +8,7 @@
         .add_main .form-group .txt {padding-left:105px;}
 
         .manage_list .all_list p{padding:5px 8px 0 8%;}
-        .manage_list div p:last-child{padding:5px 8px 5px 8%;}
+        .manage_list div p:last-child{padding:0px 8px 5px 8%;}
 </style>
 @stop
 
@@ -73,22 +73,34 @@
                 <div class="all_list" id="{{ @$val['id']}}">
 
                     @if(empty($val['Apply_status']))
-                    <div class="w_70 left">
-                        <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
-                        <p>已预约/容量：<span>{{ @$val['Apply_num']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
-                    </div>
-                    <div class="w_30 right mart_10">
-                        <label class="check_label checkbox_input check_one">
-                            <div class="check_real check_icon display_inline"></div>
-                        </label>
-                    </div>
+
+                        @if($val['apply_num']==$data['LaboratoryInfo']['total'])
+                            <div class="w_70 left">
+                                <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
+
+                                <p>已预约/容量：<span>-</span></p>
+                            </div>
+                            <div class="w_30 right mart_12 cloc">
+                                已满
+                            </div>
+                        @else
+                            <div class="w_70 left">
+                                <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
+                                <p>已预约/容量：<span>{{ @$val['apply_num']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
+                            </div>
+                            <div class="w_30 right mart_12">
+                                <label class="check_label checkbox_input check_one">
+                                    <div class="check_real check_icon display_inline"></div>
+                                </label>
+                            </div>
+                        @endif
                     @elseif($val['Apply_status'] == 1)
                     <div class="w_70 left">
                         <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
 
-                        <p>已预约/容量：<span>{{ @$val['Apply_num']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
+                        <p>已预约/容量：<span>{{ @$val['apply_num']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
                     </div>
-                    <div class="w_30 right mart_10 red">
+                    <div class="w_30 right mart_12 red">
                         您已预约
                     </div>
                     @elseif($val['Apply_status'] == 2)
@@ -96,7 +108,7 @@
                             <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
                             <p>已预约/容量：<span>{{$data['LaboratoryInfo']['total']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
                         </div>
-                        <div class="w_30 right mart_10">
+                        <div class="w_30 right mart_12">
                         </div>
                     @endif
                 </div>
@@ -104,7 +116,7 @@
 
         </div>
         <div class="w_94">
-            <input class="btn2 mart_10 marb_10" type="submit" value="确认预约">
+            <input class="btn2 mart_10 marb_10"  id="submit"  type="submit" value="确认预约">
         </div>
     </form>
     <div id="sidepopup_layer">

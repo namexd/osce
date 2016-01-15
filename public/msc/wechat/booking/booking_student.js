@@ -135,7 +135,7 @@ function booking_student_form(){
                 message: 'The hospital is not valid',
                 validators: {
                     notEmpty: {/*非空提示*/
-                        message: '课程名不能为空'
+                        message: '申请原因不能为空'
                     }
                 },
                 stringLength: {/*长度提示*/
@@ -144,6 +144,20 @@ function booking_student_form(){
                     message: '申请原因不得超过512个字符'
                 }
             },
+        }
+    })
+    $("#submit").click(function(){
+        if($(".date_list").children("input").size()=="0"){
+
+            $.alert({
+                title: '提示：',
+                content: '您尚未选择时间段!',
+                confirmButton: '确定',
+                confirm: function(){
+
+                }
+            });
+            return false;
         }
     })
 

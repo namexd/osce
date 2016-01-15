@@ -185,7 +185,6 @@ class LaboratoryCotroller extends MscWeChatController
     public function ApplyLaboratoryOp(Request $Request){
         $this->validate($Request,[
             'lab_id'   => 'required|integer',
-            'open_plan_id'   => 'required',
             'description'=>'required|max:512',
             'date_time' => 'required|date',
             'course_name'=>'required',
@@ -195,7 +194,6 @@ class LaboratoryCotroller extends MscWeChatController
         ],[
             'lab_id.required'=>'实验室id必填',
             'lab_id.integer'=>'实验室id必须为数字',
-            'open_plan_id.required'=>'日历id必填',
             'description.required'=>'预约原因必填',
             'description.max'=>'预约原因最长不能超过512个字节',
             'date_time.required'=>'预约日期必填',
@@ -206,6 +204,48 @@ class LaboratoryCotroller extends MscWeChatController
             'begintime.required'=>'预约开始时间段必填',
             'endtime.required'=>'预约结束时间段必填'
         ]);
+        $req = $Request->all();
+        $user = Auth::user();
+        $data = [
+            'lab_id'=>$req['lab_id'],
+            'begintime'=>$req['begintime'],
+            'endtime'=>$req['endtime'],
+            'type'=>1,
+            'description'=>$req['description'],
+            'apply_user_id'=>$user->id,
+            'apply_time'=>$req['date_time'],
+            'user_type'=>($user->user_type == 1)?2:1,
+            'course_name'=>$req['course_name'],
+            'total'=>$req['total']
+        ];
+        //TODO 新建数据库对象 准备事物操作
+        $MscMis = DB::connection('msc_mis');
+        $MscMis->beginTransaction();
+        $LabApply = new LabApply;
+        $rew = $LabApply->create($data);
+        if (!empty($rew->id)) {
+            //TODO 构建计划表数据
+            $LabPlanData = [
+                'begin_endtime' => $req['begintime'].'-'.$req['endtime'],
+                'user_id' => $user->id,
+                'type' => 2,
+                'lab_id' => $rew->lab_id,
+                'plan_time' => $rew->apply_time,
+                'lab_apply_id' => $rew->id
+            ];
+            $LabPlan = new LabPlan;
+            $LabPlanInfo = $LabPlan->create($LabPlanData);
+            if(!empty($LabPlanInfo->id)){
+                $MscMis->commit();
+                return  view('msc::wechat.booking.booking_success');
+            }else{
+                $MscMis->rollBack();
+                dd('添加失败');
+            }
+        }else{
+            $MscMis->rollBack();
+            dd('添加失败');
+        }
 
 
 
