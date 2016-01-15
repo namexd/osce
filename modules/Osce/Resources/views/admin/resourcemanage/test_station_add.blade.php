@@ -67,7 +67,7 @@
                                 {{--</div>--}}
                             {{--</div>--}}
 
-                            <div class="hr-line-dashed"></div>
+                            {{--<div class="hr-line-dashed"></div>--}}
                             {{--<div class="form-group">--}}
                                 {{--<label class="col-sm-2 control-label">考站编号</label>--}}
 
@@ -88,7 +88,7 @@
                                 <label class="col-sm-2 control-label">考试科目</label>
 
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="vcr_id">
+                                    <select id="" required  class="form-control m-b" name="subject_id">
                                         @foreach($subject as $key=>$item)
                                             <option value="{{$item->id}}">{{$item->title}}</option>
                                         @endforeach
