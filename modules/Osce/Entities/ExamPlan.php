@@ -56,7 +56,9 @@ class ExamPlan extends CommonModel
             $screeningTimeList      =   $this   ->  setEachBatchTime($examScreening,$batchNum);
             $timeList[$examScreening->id] = $screeningTimeList;
         }
+
         $plan   =   $this->distribute($timeList);
+        
         $groupData  =   $this->makeGroupPlanByRoom($plan);
         return  $groupData;
     }
@@ -73,18 +75,16 @@ class ExamPlan extends CommonModel
             foreach($examScreeningBactchList as $batchId    =>   $batch)
             {
                 $batchStudnet   =   [];
-
-                if($batchStudnet===[])
-                {
-                    $batchStudnet   =   $screeningStudents[$examScreeningIndex][$batchId];
-                }
-                else
-                {
-                    $batchStudnet   =   $this   ->  changeStudentIndex($batchStudnet);
-                }
-
                 foreach($batch as $serialnumber    =>  $batchInfo)
                 {
+                    if($batchStudnet===[])
+                    {
+                        $batchStudnet   =   $screeningStudents[$examScreeningIndex][$batchId];
+                    }
+                    else
+                    {
+                        $batchStudnet   =   $this   ->  changeStudentIndex($batchStudnet);
+                    }
                     $stationIndex   =   0;
                     foreach($batchInfo as $stationId  =>  $batchData)
                     {
