@@ -346,13 +346,13 @@ class IndexController extends CommonController
     public function getDeleteWatch(Request $request){
 
         $this->validate($request,[
-            'code'                    =>  'required|integer',
+            'code'                    =>  'required',
             'create_user_id'       =>  'required|integer'
         ]);
 
-        $count=Watch::where('code',$request->get('code'))->delete();
+        $resutl=Watch::where('code',$request->get('code'))->delete();
 
-        if($count>0){
+        if($resutl){
             return response()->json(
                 $this->success_data()
             );
