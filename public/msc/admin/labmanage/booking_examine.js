@@ -48,9 +48,9 @@ function booking_examine(){
     //不通过弹窗
     $(".refuse").click(function(){
         var id = $(this).attr('data-id');
-        $('#refuse_from').append('<input type="hidden" name="id" value="'+id+'">');
-        $("#refuse_from").show();
+        $('#refuse_from').show().append('<input type="hidden" name="id" value="'+id+'">');
         $("#detail_from").hide();
+        $("#choose_from").hide();
     });
     //不通过验证
     $('#refuse_from').bootstrapValidator({
@@ -96,21 +96,23 @@ function booking_examine(){
 
             }
         });
+        $("#choose_from").hide();
         $("#refuse_from").hide();
         $("#detail_from").show();
     });
     //批量不通过
     $(".all_refuse").click(function(){
         if($(".check_label").children(".check").size()==0){
-            layer.confirm("请至少选择一条记录进行操作！", {
-                btn: ['确定','取消'] //按钮
-            }, function(){
-                window.location.href=window.location.href;
-            });
+            $("#refuse_from").hide();
+            $("#detail_from").hide();
+            $("#choose_from").show();
         }else{
-
+            $("#refuse_from").show();
+            $("#detail_from").hide();
+            $("#choose_from").hide();
         }
     });
+
     //批量通过
     $(".all_pass").click(function(){
         if($(".check_label").children(".check").size()==0){
@@ -164,6 +166,7 @@ function booking_examine_other(){
 
             }
         });
+        $("#choose_from").hide();
         $("#refuse_from").hide();
         $("#detail_from").show();
     });
