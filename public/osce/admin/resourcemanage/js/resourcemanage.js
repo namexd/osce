@@ -187,22 +187,13 @@ function categories(){
         //记录计数
         thisElement.attr('current',child);
 
-        //自动加减节点
-        thisElement.find('td').eq(2).find('select');
-        var total;
-        console.log(thisElement.find('td').eq(2).find('select').val())
-        if(change.val()>1){
-            total = parseInt(change.val())+1;
-        }else{
-            total = 1;
-        }
         //分数自动加减
         var option = '';
-        for(var k =0;k<=total;k++){
+        for(var k =0;k<=child;k++){
             option += '<option value="'+k+'">'+k+'</option>';
         }
         thisElement.find('td').eq(2).find('select').html(option);
-        thisElement.find('td').eq(2).find('select').val(total);
+        thisElement.find('td').eq(2).find('select').val(child);
 
         var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
         thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html)
@@ -283,12 +274,18 @@ function categories(){
 
             //改变value值
             var total = parseInt(change.val())-parseInt(thisElement.find('td').eq(2).find('select').val());
+            //当删除完的时候
+            if(total==0){
+                total = 1;
+                change.removeAttr('disabled');
+            }
             var option = '';
             for(var k =1;k<=total;k++){
                 option += '<option value="'+k+'">'+k+'</option>';
             }
             change.html(option);
             change.val(total);
+            $('.'+className+'[parent='+parent+']').attr('current',total);
 
 
         }
