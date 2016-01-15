@@ -615,6 +615,7 @@ class InvigilatorController extends CommonController
                 return json_encode(1);
             }
         }
+        return json_encode(0);
     }
 
 }

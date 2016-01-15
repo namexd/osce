@@ -10,6 +10,7 @@ $(function(){
         case "clinicalcase":clinicalcase();break;
         case "categories":categories();break;
         case "invigilator":invigilator();break;
+        case "sp_invigilator":sp_invigilator();break;
     }
 });
 
@@ -486,7 +487,7 @@ function categories(){
 }
 
 function invigilator(){
-    $(".delete").click(function(){
+    /*$(".delete").click(function(){
 
         var thisElement=$(this);
         layer.alert('确认删除？',function(){
@@ -496,9 +497,15 @@ function invigilator(){
                 url:pars.deletes,
                 data:{id:thisElement.attr('value')},
                 success:function(data){
-                    location.reload();
+                    //location.reload();
+                    console.log(data);
                 }
             })
         });
-    })
+    })*/
+
+}
+
+function sp_invigilator(){
+
 }
