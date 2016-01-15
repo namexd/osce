@@ -219,7 +219,6 @@ class TopicController extends CommonController
         $subject    =   Subject::find($id);
 
         $items      =   $subject->items;
-        //dd($items);
         $items      =   SubjectItem::builderItemTable($items);
         $prointNum  =   1;
         $optionNum  =   [
