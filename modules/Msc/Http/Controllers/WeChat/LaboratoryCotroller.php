@@ -199,6 +199,8 @@ class LaboratoryCotroller extends MscWeChatController
                                 $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 1;
                             }elseif($v['LabApply']['user_type'] == 2){//TODO 老师预约
                                 $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 2;
+                            }elseif($val['apply_num'] >= $LaboratoryInfo['total']){ //TODO 已经预约满
+                                $LaboratoryInfo['OpenPlan'][$key]['Apply_status'] = 3;
                             }
                         }
                     }
