@@ -18,6 +18,7 @@ use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
@@ -46,21 +47,29 @@ class InvigilatePadController extends CommonController
     {
 //        dd(222222222);
         $this->validate($request, [
-            'watch_id' => 'required|integer'
+            'id' => 'required|integer'
         ], [
-            'watch_id.required' => '请刷腕表'
+            'id.required' => '请老师PAD登陆'
         ]);
-        $watch_id = (int)$request->input('watch_id');
-        $studentModel = new  Student();
-        $studentData = $studentModel->studentList($watch_id);
-        $list = [];
-        foreach ($studentData as $itme) {
-            $list[] = [
-                'name' => $itme->name,
-                'code' => $itme->code,
-                'idcard' => $itme->idcard,
-                'mobile' => $itme->mobile
-            ];
+        $teacher_id = (int)$request->input('id');
+        $teacherType =Teacher::where('id','=',$teacher_id)->select('type')->first()->type;
+        if($teacherType!==1){
+            return response()->json(
+                $this->fail(new \Exception('你目前不是监考老师'))
+            );
+        }else{
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentList($teacher_id);
+//            dd($studentData);
+            $list = [];
+            foreach ($studentData as $itme) {
+                $list[] = [
+                    'name' => $itme->name,
+                    'code' => $itme->code,
+                    'idcard' => $itme->idcard,
+                    'mobile' => $itme->mobile
+                ];
+            }
         }
 
         dd($list);
