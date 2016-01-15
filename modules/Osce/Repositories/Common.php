@@ -81,43 +81,39 @@ class Common
             ->  paginate(config('osce.page_size'));
     }
 
-    public function createAdminUser($data){
-        if(config('APP_DEBUG'))
-        {
+    public function createAdminUser($data)
+    {
+        if(config('APP_DEBUG')){
             $password   =  123456;
-        }
-        else
-        {
+        } else{
             $password   =   Common::getRandStr(6);
         }
 
         DB::beginTransaction();
         try{
             $user   =   Common::registerUser(['username'=>$data['mobile'],],$password);
-            if(is_null($user))
-            {
+            if(is_null($user)){
                 throw new \Exception('创建用户失败');
             }
             $user   ->  name    =   $data['name'];
             $user   ->  gender  =   $data['gender'];
-            DB::table('sys_user_role')->insert(
-                [
+
+            DB::table('sys_user_role')->insert([
                     'role_id'=>config('osce.adminRoleId',3),
                     'user_id'=>$user->id,
                     'created_at'=>time(),
                     'updated_at'=>time(),
-                ]
-            );
-            if(!$user   ->  save())
-            {
+            ]);
+
+            if(!$result = $user ->save()){
                 throw new \Exception('初始化资料失败');
             }
+
             DB::commit();
             $this   ->  sendRegisterEms($data['mobile'],$password);
-            return  $user;
-        }
-        catch(\Exception $ex)
-        {
+            return  $result;
+
+        } catch(\Exception $ex){
             DB::rollBack();
             throw $ex;
         }
