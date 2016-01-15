@@ -1069,13 +1069,9 @@ function smart_assignment(){
         //    };
 
         var dl  =   $('<dl class="clearfloat">');
-
         var items   =   data.items;
-        console.log(data)
-        var everyHeight=data.end-data.begin;
-        console.log(everyHeight);
-        dl.css("height",everyHeight/10+"px");
-
+        var everyHeight=data.end-data.start;
+        dl.css("height",everyHeight+"px");
         for(var i in items)
         {
             var dd  = $('<dd>').text(items[i].name);
@@ -1158,6 +1154,7 @@ function smart_assignment(){
         for (var i in data){
             var groupData=data[i];
             var dom =   makeAll(groupData);
+            $('.classroom-box').html('');
             $('.classroom-box').append(dom);
         }
     }
@@ -1165,13 +1162,15 @@ function smart_assignment(){
 
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
+            console.log(testData.data);
             maketotal(testData.data);
+            $(".table>li").css("width",liwidth+"px");//给表格设置列宽
             $('#makePlan').one('click',makePlan);
         });
     }
     $('#makePlan').one('click',makePlan);
 
-    $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+
 
 
 //点击两个表格可进行交换
@@ -1255,7 +1254,7 @@ function examinee_manage(){
                 //data    =   eval('('+data+')');
                 //console.log(data);
                 if(data.code == 1){
-                    console.log(data.code);
+
                     layer.alert('导入成功！');
                     location.reload();
                 }
