@@ -401,8 +401,8 @@
                 var str = '';
                 var name = '';
                 var timeBrr = '';
+                //console.log($('.dataarr').val());
                 if(!$('.dataarr').val()){
-
                     layer.msg("请选择日期", {icon: 2,time: 1000});
                     return false;
                 }
