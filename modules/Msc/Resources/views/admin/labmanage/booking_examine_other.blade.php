@@ -31,7 +31,7 @@
                 <div class="tabs-container">
                     <ul class="nav nav-tabs">
                         <li><a href="/msc/admin/laboratory/lab-order-list?type=1">待处理</a></li>
-                        <li class="active"><a href="/msc/admin/laboratory/ajax-data?type=2">已处理</a></li>
+                        <li class="active"><a href="/msc/admin/laboratory/lab-order-list?type=2">已处理</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-2" class="tab-pane active">
@@ -85,11 +85,11 @@
                                                         <td class="name">{{@$list->labname}}</td>
                                                         <td class="status">{{@$list->address}}</td>
                                                         <td>
-                                                            @if(empty(@$list->begintime) && empty(@$list->endtime))
-                                                                {{@$list->playyear}}
-                                                            @else
+                                                            {{--@if(empty(@$list->begintime) && empty(@$list->endtime))--}}
+                                                                {{--{{@$list->playyear}}--}}
+                                                            {{--@else--}}
                                                                 {{@$list->apply_time}}
-                                                            @endif
+                                                            {{--@endif--}}
 
                                                         </td>
                                                         @if(empty(@$list->begintime) && empty(@$list->endtime))
@@ -128,6 +128,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        {{--分页--}}
+        <div class="btn-group pull-right">
+            <?php echo $LabOrderList->appends(['type'=>$type])->render();?>
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}

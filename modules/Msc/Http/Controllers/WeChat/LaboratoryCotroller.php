@@ -163,6 +163,15 @@ class LaboratoryCotroller extends MscWeChatController
         $LadDevice = new LadDevice;
         //TODO GetLaboratoryInfo方法会查询出（实验室相关的楼栋信息、实验室相关的日历安排、实验室相关的日历安排、以及不同日历安排的预约情况和计划情况）
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,1);
+
+        if(!empty($LaboratoryInfo->toArray())){
+            if(empty($LaboratoryInfo->LabApply->toArray())){
+                foreach($LaboratoryInfo->LabApply as $v){
+                    $v['begintime'] = date('H:i',strtotime($v['begintime']));
+                    $v['endtime'] = date('H:i',strtotime($v['endtime']));
+                }
+            }
+        }
         $data = [
             'ApplyTime'=>$DateTime,
             'LaboratoryInfo'=>$LaboratoryInfo,
