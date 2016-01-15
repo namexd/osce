@@ -100,7 +100,7 @@ class ProfessionController extends MscController
         'name.required'=>'专业名称必填',
         'name.max'=>'专业名称最长50个字节',
         'name.name'=>'专业名称不能重复添加',
-        
+
         'code.required'=>'专业专业代码必填',
         'code.max'=>'专业代码最长32个字节',
 
