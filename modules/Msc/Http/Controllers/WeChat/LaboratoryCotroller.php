@@ -210,8 +210,14 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
+        $user = Auth::user();
+        //$user->user_type == 2 代表学生
+        if($user->user_type == 2){
+            return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
+        }elseif($user->user_type == 1){ //$user->user_type == 1 代表老师
+            return view('msc::wechat.booking.booking_teacher_open_detail',['data'=>$data]);
+        }
         //dd($data);
-        return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
     /**
@@ -249,11 +255,125 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryOpenPlanData'=>$LaboratoryOpenPlanData,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($LabId)
         ];
-        //dd($data);
-        return  view('msc::wechat.booking.booking_student_form',['data'=>$data]);
+        $user = Auth::user();
+        //$user->user_type == 2 代表学生
+        if($user->user_type == 2){
+            return  view('msc::wechat.booking.booking_student_form',['data'=>$data]);
+        }elseif($user->user_type == 1){ //$user->user_type == 1 代表老师
+            return view('msc::wechat.booking.booking_teacher_open_form',['data'=>$data]);
+        }
+
+    }
+    /**
+     * 老師預約普通實驗室 數據處理
+     * @method  POST
+     * @url /msc/wechat/laboratory/open-laboratory-form-teacher-op
+     * @access public
+     * @param Request $Request
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月7日10:31:29
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function OpenLaboratoryFormTeacherOp(Request $Request){
+        $this->validate($Request,[
+            'lab_id'   => 'required|integer',
+            'open_plan_id'   => 'required',
+            'description'=>'required|max:512',
+            'date_time' => 'required|date',
+            'course_name'=>'required',
+            'total'=>'required|integer'
+        ],[
+            'lab_id.required'=>'实验室id必填',
+            'lab_id.integer'=>'实验室id必须为数字',
+            'open_plan_id.required'=>'日历id必填',
+            'description.required'=>'预约日期必填',
+            'description.max'=>'预约原因最长不能超过512个字节',
+            'date_time.required'=>'预约日期必填',
+            'date_time.date'=>'预约日期必须为标准的日期格式',
+            'course_name.required'=>'课程名称必填',
+            'total.required'=>'上课人数必填',
+            'total.integer'=>'上课人数必须为数字'
+        ]);
+
+        $req = $Request->all();
+        $user = Auth::user();
+        $open_plan_id = $req['open_plan_id'];
+        $data = [
+            'lab_id'=>$req['lab_id'],
+            'type'=>2,
+            'description'=>$req['description'],
+            'apply_user_id'=>$user->id,
+            'apply_time'=>$req['date_time'],
+            'user_type'=>($user->user_type == 1)?2:1,
+            'course_name'=>$req['course_name'],
+            'total'=>$req['total']
+        ];
+
+        //TODO 新建数据库对象 准备事物操作
+        $MscMis = DB::connection('msc_mis');
+        $MscMis->beginTransaction();
+        $LabApply = new LabApply;
+        $rew = $LabApply->create($data);
+        if (!empty($rew->id)) {
+
+            $begin_endtime = '';
+            $OpenPlan = new OpenPlan;
+            //TODO 根据日历id 数组 查询日历表数据 (为插入计划表做准备)
+            $OpenPlanInfo = $OpenPlan->whereIn('id',$open_plan_id)->get();
+            if(!empty($OpenPlanInfo->toArray())){
+                foreach($OpenPlanInfo as $v){
+                    if(empty($begin_endtime)){
+                        $begin_endtime .= $v['begintime'].'-'.$v['endtime'];
+                    }else{
+                        $begin_endtime .= (','.$v['begintime'].'-'.$v['endtime']);
+                    }
+                }
+            }
+            //TODO 构建计划表数据
+            $LabPlanData = [
+                'begin_endtime' => $begin_endtime,
+                'user_id' => $user->id,
+                'type' => 2,
+                'lab_id' => $rew->lab_id,
+                'plan_time' => $rew->apply_time,
+                'lab_apply_id' => $rew->id
+            ];
+            $LabPlan = new LabPlan;
+            $LabPlanInfo = $LabPlan->create($LabPlanData);
+
+            //TODO 计划插入成功 之后生成预约和日历的中间表数据
+            if (!empty($LabPlanInfo->id)) {
+                $PlanApplyData = [];
+                foreach($open_plan_id as $v){
+                    $PlanApplyData [] = [
+                        'apply_id'=>$rew->id,
+                        'open_plan_id'=>$v,
+                        'created_at'=>date('Y-m-d H:i:s',time()),
+                        'updated_at'=>date('Y-m-d H:i:s',time())
+                    ];
+                }
+                if($MscMis->table('plan_apply')->insert($PlanApplyData)){
+
+                    if($MscMis->table('open_plan')->whereIn('id',$open_plan_id)->increment('apply_num',1)){
+                        $MscMis->commit();
+                        return  view('msc::wechat.booking.booking_success');
+                    }else{
+                        $MscMis->rollBack();
+                        dd('添加失败');
+                    }
+                }else{
+                    $MscMis->rollBack();
+                    dd('添加失败');
+                }
+            }else{
+                $MscMis->rollBack();
+                dd('添加失败');
+            }
+        }
     }
 
     /**
+     * 學生預約普通實驗室 數據處理
      * @method  POST
      * @url /msc/wechat/laboratory/open-laboratory-form-op
      * @access public
