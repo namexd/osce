@@ -287,7 +287,11 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
-            'created_user_id'       =>  'required|integer'
+            'created_user_id'       =>  'required|integer',
+            'description'           =>  'sometimes',
+            'factory'               =>  'sometimes',
+            'sp'                    =>  'sometimes',
+            'purchase_dt'           =>  'sometimes',
         ]);
 
         try{
@@ -342,8 +346,8 @@ class IndexController extends CommonController
     public function getDeleteWatch(Request $request){
 
         $this->validate($request,[
-            'id'            =>  'required|integer',
-            'user_id'       =>  'required|integer'
+            'id'                    =>  'required|integer',
+            'created_user_id'       =>  'required|integer'
         ]);
 
         $count=Watch::destroy($request->get('id'));
@@ -384,17 +388,26 @@ class IndexController extends CommonController
 
         $this->validate($request,[
             'id'            =>  'required|integer',
-            'status'        =>  'required|integer',
-            'user_id'       =>  'required|integer'
+            'code'                  =>  'required',
+            'status'                =>  'required',
+            'created_user_id'       =>  'required|integer',
+            'description'           =>  'sometimes',
+            'factory'               =>  'sometimes',
+            'sp'                    =>  'sometimes',
+            'purchase_dt'           =>  'sometimes',
         ]);
 
 
         $count=Watch::where('id','=',$request->get('id'))
             ->update([
-                'status'=>$request->get('status'),
-                'factory'=>$request->get('factory'),
-                'code'=>$request->get('code'),
-                'purchase_dt'=>$request->get('purchase_dt'),
+                'code'          =>  $request->get('code'),
+                'name'          =>  $request->get('name',''),
+                'status'        =>  $request->get('status'),
+                'description'   =>  $request->get('description'),
+                'factory'       =>  $request->get('factory'),
+                'sp'            =>  $request->get('sp'),
+                'created_user_id'=> $request->get('created_user_id'),
+                'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
         if($count>0){
