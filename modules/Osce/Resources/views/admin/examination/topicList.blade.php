@@ -18,6 +18,7 @@
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'topic','del':'{{route('osce.admin.topic.getDelTopic')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

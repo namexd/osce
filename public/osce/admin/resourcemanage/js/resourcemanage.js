@@ -10,6 +10,7 @@ $(function(){
         case "clinicalcase":clinicalcase();break;
         case "categories":categories();break;
         case "invigilator":invigilator();break;
+        case "topic":topic();break;
     }
 });
 
@@ -145,9 +146,6 @@ function categories(){
     $('tbody').on('click','.fa-plus',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
-        //禁用下拉
-        thisElement.find('td').eq(2).find('select').attr('disabled','disabled');
-
         var parent = thisElement.attr('parent'),
                 child = thisElement.attr('current');
 
@@ -193,6 +191,10 @@ function categories(){
         }
         thisElement.find('td').eq(2).find('select').html(option);
         thisElement.find('td').eq(2).find('select').val(child);
+        //禁用下拉
+        thisElement.find('td').eq(2).find('select').hide();
+        thisElement.find('td').eq(2).find('span').remove();
+        thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
 
         var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
         thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html)
@@ -273,10 +275,13 @@ function categories(){
 
             //改变value值
             var total = parseInt(change.val())-parseInt(thisElement.find('td').eq(2).find('select').val());
+            var cu = total;
             //当删除完的时候
             if(total==0){
                 total = 1;
-                change.removeAttr('disabled');
+                cu = 0;
+                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+                change.show();
             }
             var option = '';
             for(var k =1;k<=total;k++){
@@ -284,7 +289,10 @@ function categories(){
             }
             change.html(option);
             change.val(total);
-            $('.'+className+'[parent='+parent+']').attr('current',total);
+            $('.'+className+'[parent='+parent+']').attr('current',cu);
+
+            $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+            change.after('<span>'+parseInt(total)+'</span>');
 
 
         }
@@ -480,6 +488,10 @@ function categories(){
             change.html(option);
             change.val(total-1);
 
+            $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+            change.after('<span>'+parseInt(total-1)+'</span>')
+
+
         });
 
 
@@ -501,4 +513,31 @@ function invigilator(){
             })
         });
     })
+}
+
+/**
+ * 评分标准列表
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-15
+ * @return  {[type]}   [description]
+ */
+
+function topic(){
+
+   $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'get',
+                async:false,
+                url:pars.del,
+                data:{id:thisElement.attr('value')},
+                success:function(data){
+                    location.reload();
+                }
+            })
+        });
+    }) 
+
 }
