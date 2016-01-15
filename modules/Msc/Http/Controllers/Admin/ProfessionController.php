@@ -178,10 +178,11 @@ class ProfessionController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public  function postProfessionSave(Request $request){
+        $profession = new StdProfessional();
         $this->validate($request,[
             'id' => 'sometimes|min:0|max:10',
             'name'   => 'required|max:50',
-            'code'   =>  'required|max:32',
+            'code'   =>  'required|max:32|unique:msc_mis.student_professional,code,'.$request->get('id').',id',
             'status' =>   'required|in:0,1'
         ],[
             'name.required'=>'专业名称必填',
@@ -189,8 +190,7 @@ class ProfessionController extends MscController
 
             'code.required'=>'专业专业代码必填',
             'code.max'=>'专业代码最长32个字节',
-
-            'code.unique'=>'专业代码不能重复添加',
+            'code.unique'=>'专业代码不能重复',
             'status.required'=>'状态值必填',
             'status'=>'状态值只能为0或1'
         ]);
@@ -198,7 +198,6 @@ class ProfessionController extends MscController
             return redirect()->back()->withInput()->withErrors('专业名称和专业代码不能相同');
         }
         $data = $request->only(['name','code','status','id']);
-        $profession = new StdProfessional();
         $result =$profession->postSaveProfession($data);
         if ($result) {
             return redirect()->back()->withInput()->withErrors('修改成功');
