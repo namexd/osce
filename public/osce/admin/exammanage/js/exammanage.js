@@ -900,6 +900,42 @@ function examroom_assignment(){
             $(elem).find('td').eq(0).text(parseInt(key)+1);
         });
 
+
+        //删除监考数据
+        var now_data = thisElement.find('td').eq(1).find('select').val();  
+        var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
+        var current = [];
+        for(var j in now_data){
+                for(var i in delStore){
+
+                    if(delStore[i].id==now_data[j]){
+                        if(delStore[i].count>1){
+                            delStore[i].count -= 1;
+                            current.push({id:delStore[i].id,count:delStore[i].count});
+                        }else{
+                            //删除dom
+                            var str = delStore[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                station_count = key + 1;
+                                $(elem).find('td').eq(0).text(station_count);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
+                    }else{
+                        current.push({id:delStore[i].id,count:delStore[i].count});
+                    }
+                }
+        }
+
+        $('#examroom').find('tbody').attr('data',JSON.stringify(current));
+
+
+
+
     });
 
     /**
