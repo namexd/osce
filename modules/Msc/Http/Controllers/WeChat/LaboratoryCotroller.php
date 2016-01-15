@@ -190,7 +190,6 @@ class LaboratoryCotroller extends MscWeChatController
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryOpenInfo($id,$DateTime,2);
         if(!empty($LaboratoryInfo['OpenPlan'])){
             foreach($LaboratoryInfo['OpenPlan'] as $key => $val){
-                $LaboratoryInfo['OpenPlan'][$key]['Apply_num'] = $val['apply_num'];
                 if(count($val['PlanApply'])>0){
                     foreach($val['PlanApply'] as $k => $v){
                         if(!empty($v['LabApply'])){
