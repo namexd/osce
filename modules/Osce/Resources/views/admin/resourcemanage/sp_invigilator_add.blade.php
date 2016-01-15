@@ -44,13 +44,17 @@
             });
             //键盘事件不停检测输入的手机号
             $("#mobile").keyup(function(){
+                var thisMobile=$(this).val();
+                console.log(thisMobile);
                 $.ajax({
                     type:'post',
-                    async:false,
-                    url:url,
-                    data:{mobile:$(this).val()},
+                    async:true,
+                    url:'{{route('osce.admin.invigilator.postSelectTeacher')}}',
+                    data:{moblie:thisMobile},
                     success:function(data){
-                        console.log(data);
+                        if(data==1){
+                            layer.alert("手机号码已存在");
+                        }
                     }
                 })
             })
@@ -106,7 +110,7 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit">保存</button>
+                                <button class="btn btn-primary" type="submit" id="save">保存</button>
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
 {{--								<a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>--}}
                             </div>

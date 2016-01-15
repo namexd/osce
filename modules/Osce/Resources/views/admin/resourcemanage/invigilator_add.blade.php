@@ -42,6 +42,22 @@
                     }
                 }
             });
+            //键盘事件不停检测输入的手机号
+            $("#mobile").keyup(function(){
+                var thisMobile=$(this).val();
+                console.log(thisMobile);
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    url:'{{route('osce.admin.invigilator.postSelectTeacher')}}',
+                    data:{moblie:thisMobile},
+                    success:function(data){
+                        if(data==1){
+                            layer.alert("手机号码已存在"); 
+                        }
+                    }
+                })
+            })
         })
 
     </script>
@@ -72,7 +88,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">手机号</label>
                             <div class="col-sm-10">
-                                <input type="text"  class="form-control" name="moblie">
+                                <input type="text"  class="form-control" name="moblie" id="mobile">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
