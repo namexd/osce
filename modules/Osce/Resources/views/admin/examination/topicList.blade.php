@@ -55,7 +55,7 @@
                         <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{$item->description}}</td>
-                        <td>
+                        <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.topic.getEditTopic',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                             <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
@@ -79,4 +79,22 @@
         </div>
     </form>
 </div>
+<script>
+$(function(){
+    $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'get',
+                async:false,
+                url:"{{route('osce.admin.topic.getDelTopic')}}?id="+thisElement.parent().parent().parent().attr('value'),
+                success:function(data){
+                    location.reload();
+                }
+            })
+        });
+    })
+})
+</script>
 @stop{{-- 内容主体区域 --}}
