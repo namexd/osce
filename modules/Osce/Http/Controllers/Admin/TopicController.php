@@ -268,7 +268,6 @@ class TopicController extends CommonController
                     $item = e($item);
                 }
             }
-            return $data;
             echo json_encode($this->success_data($data));
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
