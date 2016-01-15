@@ -101,17 +101,7 @@ class Flows extends CommonModel
 
             //保存  考站监考老师、sp老师安排数据
             foreach ($stationData as $key => $item) {
-                $examFlowStationData = [
-                    'serialnumber' => $key,
-                    'station_id' => $item['id'],
-                    'flow_id' => $result->id,
-                    'created_user_id' => $user->id
-                ];
 
-
-                if (!$test4 = ExamFlowStation::create($examFlowStationData)) {
-                    throw new \Exception('考试流程-考站关系添加失败！');
-                }
 
                 $teacherIDs = [];
 

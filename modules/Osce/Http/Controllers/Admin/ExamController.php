@@ -1200,4 +1200,18 @@ class ExamController extends CommonController
         $ExamPlanModel   =   new ExamPlan();
         $ExamPlanModel      ->changePerson($studentAInfo,$studentBInfo,$exam,$user);
     }
+
+    public function getExamAssignmentByStation(Request $request)
+    {
+        //验证
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        //获取传入的exam_id值
+        $id = $request->input('id');
+
+        //将其传入对应的模型查询数据
+        
+    }
 }
