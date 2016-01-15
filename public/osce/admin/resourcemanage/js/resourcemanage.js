@@ -146,6 +146,9 @@ function categories(){
     $('tbody').on('click','.fa-plus',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
+        //禁用下拉
+        thisElement.find('td').eq(2).find('select').attr('disabled','disabled');
+
         var parent = thisElement.attr('parent'),
                 child = thisElement.attr('current');
 
@@ -155,7 +158,7 @@ function categories(){
                 '<td>'+parent+'-'+child+'</td>'+
                 '<td>'+
                 '<div class="form-group">'+
-                '<label class="col-sm-2 control-label">考核点:</label>'+
+                '<label class="col-sm-2 control-label">考核项:</label>'+
                 '<div class="col-sm-10">'+
                 '<input id="select_Category"  class="form-control" name="content['+parent+']['+child+']"/>'+
                 '</div>'+
@@ -183,6 +186,24 @@ function categories(){
                 '</tr>';
         //记录计数
         thisElement.attr('current',child);
+
+        //自动加减节点
+        thisElement.find('td').eq(2).find('select');
+        var total;
+        console.log(thisElement.find('td').eq(2).find('select').val())
+        if(change.val()>1){
+            total = parseInt(change.val())+1;
+        }else{
+            total = 1;
+        }
+        //分数自动加减
+        var option = '';
+        for(var k =0;k<=total;k++){
+            option += '<option value="'+k+'">'+k+'</option>';
+        }
+        thisElement.find('td').eq(2).find('select').html(option);
+        thisElement.find('td').eq(2).find('select').val(total);
+
         var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
         thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html)
 
@@ -251,6 +272,25 @@ function categories(){
             //子类删除
             thisElement.remove();
             increment(thisElement);
+
+
+
+            //父亲节点
+            var className = thisElement.attr('class');
+                parent =  className.split('-')[1];
+            //自动加减节点
+            var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
+
+            //改变value值
+            var total = parseInt(change.val())-parseInt(thisElement.find('td').eq(2).find('select').val());
+            var option = '';
+            for(var k =1;k<=total;k++){
+                option += '<option value="'+k+'">'+k+'</option>';
+            }
+            change.html(option);
+            change.val(total);
+
+
         }
     });
 
@@ -423,6 +463,28 @@ function categories(){
                 }
             });
         }) ;
+
+
+
+        $('tbody').on('change','select',function(){
+            var thisElement = $(this).parent().parent();
+            //父亲节点
+            var className = thisElement.attr('class');
+                parent =  className.split('-')[1];
+            //自动加减节点
+            var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
+
+            //改变value值
+            var total = parseInt(change.val())+parseInt($(this).val());
+
+            var option = '';
+            for(var k =1;k<=total;k++){
+                option += '<option value="'+k+'">'+k+'</option>';
+            }
+            change.html(option);
+            change.val(total-1);
+
+        });
 
 
 }
