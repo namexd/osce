@@ -27,7 +27,7 @@
     }
 
     ?>
-    <input type="hidden" id="parameter" value="{'pagename':'booking_student'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'booking_student_detail'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
