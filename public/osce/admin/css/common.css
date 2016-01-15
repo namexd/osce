@@ -214,3 +214,11 @@ a.btn:hover {text-decoration: none;}
 body .layer-ext-moon .layui-layer-btn .layui-layer-btn0 {background: #1ab394;}
 body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .fa-2x{font-size: 16px;}
+
+/*描述超出显示省略号*/
+.description{
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

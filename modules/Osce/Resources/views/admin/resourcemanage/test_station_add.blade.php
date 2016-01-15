@@ -51,6 +51,7 @@
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
                                     <select id="type" required  class="form-control m-b" name="type">
+                                        <option value="">请选择类别</option>
                                         @foreach($placeCate as $key=>$item)
                                             <option value="{{$key}}">{{$item}}</option>
                                         @endforeach

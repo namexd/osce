@@ -51,7 +51,13 @@
                             <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->name}}</td>
-                            <td>{{$item->type}}</td>
+                            <td>
+                                @foreach($placeCate as $type => $value)
+                                    @if($type == $item->type)
+                                    {{$value}}
+                                    @endif
+                                @endforeach
+                            </td>
                             <td>{{$item->description}}</td>
                             <td value="{{$item->id}}">
                                 <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
@@ -67,6 +73,9 @@
                 </div>
             </div>
         </form>
+        <div class="pull-left">
+            共{{$data->total()}}条
+        </div>
         <div class="pull-right">
             {!! $data->render() !!}
         </div>

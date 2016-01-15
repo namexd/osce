@@ -81,6 +81,10 @@
             </div>
         </div>
     </form>
+
+    <div class="pull-left">
+        共{{$data->total()}}条
+    </div>
     <div class="pull-right">
         {!! $data->render() !!}
     </div>

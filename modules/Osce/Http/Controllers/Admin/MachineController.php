@@ -235,7 +235,7 @@ class MachineController extends CommonController
                 throw new \Exception('新增设备失败');
             }
         } catch(\Exception $ex) {
-            return response()->back()->withError($ex->getMessage());
+            return redirect()->back()->withError($ex->getMessage());
         }
     }
 
@@ -287,7 +287,7 @@ class MachineController extends CommonController
                 throw new \Exception('编辑设备失败');
             }
         } catch(\Exception $ex) {
-            return response()->back()->withError($ex->getMessage());
+            return redirect()->back()->withError($ex->getMessage());
         }
     }
 
