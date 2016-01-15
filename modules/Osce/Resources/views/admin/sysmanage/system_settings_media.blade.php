@@ -223,8 +223,7 @@
 			                <div class="form-group">
                                 <div class="col-sm-6 col-sm-offset-2">
                                 	<input class="btn btn-primary"  type="submit" name="" id="" value="保 存" />
-                                	<input class="btn btn-white"  type="reset" name="" id="" value="取 消" />
-									{{--<a class="btn btn-white" href="javascript:history.go(-1);">取消</a>--}}
+									<a class="btn btn-white" href="{{url('osce/admin/config/index')}}">取消</a>
                                 </div>
                             </div>
 			            </div>

@@ -201,9 +201,10 @@ class TopicController extends CommonController
 
         $id         =   $request->get('id');
         $subject    =   Subject::find($id);
-        $items      =   $subject->items;
-        $items      =   SubjectItem::builderItemTable($items);
 
+        $items      =   $subject->items;
+
+        $items      =   SubjectItem::builderItemTable($items);
         return view('osce::admin.resourcemanage.edittopic',['item'=>$subject,'list'=>$items]);
     }
 
@@ -226,7 +227,7 @@ class TopicController extends CommonController
      */
     public function getDelTopic(Request $request){
         $this->validate($request,[
-            'id'=>''
+            'id'=>'required'
         ]);
         $id =   $request->get('id');
         $SubjectModel   =   new Subject();

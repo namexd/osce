@@ -168,8 +168,10 @@
                                 <label class="col-sm-2 control-label">设备状态</label>
                                 <div class="col-sm-10">
                                     <select id=""   class="form-control m-b" name="status">
-                                        <option value="1">正常</option>
-                                        <option value="0">损坏</option>
+                                        <option value="0">离线</option>
+                                        <option value="1">在线</option>
+                                        <option value="2">维修</option>
+                                        <option value="3">报废</option>
                                     </select>
                                 </div>
                             </div>

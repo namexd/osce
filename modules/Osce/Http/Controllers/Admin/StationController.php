@@ -53,13 +53,14 @@ class StationController extends CommonController
 
         //拼凑一个order数组
         $order = [$orderType, $orderBy];
+        //考站类型
+        $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试'];
 
         //获得展示数据
         $data = $model->showList($order);
 
         //将展示数据放在页面上
-        return view('osce::admin.resourcemanage.test_station',
-            ['data' => $data]);
+        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate]);
 
     }
 
@@ -107,8 +108,8 @@ class StationController extends CommonController
             $this->validate($request, [
                 'name'          => 'required',
                 'type'          => 'required|integer',
-                'description'   => 'required',
-                'code'          => 'required',
+//                'description'   => 'required',
+//                'code'          => 'required',
                 'mins'          => 'required',
                 'vcr_id'        => 'required|integer',
                 'room_id'       => 'required|integer',
@@ -116,7 +117,7 @@ class StationController extends CommonController
                 'subject_id'    => 'required|integer'
             ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'description', 'code');
+            $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'code');
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
@@ -259,7 +260,7 @@ class StationController extends CommonController
     private function dropDownList($id = "")
     {
         //将下拉菜单的数据查出
-        $placeCate = ['0' => '请选择类别', '1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
+        $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         if ($id == "") {
             $vcr = Vcr::where('status', 1)
                 ->select(['id', 'name'])
@@ -278,6 +279,8 @@ class StationController extends CommonController
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间
         $subject= Subject::all(['id', 'title']);
+//        dd($subject);
+
 
         return array($placeCate, $vcr, $case, $room, $subject);  //评分标准
     }
