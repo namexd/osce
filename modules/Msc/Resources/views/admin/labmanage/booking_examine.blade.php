@@ -89,11 +89,11 @@
                                                     <td class="name">{{@$list->labname}}</td>
                                                     <td class="status">{{@$list->address}}</td>
                                                     <td>
-                                                        @if(empty(@$list->begintime) && empty(@$list->endtime))
-                                                            {{@$list->playyear}}
-                                                        @else
-                                                            {{@$list->apply_time}}
-                                                        @endif
+                                                        {{--@if(empty(@$list->begintime) && empty(@$list->endtime))--}}
+                                                            {{--{{@$list->playyear}}--}}
+                                                        {{--@else--}}
+                                                        {{@$list->apply_time}}
+                                                        {{--@endif--}}
 
                                                     </td>
                                                     @if(empty(@$list->begintime) && empty(@$list->endtime))
@@ -252,7 +252,7 @@
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-2 right">
-                    <button class="btn btn-primary right" type="button" data-dismiss="modal">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-primary right" type="submit" data-dismiss="modal">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                 </div>
             </div>
         </div>

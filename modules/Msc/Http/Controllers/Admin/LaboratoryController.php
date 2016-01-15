@@ -19,6 +19,7 @@ use Modules\Msc\Entities\Floor;
 use Modules\Msc\Entities\OpenPlan;
 use Modules\Msc\Entities\PlanApply;
 use Modules\Msc\Entities\LabApply;
+use Modules\Msc\Entities\LabPlan;
 use Illuminate\Support\Facades\Cache;
 use Modules\Msc\Http\Controllers\MscController;
 use URL;
@@ -518,8 +519,7 @@ class LaboratoryController extends MscController
                     $plan1[$t1]['endtime'] = $endtime[1];
                     $plan1[$t1]['period_type'] = $this->get_n($endtime[0]);
                 }
-//                var_dump($dataid);
-//               var_dump($plan1);
+
                 $cnt = count($plan1);
                 if ($dataid) {
                     if($cnt > $count) {
@@ -565,16 +565,6 @@ class LaboratoryController extends MscController
     }
 
 
-    /**
-     * Created by PhpStorm.
-     * User: weihuiguo
-     * Date: 2016年1月11日11:35:27
-     * 修改实验室开放时间
-     */
-    public function postDoEditLabCleander()
-    {
-
-    }
 
     /**
      * Created by PhpStorm.
@@ -618,46 +608,169 @@ class LaboratoryController extends MscController
      * Created by PhpStorm.
      * User: weihuiguo
      * Date: 2016年1月11日11:35:27
-     * 实验室预约记录审核通过
+     * 判断是否冲突
+     */
+    public function _check(){
+        $id = Input::get('id');
+        $open_plan_id = PlanApply::where('apply_id','=',$id)->first();
+        if($open_plan_id){
+            $PlanApply = PlanApply::where('open_plan_id','=',$open_plan_id->open_plan_id)->get();
+            //当前日历ID存在多个
+            if(count($PlanApply) > 1){
+
+                //循环判断是否有老师并统计学生人数
+                foreach($PlanApply as $v){
+                    $LabApply[] = LabApply::where('id','=',$v->apply_id)->first();
+                }
+                $t = 0;
+                $s = 0;
+               // dd($LabApply);
+                foreach($LabApply as $apply){
+                    if(@$apply->type == 2 && @$apply->user_type == 2){
+                        $t++;
+                    }else{
+                        $s++;
+                    }
+                }
+                //dd($s.$t);
+                if($t >= 1){
+                    $data = [
+                        'status' => 0,
+                        'info' => '该实验室已经有 学员（'.$s.'人）预约使用，确认通过教师预约？通过教师预约会取消之前的预约记录，请确认已经提前做好沟通!'
+                    ];
+                    return $data;exit;
+                }else{
+                    $data = [
+                        'status' => 1,
+                    ];
+                    return $data;exit;
+                }
+            }else{
+                $data = [
+                    'status' => 1,
+                ];
+                return $data;exit;
+            }
+
+        }else{
+            $data = [
+                'status' => 1,
+            ];
+            return $data;exit;
+        }
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月11日11:35:27
+     * 实验室预约记录单条审核
      */
     public function getLabOrderCheck(LabApply $LabApply,OpenPlan $OpenPlan)
     {
         DB::connection('msc_mis')->beginTransaction();
         $id = Input::get('id');
         $data['status'] = Input::get('type');
-        if (Input::get('description')) {
-            $data['description'] = Input::get('description');
-        }
         if ($id) {
             $datadetail = $LabApply->getonelaborderdetail($id);
             $datadetail = $datadetail->toArray();
-            if($datadetail['total'] >= $datadetail['plan_apply'][0]['open_plan'][0]['apply_num']){
-                $do = $LabApply->where('id', '=', $id)->update($data);
-            }else{
-                return redirect()->back()->withInput()->withErrors($data['labname'].'预约已满');
-            }
 
-            //$this->end_sql(1);
-            if ($do) {
-                if($datadetail['type'] == 2){
-                    $cleander = PlanApply::where('apply_id','=',$id)->select('open_plan_id')->get();
-                    foreach($cleander as $va){
-                        $date[] = OpenPlan::where('id','=',$va->open_plan_id)->first();
+            //审核通过
+            if (!@Input::get('description')) {
+                //dd($datadetail['plan_apply']);
+                if($datadetail['plan_apply']){
+                    foreach($datadetail['plan_apply'] as $v){
+
+                        if($v['open_plan']){
+                            if($datadetail['total'] >= $v['open_plan']['apply_num']){
+                                $do = $LabApply->where('id', '=', $id)->update($data);
+                                if(!$do){
+                                    DB::connection('msc_mis')->rollBack();
+                                    return redirect()->back()->withInput()->withErrors('系统异常');
+                                }
+                            }else{
+                                return redirect()->back()->withInput()->withErrors($data['labname'].'预约已满');
+                            }
+                            //dd(111);
+                        }else{
+                            //dd($v['open_plan']);
+                            $do = $LabApply->where('id', '=', $id)->update($data);
+                            if($do != 1){
+                                DB::connection('msc_mis')->rollBack();
+                                return redirect()->back()->withInput()->withErrors('系统异常');
+                            }
+                        }
+
                     }
-                    foreach($date as $v){
-                        $apply_num = $v->apply_num+1;
-                        $apply_numDO = $OpenPlan->where('id','=',$v->id)->update(['apply_num'=>$apply_num]);
-                        if(!$apply_numDO){
+                    //exit;
+                    DB::connection('msc_mis')->commit();
+                    return redirect()->back()->withInput()->withErrors('操作成功');
+                }else{
+                    $do = $LabApply->where('id', '=', $id)->update($data);
+                    if(!$do){
+                        DB::connection('msc_mis')->rollBack();
+                        return redirect()->back()->withInput()->withErrors('系统异常');
+                    }
+                    DB::connection('msc_mis')->commit();
+                    return redirect()->back()->withInput()->withErrors('操作成功');
+                }
+
+
+            }else{
+                //审核不通过
+                $data['refuse_reason'] = Input::get('description');
+                $editLabApply = LabApply::where('id','=',$id)->update($data);
+                if($datadetail['plan_apply']){
+                    //有实验室日历预约
+                    if($editLabApply === false){
+                        DB::connection('msc_mis')->rollBack();
+                        return redirect()->back()->withInput()->withErrors('系统异常');
+                    }else{
+                        $dellabplan = LabPlan::where('lab_apply_id','=',$id)->delete();
+                        if($editLabApply === false && editLabApply != 0){
                             DB::connection('msc_mis')->rollBack();
                             return redirect()->back()->withInput()->withErrors('系统异常');
+                        }else{
+                            $planplay[] = PlanApply::where('apply_id','=',$id)->get();
+                            if(!$planplay){
+                                DB::connection('msc_mis')->commit();
+                                return redirect()->back()->withInput()->withErrors('操作成功');
+                            }
                         }
                     }
+                    if(!@$planplay){
+                        foreach($planplay as $k=>$v){
+                            $planplay[$k] = $v->toArray();
+
+                        }
+                        foreach($planplay as $k=>$v){
+                            if($v){
+                                $apply_num = OpenPlan::where('id','=',$v[0]['open_plan_id'])->first();
+                                //$total = $LabApply->get_total($v);
+                                if($apply_num > 0){
+                                    $editopenplay = OpenPlan::where('id','=',$v[0]['open_plan_id'])->decrement('apply_num',1);
+                                }
+                                if($editopenplay === false && $editopenplay != 0){
+                                    DB::connection('msc_mis')->rollBack();
+                                    return redirect()->back()->withInput()->withErrors('系统异常');
+                                }
+                            }
+                        }
+                    }
+
+                }else{
+                    //没有实验室日历预约
+                    if($editLabApply === false){
+                        DB::connection('msc_mis')->rollBack();
+                        return redirect()->back()->withInput()->withErrors('系统异常');
+                    }
                 }
+
                 DB::connection('msc_mis')->commit();
                 return redirect()->back()->withInput()->withErrors('操作成功');
-            } else {
-                return redirect()->back()->withInput()->withErrors('系统异常');
             }
+
+
         } else {
             return redirect()->back()->withInput()->withErrors('系统异常');
         }
@@ -719,8 +832,10 @@ class LaboratoryController extends MscController
         foreach ($data as $k => $LabApply) {
             if($LabApply['plan_apply']){
                 foreach ($LabApply['plan_apply'] as $ke => $v) {
-                    $data[$k]['order'] = $v['open_plan']['apply_num'];
+                    $data[$k]['order'] = $v['open_plan']['apply_num']?$v['open_plan']['apply_num']:0;
                 }
+            }else{
+                    $data[$k]['order'] = 0;
             }
 
         }
@@ -758,7 +873,7 @@ class LaboratoryController extends MscController
                 if (!Input::get('teacher')) {
                     $info = [
                         'status' => 0,
-                        'info' => '开放实验室预约存在冲突！是否通过老师的预约?'
+                        'info' => '该实验室已经有 学员预约使用，确认通过教师预约？通过教师预约会取消之前的预约记录，请确认已经提前做好沟通!'
                     ];
                     return $info;
                     die;
@@ -769,13 +884,13 @@ class LaboratoryController extends MscController
                         $LabApply = LabApply::where('id', '=', $v['id'])->update(['status'=>2]);
                     }else{
                         //  不通过学生
-                        $LabApply = LabApply::where('id', '=', $v['id'])->update(['status'=>3,'description'=>'你的'.$v['labname'].'预约与老师的预约冲突']);
+                        $LabApply = LabApply::where('id', '=', $v['id'])->update(['status'=>3,'refuse_reason'=>'你的'.$v['labname'].'预约与老师的预约冲突']);
                     }
                     if ($LabApply === false) {
                         DB::connection('msc_mis')->rollBack();
                         $info = [
                             'status' => 2,
-                            'info' => '系统异常！'
+                            'info' => '系统异常111！'
                         ];
                         return $info;
                         die;
@@ -792,31 +907,30 @@ class LaboratoryController extends MscController
             }else{
                 //2.不包含老师{
                 foreach ($data as $k => $v) {
-                    //dd();
                     //  直接通过所有
                     if($v['total'] >= $v['order']){
                         $LabApply = LabApply::where('id', '=', $v['id'])->update(['status'=>2]);
                         if(!$LabApply){
                             $info = [
                                 'status' => 2,
-                                'info' => '系统异常！'
+                                'info' => '系统异常222！'
                             ];
                             return $info;
                             die;
                         }
-                        if($v['type'] == 2){
-                            $apply_num = $v['plan_apply'][0]['open_plan']['apply_num']+1;
-
-                            $apply_numDO = $OpenPlan->where('id','=',$v['plan_apply'][0]['open_plan']['id'])->update(['apply_num'=>$apply_num]);
-                            if(!$apply_numDO){
-                                $info = [
-                                    'status' => 2,
-                                    'info' => '系统异常！'
-                                ];
-                                return $info;
-                                die;
-                            }
-                        }
+//                        //var_dump($v['plan_apply']);//var_dump($v['type']);
+//                        if(!empty($v['plan_apply']) && !is_null($v['plan_apply']) && !$v['plan_apply']){
+//                            $apply_num = @$v['plan_apply'][0]['open_plan']['apply_num']+1;
+//                            $apply_numDO = @$OpenPlan->where('id','=',$v['plan_apply'][0]['open_plan']['id'])->update(['apply_num'=>$apply_num]);
+//                            if(!$apply_numDO){
+//                                $info = [
+//                                    'status' => 2,
+//                                    'info' => '系统异常333！'
+//                                ];
+//                                return $info;
+//                                die;
+//                            }
+//                        }
                     }else{
                         $info = [
                             'status' => 4,
@@ -830,12 +944,13 @@ class LaboratoryController extends MscController
                         DB::connection('msc_mis')->rollBack();
                         $info = [
                             'status' => 2,
-                            'info' => '系统异常！'
+                            'info' => '系统异常444！'
                         ];
                         return $info;
                         die;
                     }
                 }
+               // exit;
             }
 
         DB::connection('msc_mis')->commit();
@@ -845,5 +960,65 @@ class LaboratoryController extends MscController
         ];
         return $info;
 
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: weihuiguo
+     * Date: 2016年1月11日11:35:27
+     * 实验室预约记录批量审核不通过
+     */
+    public function getLabOrderDonot(LabApply $LabApply){
+        DB::connection('msc_mis')->beginTransaction();
+        $user = Auth::user();
+        $idstr = explode(',',trim(Input::get('idstr'),','));
+        $data = [
+            'refuse_reason' => Input::get('description'),
+            'audit_time' => date('Y-m-d H:i:s'),
+            'audit_user' => $user->name,
+            'audit_id' => $user->id,
+            'status' => 3,
+        ];
+        foreach($idstr as $v){
+            $editLabApply = LabApply::where('id','=',$v)->update($data);
+
+            if($editLabApply === false){
+                DB::connection('msc_mis')->rollBack();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }else{
+                $dellabplan = LabPlan::where('lab_apply_id','=',$v)->delete();
+
+                if($editLabApply === false && editLabApply != 0){
+                    DB::connection('msc_mis')->rollBack();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }else{
+                    $planplay[] = PlanApply::where('apply_id','=',$v)->get();
+                    if(!$planplay){
+                        DB::connection('msc_mis')->commit();
+                        return redirect()->back()->withInput()->withErrors('操作成功');
+                    }
+                }
+            }
+        }
+        foreach($planplay as $k=>$v){
+                $planplay[$k] = $v->toArray();
+
+        }
+        foreach($planplay as $k=>$v){
+            if($v){
+                $apply_num = OpenPlan::where('id','=',$v[0]['open_plan_id'])->first();
+                //$total = $LabApply->get_total($v);
+                if($apply_num > 0){
+                    $editopenplay = OpenPlan::where('id','=',$v[0]['open_plan_id'])->decrement('apply_num',1);
+                }
+                if($editopenplay === false && $editopenplay != 0){
+                    DB::connection('msc_mis')->rollBack();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }
+            }
+        }
+        //exit;
+        DB::connection('msc_mis')->commit();
+        return redirect()->back()->withInput()->withErrors('操作成功');
     }
 }
