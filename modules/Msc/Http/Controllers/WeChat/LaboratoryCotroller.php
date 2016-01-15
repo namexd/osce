@@ -168,7 +168,47 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
+        dd($LaboratoryInfo);
         return  view('msc::wechat.booking.booking_teacher_ordinary_form',['data'=>$data]);
+    }
+
+    /**
+     * 普通实验室预约数据处理
+     * @method  POST
+     * @url /msc/wechat/laboratory/apply-laboratory-op
+     * @access public
+     * @param Request $Request
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月15日16:45:56
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ApplyLaboratoryOp(Request $Request){
+        $this->validate($Request,[
+            'lab_id'   => 'required|integer',
+            'open_plan_id'   => 'required',
+            'description'=>'required|max:512',
+            'date_time' => 'required|date',
+            'course_name'=>'required',
+            'total'=>'required|integer',
+            'begintime'=>'required',
+            'endtime'=>'required'
+        ],[
+            'lab_id.required'=>'实验室id必填',
+            'lab_id.integer'=>'实验室id必须为数字',
+            'open_plan_id.required'=>'日历id必填',
+            'description.required'=>'预约原因必填',
+            'description.max'=>'预约原因最长不能超过512个字节',
+            'date_time.required'=>'预约日期必填',
+            'date_time.date'=>'预约日期必须为标准的日期格式',
+            'course_name.required'=>'课程名称必填',
+            'total.required'=>'上课人数必填',
+            'total.integer'=>'上课人数必须为数字',
+            'begintime.required'=>'预约开始时间段必填',
+            'endtime.required'=>'预约结束时间段必填'
+        ]);
+
+
+
     }
     /**
      * 根据id 和 日期 开放实验室日历列表页面
