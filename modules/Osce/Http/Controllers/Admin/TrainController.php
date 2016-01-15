@@ -269,12 +269,12 @@ class TrainController extends  CommonController{
         $user=Auth::user();
         $userId=$user->id;
         $file=\Input::file('doc');
-
+        $time=date('Y-m-d',time());
         $fileName=$file->getFilename();
         $file_ex=$file->getClientOriginalExtension();
 //         $file_size=round($file->getSize() /1024);
 //         $file_mime=$file->getMimeType();
-        $uploadDir='/uploads/doc';
+        $uploadDir='/uploads/'.$time.'/doc';
         if(!dir($uploadDir)){
             mkdir('uploads',777,true);
         }
@@ -293,7 +293,7 @@ class TrainController extends  CommonController{
         $file=\Input::file('xlsx');
         $fileName=$file->getFilename();
         $file_ex=$file->getClientOriginalExtension();
-        $uploadDir='/uploads/xlsx';
+        $uploadDir='/uploads/'.$time.'/xlsx';
         if(!dir($uploadDir)){
             mkdir('uploads',777,true);
         }
