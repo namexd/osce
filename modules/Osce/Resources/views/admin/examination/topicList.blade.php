@@ -46,9 +46,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                @forelse($list as $item)
+                @forelse($list as $key => $item)
                     <tr>
-                        <td>{{$item->id}}</td>
+                        <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{$item->score}}</td>
                         <td>
@@ -61,8 +61,16 @@
                 </tbody>
             </table>
 
-            <div class="btn-group pull-right">
-               
+            <br/>
+            <div class="pull-left">
+                共{{$list->total()}}条
+            </div>
+            <div class="pull-right">
+                <nav>
+                    <ul class="pagination">
+                        {!! $list->appends($_GET)->render() !!}
+                    </ul>
+                </nav>
             </div>
         </div>
     </form>

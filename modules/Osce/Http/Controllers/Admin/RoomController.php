@@ -237,10 +237,10 @@ class RoomController extends CommonController
             }
 
             DB::connection('osce_mis')->commit();
-            return json_encode($this->success_data(['删除成功！']));
+            return $this->success_data(['删除成功！']);
         } catch (\Exception $ex) {
             DB::connection('osce_mis')->rollBack();
-            return json_encode($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 

@@ -201,10 +201,9 @@ class TopicController extends CommonController
 
         $id         =   $request->get('id');
         $subject    =   Subject::find($id);
-
         $items      =   $subject->items;
-
         $items      =   SubjectItem::builderItemTable($items);
+
         return view('osce::admin.resourcemanage.edittopic',['item'=>$subject,'list'=>$items]);
     }
 
