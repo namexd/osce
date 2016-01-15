@@ -528,6 +528,9 @@ function invigilator(){
 
 function topic(){
 
+
+    alert('ok');
+
    $(".fa-trash-o").click(function(){
         var thisElement=$(this);
         layer.alert('确认删除？',function(){
@@ -541,8 +544,7 @@ function topic(){
                 }
             })
         });
-    }) 
-
+    })
 
 }
 
