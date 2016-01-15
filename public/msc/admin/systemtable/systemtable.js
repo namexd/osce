@@ -481,7 +481,7 @@ function major_table(){
             window.location.href=url;
         });
     });
-    //            停用
+    //            停 用
     $(".stop").click(function(){
         var this_id = $(this).attr('data');
         var type = $(this).attr('data-type');

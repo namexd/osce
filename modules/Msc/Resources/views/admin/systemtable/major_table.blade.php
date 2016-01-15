@@ -19,6 +19,7 @@
 @section('only_js')
     <script src="{{asset('msc/admin/js/ajaxupload.js')}}"></script>
     <script src="{{asset('msc/admin/systemtable/systemtable.js')}}"></script>
+
 @stop
 
 @section('content')
