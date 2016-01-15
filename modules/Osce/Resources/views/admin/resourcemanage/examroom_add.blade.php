@@ -90,7 +90,9 @@
 
                             <div class="col-sm-10">
                                 <select name="vcr" id="" class="form-control">
-                                    <option value=""></option>
+                                    @foreach($vcr as $key=>$item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

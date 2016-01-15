@@ -49,7 +49,6 @@ class UserController extends CommonController
         $id =   $request    ->get('id');
 
         $staff  =   User::find($id);
-
         return view('osce::admin.sysmanage.usermanage_edit',['item'=>$staff]);
     }
 
