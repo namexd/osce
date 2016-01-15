@@ -450,13 +450,15 @@ class LaboratoryController extends MscController
         DB::connection('msc_mis')->beginTransaction();
         $date = explode('&', trim(Input::get('date'), '&'));
         $timestr = explode('@', trim(Input::get('timestr'), '@'));
-        //dd($timestr);
+
         foreach ($timestr as $k => $v) {
             $arr['time' . $k] = explode('!', trim($v, '!'));
         }
+
         if (count($arr) > 1 && count($arr) < 3) {
             $brr = array_merge($arr['time0'], $arr['time1']);
         }
+
         if (count($arr) < 2) {
             foreach ($arr as $lttwo) {
                 $brr = $lttwo;
@@ -503,53 +505,10 @@ class LaboratoryController extends MscController
             $post[$aa]['created_at'] = date('Y-m-d H:i:s');
             $post[$aa]['updated_at'] = date('Y-m-d H:i:s');
         }
-        foreach ($where as $o => $time) {
-            $plan[] = array_merge($time, $post[0]);
-        }
-        try {
-            foreach ($plan as $t1 => $v1) {
-                $begintime = explode('*', $v1['begintime']);
-                $endtime = explode('*', $v1['endtime']);
-                $plan[$t1]['begintime'] = $begintime[1];
-                $plan[$t1]['endtime'] = $endtime[1];
-                $plan[$t1]['period_type'] = $this->get_n($endtime[0]);
-            }
-//            var_dump($dataid);
-//dd($plan);
-            //$dateidcnt = count($dataid);
-            if ($dataid) {
-                $this->start_sql(1);
-                for ($i = 0; $i < $count; $i++) {
-                    unset($plan[$i]['created_at']);
-                    if($dataid[$i] && $plan[$i]){
-                        OpenPlan::where('id', '=', $dataid[$i])->update($plan[$i]);
-                    }else{
-                        $this->start_sql(1);
-                        OpenPlan::insert($plan[$i]);
-                        //$this->end_sql(1);
-                    }
 
-
-                }
-                 //$this->end_sql(1);
-
-            } else {
-                //dd('aa');
-                $this->start_sql(1);
-                OpenPlan::insert($plan);
-                //$this->end_sql(1);
-            }
-
-        } catch (Exception $e) {
-            DB::connection('msc_mis')->rollback();
-            return ['status' => 1, 'info' => $e];
-            exit;
-        }
-
-
-        if (@$post[1]) {
+        for ($q = 0; $q < count($post); $q++) {
             foreach ($where as $o => $time) {
-                $plan1[] = array_merge($time, $post[1]);
+                $plan1[] = array_merge($time, $post[$q]);
             }
             try {
                 foreach ($plan1 as $t1 => $v1) {
@@ -559,87 +518,46 @@ class LaboratoryController extends MscController
                     $plan1[$t1]['endtime'] = $endtime[1];
                     $plan1[$t1]['period_type'] = $this->get_n($endtime[0]);
                 }
-
+//                var_dump($dataid);
+//               var_dump($plan1);
+                $cnt = count($plan1);
                 if ($dataid) {
-                    if($dataid[$i] && $plan[$i]){
-                        OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
+                    if($cnt > $count) {
+                        for ($i = 0; $i < $cnt; $i++) {
+                            unset($plan1[$i]['created_at']);
+                            //当时间数大于ID数
+
+                            if ($i < $count) {
+                                OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
+                            } else {
+                                OpenPlan::insert($plan1[$i]);
+                            }
+                        }
                     }else{
-                        $this->start_sql(1);
-                        OpenPlan::insert($plan1[$i]);
-                        //$this->end_sql(1);
+                        for ($i = 0; $i < $count; $i++) {
+                            unset($plan1[$i]['created_at']);
+                            //时间数小于ID数
+
+                            if ($i < $cnt) {
+                                OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
+                            } else {
+                                OpenPlan::where('id', '=', $dataid[$i])->delete();
+                            }
+                        }
+
+
                     }
                 } else {
                     OpenPlan::insert($plan1);
                 }
+        //exit;
+            } catch (Exception $e) {
+                DB::connection('msc_mis')->rollback();
+                return ['status' => 1, 'info' => $e];
+                exit;
+            }
+        }
 
-            } catch (Exception $e) {
-                DB::connection('msc_mis')->rollback();
-                return ['status' => 1, 'info' => $e];
-                exit;
-            }
-        }
-        if (@$post[2]) {
-            foreach ($where as $o => $time) {
-                $plan2[] = array_merge($time, $post[2]);
-            }
-            try {
-                foreach ($plan2 as $t1 => $v1) {
-                    $begintime = explode('*', $v1['begintime']);
-                    $endtime = explode('*', $v1['endtime']);
-                    $plan2[$t1]['begintime'] = $begintime[1];
-                    $plan2[$t1]['endtime'] = $endtime[1];
-                    $plan2[$t1]['period_type'] = $this->get_n($endtime[0]);
-                }
-                if ($dataid) {
-                    for ($i = 0; $i < $count; $i++) {
-                        if($dataid[$i] && $plan[$i]){
-                            OpenPlan::where('id', '=', $dataid[$i])->update($plan2[$i]);
-                        }else{
-                            $this->start_sql(1);
-                            OpenPlan::insert($plan2[$i]);
-                            //$this->end_sql(1);
-                        }
-                    }
-                } else {
-                    OpenPlan::insert($plan2);
-                }
-            } catch (Exception $e) {
-                DB::connection('msc_mis')->rollback();
-                return ['status' => 1, 'info' => $e];
-                exit;
-            }
-        }
-        if (@$post[3]) {
-            foreach ($where as $o => $time) {
-                $plan3[] = array_merge($time, $post[3]);
-            }
-            try {
-                foreach ($plan3 as $t1 => $v1) {
-                    $begintime = explode('*', $v1['begintime']);
-                    $endtime = explode('*', $v1['endtime']);
-                    $plan3[$t1]['begintime'] = $begintime[1];
-                    $plan3[$t1]['endtime'] = $endtime[1];
-                    $plan3[$t1]['period_type'] = $this->get_n($endtime[0]);
-                }
-                if ($dataid) {
-                    for ($i = 0; $i < $count; $i++) {
-                        if($dataid[$i] && $plan[$i]){
-                            OpenPlan::where('id', '=', $dataid[$i])->update($plan3[$i]);
-                        }else{
-                            $this->start_sql(1);
-                            OpenPlan::insert($plan3[$i]);
-                            //$this->end_sql(1);
-                        }
-                    }
-                } else {
-                    OpenPlan::insert($plan3);
-                }
-            } catch (Exception $e) {
-                DB::connection('msc_mis')->rollback();
-                return ['status' => 1, 'info' => $e];
-                exit;
-            }
-        }
         DB::connection('msc_mis')->commit();
         //當前添加的實驗室的开放日历
         $labdata = $this->get_lab_cleander(Input::get('lid'));
