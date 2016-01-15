@@ -34,7 +34,7 @@
                 <th>#</th>
                 <th>病例</th>
                 <th>描述</th>
-                <th>操作</th>
+                <th width="80px">操作</th>
 
             </tr>
             </thead>

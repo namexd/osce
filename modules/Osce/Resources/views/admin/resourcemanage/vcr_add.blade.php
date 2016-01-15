@@ -83,6 +83,10 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '功能描述不能为空'
+                            },
+                            regexp: {
+                                regexp: /^\d+$/,
+                                message: '请输入正确的编号'
                             }
                         }
                     }

@@ -141,14 +141,14 @@ class MachineController extends CommonController
         switch($cate_id)
         {
             case 2:
-                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 3:
-                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 1:
             default:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
         }
     }
 
