@@ -57,7 +57,6 @@ function booking_student(){
     }
 
     function  getlist(qj){ //查询ajax查询
-        var target_url = "{{ route('msc.Laboratory.ApplyOpenLaboratory') }}"
         $.ajax({
             url:url,
             type: "get",
