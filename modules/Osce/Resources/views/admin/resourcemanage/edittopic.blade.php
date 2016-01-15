@@ -63,20 +63,20 @@
                                                     <th>操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="{{count($list)}}">
+                                            <tbody index="{{$prointNum}}">
                                             @forelse($list as $data)
-                                                <tr class="pid-{{$data->pid==0? $data->order:$data->parent->order}}" current="0" {{$data->pid==0? 'parent='.$data->order.'':'child="'.$data->order.'"'}}>
-                                                    <td>{{$data->pid==0? $data->order:$data->parent->order.'-'.$data->order}}</td>
+                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}" current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child="'.$data->sort.'"'}}>
+                                                    <td>{{$data->pid==0? $data->sort:$data->parent->sort.'-'.$data->sort}}</td>
                                                     <td>
                                                         <div class="form-group">
                                                             <label class="col-sm-2 control-label">{{$data->pid==0? '考核点:':'考核项:'}}</label>
                                                             <div class="col-sm-10">
-                                                                <input id="select_Category"  class="form-control" name="{{$data->pid==0? 'content['.$data->order.'][title]':'content['.$data->parent->order.']['.$data->order.']'}}" value="{{$data->content}}"/>
+                                                                <input id="select_Category"  class="form-control" name="{{$data->pid==0? 'content['.$data->sort.'][title]':'content['.$data->parent->sort.']['.$data->sort.']'}}" value="{{$data->content}}"/>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <select class="form-control" name="{{$data->pid==0? 'score['.$data->order.'][total]':'score['.$data->parent->order.']['.$data->order.']'}}">
+                                                        <select class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
                                                             <option value="1" {{$data->score==1? 'selected="selected"':''}}>1</option>
                                                             <option value="2" {{$data->score==2? 'selected="selected"':''}}>2</option>
                                                             <option value="3" {{$data->score==3? 'selected="selected"':''}}>3</option>

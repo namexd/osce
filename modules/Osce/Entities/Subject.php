@@ -163,7 +163,6 @@ class Subject extends CommonModel
      */
     protected function addPoint($subject,array $points){
         $SubjectItemModel    = new SubjectItem();
-
         try{
             foreach($points as $point)
             {
