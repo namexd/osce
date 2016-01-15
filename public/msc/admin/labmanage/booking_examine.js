@@ -7,6 +7,7 @@ $(function(){
     switch(pars.pagename){
         case "booking_examine":booking_examine();break; //预约记录审核页面
         case "booking_examine_other":booking_examine_other();break; //预约记录审核已处理页面
+        case "lab_booking":lab_booking();break; //实验室预约记录查看页面
     }
 });
 //预约记录审核页面
@@ -198,4 +199,42 @@ function booking_examine_other(){
         $("#refuse_from").hide();
         $("#detail_from").show();
     });
+}
+//实验室预约记录查看页面
+function lab_booking(){
+    //            获取当前时间
+    var d=new Date();
+    var year= d.getFullYear();
+    var month= d.getMonth() + 1;
+    var day= d.getDate();
+    var nowTime=year+"-"+month+"-"+day;
+    $("#laydate").val(nowTime);
+//            日期选择
+    laydate({
+        elem:"#laydate",
+        event:"click",
+        formate:"YYYY-MM-DD",
+        festival:true
+    });
+    laydate.skin('molv');
+
+//            选择框
+    $(".check_one").click(function(){
+        if($(this).children(".check_icon").hasClass("check")){
+            $(this).children(".check_icon").addClass("check");
+        }else{
+            $(this).children(".check_icon").addClass("check");
+            $(this).siblings(".check_one").children(".check_icon").removeClass("check");
+        }
+    });
+//            学生表单
+    $(".student").click(function(){
+        $("#stu_from").show();
+        $("#teacher_from").hide();
+    });
+//            老师表单
+    $(".teacher").click(function(){
+        $("#stu_from").hide();
+        $("#teacher_from").show();
+    })
 }
