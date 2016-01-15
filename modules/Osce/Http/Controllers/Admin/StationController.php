@@ -117,7 +117,7 @@ class StationController extends CommonController
                 'subject_id'    => 'required|integer'
             ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'code');
+            $stationData = $request->only('name', 'type', 'mins', 'subject_id');
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
