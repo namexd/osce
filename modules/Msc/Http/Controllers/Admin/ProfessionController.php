@@ -107,9 +107,7 @@ class ProfessionController extends MscController
         'status.required'=>'状态值必填',
         'status'=>'状态值只能为0或1'
     ]);
-        if(Input::get('name') == Input::get('code')){
-            return redirect()->back()->withInput()->withErrors('专业名称和专业代码不能相同');
-        }
+
         $data=[
             'name'=>Input::get('name'),
             'code'=>Input::get('code'),
@@ -194,9 +192,7 @@ class ProfessionController extends MscController
             'status.required'=>'状态值必填',
             'status'=>'状态值只能为0或1'
         ]);
-        if(Input::get('name') == Input::get('code')){
-            return redirect()->back()->withInput()->withErrors('专业名称和专业代码不能相同');
-        }
+
         $data = $request->only(['name','code','status','id']);
         $result =$profession->postSaveProfession($data);
         if ($result) {
