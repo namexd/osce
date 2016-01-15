@@ -76,4 +76,6 @@ class OpenPlan  extends  Model
     public function PlanApply(){
         return  $this->hasMany('Modules\Msc\Entities\PlanApply','open_plan_id','id');
     }
+
+
 }

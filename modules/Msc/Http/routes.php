@@ -164,7 +164,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::post('/laboratory/open-laboratory-form',['uses'=>'LaboratoryCotroller@OpenLaboratoryForm','as'=>'msc.Laboratory.OpenLaboratoryForm']);
 		//处理开放实验预约表单
 		Route::post('/laboratory/open-laboratory-form-op',['uses'=>'LaboratoryCotroller@OpenLaboratoryFormOp','as'=>'msc.Laboratory.OpenLaboratoryFormOp']);
-
+		//老师的开放实验室和普通实验室页面
+		Route::get('/laboratory/laboratory-teacher-list',['uses'=>'LaboratoryCotroller@LaboratoryTeacherList','as'=>'msc.Laboratory.LaboratoryTeacherList']);
 		// /msc/wechat/personal-center/index
 	});
 	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){

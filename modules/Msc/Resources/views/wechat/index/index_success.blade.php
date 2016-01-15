@@ -21,6 +21,6 @@
 
     <div class="error_attention">
         <img src="{{asset('msc/wechat/index/img/success.png')}}" />
-        <p>{{ @$error_msg }}</p>
+        <p>{{ @$success_msg }}</p>
     </div>
 @stop

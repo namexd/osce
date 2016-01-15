@@ -53,15 +53,29 @@ class LaboratoryCotroller extends MscWeChatController
         $FloorData = $Floor->GetFloorData();
         $user = Auth::user();
         //$user->user_type == 2 代表学生
-
         if($user->user_type == 2){
             return view('msc::wechat.booking.booking_student',['FloorData'=>$FloorData]);
         //$user->user_type == 1 代表老师$val
         }elseif($user->user_type == 1){
-
+            return view('msc::wechat.booking.booking_teacher',['FloorData'=>$FloorData]);
         }
     }
 
+    /**
+     * @method  GET
+     * @url /msc/wechat/laboratory/laboratory-teacher-list
+     * @access public
+     * @return \Illuminate\View\View
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月15日10:29:38
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LaboratoryTeacherList(){
+        $Floor = new Floor;
+        $FloorData = $Floor->GetFloorData();
+        dd("需求着陆页");
+        return view('msc::wechat.booking.booking_teacher',['FloorData'=>$FloorData]);
+    }
     /**
      * 获取普通实验室列表
      * @method GET
@@ -321,7 +335,7 @@ class LaboratoryCotroller extends MscWeChatController
 
                     if($MscMis->table('open_plan')->whereIn('id',$open_plan_id)->increment('apply_num',1)){
                         $MscMis->commit();
-                        dd('添加成功');
+                        return  view('msc::wechat.booking.booking_success');
                     }else{
                         $MscMis->rollBack();
                         dd('添加失败');

@@ -38,7 +38,7 @@ class ProfessionalTitle extends Model
         }
 
 
-        return $builder->orderBy('status','desc')->paginate(config('msc.page_size',10));
+        return $builder->orderBy('status','desc')->orderBy('id','desc')->paginate(config('msc.page_size',10));
     }
 
 //    //�ı�ְ��״̬

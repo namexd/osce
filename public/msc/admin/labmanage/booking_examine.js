@@ -7,6 +7,7 @@ $(function(){
     switch(pars.pagename){
         case "booking_examine":booking_examine();break; //预约记录审核页面
         case "booking_examine_other":booking_examine_other();break; //预约记录审核已处理页面
+        case "lab_booking":lab_booking();break; //实验室预约记录查看页面
     }
 });
 //预约记录审核页面
@@ -48,9 +49,9 @@ function booking_examine(){
     //不通过弹窗
     $(".refuse").click(function(){
         var id = $(this).attr('data-id');
-        $('#refuse_from').append('<input type="hidden" name="id" value="'+id+'">');
-        $("#refuse_from").show();
+        $('#refuse_from').show().append('<input type="hidden" name="id" value="'+id+'">');
         $("#detail_from").hide();
+        $("#choose_from").hide();
     });
     //不通过验证
     $('#refuse_from').bootstrapValidator({
@@ -96,21 +97,23 @@ function booking_examine(){
 
             }
         });
+        $("#choose_from").hide();
         $("#refuse_from").hide();
         $("#detail_from").show();
     });
     //批量不通过
     $(".all_refuse").click(function(){
         if($(".check_label").children(".check").size()==0){
-            layer.confirm("请至少选择一条记录进行操作！", {
-                btn: ['确定','取消'] //按钮
-            }, function(){
-                window.location.href=window.location.href;
-            });
+            $("#refuse_from").hide();
+            $("#detail_from").hide();
+            $("#choose_from").show();
         }else{
-
+            $("#refuse_from").show();
+            $("#detail_from").hide();
+            $("#choose_from").hide();
         }
     });
+
     //批量通过
     $(".all_pass").click(function(){
         if($(".check_label").children(".check").size()==0){
@@ -127,16 +130,44 @@ function booking_examine(){
                 }
             });
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/msc/admin/laboratory/lab-order-allcheck",
                 data: {idstr:idstr},
                 success: function(msg){
-
+                    if(msg.status == 1){
+                        layer.msg(msg.info, {icon: 2,time: 2000});
+                        window.location.href=window.location.href;
+                    }else if(msg.status == 2){
+                        layer.msg(msg.info, {icon: 1,time: 2000});
+                    }else if(msg.status == 3){
+                        layer.msg(msg.info, {icon: 1,time: 2000});
+                    }else if(msg.status == 4){
+                        layer.msg(msg.info, {icon: 1,time: 2000});
+                    }else{
+                        layer.confirm(msg.info, {
+                            btn: ['是','否'] //按钮
+                        }, function(){
+                            $.ajax({
+                                type: "GET",
+                                url: "/msc/admin/laboratory/lab-order-allcheck",
+                                data: {idstr:idstr,teacher:1},
+                                success: function(msg){
+                                    if(msg.status == 1){
+                                        layer.msg(msg.info, {icon: 2,time: 2000});
+                                        window.location.href=window.location.href;
+                                    }else{
+                                        layer.msg(msg.info, {icon: 1,time: 2000});
+                                    }
+                                }
+                            });
+                        });
+                    }
                 }
             });
         }
     })
 }
+
 //预约记录审核已处理页面
 function booking_examine_other(){
     //详情弹窗
@@ -164,7 +195,46 @@ function booking_examine_other(){
 
             }
         });
+        $("#choose_from").hide();
         $("#refuse_from").hide();
         $("#detail_from").show();
     });
+}
+//实验室预约记录查看页面
+function lab_booking(){
+    //            获取当前时间
+    var d=new Date();
+    var year= d.getFullYear();
+    var month= d.getMonth() + 1;
+    var day= d.getDate();
+    var nowTime=year+"-"+month+"-"+day;
+    $("#laydate").val(nowTime);
+//            日期选择
+    laydate({
+        elem:"#laydate",
+        event:"click",
+        formate:"YYYY-MM-DD",
+        festival:true
+    });
+    laydate.skin('molv');
+
+//            选择框
+    $(".check_one").click(function(){
+        if($(this).children(".check_icon").hasClass("check")){
+            $(this).children(".check_icon").addClass("check");
+        }else{
+            $(this).children(".check_icon").addClass("check");
+            $(this).siblings(".check_one").children(".check_icon").removeClass("check");
+        }
+    });
+//            学生表单
+    $(".student").click(function(){
+        $("#stu_from").show();
+        $("#teacher_from").hide();
+    });
+//            老师表单
+    $(".teacher").click(function(){
+        $("#stu_from").hide();
+        $("#teacher_from").show();
+    })
 }
