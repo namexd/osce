@@ -106,10 +106,9 @@ class UserController extends CommonController
         try{
             $user   =   $common     ->  createAdminUser($data);
             return redirect()->route('osce.admin.user.getStaffList');
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
