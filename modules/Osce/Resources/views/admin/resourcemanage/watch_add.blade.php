@@ -107,9 +107,8 @@
                                     <select id="" required  class="form-control m-b" name="status">
                                         <option value="0">未使用</option>
                                         <option value="1">使用中</option>
-                                        <option value="2">报废</option>
-                                        <option value="3">损坏</option>
-                                        <option value="4">维修</option>
+                                        <option value="2">维修</option>
+                                        <option value="3">报废</option>
                                     </select>
                                 </div>
                             </div>
