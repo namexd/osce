@@ -10,11 +10,8 @@ $(function(){
         case "clinicalcase":clinicalcase();break;
         case "categories":categories();break;
         case "invigilator":invigilator();break;
-<<<<<<< HEAD
         case "topic":topic();break;
-=======
         case "sp_invigilator":sp_invigilator();break;
->>>>>>> e809829418e2fa3e506177eca2cc63f9652b5039
     }
 });
 
