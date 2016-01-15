@@ -204,9 +204,9 @@ class Watch extends CommonModel implements MachineInterface
         {
             $builder =   $builder    ->  where('status', '=', $status);
         }
-        $builder = $builder -> select(['id', 'name', 'status']);
+        $builder = $builder -> select(['id', 'code','name', 'status']);
 
-        return  $builder ->  paginate(config('osce.page_size'));
+        return  $builder -> orderBy('created_at','desc') ->  paginate(config('osce.page_size'));
     }
 
 

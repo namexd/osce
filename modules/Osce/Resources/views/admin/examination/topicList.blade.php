@@ -41,7 +41,7 @@
                 <tr>
                     <th>#</th>
                     <th>课题名称</th>
-                    <th>总分</th>
+                    <th>描述</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -51,7 +51,7 @@
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
-                        <td>{{$item->score}}</td>
+                        <td>{{$item->description}}</td>
                         <td>
                             <a href="{{route('osce.admin.topic.getEditTopic',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                             <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>

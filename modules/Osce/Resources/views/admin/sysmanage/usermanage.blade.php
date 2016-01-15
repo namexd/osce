@@ -35,14 +35,14 @@
         <table class="table table-striped" id="table-striped">
             <thead>
             <tr>
-                <th>#</th>
+                <th>编号</th>
                 <th>帐号</th>
                 <th>姓名</th>
+                <th>性别</th>
                 <th>角色</th>
                 <th>联系电话</th>
                 <th>最近登录</th>
                 <th>操作</th>
-
             </tr>
             </thead>
             <tbody>
@@ -51,6 +51,7 @@
                     <td>{{$item->id}}</td>
                     <td>{{$item->username}}</td>
                     <td>{{$item->name}}</td>
+                    <td>{{$item->gender}}</td>
                     <td>-</td>
                     <td>{{$item->mobile}}</td>
                     <td>{{$item->lastlogindate}}</td>
