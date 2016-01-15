@@ -428,7 +428,7 @@
                 var str = '';
                 var name = '';
                 var timeBrr = '';
-                console.log($('.dataarr').val());
+                //console.log($('.dataarr').val());
                 if(!$('.dataarr').val()){
                     layer.msg("请选择日期", {icon: 2,time: 1000});
                     check = false;
@@ -498,7 +498,7 @@
                 $('.fc-row .check').children('div').children().each(function(i){
                             dateid[i] = $(this).attr('data-id');
                 });
-                console.log(dateid);
+                //console.log(dateid);
                 //console.log(dateid.length);
                 if(dateid.length <= 0){
                     layer.msg('请选择日期', {icon: 2,time: 2000});
