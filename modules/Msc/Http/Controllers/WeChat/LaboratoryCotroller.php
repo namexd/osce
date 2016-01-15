@@ -264,7 +264,7 @@ class LaboratoryCotroller extends MscWeChatController
 
     }
     /**
-     * 老師預約普通實驗室 數據處理
+     * 老师预约开放实验室数据处理
      * @method  POST
      * @url /msc/wechat/laboratory/open-laboratory-form-teacher-op
      * @access public
@@ -314,7 +314,6 @@ class LaboratoryCotroller extends MscWeChatController
         $LabApply = new LabApply;
         $rew = $LabApply->create($data);
         if (!empty($rew->id)) {
-
             $begin_endtime = '';
             $OpenPlan = new OpenPlan;
             //TODO 根据日历id 数组 查询日历表数据 (为插入计划表做准备)
@@ -353,7 +352,8 @@ class LaboratoryCotroller extends MscWeChatController
                 }
                 if($MscMis->table('plan_apply')->insert($PlanApplyData)){
 
-                    if($MscMis->table('open_plan')->whereIn('id',$open_plan_id)->increment('apply_num',1)){
+                    $LaboratoryInfo = $this->Laboratory->where('id','=',$req['lab_id'])->first();
+                    if($MscMis->table('open_plan')->whereIn('id',$open_plan_id)->update(['apply_num'=>$LaboratoryInfo->total])){
                         $MscMis->commit();
                         return  view('msc::wechat.booking.booking_success');
                     }else{
@@ -368,6 +368,9 @@ class LaboratoryCotroller extends MscWeChatController
                 $MscMis->rollBack();
                 dd('添加失败');
             }
+        }else{
+            $MscMis->rollBack();
+            dd('添加失败');
         }
     }
 
@@ -469,6 +472,9 @@ class LaboratoryCotroller extends MscWeChatController
                 $MscMis->rollBack();
                 dd('添加失败');
             }
+        }else{
+            $MscMis->rollBack();
+            dd('添加失败');
         }
 
     }
