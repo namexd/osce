@@ -13,8 +13,8 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'booking_student','url':'{{ route('msc.Laboratory.OpenLaboratoryListData') }}',
-    'target_url':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}','url2':'{{ route('msc.Laboratory.OpenLaboratoryListData') }}','target_url2':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'booking_teacher','url':'{{ route('msc.Laboratory.OpenLaboratoryListData') }}','type':'{{$type}}',
+    'target_url':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}','url2':'{{ route('msc.Laboratory.LaboratoryListData') }}','target_url2':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}'}" />
     <div class="user_header">
         预约实验室
     </div>

@@ -6,17 +6,23 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "booking_teacher":booking_teacher();break; //预约实验室（老师）搜索页
-        case "booking_student_detail":booking_student_detail();break; //预约实验室（学生）详情页
-        case "open_teacher_detail":open_teacher_detail();break; //老师预约开放实验室详情页
+        case "booking_teacher_open_detail.":booking_teacher_open_detail.();break; //老师预约开放实验室详情页
         case "open_teacher_write":open_teacher_write();break; //老师预约开放实验室填写页
-        case "common_teacher_write":common_teacher_write();break; //老师预约普通实验室填写页
+        case "booking_teacher_ordinary_form":booking_teacher_ordinary_form();break; //老师预约普通实验室填写页
         case "booking_student_form":booking_student_form();break;//学生申请表单填写
     }
 });
 
 function booking_teacher(){
-    var url=pars.url;
-    var target_url=pars.target_url;
+    var type=pars.type;
+    if(type=="open"){
+        var url=pars.url;
+        var target_url=pars.target_url;
+    }else {
+        var url=pars.url2;
+        var target_url=pars.target_url2;
+    }
+
     $("#order_time").val(nextday);
     var qj={DateTime:nextday};
     getlist(qj);
@@ -59,7 +65,6 @@ function booking_teacher(){
     }
 
     function  getlist(qj){ //查询ajax查询
-        var target_url = "{{ route('msc.Laboratory.ApplyOpenLaboratory') }}"
         $.ajax({
             url:url,
             type: "get",
@@ -199,7 +204,7 @@ function open_teacher_write(){
     })
 }
 //老师预约普通实验室填写页
-function common_teacher_write(){
+function booking_teacher_ordinary_form(){
     var $stu_num=$(".stu_num");
     $stu_num.change(function(){
         if($stu_num.val()<=0){
