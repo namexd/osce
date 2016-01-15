@@ -152,6 +152,7 @@
                     str += '}';
                     codropsEvents = eval('('+str+')');
                     load();
+                    $('#savedate').empty();
                 }
             })
         }
@@ -168,10 +169,10 @@
                         },
                         transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
                         $wrapper = $( '#custom-inner' ),
-                        $calendar = $( '#calendar' ),
+                        $calendar = $( '#calendar' );
+                        var event=false;
                         cal = $calendar.calendario( {
-                            onDayClick : function( $el, $contentEl, dateProperties ) {
-
+                            onDayClick : function( $el, $contentEl,dateProperties) {
                                 if(dateProperties.month<10){
                                     dateProperties.month="0"+dateProperties.month;
                                 }
@@ -179,21 +180,46 @@
                                     dateProperties.day="0"+dateProperties.day;
                                 }
                                 var savedate_one=dateProperties.year+"-"+dateProperties.month+"-"+dateProperties.day;
-                                var make = false;
-                                var dateDocArr = $('#savedate').find('input');
-                                if(dateDocArr.length>0){
-                                    dateDocArr.each(function(){
-                                        if(savedate_one == $(this).val()){
-                                            $(this).remove();
-                                            make = true;
-                                            return false;
-                                        }
-                                    })
+
+                                if( $contentEl.length > 0 ) {//判断是否是有开放事件
+                                    var dateDocArr1 = $('#savedate').find('input');
+                                    if(dateDocArr1.length>0){
+                                        dateDocArr1.each(function(){
+                                            if(savedate_one == $(this).val()){//第二次点击取消操作
+                                                $(this).remove();
+                                            }else{//未发现当前点击日期
+                                                $('#savedate').empty();
+                                                $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+                                            }
+                                        })
+                                    }else{
+                                        $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+                                    }
+
+                                    event=true;
+                               }else{
+                                    var make = false;
+                                    if(event){//判定之前是否点击过有开放事件的日期
+                                        $('#savedate').empty();
+                                        event=false;
+                                    }
+                                    var dateDocArr = $('#savedate').find('input');
+                                    if(dateDocArr.length>0){
+                                        dateDocArr.each(function(){
+                                            if(savedate_one == $(this).val()){
+                                                $(this).remove();
+                                                make = true;
+                                                return false;
+                                            }
+                                        })
+                                    }
+                                    if(make){
+                                        return false;
+                                    }
+                                    $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+
                                 }
-                                if(make){
-                                    return false;
-                                }
-                                $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+
 
                                 //清空时间段
 
@@ -392,6 +418,7 @@
 
             //保存提交日历设置
             $('#edit_save').click(function(){
+                var check = true;
                 var datestr = '';
                 var timestr = '';
                 var start = '';
@@ -401,19 +428,22 @@
                 var str = '';
                 var name = '';
                 var timeBrr = '';
-                //console.log($('.dataarr').val());
+                console.log($('.dataarr').val());
                 if(!$('.dataarr').val()){
                     layer.msg("请选择日期", {icon: 2,time: 1000});
+                    check = false;
                     return false;
                 }
 
                 if(!$('.check_real').hasClass('check')){
                     layer.msg("未勾选时间段", {icon: 2,time: 1000});
+                    check = false;
                     return false;
                 }
                 $('.dataarr').each(function(){
                     datestr += $(this).val()+"&";
                 });
+
                 $('.check_real').each(function(k){
                     if($(this).hasClass('check')){
                         var name = '';
@@ -432,12 +462,18 @@
                                     name = '下午';
                                 }else if(type == 'night'){
                                     name = '晚上';
+                                }else{
+                                    name='';
                                 }
-                                layer.msg(name+'的时间段未填写完整', {icon: 2,time: 1000});
-                                return false;
+
                             }
 
                         });
+                        if(name){
+                            layer.msg(name+'的时间段未填写完整', {icon: 2,time: 1000});
+                            check = false;
+                            return false;
+                        }
                         timeBrr = timeArr;
                         timeArr = '';
 
@@ -450,33 +486,37 @@
                     if($(this).hasClass('check')){
 
                         timestr += $('.'+$(this).attr('data')).val()+'@';
-                        //console.log(timestr);
+                        console.log(timestr);
                     }
                 });
                 if(!$('.labid').val()){
                     layer.msg("请选择实验室", {icon: 2,time: 1000});
+                    check = false;
                     return false;
                 }
                 var dateid = {};
                 $('.fc-row .check').children('div').children().each(function(i){
                             dateid[i] = $(this).attr('data-id');
                 });
+                console.log(dateid);
                 //console.log(dateid.length);
                 if(dateid.length <= 0){
                     layer.msg('请选择日期', {icon: 2,time: 2000});
+                    check = false;
                     return false;
                 }
                 //return false;
                // console.log(timestr);
                 //console.log(datestr);return false;
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('msc.admin.laboratory.postOperatingLabCleander')}}",
-                    data: {date:datestr,timestr:timestr,lid:$('.labid').val(),dateid:dateid},
-                    success: function(msg){
-                        if(msg.status){
+                if(check) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('msc.admin.laboratory.postOperatingLabCleander')}}",
+                        data: {date: datestr, timestr: timestr, lid: $('.labid').val(), dateid: dateid},
+                        success: function (msg) {
+                            if (msg.status) {
 
-                            layer.msg(msg.info, {icon: 1,time: 1000});
+                                layer.msg(msg.info, {icon: 1, time: 1000});
 //                            layer.confirm(msg.info, {
 //                                btn: ['確定'] //按钮
 //                            }, function(){
@@ -484,14 +524,17 @@
 //                                //确定之后-把已添加的数据返回并显示
 //                                //location.reload();
 //                            });
-                            getEvent($('.labid').val());
+                                getEvent($('.labid').val());
+                                load();
+                                $('#savedate').empty();
 
-                        }else{
-                            layer.msg(msg.info, {icon: 2,time: 1000});
-                            return false;
+                            } else {
+                                layer.msg(msg.info, {icon: 2, time: 1000});
+                                return false;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
         });
 
@@ -520,6 +563,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="savedate">
+
         </div>
         <div class="col-sm-7">
             <div class="ibox">
@@ -643,9 +689,7 @@
                     <input type="hidden" name="" class="afternoon">
                     <input type="hidden" name="" class="night">
                     <div class="hr-line-dashed"></div>
-                    <div id="savedate">
 
-                    </div>
                     <div class="form-group overflow">
                         <div class=" right">
                             <button class="btn btn-primary"  type="button" id="edit_save" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>

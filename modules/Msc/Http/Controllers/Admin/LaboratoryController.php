@@ -514,17 +514,24 @@ class LaboratoryController extends MscController
                 $plan[$t1]['endtime'] = $endtime[1];
                 $plan[$t1]['period_type'] = $this->get_n($endtime[0]);
             }
-
+//            var_dump($dataid);
+//dd($plan);
+            //$dateidcnt = count($dataid);
             if ($dataid) {
-                //dd('qq');
                 $this->start_sql(1);
                 for ($i = 0; $i < $count; $i++) {
                     unset($plan[$i]['created_at']);
+                    if($dataid[$i] && $plan[$i]){
+                        OpenPlan::where('id', '=', $dataid[$i])->update($plan[$i]);
+                    }else{
+                        $this->start_sql(1);
+                        OpenPlan::insert($plan[$i]);
+                        //$this->end_sql(1);
+                    }
 
-                    OpenPlan::where('id', '=', $dataid[$i])->update($plan[$i]);
 
                 }
-                // $this->end_sql(1);
+                 //$this->end_sql(1);
 
             } else {
                 //dd('aa');
@@ -554,12 +561,17 @@ class LaboratoryController extends MscController
                 }
 
                 if ($dataid) {
-                    for ($i = 0; $i < $count; $i++) {
+                    if($dataid[$i] && $plan[$i]){
                         OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
+                    }else{
+                        $this->start_sql(1);
+                        OpenPlan::insert($plan1[$i]);
+                        //$this->end_sql(1);
                     }
                 } else {
                     OpenPlan::insert($plan1);
                 }
+
             } catch (Exception $e) {
                 DB::connection('msc_mis')->rollback();
                 return ['status' => 1, 'info' => $e];
@@ -580,7 +592,13 @@ class LaboratoryController extends MscController
                 }
                 if ($dataid) {
                     for ($i = 0; $i < $count; $i++) {
-                        OpenPlan::where('id', '=', $dataid[$i])->update($plan2[$i]);
+                        if($dataid[$i] && $plan[$i]){
+                            OpenPlan::where('id', '=', $dataid[$i])->update($plan2[$i]);
+                        }else{
+                            $this->start_sql(1);
+                            OpenPlan::insert($plan2[$i]);
+                            //$this->end_sql(1);
+                        }
                     }
                 } else {
                     OpenPlan::insert($plan2);
@@ -605,7 +623,13 @@ class LaboratoryController extends MscController
                 }
                 if ($dataid) {
                     for ($i = 0; $i < $count; $i++) {
-                        OpenPlan::where('id', '=', $dataid[$i])->update($plan3[$i]);
+                        if($dataid[$i] && $plan[$i]){
+                            OpenPlan::where('id', '=', $dataid[$i])->update($plan3[$i]);
+                        }else{
+                            $this->start_sql(1);
+                            OpenPlan::insert($plan3[$i]);
+                            //$this->end_sql(1);
+                        }
                     }
                 } else {
                     OpenPlan::insert($plan3);
