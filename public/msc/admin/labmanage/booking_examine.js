@@ -129,16 +129,44 @@ function booking_examine(){
                 }
             });
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/msc/admin/laboratory/lab-order-allcheck",
                 data: {idstr:idstr},
                 success: function(msg){
-
+                    if(msg.status == 1){
+                        layer.msg(msg.info, {icon: 2,time: 2000});
+                        window.location.href=window.location.href;
+                    }else if(msg.status == 2){
+                        layer.msg(msg.info, {icon: 1,time: 2000});
+                    }else if(msg.status == 3){
+                        layer.msg(msg.info, {icon: 1,time: 2000});
+                    }else if(msg.status == 4){
+                        layer.msg(msg.info, {icon: 1,time: 2000});
+                    }else{
+                        layer.confirm(msg.info, {
+                            btn: ['是','否'] //按钮
+                        }, function(){
+                            $.ajax({
+                                type: "GET",
+                                url: "/msc/admin/laboratory/lab-order-allcheck",
+                                data: {idstr:idstr,teacher:1},
+                                success: function(msg){
+                                    if(msg.status == 1){
+                                        layer.msg(msg.info, {icon: 2,time: 2000});
+                                        window.location.href=window.location.href;
+                                    }else{
+                                        layer.msg(msg.info, {icon: 1,time: 2000});
+                                    }
+                                }
+                            });
+                        });
+                    }
                 }
             });
         }
     })
 }
+
 //预约记录审核已处理页面
 function booking_examine_other(){
     //详情弹窗

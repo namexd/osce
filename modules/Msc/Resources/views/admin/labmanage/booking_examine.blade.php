@@ -133,6 +133,10 @@
                 </div>
             </div>
         </div>
+        {{--分页--}}
+        <div class="btn-group pull-right">
+            <?php echo $LabOrderList->render();?>
+        </div>
     </div>
 @stop{{-- 内容主体区域 --}}
 
