@@ -21,7 +21,7 @@
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-       预约实验室
+       预约开放实验室
         <a class="right header_btn" href="">
 
         </a>

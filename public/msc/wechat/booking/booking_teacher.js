@@ -141,7 +141,6 @@ function booking_teacher_open_detail(){
 }
 //老师预约开放实验室填写页
 function booking_teacher_open_form(){
-
     var $stu_num=$(".stu_num");
     $stu_num.change(function(){
         if($stu_num.val()<=0){
@@ -188,7 +187,7 @@ function booking_teacher_open_form(){
                     max:512,
                     message: '申请原因不得超过512个字符'
                 }
-            },
+            }
         }
     })
 
@@ -207,6 +206,9 @@ function open_teacher_detail(){
 
 //老师预约普通实验室填写页
 function booking_teacher_ordinary_form(){
+    $(".submit_box button").click(function () {
+        get_layer();
+    })
     var $stu_num=$(".stu_num");
     $stu_num.change(function(){
         if($stu_num.val()<=0){
@@ -232,7 +234,7 @@ function booking_teacher_ordinary_form(){
                     }
                 }
             },
-            course: {
+            course_name: {
                 message: 'The hospital is not valid',
                 validators: {
                     notEmpty: {
@@ -241,7 +243,7 @@ function booking_teacher_ordinary_form(){
                     }
                 }
             },
-            num: {
+            total: {
                 message: 'The hospital is not valid',
                 validators: {
                     notEmpty: {
@@ -249,7 +251,23 @@ function booking_teacher_ordinary_form(){
                         message: '学生人数不能为空'
                     }
                 }
+            },
+            description: {
+                message: 'The hospital is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '申请原因不能为空'
+                    }
+                },
+                stringLength: {/*长度提示*/
+                    min: 1,
+                    max:512,
+                    message: '申请原因不得超过512个字符'
+                }
             }
+
         }
     });
+    /*日期控件修改*/
+
 }
