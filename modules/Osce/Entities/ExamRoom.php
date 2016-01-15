@@ -148,7 +148,8 @@ class ExamRoom extends CommonModel
                     'teacher.case_id as case_id',
                     'teacher.status as status',
                     'station.name as station_name',
-                    'station.id as station_id'
+                    'station.id as station_id',
+                    'room_station.room_id as room_id'
                 ])
                 ->get();
         } catch(\Exception $ex){
