@@ -21,7 +21,7 @@
                     <div class="input-group">
                         <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-sm btn-default" id="search"><i class="fa fa-search"></i></button>
+                            <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
                     </div>
                 </form>

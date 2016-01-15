@@ -132,7 +132,8 @@
                         floor: {
                             message: 'The floor is not valid',
                             validators: {
-                                notEmpty: {/*非空提示*/
+                                regexp: {
+                                    regexp: /^(?!-9999).*$/,
                                     message: '楼层不能为空'
                                 }
                             }
@@ -226,7 +227,7 @@
                         '<label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label> ' +
                         '<div class="col-sm-9"> ' +
                         '<select id="select_Category" class="form-control m-b oldfloor floor" name="floor"> ' +
-                        '<option value="-1">请选择楼层</option> ' +
+                        '<option value="-9999">请选择楼层</option> ' +
                         '</select> ' +
                         '</div> ' +
                         '</div> ' +
@@ -322,7 +323,7 @@
                 });
                 $('#add_from').delegate('.local','change',function(){
                     var id = $(this).val();
-                    var opstr = '<option value="-1">请选择楼层</option>';
+                    var opstr = '<option value="-9999">请选择楼层</option>';
                     $.ajax({
                         type: "POST",
                         url: "{{route('msc.admin.laboratory.getFloor')}}",
@@ -340,7 +341,7 @@
                 });
                 $('.oldlocal').change(function(){
                     var id = $(this).val();
-                    var opstr = '<option value="-1">请选择楼层</option>';
+                    var opstr = '<option value="-9999">请选择楼层</option>';
                     $.ajax({
                         type: "POST",
                         url: "{{route('msc.admin.laboratory.getFloor')}}",
@@ -832,7 +833,7 @@
                     <label class="col-sm-3 control-label"><span class="dot">*</span>楼层</label>
                     <div class="col-sm-9">
                         <select id="select_Category" class="form-control m-b floor" name="floor">
-                            <option value="-1">请选择楼层</option>
+                            <option value="-9999">请选择楼层</option>
                         </select>
                     </div>
                 </div>
