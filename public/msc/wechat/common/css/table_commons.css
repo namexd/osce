@@ -124,7 +124,7 @@
 
 /*列表样式2列表样式1*/
 .add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
-.add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
+.add_main .form-group  label{position:absolute;z-index:10;font-size:16px;margin-top:6px;width:82px;
     padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
 .add_main .form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:16px;padding-left:95px}
 .add_main .form-group .xuan_type{padding-left:95px;text-align:left!important;color:#999}

@@ -8,6 +8,7 @@ Route::group(['prefix' => 'msc', 'namespace' => 'Modules\Msc\Http\Controllers'],
 
 });
 
+
 Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','middleware' => []], function()
 {
 
@@ -168,7 +169,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//老师的开放实验室和普通实验室页面
 		Route::get('/laboratory/laboratory-teacher-list',['uses'=>'LaboratoryCotroller@LaboratoryTeacherList','as'=>'msc.Laboratory.LaboratoryTeacherList']);
 		//老師預約開放實驗室數據處理
-		Route::get('/laboratory/open-laboratory-form-teacher-op',['uses'=>'LaboratoryCotroller@OpenLaboratoryFormTeacherOp','as'=>'msc.Laboratory.OpenLaboratoryFormTeacherOp']);
+		Route::post('/laboratory/open-laboratory-form-teacher-op',['uses'=>'LaboratoryCotroller@OpenLaboratoryFormTeacherOp','as'=>'msc.Laboratory.OpenLaboratoryFormTeacherOp']);
 		// /msc/wechat/personal-center/index
 	});
 	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){

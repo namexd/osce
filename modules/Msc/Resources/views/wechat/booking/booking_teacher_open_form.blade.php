@@ -61,11 +61,11 @@
         @endforeach
         <div class="add_main">
             <div class="form-group">
-                <label for="" style="width: 86px">教学课程</label>
+                <label for="">教学课程</label>
                 <input type="text" class="form-control" value="" name="course_name">
             </div>
             <div class="form-group">
-                <label for="" style="width: 86px">学生人数</label>
+                <label for="">学生人数</label>
                 <input type="number" class="form-control stu_num" value="" name="total">
             </div>
 
