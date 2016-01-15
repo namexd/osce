@@ -47,6 +47,7 @@
                 </thead>
                 <tbody>
                 @forelse($list as $item)
+
                     <tr>
                         <td>{{$item->id}}</td>
                         <td>{{$item->title}}</td>

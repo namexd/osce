@@ -227,7 +227,7 @@ class TopicController extends CommonController
      */
     public function getDelTopic(Request $request){
         $this->validate($request,[
-            'id'=>''
+            'id'=>'required'
         ]);
         $id =   $request->get('id');
         $SubjectModel   =   new Subject();

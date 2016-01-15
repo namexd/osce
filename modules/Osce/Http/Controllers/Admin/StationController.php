@@ -107,8 +107,8 @@ class StationController extends CommonController
             $this->validate($request, [
                 'name'          => 'required',
                 'type'          => 'required|integer',
-                'description'   => 'required',
-                'code'          => 'required',
+//                'description'   => 'required',
+//                'code'          => 'required',
                 'mins'          => 'required',
                 'vcr_id'        => 'required|integer',
                 'room_id'       => 'required|integer',
@@ -116,7 +116,7 @@ class StationController extends CommonController
                 'subject_id'    => 'required|integer'
             ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'description', 'code');
+            $stationData = $request->only('name', 'type', 'mins', 'subject_id', 'code');
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
@@ -278,6 +278,8 @@ class StationController extends CommonController
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间
         $subject= Subject::all(['id', 'title']);
+//        dd($subject);
+
 
         return array($placeCate, $vcr, $case, $room, $subject);  //评分标准
     }
