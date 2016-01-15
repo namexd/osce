@@ -49,7 +49,6 @@ class UserController extends CommonController
         $id =   $request    ->get('id');
 
         $staff  =   User::find($id);
-
         return view('osce::admin.sysmanage.usermanage_edit',['item'=>$staff]);
     }
 
@@ -107,10 +106,9 @@ class UserController extends CommonController
         try{
             $user   =   $common     ->  createAdminUser($data);
             return redirect()->route('osce.admin.user.getStaffList');
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

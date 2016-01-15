@@ -598,4 +598,24 @@ class InvigilatorController extends CommonController
         }
     }
 
+    /**
+     * 查询老师是否已经存在(监,巡考老师,sp老师) 接口
+     * @api GET /osce/admin/invigilator/postSelectTeacher
+     *
+     */
+    public function postSelectTeacher(Request $request){
+        $this->validate($request,[
+            'moblie'    =>  'required'
+        ]);
+        $moblie = $request  ->get('moblie');
+        $user = User::where('username', $moblie)->first();
+        if($user){
+            $result = Teacher::where('id', $user->id)->first();
+            if($result){
+                return json_encode(1);
+            }
+        }
+        return json_encode(0);
+    }
+
 }

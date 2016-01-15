@@ -15,6 +15,7 @@
 @section('only_js')
 @stop
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'sp_invigilator','deletes':'{{route('osce.admin.invigilator.getDelInvitation')}}'}" />
     <div class="ibox-title header">
         <div class="pull-left">
             <h3>人员管理</h3>
@@ -45,7 +46,7 @@
                     <td>{{$item->name}}</td>
                     <td>{{$item->userInfo->mobile or '-'}}</td>
                     <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
-                    <td>
+                    <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
                         <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
                     </td>

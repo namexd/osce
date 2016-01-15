@@ -191,10 +191,6 @@ class Student extends CommonModel
      * @return bool
      */
 
-
-
-
-    
     public  function studentList($watch_id){
         return Student::leftjoin('watch_log',function($join){
             $join ->on('student.id','=','watch_log.student_id');
