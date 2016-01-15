@@ -18,6 +18,6 @@ class StationTeacher extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['station_id', 'user_id', 'case_id', 'created_user_id', 'type'];
+    protected $fillable = ['station_id', 'user_id', 'case_id', 'created_user_id', 'type', 'exam_id'];
 
 }

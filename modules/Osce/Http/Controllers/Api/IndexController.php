@@ -350,12 +350,29 @@ class IndexController extends CommonController
             'create_user_id'       =>  'required|integer'
         ]);
 
-        $result=Watch::where('code',$request->get('code'))->delete();
+        $id=Watch::where('code',$request->get('code'))->select()->first();
+        if($id){
+            $id=$id->id;
+            $Log_id=WatchLog::where('watch_id',$id)->select('id')->first();
+            if($Log_id){
+                $result=WatchLog::where('watch_id',$id)->delete();
+                if($result){
+                    $result=Watch::where('id',$id)->delete();
+                    if($result){
+                        return response()->json(
+                            $this->success_data()
+                        );
+                    }
+                }
+            }else{
+                $result=Watch::where('id',$id)->delete();
+                if($result){
+                    return response()->json(
+                        $this->success_data()
+                    );
+                }
+            }
 
-        if($result){
-            return response()->json(
-                $this->success_data()
-            );
         }
 
         return response()->json(

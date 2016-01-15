@@ -1,11 +1,7 @@
 @extends('osce::wechat.layouts.admin')
 
 @section('only_head_css')
-<style type="text/css">
-	.quiz_form{padding:15px;}
-	#context{height:120px;resize:none;}
-	.btn2{background:#1ab394;}
-</style>
+
 @stop
 @section('only_head_js')
 @stop

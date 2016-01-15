@@ -179,29 +179,23 @@
                                         @forelse($examStationData as $key => $item)
                                             <tr class="parent-id-{{$item->room_id}}">
                                                 <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->id}}"/></td>
-                                                <td>{{$item->name}}</td>
+                                                <td>{{$item->station_name}}</td>
                                                 <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
                                                     <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station[{{$key+1}}][teacher_id]">
-                                                        @if($item->teacher_type == 1)
-                                                            <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
+                                                        @if($item->type == 1)
+                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
                                                         @endif
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
-                                                        <div class="input-group teacher pull-left" value="1">
-                                                            <div class="pull-left">张老师</div>
+                                                        @if($item->type == 2)
+                                                        <div class="input-group teacher pull-left" value="{{$item->status}}">
+                                                            <div class="pull-left">{{$item->name}}</div>
                                                             <div class="pull-left"><i class="fa fa-times"></i></div>
                                                         </div>
-                                                        <div class="input-group teacher pull-left teacher-primary" value="3">
-                                                            <div class="pull-left">张老师</div>
-                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                        </div>
-                                                        <div class="input-group teacher pull-left teacher-warn" value="2">
-                                                            <div class="pull-left">张老师</div>
-                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                        </div>
+                                                        @endif
                                                     </div>
                                                     <div class="pull-right" value="{{$key+1}}">
                                                         <select name="" class="teacher-list js-example-basic-multiple">

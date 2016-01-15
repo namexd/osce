@@ -37,18 +37,19 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getTrainList(){
-        $user=Auth::user();
-        $userId=$user->id;
-
-        if(!$userId){
-            return response()->json(
-                $this->success_rows(0,'false')
-            );
-        }
+//      $user=Auth::user();
+//      $userId=$user->id;
+//
+//      if(!$userId){
+//          return response()->json(
+//              $this->success_rows(0,'false')
+//          );
+//      }
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
-       return view('')->with(['list'=>$list,'pagination'=>$pagination]);
+		
+       return view('osce::wechat.train.train_detail')->with(['list'=>$list,'pagination'=>$pagination]);
     }
 }
