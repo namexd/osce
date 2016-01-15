@@ -131,6 +131,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		Route::get('user/check-code-register',['uses'=>'UserController@getCheckCodeRegister','as'=>'msc.user.getCheckCodeRegister']);
 		//Route::controller('personal-center', 'PersonalCenterController');
+		Route::get('personal-center/index',['uses'=>'PersonalCenterController@getIndex','as'=>'msc.personalCenter.getIndex']);
 		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
 		//我的实验室预约
 		Route::get('/personal-center/my-laboratory-apply',['uses'=>'PersonalCenterController@MyLaboratoryApply','as'=>'msc.personalCenter.MyLaboratoryApply']);
