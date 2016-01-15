@@ -287,7 +287,7 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
-            'created_user_id'       =>  'required|integer',
+            'create_user_id'        =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
@@ -302,7 +302,7 @@ class IndexController extends CommonController
                 'description'   =>  $request->get('description',''),
                 'factory'       =>  $request->get('factory',''),
                 'sp'            =>  $request->get('sp',''),
-                'created_user_id'=> $request->get('created_user_id'),
+                'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
@@ -347,7 +347,7 @@ class IndexController extends CommonController
 
         $this->validate($request,[
             'code'                    =>  'required|integer',
-            'created_user_id'       =>  'required|integer'
+            'create_user_id'       =>  'required|integer'
         ]);
 
         $count=Watch::where('code',$request->get('code'))->delete();
@@ -389,7 +389,7 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
-            'created_user_id'       =>  'required|integer',
+            'create_user_id'       =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
@@ -404,7 +404,7 @@ class IndexController extends CommonController
                 'description'   =>  $request->get('description'),
                 'factory'       =>  $request->get('factory'),
                 'sp'            =>  $request->get('sp'),
-                'created_user_id'=> $request->get('created_user_id'),
+                'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
