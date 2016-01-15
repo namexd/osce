@@ -503,6 +503,7 @@ function major_table(){
     $("#in").change(function(){
         var str=$("#load_in").val().substring($("#load_in").val().lastIndexOf(".")+1);
         if(str!="xlsx"){
+            $("#load_in").val('');
             layer.alert(
                 "请上传正确的文件格式？",
                 {title:["温馨提示","font-size:16px;color:#408aff"]}
