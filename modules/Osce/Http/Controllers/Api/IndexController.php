@@ -353,8 +353,18 @@ class IndexController extends CommonController
         $id=Watch::where('code',$request->get('code'))->select()->first();
         if($id){
             $id=$id->id;
-            $result=WatchLog::where('watch_id',$id)->delete();
-            if($result){
+            $Log_id=WatchLog::where('watch_id',$id)->select('id')->first();
+            if($Log_id){
+                $result=WatchLog::where('watch_id',$id)->delete();
+                if($result){
+                    $result=Watch::where('id',$id)->delete();
+                    if($result){
+                        return response()->json(
+                            $this->success_data()
+                        );
+                    }
+                }
+            }else{
                 $result=Watch::where('id',$id)->delete();
                 if($result){
                     return response()->json(
@@ -362,6 +372,7 @@ class IndexController extends CommonController
                     );
                 }
             }
+
         }
 
         return response()->json(
