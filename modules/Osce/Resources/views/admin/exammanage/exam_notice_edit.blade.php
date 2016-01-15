@@ -13,6 +13,14 @@
         background-image:none!important;
         /*background: url(../images/add_img.png) no-repeat center; */
     }
+    input#file0 {
+        position: relative;
+        top: -5px;
+        left: -5px;
+        height: 34px;
+        width: 70px;
+        opacity: 0;
+    }
     </style>
 @stop
 

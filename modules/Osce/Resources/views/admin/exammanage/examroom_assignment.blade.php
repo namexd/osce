@@ -136,7 +136,7 @@
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
-                                                    <select class="form-control js-example-basic-multiple" multiple="multiple" name="room[{{$k2++}}][]">
+                                                    <select class="form-control js-example-basic-multiple room-station" multiple="multiple" name="room[{{$k2++}}][]">
 
                                                         <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
 
@@ -177,7 +177,7 @@
                                         </thead>
                                         <tbody index="{{count($examStationData)}}">
                                         @forelse($examStationData as $key => $item)
-                                            <tr class="parent-id-{{$item->id}}">
+                                            <tr class="parent-id-{{$item->room_id}}">
                                                 <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->id}}"/></td>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
