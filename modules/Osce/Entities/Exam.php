@@ -256,8 +256,9 @@ class Exam extends CommonModel
         $builder->orderBy('exam.begin_dt');
         return $builder->paginate(10);
     }
-//
-    public function getTodayList($startTime){
+//查询今日考试
+    public function getTodayList($startTime,$endtime){
+
           $list=$this->select(DB::raw(
               implode(',',[
                   $this->table.'.id as id',
@@ -277,11 +278,10 @@ class Exam extends CommonModel
          $list=$list->whereRaw(
              'unix_timestamp('.$this->table.'.end_dt) < ?',
              [
-                 $startTime
+                 $endtime
              ]
          );
-
-          return $list;
+        return $list->get();
     }
 
     public function getExamRoomData($exam_id)
