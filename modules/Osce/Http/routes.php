@@ -150,6 +150,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/intelligence-eaxm-plan', ['uses'=>'ExamController@getIntelligenceEaxmPlan','as'=>'osce.admin.exam.getIntelligenceEaxmPlan']);
 		Route::get('exam/intelligence', ['uses'=>'ExamController@getIntelligence','as'=>'osce.admin.exam.getIntelligence']);
 		Route::post('exam/intelligence', ['uses'=>'ExamController@postIntelligence','as'=>'osce.admin.exam.postIntelligence']);
+		Route::get('exam/change-student', ['uses'=>'ExamController@getChangeStudent','as'=>'osce.admin.exam.getChangeStudent']);
 
 		//sp
 		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getShow','as'=>'osce.admin.spteacher.getShow']);
@@ -178,12 +179,19 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//测试
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
         //考前培训
+
 		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.wechat.getTrainList']);
 		Route::get('train/edit-train',['uses'=>'TrainController@getEditTrain','as'=>'osce.wechat.getEditTrain']);
 		Route::get('train/del-train',['uses'=>'TrainController@getDelTrain','as'=>'osce.wechat.getDelTrain']);
 		Route::post('train/add-train',['uses'=>'TrainController@postAddTrain','as'=>'osce.wechat.postAddTrain']);
 		Route::post('train/edit-train',['uses'=>'TrainController@postEditTrain','as'=>'osce.wechat.postEditTrain']);
 
+
+		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.admin.getTrainList']);
+		Route::get('train/edit-train',['uses'=>'TrainController@getEditTrain','as'=>'osce.admin.getEditTrain']);
+		Route::get('train/del-train',['uses'=>'TrainController@getDelTrain','as'=>'osce.admin.getDelTrain']);
+		Route::post('train/add-train',['uses'=>'TrainController@postAddTrain','as'=>'osce.admin.postAddTrain']);
+		Route::post('train/edit-train',['uses'=>'TrainController@postEditTrain','as'=>'osce.admin.postEditTrain']);
 	});
 
 });

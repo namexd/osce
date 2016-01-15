@@ -20,7 +20,8 @@
     <script src="{{asset('osce/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
 
     <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>   <!--菜单插件未使用-->
-    <script src="{{asset('osce/admin/plugins/js/plugins/sliosceroll/jquery.sliosceroll.min.js')}}"></script><!--虚拟滚动条插件未使用-->
+    
+    <script src="{{asset('osce/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未使用-->
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script><!--弹框插件未使用-->
 	<script src="{{asset('osce/wechat/common/js/jquery.cookie.js')}}"></script><!--会话添加插件插件未使用-->
 

@@ -10,6 +10,8 @@ namespace Modules\Osce\Entities;
 
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Osce\Entities\CommonModel;
+use Cache;
+
 
 class ExamPlan extends CommonModel
 {
@@ -58,7 +60,7 @@ class ExamPlan extends CommonModel
         }
 
         $plan   =   $this->distribute($timeList);
-        
+
         $groupData  =   $this->makeGroupPlanByRoom($plan);
         return  $groupData;
     }
@@ -275,7 +277,8 @@ class ExamPlan extends CommonModel
                     {
                         throw new   \Exception('没有找到考站'.$stationId.'的房间信息');
                     }
-                    $groupData[$screeningId][$room->id][$time][]=$student;
+                    $groupData[$screeningId][$room->id][$time][$student->id]=$student;
+                    $this->recordStudentTime($student,$time,$time+$this->cellTime*60,$this->stations[$stationId]);
                 }
             }
         }
@@ -322,5 +325,54 @@ class ExamPlan extends CommonModel
         }
         $this->roomList =   $roomList;
         return $data;
+    }
+
+    public function recordStudentTime($student,$start,$end,$station){
+        $studentTimeRecord  =   $this->studentTimeRecord;
+        $studentTimeRecord[$student->id][]    =   [
+            'start'     =>  $start,
+            'end'       =>  $end,
+            'station'   =>  $station
+        ];
+        $this->studentTimeRecord    =   $studentTimeRecord;
+        return $this;
+    }
+
+
+    public function changePerson($studentA,$studentB,$exam,$user){
+        $plan       =   Cache::get('plan_'.$exam->id.'_'.$user->id);
+
+        try{
+            $studentAInfo   =   $this   ->  getStudentByChangeIndex($studentA,$plan);
+            $studentBInfo   =   $this   ->  getStudentByChangeIndex($studentB,$plan);
+            $studentARoom   =   $this   -> getRoomStudentByChangeIndex($studentA,$plan);
+            $studentBRoom   =   $this   -> getRoomStudentByChangeIndex($studentB,$plan);
+
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+    public function getStudentByChangeIndex($indexInfo,$plan){
+        try{
+            $student    =   $plan[$indexInfo['screening_id']][$indexInfo['room_id']]['child'][$indexInfo['batch_index']]['items'][$indexInfo['student_id']];
+            return  $student;
+        }
+        catch(\Exception $ex)
+        {
+            throw new \Exception('没有找到该对应的学生安排');
+        }
+    }
+
+    public function getRoomStudentByChangeIndex($indexInfo,$plan){
+        try{
+            $student    =   $plan[$indexInfo['screening_id']][$indexInfo['room_id']]['child'][$indexInfo['batch_index']];
+            return  $student;
+        }
+        catch(\Exception $ex)
+        {
+            throw new \Exception('没有找到该对应的学生安排');
+        }
     }
 }

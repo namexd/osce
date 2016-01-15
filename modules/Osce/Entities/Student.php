@@ -191,16 +191,18 @@ class Student extends CommonModel
      * @return bool
      */
 
-    public  function studentList($watch_id){
-        return Student::leftjoin('watch_log',function($join){
-            $join ->on('student.id','=','watch_log.student_id');
-        })->where('watch_log.id','=',$watch_id)
-          ->select([
-              'student.name as name',
-              'student.code as code',
-              'student.idcard as idcard',
-              'student.mobile as mobile'
-          ])
+    public  function studentList($teacher_id){
+        return Student::leftjoin('exam_queue',function($join){
+            $join ->on('student.id','=','exam_queue.student_id');
+        })->leftjoin('station_teacher',function($join){
+            $join ->on('exam_queue.station_id','=','station_teacher.station_id');
+        })->where('station_teacher.user_id','=',$teacher_id)
+            ->select([
+                'student.name as name',
+                'student.code as code',
+                'student.idcard as idcard',
+                'student.mobile as mobile'
+            ])
             ->get();
     }
 }
