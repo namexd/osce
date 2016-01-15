@@ -29,7 +29,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::wechat.discussion.discussion_response');
+        return view('osce::admin.exammanage.exam_notice_add');
     }
 
     /**

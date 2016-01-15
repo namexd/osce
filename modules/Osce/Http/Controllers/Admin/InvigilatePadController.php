@@ -16,9 +16,11 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
+use DB;
 
 class InvigilatePadController extends CommonController
 {
@@ -53,7 +55,7 @@ class InvigilatePadController extends CommonController
         $studentData = $studentModel->studentList($watch_id);
         $list = [];
         foreach ($studentData as $itme) {
-            $list = [
+            $list[] = [
                 'name' => $itme->name,
                 'code' => $itme->code,
                 'idcard' => $itme->idcard,
@@ -73,10 +75,10 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     station_id    考站id   (必须的)
-     * * string     exam_id       考试id   (必须的)
+     * * int    station_id    考站id   (必须的)
+     * * int     exam_id       考试id   (必须的)
      *
-     * @return view
+     * @return json
      *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -153,36 +155,41 @@ class InvigilatePadController extends CommonController
 
     }
     /**
-     * 提交成绩详情
+     *   * 提交评价
      * @method GET
-     * @url /osce/admin/invigilatepad/save-exam-Result
+     * @url /osce/admin/invigilatepad/save-exam-evaluate
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     station_id    考站id   (必须的)
-     * * string     exam_id       考试id   (必须的)
+     * * int     subject_id    考试项目id  (必须的)
+     * * int     standard_id  评分标准 id   (必须的)
+     * * int     score       根据评分标准所得的分值
+     * * string         evaluate     评价内容
      *
-     * @return view
+     * @return  json
      *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function  getSaveExamResult(Request $request){
+    public function  getSaveExamEvaluate(Request $request){
         $this->validate($request,[
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
             'score' =>'required',
+            'evaluate'=>'required'
         ],[
             'subject_id.required'=>'请检查考试项目',
             'standard_id.required'=>'请检查评分标准',
             'score.required'=>'请检查评分标准分值',
+            'evaluate.required'=>'评价内容',
         ]);
         $data =[
             'subject_id'=>Input::get('subject_id'),
             'standard_id'=>Input::get('standard_id'),
             'score'=>Input::get('score'),
+            'evaluate'=>Input::get('evaluate'),
         ];
         $ResultModel = new TestResult();    //获取考试结果id
 //        $data['exam_result_id'] = $ResultModel-> //获取考试结果方法
@@ -200,34 +207,62 @@ class InvigilatePadController extends CommonController
     }
 
     /**
-     * 提交评价
+     * 提交成绩详情
      * @method GET
-     * @url /osce/admin/invigilatepad/see-exam-evaluate
+     * @url /osce/admin/invigilatepad/save-exam-result
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
      * * string     station_id    考站id   (必须的)
-     *
      * @return view
-     *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-      public  function getSeeExamEvaluate(Request $request){
+      public  function getSaveExamResult(Request $request){
            $this->validate($request,[
-               'station_id'=>'required|integer',
                'student_id'=>'required|integer',
+               'station_id'=>'required|integer',
+               'exam_screening_id'=>'required|integer',
+               'begin_dt'=>'required|integer',
+               'end_dt'=>'required|integer',
+               'time'=>'required|integer',
+               'score'=>'required|integer',
+               'score_dt'=>'required|integer',
+               'teacher_id'=>'required|integer',
+
            ]);
-          $stationId= Input::get('station_id');
-          $studenId = Input::get('student_id');
-//          $ExamScore =
+          $data=[
+              'station_id'=>Input::get('station_id'),
+              'student_id'=>Input::get('student_id'),
+              'exam_screening_id'=>Input::get('exam_screening_id'),
+              'begin_dt'=>Input::get('begin_dt'),//考试开始时间
+              'end_dt'=>Input::get('end_dt'),//考试实际结束时间
+              'time'=>Input::get('time'),//考试用时
+              'score'=>Input::get('score'),//最终成绩
+              'score_dt'=>Input::get('score_dt'),//评分时间
+              'teacher_id'=>Input::get('teacher_id'),
 
-
+          ];
+           $save =DB::connection('osce_mis')->table('test_result')->insertGetId($data);
+          if($save){
+              return response()->json(
+                  $this->success_data(1,'详情保存成功')
+              );
+          }else{
+              return response()->json(
+                  $this->success_data(0,'详情保存失败')
+              );
+          }
 
       }
+
+
+
+
+
 
 
     /**
@@ -252,14 +287,56 @@ class InvigilatePadController extends CommonController
             $this->validate($request,[
                'station_id'=>'required|integer'
             ]);
-
-              
-
-
+             $stationId = Input::get('station_id');
+             $stationvcrModel = new StationVcr();
+             $list = $stationvcrModel->vcrlist($stationId);
+          $vcrdata= [
+              'name'=>$list->name,
+              'code'=>$list->code,
+              'ip'=>$list->ip,
+              'username'=>$list->username,
+              'port'=>$list->port,
+              'channel'=>$list->channel,
+          ];
+          if($list->status==0){
+              return response()->json(
+                  $this->success_data(0,'摄像头损坏')
+              );
+          }else{
+              return response()->json(
+                  $this->success_data($vcrdata,1,'摄像头可用')
+              );
+          }
 
 
       }
 
+    /**
+     * 语音点评
+     * @method GET
+     * @url /osce/admin/invigilatepad/voice-prompt
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     station_id    考站id   (必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+      public  function getVoicePrompt(Request $request){
+          $this->validate($request,[
+              'exam_id'=>'required|integer',
+              'station_id'=>'required|integer',
+              'student_id'=>'required|integer',
+          ]);
+
+
+
+      }
 
 
 

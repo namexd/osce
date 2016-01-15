@@ -10,6 +10,8 @@ namespace Modules\Osce\Entities;
 
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Osce\Entities\CommonModel;
+use Cache;
+
 
 class ExamPlan extends CommonModel
 {
@@ -19,25 +21,15 @@ class ExamPlan extends CommonModel
     public $timestamps	    =	true;
     protected $fillable 	=	['exam_id','exam_screening_id','student_id','station_id','room_id','begin_dt','end_dt','status','created_user_id'];
 
-    protected $stationNum;
-    protected $roomList     =   [];
+    protected $stations     =   [];
+    protected $cellTime     =   0;
+    protected $batchTime    =   0;
+    protected $flowsIndex   =   [];
     protected $allStudent   =   [];
-    protected $allBlock     =   [];
-    protected $studentGroup =   [];
-    protected $batch        =   0;
-    protected $flowsStudent =   [];
-    protected $roomSerialnumber =   [];
-    protected $flowTime     =   [];
-    protected $roomTime     =   [];
-    protected $startTime    =   [];
-    protected $flowRoomNum  =   [];
-    protected $screeningId  =   0;
-    protected $plan         =   [];
-    protected $studentBusyTime  =   [];
 
-    //流程组 组内 考场优先级
-    protected $flowGroupInnerPriority   =   [];
-
+    protected $timeList     =   [];
+    protected $roomList     =   [];
+    protected $screeningStudents     =   [];
     /**
      *  智能排考
      * @access public
@@ -53,194 +45,171 @@ class ExamPlan extends CommonModel
      *
      */
     public function IntelligenceEaxmPlan($exam){
-        $this   ->  initStartTime($exam);
-        $this->allStudent   =   $this   ->  getExamStudent($exam);
-        $this->roomList     =   $this   ->  getRoomList($exam);
-        $examScreeningTotal =   $this   ->  groupStudent($exam);
+        $this   ->  stations   =   $this   ->  getAllStation($exam);
+        $this   ->  allStudent =   $this   ->  getExamStudent($exam);
 
-        $this   ->  getAllBlock($exam);
-        //$studentGroup       =[];
-
-        /**
-         * $examScreeningTotal[
-         *      '场次ID'=>[
-         *          '批次序号'=>[{学生}]
-         *      ]
-         * ]
-         *
-         * $allBlock[
-         *      '场次ID'=>[
-         *          '批次序号'=>[
-         *              ‘考场ID’=>[],
-         *              ‘考场ID’=>[],
-         *              ‘考场ID’=>[],
-         *          ]
-         *      ]
-         * ]
-         */
-        $plan   =[];
-        $roomData   =   [];
-        foreach($this->allBlock as $screeningId =>  $screeningBlock)
+        $mins   =   $this   ->  getMaxStationTime();
+        $this   ->  getBatchTime();
+        $examScreenings =   $exam   ->  examScreening;
+        $timeList       =   $this   ->  timeList;
+        foreach($examScreenings as $examScreening)
         {
-            $this   ->screeningId   =   $screeningId;
-            $screeningPlan  =[];
-            foreach($screeningBlock as $batch=>$batchBlock)
+            $batchNum   =  $this   ->  getBatchNum($examScreening);
+            $screeningTimeList      =   $this   ->  setEachBatchTime($examScreening,$batchNum);
+            $timeList[$examScreening->id] = $screeningTimeList;
+        }
+
+        $plan   =   $this->distribute($timeList);
+
+        $groupData  =   $this->makeGroupPlanByRoom($plan);
+        return  $groupData;
+    }
+
+    public function distribute($timeList){
+        $screeningStudents  =   $this   ->  screeningStudents;
+        $flowsIndex         =   $this->flowsIndex;
+        $examScreeningIndex =   0;
+
+        $plan   =   [];
+
+        foreach($timeList as $examScreeningId   =>  $examScreeningBactchList)
+        {
+            foreach($examScreeningBactchList as $batchId    =>   $batch)
             {
-                $batchPlan  =[];
-                foreach($batchBlock as $roomId=>$roomBlock)
+                $batchStudnet   =   [];
+                foreach($batch as $serialnumber    =>  $batchInfo)
                 {
-                    $this   ->  setRoomTime($roomId);
-                    $student    =   [];
-                    if(!empty($examScreeningTotal[$screeningId][$batch]))
+                    if($batchStudnet===[])
                     {
-                        $student    =   $this->putStudentToRoom($examScreeningTotal[$screeningId][$batch],$this->getRoomFlowSerialnumber($roomId),$roomId);
-                        $batchPlan[$roomId] =   $student;
+                        $batchStudnet   =   $screeningStudents[$examScreeningIndex][$batchId];
                     }
                     else
                     {
-                        $batchPlan[$roomId] =   [];
+                        $batchStudnet   =   $this   ->  changeStudentIndex($batchStudnet);
                     }
-
-                    $beginTime  =   $this->getRoomTime($roomId);
-                    $endTime    =   $this->getRoomTime($roomId) +   $this   ->  getFlowTimeByRoomId($roomId);
-
-                    $batchInfo =[
-                        'begin'     =>  $beginTime,
-                        'end'       =>  $endTime,
-                        'items'     =>  $student,
-                    ];
-                    $this   ->  setStudentsBusyTime($student,$beginTime,$endTime,$screeningId.'-'.$roomId.'-'.$batch);
-                    $roomData[$screeningId][$roomId]['name']             =   $this->getRoomName($roomId);
-                    $roomData[$screeningId][$roomId]['child'][$batch]    =   $batchInfo;
-                    //$roomData[$screeningId][$roomId][$batch]    =     $batch;
+                    $stationIndex   =   0;
+                    foreach($batchInfo as $stationId  =>  $batchData)
+                    {
+                        $stationStudnet     =   $batchStudnet[$stationIndex];
+                        $stationIndex++;
+                        $plan[$examScreeningId][$stationId][$batchData]   =   $stationStudnet;
+                    }
                 }
-                $screeningPlan[$batch]=$batchPlan;
             }
-            $plan[$screeningId]=$screeningPlan;
+            $examScreeningIndex++;
         }
-        $this   ->  plan    =$plan;
-        dd($this->studentBusyTime);
-        return $roomData;
+        return $plan;
     }
 
-    /*
-     * 初始化 开始时间
-     */
-    public function initStartTime($exam){
+    public function changeStudentIndex($batchStudnet){
         $data   =   [];
-        foreach($exam->examScreening as $examScreening)
+        $total  =   count($batchStudnet);
+        foreach($batchStudnet as $index=>$student)
         {
-            $data[$examScreening->id] = strtotime($examScreening->begin_dt);
+            $newIndex           =   $index+1;
+            if($newIndex>=$total)
+            {
+                $newIndex       =   $newIndex-$total;
+            }
+            $data[$newIndex]    =   $student;
         }
-        $this   ->  startTime   =   $data;
-    }
-    /*
-     * 学生分场次
-     */
-    public function groupStudent($exam){
-        //计算单批次时间
-        $oneTotal       =   $this   ->  oneFlowsTime($exam);
-        $stationList    =   $this   ->  getBatchAllStation($exam);
-        $stationNum     =   count($stationList);
-        $examScreeningTotal     =   [];
-        //计算批次数量
-        $batchList              =   [];
-        $studentGroup           =   [];
-        foreach($exam   ->  examScreening as $screening)
-        {
-            $startTime  =   strtotime($screening ->  begin_dt);
-            $endTime    =   strtotime($screening ->  end_dt);
-            if($startTime==false||$endTime==false)
-            {
-                throw new \Exception('开始/结束时间格式不对');
-            }
-            if($endTime<$startTime)
-            {
-                throw new \Exception('考试的开始时间大于结束时间，请确认设置');
-            }
-            $totalTime  =   intval(($endTime-$startTime)/60);
-            $batch      =   intval($totalTime/$oneTotal);
-            $batchList[$screening->id]  =   $batch;
-
-
-            $batchStudent   =[];
-            for($i=1;$i<=$batch;$i++)
-            {
-                try
-                {
-                    $batchStudent[$i]    =   $this->getStudentByNum($stationNum);
-                }
-                catch(\Exception $ex)
-                {
-                    $batchStudent[$i]   =   [];
-                }
-            }
-            $studentGroup[$screening->id]   =   $batchStudent;
-        }
-        $this       ->  batch   =   $batchList;
-        return $studentGroup;
+        return $data;
     }
 
-    public function getAllBlock($exam){
-        foreach($exam   ->  examScreening as $screening)
+    public function getPerBatchStudent(){
+        $num        =   count($this->stations);
+        $students   =   $this   ->  getStudentByNum($num);
+        return $students;
+    }
+    public function getPerBatchStudentHaveWatch(){
+
+    }
+    public function getBatchNum($examScreening){
+        $start  =   strtotime($examScreening->begin_dt);
+        $end    =   strtotime($examScreening->end_dt);
+        if($end<$start)
         {
-            $this       ->  makeBlock($screening->id);
+            throw new \Exception('开始时间小于结束时间');
         }
+        $batchNum   =   intval(($end-$start)/($this->batchTime*60));
+        return $batchNum;
+    }
+
+    public function setEachBatchTime($examScreening,$batchNum){
+        $start  =   strtotime($examScreening->begin_dt);
+        $data   =   [];
+        $nowTime    =   $start;
+        $flowsIndex         =   $this->flowsIndex;
+
+        $screeningStudents      =   $this->screeningStudents;
+        if(empty($thisScreeningStudents))
+        {
+            $thisScreeningStudents  =[];
+        }
+        else
+        {
+            $thisScreeningStudents  =   $screeningStudents[$examScreening];
+        }
+
+        $batchStudents          =   [];
+        for($i=1;$i<=$batchNum;$i++)
+        {
+            $thisBatchStudents      =   $this   ->  getPerBatchStudent();
+            $batchStudents[$i]      =   $thisBatchStudents;
+            foreach($flowsIndex as $flowList)
+            {
+                $first  =   array_shift($flowList);
+                foreach($this   ->  stations as $station)
+                {
+                    $data[$i][$first->serialnumber][$station->id] =   $nowTime;
+                }
+                $nowTime+=$this->cellTime;
+            }
+        }
+        $thisScreeningStudents[]=   $batchStudents;
+        $this->screeningStudents=   $thisScreeningStudents;
+
+        return $data;
+    }
+
+    public function getBatchTime(){
+        $flowsIndex =   $this   ->  flowsIndex;
+        $batchTime  =   count($flowsIndex)*$this->cellTime;
+        $this   ->  batchTime   =   $batchTime;
         return $this;
     }
-    public function makeBlock($screeningId){
-        $batch      =   $this   ->  batch[$screeningId];
-        $allBlock  =   $this    ->  allBlock;
-        $thisScreening  =   $batch[$screeningId];
-        $roomList  =   $this    ->  roomList;
-        for($i=1;$i<=$batch;$i++)
+    /*
+     * 获取报考学生
+     */
+    public function getExamStudent($exam){
+        $data   =   [];
+        foreach($exam   ->  students as $student)
         {
-            $item=  [];
-            foreach($roomList as $room)
-            {
-                $item[$room->id][]   =   [];
-            }
-            $thisScreening[$i]=$item;
+            $data[] =$student;
         }
-        $allBlock[$screeningId] =   $thisScreening;
-        $this   ->  allBlock    =   $allBlock;
-        return  $allBlock;
+
+        return  $data;
     }
 
-    /*
-     * 获取单一流程时间
-     */
-    public function oneFlowsTime($exam){
+    public function totalPrepare($time){
+        return $time+config('osce.prepare',0);
+    }
+
+    public function getAllStation($exam){
         $flows  =   $this   ->  getExamFlow($exam);
         $flowsIndex         =   $this   ->  groupFlowByRoom($flows);
-        $total              =   0;
-        $stationNum     =   0;
-        $flowTime       =   [];
-
-        foreach($flowsIndex as $ser=>$group)
+        $this   ->  flowsIndex  =   $flowsIndex;
+        $examFlowRoomModel   =   new ExamFlowRoom();
+        $data   =   [];
+        foreach($flowsIndex as $flow)
         {
-            $longestTime    =   0;
-            foreach($group as $examFlowRoom)
+            foreach($examFlowRoomModel  ->  getRoomStationsByFlow($flow) as $station)
             {
-                $this           ->  initFlowGroupInnerPriority($examFlowRoom);
-                $this           ->  initFlowRoomNum($examFlowRoom);
-                $time           =   $examFlowRoom   ->  getRoomStaionTime($examFlowRoom);
-                $stationNum     +=  $examFlowRoom   ->  getRoomStationNum($examFlowRoom);
-                $longestTime    =   $time>$longestTime? $time:$longestTime;
+                $data[$station->id] =   $station;
             }
-            $groupTime  =   ceil($longestTime/count($group));
-            $groupTime  =   intval($this   ->  totalPrepare($groupTime));
-
-            //getRoomFlowSerialnumber
-            $flowTime[$ser] =  $groupTime;
-
-            $total+=$groupTime;
         }
-        $this->flowTime     =   $flowTime;
-        $this   ->  stationNum  =   $stationNum;
-        return $total;
+        return $data;
     }
-
     /*
      * 获取考试所有流程节点
      */
@@ -248,8 +217,8 @@ class ExamPlan extends CommonModel
         return $exam    ->  flows;
     }
     /*
-     *  根据考场分组流程
-     */
+    *  根据考场分组流程
+    */
     public function groupFlowByRoom($flows){
         $group                      =   [];
         foreach($flows as $flow)
@@ -266,272 +235,144 @@ class ExamPlan extends CommonModel
         return $group;
     }
 
-    /*
-     * 计算 叠加准备时间
-     */
-    public function totalPrepare($time){
-        return $time+config('osce.prepare',0);
+    public function getMaxStationTime(){
+        $mins   =   0;
+        foreach($this   ->  stations as $station)
+        {
+            $mins   =   $mins>$station->mins? $mins:$station->mins;
+        }
+        $mins   =   $this   ->  totalPrepare($mins);
+        $this   ->  cellTime    =   $mins;
+        return $mins;
     }
 
-    /*
-     * 获取指定数量的考生
-     */
-    public function getStudentByNum($num,$screeningId=false){
-        if(!$screeningId)
-        {
-            $allStudent =   $this   ->  allStudent;
-        }
-        else
-        {
-            $allStudent =   $this   ->  studentGroup[$screeningId];
-        }
-
-        if(empty($allStudent))
-        {
-            throw new \Exception('所有用户已经选择');
-        }
+    public function getStudentByNum($num){
+        $allStudent =   $this   ->  allStudent;
         shuffle($allStudent);
         $data   =   [];
         for($i=0;$i<$num;$i++)
         {
-            $data[] =array_pop($allStudent);
+            $student=   array_pop($allStudent);
+            if(empty($student))
+            {
+                $student    =   new \stdClass();
+                $student    ->  name    =   '空缺';
+                $student    ->  id      =   0;
+            }
+            $data[] =   $student;
         }
         $this->allStudent   =   $allStudent;
         return $data;
     }
-    /*
-     * 获取报考学生
-     */
-    public function getExamStudent($exam){
-        $data   =   [];
-        foreach($exam   ->  students as $student)
-        {
-            $data[] =$student;
-        }
-        return  $data;
-    }
 
-    /*
-     * 给考生分批次
-     */
-    public function getBatchAllStation($exam){
-        $examFlowRoomModel   =   new ExamFlowRoom();
-        $list   =   $examFlowRoomModel  ->  where('room_id','=',$exam->id)->get();
-        $stationsList   =[];
-        foreach($list as $roomRelation)
-        {
-            $room   =   $roomRelation->room;
-            $station    =   [];
-            if(is_null($room))
+    public function makeGroupPlanByRoom($plan){
+        $groupData  =   [];
+        $list       =   $this->getStationRoomInfo();
+        foreach($plan as $screeningId   =>  $screeningPlan){
+            foreach($screeningPlan as $stationId=>$timeStudent)
             {
-                throw new \Exception('房间不存在');
-            }
-            else
-            {
-                $stations    =   $room->stations;
-                foreach($stations as $station)
-                {
-                    $stationsList[]     =   $station;
+                foreach($timeStudent as $time=>$student){
+                    $room   =   $list[$stationId];
+                    if(is_null($room))
+                    {
+                        throw new   \Exception('没有找到考站'.$stationId.'的房间信息');
+                    }
+                    $groupData[$screeningId][$room->id][$time][$student->id]=$student;
+                    $this->recordStudentTime($student,$time,$time+$this->cellTime*60,$this->stations[$stationId]);
                 }
             }
         }
-        return $stationsList;
+        return $this->groupPlanByTime($groupData);
     }
 
-    /*
-     * 获取考场清单
-     */
-    public function getRoomList($exam){
-        $data   =   [];
-        $examRoomModel  =   new ExamRoom();
-        $roomSerialnumber   =   [];
-        foreach($examRoomModel   ->  getExamRoomData($exam->id) as $roomFxam)
-        {
-            $roomSerialnumber[$roomFxam->room_id]=$roomFxam->serialnumber;
-            $data[] =   $roomFxam->room;
+    public function groupPlanByTime($groupData){
+        $data  = [];
+        $roomList   =   $this->roomList;
+        foreach($groupData as $screeningId   =>  $roomPlan){
+            foreach($roomPlan as $roomId=>$timePlan)
+            {
+                $room   =   $roomList[$roomId];
+                $roomdData  =   [
+                    'name'  =>  $room->name,
+                    'child' =>  []
+                ];
+                foreach($timePlan as $time=>$student)
+                {
+                    $item   =   [
+                        'start' =>  $time,
+                        'end'   =>  $time+$this->cellTime,
+                        'items' =>  $student
+                    ];
+                    $roomdData['child'][]=$item;
+                }
+                $data[$screeningId][$roomId]=$roomdData;
+            }
         }
-        $this->roomSerialnumber    =   $roomSerialnumber;
+        return $data;
+    }
+    public function getStationRoomInfo(){
+        $stations   =   $this->stations;
+        $data   =   [];
+        foreach($stations as $station)
+        {
+            if(is_null($station->roomStation))
+            {
+                throw new \Exception('考站数据错误');
+            }
+            $room   =   $station->roomStation->room;
+            $data[$station->id]         =   $room;
+            $roomList[$room->id]        =   $room;
+        }
+        $this->roomList =   $roomList;
         return $data;
     }
 
-    /*
-     * 给指定流程的指定房间分配学生
-     */
-    public function putStudentToRoom($studentList,$flowId,$roomId){
-        //检查是否有同流程考场（选考）
-        $flowRoomNum    =   $this   ->  flowRoomNum($flowId);
-        if($flowRoomNum>1)
-        {
-            //同流程考场人员优先级检查
-            if(!$this   -> flowGroupInnerPriorityCheck($roomId,$flowId))
-            {
-                return [];
-            }
-        }
-
-        $flowsStudent   =   $this->flowsStudent;
-        if(array_key_exists($flowId,$flowsStudent))
-        {
-            $flowStudents=   $flowsStudent[$flowId];
-            if(count(array_intersect($studentList,$flowStudents))>0)
-            {
-                return [];
-            }
-            foreach($studentList as $student)
-            {
-                $flowStudents[]=$student;
-            }
-        }
-        else
-        {
-            $flowStudents=   $studentList;
-        }
-        $flowsStudent[$flowId]  =   $flowStudents;
-        $this   ->  flowsStudent=   $flowsStudent;
-        if($flowRoomNum>1)
-        {
-            $this   ->  setFlowGroupInnerPriority($roomId,$flowId);
-        }
-        return  $studentList;
-    }
-
-    /*
-     * 根据房间号获取流程步骤（暂不支持 多选1以上）
-     */
-    public function getRoomFlowSerialnumber($roomId){
-        $roomSerialnumber   =   $this->roomSerialnumber;
-        return $roomSerialnumber[$roomId];
-    }
-
-    public function setRoomTime($roomId){
-        $roomTime   =   $this   ->  roomTime;
-        if(array_key_exists($roomId,$roomTime))
-        {
-            $roomTime[$roomId]  +=$this->getFlowTimeByRoomId($roomId);
-        }
-        else
-        {
-            $startTime          =   $this->startTime;
-            $ser                =   $this   ->screeningId;
-            $roomTime[$roomId]  =   $startTime[$ser];
-        }
-        $this   ->  roomTime    =   $roomTime;
-        return $this;
-    }
-
-    /*
-     * 根据考场ID获取考场关键时间
-     */
-    public function getRoomTime($roomId){
-        $roomTime   =   $this   ->  roomTime;
-        $flowTime   =   $this   ->  flowTime;
-        if(empty($roomTime[$this->getRoomFlowSerialnumber($roomId)]))
-        {
-            $startTime          =   $this   ->  startTime;
-            $ser                =   $this   ->  screeningId;
-            return  $startTime[$ser];
-        }
-        else
-        {
-            $time   =   $roomTime[$roomId]+$flowTime[$this->getRoomFlowSerialnumber($roomId)];
-            return  strval($time);
-        }
-    }
-
-    /*
-     * 获取房间所在流程的最大时间
-     */
-    public function getFlowTimeByRoomId($roomId){
-        $flowTime   =   $this   ->  flowTime;
-        return  $flowTime[$this->getRoomFlowSerialnumber($roomId)]*60;
-    }
-
-    /*
-     * 流程组 内的 优先级检查
-     */
-    public function flowGroupInnerPriorityCheck($roomId,$flowId){
-        $flowGroupInnerPrioritys    =   $this->flowGroupInnerPriority;
-        if(!array_key_exists($flowId,$flowGroupInnerPrioritys))
-        {
-            $flowGroupInnerPriority[$roomId]    =   false;
-            $flowGroupInnerPrioritys[$flowId]   =   $flowGroupInnerPriority;
-        }
-        $flowGroupInnerPriority     =   $flowGroupInnerPrioritys[$flowId];
-        if(!array_key_exists($roomId,$flowGroupInnerPriority))
-        {
-            $flowGroupInnerPriority[$roomId]    =   false;
-            $flowGroupInnerPrioritys[$flowId]   =   $flowGroupInnerPriority;
-        }
-        return $flowGroupInnerPriority[$roomId];
-    }
-
-    /*
-     * 设置组内优先级
-     */
-    public function setFlowGroupInnerPriority($roomId,$flowId){
-        $flowGroupInnerPrioritys    =   $this->flowGroupInnerPriority;
-        $flowGroupInnerPrioritys[$flowId][$roomId]  =   false;
-    }
-
-    /*
-     * 初始化组内优先级
-     */
-    public function initFlowGroupInnerPriority($examFlowRoom){
-        $flowGroupInnerPriority =   $this->flowGroupInnerPriority;
-        $flowGroupInnerPriority[$examFlowRoom->flow_id][$examFlowRoom->room_id] =   true;
-        $this   ->  flowGroupInnerPriority  =   $flowGroupInnerPriority;
-        return $this;
-    }
-
-    /*
-     * 流程所在房间数量
-     */
-    public function flowRoomNum($flowId){
-        return  $this   -> flowRoomNum[$flowId];
-    }
-
-    /*
-     * 初始化流程房间数
-     */
-    public function initFlowRoomNum($examFlowRoom){
-        $examFlowRoomModel   =   new ExamFlowRoom();
-        $num    =   $examFlowRoomModel   ->  where('flow_id','=',$examFlowRoom->flow_id)->count();
-        $flowRoomNum    =   $this   ->  flowRoomNum;
-        $flowRoomNum[$examFlowRoom->flow_id]   =   $num;
-        $this   ->  flowRoomNum =   $flowRoomNum;
-        return $this;
-    }
-
-    /*
-     * 获取房间名称
-     */
-
-    public function getRoomName($roomId){
-        $roomList   =   $this->roomList;
-        foreach($roomList as $room)
-        {
-            if($roomId==$room->id)
-            {
-                return  $room->name;
-            }
-        }
-        return  '';
-    }
-
-    public function setStudentBusyTime($studentId,$start,$end,$localtion){
-        $studentBusyTime    =   $this->studentBusyTime;
-        $studentBusyTime[$studentId][$localtion]    =   [
-            'start' =>  $start,
-            'end'   =>  $end
+    public function recordStudentTime($student,$start,$end,$station){
+        $studentTimeRecord  =   $this->studentTimeRecord;
+        $studentTimeRecord[$student->id][]    =   [
+            'start'     =>  $start,
+            'end'       =>  $end,
+            'station'   =>  $station
         ];
-        $this   ->  studentBusyTime =   $studentBusyTime;
+        $this->studentTimeRecord    =   $studentTimeRecord;
         return $this;
     }
 
-    public function setStudentsBusyTime($studentList,$start,$end,$localtion){
-        foreach($studentList as $student)
+
+    public function changePerson($studentA,$studentB,$exam,$user){
+        $plan       =   Cache::get('plan_'.$exam->id.'_'.$user->id);
+
+        try{
+            $studentAInfo   =   $this   ->  getStudentByChangeIndex($studentA,$plan);
+            $studentBInfo   =   $this   ->  getStudentByChangeIndex($studentB,$plan);
+            $studentARoom   =   $this   -> getRoomStudentByChangeIndex($studentA,$plan);
+            $studentBRoom   =   $this   -> getRoomStudentByChangeIndex($studentB,$plan);
+
+        }
+        catch(\Exception $ex)
         {
-            $this   ->  setStudentBusyTime($student->id,$start,$end,$localtion);
+            throw $ex;
+        }
+    }
+    public function getStudentByChangeIndex($indexInfo,$plan){
+        try{
+            $student    =   $plan[$indexInfo['screening_id']][$indexInfo['room_id']]['child'][$indexInfo['batch_index']]['items'][$indexInfo['student_id']];
+            return  $student;
+        }
+        catch(\Exception $ex)
+        {
+            throw new \Exception('没有找到该对应的学生安排');
+        }
+    }
+
+    public function getRoomStudentByChangeIndex($indexInfo,$plan){
+        try{
+            $student    =   $plan[$indexInfo['screening_id']][$indexInfo['room_id']]['child'][$indexInfo['batch_index']];
+            return  $student;
+        }
+        catch(\Exception $ex)
+        {
+            throw new \Exception('没有找到该对应的学生安排');
         }
     }
 }

@@ -285,8 +285,13 @@ class IndexController extends CommonController
     public function getAddWatch(Request $request){
 
         $this->validate($request,[
-            'code'          =>  'required',
-            'user_id'       =>  'required|integer'
+            'code'                  =>  'required',
+            'status'                =>  'required',
+            'create_user_id'        =>  'required|integer',
+            'description'           =>  'sometimes',
+            'factory'               =>  'sometimes',
+            'sp'                    =>  'sometimes',
+            'purchase_dt'           =>  'sometimes',
         ]);
 
         try{
@@ -297,7 +302,8 @@ class IndexController extends CommonController
                 'description'   =>  $request->get('description',''),
                 'factory'       =>  $request->get('factory',''),
                 'sp'            =>  $request->get('sp',''),
-                'created_user_id'=> $request->get('user_id'),
+                'create_user_id'=> $request->get('create_user_id'),
+                'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
             if($watch->id>0){
@@ -340,16 +346,33 @@ class IndexController extends CommonController
     public function getDeleteWatch(Request $request){
 
         $this->validate($request,[
-            'id'            =>  'required|integer',
-            'user_id'       =>  'required|integer'
+            'code'                    =>  'required',
+            'create_user_id'       =>  'required|integer'
         ]);
 
-        $count=Watch::destroy($request->get('id'));
+        $id=Watch::where('code',$request->get('code'))->select()->first();
+        if($id){
+            $id=$id->id;
+            $Log_id=WatchLog::where('watch_id',$id)->select('id')->first();
+            if($Log_id){
+                $result=WatchLog::where('watch_id',$id)->delete();
+                if($result){
+                    $result=Watch::where('id',$id)->delete();
+                    if($result){
+                        return response()->json(
+                            $this->success_data()
+                        );
+                    }
+                }
+            }else{
+                $result=Watch::where('id',$id)->delete();
+                if($result){
+                    return response()->json(
+                        $this->success_data()
+                    );
+                }
+            }
 
-        if($count>0){
-            return response()->json(
-                $this->success_data()
-            );
         }
 
         return response()->json(
@@ -362,7 +385,7 @@ class IndexController extends CommonController
     /**
      * 更新腕表状态接口
      *
-     * @api GET /api/1.0/private/osce/watch/delete
+     * @api GET /api/1.0/private/osce/watch/update
      * @access private
      *
      * @param Request $request get请求<br><br>
@@ -381,14 +404,26 @@ class IndexController extends CommonController
     public function getUpdateWatch(Request $request){
 
         $this->validate($request,[
-            'id'            =>  'required|integer',
-            'status'        =>  'required|integer',
-            'user_id'       =>  'required|integer'
+            'code'                  =>  'required',
+            'status'                =>  'required',
+            'create_user_id'       =>  'required|integer',
+            'description'           =>  'sometimes',
+            'factory'               =>  'sometimes',
+            'sp'                    =>  'sometimes',
+            'purchase_dt'           =>  'sometimes',
         ]);
 
 
-        $count=Watch::where('id','=',$request->get('id'))
-            ->update(['status'=>$request->get('status')]);
+        $count=Watch::where('code'   ,'=', $request->get('code'))
+            ->update([
+                'name'          =>  $request->get('name',''),
+                'status'        =>  $request->get('status'),
+                'description'   =>  $request->get('description'),
+                'factory'       =>  $request->get('factory'),
+                'sp'            =>  $request->get('sp'),
+                'create_user_id'=> $request->get('create_user_id'),
+                'purchase_dt'   => $request->get('purchase_dt'),
+            ]);
 
         if($count>0){
             return response()->json(
@@ -400,6 +435,41 @@ class IndexController extends CommonController
             $this->fail(new \Exception('更新腕表失败'))
         );
     }
+
+    /**
+     *编辑返回设备信息
+     * @method GET
+     * @url /api/1.0/private/osce/watch/watch-detail
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        code       设备编码(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchDetail(Request $request){
+        $this->validate($request,[
+            'code'  =>  'required'
+        ]);
+
+       try{
+       $list=Watch::where('code',$request->get('code'))->select()->get();
+        return response()->json(
+            $this->success_data($list,1,'success')
+        );}
+            catch( \Exception $ex){
+            return response()->json(
+            $this->fail($ex)
+            );
+      }
+    }
+
 
     /**
      *获取当日考试列表
@@ -442,10 +512,8 @@ class IndexController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        code        设备编码(必须的)
+     * * string        status      状态(必须的)
      *
      * @return ${response}
      *
@@ -457,17 +525,15 @@ class IndexController extends CommonController
     public function getWatchList(Request $request)
     {
         $this->validate($request, [
-            'code' => 'sometimes|integer'
+            'code' => 'sometimes',
+            'status' => 'sometimes|integer',
         ]);
 
         $code = intval($request->get('code'));
-
+        $status = intval($request->get('status'));
         try{
-            if ($code) {
-                $list = Watch::where('code', 'like', '%' . $code . '%');
-            } else {
-                $list = Watch::select()->get();
-            }
+            $watchModel=new Watch();
+            $list=$watchModel->getWatch($code,$status);
 
             $data = [];
             foreach ($list as $item) {
@@ -527,7 +593,8 @@ class IndexController extends CommonController
                         'id' => $v['id'],
                         'status' => $v['status'],
                         'name' => $v['name'],
-                        'code' => $v['code']
+                        'code' => $v['code'],
+                        'studentName' => '-',
                     ];
                 }
 

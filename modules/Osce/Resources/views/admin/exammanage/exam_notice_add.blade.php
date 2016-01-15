@@ -4,6 +4,15 @@
     .col-sm-1{margin-top: 6px;}
     .col-sm-1>input[type="checkbox"]{vertical-align: sub;}
     .form-group.col-sm-1{margin-bottom: 0!important;}
+    .images_upload {
+        display: inline-block;
+        height: 34px!important;
+        width: 70px!important;
+        border: 1px dashed #ccc;
+        cursor: pointer;
+        background-image:none!important;
+        /*background: url(../images/add_img.png) no-repeat center; */
+    }
     </style>
 @stop
 
@@ -71,15 +80,24 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">附件:</label>
 
-                        <div class="col-sm-10">
-                            <input type="text"  id="tell" name="tell" class="form-control">
-                        </div>
+                        <div class="form-group col-sm-1">
+                                <input type="checkbox" name="accept[]" checked="checked">
+                                <label>考生</label>
+                            </div>
+                            <div class="form-group col-sm-1">
+                                <input type="checkbox" name="accept[]">
+                                <label>老师</label>
+                            </div>
+                            <div class="form-group col-sm-1">
+                                <input type="checkbox" name="accept[]">
+                                <label>sp老师</label>
+                            </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
                             <button class="btn btn-primary" type="submit">保存</button>
-                            <button class="btn btn-white cancel" type="button">取消</button>
+                            <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>
             </form>

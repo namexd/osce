@@ -67,11 +67,13 @@ class Room extends CommonModel
                     throw new \Exception('查无此考场！');
                 }
                 return $result;
+                
 
             }
 
 
             //判断传入的type是否合法
+
             $area = Area::where('area.cate', '=', $type)->first();
 //            dd($area);
             if (!$area) {

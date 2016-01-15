@@ -586,7 +586,7 @@ class ExamController extends CommonController
         try {
 
             //获得上传的数据
-                $exam_id= $id;
+            $exam_id= $id;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
             $studentList = array_shift($data);
@@ -603,11 +603,8 @@ class ExamController extends CommonController
 
 
             }
-//            return response()->json(
-//                $this->success_data(['result' => true, 'code' => 1])
-//            );
-         echo json_encode(['result' => true, 'data' =>['code'=>1] ]);
-//            echo json_encode($this->success_data());
+//               echo json_encode(['result' => true, 'data' =>['code'=>1] ]);
+            echo json_encode($this->success_data(['code'=>1]));
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
         }
@@ -1097,7 +1094,7 @@ class ExamController extends CommonController
         $ExamPlanModel   =   new ExamPlan();
         $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
         $user   =   Auth::user();
-        Cache::forget('plan_'.$exam->id.'_'.$user->id);
+        Cache::pull('plan_'.$exam->id.'_'.$user->id);
         $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
             return $plan;
         });
@@ -1158,5 +1155,49 @@ class ExamController extends CommonController
         $this->validate($request,[
             'id'    =>  'required|integer'
         ]);
+    }
+
+    /**
+     *
+     * @url GET /osce/admin/exam/change-student
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getChangeStudent(Request $request){
+        $id =   17;
+        $exam       =   Exam::find($id);
+        $user       =   Auth::user();
+        $fist   ='17-3-0-3';
+        $sec    ='17-3-1-1';
+        $studentA   =   explode('-',$fist);
+        $studentB   =   explode('-',$sec);
+        $studentAInfo   =   [
+            'screening_id'  =>  $studentA[0],
+            'room_id'       =>  $studentA[1],
+            'batch_index'   =>  $studentA[2],
+            'student_id'    =>  $studentA[3],
+        ];
+        $studentBInfo   =   [
+            'screening_id'  =>  $studentB[0],
+            'room_id'       =>  $studentB[1],
+            'batch_index'   =>  $studentB[2],
+            'student_id'    =>  $studentB[3],
+        ];
+        $ExamPlanModel   =   new ExamPlan();
+        $ExamPlanModel      ->changePerson($studentAInfo,$studentBInfo,$exam,$user);
     }
 }

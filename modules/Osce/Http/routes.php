@@ -152,6 +152,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/intelligence-eaxm-plan', ['uses'=>'ExamController@getIntelligenceEaxmPlan','as'=>'osce.admin.exam.getIntelligenceEaxmPlan']);
 		Route::get('exam/intelligence', ['uses'=>'ExamController@getIntelligence','as'=>'osce.admin.exam.getIntelligence']);
 		Route::post('exam/intelligence', ['uses'=>'ExamController@postIntelligence','as'=>'osce.admin.exam.postIntelligence']);
+		Route::get('exam/change-student', ['uses'=>'ExamController@getChangeStudent','as'=>'osce.admin.exam.getChangeStudent']);
 
 		//sp
 		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getShow','as'=>'osce.admin.spteacher.getShow']);
@@ -173,7 +174,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.admin.invigilatepad.getAuthentication']);
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.admin.invigilatepad.getExamGrade']);
 		Route::get('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@getSaveExamResult','as'=>'osce.admin.invigilatepad.getSaveExamResult']);
-		Route::get('invigilatepad/see-exam-evaluate', 	['uses'=>'InvigilatePadController@getSeeExamEvaluate','as'=>'osce.admin.invigilatepad.getSeeExamEvaluate']);
+		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.admin.invigilatepad.getSaveExamEvaluate']);
 
 
 		//测试
@@ -209,7 +210,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
 		Route::post('discussion/add-question',['uses'=>'DiscussionController@postAddQuestion','as'=>'osce.wechat.postAddQuestion']);
+		Route::get('discussion/add-question',['uses'=>'DiscussionController@getAddQuestion','as'=>'osce.wechat.getAddQuestion']);
+		Route::get('discussion/add-reply',['uses'=>'DiscussionController@getAddReply','as'=>'osce.wechat.getAddReply']);
 		Route::post('discussion/add-reply',['uses'=>'DiscussionController@postAddReply','as'=>'osce.wechat.postAddReply']);
+		Route::get('discussion/edit-question',['uses'=>'DiscussionController@getEditQuestion','as'=>'osce.wechat.getEditQuestion']);
+		Route::post('discussion/edit-question',['uses'=>'DiscussionController@postEditQuestion','as'=>'osce.wechat.postEditQuestion']);
 
 		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.wechat.getTrainList']);
 
@@ -253,6 +258,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('delete',['uses'=>'IndexController@getDeleteWatch']);
 		Route::get('exam-list',['uses'=>'IndexController@getExamList']);
 		Route::get('list',['uses'=>'IndexController@getWatchList']);
+		Route::get('watch-detail',['uses'=>'IndexController@getWatchDetail']);
 
 
 		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
