@@ -205,4 +205,6 @@ a{-webkit-touch-callout:none;}
 
 /*日期选择日历插件样式*/
 .laydate_div .laydate-icon{width: 100%;border-radius: 2px;padding-left: 5px;font-size: 14px;background-image: none;}
+/*必填选项颜色*/
+.dot{color: #ed5565;}
 
