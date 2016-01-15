@@ -242,15 +242,15 @@ class Teacher extends CommonModel
             }
             $teacher    =   $this   ->  find($user  ->  id);
             if($teacher){
-                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
-                $teacher->name = $data['name'];
-                $teacher = $teacher->save();
-                if (!$teacher) {
-                    throw new \Exception('保存老师名字失败，请重试！');
-                } else {
-                    return $teacher;
-                }
-//            throw new \Exception('该教职员工已经存在');
+                throw new \Exception('该教职员工已经存在');
+//                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
+//                $teacher->name = $data['name'];
+//                $teacher = $teacher->save();
+//                if (!$teacher) {
+//                    throw new \Exception('保存老师名字失败，请重试！');
+//                } else {
+//                    return $teacher;
+//                }
             } else{
                 $data['id'] =   $user   ->  id;
                 if($teacher =   $this   ->  create($data)){
@@ -260,7 +260,7 @@ class Teacher extends CommonModel
                 }
             }
         } catch(\Exception $ex){
-            return response()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

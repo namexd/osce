@@ -133,11 +133,12 @@ class SubjectItem extends CommonModel
             $item   =   [
                 'content'   =>  $item['title'],
                 'score'     =>  $itemScore['total'],
-                'sort'     =>  $prointIndex,
+                'sort'      =>  $prointIndex,
                 'child'     =>  $child
             ];
             $data[]=$item;
         }
+
         return $data;
     }
 

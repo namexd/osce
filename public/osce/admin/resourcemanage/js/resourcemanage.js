@@ -162,7 +162,7 @@ function categories(){
                 '<div class="form-group">'+
                 '<label class="col-sm-2 control-label">评分标准:</label>'+
                 '<div class="col-sm-10">'+
-                '<input id="select_Category"  class="form-control" name="description['+parent+']['+child+']"/>'+
+                '<input id="select_Category"  class="form-control"  name="description['+parent+']['+child+']"/>'+
                 '</div>'+
                 '</div>'+
                 '</td>'+
@@ -343,7 +343,6 @@ function categories(){
 
                         for(var i in res){
                            if(res[i].level==1){
-
                                 index++;
                                //添加父级dom
                                html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
@@ -352,7 +351,7 @@ function categories(){
                                        '<div class="form-group">'+
                                        '<label class="col-sm-2 control-label">考核点:</label>'+
                                        '<div class="col-sm-10">'+
-                                       '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+res[i].sort+'][title]"/>'+
+                                       '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+index+'][title]"/>'+
                                        '</div>'+
                                        '</div>'+
                                        '</td>'+
@@ -381,13 +380,13 @@ function categories(){
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">考核项:</label>'+
                                                '<div class="col-sm-10">'+
-                                               '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+res[i].score+']['+res[j].sort+']"/>'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+index+']['+res[j].sort+']"/>'+
                                                '</div>'+
                                                '</div>'+
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">评分标准:</label>'+
                                                '<div class="col-sm-10">'+
-                                               '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+res[i].score+']['+res[j].sort+']"/>'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+index+']['+res[j].sort+']"/>'+
                                                '</div>'+
                                                '</div>'+
                                                '</td>'+
