@@ -53,13 +53,14 @@ class StationController extends CommonController
 
         //拼凑一个order数组
         $order = [$orderType, $orderBy];
+        //考站类型
+        $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试'];
 
         //获得展示数据
         $data = $model->showList($order);
 
         //将展示数据放在页面上
-        return view('osce::admin.resourcemanage.test_station',
-            ['data' => $data]);
+        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate]);
 
     }
 
@@ -259,7 +260,7 @@ class StationController extends CommonController
     private function dropDownList($id = "")
     {
         //将下拉菜单的数据查出
-        $placeCate = ['0' => '请选择类别', '1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
+        $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         if ($id == "") {
             $vcr = Vcr::where('status', 1)
                 ->select(['id', 'name'])
