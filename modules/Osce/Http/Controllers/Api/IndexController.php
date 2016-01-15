@@ -527,7 +527,8 @@ class IndexController extends CommonController
                         'id' => $v['id'],
                         'status' => $v['status'],
                         'name' => $v['name'],
-                        'code' => $v['code']
+                        'code' => $v['code'],
+                        'studentName' => '-',
                     ];
                 }
 
