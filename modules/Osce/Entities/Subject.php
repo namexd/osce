@@ -118,8 +118,13 @@ class Subject extends CommonModel
         try{
             foreach($data as $field=>$value)
             {
+                if($field=='description')
+                {
+                    continue;
+                }
                 $subject    ->  $field  =$value;
             }
+
             if($subject    ->  save())
             {
                 $this   ->  editPoint($subject,$points);

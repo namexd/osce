@@ -76,6 +76,14 @@
                                                                 <input id="select_Category"  class="form-control" name="{{$data->pid==0? 'content['.$data->sort.'][title]':'content['.$data->parent->sort.']['.$data->sort.']'}}" value="{{$data->content}}"/>
                                                             </div>
                                                         </div>
+                                                        @if($data->pid!=0)
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">评分标准:</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="select_Category" class="form-control" name="description[{{$data->parent->sort}}][{{$data->sort}}]" value="{{$data->answer}}">
+                                                            </div>
+                                                        </div>
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         <select class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">

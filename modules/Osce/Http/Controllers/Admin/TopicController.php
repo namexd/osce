@@ -77,10 +77,11 @@ class TopicController extends CommonController
             'score.required'    =>  '评分必须',
         ]);
 
-        $content        = $request->get('content');
-        $score          = $request->get('score');
+        $content        = $request  ->get('content');
+        $score          = $request  ->get('score');
+        $answer          = $request ->get('description');
 
-        $formData = SubjectItem::builderItemData($content, $score);
+        $formData = SubjectItem::builderItemData($content, $score,$answer);
         $totalData   =  0;
 
         foreach($score as $index=>$socrdata)
@@ -143,14 +144,14 @@ class TopicController extends CommonController
         $data   =   [
 //            'id'            =>  intval($request     ->  get('id')),
             'title'         =>  e($request          ->  get('title')),
-            'description'   =>  e($request          ->  get('description')),
+            'description'   =>  $request          ->  get('description'),
         ];
         $id     =   intval($request ->get('id'));
 
         $subjectModel   =   new Subject();
         try
         {
-            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
+            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'),$request->get('description'));
             if($subjectModel   ->  editTopic($id,$data,$formData))
             {
                 return redirect()->route('osce.admin.topic.getList');
