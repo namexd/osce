@@ -9,47 +9,8 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/labmanage/booking_examine.js')}}"></script>
     <script src="{{asset('msc/admin/js/calendar3/laydate.js')}}"></script>
-    <script>
-        $(function(){
-            //            获取当前时间
-            var d=new Date();
-            var year= d.getFullYear();
-            var month= d.getMonth() + 1;
-            var day= d.getDate();
-            var nowTime=year+"-"+month+"-"+day;
-            $("#laydate").val(nowTime);
-//            日期选择
-            laydate({
-                elem:"#laydate",
-                event:"click",
-                formate:"YYYY-MM-DD",
-                festival:true
-            });
-            laydate.skin('molv');
-
-//            选择框
-            $(".check_one").click(function(){
-                if($(this).children(".check_icon").hasClass("check")){
-                    $(this).children(".check_icon").addClass("check");
-                }else{
-                    $(this).children(".check_icon").addClass("check");
-                    $(this).siblings(".check_one").children(".check_icon").removeClass("check");
-                }
-            });
-//            学生表单
-            $(".student").click(function(){
-                $("#stu_from").show();
-                $("#teacher_from").hide();
-            });
-//            老师表单
-            $(".teacher").click(function(){
-                $("#stu_from").hide();
-                $("#teacher_from").show();
-            })
-        });
-    </script>
+    <script src="{{asset('msc/admin/labmanage/booking_examine.js')}}"></script>
 @stop
 
 @section('content')
