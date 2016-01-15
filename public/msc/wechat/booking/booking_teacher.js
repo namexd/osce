@@ -6,8 +6,8 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "booking_teacher":booking_teacher();break; //预约实验室（老师）搜索页
-        case "booking_teacher_open_detail.":booking_teacher_open_detail.();break; //老师预约开放实验室详情页
-        case "open_teacher_write":open_teacher_write();break; //老师预约开放实验室填写页
+        case "booking_teacher_open_detail":booking_teacher_open_detail();break; //老师预约开放实验室详情页
+        case "booking_teacher_open_form":booking_teacher_open_form();break; //老师预约开放实验室填写页
         case "booking_teacher_ordinary_form":booking_teacher_ordinary_form();break; //老师预约普通实验室填写页
         case "booking_student_form":booking_student_form();break;//学生申请表单填写
     }
@@ -126,7 +126,7 @@ function booking_student_detail(){
     })
 }
 //预约实验室（学生）提交表单
-function booking_student_form(){
+function booking_teacher_open_form(){
     $(".submit_box button").click(function () {
         get_layer();
     })
