@@ -22,16 +22,13 @@
             <h5>新增通知</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal">
+            <form method="post" class="form-horizontal" action="">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">
                             <select id="select_Category"   class="form-control" name="sex">
-                                @forelse($list as $exam)
-                                <option value="{{$exam->id}}">{{$exam->name}}</option>
-                                @empty
-                                    <option value="">请创建考试</option>
-                                @endforelse
+                                <option>2016OSCE考试第一期</option>
+                                <option>2016OSCE考试第一期</option>
                             </select>
                         </div>
                     </div>
@@ -40,15 +37,15 @@
                         <label class="col-sm-2 control-label">接收人:</label>
                         <div class="col-sm-10 select_code">
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" disabled="disabled">
+                                <input type="checkbox" name="accept[]" checked="checked">
                                 <label>考生</label>
                             </div>
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" disabled="disabled">
+                                <input type="checkbox" name="accept[]">
                                 <label>老师</label>
                             </div>
                             <div class="form-group col-sm-1">
-                                <input type="checkbox"  disabled="disabled" checked="checked">
+                                <input type="checkbox" name="accept[]">
                                 <label>sp老师</label>
                             </div>
                         </div>
@@ -57,7 +54,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">标题:</label>
                         <div class="col-sm-10">
-                            <input type="text"  id="examinee_id" name="examinee_id" class="form-control">
+                            <input type="text"  id="examinee_id" name="name" value="{{$item->name}}" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -78,8 +75,8 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-white cancel" type="button">取&nbsp;&nbsp;消</button>
-                            <button class="btn btn-primary" type="submit">保&nbsp;&nbsp;存</button>
+                            <button class="btn btn-primary" type="submit">保存</button>
+                            <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>
             </form>
