@@ -29,7 +29,6 @@
                 <a  href="{{route('osce.admin.machine.getAddCameras')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
             <div class="panel blank-panel">
                 <div class="panel-heading">
                     <div class="panel-options">
@@ -43,32 +42,33 @@
                 </div>
 
                 <div class="input-group" style="margin: 20px 0">
-                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;">
-                    <div class="btn-group" style="margin-right: 10px;">
-                        <button type="button" class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
-                            @if(array_key_exists('status',$_GET))
+                    <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
+                        <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;" name="name">
+                        <div class="btn-group" style="margin-right: 10px;">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
+                                @if(array_key_exists('status',$_GET))
+                                    @forelse($machineStatuValues as $status=>$machineStatuValue)
+                                        @if($_GET['status']==$status)
+                                            {{$machineStatuValue}}
+                                        @endif
+                                    @empty
+                                    @endforelse
+                                @else
+                                    状态
+                                @endif
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{route('osce.admin.machine.getMachineList')}}">全部</a></li>
                                 @forelse($machineStatuValues as $status=>$machineStatuValue)
-                                    @if($_GET['status']==$status)
-                                        {{$machineStatuValue}}
-                                    @endif
+                                    <li><a href="{{route('osce.admin.machine.getMachineList',['status'=>$status])}}">{{$machineStatuValue}}</a></li>
                                 @empty
                                 @endforelse
-                            @else
-                                状态
-                            @endif
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{route('osce.admin.machine.getMachineList')}}">全部</a></li>
-                            @forelse($machineStatuValues as $status=>$machineStatuValue)
-                                <li><a href="{{route('osce.admin.machine.getMachineList',['status'=>$status])}}">{{$machineStatuValue}}</a></li>
-                            @empty
-                            @endforelse
-                        </ul>
-                    </div>
-                    <button type="button" class="btn  btn-primary" id="search">&nbsp;搜索&nbsp;</button>
-
+                            </ul>
+                        </div>
+                        <button type="submit" class="btn  btn-primary" id="search">&nbsp;搜索&nbsp;</button>
+                    </form>
                 </div>
 
                 <table class="table table-striped" id="table-striped">
@@ -100,6 +100,6 @@
                     {!! $list->appends($_GET)->render() !!}
                 </div>
             </div>
-        </form>
+
     </div>
 @stop{{-- 内容主体区域 --}}
