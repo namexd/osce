@@ -11,6 +11,7 @@ $(function(){
         case "sp_invitation":sp_invitation();break;
         case "examroom_assignment":examroom_assignment();break;
         case "exam_notice_add":exam_notice_add();break;
+        case "exam_notice_edit":exam_notice_edit();break;
         case "smart_assignment":smart_assignment();break;
         case "examinee_manage":examinee_manage();break;
         case "examinee_add":examinee_add();break;
@@ -1009,6 +1010,7 @@ function examroom_assignment(){
 
 }
 
+
 /**
  * 考试通知 新增
  * @author mao
@@ -1018,6 +1020,129 @@ function examroom_assignment(){
 function exam_notice_add(){
 
     var ue = UE.getEditor('editor');
+
+    /**
+     * 获取文本编辑内容
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     * @return  {[type]}   [为本内容]
+     */
+    function getContent(){
+
+        var arr = [];
+        arr.push(UE.getEditor('editor').getContent());
+        return arr.join("\n");
+    }
+
+
+    /**
+     * 附件上传
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     */
+    $(".images_upload").change(function(){
+        $.ajaxFileUpload({
+            url:'url',
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',
+            success: function (data, status){
+            //上传成功
+            },
+            error: function (data, status, e){
+                //上传失败
+            }
+        });
+    }) ;
+
+    
+}
+
+/**
+ * 考试通知 编辑
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-15
+ */
+function exam_notice_edit(){
+
+    //初始化
+    var ue = UE.getEditor('editor');
+
+
+    //测试数据
+    var test_data = '<p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160115/1452835178916146.jpg" title="1452835178916146.jpg">1452835178916146.jpg</a></p><p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160115/1452834723154699.jpg" title="1452834723154699.jpg">1452834723154699.jpg</a></p><p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160107/1452155293584887.jpg" title="1452155293584887.jpg">1452155293584887.jpg</a></p><p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160107/1452154121985298.jpg" title="1452154121985298.jpg">1452154121985298.jpg</a></p><p><em>fdsafd</em><br/></p><p><span style="font-size: 24px; text-decoration: underline;">csavfdf</span></p><p><strong><span style="font-size: 24px;">fdsafgdsaf</span></strong></p><p><br/></p><p><br/></p><p><span style="font-size: 24px; background-color: rgb(255, 255, 0);">fdsafdaf<img src="http://img.baidu.com/hi/jx2/j_0058.gif"/><span style="font-size: 24px; background-color: rgb(255, 255, 0);"></span></span></p>'
+
+    /**
+     * 插入插入内容
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     * @param   {String}  isAppendTo [插入的内容]
+     */
+    function setContent(isAppendTo) {
+
+        UE.getEditor('editor').setContent(isAppendTo);
+    }
+
+    /**
+     * 编辑的富文本编辑内容
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     */
+    $.ajax({
+        type:'get',
+        async:true,
+        url:'http://127.0.0.1:3000/getjson',
+        success:function(res){
+
+            //延后执行
+            var thisID = setInterval(function(){
+
+                setContent(test_data)
+                clearInterval(thisID);
+            },1000);
+        }
+    });
+
+    /**
+     * 附件上传
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     */
+    $(".images_upload").change(function(){
+        $.ajaxFileUpload({
+            url:'url',
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',
+            success: function (data, status){
+            //上传成功
+            },
+            error: function (data, status, e){
+                //上传失败
+            }
+        });
+    }) ;
+
+    /**
+     * 获取文本编辑内容
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     * @return  {[type]}   [为本内容]
+     */
+    function getContent(){
+
+        var arr = [];
+        arr.push(UE.getEditor('editor').getContent());
+        return arr.join("\n");
+    }
+
+
+    
 }
 
 /*
@@ -1069,13 +1194,9 @@ function smart_assignment(){
         //    };
 
         var dl  =   $('<dl class="clearfloat">');
-
         var items   =   data.items;
-        console.log(data)
-        var everyHeight=data.end-data.begin;
-        console.log(everyHeight);
-        dl.css("height",everyHeight/10+"px");
-
+        var everyHeight=data.end-data.start;
+        dl.css("height",everyHeight+"px");
         for(var i in items)
         {
             var dd  = $('<dd>').text(items[i].name);
@@ -1158,6 +1279,7 @@ function smart_assignment(){
         for (var i in data){
             var groupData=data[i];
             var dom =   makeAll(groupData);
+            $('.classroom-box').html('');
             $('.classroom-box').append(dom);
         }
     }
@@ -1165,13 +1287,15 @@ function smart_assignment(){
 
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
+            console.log(testData.data);
             maketotal(testData.data);
+            $(".table>li").css("width",liwidth+"px");//给表格设置列宽
             $('#makePlan').one('click',makePlan);
         });
     }
     $('#makePlan').one('click',makePlan);
 
-    $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+
 
 
 //点击两个表格可进行交换
@@ -1255,7 +1379,7 @@ function examinee_manage(){
                 //data    =   eval('('+data+')');
                 //console.log(data);
                 if(data.code == 1){
-                    console.log(data.code);
+
                     layer.alert('导入成功！');
                     location.reload();
                 }

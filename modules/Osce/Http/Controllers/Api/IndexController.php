@@ -287,7 +287,7 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
-            'created_user_id'       =>  'required|integer',
+            'create_user_id'        =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
@@ -302,7 +302,7 @@ class IndexController extends CommonController
                 'description'   =>  $request->get('description',''),
                 'factory'       =>  $request->get('factory',''),
                 'sp'            =>  $request->get('sp',''),
-                'created_user_id'=> $request->get('created_user_id'),
+                'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
@@ -346,16 +346,33 @@ class IndexController extends CommonController
     public function getDeleteWatch(Request $request){
 
         $this->validate($request,[
-            'code'                    =>  'required|integer',
-            'created_user_id'       =>  'required|integer'
+            'code'                    =>  'required',
+            'create_user_id'       =>  'required|integer'
         ]);
 
-        $count=Watch::where('code',$request->get('code'))->delete();
+        $id=Watch::where('code',$request->get('code'))->select()->first();
+        if($id){
+            $id=$id->id;
+            $Log_id=WatchLog::where('watch_id',$id)->select('id')->first();
+            if($Log_id){
+                $result=WatchLog::where('watch_id',$id)->delete();
+                if($result){
+                    $result=Watch::where('id',$id)->delete();
+                    if($result){
+                        return response()->json(
+                            $this->success_data()
+                        );
+                    }
+                }
+            }else{
+                $result=Watch::where('id',$id)->delete();
+                if($result){
+                    return response()->json(
+                        $this->success_data()
+                    );
+                }
+            }
 
-        if($count>0){
-            return response()->json(
-                $this->success_data()
-            );
         }
 
         return response()->json(
@@ -389,7 +406,7 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
-            'created_user_id'       =>  'required|integer',
+            'create_user_id'       =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
@@ -404,7 +421,7 @@ class IndexController extends CommonController
                 'description'   =>  $request->get('description'),
                 'factory'       =>  $request->get('factory'),
                 'sp'            =>  $request->get('sp'),
-                'created_user_id'=> $request->get('created_user_id'),
+                'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
@@ -420,17 +437,14 @@ class IndexController extends CommonController
     }
 
     /**
-     *
+     *编辑返回设备信息
      * @method GET
      * @url /api/1.0/private/osce/watch/watch-detail
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        code       设备编码(必须的)
      *
      * @return ${response}
      *
@@ -498,10 +512,8 @@ class IndexController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        code        设备编码(必须的)
+     * * string        status      状态(必须的)
      *
      * @return ${response}
      *
