@@ -470,6 +470,68 @@ function title_table(){
 }
 //专业列表页面
 function major_table(){
+    //            删除
+    $(".delete").click(function(){
+        var this_id = $(this).attr('data');
+        var url = pars.deleteUrl+"?id="+this_id;
+        //询问框
+        layer.confirm('您确定要删除该专业？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            window.location.href=url;
+        });
+    });
+    //            停用
+    $(".stop").click(function(){
+        var this_id = $(this).attr('data');
+        var type = $(this).attr('data-type');
+        var url = pars.stopUrl+"?id="+this_id+"&type="+type;
+        var str = '';
+        if(type == 1){
+            str = '您确定要启用该专业？';
+        }else{
+            str = '您确定要停用该专业？';
+        }
+        //询问框
+        layer.confirm(str, {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            window.location.href=url;
+        });
+    });
+    //            导入
+    $("#in").change(function(){
+        var str=$("#load_in").val().substring($("#load_in").val().lastIndexOf(".")+1);
+        if(str!="xlsx"){
+            layer.alert(
+                "请上传正确的文件格式？",
+                {title:["温馨提示","font-size:16px;color:#408aff"]}
+            );
+        }else{
+            $.ajaxFileUpload({
+                type:"post",
+                url:pars.inUrl,
+                fileElementId:'load_in',//必须要是 input file标签 ID
+                dataType: 'json',
+                success: function (data, status){
+                    if(data.status = true){
+                        layer.msg("导入成功，有"+data.dataHavenInfo.count+"条已有数据未被导入", {icon: 1,time: 4000});
+                        setTimeout(function(){
+                            window.location.href = window.location.href;
+                        },3500)
+                    }else{
+                        layer.msg("导入失败", {icon: 1,time: 1000});
+                    }
+                },
+                error: function (data, status, e){
+                    layer.alert(
+                        "上传失败！",
+                        {title:["温馨提示","font-size:16px;color:#408aff"]}
+                    );
+                }
+            });
+        }
+    });
     //            新增表单验证
     function add_form(){
         $('#add_from').bootstrapValidator({
