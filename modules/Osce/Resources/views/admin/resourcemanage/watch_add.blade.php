@@ -75,6 +75,22 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">生产厂家</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="code" name="factory">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">型号</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="code" name="sp">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">设备状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
@@ -83,6 +99,14 @@
                                         <option value="2">维修</option>
                                         <option value="3">报废</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">描述</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="code" name="description">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

@@ -621,10 +621,14 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'name'          =>  'required',
             'code'          =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
             'status'        =>  'required',
         ],[
             'name.required'     =>  '腕表名称必填',
             'code.required'     =>  '腕表编号必填',
+            'factory.required'  =>  '生产厂家必填',
+            'sp.required'       =>  '型号规格必填',
             'status.required'   =>  '腕表状态必选',
         ]);
 
@@ -636,7 +640,10 @@ class MachineController extends CommonController
         $data   =   [
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
             'status'        =>  $request    ->  get('status'),
+            'description'   =>  $request    ->  get('description'),
             'create_user_id'=>  $user       ->  id
         ];
 
