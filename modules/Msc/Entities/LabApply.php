@@ -34,6 +34,13 @@ class LabApply  extends Model
         return  $this->hasMany('Modules\Msc\Entities\PlanApply','apply_id','id');
     }
 
+    //用户管理员
+    public function user(){
+
+        return $this->hasOne('App\Entities\User','id','apply_user_id');
+    }
+
+
     //后台获取审核列表
     public function get_check_list($keyword="",$type=1,$id=''){
         $userDb    = config('database.connections.sys_mis.database');

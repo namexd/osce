@@ -28,11 +28,9 @@ class StdProfessional extends Model
 
        if ($keyword)
        {
-           echo 1;
            $builder = $builder->where($this->table.'.name','like','%'.$keyword.'%');
        }
        if(in_array($status,[1,2])){
-           echo 2;
            $builder = $builder->where($this->table.'.status',$status-1);
        }
 

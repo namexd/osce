@@ -8,6 +8,7 @@
     <link href="{{asset('msc/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('msc/admin/plugins/css/style.min.css?v=3.0.0')}}" rel="stylesheet">
 	<link href="{{asset('msc/common/css/bootstrapValidator.css')}}" rel="stylesheet">
+
 @stop
 
 @section('head_js')
@@ -15,6 +16,7 @@
     <script src="{{asset('msc/admin/plugins/js/jquery-ui-1.10.4.min.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
     <script src="{{asset('msc/common/js/bootstrapValidator.js')}}"></script>
+
 
 @stop
 @section('head_style')

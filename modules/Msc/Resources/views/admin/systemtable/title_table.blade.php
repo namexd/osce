@@ -21,7 +21,7 @@
                     <div class="input-group">
                         <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-sm btn-default" id="search"><i class="fa fa-search"></i></button>
+                            <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
                     </div>
                 </form>
@@ -63,7 +63,7 @@
                             <td class="number">{{ ($number+$k) }}</td>
                             <td class="name">{{ @$val['name'] }}</td>
                             <td class="describe">{{ @$val['description'] }}</td>
-                            <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
+                            <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)<span>正常</span>@else<span class="state2">停用</span>@endif</td>
                             <td class="opera">
                                 <a href=""   data="{{@$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span></a>
                                 @if($val['status']==1)
