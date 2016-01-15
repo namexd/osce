@@ -90,7 +90,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'smart_assignment','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'smart_assignment','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}','makePlanUrl':'{{route('osce.admin.exam.getIntelligenceEaxmPlan',['id'=>$_GET['id']])}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -114,16 +114,12 @@
                 </div>
             </div>
             <div class="assign-box clearfloat">
-                <div class="time-list">
-                    <p>8:00</p>
-                    <p class="end">12:00</p>
-                </div>
                 <div class="classroom-box">
 
                 </div>
             </div>
             <div class="operate">
-                <button class="btn btn-default" type="button">智能排考</button>
+                <button class="btn btn-default" type="button" id="makePlan">智能排考</button>
                 <button class="btn btn-default save" type="button">保存方案</button>
                 <button class="btn btn-default" type="button">导出excel</button>
             </div>
