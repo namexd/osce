@@ -10,7 +10,7 @@
 </style>
 @stop
 @section('only_head_js')
-    <script src="{{asset('msc/wechat/booking/mybooking_teacher.js')}}"></script>
+    <script src="{{asset('msc/wechat/booking/mybooking.js')}}"></script>
 @stop
 
 @section('content')

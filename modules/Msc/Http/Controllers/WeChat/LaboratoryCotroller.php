@@ -73,8 +73,10 @@ class LaboratoryCotroller extends MscWeChatController
     public function LaboratoryTeacherList(){
         $Floor = new Floor;
         $FloorData = $Floor->GetFloorData();
-        dd("需求着陆页");
-        return view('msc::wechat.booking.booking_teacher',['FloorData'=>$FloorData]);
+        $type = Input::get('type');
+        if(!empty($type)){
+            return view('msc::wechat.booking.booking_teacher',['FloorData'=>$FloorData,'type'=>$type]);
+        }
     }
     /**
      * 获取普通实验室列表
@@ -188,7 +190,7 @@ class LaboratoryCotroller extends MscWeChatController
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryOpenInfo($id,$DateTime,2);
         if(!empty($LaboratoryInfo['OpenPlan'])){
             foreach($LaboratoryInfo['OpenPlan'] as $key => $val){
-                $LaboratoryInfo['OpenPlan'][$key]['Apply_num'] = count($val['PlanApply']);
+                //$LaboratoryInfo['OpenPlan'][$key]['Apply_num'] = count($val['PlanApply']);
                 if(count($val['PlanApply'])>0){
                     foreach($val['PlanApply'] as $k => $v){
                         if(!empty($v['LabApply'])){
