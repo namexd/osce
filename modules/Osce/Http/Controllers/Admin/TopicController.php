@@ -263,6 +263,12 @@ class TopicController extends CommonController
             $topicList = array_shift($data);
             //将中文表头，按配置翻译成英文的字段名
             $data = Common::arrayChTOEn($topicList, 'osce.importForCnToEn.standard');
+            foreach ($data as &$items) {
+                foreach ($items as &$item) {
+                    $item = e($item);
+                }
+            }
+            return $data;
             echo json_encode($this->success_data($data));
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
