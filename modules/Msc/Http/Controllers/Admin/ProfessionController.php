@@ -42,11 +42,13 @@ class ProfessionController extends MscController
          'keyword '   =>    'sometimes',
          'status'  =>   'sometimes|in:1,2,3'
       ]);
-      $keyword  =   urldecode(e($request->input('keyword')));
+      $keyword  =   $request->input('keyword');
       $status  = (int)$request->input('status',3);
 //       dd($keyword);
       $profession = new StdProfessional();
-      $pagination=$profession-> getprofessionList( $keyword,$status);
+
+      $pagination=$profession-> getprofessionList($keyword,$status);
+
 //       dd($pagination);
       $list=[];
       foreach($pagination as $itme){
@@ -63,8 +65,8 @@ class ProfessionController extends MscController
     return view('msc::admin.systemtable.major_table',[
         'pagination'=>$pagination,
         'list'         =>       $list,
-        'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
-        'status'=>$request->input('status')?$request->input('status'):'',
+        'keyword'=>$keyword?$keyword:'',
+        'status'=>$status?$status:0,
         'ProfessionStatus'=>$ProfessionStatus,
         'number'=>$this->getNumber()
     ]);
@@ -91,14 +93,13 @@ class ProfessionController extends MscController
      */
     public function postProfessionAdd(Request $request){
     $this->validate($request,[
-        'name'   => 'required|max:50|unique:msc_mis.student_professional',
+        'name'   => 'required|max:50',
         'code'   =>  'required|max:32|unique:msc_mis.student_professional',
         'status' =>   'required|in:0,1'
     ],[
         'name.required'=>'专业名称必填',
         'name.max'=>'专业名称最长50个字节',
-
-        'name.unique'=>'专业名称不能重复添加',
+        
         'code.required'=>'专业专业代码必填',
         'code.max'=>'专业代码最长32个字节',
 
@@ -106,6 +107,9 @@ class ProfessionController extends MscController
         'status.required'=>'状态值必填',
         'status'=>'状态值只能为0或1'
     ]);
+        if(Input::get('name') == Input::get('code')){
+            return redirect()->back()->withInput()->withErrors('专业名称和专业代码不能相同');
+        }
         $data=[
             'name'=>Input::get('name'),
             'code'=>Input::get('code'),
@@ -176,14 +180,13 @@ class ProfessionController extends MscController
     public  function postProfessionSave(Request $request){
         $this->validate($request,[
             'id' => 'sometimes|min:0|max:10',
-            'name'   => 'required|max:50|unique:msc_mis.student_professional',
+            'name'   => 'required|max:50',
             'code'   =>  'required|max:32|unique:msc_mis.student_professional',
             'status' =>   'required|in:0,1'
         ],[
             'name.required'=>'专业名称必填',
             'name.max'=>'专业名称最长50个字节',
 
-            'name.unique'=>'专业名称不能重复添加',
             'code.required'=>'专业专业代码必填',
             'code.max'=>'专业代码最长32个字节',
 
@@ -191,6 +194,9 @@ class ProfessionController extends MscController
             'status.required'=>'状态值必填',
             'status'=>'状态值只能为0或1'
         ]);
+        if(Input::get('name') == Input::get('code')){
+            return redirect()->back()->withInput()->withErrors('专业名称和专业代码不能相同');
+        }
         $data = $request->only(['name','code','status','id']);
         $profession = new StdProfessional();
         $result =$profession->postSaveProfession($data);

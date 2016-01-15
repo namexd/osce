@@ -58,7 +58,7 @@ class Devices  extends Model
                 );
             }
         )->select($this->table.'.*','device_cate.name as catename');
-        return $builder->orderBy( $this->table.'.status','desc')->paginate(config('msc.page_size',10));
+        return $builder->orderBy( $this->table.'.devices_cate_id','ASC')->orderBy( $this->table.'.status','desc')->orderBy( $this->table.'.id','desc')->paginate(config('msc.page_size',10));
     }
 
 
