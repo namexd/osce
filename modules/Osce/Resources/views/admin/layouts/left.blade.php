@@ -78,9 +78,6 @@
 								<a class="active J_menuItem" href="{{route('osce.admin.user.getStaffList')}}">用户管理</a>
                             </li>
                             <li>
-                                <a class="J_menuItem" href="{{ route('auth.AuthManage') }}">权限管理</a>
-                            </li>
-                            <li>
                                 <a class="J_menuItem" href="{{route('osce.admin.config.getIndex')}}">系统设置</a>
                             </li>
                         </ul>

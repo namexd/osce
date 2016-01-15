@@ -71,7 +71,6 @@ function deleteItem(url){
 	$('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
-        console.log(thisElement.parent().parent().parent().attr('value'));
         layer.alert('确认删除？',function(){
             $.ajax({
                 type:'post',
@@ -79,6 +78,7 @@ function deleteItem(url){
                 url:url,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
                 success:function(data){
+                    console.log(data);
                     if(data.code==1){
                         location.reload();
                     }else{
@@ -87,7 +87,7 @@ function deleteItem(url){
 
                 },
                 error:function(){
-                    console.log("错误")
+                    console.log("错误");
                 }
 
             })
@@ -438,7 +438,6 @@ function invigilator(){
                 url:pars.deletes,
                 data:{id:thisElement.attr('value')},
                 success:function(data){
-                    
                     location.reload();
                 }
             })
