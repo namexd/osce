@@ -1,20 +1,10 @@
 @extends('osce::wechat.layouts.admin')
 
 @section('only_head_css')
-<style type="text/css">
-	.header_a:focus,.header_a:active{color:#fff;}
-	#discussion_ul{overflow: hidden;}
-	#discussion_ul li{width:100%;margin-bottom:10px;background:#fff;padding:0 15px 0;font-family:"microsoft yahei";}
-	#discussion_ul .p_title{padding:10px 0;font-family: "microsoft yahei";overflow:hidden;text-overflow: ellipsis;white-space: nowrap;}
-	#discussion_ul li .main_txt{line-height:1.5em;}
-	.p_bottom{border-top:1px solid #ccc;line-height:2.5em;margin-top:10px;}
-	.student_name{color:#16BEB0;}
-	.comment{display:inline-block;color:#999;}
-</style>
+<link rel="stylesheet" href="{{asset('osce/wechat/css/discussion.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
 @stop
-
 
 @section('content')
     <div class="user_header">
