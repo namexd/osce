@@ -14,14 +14,17 @@ class Discussion extends CommonModel{
     protected $table 		= 	'bbs_topic';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['title','content','pid','create_user_id'];
+    protected   $fillable 	=	['title','content','pid','create_user_id','created_at'];
     public      $search    =   [];
 
     public function getAuthor(){
-        return $this->hasMany('App\Entities\User','id','create_user_id');
+        return $this->belongsTo('App\Entities\User','create_user_id','id');
     }
 
     public function getDiscussionPagination(){
-        return $this->paginate(config('msc.page_size'));
+        return $this->where('pid',0)->paginate(config('msc.page_size'));
+    }
+    public function getReplyPagination($id){
+        return $this->where('pid',$id)->paginate(config('msc.page_size'));
     }
 }

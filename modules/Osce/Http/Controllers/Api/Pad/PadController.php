@@ -157,13 +157,32 @@ class PadController extends  CommonController{
 
        }
 
-
+    /**
+     *候考提醒
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        exam_id        考试ID
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
        public function getWriteStudent(Request $request){
-           $this->validate($request,[]);
-
+           $this->validate($request,[
+               'exam_id' =>'required|integer'
+           ]);
+           $exam_id=$request->get('exam_id');
+           $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
            $time=time();
            $examQueue=new ExamQueue();
-           $students=$examQueue->getStudent($time);
+           $students=$examQueue->getStudent($time,$mode);
            return response()->json(
                $this->success_data($students,1,'success')
            );

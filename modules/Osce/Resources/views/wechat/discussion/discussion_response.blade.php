@@ -76,7 +76,6 @@
 
 @section('content')
     <ul class="option">
-        <li><a href="">回复</a></li>
         <li><a href="#">编辑</a></li>
         <li><a href="">删除</a></li>
     </ul>
@@ -90,26 +89,28 @@
         </a>
     </div>
     <div class="content-box">
+        @foreach($list as $list)
         <div>
-            <h2 class="title">关于OSEC考试2015第三期考试的疑问</h2>
+            <h2 class="title">{{  $list->title }}</h2>
             <div class="title-footer">
-                <div class="item-l">学生1</div>
-                <div class="item-c">2015-12-23 12:23:34</div>
+                <div class="item-l">{{  $list->getAuthor->name }}</div>
+                <div class="item-c">{{  $list->created_at }}</div>
                 <div class="item-r">&nbsp;</div>
                 <div class="clearfix"></div>
             </div>
             <div class="title-con">
-                <p>关于2015年第3期技能培训考场安排，存在下面3方面的疑问，麻烦帮忙解答下，谢谢！</p>
-                <p>1、XXXXXXXXXXXXXXXXXXXXXXXXXX安排；</p> 
-                <p>2、XXXXXXXXXXXXXXXXXXXXXXXXXXx的安排；</p>
-                <p>3、XXXXXXXXXXXXXXXXXXXXXXXXXX的安排</p>
+                <p>{{  $list->content    }}</p>
             </div>
         </div>
     </div>
+    @endforeach
     <ul class="history-list">
         <li>
-            <textarea placeholder="请在此输入"></textarea>
-            <input type="submit" value="提交" class="btn2" />
+            <form action="{{  route('osce.wechat.postAddReply') }}" method="post">
+                <input type="hidden" name="id" value="{{ $list->id }}">
+                <textarea placeholder="请在此输入" name="content"></textarea>
+                <input type="submit" value="提交" class="btn2" />
+            </form>
         </li>
     </ul>
 @stop

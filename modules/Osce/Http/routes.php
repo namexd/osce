@@ -30,6 +30,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('room/edit-room', ['uses'=>'RoomController@postEditRoom','as'=>'osce.admin.room.postEditRoom']);   //修改的业务逻辑
 		Route::post('room/create-room', ['uses'=>'RoomController@postCreateRoom','as'=>'osce.admin.room.postCreateRoom']);  //添加的业务逻辑
 
+		//病例
 		Route::controller('case','CaseController');
 		Route::get('case/case-list', ['uses'=>'CaseController@getCaseList','as'=>'osce.admin.case.getCaseList']);  //病例的着陆页
 		Route::get('case/edit-case', ['uses'=>'CaseController@getEditCase','as'=>'osce.admin.case.getEditCase']);  //病例的修改页
@@ -53,9 +54,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilator/edit-sp-invigilator',['uses'=>'InvigilatorController@getEditSpInvigilator','as'=>'osce.admin.invigilator.getEditSpInvigilator']);
 		Route::post('invigilator/add-sp-invigilator', 	['uses'=>'InvigilatorController@postAddSpInvigilator','as'=>'osce.admin.invigilator.postAddSpInvigilator']);
 		Route::post('invigilator/edit-sp-invigilator', 	['uses'=>'InvigilatorController@postEditSpInvigilator','as'=>'osce.admin.invigilator.postEditSpInvigilator']);
-		
+
+		//设置
 		Route::get('config/index',  ['uses'=>'ConfigController@getIndex','as'=>'osce.admin.config.getIndex']);
 		Route::post('config/store',  ['uses'=>'ConfigController@postStore','as'=>'osce.admin.config.postStore']);
+		Route::get('config/area',  ['uses'=>'ConfigController@getArea','as'=>'osce.admin.config.getArea']);
+		Route::get('config/area-store',  ['uses'=>'ConfigController@getAreaStore','as'=>'osce.admin.config.getAreaStore']);
+		Route::post('config/area-store',  ['uses'=>'ConfigController@postAreaStore','as'=>'osce.admin.config.postAreaStore']);
 
 
 		Route::get('invigilator/del-invitation', 	['uses'=>'InvigilatorController@getDelInvitation','as'=>'osce.admin.invigilator.getDelInvitation']);
@@ -168,7 +173,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.admin.invigilatepad.getAuthentication']);
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.admin.invigilatepad.getExamGrade']);
 		Route::get('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@getSaveExamResult','as'=>'osce.admin.invigilatepad.getSaveExamResult']);
-		Route::get('invigilatepad/see-exam-details', 	['uses'=>'InvigilatePadController@getSeeExamDetails','as'=>'osce.admin.invigilatepad.getSeeExamDetails']);
+		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.admin.invigilatepad.getSaveExamEvaluate']);
 
 
 		//测试
@@ -204,7 +209,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
 		Route::post('discussion/add-question',['uses'=>'DiscussionController@postAddQuestion','as'=>'osce.wechat.postAddQuestion']);
+		Route::get('discussion/add-question',['uses'=>'DiscussionController@getAddQuestion','as'=>'osce.wechat.getAddQuestion']);
+		Route::get('discussion/add-reply',['uses'=>'DiscussionController@getAddReply','as'=>'osce.wechat.getAddReply']);
 		Route::post('discussion/add-reply',['uses'=>'DiscussionController@postAddReply','as'=>'osce.wechat.postAddReply']);
+		Route::get('discussion/edit-question',['uses'=>'DiscussionController@getEditQuestion','as'=>'osce.wechat.getEditQuestion']);
+		Route::post('discussion/edit-question',['uses'=>'DiscussionController@postEditQuestion','as'=>'osce.wechat.postEditQuestion']);
 
 		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.wechat.getTrainList']);
 
@@ -247,6 +256,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('update',['uses'=>'IndexController@getUpdateWatch']);
 		Route::get('delete',['uses'=>'IndexController@getDeleteWatch']);
 		Route::get('exam-list',['uses'=>'IndexController@getExamList']);
+		Route::get('list',['uses'=>'IndexController@getWatchList']);
 
 
 		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
@@ -254,6 +264,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 			Route::get('vcr',['uses'=>'PadController@getVcr']);
 			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
 			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+			Route::get('write-student',['uses'=>'PadController@getWriteStudent']);
 		});
 	});
 

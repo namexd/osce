@@ -67,12 +67,14 @@ class Room extends CommonModel
                     throw new \Exception('查无此考场！');
                 }
                 return $result;
+                
 
             }
 
 
             //判断传入的type是否合法
-            $area = Area::where('area.cate', '=', $type)->get();
+
+            $area = Area::where('area.cate', '=', $type)->first();
 //            dd($area);
             if (!$area) {
                 throw new \Exception('传入的场所区域不合法！');
@@ -94,6 +96,7 @@ class Room extends CommonModel
                 //如果是其他，就只与摄像头之间关联
                 //得到当前传入的type对应哪个区域的摄像头
                 $areaId = $area->id;
+
                 //通过关联拿到对应的摄像机的数据
                 $vcr = Area::find($areaId)->areaVcr()->get();
                 if (!$vcr) {
