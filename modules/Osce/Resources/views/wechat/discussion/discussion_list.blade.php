@@ -21,18 +21,17 @@
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-       	查看
-        <a class="right header_btn nou clof header_a" href="#">提问</a>
+       	讨论区
+        <a class="right header_btn nou clof header_a" href="{{ route('osce.wechat.getAddQuestion')  }}">提问</a>
     </div>
     <ul id="discussion_ul">
 		@foreach($list as $list)
         <li>
-			<input type="hidden" value="{{ $list['id'] }}" name="id">
-        	<a class="nou" href="#">
+        	<a class="nou" href="{{ route('osce.wechat.getCheckQuestion',array('id'=>$list['id']))  }}">
         		<p class="font14 fontb clo3 p_title">{{  $list['title']  }}</p>
         		<p class="font12 clo9 main_txt">{{  $list['content']  }}</p>
         		<p class="font12 p_bottom">
-        			<span class="student_name">{{ $list['name']  }}</span>
+        			<span class="student_name">{{ $list['name']->name  }}</span>
         			<span class="clo0">·</span>
         			<span class="clo9">{{ $list['time']  }}</span>
         			<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;{{ $list['count']  }}</span>
