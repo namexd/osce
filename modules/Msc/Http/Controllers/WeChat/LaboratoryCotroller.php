@@ -210,8 +210,14 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
+        $user = Auth::user();
+        //$user->user_type == 2 代表学生
+        if($user->user_type == 2){
+            return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
+        }elseif($user->user_type == 1){ //$user->user_type == 1 代表老师
+            return view('msc::wechat.booking.booking_teacher_open_detail',['data'=>$data]);
+        }
         //dd($data);
-        return  view('msc::wechat.booking.booking_student_detail',['data'=>$data]);
     }
 
     /**
@@ -254,7 +260,7 @@ class LaboratoryCotroller extends MscWeChatController
         if($user->user_type == 2){
             return  view('msc::wechat.booking.booking_student_form',['data'=>$data]);
         }elseif($user->user_type == 1){ //$user->user_type == 1 代表老师
-            return view('msc::wechat.booking.booking_teacher_choice');
+            return view('msc::wechat.booking.booking_teacher_open_form',['data'=>$data]);
         }
 
     }
