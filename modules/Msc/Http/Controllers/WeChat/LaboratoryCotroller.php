@@ -73,8 +73,10 @@ class LaboratoryCotroller extends MscWeChatController
     public function LaboratoryTeacherList(){
         $Floor = new Floor;
         $FloorData = $Floor->GetFloorData();
-        dd("需求着陆页");
-        return view('msc::wechat.booking.booking_teacher',['FloorData'=>$FloorData]);
+        $type = Input::get('type');
+        if(!empty($type)){
+            return view('msc::wechat.booking.booking_teacher',['FloorData'=>$FloorData,'type'=>$type]);
+        }
     }
     /**
      * 获取普通实验室列表
