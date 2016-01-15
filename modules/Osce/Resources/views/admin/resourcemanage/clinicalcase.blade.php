@@ -7,6 +7,12 @@
         font-weight: bolder;
     }
     #start,#end{width: 160px;}
+    .description{
+          width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     </style>
 @stop
 
@@ -41,8 +47,8 @@
             @foreach($data as $key => $item)
                 <tr>
                     <td>{{$key+1}}</td>
-                    <td>{{$item->name}}</td>
-                    <td>{{$item->description}}</td>
+                    <td><p class="description">{{$item->name}}</p></td>
+                    <td><p class="description" title="{{$item->description}}">{{$item->description}}</p></td>
                     <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
