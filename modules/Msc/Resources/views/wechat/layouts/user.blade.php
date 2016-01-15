@@ -7,20 +7,15 @@
     <link href="{{asset('msc/wechat/common/css/font-awesome/css/font-awesome.css')}}" rel="stylesheet"/>
 	<link href="{{asset('msc/wechat/common/css/commons.css')}}"  rel="stylesheet"/>
 	<link href="{{asset('msc/wechat/user/css/commons.css')}}"  rel="stylesheet"/>
-    <link href="{{asset('msc/wechat/jquery-confirm/jquery-confirm.css')}}" rel="stylesheet">
 @stop
 
 @section('head_js')
 	<!-- 全局js -->
     <script src="{{asset('msc/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
-    <script src="{{asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
     <script src="{{asset('msc/wechat/validate/jquery.validate.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/validate/jquery.metadata.js')}}"></script>
-    <script src="{{asset('msc/wechat/validate/messages_zh.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/jquery-confirm/jquery-confirm.js')}}"></script>
+
 @stop
 @section('head_style')
     <style type="text/css">
