@@ -4,6 +4,15 @@
     .col-sm-1{margin-top: 6px;}
     .col-sm-1>input[type="checkbox"]{vertical-align: sub;}
     .form-group.col-sm-1{margin-bottom: 0!important;}
+    .images_upload {
+        display: inline-block;
+        height: 34px!important;
+        width: 70px!important;
+        border: 1px dashed #ccc;
+        cursor: pointer;
+        background-image:none!important;
+        /*background: url(../images/add_img.png) no-repeat center; */
+    }
     </style>
 @stop
 
@@ -11,11 +20,12 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.config.js')}}"></script>
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
+ <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'exam_notice_add'}" />
+<input type="hidden" id="parameter" value="{'pagename':'exam_notice_edit'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -26,7 +36,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">
-                            <select id="select_Category"   class="form-control" name="sex">
+                            <select id="select_Category"   class="form-control" name="">
                                 <option>2016OSCE考试第一期</option>
                                 <option>2016OSCE考试第一期</option>
                             </select>
@@ -69,7 +79,9 @@
                         <label class="col-sm-2 control-label">附件:</label>
 
                         <div class="col-sm-10">
-                            <input type="text"  id="tell" name="tell" class="form-control">
+                            <span class="images_upload">
+                                <input type="file" name="images" id="file0"/>
+                            </span>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
