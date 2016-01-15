@@ -15,14 +15,14 @@ use Modules\Osce\Http\Controllers\CommonController;
 class DiscussionController extends  CommonController{
 
     /**
-     *鑾峰彇闂鍒楄〃
+     *问题列表页面
      * @method GET
      * @url /osce/wechat/discussion/question-list
      * @access public
      *
-     * @param Request $request post璇锋眰<br><br>
-     * <b>post璇锋眰瀛楁锛�</b>
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
      *
      * @return ${response}
      *
@@ -32,13 +32,13 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getQuestionList(){
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        if(!$userId){
-//            return response()->json(
-//                $this->success_rows(2,'璇峰厛鐧诲綍')
-//            );
-//        }
+        $user=Auth::user();
+        $userId=$user->id;
+        if(!$userId){
+            return response()->json(
+                $this->success_rows(2,'请先登陆')
+            );
+        }
 
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
@@ -51,16 +51,16 @@ class DiscussionController extends  CommonController{
                  $time = $time;
               } else {
                   if ($time < 60) {
-                      $time= $time . '绉掑墠';
+                      $time= $time . '秒前';
                   } else {
                       if ($time < 3600) {
-                          $time=  floor($time / 60) . '鍒嗛挓鍓�';
+                          $time=  floor($time / 60) . '分钟前';
                       } else {
                           if ($time < 86400) {
-                              $time= floor($time / 3600) . '灏忔椂鍓�';
+                              $time= floor($time / 3600) . '小时前';
                           } else {
-                              if ($time < 259200) {//3澶╁唴
-                                  $time= floor($time / 86400) . '澶╁墠';
+                              if ($time < 259200) {
+                                  $time= floor($time / 86400) . '天前';
                               } else {
                                   $time =  $time;
                               }
@@ -78,18 +78,19 @@ class DiscussionController extends  CommonController{
                 'count' =>$countReply,
             ];
           }
+
           return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
       }
 
     /**
-     *鏌ョ湅闂
+     *查看问题
      * @method GET
      * @url /osce/wechat/discussion/check-question
      * @access public
      *
-     * @param Request $request post璇锋眰<br><br>
-     * <b>post璇锋眰瀛楁锛�</b>
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
      *
      * @return ${response}
      *
@@ -99,63 +100,88 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getCheckQuestion(Request $request){
-          // $user=Auth::user();
-          // $userId=$user->id;
-          // if(!$userId){
-          //     return \Response::json(array('code'=>2));
-          // }
+          $this->validate($request,[
+              'id'  =>'required|integer'
+          ]);
+           $user=Auth::user();
+           $userId=$user->id;
+           if(!$userId){
+               return \Response::json(array('code'=>2));
+           }
           $id    =   intval($request   ->  get('id'));
           $list=Discussion::where('id',$id)->select()->get();
           $discussionModel	=	new Discussion();
-          $pagination				=	$discussionModel	->	getDiscussionPagination();
+          $pagination				=	$discussionModel	->	getReplyPagination($id);
           foreach($list as $item){
               $question=[
-                  'id'             =>$item->id,
-                  'title'          =>$item->title,
-                  'context'        =>$item->context,
-                  'create_user'    =>$item->getAuthor,
-                  'create_at'      =>$item->create_at,
-                  'update_at'      =>$item->update_at,
+                  'id' =>$item->id,
+                  'title' =>$item->title,
+                  'content' =>$item->content,
+                  'create_at' =>$item->created_at,
+                  'name'   =>$item->getAuthor,
               ];
           }
           $countReply=Discussion::where('pid',$id)->count();
 
-          //鑾峰彇鍥炲浜轰俊鎭�
+          //回复内容
            $replys=Discussion::where('pid',$id)->select()->get();
-//           $data=[];
-//          foreach($replys as $itm){
-//              $data[]=[
-//                  'id'             =>$itm->id,
-//                  'title'          =>$itm->title,
-//                  'context'        =>$itm->context,
-//                  'create_user'    =>$itm->getAuthor,
-//                  'create_at'      =>$itm->create_at,
-//                  'update_at'      =>$itm->update_at,
-//              ];
-//          }
+           $data=[];
+          foreach($replys as $itm){
+              $time=time()-strtotime($item->created_at);
+              if ($time < 0) {
+                  $time = $time;
+              } else {
+                  if ($time < 60) {
+                      $time= $time . '秒前';
+                  } else {
+                      if ($time < 3600) {
+                          $time=  floor($time / 60) . '分钟前';
+                      } else {
+                          if ($time < 86400) {
+                              $time= floor($time / 3600) . '小时前';
+                          } else {
+                              if ($time < 259200) {
+                                  $time= floor($time / 86400) . '天前';
+                              } else {
+                                  $time =  $time;
+                              }
+                          }
+                      }
+                  }
+              }
+              $data[]=[
+                  'id'             =>$itm->id,
+                  'title'          =>$itm->title,
+                  'content'        =>$itm->content,
+                  'name'           =>$itm->getAuthor,
+                  'time'           =>$time,
+                  'update_at'      =>$itm->update_at,
+              ];
+          }
             $row=array(
-                // 'question'   =>$question,
-                'replys' =>$replys,
+                'question'   =>$question,
                 'countReply' =>$countReply,
             );
 
-          return view('osce::wechat.discussion.discussion_detail')->with(['row'=>$row,'pagination'=>$pagination]);
+          return view('osce::wechat.discussion.discussion_detail')->with(['row'=>$row,'data' =>$data,'pagination'=>$pagination]);
 
       }
 
 
+     public function getAddQuestion(){
+         return view('osce::wechat.discussion.discussion_quiz');
+     }
+
     /**
-     *鎻愪氦闂
-     * @method POST
+     *提交问题
+     * @method GET
      * @url /osce/wechat/discussion/add-question
      * @access public
      *
-     * @param Request $request post璇锋眰<br><br>
-     * <b>post璇锋眰瀛楁锛�</b>
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        title         标题(必须的)
+     * * string        content       内容(必须的)
      *
      * @return ${response}
      *
@@ -165,41 +191,48 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function postAddQuestion(Request $request){
-          //楠岃瘉瑙勫垯
+          //验证规则
           $this->validate($request,[
                'title'    =>'required|max:256',
                'content'  =>'required',
           ]);
           $user=Auth::user();
           $userId=$user->id;
-//          if(!$userId){
-//              return response()->json(
-//                  $this->success_rows(2,'璇峰厛鐧诲綍')
-//              );
-//          }
-          $data=$request->only(['title','content']);
-          $data['user_id']=$userId;
-          $data['pdi']=0;
-          $discussionModel= new Discussion();
-          $result=$discussionModel->save($data);
-          if($result){
-              return view()->with('success','鎻愪氦鎴愬姛');
+          if(!$userId){
+              return response()->json(
+                  $this->success_rows(2,'请先登陆')
+              );
           }
-          return redirect()->back()->withInput()->withErrors('鎻愪氦澶辫触');
+          $data=$request->only(['title','content']);
+          $data['create_user_id']=$userId;
+          $data['pid']=0;
+          $result=Discussion::create($data);
+          if($result){
+              return \Response::json(array('code'=>1));
+          }
+          return redirect()->back()->withInput()->withErrors('提问失败');
       }
 
+     public function getAddReply(Request $request){
+         $this->validate($request,[
+             'id'  =>'required|integer'
+         ]);
+         $id    =   intval($request   ->  get('id'));
+         $list=Discussion::where('id',$id)->select()->get();
+
+         return view('osce::wechat.discussion.discussion_response')->with('list',$list);
+     }
+
     /**
-     *鎻愪氦鍥炵瓟
-     * @method POST
-     * @url    /osce/wechat/discussion/add-reply
+     *提交回复
+     * @method GET
+     * @url /osce/wechat/discussion/add-reply
      * @access public
      *
-     * @param Request $request post璇锋眰<br><br>
-     * <b>post璇锋眰瀛楁锛�</b>
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        pid        问题Id(必须的)
+     * * string     content    内容(必须的)
      *
      * @return ${response}
      *
@@ -210,36 +243,33 @@ class DiscussionController extends  CommonController{
      */
       public function postAddReply(Request $request){
           $this->validate($request,[
-               'pid'      => 'required|integer',
-               'content'  => 'required|integer',
+               'id'      => 'required|integer',
+               'content'  => 'required',
           ]);
           $user=Auth::user();
           $userId=$user->id;
-//          if(!$userId){
-//              return response()->json(
-//                  $this->success_rows(2,'璇峰厛鐧诲綍')
-//              );
-//          }
-          $data=$request->only(['pid','content']);
-          $result=Discussion::insert(['content'=>$data['content'],'pid'=>$data['pid'],'create_user_id'=>$userId]);
-          if($result){
-              return view()->with('success','鍥炲鎴愬姛');
+          if(!$userId){
+              return response()->json(
+                  $this->success_rows(2,'请先登陆')
+              );
           }
-          return redirect()->back()->withInput()->withErrors('鍥炲澶辫触');
+          $data=$request->only(['id','content']);
+          $result=Discussion::create(['content'=>$data['content'],'pid'=>$data['id'],'create_user_id'=>$userId]);
+          if($result){
+              return \Response::json(array('code'=>1));
+          }
+          return redirect()->back()->withInput()->withErrors('回复失败');
       }
 
     /**
-     *鍒犻櫎璇ラ棶棰�
+     *删除问题
      * @method GET
      * @url /osce/wechat/discussion/del-question
      * @access public
      *
-     * @param Request $request post璇锋眰<br><br>
-     * <b>post璇锋眰瀛楁锛�</b>
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
-     * * string        鍙傛暟鑻辨枃鍚�        鍙傛暟涓枃鍚�(蹇呴』鐨�)
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        问题Id(必须的)
      *
      * @return ${response}
      *
@@ -252,23 +282,102 @@ class DiscussionController extends  CommonController{
           $this->validate($request,[
               'id'  =>'required|integer'
           ]);
-//         $user=Auth::user();
-//         $userId=$user->id;
-//         if(!$userId){
-//             return response()->json(
-//                 $this->success_rows(2,'璇峰厛鐧诲綍')
-//             );
-//         }
+         $user=Auth::user();
+         $userId=$user->id;
+         if(!$userId){
+             return response()->json(
+                 $this->success_rows(2,'请登陆')
+             );
+         }
+         $id=$request->get('id');
+         $createId=Discussion::where('id',$id)->select()->first()->create_user_id;
+
+         $manager=config('osce.manager');
+         if(($userId==$createId) || ($userId==$manager[0])){
+             $pid=Discussion::where('pid',$id)->select('pid')->first();
+             if($pid){
+                 $result=Discussion::where('pid',$id)->delete();
+                 if($result){
+                     $result=Discussion::where('id',$id)->delete();
+                     if($result){
+                         return redirect('/osce/wechat/discussion/question-list')->with('success','删除成功');
+                     }else{
+                         return redirect()->back()->withInput()->withErrors('删除失败');
+                     }
+                 }
+             }else{
+                 $result=Discussion::where('id',$id)->delete();
+                 if($result){
+                     return redirect('/osce/wechat/discussion/question-list')->with('success','删除成功');
+                 }else{
+                     return redirect()->back()->withInput()->withErrors('删除失败');
+                 }
+             }
+         }
+
+         return \Response::json(array('code'=>3));
+
+     }
+
+    /**
+     *编辑问题
+     * @method GET
+     * @url /osce/wechat/discussion/edit-question
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        问题ID(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+     public function getEditQuestion(Request $request){
+         $this->validate($request,[
+             'id'  =>'required|integer'
+         ]);
+         $id=$request->get('id');
+         $list=Discussion::where('id',$id)->select()->get();
+         return view('osce::wechat.discussion.discussion_edit')->with('list',$list);
+     }
+
+    /**
+     *保存编辑
+     * @method POST
+     * @url /osce/wechat/discussion/edit-question
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+     public function postEditQuestion(Request $request){
+         $this->validate($request,[
+             'id'       =>'required|integer',
+             'title'    => 'required',
+             'content'  => 'required',
+         ]);
 
          $id=$request->get('id');
-//         $manager=config('osce.manager');
-//         if($userId!==$id || $id!==$manager[0]){
-//             return \Response::json(array('code'=>3));
-//         }
-         $result=Discussion::where('id',$id)->delete();
+         $title=$request->get('title');
+         $content=$request->get('content');
+
+         $result=Discussion::where('id',$id)->update(['title'=>$title,'content'=>$content]);
          if($result){
-             return view()->with('success','鍒犻櫎鎴愬姛');
+             return \Response::json(array('code'=>1));
          }
-         return redirect()->back()->withInput()->withErrors('鍒犻櫎澶辫触');
+         return redirect()->back()->withInput()->withErrors('编辑失败');
      }
 }

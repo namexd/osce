@@ -285,8 +285,9 @@ class IndexController extends CommonController
     public function getAddWatch(Request $request){
 
         $this->validate($request,[
-            'code'          =>  'required',
-            'user_id'       =>  'required|integer'
+            'code'                  =>  'required',
+            'status'                =>  'required',
+            'created_user_id'       =>  'required|integer'
         ]);
 
         try{
@@ -297,7 +298,8 @@ class IndexController extends CommonController
                 'description'   =>  $request->get('description',''),
                 'factory'       =>  $request->get('factory',''),
                 'sp'            =>  $request->get('sp',''),
-                'created_user_id'=> $request->get('user_id'),
+                'created_user_id'=> $request->get('created_user_id'),
+                'purchase_dt'   => $request->get('purchase_dt'),
             ]);
 
             if($watch->id>0){
@@ -362,7 +364,7 @@ class IndexController extends CommonController
     /**
      * 更新腕表状态接口
      *
-     * @api GET /api/1.0/private/osce/watch/delete
+     * @api GET /api/1.0/private/osce/watch/update
      * @access private
      *
      * @param Request $request get请求<br><br>
@@ -388,7 +390,12 @@ class IndexController extends CommonController
 
 
         $count=Watch::where('id','=',$request->get('id'))
-            ->update(['status'=>$request->get('status')]);
+            ->update([
+                'status'=>$request->get('status'),
+                'factory'=>$request->get('factory'),
+                'code'=>$request->get('code'),
+                'purchase_dt'=>$request->get('purchase_dt'),
+            ]);
 
         if($count>0){
             return response()->json(
@@ -457,17 +464,15 @@ class IndexController extends CommonController
     public function getWatchList(Request $request)
     {
         $this->validate($request, [
-            'code' => 'sometimes|integer'
+            'code' => 'sometimes',
+            'status' => 'sometimes|integer',
         ]);
 
         $code = intval($request->get('code'));
-
+        $status = intval($request->get('status'));
         try{
-            if ($code) {
-                $list = Watch::where('code', 'like', '%' . $code . '%');
-            } else {
-                $list = Watch::select()->get();
-            }
+            $watchModel=new Watch();
+            $list=$watchModel->getWatch($code,$status);
 
             $data = [];
             foreach ($list as $item) {

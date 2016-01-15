@@ -18,14 +18,14 @@
         </a>
        	提问
     </div>
-    <form class="quiz_form" action="#" method="post">
+    <form class="quiz_form" action="{{  route('osce.wechat.postAddQuestion') }}" method="post">
     	<div class="form-group">
 	      <label class="" for="name">名称：</label>
 	      <input type="text" class="form-control" name="title" id="" placeholder="请输入名称">
 	    </div>
 	    <div class="form-group">
 	      <label class="" for="name">内容：</label>
-	      <textarea class="form-control" id="context" name="context" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
+	      <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
 	    </div>
 	    <div class="form-group">
     		<input class="btn btn2" type="submit" value="提交"/>
