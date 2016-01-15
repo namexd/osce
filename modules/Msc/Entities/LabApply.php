@@ -162,4 +162,13 @@ class LabApply  extends Model
             $PlanApply->with(['OpenPlan']);
         }])->get();
     }
+
+
+    //根据预约ID查找实验室的total
+    public function get_total($id){
+        $builder = $this->where('id','=',$id);
+        $builder = $builder->leftJoin('lab', function($join){
+            $join->on('lab.id', '=', 'lab_apply.lab_id');
+        })->first();
+    }
 }

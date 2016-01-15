@@ -42,7 +42,23 @@ function booking_examine(){
         layer.confirm("确定通过预约？", {
             btn: ['确定','取消'] //按钮
         }, function(){
-            window.location.href=url;
+            $.ajax({
+                type: "GET",
+                url: "/msc/admin/laboratory/_check",
+                data: {id:id},
+                success: function(msg){
+                    if(msg.status == 1){
+                        window.location.href=url;
+                    }else{
+                        layer.confirm(msg.info, {
+                            btn: ['确定','取消'] //按钮
+                        }, function(){
+                            window.location.href=url;
+                        });
+                    }
+                }
+            });
+
         });
     });
 
@@ -111,6 +127,17 @@ function booking_examine(){
             $("#refuse_from").show();
             $("#detail_from").hide();
             $("#choose_from").hide();
+            var idstr = '';
+            $(".check_label").children(".check").each(function(i){
+
+                if($(this).attr('data-id')){
+                    idstr += $(this).attr('data-id')+',';
+                }
+            });
+            //alert(idstr);
+           // console.log(idstr);
+            $('#refuse_from').append('<input type="hidden" name="idstr" value="'+idstr+'">');
+            $('#refuse_from').attr('action',"/msc/admin/laboratory/lab-order-donot");
         }
     });
 
@@ -135,14 +162,14 @@ function booking_examine(){
                 data: {idstr:idstr},
                 success: function(msg){
                     if(msg.status == 1){
-                        layer.msg(msg.info, {icon: 2,time: 2000});
+                        layer.msg(msg.info, {icon:1,time: 2000});
                         window.location.href=window.location.href;
                     }else if(msg.status == 2){
-                        layer.msg(msg.info, {icon: 1,time: 2000});
+                        layer.msg(msg.info, {icon: 2,time: 2000});
                     }else if(msg.status == 3){
-                        layer.msg(msg.info, {icon: 1,time: 2000});
+                        layer.msg(msg.info, {icon: 2,time: 2000});
                     }else if(msg.status == 4){
-                        layer.msg(msg.info, {icon: 1,time: 2000});
+                        layer.msg(msg.info, {icon: 2,time: 2000});
                     }else{
                         layer.confirm(msg.info, {
                             btn: ['是','否'] //按钮
@@ -153,10 +180,10 @@ function booking_examine(){
                                 data: {idstr:idstr,teacher:1},
                                 success: function(msg){
                                     if(msg.status == 1){
-                                        layer.msg(msg.info, {icon: 2,time: 2000});
+                                        layer.msg(msg.info, {icon: 1,time: 2000});
                                         window.location.href=window.location.href;
                                     }else{
-                                        layer.msg(msg.info, {icon: 1,time: 2000});
+                                        layer.msg(msg.info, {icon: 2,time: 2000});
                                     }
                                 }
                             });
