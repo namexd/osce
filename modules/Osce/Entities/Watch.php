@@ -27,7 +27,6 @@ class Watch extends CommonModel implements MachineInterface
         1   =>  '使用中',
         2   =>  '维修',
         3   =>  '报废',
-        4   =>  '损坏',
     ];
 
     /**
