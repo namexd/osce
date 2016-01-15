@@ -4,9 +4,38 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('osce/plugins/js/plugins/validate/jquery.validate.min.js')}}"></script>
-    <script src="{{asset('osce/plugins/js/plugins/messages_zh.min.js')}}"></script>
-    
+    <script>
+        $(function(){
+            $('#sourceForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    name: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '病例名称不能为空'
+                            }
+                        }
+                    },
+                    description: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '编号不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+    </script>
 @stop
 
 @section('content')
@@ -26,7 +55,7 @@
                             <label class="col-sm-2 control-label">场所名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" value="{{$data->name}}" name="name">
+                                <input type="text"  class="form-control" id="name" value="{{$data->name}}" name="name">
                             </div>
                         </div>
 
@@ -46,7 +75,6 @@
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                                 {{--<button class="btn btn-white" type="submit">取消</button>--}}
-
                             </div>
                         </div>
 
