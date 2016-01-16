@@ -71,7 +71,7 @@ class InvitationController extends CommonController
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
 //            dd(11111);
-            return redirect()->back('osce::admin.exammanage.examroom_assignment');
+            return view('osce::admin.exammanage.examroom_assignment');
         } else {
             throw new \Exception('邀请创建失败');
         }
@@ -106,7 +106,7 @@ class InvitationController extends CommonController
 
 
     /**
-     *sp邀请用户的还回结果
+     *sp邀请用户的同意与拒绝操作
      * @api GET /osce/wechat/invitation/invitation-respond
      * @access public
      *
