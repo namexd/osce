@@ -7,6 +7,7 @@
     <link href="{{asset('osce/admin/plugins/css/font-awesome.min.css?v=4.3.0')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('app/index/style.min.css')}}" rel="stylesheet">
+
     <style>
         body{
             font-family: 微软雅黑;
@@ -84,7 +85,13 @@
     <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
-
+    <script>
+        $(function(){
+            $("#side-menu li").click(function(){
+                $("body").removeClass("mini-navbar");
+            })
+        })
+    </script>
     <!-- 自定义js -->
     <script src="{{asset('osce/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
     <script type="text/javascript" src="{{asset('osce/admin/plugins/js/contabs.min.js')}}"></script>
