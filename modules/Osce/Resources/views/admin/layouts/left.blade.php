@@ -53,7 +53,7 @@
                             </li>
                             <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}">监考设备管理</a>
                             </li>
-							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">考核标准</a>
+							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">科目管理</a>
                             </li>
 							
                         </ul>
