@@ -6,6 +6,7 @@ return [
 	'page_size' => 10,
 	'order_type' => 'created_at',
 	'order_by' => 'desc',
+    'num'    =>10,
 
 	'importForCnToEn'=>[
 		// 中英文 字段名对照
