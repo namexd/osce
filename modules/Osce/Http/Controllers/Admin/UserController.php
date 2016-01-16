@@ -145,7 +145,6 @@ class UserController extends CommonController
         ]);
         $id =   intval($request    ->  get('id'));
         $user   =   User::find($id);
-        dd($user);
         if($user->delete())
         {
             return redirect()->route('osce.admin.user.getStaffList');
