@@ -22,6 +22,15 @@ class Exam extends CommonModel
     protected $fillable = ['name', 'code', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'description'];
 
     /**
+     * 考试与考站的关联
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function examStation()
+    {
+        return $this->belongsToMany('\Modules\Osce\Entities\Station','exam_flow_station','exam_id','station_id');
+    }
+
+    /**
      * 考试场次关联
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
