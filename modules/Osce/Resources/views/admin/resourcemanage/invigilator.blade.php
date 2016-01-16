@@ -49,7 +49,7 @@
                     <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                     <td>
                         <a href="{{route('osce.admin.invigilator.postEditInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}" class="delete"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}" class="delete" onclick="return confirm('确认删除');"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
                     </td>
                 </tr>
                 @empty
