@@ -15,31 +15,31 @@
        	查看
        	<a class="right header_btn nou clof header_a" href="#"></a>
     </div>
-    
+
     <div class="add_main">
         <div class="form-group">
             <label for="">培训名称</label>
-            <div class="txt">2015年第3季度技能培训学生考前培训</div>
+            <div class="txt">{{ $train->name  }}</div>
         </div>
         <div class="form-group">
             <label for="">培训地点</label>
-            <div class="txt">技能教室中心4楼403室</div>
+            <div class="txt">{{ $train->address  }}</div>
         </div>
         <div class="form-group">
             <label for="">开始时间</label>
-            <div class="txt">2015-11-22 08:00</div>
+            <div class="txt">{{ $train->begin_dt  }}</div>
         </div>
         <div class="form-group">
             <label for="">结束时间</label>
-            <div class="txt">2015-11-22 09:00</div>
-        </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+            <div class="txt">{{ $train->end_dt  }}</div>
+        </div>
         <div class="form-group">
             <label for="">培训讲师</label>
-            <div class="txt">张老师</div>
+            <div class="txt">{{ $train->teacher  }}</div>
         </div>
         <div class="form-group">
             <label for="">描述</label>
-            <div class="txt">2015年第3季度技能培训学生考前培训</div>
+            <div class="txt">{{ $train->description }}</div>
         </div>
     </div>
     <div class="add_main">

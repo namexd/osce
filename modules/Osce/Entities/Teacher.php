@@ -32,6 +32,13 @@ class Teacher extends CommonModel
     ];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function teacherStation()
+    {
+        return $this->belongsToMany('\Modules\Osce\Entities\Station','station_teacher','teacher_id','station_id');
+    }
+    /**
      * 用户关联
      */
     public function userInfo(){
@@ -392,5 +399,34 @@ class Teacher extends CommonModel
 
     public function registerTeacher(){
         //$this   ->  registerUser();
+    }
+
+    /**
+     * 获得与考站想关联的老师
+     * @param array $stationIds
+     * @return mixed
+     */
+    public function stationTeacher($exam_id)
+    {
+        return $this->leftJoin('station_teacher',
+            function ($join) {
+                $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
+            })
+            -> leftJoin('station',
+                function ($join) {
+                    $join->on('station.id','=','station_teacher.station_id');
+                })
+            -> where('station_teacher.exam_id' , $exam_id)
+            -> select([
+                $this->table . '.id as teacher_id',
+                $this->table . '.name as teacher_name',
+                $this->table . '.type as teacher_type',
+                $this->table . '.status as teacher_status',
+                'station.id as station_id',
+                'station.name as station_name',
+                'station.type as station_type',
+                'station.code as station_code',
+            ])
+            -> get();
     }
 }
