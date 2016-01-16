@@ -46,9 +46,9 @@
             </tr>
             </thead>
             <tbody>
-                @forelse($list as $item)
+                @forelse($list as $key => $item)
                 <tr>
-                    <td>{{$item->id}}</td>
+                    <td>{{$key+1}}</td>
                     <td>{{$item->username}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->gender}}</td>
