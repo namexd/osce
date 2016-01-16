@@ -121,10 +121,46 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">编号</label>
+                                <label class="col-sm-2 control-label">设备ID</label>
 
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="code" name="code">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">厂家</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="code" name="factory">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">型号</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="code" name="sp">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">采购日期</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="code" name="buy_dt">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">状态</label>
+                                <div class="col-sm-10">
+                                    <select id=""   class="form-control m-b" name="status">
+                                        <option value="0">离线</option>
+                                        <option value="1">在线</option>
+                                        <option value="2">维修</option>
+                                        <option value="3">报废</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -137,7 +173,30 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">用户名</label>
+                                <label class="col-sm-2 control-label">端口</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="port" name="port">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">通道号</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="channel" name="channel">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div><div class="form-group">
+                                <label class="col-sm-2 control-label">功能描述</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text"  id="description" class="form-control" name="description">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">账号</label>
 
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="username" name="username">
@@ -149,41 +208,6 @@
 
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="password" name="password">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">端口</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="port" name="port">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">网口号</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="channel" name="channel">
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">设备状态</label>
-                                <div class="col-sm-10">
-                                    <select id=""   class="form-control m-b" name="status">
-                                        <option value="0">离线</option>
-                                        <option value="1">在线</option>
-                                        <option value="2">维修</option>
-                                        <option value="3">报废</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
-                                <label class="col-sm-2 control-label">功能描述</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text"  id="description" class="form-control" name="description">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
