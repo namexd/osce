@@ -56,9 +56,6 @@
                     <td>{{$item->mobile}}</td>
                     <td>{{$item->lastlogindate}}</td>
                     <td>
-                        {{--<a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}" class="status1" >编辑</a>--}}
-                        {{--<a href="{{route('osce.admin.user.getDelUser',['id'=>$item->id])}}" class="status3" onclick="return confirm('确认删除');" >删除</a>--}}
-
                         <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}">
                             <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                         </a>

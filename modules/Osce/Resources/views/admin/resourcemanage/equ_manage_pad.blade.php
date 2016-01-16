@@ -91,7 +91,11 @@
                             <td>{{$item->id}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$machineStatuValues[$item->status]}}</td>
-                            <td><a href="{{route('osce.admin.machine.getEditPad',['id'=>$item->id])}}">编辑</a></td>
+                            <td>
+                                <a href="{{route('osce.admin.machine.getEditPad',['id'=>$item->id])}}">
+                                    <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                                </a>
+                            </td>
                         </tr>
                     @empty
                     @endforelse
