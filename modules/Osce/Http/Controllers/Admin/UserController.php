@@ -41,6 +41,7 @@ class UserController extends CommonController
         $list   =   $common->getUserList();
         return view('osce::admin.sysmanage.usermanage',['list'=>$list]);
     }
+
     public function getEditStaff(Request $request){
         $this   ->  validate($request,[
             'id'    =>  'required',
@@ -104,6 +105,10 @@ class UserController extends CommonController
             'gender'    =>  $gender,
         ];
         try{
+            if(User::where('mobile','=',$mobile)->count())
+            {
+                throw new \Exception('该手机已经被注册了');
+            }
             $user   =   $common     ->  createAdminUser($data);
             return redirect()->route('osce.admin.user.getStaffList');
 
