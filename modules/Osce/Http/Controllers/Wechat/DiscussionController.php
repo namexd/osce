@@ -32,13 +32,13 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getQuestionList(){
-        $user=Auth::user();
-        $userId=$user->id;
-        if(!$userId){
-            return response()->json(
-                $this->success_rows(2,'请先登陆')
-            );
-        }
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        if(!$userId){
+//            return response()->json(
+//                $this->success_rows(2,'请先登陆')
+//            );
+//        }
 
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();

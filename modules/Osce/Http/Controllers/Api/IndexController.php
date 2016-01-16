@@ -506,9 +506,7 @@ class IndexController extends CommonController
                  $this->success_rows(1,'success',count($examList),$pagesize=1,count($examList),$examList)
              );
         }
-        return response()->json(
-            $this->fail(new \Exception('今日无考试场次'))
-        );
+        return \Response::json(array('code' => 4));
 
     }
 

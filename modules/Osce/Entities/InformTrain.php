@@ -18,7 +18,13 @@ class InformTrain extends CommonModel{
         return $this->paginate(config('msc.page_size'));
     }
 
+    public function getAuthor(){
+        return $this->belongsTo('App\Entities\User','create_user_id','id');
+    }
 
+    public function getExam(){
+        return $this->belongsTo('App\Osce\Entities\Exam','exam_id','id');
+    }
     // 获得分页列表
     public function  getInformList(){
 

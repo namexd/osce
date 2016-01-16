@@ -195,44 +195,44 @@ class PadController extends  CommonController{
           };
        }
 
-    /**
-     *更新考前提醒
-     * @method GET
-     * @url api/1.0/private/osce/pad/write-remind
-     * @access public
-     *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * * string        description      考前提醒(必须的)
-     * * int           exam_id         考试Id(必须的)
-     *
-     * @return ${response}
-     *
-     * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
-     * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-       public function getWriteRemind(Request $request){
-           $this->validate($request,[
-               'description'   => 'required',
-               'exam_id'       => 'required|integer',
-           ]);
-           $description=$request->get('description');
-           $exam_id=$request->get('exam_id');
-
-            $count=  Exam::where('id',$exam_id)->update([
-                  'description'  =>$description
-              ]);
-            if($count>0) {
-                return response()->json(
-                    $this->success_data()
-                );
-            }
-            return response()->json(
-                $this->fail(new \Exception('更新考前提醒失败'))
-            );
-       }
+//    /**
+//     *更新考前提醒
+//     * @method GET
+//     * @url api/1.0/private/osce/pad/write-remind
+//     * @access public
+//     *
+//     * @param Request $request post请求<br><br>
+//     * <b>post请求字段：</b>
+//     * * string        description      考前提醒(必须的)
+//     * * int           exam_id         考试Id(必须的)
+//     *
+//     * @return ${response}
+//     *
+//     * @version 1.0
+//     * @author zhouchong <zhouchong@misrobot.com>
+//     * @date ${DATE} ${TIME}
+//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+//     */
+//       public function getWriteRemind(Request $request){
+//           $this->validate($request,[
+//               'description'   => 'required',
+//               'exam_id'       => 'required|integer',
+//           ]);
+//           $description=$request->get('description');
+//           $exam_id=$request->get('exam_id');
+//
+//            $count=  Exam::where('id',$exam_id)->update([
+//                  'description'  =>$description
+//              ]);
+//            if($count>0) {
+//                return response()->json(
+//                    $this->success_data()
+//                );
+//            }
+//            return response()->json(
+//                $this->fail(new \Exception('更新考前提醒失败'))
+//            );
+//       }
     /**
      *根据考试id获取考试场所列表(接口)
      * @method GET

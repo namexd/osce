@@ -17,17 +17,17 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class TrainController extends  CommonController{
 
     /**
-     *ÅàÑµÁĞ±í
+     *åŸ¹è®­åˆ—è¡¨
      * @method GET
      * @url /osce/wechat/train/train-list
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return ${response}
      *
@@ -49,7 +49,68 @@ class TrainController extends  CommonController{
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
-		
-       return view('osce::wechat.train.train_detail')->with(['list'=>$list,'pagination'=>$pagination]);
+        $data=[];
+        foreach($list as $item){
+            $time=time()-strtotime($item->created_at);
+            if ($time < 0) {
+                $time = $time;
+            } else {
+                if ($time < 60) {
+                    $time= $time . 'ç§’å‰';
+                } else {
+                    if ($time < 3600) {
+                        $time=  floor($time / 60) . 'åˆ†é’Ÿå‰';
+                    } else {
+                        if ($time < 86400) {
+                            $time= floor($time / 3600) . 'å°æ—¶å‰';
+                        } else {
+                            if ($time < 259200) {
+                                $time= floor($time / 86400) . 'å¤©å‰';
+                            } else {
+                                $time =  $time;
+                            }
+                        }
+                    }
+                }
+            }
+            $data[]=[
+                'id' =>$item->id,
+                'name' =>$item->name,
+                'address' =>$item->address,
+                'create_at' =>$item->created_at,
+                'begin_dt' =>$item->begin_dt,
+                'teacher' =>$item->teacher,
+                'content' =>$item->content,
+                'end_dt' =>$item->end_dt,
+                'author'   =>$item->getAuthor,
+                'time' =>$time,
+            ];
+
+        }
+//dd($data);
+        return view('osce::wechat.train.train_list')->with(['data'=>$data,'pagination'=>$pagination]);
+    }
+
+    /**
+     *æŸ¥çœ‹è€ƒå‰åŸ¹è®­
+     * @method GET
+     * @url /osce/wechat/train/train-detail
+     * @access public
+     *
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * int        id        ä¸»é”®Id(å¿…é¡»çš„)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getTrainDetail(Request $request){
+        $id=$request->get('id');
+        $train=InformTrain::find($id);
+        return view('osce::wechat.train.train_detail')->with('train',$train);
     }
 }
