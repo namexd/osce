@@ -202,7 +202,8 @@ class Student extends CommonModel
                 'student.name as name',
                 'student.code as code',
                 'student.idcard as idcard',
-                'student.mobile as mobile'
+                'student.mobile as mobile',
+                'exam_queue.status as status'
             ])
             ->get();
     }
