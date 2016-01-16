@@ -60,10 +60,15 @@ class InvigilatePadController extends CommonController
         }else{
             $studentModel = new  Student();
             $studentData = $studentModel->studentList($teacher_id);
+            if($studentData){
+
+            }else{
+
+            }
 //            dd($studentData);
             $list = [];
             foreach ($studentData as $itme) {
-                $list[] = [
+                $list[]= [
                     'name' => $itme->name,
                     'code' => $itme->code,
                     'idcard' => $itme->idcard,
@@ -270,10 +275,6 @@ class InvigilatePadController extends CommonController
           }
 
       }
-
-
-
-
 
 
 
