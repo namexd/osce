@@ -19,7 +19,7 @@
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
-                                message: '病例名称不能为空'
+                                message: '名称不能为空'
                             }
                         }
                     },
@@ -77,19 +77,19 @@
                             }
                         }
                     },
-                    description: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '功能描述不能为空'
-                            },
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: '请输入正确的编号'
-                            }
-                        }
-                    }
+//                    description: {
+//                        /*键名username和input name值对应*/
+//                        message: 'The username is not valid',
+//                        validators: {
+//                            notEmpty: {/*非空提示*/
+//                                message: '功能描述不能为空'
+//                            },
+//                            regexp: {
+//                                regexp: /^\d+$/,
+//                                message: '请输入正确的编号'
+//                            }
+//                        }
+//                    }
                 }
             });
         })

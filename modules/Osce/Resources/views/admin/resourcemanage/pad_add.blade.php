@@ -19,7 +19,7 @@
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
-                                message: '病例名称不能为空'
+                                message: 'PAD名称不能为空'
                             }
                         }
                     },
