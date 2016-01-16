@@ -56,8 +56,13 @@
                     <td>{{$item->mobile}}</td>
                     <td>{{$item->lastlogindate}}</td>
                     <td>
-                        <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}" class="status1" >编辑</a>
-                        <a href="{{route('osce.admin.user.getDelUser',['id'=>$item->id])}}" class="status3" onclick="return confirm('确认删除');" >删除</a>
+                        {{--<a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}" class="status1" >编辑</a>--}}
+                        {{--<a href="{{route('osce.admin.user.getDelUser',['id'=>$item->id])}}" class="status3" onclick="return confirm('确认删除');" >删除</a>--}}
+
+                        <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}">
+                            <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                        </a>
+                        <a href="javascript:void(0)" uid="{{$item->id}}"><span class="read state2"><i class="fa fa-trash-o fa-2x" uid="{{$item->id}}"></i></span></a>
                     </td>
                 </tr>
                 @empty
@@ -77,4 +82,22 @@
         </div>
     </form>
 </div>
+<script>
+    $(function(){
+        $(".fa-trash-o").click(function(){
+            var thisElement=$(this);
+
+            layer.alert('确认删除？',function(){
+                $.ajax({
+                    type:'get',
+                    async:false,
+                    url:"{{route('osce.admin.user.getDelUser')}}?id="+thisElement.attr('uid'),
+                    success:function(data){
+                        location.reload();
+                    }
+                })
+            });
+        })
+    })
+</script>
 @stop{{-- 内容主体区域 --}}
