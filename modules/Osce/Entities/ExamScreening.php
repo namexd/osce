@@ -21,7 +21,7 @@ class ExamScreening extends CommonModel
 
      //关联考试表
     public function  ExamInfo(){
-        return $this->hasOne('Modules\Osce\Entities\exam','id','exam_id');
+        return $this->belongsTo('Modules\Osce\Entities\exam','exam_id','id');
     }
 
     public function roomsRelation(){
