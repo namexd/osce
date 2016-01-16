@@ -30,6 +30,14 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
+ <script>
+     function delAttch(){
+         if(confirm('确认删除附件？'))
+         {
+             $(this).remove();
+         }
+     }
+ </script>
 @stop
 
 @section('content')
@@ -37,16 +45,19 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增通知</h5>
+            <h5>编辑通知</h5>
         </div>
         <div class="ibox-content">
             <form method="post" class="form-horizontal" action="">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">
-                            <select id="select_Category"   class="form-control" name="">
-                                <option>2016OSCE考试第一期</option>
-                                <option>2016OSCE考试第一期</option>
+                            <select id="select_Category"   class="form-control" name="exam_id" disabled>
+                                @forelse($list as $exam)
+                                    <option value="{{$exam->id}}" {{$exam->id==$item->exam_id? 'selected="selected"':''}}>{{$exam->name}}</option>
+                                @empty
+                                    <option value="">请创建考试</option>
+                                @endforelse
                             </select>
                         </div>
                     </div>
@@ -55,15 +66,15 @@
                         <label class="col-sm-2 control-label">接收人:</label>
                         <div class="col-sm-10 select_code">
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]" checked="checked">
+                                <input type="checkbox" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <label>考生</label>
                             </div>
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]">
+                                <input type="checkbox" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <label>老师</label>
                             </div>
                             <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]">
+                                <input type="checkbox" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <label>sp老师</label>
                             </div>
                         </div>
@@ -79,7 +90,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
+                            <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content" ></script>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -90,6 +101,12 @@
                             <span class="images_upload">
                                 <input type="file" name="images" id="file0"/>
                             </span>
+                            <ul class="attch-box" style="padding: 15px 0;">
+                                @forelse(explode(',',$item->attachments) as $attachment)
+                                <li style="cursor: pointer;" onclick="return delAttch()"><span><?php $pathInfo=explode('/',$attachment)?>{{array_pop($pathInfo)}}</span><input name="attach[]" class="attach" type="hidden" value="{{$attachment}}" /></li>
+                                @empty
+                                @endforelse
+                            </ul>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

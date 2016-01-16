@@ -1079,7 +1079,12 @@ function exam_notice_add(){
         return arr.join("\n");
     }
 
-
+    function delAttch(){
+        if(confirm('确认删除附件？'))
+        {
+            $(this).remove();
+        }
+    }
     /**
      * 附件上传
      * @author mao
@@ -1088,11 +1093,20 @@ function exam_notice_add(){
      */
     $(".images_upload").change(function(){
         $.ajaxFileUpload({
-            url:'url',
+            url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
             //上传成功
+                var li      =   $('<li>').bind('click',delAttch).css('cursor','pointer');
+                var input   =   $('<input>').attr({
+                    'name':'attach[]',
+                    'class':'attach',
+                    'type':'hidden'
+                }).val(data.data.path);
+                var span    =   $('<span>').text(data.data.name);
+                var li      =li.append(span).append(input);
+                $('.attch-box').append(li);
             },
             error: function (data, status, e){
                 //上传失败
@@ -1111,8 +1125,12 @@ function exam_notice_add(){
  */
 function exam_notice_edit(){
 
+    var content =   $('#content').html();
     //初始化
-    var ue = UE.getEditor('editor');
+    var ue = UE.getEditor('editor',{
+        serverUrl:'/osce/api/communal-api/editor-upload'
+    });
+    UE.setContent(content);
 
 
     //测试数据
@@ -1126,7 +1144,6 @@ function exam_notice_edit(){
      * @param   {String}  isAppendTo [插入的内容]
      */
     function setContent(isAppendTo) {
-
         UE.getEditor('editor').setContent(isAppendTo);
     }
 
@@ -1150,20 +1167,28 @@ function exam_notice_edit(){
             },1000);
         }
     });
-
     /**
-     * 附件上传
+     * 附件图片上传
      * @author mao
      * @version 1.0
      * @date    2016-01-15
      */
-    $(".images_upload").change(function(){
+    $(".attch_upload").change(function(){
         $.ajaxFileUpload({
             url:'url',
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
-            //上传成功
+                //上传成功
+                var li      =   $('<li>').bind('click',delAttch).css('cursor','pointer');
+                var input   =   $('<input>').attr({
+                    'name':'attach[]',
+                    'class':'attach',
+                    'type':'hidden'
+                }).val(data.data.path);
+                var span    =   $('<span>').text(data.data.name);
+                var li      =li.append(span).append(input);
+                $('.attch-box').append(li);
             },
             error: function (data, status, e){
                 //上传失败
@@ -1179,7 +1204,7 @@ function exam_notice_edit(){
      * @return  {[type]}   [为本内容]
      */
     function getContent(){
-
+        //
         var arr = [];
         arr.push(UE.getEditor('editor').getContent());
         return arr.join("\n");

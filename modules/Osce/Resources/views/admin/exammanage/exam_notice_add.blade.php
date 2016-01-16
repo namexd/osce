@@ -20,11 +20,13 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.config.js')}}"></script>
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
+ <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
+ <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'exam_notice_add'}" />
+<input type="hidden" id="parameter" value="{'pagename':'exam_notice_add','url':'{{route('osce.api.communal-api.postAttchUpload')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -37,7 +39,7 @@
                         <div class="col-sm-10">
                             <select id="select_Category"   class="form-control" name="exam id">
                                 @forelse($list as $exam)
-                                <option value="{{$exam->id}}">{{$exam->name}}</option>
+                                <option value="{{$exam->id}}" >{{$item->name}}</option>
                                 @empty
                                     <option value="">请创建考试</option>
                                 @endforelse
@@ -76,23 +78,19 @@
                             <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content"></script>
                         </div>
                     </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">附件:</label>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">附件:</label>
 
-                        <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]" checked="checked">
-                                <label>考生</label>
-                            </div>
-                            <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]">
-                                <label>老师</label>
-                            </div>
-                            <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]">
-                                <label>sp老师</label>
-                            </div>
+                    <div class="col-sm-10">
+                            <span class="images_upload">
+                                <input type="file"  name="attchment" id="file0"/>
+                            </span>
+                            <ul class="attch-box" style="padding: 15px 0;">
+                            </ul>
+
                     </div>
+                </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">

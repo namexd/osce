@@ -247,6 +247,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 });
 
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
+	Route::group(['prefix'=>'api','namespace'=>'Api'],function(){
+		Route::post('communal-api/attch-upload',['uses'=>'CommunalApiController@postAttchUpload','as'=>'osce.api.communal-api.postAttchUpload']);
+		Route::get('communal-api/editor-upload',['uses'=>'CommunalApiController@getEditorUpload','as'=>'osce.api.communal-api.getEditorUpload']);
+		Route::post('communal-api/editor-upload',['uses'=>'CommunalApiController@postEditorUpload','as'=>'osce.api.communal-api.postEditorUpload']);
+	});
+});
 
 /**
  * WindowsAPP接口
