@@ -673,17 +673,24 @@ class MachineController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'code'          =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
             'status'        =>  'sometimes',
         ],[
             'id.required'       =>'设备ID必填',
             'name.required'     =>'设备名称必填',
             'code.required'     =>'设备编码必填',
+            'factory.required'  =>'生产厂家必填',
+            'sp.required'       =>'型号规格必填',
             'status.required'   =>'设备状态必填',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
@@ -776,17 +783,9 @@ class MachineController extends CommonController
             //获取删除的id
             $id      = $request->input('id');
             $cate_id = $request->input('cate_id');
-            switch($cate_id){
-                case 1: $model = new Vcr();
-                        break;
-                case 2: $model = new Pad();
-                        break;
-                case 3: $model = new Watch();
-                        break;
-                default: throw new \Exception('监考设备类型错误');
-            }
+            $model      =   $this   ->  getMachineModel($cate_id);
             //通过id删除相应的设备
-            if($result = $model->where('id', $id)->deleted()) {
+            if($result = $model->where('id', $id)->delete()) {
                 return json_encode($this->success_data(['删除成功！']));
             }else{
                 throw new \Exception('该设备已于其他设备关联,无法删除');

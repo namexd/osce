@@ -103,6 +103,22 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">生产厂家</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="code" name="factory" value="{{$item['factory']}}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">型号</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="code" name="sp" value="{{$item['sp']}}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">设备状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
@@ -111,6 +127,14 @@
                                         <option value="2" {{($item['status']==2)?'selected="selected"':''}}>维修</option>
                                         <option value="3" {{($item['status']==3)?'selected="selected"':''}}>报废</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">描述</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="code" name="description" value="{{$item['description']}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
