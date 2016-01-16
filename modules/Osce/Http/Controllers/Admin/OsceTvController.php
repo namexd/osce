@@ -23,8 +23,7 @@ class OsceTvController extends  CommonController{
           $description=Exam::where('id',$exam_id)->select('description')->first()->description;
           $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
           $examQueModel= new ExamQueue();
-          $time=time();
-          $list=$examQueModel->getStudent($time,$mode,$exam_id);
+          $list=$examQueModel->getStudent($mode,$exam_id);
           dd($list);
           return view()->with(['list'=>$list,'description'=>$description]);
       }

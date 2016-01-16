@@ -25,6 +25,9 @@ class ExamFlowRoom extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Room','id','room_id');
     }
 
+    public function queueStudent(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamQueue','room_id','room_id');
+    }
     /**
      * 获取考场下 考站数量
      * @access public
