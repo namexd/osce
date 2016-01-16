@@ -94,8 +94,8 @@ class NoticeController extends CommonController
         $exam_id    =   $request    ->  get('exam_id');
         $groups    =   $request     ->  get('groups');
 
-        try
-        {
+//        try
+//        {
             if(!is_array($groups))
             {
                 throw new \Exception('请选择接收人所属角色');
@@ -109,11 +109,11 @@ class NoticeController extends CommonController
             {
                 throw new \Exception('通知创建失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()   ->  back()  ->withErrors($ex);
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            return redirect()   ->  back()  ->withErrors($ex);
+//        }
     }
 
     /**

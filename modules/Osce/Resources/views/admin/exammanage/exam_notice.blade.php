@@ -23,7 +23,7 @@
                 <h5 class="title-label">资讯&通知</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.notice.getAddNotice')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
