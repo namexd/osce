@@ -197,6 +197,7 @@ class Student extends CommonModel
         })->leftjoin('station_teacher',function($join){
             $join ->on('exam_queue.station_id','=','station_teacher.station_id');
         })->where('station_teacher.user_id','=',$teacher_id)
+            ->where('student.status','=',1)
             ->select([
                 'student.name as name',
                 'student.code as code',

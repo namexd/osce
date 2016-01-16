@@ -171,7 +171,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.admin.invigilatepad.getAuthentication']);
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.admin.invigilatepad.getExamGrade']);
-		Route::get('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@getSaveExamResult','as'=>'osce.admin.invigilatepad.getSaveExamResult']);
+		Route::post('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.admin.invigilatepad.postSaveExamResult']);
 		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.admin.invigilatepad.getSaveExamEvaluate']);
 		//候考
 		Route::get('oscetv/write-detail',['uses'=>'OsceTvController@getWriteDetail','as'=>'osce.admin.getWriteDetail']);

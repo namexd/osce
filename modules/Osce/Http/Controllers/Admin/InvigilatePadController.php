@@ -182,7 +182,7 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function  getSaveExamEvaluate(Request $request){
+    public function  getSaveExamEvaluate(Request $request,$ExamResultId){
         $this->validate($request,[
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
@@ -200,8 +200,7 @@ class InvigilatePadController extends CommonController
             'score'=>Input::get('score'),
             'evaluate'=>Input::get('evaluate'),
         ];
-        $ResultModel = new TestResult();    //获取考试结果id
-//        $data['exam_result_id'] = $ResultModel-> //获取考试结果方法
+        $data['exam_result_id'] =$ExamResultId;
         $Save =ExamScore::create($data);
         if($Save){
             return response()->json(
@@ -216,7 +215,7 @@ class InvigilatePadController extends CommonController
     }
 
     /**
-     * 提交成绩详情
+     * 提交成绩评分详情，考试结果
      * @method GET
      * @url /osce/admin/invigilatepad/save-exam-result
      * @access public
@@ -230,7 +229,7 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-      public  function getSaveExamResult(Request $request){
+      public  function postSaveExamResult(Request $request){
            $this->validate($request,[
                'student_id'=>'required|integer',
                'station_id'=>'required|integer',
@@ -241,7 +240,6 @@ class InvigilatePadController extends CommonController
                'score'=>'required|integer',
                'score_dt'=>'required|integer',
                'teacher_id'=>'required|integer',
-
            ]);
           $data=[
               'station_id'=>Input::get('station_id'),
@@ -253,12 +251,17 @@ class InvigilatePadController extends CommonController
               'score'=>Input::get('score'),//最终成绩
               'score_dt'=>Input::get('score_dt'),//评分时间
               'teacher_id'=>Input::get('teacher_id'),
-
           ];
-           $save =DB::connection('osce_mis')->table('test_result')->insertGetId($data);
-          if($save){
+            $TestResultModel  =new TestResult();
+            $result= $TestResultModel->addTestResult($data);
+            //得到考试结果id
+            $ExamResultId =$result->id;
+          //存入考试评分详情表
+          $SaveEvaluate = $this->getSaveExamEvaluate($request,$ExamResultId);
+
+          if($result){
               return response()->json(
-                  $this->success_data(1,'详情保存成功')
+                  $this->success_data($result,1,'详情保存成功')
               );
           }else{
               return response()->json(

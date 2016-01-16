@@ -7,7 +7,7 @@
  */
 
 namespace Modules\Osce\Entities;
-
+use DB;
 
 class TestResult extends CommonModel
 {
@@ -19,4 +19,54 @@ class TestResult extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'begin_dt', 'end_dt','time','score','score_dt','teacher_id','create_user_id'];
+
+   //关联到学生表
+    public function student(){
+        return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
+    }
+
+    //关联到考站表
+    public  function  station(){
+        return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
+
+    }
+    //关联到考试场次表
+    public  function  examScreening(){
+         return $this->hasOne('Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
+    }
+
+
+    public function addTestResult($data)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            $TestResultData = [];
+
+            if ($testResult = $this->create($data)) {
+                $TestResultData = [
+                    'item_id' => $testResult->id,
+                    'type' => 1,
+                ];
+            } else {
+                throw new \Exception('新增考试失败');
+            }
+            if (empty($TestResultData)) {
+                throw new \Exception('没有找到考试新增数据');
+            }
+            //$machine    =   Machine::create($machineData);
+            $TestResult = true;
+            if ($TestResult) {
+                $connection->commit();
+                return $testResult;
+            } else {
+                throw new   \Exception('新增考试资源失败');
+            }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+
+    }
+
 }
