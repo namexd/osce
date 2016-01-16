@@ -86,7 +86,8 @@ class Common
         if(config('APP_DEBUG')){
             $password   =  123456;
         } else{
-            $password   =   Common::getRandStr(6);
+            $password   =  123456;
+//            $password   =   Common::getRandStr(6);
         }
 
         DB::beginTransaction();
