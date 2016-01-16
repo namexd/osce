@@ -95,6 +95,7 @@
                                 <a href="{{route('osce.admin.machine.getEditWatch',['id'=>$item->id])}}">
                                     <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                                 </a>
+                                <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x" eid="{{$item->id}}"></i></span></a>
                             </td>
                         </tr>
                     @empty
@@ -115,6 +116,30 @@
                     </nav>
                 </div>
             </div>
-
     </div>
+
+    <script>
+        $(function(){
+            //删除用户
+            $(".fa-trash-o").click(function(){
+                var thisElement=$(this);
+                var eid=thisElement.attr("eid");
+                layer.alert('确认删除？',function(){
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        url:'{{route('osce.admin.machine.postMachineDelete')}}',
+                        data:{id:eid, cate_id:3},
+                        success:function(data){
+                            if(data.code == 1){
+                                location.reload();
+                            }else {
+                                layer.alert(data.message);
+                            }
+                        }
+                    })
+                });
+            })
+        })
+    </script>
 @stop{{-- 内容主体区域 --}}

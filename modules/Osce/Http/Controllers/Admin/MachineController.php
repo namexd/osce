@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\RoomVcr;
+use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Pad;
@@ -781,17 +783,26 @@ class MachineController extends CommonController
                 'cate_id'   =>  'required|integer'
             ]);
             //获取删除的id
-            $id      = $request->input('id');
-            $cate_id = $request->input('cate_id');
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $id      = $request ->input('id');
+            $cate_id = $request ->input('cate_id');
+            if($cate_id ==1){
+                if($result = StationVcr::where('vcr_id',$id)->first()){
+                    throw new \Exception('该设备已于其他设备关联,无法删除!');
+                }
+                if($result = RoomVcr::where('vcr_id',$id)->first()){
+                    throw new \Exception('该设备已于其他设备关联,无法删除!');
+                }
+            }
+
+            $model   = $this    ->getMachineModel($cate_id);
             //通过id删除相应的设备
             if($result = $model->where('id', $id)->delete()) {
-                return json_encode($this->success_data(['删除成功！']));
+                return $this->success_data(['删除成功！']);
             }else{
-                throw new \Exception('该设备已于其他设备关联,无法删除');
+                throw new \Exception('该设备已于其他设备关联,无法删除!');
             }
         } catch (\Exception $ex){
-            return json_encode($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 
