@@ -180,35 +180,21 @@ class InvigilatePadController extends CommonController
         $exam =Exam::find($examId);
         $StandardModel  =   new Standard();
         $standardList   =   $StandardModel->ItmeList($station->subject_id);
-        $temp=array();
-        $data=array();
-        //首先找pid为0的
-        foreach($standardList as $v){
-            if($v["pid"]==0){
-                $temp[]=$v;
-            }
-        }
-        while($temp){
-            $now = array_pop($temp);
-                //设置非顶级元素的level=父类的level+1
-                foreach($data as $v){
+        if(count($standardList)!=0){
+            return response()->json(
+        $this->success_data($standardList,1,'数据传送成功')
+            );
+        }else{
+            return response()->json(
+                $this->fail(new \Exception('数据查询失败'))
+            );
 
-                    if($v["id"]==$now["pid"]){
-
-                        $now["level"]=$v["level"]+1;
-                    }
-                }
-            //找直接子类
-            foreach($standardList as $v){
-                if($v["pid"]==$now["id"]){
-                    $temp[]=$v;
-                }
-            }
-            //移动到最终结果数组
-            array_push($data,$now);
         }
-        echo json_encode($data);
-        return $data;
+            
+//        echo json_encode($standardList);
+//         return response()->json(
+//        $this->success_data($data,1,'数据传送成功')
+//            );
 
     }
     /**
