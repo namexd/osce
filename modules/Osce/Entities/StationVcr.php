@@ -81,7 +81,7 @@ class StationVcr extends CommonModel
                    'vcr.channel as channel',
                    'vcr.status as status',
                ])
-               ->get();;
+               ->get();
     }
 
 
