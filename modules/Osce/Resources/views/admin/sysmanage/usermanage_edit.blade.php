@@ -57,6 +57,7 @@
                 <div class="form-group">
                     <div class="col-sm-offset-2">
                         <button type="submit" class="btn btn-primary btn-edit" data-dismiss="modal" aria-hidden="true">确定</button>
+                        <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                     </div>
                 </div>
             </div>
