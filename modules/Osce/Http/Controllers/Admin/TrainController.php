@@ -20,7 +20,7 @@ class TrainController extends  CommonController{
     /**
      *培训列表
      * @method GET
-     * @url
+     * @url  /osce/admin/train/train-list
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -38,18 +38,18 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getTrainList(){
-        $user=Auth::user();
-        $userId=$user->id;
-
-        if(!$userId){
-          return false;
-        }
+//      $user=Auth::user();
+//      $userId=$user->id;
+//
+//      if(!$userId){
+//        return false;
+//      }
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
 
-        return view()->with(['list'=>$list,'pagination'=>$pagination]);
+        return view('osce::admin.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
 
     }
 
@@ -58,7 +58,7 @@ class TrainController extends  CommonController{
     /**
      *新增培训
      * @method GET
-     * @url /osce/wechat/train/train-list
+     * @url /osce/admin/train/add-train
      * @access public
      *
      * @param Request $request post请求<br><br>

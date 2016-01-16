@@ -18,61 +18,55 @@ class ExamQueue extends  CommonModel{
     protected $fillable = ['exam_id', 'exam_screening_id','student_id','station_id','room_id','begin_dt','end_dt','status','created_user_id'];
     public $search = [];
 
-    public function getStudent($time,$mode){
+    public function student(){
+        return $this->hasMany('\Modules\Osce\Entities\student','id','student_id');
+    }
 
-        $builder=$this->Join('student','exam_queue.student_id','=','student.id');
+    public function getStudent($mode,$exam_id){
+        $exam   =Exam::find($exam_id);
         if($mode==1){
-            $builder=$builder->Join('room','exam_queue.room_id','=','room.id');
-            $builder=$builder->select(
-                'exam_queue.id as id',
-                'exam_queue.begin_dt as begin_dt',
-                'room.name as room_name',
-                'room.address as room_address',
-                'student.name as student_name',
-                'student.code as student_code'
-            );
-            $builder=$builder->whereRaw(
-                'unix_timestamp('.$this->table.'.begin_dt) >= ?',
-                [
-                    $time
-                ]
-            );
-          return  $builder->take(10)->get();
+            return   $this->room($exam);
+
         }elseif($mode==2){
-            $builder=$builder->Join('station','exam_queue.station_id','=','station.id')
-                ->Join('room','exam_queue.room_id','=','room.id');
-            $builder=$builder->select(
-                'exam_queue.id as id',
-                'room.name as room_name',
-                'exam_queue.begin_dt as begin_dt',
-                'room.address as room_address',
-                'student.name as student_name',
-                'student.code as student_code',
-                'station.name as station_name'
-            );
-            $builder=$builder->whereRaw(
-                'unix_timestamp('.$this->table.'.begin_dt) >= ?',
-                [
-                    $time
-                ]
-            );
-          return   $builder->take(10)->get();
-        }else{
-            $builder=$builder->select(
-                'exam_queue.id as id',
-                'exam_queue.begin_dt as begin_dt',
-                'student.name as student_name',
-                'student.code as student_code'
-            );
-            $builder=$builder->whereRaw(
-                'unix_timestamp('.$this->table.'.begin_dt) >= ?',
-                [
-                    $time
-                ]
-            );
-          return  $builder->take(10)->get();
+           return $this->station($exam);
         }
 
-        return $builder;
+    }
+
+
+    //当考试排序模式为1的时候
+    protected function room($exam){
+        $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
+        $data=[];
+        foreach($examFlowRoomList as $examFlowRoom)
+        {
+            $students    =   $examFlowRoom->queueStudent()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
+          foreach($students as $room){
+              foreach($students as $item){
+                  $data[]=[
+                     $room->room_id=> $item->student,
+                  ];
+              }
+          }
+        }
+        return $data;
+    }
+
+    //当考试排序模式为2的时候
+    protected function station($exam){
+       $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
+       foreach ($examFlowStationList as $examFlowStation){
+           $students=$examFlowStation ->queueStation()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
+           foreach($students as $station){
+               foreach($students as $item){
+                   $data[]=[
+                       $station->station_id=> $item->student,
+                   ];
+
+               }
+           }
+       }
+
+        return $data;
     }
 }

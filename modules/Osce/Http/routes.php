@@ -37,8 +37,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('case/create-case', ['uses'=>'CaseController@getCreateCase','as'=>'osce.admin.case.getCreateCase']);  //病例的添加页
 	});
 
-
-
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
         //监考老师
 
@@ -173,18 +171,27 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.admin.invigilatepad.getAuthentication']);
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.admin.invigilatepad.getExamGrade']);
-		Route::get('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@getSaveExamResult','as'=>'osce.admin.invigilatepad.getSaveExamResult']);
+		Route::post('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.admin.invigilatepad.postSaveExamResult']);
 		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.admin.invigilatepad.getSaveExamEvaluate']);
-
+		//候考
+		Route::get('oscetv/write-detail',['uses'=>'OsceTvController@getWriteDetail','as'=>'osce.admin.getWriteDetail']);
 
 		//测试
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
         //考前培训
+
 		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.wechat.getTrainList']);
 		Route::get('train/edit-train',['uses'=>'TrainController@getEditTrain','as'=>'osce.wechat.getEditTrain']);
 		Route::get('train/del-train',['uses'=>'TrainController@getDelTrain','as'=>'osce.wechat.getDelTrain']);
 		Route::post('train/add-train',['uses'=>'TrainController@postAddTrain','as'=>'osce.wechat.postAddTrain']);
 		Route::post('train/edit-train',['uses'=>'TrainController@postEditTrain','as'=>'osce.wechat.postEditTrain']);
+
+
+		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.admin.getTrainList']);
+		Route::get('train/edit-train',['uses'=>'TrainController@getEditTrain','as'=>'osce.admin.getEditTrain']);
+		Route::get('train/del-train',['uses'=>'TrainController@getDelTrain','as'=>'osce.admin.getDelTrain']);
+		Route::post('train/add-train',['uses'=>'TrainController@postAddTrain','as'=>'osce.admin.postAddTrain']);
+		Route::post('train/edit-train',['uses'=>'TrainController@postEditTrain','as'=>'osce.admin.postEditTrain']);
 	});
 
 });

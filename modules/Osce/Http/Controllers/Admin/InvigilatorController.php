@@ -520,7 +520,11 @@ class InvigilatorController extends CommonController
         try{
             if(!is_null($id))
             {
-                    Teacher::where('id',$id)->delete();
+
+                    if(!Teacher::where('id',$id)->delete())
+                    {
+                        throw new \Exception('删除用户失败,请检查次教务人员是否已在在其他考试中已用了');
+                    }
                 return redirect()->back();
             }
             else

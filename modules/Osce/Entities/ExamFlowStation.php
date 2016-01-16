@@ -19,4 +19,8 @@ class ExamFlowStation extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['serialnumber', 'station_id', 'flow_id', 'created_user_id'];
+
+    public function queueStation(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamQueue','station_id','station_id');
+    }
 }
