@@ -25,27 +25,25 @@ class ExamQueue extends  CommonModel{
     public function getStudent($mode,$exam_id){
         $exam   =Exam::find($exam_id);
         if($mode==1){
-            return   $this->room($exam);
+            return   $this->getWriteRoom($exam);
 
         }elseif($mode==2){
-           return $this->station($exam);
+           return $this->getWriteStation($exam);
         }
 
     }
 
 
     //当考试排序模式为1的时候
-    protected function room($exam){
+    protected function getWriteRoom($exam){
         $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
         $data=[];
         foreach($examFlowRoomList as $examFlowRoom)
         {
             $students    =   $examFlowRoom->queueStudent()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
-          foreach($students as $room){
-              foreach($students as $item){
-                  $data[]=[
-                     $room->room_id=> $item->student,
-                  ];
+          foreach($students as $examQueue){
+              foreach($examQueue->student as $student){
+                  $data[$examQueue->room_id][]=$student;
               }
           }
         }
@@ -53,20 +51,18 @@ class ExamQueue extends  CommonModel{
     }
 
     //当考试排序模式为2的时候
-    protected function station($exam){
+    protected function getWriteStation($exam){
        $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
+        $data=[];
        foreach ($examFlowStationList as $examFlowStation){
-           $students=$examFlowStation ->queueStation()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
-           foreach($students as $station){
-               foreach($students as $item){
-                   $data[]=[
-                       $station->station_id=> $item->student,
-                   ];
 
+           $students=$examFlowStation ->queueStation()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
+           foreach($students as $ExamQueue ){
+               foreach($ExamQueue->student as $student){
+                   $data[$ExamQueue->room_id][$ExamQueue->station_id]=$student;
                }
            }
        }
-
         return $data;
     }
 }
