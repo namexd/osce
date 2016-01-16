@@ -33,38 +33,40 @@ class ExamQueue extends  CommonModel{
 
     }
 
+
+    //当考试排序模式为1的时候
     protected function room($exam){
         $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
         $data=[];
         foreach($examFlowRoomList as $examFlowRoom)
         {
             $students    =   $examFlowRoom->queueStudent()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
-
-            foreach($students as $item){
-               $data[]=[
-                   'id' =>$item->id,
-                   'student_id' =>$item->student,
-                   'room_id' =>$item->room_id,
-               ];
-            }
+          foreach($students as $room){
+              foreach($students as $item){
+                  $data[]=[
+                     $room->room_id=> $item->student,
+                  ];
+              }
+          }
         }
         return $data;
     }
 
+    //当考试排序模式为2的时候
     protected function station($exam){
        $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
-
        foreach ($examFlowStationList as $examFlowStation){
            $students=$examFlowStation ->queueStation()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
-           foreach($students as $item){
-               $data[]=[
-                   'id' =>$item->id,
-                   'student_id' =>$item->student,
-                   'room_id' =>$item->room_id,
-                   'station_id' =>$item->station_id,
-               ];
+           foreach($students as $station){
+               foreach($students as $item){
+                   $data[]=[
+                       $station->station_id=> $item->student,
+                   ];
+
+               }
            }
        }
+
         return $data;
     }
 }

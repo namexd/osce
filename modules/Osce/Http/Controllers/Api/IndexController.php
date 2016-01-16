@@ -118,7 +118,7 @@ class IndexController extends CommonController
      */
     public function getBoundWatch(Request $request){
         $this->validate($request,[
-            'code'      =>'required|integer',
+            'code'      =>'required',
             'id_card' =>'required',
             'exam_id' =>'required'
         ]);
@@ -181,7 +181,7 @@ class IndexController extends CommonController
      */
     public function getUnwrapWatch(Request $request){
         $this->validate($request,[
-            'code' =>'required|integer'
+            'code' =>'required'
         ]);
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select('id')->first()->id;
@@ -250,12 +250,17 @@ class IndexController extends CommonController
         $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select('watch_id')->first();
 
         if($watch_id){
+
             $watch_id=$watch_id->watch_id;
             $status=Watch::where('id',$watch_id)->select('status')->first()->status;
 
             if($status==1){
                 return response()->json(
                     $this->success_data($data,1,'已绑定腕表')
+                );
+            }else{
+                return response()->json(
+                    $this->success_data($data,0,'未绑定腕表')
                 );
             }
         }
@@ -530,11 +535,11 @@ class IndexController extends CommonController
     {
         $this->validate($request, [
             'code' => 'sometimes',
-            'status' => 'sometimes|integer',
+            'status' => 'sometimes',
         ]);
 
-        $code = intval($request->get('code'));
-        $status = intval($request->get('status'));
+        $code = $request->get('code');
+        $status = $request->get('status');
         try{
             $watchModel=new Watch();
             $list=$watchModel->getWatch($code,$status);
