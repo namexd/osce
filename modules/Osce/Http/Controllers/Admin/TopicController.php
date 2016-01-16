@@ -77,11 +77,13 @@ class TopicController extends CommonController
             'score.required'    =>  '评分必须',
         ]);
 
-        $content        = $request->get('content');
-        $score          = $request->get('score');
+        $content        = $request  ->get('content');
+        $score          = $request  ->get('score');
+        $answer          = $request ->get('description');
 
-        $formData = SubjectItem::builderItemData($content, $score);
+        $formData = SubjectItem::builderItemData($content, $score,$answer);
         $totalData   =  0;
+
         foreach($score as $index=>$socrdata)
         {
             foreach($socrdata as $key=>$socre)
@@ -93,11 +95,13 @@ class TopicController extends CommonController
                 $totalData  +=  $socre;
             }
         }
+
         $data   =   [
             'title'         =>  e($request  ->  get('title')),
             'description'   =>  e($request  ->  get('desc')),
             'score'         =>  $totalData,
         ];
+
         $subjectModel   =   new Subject();
         if($subjectModel->  addSubject($data,$formData)){
             return redirect()->route('osce.admin.topic.getList');
@@ -140,14 +144,14 @@ class TopicController extends CommonController
         $data   =   [
 //            'id'            =>  intval($request     ->  get('id')),
             'title'         =>  e($request          ->  get('title')),
-            'description'   =>  e($request          ->  get('description')),
+            'description'   =>  $request          ->  get('description'),
         ];
         $id     =   intval($request ->get('id'));
 
         $subjectModel   =   new Subject();
         try
         {
-            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
+            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'),$request->get('description'));
             if($subjectModel   ->  editTopic($id,$data,$formData))
             {
                 return redirect()->route('osce.admin.topic.getList');
@@ -216,9 +220,30 @@ class TopicController extends CommonController
         $subject    =   Subject::find($id);
 
         $items      =   $subject->items;
-
         $items      =   SubjectItem::builderItemTable($items);
-        return view('osce::admin.resourcemanage.edittopic',['item'=>$subject,'list'=>$items]);
+        $prointNum  =   1;
+        $optionNum  =   [
+            0=>0
+        ];
+        foreach($items as $item)
+        {
+            if($item->pid==0)
+            {
+                $prointNum++;
+            }
+            else
+            {
+                if(array_key_exists($item->pid,$optionNum))
+                {
+                    $optionNum[$item->pid]++;
+                }
+                else
+                {
+                    $optionNum[$item->pid]=0;
+                }
+            }
+        }
+        return view('osce::admin.resourcemanage.edittopic',['item'=>$subject,'list'=>$items,'prointNum'=>$prointNum,'optionNum'=>$optionNum]);
     }
 
     /**

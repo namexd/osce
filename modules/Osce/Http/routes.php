@@ -87,6 +87,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('topic/edit-topic', 	['uses'=>'TopicController@postEditTopic','as'=>'osce.admin.topic.postEditTopic']);
 		Route::post('topic/import-excel', 	['uses'=>'TopicController@postImportExcel','as'=>'osce.admin.topic.postImportExcel']);
 		Route::get('topic/toppic-tpl', 	['uses'=>'TopicController@getToppicTpl','as'=>'osce.admin.topic.getToppicTpl']);
+		Route::get('topic/del-topic', 	['uses'=>'TopicController@getDelTopic','as'=>'osce.admin.topic.getDelTopic']);
 
 		//病例
 		Route::post('case/delete', 	['uses'=>'CaseController@postDelete','as'=>'osce.admin.case.postDelete']);

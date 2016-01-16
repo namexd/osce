@@ -18,6 +18,7 @@
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'topic','del':'{{route('osce.admin.topic.getDelTopic')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -29,12 +30,14 @@
         </div>
     <form class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
+          <form method="post" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control">
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </span>
             </div>
+          </form>
 
             <table class="table table-striped" id="table-striped">
                 <thead>
@@ -52,7 +55,7 @@
                         <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{$item->description}}</td>
-                        <td>
+                        <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.topic.getEditTopic',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                             <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
@@ -76,4 +79,22 @@
         </div>
     </form>
 </div>
+<script>
+$(function(){
+    $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'get',
+                async:false,
+                url:"{{route('osce.admin.topic.getDelTopic')}}?id="+thisElement.parent().parent().parent().attr('value'),
+                success:function(data){
+                    location.reload();
+                }
+            })
+        });
+    })
+})
+</script>
 @stop{{-- 内容主体区域 --}}
