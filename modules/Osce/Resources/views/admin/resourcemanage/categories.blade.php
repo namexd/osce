@@ -19,7 +19,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增评分标准</h5>
+            <h5>新增科目</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -85,7 +85,6 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-                                {{--<button class="btn btn-white" type="submit">取消</button>--}}
                             </div>
                         </div>
                     </form>
