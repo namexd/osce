@@ -89,7 +89,8 @@ class Flows extends CommonModel
                         'serialnumber'      =>  $key,
                         'room_id'           =>  $room_id,
                         'flow_id'           =>  $result->id,
-                        'created_user_id'   =>  $user ->id
+                        'created_user_id'   =>  $user ->id,
+                        'exam_id'           =>  $exam_id
                     ];
 
                     if(!$test3 = ExamFlowRoom::create($examFlowRoom)){

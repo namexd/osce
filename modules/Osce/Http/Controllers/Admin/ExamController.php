@@ -1214,4 +1214,77 @@ class ExamController extends CommonController
         //将其传入对应的模型查询数据
         
     }
+
+    /**
+     *以考站为中心的考试安排着陆页
+     * @url GET /osce/admin/exam/change-student
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getStationAssignment(Request $request , Teacher $teacher)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+        $exam_id = $request->input('id');
+
+        //展示已经关联的考站和老师列表
+        $stationData = $teacher->stationTeacher($exam_id);
+
+        return view('osce::admin.exammanage.station_assignment', ['exam_id' => $exam_id, 'stationData' => $stationData]);
+    }
+
+    /**
+     *以考站为中心的考试安排逻辑处理页
+     * @url GET /osce/admin/exam/change-student
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
+    {
+        //验证
+        $this->validate($request, [
+            'teacher_id' => 'required|array',
+            'station_id' => 'required|array',
+            'exam_id' => 'required|integer'
+        ]);
+
+        //获取数据
+        $examId = $request->get('exam_id');
+        $stationIds = $request->get('station_id'); //所有的考站数据
+        $teacherIds = $request->get('teacher_id'); //所有的老师数据
+        //查看是新建还是编辑
+        if (ExamFlowStation::where('exam_id',$examId)->get()->isEmpty()) {  //若是为真，就说明是添加
+            $examFlowStation
+        }
+    }
 }
