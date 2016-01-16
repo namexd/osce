@@ -79,12 +79,13 @@ class Student extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
-
-            if (!$result = $this->where($this->table.'.id', '=', $student_id)->delete())
-            {
-                throw new \Exception('删除考生失败，请重试！');
+            $result = WatchLog::where('student_id', $student_id)->first();
+            if($result){
+                throw new \Exception('该考生已绑定，无法删除！');
             }
-
+            if (!$result = $this->where('id', $student_id)->delete()){
+                throw new \Exception('该考生已绑定，无法删除！');
+            }
             $connection->commit();
             return true;
 

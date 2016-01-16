@@ -366,29 +366,25 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getDelStudent(Request $request, Student $student)
+    public function postDelStudent(Request $request, Student $student)
     {
         //验证
         $this->validate($request, [
-            'id' => 'required|integer'
+            'id'        => 'required|integer',
         ]);
 
         try {
-            //获取id
-            $exam_id = $request->get('exam_id');
+            //获取student_id
             $student_id = $request->get('id');
-
             //进入模型逻辑
             $result = $student->deleteData($student_id);
 
-            if ($result !== true) {
-                throw new \Exception('删除考试失败，请重试！');
-            } else {
-                return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
+            if ($result === true) {
+                return $this->success_data(['删除成功！']);
             }
 
         } catch (\Exception $ex) {
-            return redirect()->back()->withError($ex);
+            return $this->fail($ex);
         }
     }
 

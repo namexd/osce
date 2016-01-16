@@ -1376,7 +1376,19 @@ function examinee_manage(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
         layer.alert('确认删除？',function(){
-            location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deleteUrl,
+                data:{id:sid},
+                success:function(data){
+                    if(data.code == 1){
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
+                }
+            })
         });
     })
 }
