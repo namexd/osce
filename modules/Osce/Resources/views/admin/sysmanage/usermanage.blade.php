@@ -62,7 +62,7 @@
                         <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}">
                             <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                         </a>
-                        <a href="javascript:void(0)" uid="{{$item->id}}"><span class="read state2"><i class="fa fa-trash-o fa-2x" uid="{{$item->id}}"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x" uid="{{$item->id}}"></i></span></a>
                     </td>
                 </tr>
                 @empty
@@ -84,16 +84,36 @@
 </div>
 <script>
     $(function(){
+        {{--$(".fa-trash-o").click(function(){--}}
+            {{--var thisElement=$(this);--}}
+
+            {{--layer.alert('确认删除？',function(){--}}
+                {{--$.ajax({--}}
+                    {{--type:'get',--}}
+                    {{--async:false,--}}
+                    {{--url:"{{route('osce.admin.user.getDelUser')}}?id="+thisElement.attr('uid'),--}}
+                    {{--success:function(data){--}}
+                        {{--location.reload();--}}
+                    {{--}--}}
+                {{--})--}}
+            {{--});--}}
+        {{--})--}}
+        //删除用户
         $(".fa-trash-o").click(function(){
             var thisElement=$(this);
-
+            var uid=thisElement.attr("uid");
             layer.alert('确认删除？',function(){
                 $.ajax({
-                    type:'get',
-                    async:false,
-                    url:"{{route('osce.admin.user.getDelUser')}}?id="+thisElement.attr('uid'),
+                    type:'post',
+                    async:true,
+                    url:'{{route('osce.admin.user.postDelUser')}}',
+                    data:{id:uid},
                     success:function(data){
-                        location.reload();
+                        if(data.code == 1){
+                            location.reload();
+                        }else {
+                            layer.alert(data.message);
+                        }
                     }
                 })
             });

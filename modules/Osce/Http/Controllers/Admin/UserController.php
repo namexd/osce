@@ -13,6 +13,7 @@ use Modules\Osce\Entities\Staff;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use App\Entities\User;
+use Auth;
 
 class UserController extends CommonController
 {
@@ -144,19 +145,24 @@ class UserController extends CommonController
         }
     }
 
-    public function getDelUser(Request $request){
+    public function postDelUser(Request $request){
         $this->validate($request,[
             'id'  =>  'required'
         ]);
         $id =   intval($request    ->  get('id'));
-        $user   =   User::find($id);
-        if($user->delete())
-        {
-            return redirect()->route('osce.admin.user.getStaffList');
-        }
-        else
-        {
-            return redirect()->back()->withErrors(new \Exception('删除失败'));
+        try{
+            $user   =   Auth::user();
+            if($user->id ==$id){
+                throw new \Exception('此为当前登录人的账号，无法删除自己！');
+            }
+            $user   =   User::find($id);
+            if($user->delete()){
+                return $this->success_data('删除成功！');
+            } else{
+                throw new \Exception('删除失败！');
+            }
+        } catch(\Exception $ex){
+            return $this->fail($ex);
         }
     }
 }
