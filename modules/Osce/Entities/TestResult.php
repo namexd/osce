@@ -54,19 +54,14 @@ class TestResult extends CommonModel
             if (empty($TestResultData)) {
                 throw new \Exception('没有找到考试新增数据');
             }
-            //$machine    =   Machine::create($machineData);
-            $TestResult = true;
-            if ($TestResult) {
-                $connection->commit();
-                return $testResult;
-            } else {
-                throw new   \Exception('新增考试资源失败');
-            }
+            $connection->commit();
+            return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
 
     }
+
 
 }

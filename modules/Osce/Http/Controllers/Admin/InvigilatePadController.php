@@ -11,20 +11,85 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamScore;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
+use Storage;
 
 class InvigilatePadController extends CommonController
 {
+    /**
+     * @param $files
+     * @param $params
+     * @param $date
+     * @param $testResultId
+     * @return static
+     * @throws \Exception
+     */
+    protected static function uploadFileBuilder($files, $date, array $params, $testResultId)
+    {
+        try {
+            //将上传的文件遍历
+            foreach ($files as $key => $file) {
+                //拼凑文件名字
+                $fileName = '';
+                //获取文件的MIME类型
+                $fileMime = $file->getMimeType();
+                foreach ($params as $param) {
+                    $fileName .= $param;
+                }
+                $fileName .= $file->getClientOriginalExtension(); //获取文件名的正式版
+
+                //取得保存路径
+                $savePath = public_path('osce/Attach/') . $fileMime . '/' . $date . '/' . $params['student_name'] . '/';
+                $savePath = realpath($savePath);
+
+                //如果没有这个文件夹，就新建一个文件夹
+                if (!file_exists($savePath)) {
+                    mkdir($savePath, 0755, true);
+                }
+
+                //将文件放到自己的定义的目录下
+                if (!$file->move($savePath, $fileName)) {
+                    throw new \Exception('文件保存失败！请重试！');
+                }
+
+                //生成附件url地址
+                $attachUrl = $savePath . $fileName;
+
+                //将要插入数据库的数据拼装成数组
+                $data = [
+                    'test_result_id' => $testResultId,
+                    'url' => $attachUrl,
+                    'type' => $fileMime,
+                    'name' => $fileName,
+                    'description' => $date . '-' . $params['student_name'],
+                ];
+
+                //将内容插入数据库
+                if (!$result = TestAttach::create($data)) {
+                    if (!Storage::delete($attachUrl)) {
+                        throw new \Exception('未能成功保存文件！');
+                    }
+                    throw new \Exception('附件数据保存失败');
+                }
+                return $result;
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 
     /**
      * 身份验证
@@ -60,10 +125,15 @@ class InvigilatePadController extends CommonController
         }else{
             $studentModel = new  Student();
             $studentData = $studentModel->studentList($teacher_id);
+            if($studentData){
+
+            }else{
+
+            }
 //            dd($studentData);
             $list = [];
             foreach ($studentData as $itme) {
-                $list[] = [
+                $list[]= [
                     'name' => $itme->name,
                     'code' => $itme->code,
                     'idcard' => $itme->idcard,
@@ -115,21 +185,13 @@ class InvigilatePadController extends CommonController
         $StandardModel  =   new Standard();
         $standardList   =   $StandardModel->ItmeList($station->subject_id);
         $temp=array();
-
         $data=array();
-
         //首先找pid为0的
-
         foreach($standardList as $v){
-
             if($v["pid"]==0){
-
                 $temp[]=$v;
-
             }
-
         }
-
         while($temp){
             $now = array_pop($temp);
                 //设置非顶级元素的level=父类的level+1
@@ -139,26 +201,16 @@ class InvigilatePadController extends CommonController
 
                         $now["level"]=$v["level"]+1;
                     }
-
                 }
             //找直接子类
-
             foreach($standardList as $v){
-
                 if($v["pid"]==$now["id"]){
-
                     $temp[]=$v;
-
                 }
-
             }
-
             //移动到最终结果数组
-
             array_push($data,$now);
-
         }
-
         echo json_encode($data);
         return $data;
 
@@ -254,14 +306,29 @@ class InvigilatePadController extends CommonController
           ];
             $TestResultModel  =new TestResult();
             $result= $TestResultModel->addTestResult($data);
-            //得到考试结果id
-            $ExamResultId =$result->id;
+          //得到考试结果id
+          $ExamResultId =$result->id;
+          //考站id
+          $stationId =$result->station_id;
+          //学生id
+          $studentId =$result->student_id;
+          //考试场次id
+          $ExamScreeningId = $result->exam_screening_id;
+          $array = [
+              'test_result_id'=>$ExamResultId,
+              'station_id'=>$stationId,
+              'student_id'=>$studentId,
+              'exam_screening_id'=>$ExamScreeningId,
+          ];
+          //调用照片上传方法，传入数据。
+           $this->postTestAttach($request, $array);
+
           //存入考试评分详情表
           $SaveEvaluate = $this->getSaveExamEvaluate($request,$ExamResultId);
 
           if($result){
               return response()->json(
-                  $this->success_data($result,1,'详情保存成功')
+                  $this->success_data(1,'详情保存成功')
               );
           }else{
               return response()->json(
@@ -271,10 +338,74 @@ class InvigilatePadController extends CommonController
 
       }
 
+    /**
+     * 照片附件的上传
+     * @method POST
+     * @url /osce/admin/invigilatepad/save-exam-result
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     station_id    考站id   (必须的)
+     * @param array $array
+     * @return view
+     * @throws \Exception
+     * @version 1.0
+     * @author jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date   2016-01-16  14:33
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postTestAttach(Request $request, Array $array)
+    {
+        try {
+            //获取考站、考生、和考试关联的id
+            list($stationId, $studentId, $examScreenId, $testResultId) = $array;
 
+            //根据ID找到对应的名字
+            $studentName = Student::findOrFail($studentId)->first()->name;
+            $stationName = Station::findOrFail($stationId)->first()->name;
+            $examName = ExamScreening::findOrFail($examScreenId)->ExamInfo->name;
 
+            //将参数拼装成一个数组
+            $params = [
+                'exam_name' => $examName,
+                'student_name' => $studentName,
+                'station_name' => $stationName,
+            ];
+            //获取当前日期
+            $date = date('Y-m-d');
 
+            //获取上传的文件,验证文件是否成功上传
+            if (!$request->hasFile('photo')) {
+                throw new \Exception('上传的照片不存在');
+            }
 
+            if ($request->hasFile('radio')) {
+                throw new \Exception('上传的音频不存在');
+            }
+
+            $photos = $request->file('photo');
+            $radios = $request->file('radio');
+
+            //判断照片上传中是否有出错
+            if (!$photos->isValid()) {
+                throw new \Exception('上传的照片出错');
+            }
+
+            if (!$radios->isValid()) {
+                throw new \Exception('上传的音频出错');
+            }
+
+            //拼装文件名
+            $resultPhoto[] = self::uploadFileBuilder($photos, $date, $params, $testResultId);
+            $resultRadio[] = self::uploadFileBuilder($radios, $date, $params, $testResultId);
+
+            $result = [$resultPhoto, $resultRadio];
+            return $result;
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 
 
     /**
