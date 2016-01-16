@@ -21,7 +21,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class PadController extends  CommonController{
     /**
-     *根据场所ID获取摄像机列表
+     *根据场所ID获取摄像机列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/room-vcr
      * @access public
@@ -50,7 +50,7 @@ class PadController extends  CommonController{
        }
 
     /**
-     *根据摄像机ID 获取摄像机设置信息
+     *根据摄像机ID 获取摄像机设置信息(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/vcr
      * @access public
@@ -79,7 +79,7 @@ class PadController extends  CommonController{
        }
 
     /**
-     *根据考场ID和考试ID获取考场和考站的摄像头列表
+     *根据考场ID和考试ID获取考场和考站的摄像头列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/student-vcr
      * @access public
@@ -116,7 +116,7 @@ class PadController extends  CommonController{
        }
 
     /**
-     *根据时间段和摄像机ID 获取标记点列表
+     *根据时间段和摄像机ID 获取标记点列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/timing-vcr
      * @access public
@@ -158,9 +158,9 @@ class PadController extends  CommonController{
        }
 
     /**
-     *候考提醒
+     *候考提醒(接口)
      * @method GET
-     * @url /user/
+     * @url api/1.0/private/osce/pad/write-student
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -182,9 +182,118 @@ class PadController extends  CommonController{
            $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
            $time=time();
            $examQueue=new ExamQueue();
-           $students=$examQueue->getStudent($time,$mode);
+          try {
+              $students = $examQueue->getStudent($time, $mode);
+              $students = $students->toArray();
+              return response()->json(
+                  $this->success_rows(1, 'success', $students->total(), config('msc.page_size'), $students->currentPage(), $students['data'])
+              );
+          }catch( \Exception $ex){
+              return response()->json(
+                  $this->fail($ex)
+              );
+          };
+       }
+
+//    /**
+//     *更新考前提醒
+//     * @method GET
+//     * @url api/1.0/private/osce/pad/write-remind
+//     * @access public
+//     *
+//     * @param Request $request post请求<br><br>
+//     * <b>post请求字段：</b>
+//     * * string        description      考前提醒(必须的)
+//     * * int           exam_id         考试Id(必须的)
+//     *
+//     * @return ${response}
+//     *
+//     * @version 1.0
+//     * @author zhouchong <zhouchong@misrobot.com>
+//     * @date ${DATE} ${TIME}
+//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+//     */
+//       public function getWriteRemind(Request $request){
+//           $this->validate($request,[
+//               'description'   => 'required',
+//               'exam_id'       => 'required|integer',
+//           ]);
+//           $description=$request->get('description');
+//           $exam_id=$request->get('exam_id');
+//
+//            $count=  Exam::where('id',$exam_id)->update([
+//                  'description'  =>$description
+//              ]);
+//            if($count>0) {
+//                return response()->json(
+//                    $this->success_data()
+//                );
+//            }
+//            return response()->json(
+//                $this->fail(new \Exception('更新考前提醒失败'))
+//            );
+//       }
+    /**
+     *根据考试id获取考试场所列表(接口)
+     * @method GET
+     * @url api/1.0/private/osce/pad/exam-room
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+       public function getExamRoom(Request $request){
+              $this->validate($request,[
+                  'exam_id'  =>'required|integer'
+              ]);
+              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get()->paginate(config('msc.page_size'));
+              $data=$examList->toArray();
            return response()->json(
-               $this->success_data($students,1,'success')
-           );
+               $this->success_rows(1,'success',$examList->total(),config('msc.page_size'),$examList->currentPage(),$data['data'])
+              );
+       }
+
+    /**
+     *根据考试id获取候考场所列表(接口)
+     * @method GET
+     * @url api/1.0/private/osce/pad/write-room
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+       public function getWriteRoom(Request $request){
+             $this->validate($request,[
+                 'exam_id'   =>'required|integer'
+             ]);
+             $examModel = new Exam();
+             $exam_id=$request->get('exam_id');
+         try{
+             $examList=$examModel->getWriteRoom($exam_id);
+             $data=$examList->toArray();
+               return response()->json(
+                   $this->success_rows(1,'success',$examList->total(),config('msc.page_size'),$examList->currentPage(),$data['data'])
+               );
+           }catch( \Exception $ex){
+                   return response()->json(
+                       $this->fail($ex)
+                   );
+               };
        }
 }

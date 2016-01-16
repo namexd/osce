@@ -197,12 +197,13 @@ class Student extends CommonModel
         })->leftjoin('station_teacher',function($join){
             $join ->on('exam_queue.station_id','=','station_teacher.station_id');
         })->where('station_teacher.user_id','=',$teacher_id)
-            ->where('student.status','=',1)
+            ->where('exam_queue.status','=',1)
             ->select([
                 'student.name as name',
                 'student.code as code',
                 'student.idcard as idcard',
-                'student.mobile as mobile'
+                'student.mobile as mobile',
+                'exam_queue.status as status'
             ])
             ->get();
     }

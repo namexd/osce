@@ -16,30 +16,21 @@
        	<a class="right header_btn nou clof header_a" href="#"></a>
     </div>
     <ul id="discussion_ul">
+		@foreach($data as $data)
+
     	<li>
-        	<a class="nou" href="#">
-        		<p class="font14 fontb clo3 p_title">2015年第3季度技能培训学生考前培训</p>
-        		<p class="font12 clo9 main_txt">临床技能中心10楼虚拟教学中心教室1</p>
-        		<p class="font12 clo9 main_txt">2015-11-22 12:30 ~ 2015-11-22 15:00</p>
+        	<a class="nou" href="{{ route('osce.wechat.getTrainDetail',array('id'=>$data['id']))  }}">
+        		<p class="font14 fontb clo3 p_title">{{  $data['name'] }}</p>
+        		<p class="font12 clo9 main_txt">{{  $data['address'] }}</p>
+        		<p class="font12 clo9 main_txt">{{  $data['begin_dt'] }} ~ {{  $data['end_dt'] }}</p>
         		<p class="font12 p_bottom">
-        			<span class="student_name">张三</span>
-        			<span class="clo9">3分钟前</span>
+        			<span class="student_name">{{ $data['author']->name }}</span>
+        			<span class="clo9">{{  $data['time'] }}</span>
         			<span class="right comment">已读&nbsp;100</span>
         		</p>
         	</a>
         </li>
-		<li>
-        	<a class="nou" href="#">
-        		<p class="font14 fontb clo3 p_title">2015年第3季度技能培训学生考前培训</p>
-        		<p class="font12 clo9 main_txt">临床技能中心10楼虚拟教学中心教室1</p>
-        		<p class="font12 clo9 main_txt">2015-11-22 12:30 ~ 2015-11-22 15:00</p>
-        		<p class="font12 p_bottom">
-        			<span class="student_name">张三</span>
-        			<span class="clo9">3分钟前</span>
-        			<span class="right comment">已读&nbsp;100</span>
-        		</p>
-        	</a>
-        </li>
+		@endforeach
     </ul>
 	<div class="">
 		<div class="pull-left">

@@ -95,7 +95,7 @@ class Exam extends CommonModel
                 'total'
             ])->orderBy('created_at', 'desc');
 
-            return $builder->paginate(10);
+            return $builder->paginate(config('msc.page_size'));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -263,7 +263,7 @@ class Exam extends CommonModel
         ]);
 
         $builder->orderBy('exam.begin_dt');
-        return $builder->paginate(10);
+        return $builder->paginate(config('msc.page_size'));
     }
 //查询今日考试
     public function getTodayList($startTime,$endtime){
@@ -316,5 +316,28 @@ class Exam extends CommonModel
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    //获取候考教室列表
+    public function getWriteRoom($exam_id){
+       $time=time();
+       try{
+       $builder=$this->Join('room','exam.id','=','exam_id');
+       $builder=$builder->whereRaw(
+               'unix_timestamp('.$this->table.'.begin_dt) < ?',
+        [
+                   $time
+               ]
+           );
+       $builder= $builder->select([
+           'room.id as room_id',
+           'room.name as room_name',
+           'exam.name as exam_name',
+       ])->get();
+        return $builder->paginate(config('msc.page_size'));
+       }catch (\Exception $ex){
+           throw $ex;
+       }
+
     }
 }

@@ -198,6 +198,7 @@ class ExamRoom extends CommonModel
 
     }
 
+    //获取考站摄像机信息
     public function getStionVcr($id,$room_id){
         try{
             $result = $this -> leftJoin('room_station', function($join){

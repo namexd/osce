@@ -98,7 +98,7 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     idcard        学生身份证号   (必须的)
+     * * string    id      老师id(必须的)
      *
      * @return view
      *
@@ -114,7 +114,7 @@ class InvigilatePadController extends CommonController
         $this->validate($request, [
             'id' => 'required|integer'
         ], [
-            'id.required' => '请老师PAD登陆'
+            'id.required' => '请检查PAD是否登陆成功'
         ]);
         $teacher_id = (int)$request->input('id');
         $teacherType =Teacher::where('id','=',$teacher_id)->select('type')->first()->type;
@@ -128,13 +128,14 @@ class InvigilatePadController extends CommonController
 //            dd($studentData);
             $list = [];
             foreach ($studentData as $itme) {
-                $list[] = [
+                $list[]= [
                     'name' => $itme->name,
                     'code' => $itme->code,
                     'idcard' => $itme->idcard,
                     'mobile' => $itme->mobile
                 ];
             }
+
         }
 
         dd($list);
@@ -180,21 +181,13 @@ class InvigilatePadController extends CommonController
         $StandardModel  =   new Standard();
         $standardList   =   $StandardModel->ItmeList($station->subject_id);
         $temp=array();
-
         $data=array();
-
         //首先找pid为0的
-
         foreach($standardList as $v){
-
             if($v["pid"]==0){
-
                 $temp[]=$v;
-
             }
-
         }
-
         while($temp){
             $now = array_pop($temp);
                 //设置非顶级元素的level=父类的level+1
@@ -204,26 +197,16 @@ class InvigilatePadController extends CommonController
 
                         $now["level"]=$v["level"]+1;
                     }
-
                 }
             //找直接子类
-
             foreach($standardList as $v){
-
                 if($v["pid"]==$now["id"]){
-
                     $temp[]=$v;
-
                 }
-
             }
-
             //移动到最终结果数组
-
             array_push($data,$now);
-
         }
-
         echo json_encode($data);
         return $data;
 
@@ -269,11 +252,11 @@ class InvigilatePadController extends CommonController
         $Save =ExamScore::create($data);
         if($Save){
             return response()->json(
-                $this->success_data(1,'详情保存成功')
+                $this->success_data(1,'评价保存成功')
             );
         }else{
             return response()->json(
-                $this->success_data(0,'详情保存失败')
+                $this->success_data(0,'评价保存失败')
             );
         }
 
@@ -319,14 +302,29 @@ class InvigilatePadController extends CommonController
           ];
             $TestResultModel  =new TestResult();
             $result= $TestResultModel->addTestResult($data);
-            //得到考试结果id
-            $ExamResultId =$result->id;
+          //得到考试结果id
+          $ExamResultId =$result->id;
+          //考站id
+          $stationId =$result->station_id;
+          //学生id
+          $studentId =$result->student_id;
+          //考试场次id
+          $ExamScreeningId = $result->exam_screening_id;
+          $array = [
+              'test_result_id'=>$ExamResultId,
+              'station_id'=>$stationId,
+              'student_id'=>$studentId,
+              'exam_screening_id'=>$ExamScreeningId,
+          ];
+          //调用照片上传方法，传入数据。
+           $this->postTestAttach($request, $array);
+
           //存入考试评分详情表
           $SaveEvaluate = $this->getSaveExamEvaluate($request,$ExamResultId);
 
           if($result){
               return response()->json(
-                  $this->success_data($result,1,'详情保存成功')
+                  $this->success_data(1,'详情保存成功')
               );
           }else{
               return response()->json(
@@ -406,10 +404,6 @@ class InvigilatePadController extends CommonController
     }
 
 
-
-
-
-
     /**
      *  查看现场视屏
      * @method GET
@@ -455,35 +449,5 @@ class InvigilatePadController extends CommonController
 
 
       }
-
-    /**
-     * 语音点评
-     * @method GET
-     * @url /osce/admin/invigilatepad/voice-prompt
-     * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string     station_id    考站id   (必须的)
-     *
-     * @return view
-     *
-     * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-      public  function getVoicePrompt(Request $request){
-          $this->validate($request,[
-              'exam_id'=>'required|integer',
-              'station_id'=>'required|integer',
-              'student_id'=>'required|integer',
-          ]);
-
-
-
-      }
-
-
-
 
 }

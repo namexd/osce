@@ -237,14 +237,14 @@ class IndexController extends CommonController
 
         $idCard=$request->get('id_card');
 
-        $student_id=Student::where('idcard',$idCard)->select('id')->first()->id;
+        $student_id=Student::where('idcard',$idCard)->select('id')->first();
 
         if(!$student_id){
            return response()->json(
                $this->success_rows(2,'未找到学生相关信息')
            );
         }
-
+        $student_id=$student_id->id;
         $data=array('code'=>$student_id);
 
         $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select('watch_id')->first();
@@ -543,7 +543,6 @@ class IndexController extends CommonController
         try{
             $watchModel=new Watch();
             $list=$watchModel->getWatch($code,$status);
-
             $data = [];
             foreach ($list as $item) {
                 $data[] = ['id' => $item->id,
@@ -556,7 +555,7 @@ class IndexController extends CommonController
             $row = [];
             foreach ($data as $itm) {
                 if ($itm['status'] == 1) {
-                    $studentId = ExamScreeningStudent::where('id', $itm['id'])->select('student_id')->first();
+                    $studentId = ExamScreeningStudent::where('watch_id', $itm['id'])->select('student_id')->first();
                     if (!$studentId) {
                         $row[] = [
                             'id' => $itm['id'],
