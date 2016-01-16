@@ -210,7 +210,7 @@ class Watch extends CommonModel implements MachineInterface
     }
 
     //返回全部数据
-    public function getWatch($code='',$status=''){
+    public function getWatch($code,$status){
         $builder=$this->select();
 
         if($code)
@@ -219,14 +219,14 @@ class Watch extends CommonModel implements MachineInterface
         }
         if($status )
         {
-
-            $builder =   $builder    ->  where('status','=',$status);
+            if($status==-1)
+            {
+                $builder =   $builder    ->  where('status','=',0);
+            }else{
+                $builder =   $builder    ->  where('status','=',$status);
+            }
         }
-        if($status==-1)
-        {
 
-            $builder =   $builder    ->  where('status','=',0);
-        }
         return $builder->get();
     }
 }
