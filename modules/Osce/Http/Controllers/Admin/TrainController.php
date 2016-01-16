@@ -48,9 +48,9 @@ class TrainController extends  CommonController{
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
 
-        $list=InformTrain::select()->orderBy('begin_dt')->get();
+        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
 
-        return view('osce::wechat.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
+        return view('osce::admin.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
 
     }
 
