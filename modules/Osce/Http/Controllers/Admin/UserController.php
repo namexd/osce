@@ -165,4 +165,17 @@ class UserController extends CommonController
             return $this->fail($ex);
         }
     }
+    public function getLogout() {
+
+        if(Auth::check())
+        {
+            try{
+                Auth::logout();
+            } catch (\Exception $ex){
+                return redirect()->route('osce.admin.getIndex')->with('message','你现在已经退出登录了!');
+            }
+        }
+        return redirect()->route('osce.admin.getIndex')->with('message','你现在已经退出登录了!');
+    }
+
 }

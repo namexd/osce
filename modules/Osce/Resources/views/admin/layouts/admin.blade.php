@@ -54,8 +54,11 @@
                     <i class="fa fa-bell"></i>
                     <i class="fa fa-gear"></i>
                 </button>
-
-                <a href="login.html" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+                @if(Auth::user())
+                    <a href="{{route('osce.admin.user.getLogout')}}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+                @else
+                    <a href="{{route('osce.admin.getIndex')}}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 登录</a>
+                @endif
             </div>
             <div class="row J_mainContent" id="content-main">
 
