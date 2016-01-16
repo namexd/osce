@@ -128,6 +128,7 @@ class Common
         return  $user->save();
     }
     static public function sendRegisterEms($mobile,$password){
-
+        $sender=\App::make('messages.sms');
+        $sender->send($mobile,'恭喜你已经成功注册OSCE考试系统，请使用手机号进行登录，登录密码:'.$password.',请不要轻易将密码告诉他人【敏行医学】');
     }
 }
