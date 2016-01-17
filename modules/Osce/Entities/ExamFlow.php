@@ -33,6 +33,10 @@ class ExamFlow extends CommonModel
     public function examFlowRoomRelation(){
         return $this->hasOne('\Modules\Osce\Entities\ExamFlowRoom','flow_id','flow_id');
     }
+
+    public function examFlowStationRelation(){
+        return $this->hasOne('\Modules\Osce\Entities\ExamFlowStation','flow_id','flow_id');
+    }
     public function flow(){
         return $this->hasOne('\Modules\Osce\Entities\Flows','id','flow_id');
     }

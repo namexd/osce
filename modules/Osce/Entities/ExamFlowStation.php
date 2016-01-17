@@ -26,6 +26,9 @@ class ExamFlowStation extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamQueue','station_id','station_id');
     }
 
+    public function station(){
+        return $this->hasOne('\Modules\Osce\Entities\Station','id','station_id');
+    }
     public function createExamAssignment($examId, array $stationIds = [] , array $teacherIds = [])
     {
         //将数据插入各表，使用事务
