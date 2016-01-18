@@ -293,7 +293,7 @@ class ExamController extends CommonController
             'sequence_cate'  => $request  ->  get('sequence_cate'),
             'sequence_mode'  => $request  ->  get('sequence_mode'),
         ];
-
+        
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
