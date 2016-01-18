@@ -69,7 +69,7 @@
                          <td>{{ $item['student_name'] }}</td>
                          <td>{{ $item->userInfo->gender }}</td>
                          <td>{{ $item['code'] }}</td>
-                         <td>{{ $item['idCard'] }}</td>
+         @                <td>{{ $item['idCard'] }}</td>
                          <td>{{ $item['mobile'] }}</td>
                      </tr>
                    @endforeach

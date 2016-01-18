@@ -568,6 +568,80 @@ class ExamController extends CommonController
         }
     }
 
+    public function getEidtExaminee(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+        ]);
+
+        $id =   $request    ->  get('id');
+
+        $student    =   Student::find($id);
+
+        return view('osce::admin.exammanage.examinee_edit', ['item' => $student]);
+    }
+
+    public function postEditExaminee(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'code'          =>  'somtimes',
+            'gender'        =>  'required',
+            'mobile'        =>  'required',
+            'description'   =>  'somtimes',
+            'images_path'   =>  'required',
+        ],[
+            'name.required'         =>  '姓名必填',
+            'idcard.required'       =>  '身份证号必填',
+            'mobile.required'       =>  '手机号必填',
+            'images_path.required'  =>  '请上传照片',
+        ]);
+        $id =   $request->get('id');
+        $student    =   Student::find($id);
+        $images     =   $request->get('images_path');
+        $data   =   [
+            'name'          =>  $request->get('name'),
+            'idcard'        =>  $request->get('idcard'),
+            'mobile'        =>  $request->get('mobile'),
+            'code'          =>  $request->get('code'),
+            'avator'        =>  $images[0],
+            'description'   =>  $request->get('description'),
+        ];
+
+        try{
+            if($student)
+            {
+                foreach($data as $feild => $value)
+                {
+                    $student->  $feild  =   $value;
+                }
+
+                if($student->save())
+                {
+                    $user   =   $student->userInfo;
+                    $user   ->  gender  =$request->get('gender');
+                    if(!$user->save())
+                    {
+                        throw new \Exception('用户信息修改失败');
+                    }
+                    return redirect()->route('osce.admin.exam.getExamineeManage',['id'=>$student->exam_id]);
+                }
+                else
+                {
+                    throw new \Exception('考生信息修改失败');
+                }
+
+            }
+            else
+            {
+                throw new \Exception('没有找到该考生');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex);
+        }
+    }
     /**
      * Excel导入考生
      * @api GET /osce/admin/exam/getImportStudent
