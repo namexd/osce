@@ -42,6 +42,7 @@ class Staff extends CommonModel
      *
      */
     public function getList(){
+
         return $this    ->  paginate(config('osce.page_size'));
     }
 }

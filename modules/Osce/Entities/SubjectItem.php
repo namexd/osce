@@ -57,8 +57,9 @@ class SubjectItem extends CommonModel
             $data   =   [
                 'subject_id'        =>  $subject->id,
                 'content'           =>  $point['content'],
-                'order'             =>  $point['order'],
+                'sort'             =>  $point['sort'],
                 'score'             =>  $point['score'],
+               // 'answer'             =>  $point['answer'],
                 'created_user_id'   =>  $user->id,
                 'pid'               =>  0,
                 'level'             =>  1,
@@ -79,8 +80,9 @@ class SubjectItem extends CommonModel
             $data   =   [
                 'subject_id'        =>  $subject->id,
                 'content'           =>  $point['content'],
-                'order'             =>  $point['order'],
+                'sort'             =>  $point['sort'],
                 'score'             =>  $point['score'],
+                'answer'             =>  $point['answer'],
                 'created_user_id'   =>  $user->id,
                 'pid'               =>  $parent->id,
                 'level'             =>  $level,
@@ -114,33 +116,33 @@ class SubjectItem extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    static public function builderItemData($content,$score){
+    static public function builderItemData($content,$score,$answer){
         $data   =   [];
-        foreach($content as $prointIndex    =>  $item)
-        {
+        foreach($content as $prointIndex => $item){
             $child  =   [];
             $itemScore  =   $score[$prointIndex];
-            foreach($item as $contentIndex  =>  $content)
-            {
-                if($contentIndex=='title')
-                {
+            $itemAnswer  =   $answer[$prointIndex];
+            foreach($item as $contentIndex  =>  $content){
+                if($contentIndex=='title'){
                     continue;
                 }
-                $content    =   [
+                $contentData    =   [
                     'content'   =>  $content,
                     'score'     =>  $itemScore[$contentIndex],
-                    'order'     =>  $contentIndex,
+                    'sort'      =>  $contentIndex,
+                    'answer'    =>  $itemAnswer[$contentIndex]
                 ];
-                $child[]=$content;
+                $child[]=$contentData;
             }
             $item   =   [
                 'content'   =>  $item['title'],
                 'score'     =>  $itemScore['total'],
-                'order'     =>  $prointIndex,
+                'sort'      =>  $prointIndex,
                 'child'     =>  $child
             ];
             $data[]=$item;
         }
+
         return $data;
     }
 
@@ -176,7 +178,7 @@ class SubjectItem extends CommonModel
             $data[]     =   $item;
             $childItem  =   $child[$item->id];
 
-            $indexArray =   array_pluck($childItem,'order');
+            $indexArray =   array_pluck($childItem,'sort');
             array_multisort($indexArray, SORT_ASC, $childItem);
 
             foreach($childItem as $chilren)

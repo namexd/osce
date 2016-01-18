@@ -38,35 +38,35 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
-                        	<label class="control-label">{{ $data['name']  }}</label>
+                        	<p class="form-control-static">{{ $data['name']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训地点:</label>
                         <div class="col-sm-10">
-                           	<label class="control-label">{{ $data['address']  }}</label>
+                        	<p class="form-control-static">{{ $data['address']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10">
-                        	<label class="control-label">{{ $data['begin_dt']  }}</label>
+                        	<p class="form-control-static">{{ $data['begin_dt']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">结束时间:</label>
                         <div class="col-sm-10">
-                        	<label class="control-label">{{ $data['end_dt']  }}</label>
+                        	<p class="form-control-static">{{ $data['end_dt']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训讲师:</label>
                         <div class="col-sm-10">
-                            <label class="control-label">{{ $data['teacher']  }}</label>
+                        	<p class="form-control-static">{{ $data['teacher']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

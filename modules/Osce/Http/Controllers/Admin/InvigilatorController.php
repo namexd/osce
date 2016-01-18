@@ -11,7 +11,9 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\User;
 use App\Repositories\Common;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Invigilator;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -156,6 +158,9 @@ class InvigilatorController extends CommonController
             'moblie.required'   =>  '监考教师手机必填'
         ]);
         $user   =   Auth::user();
+        if(empty($user)){
+            throw new \Exception('未找到当前操作人信息');
+        }
         $data   =   [
             'name'              =>  e($request->get('name')),
             'type'              =>  intval($request->get('type')),
@@ -163,24 +168,20 @@ class InvigilatorController extends CommonController
             'code'              =>  e($request->get('code')),
             'case_id'           =>  intval($request->get('case_id')),
             'status'            =>  1,
-            'create_user_id'    => $user->id
+            'create_user_id'    =>  $user->id,
+            'role_id'           =>  config('osce.invigilatorRoleId',1)
         ];
-
+//        'spRoleId'		=>	4,
+//	'invigilatorRoleId'	=>	1,
         $Invigilator    =   new Teacher();
-        try
-        {
-            if($Invigilator    ->  addInvigilator($data))
-            {
+        try{
+            if($Invigilator    ->  addInvigilator($data)){
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -221,9 +222,11 @@ class InvigilatorController extends CommonController
             'mobile.required'   =>  '监考教师手机必填',
             'case_id.required'  =>  '监考教师病例必填'
         ]);
-        try
-        {
+        try{
             $user   =   Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
             $data   =   [
                 'name'              =>  e($request->get('name')),
                 'type'              =>  intval($request->get('type')),
@@ -231,22 +234,18 @@ class InvigilatorController extends CommonController
                 'code'              =>  e($request->get('code')),
                 'case_id'           =>  intval($request->get('case_id')),
                 'status'            =>  1,
-                'create_user_id'    => $user->id
+                'create_user_id'    =>  $user->id,
+                'role_id'           =>  config('osce.spRoleId',4)
             ];
 
             $Invigilator    =   new Teacher();
-            if($Invigilator    ->  addInvigilator($data))
-            {
+            if($Invigilator ->  addInvigilator($data)){
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -353,8 +352,10 @@ class InvigilatorController extends CommonController
             $teacherModel   =   new Teacher();
             $name           =   e($request->get('name'));
             $mobile         =   e($request->get('mobile'));
-            $type=Teacher::where('id',$id)->select('type')->first()->type;
-            if($teacherModel    ->  editInvigilator($id,$name,$mobile,$type))
+            $type           =   e($request->get('type'));
+//            $type = Teacher::where('id',$id)->select('type')->first()->type;
+
+            if($result = $teacherModel ->  editInvigilator($id,$name,$mobile,$type))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             }
@@ -515,25 +516,24 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getDelInvitation(Request $request){
+    public function postDelInvitation(Request $request){
         $id             =   $request    ->  get('id');
         try{
             if(!is_null($id))
             {
-
-                    if(!Teacher::where('id',$id)->delete())
-                    {
-                        throw new \Exception('删除用户失败,请检查次教务人员是否已在在其他考试中已用了');
-                    }
-                return redirect()->back();
-            }
-            else
-            {
+                if(StationTeacher::where('user_id', $id)->first() || ExamSpTeacher::where('teacher_id',$id)->first()){
+                    throw new \Exception('该老师已被关联，无法删除！');
+                }
+                if(!Teacher::where('id',$id)->delete()){
+                    throw new \Exception('删除老师失败，请重试！');
+                }
+                return $this->success_data('删除成功！');
+            } else {
                 throw new \Exception('没有找到该老师的相关信息');
             }
         }
         catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex);
+            return $this->fail($ex);
         }
     }
 
@@ -601,6 +601,26 @@ class InvigilatorController extends CommonController
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
         }
+    }
+
+    /**
+     * 查询老师是否已经存在(监,巡考老师,sp老师) 接口
+     * @api GET /osce/admin/invigilator/postSelectTeacher
+     *
+     */
+    public function postSelectTeacher(Request $request){
+        $this->validate($request,[
+            'moblie'    =>  'required'
+        ]);
+        $moblie = $request  ->get('moblie');
+        $user = User::where('username', $moblie)->first();
+        if($user){
+            $result = Teacher::where('id', $user->id)->first();
+            if($result){
+                return json_encode(1);
+            }
+        }
+        return json_encode(0);
     }
 
 }
