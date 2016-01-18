@@ -229,6 +229,18 @@ function booking_examine_other(){
 }
 //实验室预约记录查看页面
 function lab_booking(){
+    //alert('qqq');
+    //$('#fm').delegate('.btn-pl','click',function(){
+    //    alert();
+    //});
+    $('.sub').click(function(){
+
+        $('.type').each(function(){
+            if($(this).hasClass('.check')){
+                alert($(this).children('input').val());
+            }
+        });
+    });
     //            获取当前时间
     var d=new Date();
     var year= d.getFullYear();
@@ -263,5 +275,27 @@ function lab_booking(){
     $(".teacher").click(function(){
         $("#stu_from").hide();
         $("#teacher_from").show();
+        var id = $(this).attr('data-id');
+        if($(this).attr('datatype') == 1){
+            $('.claue').remove();
+        }
+        $.ajax({
+            type: "GET",
+            url: "/msc/admin/laboratory/lab-detail",
+            data: {id:id},
+            success: function(msg){
+
+                $('input[name=name]').val(msg.lname);
+                $('input[name=address]').val(msg.localname+' 教学楼 '+msg.floor+'楼 '+msg.lcode);
+                $('input[name=bookingTime]').val(msg.apply_time);
+                $('input[name=timeInterval]').val(msg.begintime+'~'+msg.endtime);
+                $('input[name=teaching]').val(msg.course_name);
+                $('input[name=number]').val(msg.total);
+                $('input[name=bookingPerson]').val(msg.user.name);
+                $('.detail').val(msg.description);
+                $('input[name=applyTime]').val(msg.created_at);
+            }
+        });
     })
+
 }

@@ -11,6 +11,7 @@
         .add_main .form-group input {padding-left:100px;}
         #now_borrow .submit_box{ top: 100px;}
         .form-control[readonly]{background-color: #fff;}
+        .help-block{padding-left: 100px;}
     </style>
 @stop
 @section('only_head_js')
@@ -31,78 +32,14 @@
 
 
     <script type="text/javascript">
-        $(function () {
-            var Take = [];
-            $('#Take').find('p').each(function(){
-                var data = [];
-                var time = $(this).find('span:first').html().split("-");
-                data['begintime'] = (new Date("2016-12-11 "+time[0]+":00")).getTime()/1000;
-                data['endtime'] = (new Date("2016-12-11 "+time[1]+":00")).getTime()/1000;
-                data['name'] = $(this).find('span:last').html();
-                console.log(data);
-                Take.push(data);
-            })
-            var currYear = (new Date()).getFullYear();
-            var opt={};
-            opt.date = {preset : 'date'};
-            //opt.datetime = { preset : 'datetime', minDate: new Date(2012,3,10,9,22), maxDate: new Date(2014,7,30,15,44), stepMinute: 5  };
-            opt.datetime = {preset : 'datetime'};
-            opt.time = {preset : 'time'};
-            opt.default = {
-                theme: 'android-ics light', //皮肤样式
-                display: 'bottom',//显示方式
-                mode: 'scroller', //日期选择模式
-                lang:'zh',
-            };
 
-            var optTime = $.extend(opt['time'], opt['default']);
-
-            $("#begintime").mobiscroll(optTime).time(optTime);
-            $("#endTime").mobiscroll(optTime).time(optTime);
-
-            $('#endTime').change(function(){
-                if($('#startTime').val()){
-                    console.log(format(Take[0]['begintime']));
-                }
-            })
-
-            $('#startTime').change(function(){
-                if($('#endTime').val()){
-
-                }
-            })
-
-            function format(shijianchuo)
-            {
-//shijianchuo是整数，否则要parseInt转换
-                var time = new Date(shijianchuo);
-                var y = time.getFullYear();
-                var m = time.getMonth()+1;
-                var d = time.getDate();
-                var h = time.getHours();
-                var mm = time.getMinutes();
-                var s = time.getSeconds();
-                return y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm)+':'+add0(s);
-            }
-            function add0(m){return m<10?'0'+m:m }
-
-        });
 
     </script>
     <!-- E 可根据自己喜好引入样式风格文件 -->
 @stop
 
 @section('content')
-    <?php
-    $errorsInfo =(array)$errors->getMessages();
-    if(!empty($errorsInfo))
-    {
-        $errorsInfo = array_shift($errorsInfo);
-        echo '<pre>';
-        var_dump($errorsInfo);die;
-    }
 
-    ?>
     <input type="hidden" id="parameter" value="{'pagename':'booking_teacher_ordinary_form'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
@@ -148,23 +85,25 @@
             </div>
         </div>
     </div>
-    <form action="{{route('msc.Laboratory.ApplyLaboratoryOp')}}" method="post" id="myform">
+    <div class="add_main">
+        <div class="form-group">
+            <label for="">开始使用</label>
+            <input type="text" class="form-control" id="begintime_set" name="begintime" value="">
+        </div>
+        <div class="form-group">
+            <label for="">结束使用</label>
+            <input type="text"  class="form-control"  id="endTime_set" name="endtime"  value="">
+        </div>
+    </div>
+    <form action="{{route('msc.Laboratory.ApplyLaboratoryOp')}}" method="post" id="booking_teacher_form">
         <input name="date_time" value="{{ $data['ApplyTime']}}" type="hidden"/>
         <input name="lab_id" value="{{ $data['LaboratoryInfo']['id']}}" type="hidden"/>
+        <input type="hidden"  id="begintime" name="begintime" value="">
+        <input type="hidden"  id="endtime" name="endtime" value="">
         <div class="add_main">
             <div class="form-group">
-                <label for="">开始使用</label>
-
-                <input type="text" class="form-control" name="begintime" id="begintime" readonly="" class="">
-
-            </div>
-            <div class="form-group">
-                <label for="">结束使用</label>
-                <input type="text"  class="form-control" name="endtime" id="endTime" readonly="" class="">
-            </div>
-            <div class="form-group">
                 <label for="">教学课程</label>
-                <input type="text" class="form-control" value="" name="course_name">
+                <input type="text" class="form-control"  name="course_name" value="">
             </div>
             <div class="form-group">
                 <label for="">学生人数</label>
@@ -176,7 +115,7 @@
             <div class="form-group">
                 <textarea name="description" class=" form-control textarea1" ></textarea>
             </div>
-            <input class="btn2 mart_10 marb_10" type="submit" value="提交预约">
+            <input class="btn2 mart_10 marb_10"  type="submit" value="提交预约">
         </div>
     </form>
 

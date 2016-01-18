@@ -209,36 +209,111 @@ function booking_teacher_ordinary_form(){
     $(".submit_box button").click(function () {
         get_layer();
     })
+    /*课程人数最少为1*/
     var $stu_num=$(".stu_num");
     $stu_num.change(function(){
         if($stu_num.val()<=0){
             $stu_num.val("1");
         }
     });
+    /*选择时间段插件*/
+    var opt={};
+    opt.date = {preset : 'date'};
+    opt.datetime = {preset : 'datetime'};
+    opt.time = {preset : 'time'};
+    opt.default = {
+        theme: 'android-ics light', //皮肤样式
+        display: 'bottom',//显示方式
+        mode: 'scroller', //日期选择模式
+        lang:'zh',
+    };
+    var optTime = $.extend(opt['time'], opt['default']);
+    $("#begintime_set").mobiscroll(optTime).time(optTime);
+    $("#endTime_set").mobiscroll(optTime).time(optTime);
+    /*验证时间段是否被选中*/
+    var Take = [];
+    $('#Take').find('p').each(function(){
+        var data = [];
+        var time = $(this).find('span:first').html().split("-");
+        data['begintime'] =time[0].replace(":","").toString();
+        data['endtime'] = time[1].replace(":","").toString();
+        data['name'] = $(this).find('span:last').html();
+        Take.push(data);
+    })
+    var beginTime;
+    var endTime;
+    $('#begintime_set').change(function(){
+        beginTime= $(this).val().replace(":","").toString();
+        $(Take).each(function () { //循环判定 开始时间是否在已选定的时间段内
+            if (beginTime>=this.begintime&&beginTime<=this.endtime){
+                $.alert({
+                    title: '提示：',
+                    content: '您选择的时间段已被占用，请重新选择其他时间段！',
+                    confirmButton: '确定',
+                });
+                $('#begintime_set').val("");
+            }else{
+                //$("#begintime").parents().addClass("has-success").removeClass("has-error");
+                //$("#begintime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
+                //$("#begintime").next().next("small").hide();
+                $("#begintime").val($('#begintime_set').val());
+            }
+        })
+    })
+
+    $('#endTime_set').change(function(){
+         endTime= $(this).val().replace(":","").toString();
+        $(Take).each(function () { //循环判定 结束时间时间是否在已选定的时间段内
+            if (endTime>=this.begintime&&endTime<=this.endtime){
+                $.alert({
+                    title: '提示：',
+                    content: '您选择的时间段已被占用，请重新选择其他时间段！',
+                    confirmButton: '确定',
+                });
+                $('#endTime_set').val("");
+                return false;
+            }else if(endTime<=beginTime){
+                $.alert({
+                    title: '提示：',
+                    content: '结束时间必须晚于开始时间！',
+                    confirmButton: '确定',
+                });
+                $('#endTime_set').val("");
+                return false;
+            }
+            else{
+                //$("#endTime").parents().addClass("has-success").removeClass("has-error");
+                //$("#endTime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
+                //$("#endTime").next().next("small").hide();
+                $("#endtime").val($('#endTime_set').val());
+            }
+        })
+    })
+
+
     //表单验证
-    $("#myform").bootstrapValidator({
+    $("#booking_teacher_form input").focus(function(){
+        if(!beginTime||!endTime){
+            $.alert({
+                title: '提示：',
+                content: '请先选择使用时间段！',
+                confirmButton: '确定',
+            });
+        }
+
+    })
+    $("#booking_teacher_form").bootstrapValidator({
         message: 'This value is not valid',
-        feedbackIcons: {
-            /*输入框不同状态，显示图片的样式*/
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {/*验证*/
-            time:{
-                message: 'The hospital is not valid',
-                validators: {
-                    notEmpty: {
-                        /*非空提示*/
-                        message: '使用时段不能为空'
-                    }
-                }
-            },
             course_name: {
                 message: 'The hospital is not valid',
                 validators: {
-                    notEmpty: {
-                        /*非空提示*/
+                    notEmpty: {/*非空提示*/
                         message: '课程名不能为空'
                     }
                 }
@@ -246,8 +321,7 @@ function booking_teacher_ordinary_form(){
             total: {
                 message: 'The hospital is not valid',
                 validators: {
-                    notEmpty: {
-                        /*非空提示*/
+                    notEmpty: {/*非空提示*/
                         message: '学生人数不能为空'
                     }
                 }
@@ -265,9 +339,8 @@ function booking_teacher_ordinary_form(){
                     message: '申请原因不得超过512个字符'
                 }
             }
-
         }
-    });
+    })
     /*日期控件修改*/
 
 }

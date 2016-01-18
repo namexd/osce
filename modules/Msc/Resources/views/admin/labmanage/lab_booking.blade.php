@@ -17,7 +17,7 @@
     <input type="hidden" id="parameter" value="{'pagename':'lab_booking'}"/>
 	<div class="wrapper wrapper-content animated fadeInRight">
 		<div class="row table-head-style1">
-            <form action="" method="get">
+            <form action="" method="get" id="fm">
                 <div class="col-xs-3">
                     <form action="" method="get">
                         <div class="laydate_div">
@@ -27,19 +27,20 @@
                 </div>
                 <div class="col-xs-9">
                     <label class="check_label checkbox_input check_one mart_5">
-                        <div class="check_real check_icon display_inline marl_10 mart_3" ></div>
-                        <input type="hidden" name="" value="">
+                        <div class="check_real check_icon display_inline marl_10 mart_3 type" ></div>
+                        <input type="hidden" name="type1" value="1">
                         <span class="right text-indent clof font14">开放实验室</span>
                     </label>
                     <label class="check_label checkbox_input check_one mart_5">
-                        <div class="check_real check_icon display_inline marl_10 mart_3" ></div>
-                        <input type="hidden" name="" value="">
+                        <div class="check_real check_icon display_inline marl_10 mart_3 type" ></div>
+                        <input type="hidden" name="type2" value="2">
                         <span class="right text-indent clof font14">普通实验室</span>
                     </label>
-                    <button class="btn btn-success btn-pl marl_10" type="submit" style="margin-top: -10px">查询</button>
+                    <button class="btn btn-success btn-pl marl_10 sub" type="button" style="margin-top: -10px">查询</button>
                 </div>
             </form>
 		</div>
+
         <div class="ibox float-e-margins">
             <div class="container-fluid ibox-content">
                 @if(@$Laboratory['data'])
@@ -47,22 +48,33 @@
                 <div class="col-md-6 marb_25">
                     <div class="show_box overflow">
                         <div class="w_40 left" >
-                            <p class="font14 weight">{{$v['name']}}</p>
-                            <p>{{$v['lname']}} {{$v['floor']}}楼 {{$v['code']}}</p>
+                            <p class="font14 weight">{{@$v['name']}}</p>
+                            <p>{{@$v['lname']}} {{@$v['floor']}}楼 {{@$v['code']}}</p>
                         </div>
                         <div class="w_60 left padl_20 border_left">
-                            @if(@$v['open_plan'])
-                                @foreach($v['open_plan'] as $plan)
+                            @if(@$type == 2)
+                                @foreach(@$v['open_plan'] as $plan)
+                                    @if(@$plan['user_type'] == 1)
                                     <div class="marb_10">
-                                        <span>{{$plan['begintime']}}-{{$plan['endtime']}}</span>
-                                        <span class="marl_10"> @if($plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
+                                        <span>{{@$plan['begintime']}}-{{@$plan['endtime']}}</span>
+                                        <span class="marl_10"> @if(@$plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{@$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
                                     </div>
+
+                                    @else
+                                        <div class="marb_10">
+                                            <span>{{@$plan['begintime']}}-{{@$plan['endtime']}}</span>
+                                            <span class="marl_10"><a href="" class="font16 blue teacher" datatype="{{@$plan['user_type']}}" data-id="{{@$plan['apply_id']}}" data-toggle="modal" data-target="#myModal">{{@$plan['apply_name']}} {{@$plan['course_name']}} 课程使用</a></span>
+                                        </div>
+                                    @endif
+
                                 @endforeach
                             @else
-                                <div class="marb_10">
-                                    <span>{{$plan['lab_apply']['begintime']}}-{{$plan['lab_apply']['endtime']}}</span>
-                                    <span class="marl_10"> @if($plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
-                                </div>
+                                @foreach($v['lab_apply'] as $apply)
+                                    <div class="marb_10">
+                                        <span>{{@$apply['begintime']}}-{{@$apply['endtime']}}</span>
+                                        <span class="marl_10"><a href="" class="font16 blue teacher" datatype="{{@$apply['type']}}" data-id="{{@$apply['id']}}" data-toggle="modal" data-target="#myModal">{{@$apply['teacher']['name']}} {{@$apply['course_name']}} 课程使用</a></span>
+                                    </div>
+                                @endforeach
                             @endif
                             {{--<div class="marb_10">--}}
                                 {{--<span>8:00-10:00</span>--}}
@@ -183,7 +195,7 @@
                 <input type="text" class="form-control name add-name" name="timeInterval" value="8:00-10:00" disabled="disabled"/>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group claue">
             <label class="col-sm-3 control-label">教学课程</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control name add-name" name="teaching" value="导尿术" disabled="disabled"/>
@@ -204,7 +216,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">备注</label>
             <div class="col-sm-9">
-                <textarea class="form-control add-name" disabled="disabled" name="detail">需要20个假体模型需要20个假体模型需要20个假体模型需要20个假体模型需要20个假体模型需要20个假体模型</textarea>
+                <textarea class="form-control add-name detail" disabled="disabled" name="detail">需要20个假体模型需要20个假体模型需要20个假体模型需要20个假体模型需要20个假体模型需要20个假体模型</textarea>
             </div>
         </div>
         <div class="form-group">

@@ -576,7 +576,21 @@ class LaboratoryController extends MscController
         $keyword = Input::get('keyword') ? Input::get('keyword') : '';
         $type = Input::get('type') ? Input::get('type') : 1;
         $user = Auth::user();
-        $LabOrderList = $LabApply->get_check_list($keyword, $type, $user->id);
+        $role = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
+        $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',@$role->role_id)->first();
+
+        if($role_name){
+            if($role_name->name == "超级管理员"){
+                $id = '';
+            }else{
+                $id = $user->id;
+            }
+        }else{
+            $id = $user->id;
+        }
+        //$this->start_sql(1);
+        $LabOrderList = $LabApply->get_check_list($keyword, $type,$id);
+        //$this->end_sql(1);
         foreach ($LabOrderList as $v) {
             $v->address = $v->labname . $v->floor . '楼' . $v->code;
             if (empty($v->begintime) && empty($v->endtime)) {
@@ -790,6 +804,7 @@ class LaboratoryController extends MscController
     {
         $id = Input::get('id');
         $laborderdetail = $LabApply->getonelaborderdetail($id);
+        //dd($laborderdetail);
         if (empty($laborderdetail->begintime) && empty($laborderdetail->endtime) && !empty($laborderdetail->PlanApply)) {
             foreach ($laborderdetail->PlanApply as $plan) {
                 @$laborderdetail->playdate .= date('H:i', strtotime($plan->OpenPlan->begintime)) . ' ~ ' . date('H:i', strtotime($plan->OpenPlan->endtime)) . ' , ';
@@ -798,8 +813,8 @@ class LaboratoryController extends MscController
 
 
         } else {
-            $laborderdetail->begintime = date('H:i', strtotime($laborderdetail->begintime));
-            $laborderdetail->endtime = date('H:i', strtotime($laborderdetail->endtime));
+            $laborderdetail->begintime = date('H:i', strtotime(@$laborderdetail->begintime));
+            $laborderdetail->endtime = date('H:i', strtotime(@$laborderdetail->endtime));
         }
         return $laborderdetail;
     }
@@ -1048,9 +1063,12 @@ class LaboratoryController extends MscController
      */
     public function getLabOrderShow(Laboratory $Laboratory)
     {
+        $nowtime = Input::get('time')?Input::get('time'):date('Y-m-d');
+        $type = Input::get('type')?Input::get('type'):2;
         $user = Auth::user();
         $role = DB::connection('sys_mis')->table('sys_user_role')->where('user_id','=',$user->id)->first();
-        $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',$role->role_id)->first();
+        $role_name = DB::connection('sys_mis')->table('sys_roles')->where('id','=',@$role->role_id)->first();
+
         if($role_name){
             if($role_name->name == "超级管理员"){
                 $id = '';
@@ -1060,40 +1078,78 @@ class LaboratoryController extends MscController
         }else{
             $id = $user->id;
         }
-        $Laboratory = $Laboratory->get_check_list('','',$id);
-        $laboratory = $Laboratory->toArray();
-        foreach($laboratory['data'] as $k=>$v){
-            if($v['open_plan']) {
-                foreach ($v['open_plan'] as $k1 => $v1) {
-
-                        foreach ($v1['plan_apply'] as $k2 => $v2) {
-                            $v2['cnt'] = count($v2['lab_apply']);
-                            if($v2['lab_apply']){
-                                if ($v2['lab_apply']['type'] == 2) {
-                                    $laboratory['data'][$k]['order'] = 2;
-                                }elseif($v2['lab_apply']['type'] == 1) {
-                                    $laboratory['data'][$k]['order'] = 1;
+        //开放实验室
+        if($type == 2){
+            $laboratory = $Laboratory->get_opencheck_list($nowtime,$type,$id);
+            $laboratory = $laboratory->toArray();
+            foreach($laboratory['data'] as $k=>$v) {
+                if(empty($v['open_plan'])){
+                    unset($laboratory['data'][$k]);
+                }else{
+                    foreach($v['open_plan'] as $k1=>$v1){
+                        $laboratory['data'][$k]['open_plan'][$k1]['begintime'] = date('H:i',strtotime($v1['begintime']));
+                        $laboratory['data'][$k]['open_plan'][$k1]['endtime'] = date('H:i',strtotime($v1['endtime']));
+                        if(!empty($v1)){
+                            if($v1['plan_apply']){
+                                foreach($v1['plan_apply'] as $key => $val){
+                                    if(!empty($val['lab_apply'])){
+                                        if($val['lab_apply']['user_type'] == 2){
+                                            $laboratory['data'][$k]['open_plan'][$k1]['apply_id'] = $val['lab_apply']['id'];
+                                            $laboratory['data'][$k]['open_plan'][$k1]['apply_name'] = $val['lab_apply']['user']['name'];
+                                            $laboratory['data'][$k]['open_plan'][$k1]['course_name'] = $val['lab_apply']['course_name'];
+                                            $laboratory['data'][$k]['open_plan'][$k1]['user_type'] = $val['lab_apply']['user_type'];
+                                            break;
+                                        }
+                                    }
                                 }
+                            }else{
+                                $laboratory['data'][$k]['open_plan'][$k1]['user_type'] = 1;
                             }
 
                         }
-
+                    }
                 }
-            }else{
-                unset($laboratory['data'][$k]);
             }
-        }
 
-        foreach($laboratory['data'] as $k=>$v){
-            if(empty($v['order'])){
-                unset($laboratory['data'][$k]);
+           // dd($laboratory);
+            //普通实验室
+        }else{
+            //$this->start_sql(1);
+            $laboratory = $Laboratory->get_check_list($nowtime,$type,$id);
+            //$this->end_sql(1);
+            $laboratory = $laboratory->toArray();
+            foreach($laboratory['data'] as $k=>&$v){
+                if(empty($v['lab_apply'])){
+                    unset($laboratory['data'][$k]);
+                }else{
+                    $laboratory['data'][$k]['cnt'] = count($v['lab_apply']);
+                    foreach($v['lab_apply'] as $k1=>&$v1){
+                        $v1['begintime'] = date('H:i',strtotime($v1['begintime']));
+                        $v1['endtime'] = date('H:i',strtotime($v1['endtime']));
+                    }
+                }
             }
+
         }
-        $laboratory['data'] = $this->array_sort($laboratory['data'],'order','desc');
-        dd($laboratory);
+        // dd($laboratory);
         return view('msc::admin.labmanage.lab_booking',[
             'Laboratory' => $laboratory,
+            'type' => $type,
         ]);
     }
 
+
+    /**
+     * 查找普通实验室预约记录详情
+     */
+    public function getLabDetail(LabApply $LabApply){
+        $id = Input::get('id');
+        //dd($id);
+        $labapply = $LabApply->getLabdetail($id);
+        $labapply = $labapply->toArray();
+        //dd($labapply);
+        $labapply['begintime'] = date('H:i',strtotime($labapply['begintime']));
+        $labapply['endtime'] = date('H:i',strtotime($labapply['endtime']));
+        return $labapply;
+    }
 }
