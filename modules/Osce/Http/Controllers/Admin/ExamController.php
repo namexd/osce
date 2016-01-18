@@ -338,6 +338,14 @@ class ExamController extends CommonController
     public function postEditExam(Request $request, Exam $exam)
     {
         //验证,略过
+        $this->validate($request, [
+            'exam_id'   => 'required',
+            'name'      => 'required',
+            'time'      => 'required'
+        ],[
+            'name.required'     => '考试名称必须',
+            'time.required'     => '考试时间必须',
+        ]);
 
         //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
         $exam_id = $request->input('exam_id');
