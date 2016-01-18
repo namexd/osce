@@ -1380,7 +1380,7 @@ class ExamController extends CommonController
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'form_data' => 'required|array',
@@ -1398,9 +1398,9 @@ class ExamController extends CommonController
             }
 
             return redirect()->route('osce.admin.exam.getExamList');
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
