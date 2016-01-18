@@ -174,6 +174,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.admin.invigilatepad.getExamGrade']);
 		Route::post('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.admin.invigilatepad.postSaveExamResult']);
 		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.admin.invigilatepad.getSaveExamEvaluate']);
+		Route::get('invigilatepad/wait_exam', 	['uses'=>'InvigilatePadController@getWaitExam','as'=>'osce.admin.invigilatepad.getWaitExam']);
+
+
+
 		//候考
 		Route::get('oscetv/write-detail',['uses'=>'OsceTvController@getWriteDetail','as'=>'osce.admin.getWriteDetail']);
 
@@ -275,6 +279,11 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('exam-list',['uses'=>'IndexController@getExamList']);
 		Route::get('list',['uses'=>'IndexController@getWatchList']);
 		Route::get('watch-detail',['uses'=>'IndexController@getWatchDetail']);
+
+		//学生腕表
+
+		Route::get('wait_exam',['uses'=>'StudentWatchController@getWaitExam']);
+
 
 
 		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
