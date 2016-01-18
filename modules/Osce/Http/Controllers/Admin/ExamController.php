@@ -1405,7 +1405,7 @@ class ExamController extends CommonController
                 $examFlowStation -> updateExamAssignment($examId, $formData);
             }
 
-//            return redirect()->route('osce.admin.exam.getExamList');
+            return redirect()->route('osce.admin.exam.getExamList');
 //        } catch (\Exception $ex) {
 //            return redirect()->back()->withErrors($ex->getMessage());
 //        }

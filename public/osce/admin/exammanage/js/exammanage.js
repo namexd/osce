@@ -1674,7 +1674,7 @@ function station_assignment(){
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="form_data['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
@@ -1690,11 +1690,11 @@ function station_assignment(){
                         }else{
 
                             html += '<tr class="parent-id-'+e.params.data.id+'">'+
-                                '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="form_data['+(station_index+parseInt(i)+1)+'][station_id]" value="'+data[i].id+'"/></td>'+
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="form_data['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
