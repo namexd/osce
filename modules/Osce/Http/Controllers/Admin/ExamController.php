@@ -384,10 +384,11 @@ class ExamController extends CommonController
             'name'           => $request  ->  get('name'),
             'begin_dt'       => $begin_dt,
             'end_dt'         => $end_dt,
+            'total'          => count(Student::where('exam_id', $exam_id)->get()),
             'sequence_cate'  => $request  ->  get('sequence_cate'),
             'sequence_mode'  => $request  ->  get('sequence_mode'),
         ];
-
+        
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
@@ -1514,10 +1515,13 @@ class ExamController extends CommonController
         ]);
 
         $stationIds = $request->get('station_id');
+        $stationIds = empty($stationIds) ? [] : $stationIds;
+        //是用ajax返回
+        $ajax = true;
         //在模型里查询
         $station = new Station();
-        $data = $station->showList(['created_at','desc'],$stationIds);
-
-        return response()->json($this->success_data($data));
+        $data = $station->showList($stationIds, $ajax);
+        
+        return $this->success_data($data);
     }
 }
