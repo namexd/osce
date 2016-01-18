@@ -268,7 +268,8 @@ class ExamController extends CommonController
         try{
             if($exam = $model -> addExam($examData, $examScreeningData))
             {
-                return redirect()->route('osce.admin.exam.getExamList');
+                //TODO：罗海华2016-01-18 13:55将 成功后的重定向 改为编辑页面
+                return redirect()->route('osce.admin.exam.getEditExam',['id'=>$exam->id]);
             } else {
                 throw new \Exception('新增考试失败');
             }
@@ -614,7 +615,7 @@ class ExamController extends CommonController
 
     /**
      * 考生查询
-     * @api GET /osce/admin/exam/getStudentQuery
+     * @api GET /osce/admin/exam/student-query
      * @access public
      *
      * @param Request $request post请求<br><br>
