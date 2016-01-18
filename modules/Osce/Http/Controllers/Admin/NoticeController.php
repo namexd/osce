@@ -94,10 +94,19 @@ class NoticeController extends CommonController
         $content    =   $request    ->  get('content');
         $exam_id    =   $request    ->  get('exam_id');
         $groups     =   $request     ->  get('groups');
-        $attach     =   e(implode(',',$request     ->  get('attach')));
+        $attach     =   $request     ->  get('attach');
+        if(!empty($attach))
+        {
+            $attach     =   e(implode(',',$attach));
+        }
+        else
+        {
+            $attach =   '';
+        }
 
-//        try
-//        {
+
+        try
+        {
             if(!is_array($groups))
             {
                 throw new \Exception('请选择接收人所属角色');
@@ -111,11 +120,11 @@ class NoticeController extends CommonController
             {
                 throw new \Exception('通知创建失败');
             }
-//        }
-//        catch(\Exception $ex)
-//        {
-//            return redirect()   ->  back()  ->withErrors($ex);
-//        }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()   ->  back()  ->withErrors($ex);
+        }
     }
 
     /**
