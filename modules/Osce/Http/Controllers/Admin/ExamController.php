@@ -1141,7 +1141,15 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam]);
+        $ExamPlanModel  =   new ExamPlan();
+        $plan   =   $ExamPlanModel  ->  showPlan($exam);
+        $user   =   Auth::user();
+        Cache::pull('plan_'.$exam->id.'_'.$user->id);
+        $plan   =   Cache::rememberForever('plan_'.$exam->id.'_'.$user->id,function() use ($plan){
+            return $plan;
+        });
+
+        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
 
     /**
