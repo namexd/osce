@@ -152,7 +152,7 @@ class Student extends CommonModel
 //                var_dump(11111);
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
-                $examineeData['avator'] = $examineeData['avator'];
+//                $examineeData['avator'] = $examineeData['avator'];
                 $examineeData['create_user_id'] = $operator->id;
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');
