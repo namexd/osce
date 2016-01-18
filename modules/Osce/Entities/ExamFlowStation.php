@@ -35,7 +35,7 @@ class ExamFlowStation extends CommonModel
         try {
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
-
+//            dd($formData);
             $user = Auth::user();
             if (empty($user)) {
                 throw new Exception('未找到当前操作人信息！');
@@ -43,9 +43,9 @@ class ExamFlowStation extends CommonModel
 
             //查询考试名
             $exam = Exam::findOrFail($examId)->first();
-            foreach ($formData as $key => $item) {
-                foreach ($item as $value) {
+            foreach ($formData as $key => $value) {
                     //根据station_id查对应的名字
+//                dd($formData);
                     $station = Station::findOrFail($value['station_id'])->first();
                     //为流程表准备数据
                     $flowsData = [
@@ -65,7 +65,7 @@ class ExamFlowStation extends CommonModel
                     //准备数据，插入station_teacher表
                     $this->stationTeacherAssociation($examId, $value, $user);
 
-                }
+
             }
 
             $connection->commit();
@@ -101,34 +101,33 @@ class ExamFlowStation extends CommonModel
 
             $id = $examId;
             $this->examStationDelete($id);
-dd($formData);
             foreach ($formData as $key => $value) {
-                    //删除stationTeacher表
-                    if (count(StationTeacher::where('station_id',$value['station_id'])) != 0) {
-                        if (!StationTeacher::where('station_id',$value['station_id'])->delete()) {
-                            throw new \Exception('删除考站老师失败，请重试！');
-                        }
+                //删除stationTeacher表
+                if (count(StationTeacher::where('station_id',$value['station_id'])->get()) != 0) {
+                    if (!StationTeacher::where('station_id',$value['station_id'])->delete()) {
+                        throw new \Exception('删除考站老师失败，请重试！');
                     }
-                    //根据station_id查对应的名字
-                    $station = Station::findOrFail($value['station_id'])->first();
-                    //为流程表准备数据
-                    $flowsData = [
-                        'name' => $exam->name . '-' . $station->name,
-                        'created_user_id' => $user->id
-                    ];
-
-                    //将数据插入Flows表
-                    if (!$flowsResult = Flows::create($flowsData)) {
-                        throw new Exception('流程添加失败');
-                    }
-                    $flowsId = $flowsResult -> id;
-
-                    //将数据插入到各个关联表中
-                    $this->examStationAssociationSave($examId, $flowsId, $user, $key, $value);
-
-                    //准备数据，插入station_teacher表
-                    $this->stationTeacherAssociation($examId, $value, $user);
                 }
+                //根据station_id查对应的名字
+                $station = Station::findOrFail($value['station_id'])->first();
+                //为流程表准备数据
+                $flowsData = [
+                    'name' => $exam->name . '-' . $station->name,
+                    'created_user_id' => $user->id
+                ];
+
+                //将数据插入Flows表
+                if (!$flowsResult = Flows::create($flowsData)) {
+                    throw new Exception('流程添加失败');
+                }
+                $flowsId = $flowsResult -> id;
+
+                //将数据插入到各个关联表中
+                $this->examStationAssociationSave($examId, $flowsId, $user, $key, $value);
+
+                //准备数据，插入station_teacher表
+                $this->stationTeacherAssociation($examId, $value, $user);
+            }
 
 
             $connection->commit();
