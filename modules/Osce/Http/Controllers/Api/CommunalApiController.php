@@ -30,7 +30,6 @@ class CommunalApiController extends CommonController
      *
      */
     public function postEditorUpload(Request $request){
-
         if ($request->hasFile('upfile'))
         {
             $file   =   $request->file('upfile');
@@ -73,6 +72,7 @@ class CommunalApiController extends CommonController
      *
      */
     public function postAttchUpload(Request $request){
+        dd(1111);
         $data   =   [
             'path'  =>  ''
         ];
