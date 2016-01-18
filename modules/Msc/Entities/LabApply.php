@@ -189,7 +189,10 @@ class LabApply  extends Model
         })->first();
     }
 
-
+    //老师
+    public function Teacher(){
+        return  $this->hasOne('Modules\Msc\Entities\Teacher','id','apply_user_id');
+    }
     /**
      * 获取已经完成的历史预约的数据
      * @author tangjun <tangjun@misrobot.com>
@@ -203,5 +206,24 @@ class LabApply  extends Model
             $PlanApply->with('OpenPlan');
         }]);
         return  $builder->orderby('id','desc')->paginate(config('msc.page_size',10));
+    }
+
+    //查找普通实验室详情
+    public function getLabdetail($id){
+        $labapply = 'lab_apply';
+        $userDb    = config('database.connections.sys_mis.database');
+        $userTable = $userDb.'.users';
+        //$builder = $this->where($labapply.'.type','=',1);
+        $builder = $this->where('lab_apply.id','=',$id)->leftjoin('lab',function($lab) use($labapply){
+            $lab->on('lab.id','=',$labapply.'.lab_id');
+        })->leftjoin('location',function($local){
+            $local->on('location.id','=','lab.location_id');
+        })->leftjoin('teacher',function($teacher){
+            $teacher->on('teacher.id','=','lab_apply.apply_user_id');
+        })->leftjoin('teacher_dept',function($teacher_dept){
+            $teacher_dept->on('teacher_dept.id','=','teacher.teacher_dept');
+        })->with('user')->select('lab_apply.*','lab.floor','lab.code as lcode','lab.name as lname','location.name as localname','teacher.code','teacher_dept.name as dname')->first();
+        //dd($builder);
+        return $builder;
     }
 }

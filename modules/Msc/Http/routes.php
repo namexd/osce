@@ -99,6 +99,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/lab-order-allcheck', ['uses'=>'LaboratoryController@postLabOrderallcheck','as'=>'msc.admin.laboratory.postLabOrderallcheck']);
 		Route::get('laboratory/lab-order-donot', ['uses'=>'LaboratoryController@getLabOrderDonot','as'=>'msc.admin.laboratory.getLabOrderDonot']);
 		Route::get('laboratory/_check', ['uses'=>'LaboratoryController@_check','as'=>'msc.admin.laboratory._check']);
+		Route::get('laboratory/lab-detail', ['uses'=>'LaboratoryController@getLabdetail','as'=>'msc.admin.laboratory.getLabdetail']);
 		//资源路由
 		Route::controller('resources','ResourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);

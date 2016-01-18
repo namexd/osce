@@ -263,5 +263,26 @@ function lab_booking(){
     $(".teacher").click(function(){
         $("#stu_from").hide();
         $("#teacher_from").show();
+        var id = $(this).attr('data-id');
+        if($(this).attr('datatype') == 1){
+            $('.claue').remove();
+        }
+        $.ajax({
+            type: "GET",
+            url: "/msc/admin/laboratory/lab-detail",
+            data: {id:id},
+            success: function(msg){
+
+                $('input[name=name]').val(msg.lname);
+                $('input[name=address]').val(msg.localname+' 教学楼 '+msg.floor+'楼 '+msg.lcode);
+                $('input[name=bookingTime]').val(msg.apply_time);
+                $('input[name=timeInterval]').val(msg.begintime+'~'+msg.endtime);
+                $('input[name=teaching]').val(msg.course_name);
+                $('input[name=number]').val(msg.total);
+                $('input[name=bookingPerson]').val(msg.user.name);
+                $('input[name=detail]').val(msg.description);
+                $('input[name=applyTime]').val(msg.created_at);
+            }
+        });
     })
 }
