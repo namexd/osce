@@ -175,7 +175,7 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">媒体设置</a></li>
+						<li class="active"><a href="{{route('osce.admin.config.getIndex')}}">媒体设置</a></li>
                         <li class=""><a href="{{route('osce.admin.config.getArea')}}">场所类型</a></li>
                     </ul>
                 </div>
