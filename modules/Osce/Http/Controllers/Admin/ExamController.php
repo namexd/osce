@@ -254,11 +254,15 @@ class ExamController extends CommonController
         }
         //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
         $examData = [
-            'name'           => $request  ->  get('name'),
+            'code'           => 100,
+            'name'           => e($request  ->  get('name')),
             'begin_dt'       => $begin_dt,
             'end_dt'         => $end_dt,
             'status'         => 1,
-            'create_user_id' => $user     ->  id
+            'total'          => 0,
+            'create_user_id' => $user     ->  id,
+            'sequence_cate'  => e($request  ->  get('sequence_cate')),
+            'sequence_mode'  => e($request  ->  get('sequence_mode'))
         ];
 
         try{
@@ -539,7 +543,7 @@ class ExamController extends CommonController
             'idcard'         => $request  ->  get('idcard'),        //身份证号
             'mobile'         => $request  ->  get('tell'),          //手机号
             'code'           => $request  ->  get('examinee_id'),   //学号
-            'avatar'         => $request  ->  get('images_path')[0],//照片
+            'avator'         => $request  ->  get('images_path')[0],//照片
             'email'          => $request  ->  get('email'),         //邮箱
         ];
 
@@ -1139,7 +1143,15 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam]);
+        $ExamPlanModel  =   new ExamPlan();
+        $plan   =   $ExamPlanModel  ->  showPlan($exam);
+        $user   =   Auth::user();
+        Cache::pull('plan_'.$exam->id.'_'.$user->id);
+        $plan   =   Cache::rememberForever('plan_'.$exam->id.'_'.$user->id,function() use ($plan){
+            return $plan;
+        });
+
+        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
 
     /**
