@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\Exam;
@@ -96,12 +97,18 @@ class InvitationController extends CommonController
 
     public function getList()
     {
-        dd('邀请已发送');
+        $user= Auth::user();
+        if(empty($user))
+        {
+            throw new \Exception('未找到当前操作人信息');
+        }
+        $userId =$user->id;
+
         $notice = new Invite();
 
-        $list = $notice->get();
-
-        return view('osce::admin.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
+        $list = $notice-> where('id','=',$userId)->get();
+//        dd($list);
+        return view('osce::wechat.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
     }
 
 

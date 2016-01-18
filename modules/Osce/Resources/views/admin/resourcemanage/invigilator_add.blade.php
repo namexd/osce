@@ -74,7 +74,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>人员管理</h5>
+            <h5>新增监巡考老师</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -99,7 +99,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">手机号</label>
+                            <label class="col-sm-2 control-label">监巡考老师</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="type">
                                     <option value="1">监考老师</option>

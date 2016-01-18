@@ -176,7 +176,7 @@ class DiscussionController extends  CommonController{
             $data['row']=$row;
           return response()->json(
               $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$data)
-              
+
           );
       }
 
@@ -223,7 +223,7 @@ class DiscussionController extends  CommonController{
           if($result){
               return \Response::json(array('code'=>1));
           }
-          return redirect()->back()->withInput()->withErrors('提问失败');
+          return \Response::json(array('code'=>0));
       }
 
      public function getAddReply(Request $request){
@@ -271,7 +271,7 @@ class DiscussionController extends  CommonController{
           if($result){
               return \Response::json(array('code'=>1));
           }
-          return redirect()->back()->withInput()->withErrors('回复失败');
+          return \Response::json(array('code'=>0));
       }
 
     /**
@@ -311,17 +311,17 @@ class DiscussionController extends  CommonController{
                  if($result){
                      $result=Discussion::where('id',$id)->delete();
                      if($result){
-                         return redirect('/osce/wechat/discussion/question-list')->with('success','删除成功');
+                         return \Response::json(array('code'=>1));
                      }else{
-                         return redirect()->back()->withInput()->withErrors('删除失败');
+                         return \Response::json(array('code'=>0));
                      }
                  }
              }else{
                  $result=Discussion::where('id',$id)->delete();
                  if($result){
-                     return redirect('/osce/wechat/discussion/question-list')->with('success','删除成功');
+                     return \Response::json(array('code'=>1));
                  }else{
-                     return redirect()->back()->withInput()->withErrors('删除失败');
+                     return \Response::json(array('code'=>0));
                  }
              }
          }
@@ -389,6 +389,7 @@ class DiscussionController extends  CommonController{
          if($result){
              return \Response::json(array('code'=>1));
          }
-         return redirect()->back()->withInput()->withErrors('编辑失败');
+           return \Response::json(array('code'=>0));
+
      }
 }

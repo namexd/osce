@@ -16,13 +16,13 @@ use Illuminate\Database\Eloquent\Collection;
 class SubjectItem extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'subject_item';
+    protected $table = 'standard';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['subject_id', 'content', 'order', 'score', 'created_user_id','pid','level'];
+    protected $fillable = ['subject_id', 'content', 'sort', 'score', 'pid', 'level', 'created_user_id', 'answer'];
     public $search = [];
 
     //创建人用户关联
