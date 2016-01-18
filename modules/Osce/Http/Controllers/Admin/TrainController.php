@@ -85,7 +85,7 @@ class TrainController extends  CommonController{
         ]);
         $user=Auth::user();
         $userId=$user->id;
-        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status']);
+        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
         $data['attachments']=serialize($request->input('file'));
         $data['create_user_id']=$userId;
         $result=InformTrain::insert($data);
@@ -300,7 +300,7 @@ class TrainController extends  CommonController{
                $path   =   'osce/file/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                $destinationPath    =   public_path($path);
                $fileName           =   $file->getClientOriginalName();
-               $file   ->  move($destinationPath,$fileName);
+               $file   ->  move($destinationPath,iconv("UTF-8","gb2312",$fileName));
                $pathReturn    =   '/'.$path.$fileName;
            }
            echo json_encode(
