@@ -218,11 +218,7 @@
 								</p>
 							</div>
                             @endforeach
-                            @else
-                            <p>
-                                    <input type="hidden" name="file[]" id="" value="" />
-                                        <i class="fa fa-2x fa-delicious"></i>&nbsp;&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
-								</p>
+                           
                             @endif
                         </div>
                     </div>
