@@ -244,6 +244,7 @@ class Exam extends CommonModel
     }
 
     //考生查询
+
     public function getList($formData=''){
          $builder=$this->Join('student','student.exam_id','=','exam.id');
         if($formData['exam_name']){

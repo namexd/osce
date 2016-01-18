@@ -72,7 +72,7 @@ class CommunalApiController extends CommonController
      *
      */
     public function postAttchUpload(Request $request){
-        dd(1111);
+
         $data   =   [
             'path'  =>  ''
         ];
