@@ -65,7 +65,7 @@
                       <tr>
                          <td>{{ $item['exam_name']}}</td>
                          <td>{{ $item['student_name'] }}</td>
-                         <td>{{ $item->userInfo->gender }}</td>
+                         <td>{{is_null($item->userInfo)? '-':$item->userInfo->gender }}</td>
                          <td>{{ $item['code'] }}</td>
                         <td>{{ $item['idCard'] }}</td>
                          <td>{{ $item['mobile'] }}</td>
