@@ -96,10 +96,11 @@ class InvitationController extends CommonController
 
     public function getList()
     {
-        dd('邀请已发送');
+
         $notice = new Invite();
 
         $list = $notice->get();
+        dd($list);
 
         return view('osce::admin.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
     }

@@ -32,8 +32,6 @@
         </div>
         <form class="container-fluid ibox-content" id="list_form">
             <div class="panel blank-panel">
-
-
                 <div  class="row" style="margin:20px 0;">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <label class="pull-left exam-name">考试名称:</label>
@@ -79,9 +77,7 @@
                    @endforeach
                     </tbody>
                 </table>
-
                 <div class="btn-group pull-right">
-
                 </div>
             </div>
         </form>
