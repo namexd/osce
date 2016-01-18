@@ -507,22 +507,25 @@ function categories(){
 }
 
 function invigilator(){
+    //删除老师
     $(".delete").click(function(){
-
         var thisElement=$(this);
+
         layer.alert('确认删除？',function(){
             $.ajax({
-                type:'get',
-                async:false,
+                type:'post',
+                async:true,
                 url:pars.deletes,
-                data:{id:thisElement.attr('value')},
+                data:{id:thisElement.attr('tid')},
                 success:function(data){
-                    //location.reload();
-                    console.log(data);
+                    if(data.code == 1){
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
                 }
             })
         });
-
     })
 }
 
@@ -557,6 +560,24 @@ function topic(){
 }
 
 function sp_invigilator(){
+    //删除老师
+    $(".delete").click(function(){
+        var thisElement=$(this);
 
-
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deletes,
+                data:{id:thisElement.attr('tid')},
+                success:function(data){
+                    if(data.code == 1){
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
+                }
+            })
+        });
+    })
 }

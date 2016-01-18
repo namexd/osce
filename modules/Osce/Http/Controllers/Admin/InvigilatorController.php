@@ -11,7 +11,9 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\User;
 use App\Repositories\Common;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Invigilator;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -514,21 +516,24 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getDelInvitation(Request $request){
+    public function postDelInvitation(Request $request){
         $id             =   $request    ->  get('id');
         try{
             if(!is_null($id))
             {
-                    Teacher::where('id',$id)->delete();
-                return redirect()->back();
-            }
-            else
-            {
+                if(StationTeacher::where('user_id', $id)->first() || ExamSpTeacher::where('teacher_id',$id)->first()){
+                    throw new \Exception('该老师已被关联，无法删除！');
+                }
+                if(!Teacher::where('id',$id)->delete()){
+                    throw new \Exception('删除老师失败，请重试！');
+                }
+                return $this->success_data('删除成功！');
+            } else {
                 throw new \Exception('没有找到该老师的相关信息');
             }
         }
         catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex);
+            return $this->fail($ex);
         }
     }
 

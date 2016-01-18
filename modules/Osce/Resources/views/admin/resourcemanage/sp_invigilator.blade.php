@@ -13,9 +13,10 @@
     </style>
 @stop
 @section('only_js')
+    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'sp_invigilator','deletes':'{{route('osce.admin.invigilator.getDelInvitation')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'sp_invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}'}" />
     <div class="ibox-title header">
         <div class="pull-left">
             <h3>人员管理</h3>
@@ -47,8 +48,10 @@
                     <td>{{$item->userInfo->mobile or '-'}}</td>
                     <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
                     <td value="{{$item->id}}">
-                        <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}" onclick="return confirm('确认删除');"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}">
+                            <span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span>
+                        </a>
+                        <a href="javascript:void(0)" class="delete" tid="{{$item->id}}"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
             @empty

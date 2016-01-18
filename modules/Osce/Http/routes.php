@@ -61,7 +61,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('config/index',  ['uses'=>'ConfigController@getIndex','as'=>'osce.admin.config.getIndex']);
 
 
-		Route::get('invigilator/del-invitation', 	['uses'=>'InvigilatorController@getDelInvitation','as'=>'osce.admin.invigilator.getDelInvitation']);
+		Route::post('invigilator/del-invitation', 	['uses'=>'InvigilatorController@postDelInvitation','as'=>'osce.admin.invigilator.postDelInvitation']);
 		//测试
 		Route::get('invigilator/test', 	['uses'=>'InvigilatorController@getTest','as'=>'osce.admin.invigilator.getTest']);
 
