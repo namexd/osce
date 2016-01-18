@@ -111,14 +111,14 @@ class ExamController extends CommonController
                 }
 
             //删除考试考场关联表
-            if (count($examScreening-> get())) {
+            if (count($examScreening-> get()) != 0) {
                 if (!$examScreening-> first() ->delete()) {
                     throw new \Exception('删除考试考场关系表失败，请重试！');
                 }
             }
 
             //删除考试考场关联
-            if (ExamRoom::where('exam_id',$id)->first()) {
+            if (count(ExamRoom::where('exam_id',$id)->first()) != 0) {
                 if (!ExamRoom::where('exam_id',$id)->delete()) {
                     throw new \Exception('删除考试考场关联失败，请重试！');
                 }
@@ -126,14 +126,14 @@ class ExamController extends CommonController
 
 
             //删除考试流程关联
-            if (ExamFlow::where('exam_id',$id)->first()) {
+            if (count(ExamFlow::where('exam_id',$id)->first()) != 0) {
                 if (!ExamFlow::where('exam_id',$id)->delete()) {
                     throw new \Exception('删除考试流程关联失败，请重试！');
                 }
             }
 
             //删除考试考场流程关联
-            if (ExamFlowRoom::where('exam_id',$id)->first()) {
+            if (count(ExamFlowRoom::where('exam_id',$id)->first()) != 0) {
                 if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
                     throw new \Exception('删除考试考场流程关联失败，请重试！');
                 }
@@ -164,8 +164,6 @@ class ExamController extends CommonController
             if ($result != true) {
                 throw new \Exception('删除考试失败，请重试！');
             }
-
-
 
             //如果有flow的话，就删除
             if (count($flowIds) != 0) {
@@ -1245,7 +1243,7 @@ class ExamController extends CommonController
 
     /**
      *以考站为中心的考试安排着陆页
-     * @url GET /osce/admin/exam/change-student
+     * @url GET /osce/admin/exam/station-assignment
      * @access public
      *
      * @param Request $request
@@ -1258,8 +1256,8 @@ class ExamController extends CommonController
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-29 17:09
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-16
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
@@ -1279,7 +1277,7 @@ class ExamController extends CommonController
 
     /**
      *以考站为中心的考试安排逻辑处理页
-     * @url GET /osce/admin/exam/change-student
+     * @url GET /osce/admin/exam/station-assignment
      * @access public
      *
      * @param Request $request
@@ -1292,8 +1290,8 @@ class ExamController extends CommonController
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-29 17:09
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date  2016-01-16
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
@@ -1301,18 +1299,18 @@ class ExamController extends CommonController
     {
         //验证
         $this->validate($request, [
-            'teacher_id' => 'required|array',
-            'station_id' => 'required|array',
+            'form_data' => 'required|array',
             'exam_id' => 'required|integer'
         ]);
 
         //获取数据
         $examId = $request->get('exam_id');
-        $stationIds = $request->get('station_id'); //所有的考站数据
-        $teacherIds = $request->get('teacher_id'); //所有的老师数据
+        $formData = $request->get('form_data'); //所有的考站数据
         //查看是新建还是编辑
         if (ExamFlowStation::where('exam_id',$examId)->get()->isEmpty()) {  //若是为真，就说明是添加
-            //$examFlowStation
+            $examFlowStation -> createExamAssignment($examId, $formData);
+        } else { //否则就是编辑
+            $examFlowStation -> updateExamAssignment($examId, $formData);
         }
     }
 
