@@ -18,6 +18,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
+	Route::get('admin/index/dashboard', ['uses'=>'Admin\IndexController@dashboard','as'=>'osce.admin.index.dashboard']);
 	Route::get('/index', 'OsceController@index');
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		//房间
