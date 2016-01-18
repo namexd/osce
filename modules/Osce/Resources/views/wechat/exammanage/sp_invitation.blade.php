@@ -48,14 +48,16 @@
     </div>
     <div class="history-box">
         <ul class="history-list">
+            @forelse($list as $data)
             <li>
-                <p class="title">OSCE考试2015年第3期考试邀请</p>
-                <p class="time"><span class="year">2015-12-1</span><span>12:00:00</span></p>
+                <p class="title">{{$data->name}}</p>
+                <p class="time"><span class="year">{{date('Y-m-d',strtotime($data->created_at))}}</span><span>{{date('H-m-s',strtotime($data->created_at))}}</span></p>
             </li>
+            @empty
             <li>
-                <p class="title">OSCE考试2015年第3期考试邀请</p>
-                <p class="time"><span class="year">2015-12-1</span><span>12:00:00</span></p>
+                <p class="title">你暂时没有考试邀请</p>
             </li>
+            @endforelse
         </ul>
     </div>
 @stop
