@@ -4,11 +4,12 @@ use Illuminate\Support\Facades\Input;
 use Modules\Msc\Http\Controllers\MscWeChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Modules\Msc\Entities\ResourcesBorrowing;
+use Modules\Msc\Entities\PlanApply;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use App\Entities\User;
 use Modules\Msc\Entities\LabApply;
+use Modules\Msc\Entities\OpenPlan;
 use DB;
 class PersonalCenterController extends MscWeChatController {
 	public function getTest(){
@@ -141,7 +142,7 @@ class PersonalCenterController extends MscWeChatController {
 	 * @url /msc/wechat/personal-center/cancel-apply
 	 * @access public
 	 * @author tangjun <tangjun@misrobot.com>
-	 * @date
+	 * @date	2016年1月18日16:27:08
 	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 	public function CancelApply(){
@@ -157,21 +158,39 @@ class PersonalCenterController extends MscWeChatController {
 			if($delRew){
 				$LabApplyInfo = $LabApplyBuilder->first();
 				switch($LabApplyInfo['type']){
-					case 1:
+					case 1://TODO 取消普通实验室的预约
 						$MscMis->commit();
 						return	$this->success_rows(1,'取消成功');
 						break;
-					case 2:
-
+					case 2://TODO 取消开放实验室的预约
+						$PlanApply = new PlanApply;
+						$PlanIdArr = $PlanApply->ApplyIdGetOpenPlanIdArr($apply_id);
+						$OpenPlan = new OpenPlan;
+						//TODO 找到对应的开放日历减去预约次数
+						if(!empty($PlanIdArr)){
+							$decrementRew = $OpenPlan->whereIn('id',$PlanIdArr)->decrement('apply_num',1);
+							if($decrementRew){
+								$MscMis->commit();
+								return	$this->success_rows(1,'取消成功');
+							}else{
+								$MscMis->rollBack();
+								return	$this->success_rows(2,'取消失败');
+							}
+						}else{//TODO 如果没有找到开放日历（默认开放日历被取消）
+							$MscMis->commit();
+							return	$this->success_rows(1,'取消成功');
+						}
 						break;
+					default:
+						return	$this->success_rows(2,'取消失败');
 				}
-
 			}else{
 				$MscMis->rollBack();
+				return	$this->success_rows(2,'取消失败');
 			}
-			//$MscMis->commit();
 		}else{
 			$MscMis->rollBack();
+			return	$this->success_rows(2,'取消失败');
 		}
 	}
 
