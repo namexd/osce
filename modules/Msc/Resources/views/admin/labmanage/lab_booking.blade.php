@@ -42,156 +42,50 @@
 		</div>
         <div class="ibox float-e-margins">
             <div class="container-fluid ibox-content">
+                @if(@$Laboratory['data'])
+                    @foreach(@$Laboratory['data'] as $k=>$v)
                 <div class="col-md-6 marb_25">
                     <div class="show_box overflow">
                         <div class="w_40 left" >
-                            <p class="font14 weight">医学临床实验室</p>
-                            <p>临床医学教学楼三楼3-13</p>
+                            <p class="font14 weight">{{$v['name']}}</p>
+                            <p>{{$v['lname']}} {{$v['floor']}}楼 {{$v['code']}}</p>
                         </div>
                         <div class="w_60 left padl_20 border_left">
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">30</a>人</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10"><a href="" class="font16 blue teacher" data-toggle="modal" data-target="#myModal">张三老师</a></span>
-                            </div>
+                            @if(@$v['open_plan'])
+                                @foreach($v['open_plan'] as $plan)
+                                    <div class="marb_10">
+                                        <span>{{$plan['begintime']}}-{{$plan['endtime']}}</span>
+                                        <span class="marl_10"> @if($plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="marb_10">
+                                    <span>{{$plan['lab_apply']['begintime']}}-{{$plan['lab_apply']['endtime']}}</span>
+                                    <span class="marl_10"> @if($plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
+                                </div>
+                            @endif
+                            {{--<div class="marb_10">--}}
+                                {{--<span>8:00-10:00</span>--}}
+                                {{--<span class="marl_10">空闲</span>--}}
+                            {{--</div>--}}
+                            {{--<div class="marb_10">--}}
+                                {{--<span>8:00-10:00</span>--}}
+                                {{--<span class="marl_10">空闲</span>--}}
+                            {{--</div>--}}
+                            {{--<div class="marb_10">--}}
+                                {{--<span>8:00-10:00</span>--}}
+                                {{--<span class="marl_10">空闲</span>--}}
+                            {{--</div>--}}
+                            {{--<div class="marb_10">--}}
+                                {{--<span>8:00-10:00</span>--}}
+                                {{--<span class="marl_10"><a href="" class="font16 blue teacher" data-toggle="modal" data-target="#myModal">张三老师</a></span>--}}
+                            {{--</div>--}}
+
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 marb_25">
-                    <div class="show_box overflow">
-                        <div class="w_40 left" >
-                            <p class="font14 weight">医学临床实验室</p>
-                            <p>临床医学教学楼三楼3-13</p>
-                        </div>
-                        <div class="w_60 left padl_20 border_left">
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">30</a>人</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10"><a href="" class="font16 blue teacher" data-toggle="modal" data-target="#myModal">张三老师</a></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 marb_25">
-                    <div class="show_box overflow">
-                        <div class="w_40 left" >
-                            <p class="font14 weight">医学临床实验室</p>
-                            <p>临床医学教学楼三楼3-13</p>
-                        </div>
-                        <div class="w_60 left padl_20 border_left">
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">30</a>人</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10"><a href="" class="font16 blue teacher" data-toggle="modal" data-target="#myModal">张三老师</a></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 marb_25">
-                    <div class="show_box overflow">
-                        <div class="w_40 left" >
-                            <p class="font14 weight">医学临床实验室</p>
-                            <p>临床医学教学楼三楼3-13</p>
-                        </div>
-                        <div class="w_60 left padl_20 border_left">
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">30</a>人</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10"><a href="" class="font16 blue teacher" data-toggle="modal" data-target="#myModal">张三老师</a></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 marb_25">
-                    <div class="show_box overflow">
-                        <div class="w_40 left" >
-                            <p class="font14 weight">医学临床实验室</p>
-                            <p>临床医学教学楼三楼3-13</p>
-                        </div>
-                        <div class="w_60 left padl_20 border_left">
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">30</a>人</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10">空闲</span>
-                            </div>
-                            <div class="marb_10">
-                                <span>8:00-10:00</span>
-                                <span class="marl_10"><a href="" class="font16 blue teacher" data-toggle="modal" data-target="#myModal">张三老师</a></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+                    @endif
             </div>
         </div>
         {{--分页--}}

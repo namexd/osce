@@ -39,6 +39,7 @@
                 data['begintime'] = (new Date("2016-12-11 "+time[0]+":00")).getTime()/1000;
                 data['endtime'] = (new Date("2016-12-11 "+time[1]+":00")).getTime()/1000;
                 data['name'] = $(this).find('span:last').html();
+                console.log(data);
                 Take.push(data);
             })
             var currYear = (new Date()).getFullYear();
@@ -56,20 +57,18 @@
 
             var optTime = $.extend(opt['time'], opt['default']);
 
-            $("#startTime").mobiscroll(optTime).time(optTime);
+            $("#begintime").mobiscroll(optTime).time(optTime);
             $("#endTime").mobiscroll(optTime).time(optTime);
 
             $('#endTime').change(function(){
                 if($('#startTime').val()){
-                    alert($(this).val());
-                    alert(Take[0]['begintime']);
                     console.log(format(Take[0]['begintime']));
                 }
             })
 
             $('#startTime').change(function(){
                 if($('#endTime').val()){
-                    alert($(this).val());
+
                 }
             })
 
@@ -94,6 +93,16 @@
 @stop
 
 @section('content')
+    <?php
+    $errorsInfo =(array)$errors->getMessages();
+    if(!empty($errorsInfo))
+    {
+        $errorsInfo = array_shift($errorsInfo);
+        echo '<pre>';
+        var_dump($errorsInfo);die;
+    }
+
+    ?>
     <input type="hidden" id="parameter" value="{'pagename':'booking_teacher_ordinary_form'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
@@ -139,17 +148,19 @@
             </div>
         </div>
     </div>
-    <form action="" method="post" id="myform">
+    <form action="{{route('msc.Laboratory.ApplyLaboratoryOp')}}" method="post" id="myform">
+        <input name="date_time" value="{{ $data['ApplyTime']}}" type="hidden"/>
+        <input name="lab_id" value="{{ $data['LaboratoryInfo']['id']}}" type="hidden"/>
         <div class="add_main">
             <div class="form-group">
                 <label for="">开始使用</label>
 
-                <input type="text" class="form-control" name="appTime" id="startTime" readonly="" class="">
+                <input type="text" class="form-control" name="begintime" id="begintime" readonly="" class="">
 
             </div>
             <div class="form-group">
                 <label for="">结束使用</label>
-                <input type="text"  class="form-control" name="appTime" id="endTime" readonly="" class="">
+                <input type="text"  class="form-control" name="endtime" id="endTime" readonly="" class="">
             </div>
             <div class="form-group">
                 <label for="">教学课程</label>
@@ -161,7 +172,7 @@
             </div>
         </div>
         <div id="Reason_detail" class="w_94" >
-            <div class="form_title">备注</div>
+            <div class="form_title">预约理由</div>
             <div class="form-group">
                 <textarea name="description" class=" form-control textarea1" ></textarea>
             </div>

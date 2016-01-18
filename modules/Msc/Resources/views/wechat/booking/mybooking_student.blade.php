@@ -20,8 +20,8 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        我的预约
-        <a class="right header_btn" href="{{ url('/msc/wechat/personal-center/info-manage') }}">
-            <i class="fa fa-home clof font26 icon_return"></i>
+        <a class="right header_btn" href="">
+
         </a>
     </div>
     <div id="wrapper2">
@@ -33,38 +33,38 @@
     </div>
     <div id="info_list" class="mart_5">
         <div id="now_borrow">
-                <div class="add_main">
-                    <div class="form-group">
-                        <label for="">实验室名称</label>
-                        <div class="txt">
-                            临床实验室
-                        </div>
-                        <div class="state_btn1">
-                            待审核
-                        </div>
+            <div class="add_main">
+                <div class="form-group">
+                    <label for="">实验室名称</label>
+                    <div class="txt">
+                        临床实验室
                     </div>
-                    <div class="form-group">
-                        <label for="">地址</label>
-                        <div class="txt">
-                            新八教
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="">预约日期</label>
-                        <div class="txt">
-                            2016.1.1
-                        </div>
-                        <div class="submit_box">
-                            <a  class="btn4" href="">取消</a>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="">预约时段</label>
-                        <div class="txt">
-                            8:00-10:00
-                        </div>
+                    <div class="state_btn1">
+                        待审核
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="">地址</label>
+                    <div class="txt">
+                        新八教
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="">预约日期</label>
+                    <div class="txt">
+                        2016.1.1
+                    </div>
+                    <div class="submit_box">
+                        <a  class="btn4" href="">取消</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="">预约时段</label>
+                    <div class="txt">
+                        8:00-10:00
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="borrow_attention" style="display: none;">
             <div class="add_main">
