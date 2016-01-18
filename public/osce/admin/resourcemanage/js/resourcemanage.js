@@ -509,23 +509,7 @@ function categories(){
 function invigilator(){
     //删除老师
     $(".delete").click(function(){
-        var thisElement=$(this);
-
-        layer.alert('确认删除？',function(){
-            $.ajax({
-                type:'post',
-                async:true,
-                url:pars.deletes,
-                data:{id:thisElement.attr('tid')},
-                success:function(data){
-                    if(data.code == 1){
-                        location.reload();
-                    }else {
-                        layer.alert(data.message);
-                    }
-                }
-            })
-        });
+        deleteItems("post",pars.deletes,$(this).attr("tid"));
     })
 }
 
@@ -538,10 +522,6 @@ function invigilator(){
  */
 
 function topic(){
-
-
-    alert('ok');
-
    $(".fa-trash-o").click(function(){
         var thisElement=$(this);
         layer.alert('确认删除？',function(){
@@ -556,28 +536,31 @@ function topic(){
             })
         });
     })
-
 }
 
 function sp_invigilator(){
     //删除老师
     $(".delete").click(function(){
-        var thisElement=$(this);
 
-        layer.alert('确认删除？',function(){
-            $.ajax({
-                type:'post',
-                async:true,
-                url:pars.deletes,
-                data:{id:thisElement.attr('tid')},
-                success:function(data){
-                    if(data.code == 1){
-                        location.reload();
-                    }else {
-                        layer.alert(data.message);
-                    }
-                }
-            })
-        });
+        deleteItems("post",pars.deletes,$(this).attr("tid"));
     })
+}
+
+//删除方法封装,其中id为当前dom的value值
+function deleteItems(type,url,id){
+    layer.alert('确认删除？',function(){
+        $.ajax({
+            type:type,
+            async:false,
+            url:url,
+            data:{id:id},
+            success:function(data){
+                if(data.code == 1){
+                    location.reload();
+                }else {
+                    layer.msg(data.message);
+                }
+            }
+        })
+    });
 }
