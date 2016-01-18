@@ -64,10 +64,14 @@ class TrainController extends  CommonController{
                         if ($time < 86400) {
                             $time= floor($time / 3600) . '小时前';
                         } else {
-                            if ($time < 259200) {
+                            if ($time < 2592000) {
                                 $time= floor($time / 86400) . '天前';
                             } else {
-                                $time =  $time;
+                                if($time<31536000){
+                                    $time =  floor($time / 2592000).'月前';
+                                }else{
+                                    $time=floor($time/31536000).'年前';
+                                }
                             }
                         }
                     }
@@ -87,7 +91,6 @@ class TrainController extends  CommonController{
             ];
 
         }
-//dd($data);
         return view('osce::wechat.train.train_list')->with(['data'=>$data,'pagination'=>$pagination]);
     }
 
@@ -99,7 +102,7 @@ class TrainController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>get请求字段：</b>
-     * * int        id        主键Id(必须的)
+     * * int        id        培训id(必须的)
      *
      * @return ${response}
      *

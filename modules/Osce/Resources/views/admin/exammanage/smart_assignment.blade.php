@@ -132,6 +132,8 @@
                 <div class="classroom-box">
 
                 </div>
+
+                <textarea id="plan" style="display: none;">{{json_encode($plan)}}</textarea>
             </div>
             <div class="operate">
                 <button class="btn btn-default" type="button" id="makePlan">智能排考</button>

@@ -17,9 +17,6 @@
 @stop
 
 @section('only_js')
- <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.config.js')}}"></script>
- <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
- <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
@@ -39,7 +36,7 @@
                         <div class="col-sm-10">
                             <select id="select_Category"   class="form-control" name="exam id">
                                 @forelse($list as $exam)
-                                <option value="{{$exam->id}}" >{{$item->name}}</option>
+                                <option value="{{$exam->id}}" >{{$exam->name}}</option>
                                 @empty
                                     <option value="">请创建考试</option>
                                 @endforelse
