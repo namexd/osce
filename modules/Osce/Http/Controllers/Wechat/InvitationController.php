@@ -96,7 +96,6 @@ class InvitationController extends CommonController
 
     public function getList()
     {
-
         $notice = new Invite();
 
         $list = $notice->get();
