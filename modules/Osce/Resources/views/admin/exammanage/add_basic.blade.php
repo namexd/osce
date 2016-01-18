@@ -66,17 +66,13 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试地点</label>
-
                                 <div class="col-sm-10">
                                     <input type="text" required class="form-control" id="code" name="code" value="{{$examData['name']}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
-
-
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
-
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;" name="sequence_cate" >
                                         <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
@@ -87,7 +83,6 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">排序方式</label>
-
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;" name="sequence_mode" v>
                                         <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
@@ -97,65 +92,58 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
-
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试时间</label>
                                 <div class="col-sm-10">
                                     <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-                                        <table class="table table-bordered" id="add-basic">
-                                            <thead>
+                                    <table class="table table-bordered" id="add-basic">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>开始时间</th>
+                                            <th>结束时间</th>
+                                            <th>时长</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody index="{{count($examScreeningData)}}">
+                                        @forelse($examScreeningData as $key => $item)
                                             <tr>
-                                                <th>#</th>
-                                                <th>开始时间</th>
-                                                <th>结束时间</th>
-                                                <th>时长</th>
-                                                <th>操作</th>
-
+                                                <td>{{$key+1}}</td>
+                                                <td class="laydate">
+                                                    <input type="hidden" name="time[{{$key}}][id]" value="{{$item->id}}">
+                                                    <input type="hidden" name="time[{{$key}}][exam_id]" value="{{$id}}">
+                                                    <input type="text" class="laydate-icon end" name="time[{{$key}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
+                                                </td>
+                                                <td class="laydate">
+                                                    <input type="text" class="laydate-icon end" name="time[{{$key}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
+                                                </td>
+                                                <td>3:00</td>
+                                                <td>
+                                                    <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                </td>
                                             </tr>
-                                            </thead>
-                                            <tbody index="{{count($examScreeningData)}}">
-                                            @forelse($examScreeningData as $key => $item)
-                                                <tr>
-                                                    <td>{{$key+1}}</td>
-                                                    <td class="laydate">
-                                                        <input type="hidden" name="time[{{$key}}][id]" value="{{$item->id}}">
-                                                        <input type="hidden" name="time[{{$key}}][exam_id]" value="{{$id}}">
-                                                        <input type="text" class="laydate-icon end" name="time[{{$key}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
-                                                    </td>
-                                                    <td class="laydate">
-                                                        <input type="text" class="laydate-icon end" name="time[{{$key}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
-                                                    </td>
-                                                    <td>3:00</td>
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                            @endforelse
-                                            </tbody>
-                                        </table>
+                                        @empty
+                                        @endforelse
+                                        </tbody>
+                                    </table>
 
-                                        <div class="btn-group pull-right">
-                                           
-                                        </div>
+                                    <div class="btn-group pull-right">
+
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <input class="btn btn-primary" type="submit" value="保存">
+                                    <button class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
-
                                 </div>
                             </div>
-
-
                         </form>
 
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
 </div>

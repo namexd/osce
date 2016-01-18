@@ -194,6 +194,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		Route::get('train/edit-train',['uses'=>'TrainController@getEditTrain','as'=>'osce.admin.getEditTrain']);
 		Route::get('train/del-train',['uses'=>'TrainController@getDelTrain','as'=>'osce.admin.getDelTrain']);
+		Route::get('train/add-train',['uses'=>'TrainController@getAddTrain','as'=>'osce.admin.getAddTrain']);
 		Route::post('train/add-train',['uses'=>'TrainController@postAddTrain','as'=>'osce.admin.postAddTrain']);
 		Route::post('train/edit-train',['uses'=>'TrainController@postEditTrain','as'=>'osce.admin.postEditTrain']);
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
@@ -294,10 +295,10 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
 			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
 
-			Route::get('write-student',['uses'=>'PadController@getWriteStudent']);
+			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
 
 			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
-			Route::get('write-room',['uses'=>'PadController@getWriteRoom']);
+			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
 
 		});
 	});

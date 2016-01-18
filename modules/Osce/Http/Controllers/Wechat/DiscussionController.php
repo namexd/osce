@@ -176,7 +176,7 @@ class DiscussionController extends  CommonController{
             $data['row']=$row;
           return response()->json(
               $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$data)
-              
+
           );
       }
 
