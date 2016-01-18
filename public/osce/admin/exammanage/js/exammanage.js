@@ -1126,7 +1126,7 @@ function exam_notice_add(){
  */
 function exam_notice_edit(){
 
-    var content =   $('#content').html();
+    var content =   $('#content').val();
     console.log(content)
     //初始化
     var ue = UE.getEditor('editor',{
