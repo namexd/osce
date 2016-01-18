@@ -49,9 +49,7 @@ class TrainController extends  CommonController{
         $pagination=$trainModel->getPaginate();
 
         $list=InformTrain::select()->orderBy('begin_dt')->get();
-
-        return view('osce::wechat.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
-
+        return view('osce::admin.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
     }
 
 
@@ -77,6 +75,7 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postAddTrain(Request $request){
+    	dd($request);
         $this->validate($request,[
             //验证规则
             'name'                    =>'required|max:64',
@@ -98,7 +97,7 @@ class TrainController extends  CommonController{
         );
         $result= $this->postUploadFile($request,$array);
         if($result){
-         return view()->with('success','新增成功');
+         return view('osce::admin.train.train_add')->with('success','新增成功');
         }
         return redirect()->back()->withInput()->withErrors('新增失败');
     }
@@ -270,7 +269,7 @@ class TrainController extends  CommonController{
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
         $train=InformTrain::find($id);
-        return view('osce::wechat.train.train_detail')->with('train',$train);
+        return view('osce::admin.train.train_detail')->with('train',$train);
     }
 
     /**
@@ -376,5 +375,9 @@ class TrainController extends  CommonController{
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    public function getAddTrain(){
+    	return view('osce::admin.train.train_add');
     }
 }
