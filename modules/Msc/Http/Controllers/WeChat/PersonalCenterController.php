@@ -96,7 +96,8 @@ class PersonalCenterController extends MscWeChatController {
 			'MyApplyList'=>$MyApplyList,
 			'MyPlanList'=>$MyPlanList
 		];
-		
+		return view('msc::wechat.booking.mybooking',$data);
+
 	}
 	/**
 	 * 我已经完成的实验室预约信息；
