@@ -8,7 +8,6 @@
 
 namespace Modules\Osce\Entities;
 
-use App\User;
 use Modules\Osce\Repositories\Common;
 use App\Entities\User;
 use Auth;
