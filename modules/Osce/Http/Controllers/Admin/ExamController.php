@@ -173,11 +173,15 @@ class ExamController extends CommonController
         }
         //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
         $examData = [
-            'name'           => $request  ->  get('name'),
+            'code'           => 100,
+            'name'           => e($request  ->  get('name')),
             'begin_dt'       => $begin_dt,
             'end_dt'         => $end_dt,
             'status'         => 1,
-            'create_user_id' => $user     ->  id
+            'total'          => 0,
+            'create_user_id' => $user     ->  id,
+            'sequence_cate'  => e($request  ->  get('sequence_cate')),
+            'sequence_mode'  => e($request  ->  get('sequence_mode'))
         ];
 
         try{
@@ -293,7 +297,7 @@ class ExamController extends CommonController
             'sequence_cate'  => $request  ->  get('sequence_cate'),
             'sequence_mode'  => $request  ->  get('sequence_mode'),
         ];
-
+        
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {

@@ -35,7 +35,6 @@
                 <th>考试组成</th>
                 <th>考试人数</th>
                 <th>操作</th>
-
             </tr>
             </thead>
             <tbody>
