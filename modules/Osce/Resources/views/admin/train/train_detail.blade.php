@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
-                        	<label class="control-label">培训名称</label>
+                        	<p class="form-control-static">培训名称</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
