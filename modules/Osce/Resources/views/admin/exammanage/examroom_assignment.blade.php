@@ -178,7 +178,7 @@
                                         <tbody index="{{count($examStationData)}}">
                                         @forelse($examStationData as $key => $item)
                                             <tr class="parent-id-{{$item->room_id}}">
-                                                <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->id}}"/></td>
+                                                <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->station_id}}"/></td>
                                                 <td>{{$item->station_name}}</td>
                                                 <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>

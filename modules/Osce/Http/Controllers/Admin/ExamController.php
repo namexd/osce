@@ -816,9 +816,9 @@ class ExamController extends CommonController
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
         $examRoomData = $examRoom -> getExamRoomData($exam_id);
-//        dd($examRoomData->all());
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
+
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
 
