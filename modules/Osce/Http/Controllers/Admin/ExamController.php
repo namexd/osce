@@ -235,6 +235,7 @@ class ExamController extends CommonController
 
         //判断输入的时间是否有误
         foreach($examScreeningData as $key => $value){
+
             if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
                 throw new \Exception('输入的时间有误！');
             }
@@ -388,7 +389,7 @@ class ExamController extends CommonController
             'sequence_cate'  => $request  ->  get('sequence_cate'),
             'sequence_mode'  => $request  ->  get('sequence_mode'),
         ];
-        
+
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
@@ -769,14 +770,10 @@ class ExamController extends CommonController
         try{
             DB::beginTransaction();
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $exam_id        = $request  ->  get('id');       //考试id
+            $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
-//            dd($request->all());
-//            $flows = new Flows();
-//            if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)) {
-//                throw new \Exception('考场安排保存失败，请重试！');
-//            }
+
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
