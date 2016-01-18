@@ -20,6 +20,11 @@
             border-left: 4px solid #19aa8d;
             background: #1d2a2f;
         }
+        .navbar-default .nav > li > a:hover,
+            .navbar-default .nav > li > a:focus {
+              background-color: #1d2a2f;
+              color: white;
+            }
         </style>
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="nav-close"><i class="fa fa-times-circle"></i>
