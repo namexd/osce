@@ -252,12 +252,19 @@ function booking_teacher_ordinary_form(){
                     confirmButton: '确定',
                 });
                 $('#begintime_set').val("");
+            }else if(beginTime>=endTime){
+                $.alert({
+                    title: '提示：',
+                    content: '结束时间必须晚于开始时间！',
+                    confirmButton: '确定',
+                });
+                $('#begintime').val("");
+                return false;
             }else{
                 //$("#begintime").parents().addClass("has-success").removeClass("has-error");
                 //$("#begintime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
                 //$("#begintime").next().next("small").hide();
                 $("#begintime").val($('#begintime_set').val());
-                $("#begintime").val("");
             }
         })
     })
@@ -273,7 +280,7 @@ function booking_teacher_ordinary_form(){
                 });
                 $('#endTime_set').val("");
                 return false;
-            }else if(endTime<=beginTime){
+            }else if(beginTime>=endTime){
                 $.alert({
                     title: '提示：',
                     content: '结束时间必须晚于开始时间！',
@@ -287,7 +294,6 @@ function booking_teacher_ordinary_form(){
                 //$("#endTime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
                 //$("#endTime").next().next("small").hide();
                 $("#endtime").val($('#endTime_set').val());
-                $("#endtime").val("");
             }
         })
     })
