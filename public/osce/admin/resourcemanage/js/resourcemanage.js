@@ -275,7 +275,7 @@ function categories(){
             var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
 
             //改变value值
-            var total = parseInt(change.val())-parseInt(thisElement.find('td').eq(2).find('select').val());
+            var total = parseInt(change.val())-parseInt(thisElement.find('td').eq(2).find('select').val())+1;
             var cu = total;
             //当删除完的时候
             if(total==0){
@@ -478,8 +478,17 @@ function categories(){
             //自动加减节点
             var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
 
-            //改变value值
-            var total = parseInt(change.val())+parseInt($(this).val());
+
+
+            //改变value值,消除连续变换值的变化
+            var total = 0;//= parseInt(change.val())+parseInt($(this).val());
+            $('.'+className).each(function(key,elem){
+                if($(elem).attr('parent')==parent){
+                    return;
+                }else{
+                    total += parseInt($(elem).find('td').eq(2).find('select').val());
+                }
+            });
 
             var option = '';
             for(var k =1;k<=total;k++){
@@ -489,7 +498,7 @@ function categories(){
             change.val(total-1);
 
             $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
-            change.after('<span>'+parseInt(total-1)+'</span>')
+            change.after('<span>'+parseInt(total)+'</span>')
 
 
         });
