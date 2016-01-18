@@ -604,41 +604,35 @@ class ExamController extends CommonController
             'idcard'        =>  $request->get('idcard'),
             'mobile'        =>  $request->get('mobile'),
             'code'          =>  $request->get('code'),
-            'avator'        =>  $images[0],
+            'avator'        =>  $images[count($images)-1],
             'description'   =>  $request->get('description'),
         ];
 
         try{
-            if($student)
-            {
-                foreach($data as $feild => $value)
-                {
-                    $student->  $feild  =   $value;
+            if($student) {
+                foreach($data as $feild => $value) {
+                    if(!empty($value)){
+                        $student->  $feild  =   $value;
+                    }
                 }
 
-                if($student->save())
-                {
+                if($student->save()) {
                     $user   =   $student->userInfo;
-                    $user   ->  gender  =$request->get('gender');
-                    if(!$user->save())
-                    {
+                    $user   ->  gender = $request->get('gender');
+                    $user   ->  avatar = $data['avator'];
+                    if(!$user->save()) {
                         throw new \Exception('用户信息修改失败');
                     }
                     return redirect()->route('osce.admin.exam.getExamineeManage',['id'=>$student->exam_id]);
-                }
-                else
-                {
+                } else {
                     throw new \Exception('考生信息修改失败');
                 }
 
-            }
-            else
-            {
+            } else {
                 throw new \Exception('没有找到该考生');
             }
-        }
-        catch(\Exception $ex)
-        {
+
+        } catch(\Exception $ex) {
             return redirect()->back()->withErrors($ex);
         }
     }
@@ -1329,7 +1323,7 @@ class ExamController extends CommonController
         $id = $request->input('id');
 
         //将其传入对应的模型查询数据
-        
+
     }
 
     /**
@@ -1386,7 +1380,7 @@ class ExamController extends CommonController
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'form_data' => 'required|array',
@@ -1404,9 +1398,9 @@ class ExamController extends CommonController
             }
 
             return redirect()->route('osce.admin.exam.getExamList');
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
