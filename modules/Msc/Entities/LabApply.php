@@ -175,7 +175,9 @@ class LabApply  extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function MyApplyList($status,$uid,$user_type){
-        return  $this->where('status','=',$status)->where('apply_user_id','=',$uid)->where('user_type','=',$user_type)->with(['PlanApply'=>function($PlanApply){
+        return  $this->where('status','=',$status)->where('apply_user_id','=',$uid)->where('user_type','=',$user_type)->with(['Laboratory'=>function($Laboratory){
+            $Laboratory->with('FloorInfo');
+        },'PlanApply'=>function($PlanApply){
             $PlanApply->with(['OpenPlan']);
         }])->get();
     }
@@ -206,6 +208,20 @@ class LabApply  extends Model
             $PlanApply->with('OpenPlan');
         }]);
         return  $builder->orderby('id','desc')->paginate(config('msc.page_size',10));
+    }
+ /**
+     * @param $apply_id
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月18日12:03:44
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetApplyDetails($apply_id){
+        $builder = $this->where('id','=',$apply_id)->with(['Laboratory'=>function($Laboratory){
+            $Laboratory->with('FloorInfo');
+        },'PlanApply'=>function($PlanApply){
+            $PlanApply->with('OpenPlan');
+        }]);
+        return  $builder->first();
     }
 
     //查找普通实验室详情

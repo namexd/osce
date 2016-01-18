@@ -5,32 +5,20 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "mybooking_teacher":mybooking_teacher();break; //ÎÒµÄÔ¤Ô¼£¨ÀÏÊ¦£©
-        case "mybooking_student":mybooking_student();break; //ÎÒµÄÔ¤Ô¼Ñ§ÉúÒ³Ãæ
+        case "mybooking":mybooking();break; //æˆ‘çš„é¢„çº¦é¡µé¢
     }
 });
-
-//ÎÒµÄÔ¤Ô¼£¨ÀÏÊ¦£©
-function mybooking_teacher(){
+//æ›¾æ´ï¼Œ2016.1.8ä¿®æ”¹
+//æˆ‘çš„é¢„çº¦é¡µé¢
+function mybooking(){
     now_index="0";
     initcard();
-    function initcard(){//±íµ¥ÇÐ»»
+    function initcard(){//è¡¨å•åˆ‡æ¢
         $("#mybooking li").unbind("click").click(function(){
             $(this).addClass("check").siblings().removeClass("check");
             now_index=$(this).index();
             $("#info_list>div").eq(now_index).show().siblings("div").hide();
         });
     }
-}
 
-function mybooking_student(){
-    now_index="0";
-    initcard();
-    function initcard(){//¶¥²¿ÇÐ»»
-        $("#thelist2 li").unbind("click").click(function(){
-            $(this).addClass("check").siblings().removeClass("check");
-            now_index=$(this).index();
-            $("#info_list>div").eq(now_index).show().siblings("div").hide();
-        });
-    }
 }

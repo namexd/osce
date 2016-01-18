@@ -43,4 +43,19 @@ class PlanApply extends Model
         return  $this->hasOne('Modules\Msc\Entities\LabApply','id','apply_id');
     }
 
+    /**
+     * @param $apply_id
+     * @return array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月18日15:22:33
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ApplyIdGetOpenPlanIdArr($apply_id){
+        $PlanApplyInfo = $this->where('apply_id','=',$apply_id)->get();
+        $IdArr = [];
+        foreach($PlanApplyInfo as $v){
+            $IdArr[] = $v['open_plan_id'];
+        }
+        return  $IdArr;
+    }
 }
