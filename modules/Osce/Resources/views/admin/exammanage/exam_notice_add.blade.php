@@ -39,7 +39,7 @@
                         <div class="col-sm-10">
                             <select id="select_Category"   class="form-control" name="exam id">
                                 @forelse($list as $exam)
-                                <option value="{{$exam->id}}" >{{$item->name}}</option>
+                                <option value="{{$exam->id}}" >{{$exam->name}}</option>
                                 @empty
                                     <option value="">请创建考试</option>
                                 @endforelse
