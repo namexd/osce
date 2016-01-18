@@ -98,7 +98,7 @@ class TrainController extends  CommonController{
     /**
      *编辑培训回显
      * @method GET
-     * @url /osce/wechat/train/edit-train
+     * @url /osce/admin/train/edit-train
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -117,15 +117,16 @@ class TrainController extends  CommonController{
             'id'  => 'required|integer'
         ]);
         $id=intval($request->get('id'));
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-//        $manager=config('osce.manager');
-//        if($userId!==$id || $creteId!==$manager[0]){
-//            return response()->json(
-//                $this->success_rows(3,'false')
-//            );
-//        }
+
+//      $user=Auth::user();
+//      $userId=$user->id;
+//      $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//      $manager=config('osce.manager');
+//      if($userId!==$id || $creteId!==$manager[0]){
+//          return response()->json(
+//              $this->success_rows(3,'false')
+//          );
+//      }
         $list=InformTrain::where('id',$id)->select()->get();
 
         foreach($list as $item){
@@ -141,6 +142,7 @@ class TrainController extends  CommonController{
                 'create_user_id' =>$item->create_user_id,
             ];
         }
+        $data['attachments']=unserialize($data['attachments']);
         if($data['attachments']){
             $data['attachments']=unserialize($data['attachments']);
         }
@@ -265,7 +267,7 @@ class TrainController extends  CommonController{
     /**
      *查看考前培训
      * @method GET
-     * @url /user/
+     * @url /osce/admin/train/train-detail
      * @access public
      *
      * @param Request $request post请求<br><br>

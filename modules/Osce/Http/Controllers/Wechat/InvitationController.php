@@ -141,9 +141,13 @@ class InvitationController extends CommonController
         $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update('status', '=', 4-$status);
 
         if ($result) {
-            throw new \Exception('操作成功');
+            return response()->json(
+                $this->success_data(1,'操作成功')
+            );
         } else {
-            throw new \Exception('操作失败');
+            return response()->json(
+                $this->success_data(0,'操作失败')
+            );
         }
     }
 
