@@ -28,25 +28,45 @@ input.laydate-icon{
 
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postAddExam')}}">
-
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试名称</label>
-
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="code" name="name">
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试地点</label>
-
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="code" name="code">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">考试顺序</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" style="width:200px;" name="sequence_cate" >
+                                    <option value="1">随机</option>
+                                    <option value="2">顺序</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">排序方式</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" style="width:200px;" name="sequence_mode" v>
+                                    <option value="1">以考场分组</option>
+                                    <option value="2">以考站分组</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试时间</label>
                             <div class="col-sm-10">
@@ -59,7 +79,6 @@ input.laydate-icon{
                                             <th>结束时间</th>
                                             <th>时长</th>
                                             <th>操作</th>
-
                                         </tr>
                                         </thead>
                                         <tbody index="0">

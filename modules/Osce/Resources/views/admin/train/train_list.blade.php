@@ -23,7 +23,7 @@
             <h5 class="title-label">考前培训</h5>
         </div>
         <div class="col-xs-6 col-md-2" style="float: right;">
-            <a  href="#" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
+            <a  href="{{ route('osce.admin.getAddTrain')  }}" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
         </div>
     </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -37,42 +37,17 @@
             </tr>
             </thead>
             <tbody>
+            @foreach($list as $list)
                 <tr>
                     <td>1</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
+                    <td>{{ $list->name }}</td>
+                    <td>{{ $list->begin_dt }}~{{ $list->end_dt }}</td>
                     <td value="1">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                        <a href="{{ route('osce.admin.getEditTrain',array('id'=>$list->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
-                    <td value="2">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
-                    <td value="3">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
-                    <td value="4">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                    </td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
 

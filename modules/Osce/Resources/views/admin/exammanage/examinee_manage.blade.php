@@ -104,7 +104,7 @@
                             <td>{{$item->idcard}}</td>
                             <td>{{$item->mobile}}</td>
                             <td>
-                                {{--<a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>--}}
+                                <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                                 <span class="read  state2 delete" sid="{{$item->id}}" examid="{{$id}}"><i class="fa fa-trash-o fa-2x"></i></span>
                             </td>
                         </tr>

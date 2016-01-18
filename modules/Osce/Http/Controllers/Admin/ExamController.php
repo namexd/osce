@@ -338,6 +338,14 @@ class ExamController extends CommonController
     public function postEditExam(Request $request, Exam $exam)
     {
         //验证,略过
+        $this->validate($request, [
+            'exam_id'   => 'required',
+            'name'      => 'required',
+            'time'      => 'required'
+        ],[
+            'name.required'     => '考试名称必须',
+            'time.required'     => '考试时间必须',
+        ]);
 
         //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
         $exam_id = $request->input('exam_id');
@@ -376,10 +384,11 @@ class ExamController extends CommonController
             'name'           => $request  ->  get('name'),
             'begin_dt'       => $begin_dt,
             'end_dt'         => $end_dt,
+            'total'          => count(Student::where('exam_id', $exam_id)->get()),
             'sequence_cate'  => $request  ->  get('sequence_cate'),
             'sequence_mode'  => $request  ->  get('sequence_mode'),
         ];
-
+        
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
@@ -560,6 +569,80 @@ class ExamController extends CommonController
         }
     }
 
+    public function getEidtExaminee(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+        ]);
+
+        $id =   $request    ->  get('id');
+
+        $student    =   Student::find($id);
+
+        return view('osce::admin.exammanage.examinee_edit', ['item' => $student]);
+    }
+
+    public function postEditExaminee(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'code'          =>  'somtimes',
+            'gender'        =>  'required',
+            'mobile'        =>  'required',
+            'description'   =>  'somtimes',
+            'images_path'   =>  'required',
+        ],[
+            'name.required'         =>  '姓名必填',
+            'idcard.required'       =>  '身份证号必填',
+            'mobile.required'       =>  '手机号必填',
+            'images_path.required'  =>  '请上传照片',
+        ]);
+        $id =   $request->get('id');
+        $student    =   Student::find($id);
+        $images     =   $request->get('images_path');
+        $data   =   [
+            'name'          =>  $request->get('name'),
+            'idcard'        =>  $request->get('idcard'),
+            'mobile'        =>  $request->get('mobile'),
+            'code'          =>  $request->get('code'),
+            'avator'        =>  $images[0],
+            'description'   =>  $request->get('description'),
+        ];
+
+        try{
+            if($student)
+            {
+                foreach($data as $feild => $value)
+                {
+                    $student->  $feild  =   $value;
+                }
+
+                if($student->save())
+                {
+                    $user   =   $student->userInfo;
+                    $user   ->  gender  =$request->get('gender');
+                    if(!$user->save())
+                    {
+                        throw new \Exception('用户信息修改失败');
+                    }
+                    return redirect()->route('osce.admin.exam.getExamineeManage',['id'=>$student->exam_id]);
+                }
+                else
+                {
+                    throw new \Exception('考生信息修改失败');
+                }
+
+            }
+            else
+            {
+                throw new \Exception('没有找到该考生');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex);
+        }
+    }
     /**
      * Excel导入考生
      * @api GET /osce/admin/exam/getImportStudent
@@ -1265,13 +1348,12 @@ class ExamController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
-     *
-     * @param Teacher $teacher
+     * @return \Illuminate\View\View
+     * @internal param Teacher $teacher
      * @version 1.0
      * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
      * @date 2016-01-16
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @return \Illuminate\View\View
      */
     public function getStationAssignment(Request $request)
     {
@@ -1285,7 +1367,7 @@ class ExamController extends CommonController
         $teacher = new Teacher();
         $stationData = $teacher->stationTeacher($exam_id);
 
-        return view('osce::admin.exammanage.station_assignment', ['exam_id' => $exam_id, 'stationData' => $stationData]);
+        return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'stationData' => $stationData]);
     }
 
     /**
@@ -1300,30 +1382,36 @@ class ExamController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return void
-     *
+     * @param ExamFlowStation $examFlowStation
      * @version 1.0
      * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
      * @date  2016-01-16
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-        //验证
-        $this->validate($request, [
-            'form_data' => 'required|array',
-            'exam_id' => 'required|integer'
-        ]);
+        try {
+            //验证
+            $this->validate($request, [
+                'form_data' => 'required|array',
+                'id' => 'required|integer'
+            ]);
 
-        //获取数据
-        $examId = $request->get('exam_id');
-        $formData = $request->get('form_data'); //所有的考站数据
-        //查看是新建还是编辑
-        if (ExamFlowStation::where('exam_id',$examId)->get()->isEmpty()) {  //若是为真，就说明是添加
-            $examFlowStation -> createExamAssignment($examId, $formData);
-        } else { //否则就是编辑
-            $examFlowStation -> updateExamAssignment($examId, $formData);
+            //获取数据
+            $examId = $request->get('id');
+            $formData = $request->get('form_data'); //所有的考站数据
+            dd($formData);
+            //查看是新建还是编辑
+            if (ExamFlowStation::where('exam_id',$examId)->get()->isEmpty()) {  //若是为真，就说明是添加
+                $examFlowStation -> createExamAssignment($examId, $formData);
+            } else { //否则就是编辑
+                $examFlowStation -> updateExamAssignment($examId, $formData);
+            }
+
+            return redirect()->route('osce.admin.exam.getExamList');
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -1403,5 +1491,37 @@ class ExamController extends CommonController
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
+    }
+
+
+    /**
+     * 用ajax的方式返回考站数据
+     * @url GET /osce/admin/exam/ajax-station
+     * @access public
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * id    考试id
+     * @return void
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date  2016-01-18
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAjaxStation(Request $request)
+    {
+        $this->validate($request, [
+            'station_id' => 'sometimes|array'
+        ]);
+
+        $stationIds = $request->get('station_id');
+        $stationIds = empty($stationIds) ? [] : $stationIds;
+        //是用ajax返回
+        $ajax = true;
+        //在模型里查询
+        $station = new Station();
+        $data = $station->showList($stationIds, $ajax);
+        
+        return $this->success_data($data);
     }
 }

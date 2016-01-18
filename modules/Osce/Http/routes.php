@@ -18,6 +18,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
+	Route::get('admin/index/dashboard', ['uses'=>'Admin\IndexController@dashboard','as'=>'osce.admin.index.dashboard']);
 	Route::get('/index', 'OsceController@index');
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		//房间
@@ -118,13 +119,17 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
 		Route::get('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/choose-exam-arrange', 	['uses'=>'ExamController@getChooseExamArrange','as'=>'osce.admin.exam.getChooseExamArrange']);  //判定应该载入哪个安排页面
+		Route::post('exam/station-assignment', 	['uses'=>'ExamController@postStationAssignment','as'=>'osce.admin.exam.postStationAssignment']);
 
+		Route::get('exam/ajax-station', ['uses'=>'ExamController@getAjaxStation','as'=>'osce.admin.exam.getAjaxStation']);  //以json返回考站信息
 		Route::get('exam/add-exam', 	['uses'=>'ExamController@getAddExam','as'=>'osce.admin.exam.getAddExam']);		//新增考试
 		Route::post('exam/add-exam', 	['uses'=>'ExamController@postAddExam','as'=>'osce.admin.exam.postAddExam']);
 		Route::get('exam/examinee-manage', 	['uses'=>'ExamController@getExamineeManage','as'=>'osce.admin.exam.getExamineeManage']);  //考生管理
 		Route::get('exam/del-student', 		['uses'=>'ExamController@getDelStudent','as'=>'osce.admin.exam.getDelStudent']);		//删除考生
 		Route::get('exam/add-examinee', 	['uses'=>'ExamController@getAddExaminee','as'=>'osce.admin.exam.getAddExaminee']);		//添加考生
+		Route::get('exam/edit-examinee', 	['uses'=>'ExamController@getEidtExaminee','as'=>'osce.admin.exam.getEidtExaminee']);		//添加考生
 		Route::post('exam/add-examinee', 	['uses'=>'ExamController@postAddExaminee','as'=>'osce.admin.exam.postAddExaminee']);
+		Route::post('exam/edit-examinee', 	['uses'=>'ExamController@postEditExaminee','as'=>'osce.admin.exam.postEditExaminee']);
 		Route::get('exam/student-query',	['uses'=>'ExamController@getStudentQuery','as'=>'osce.admin.exam.getStudentQuery']);	//考生查询
 		Route::get('exam/watch-status',	['uses'=>'ExamController@getWatchStatus','as'=>'osce.admin.exam.getWatchStatus']); //查询腕表是否绑定
 		Route::get('exam/bound-watch',	['uses'=>'ExamController@getBoundWatch','as'=>'osce.admin.exam.getBoundWatch']);   //绑定腕表
@@ -196,11 +201,25 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('train/del-train',['uses'=>'TrainController@getDelTrain','as'=>'osce.admin.getDelTrain']);
 		Route::get('train/add-train',['uses'=>'TrainController@getAddTrain','as'=>'osce.admin.getAddTrain']);
 		Route::post('train/add-train',['uses'=>'TrainController@postAddTrain','as'=>'osce.admin.postAddTrain']);
+		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 		Route::post('train/edit-train',['uses'=>'TrainController@postEditTrain','as'=>'osce.admin.postEditTrain']);
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 	});
 
+	 //Pad端
+	Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
+		Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
+		Route::get('vcr',['uses'=>'PadController@getVcr']);
 
+		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+
+		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
+
+		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
+		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
+
+	});
 });
 
 
@@ -291,19 +310,19 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 
 
 
-		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
-			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
-			Route::get('vcr',['uses'=>'PadController@getVcr']);
-
-			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
-			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
-
-			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
-
-			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
-			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
-
-		});
+//		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
+//			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
+//			Route::get('vcr',['uses'=>'PadController@getVcr']);
+//
+//			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+//			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+//
+//			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
+//
+//			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
+//			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
+//
+//		});
 	});
 
 
