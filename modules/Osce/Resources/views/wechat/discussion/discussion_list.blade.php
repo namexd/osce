@@ -4,6 +4,74 @@
 <link rel="stylesheet" href="{{asset('osce/wechat/css/discussion.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
+<script type="text/javascript">
+	$(function(){
+		/**
+         * 翻页
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-18
+         */
+        $(window).scroll(function(e){
+            if(away_top >= (page_height - window_height)&&now_page<totalpages){
+                now_page++;
+                //qj.page=now_page;//设置页码
+                getItem(now_page,url)
+                /*加载显示*/
+            }
+        });
+
+        //初始化
+        var now_page = 1;
+        var url = "{{route('osce.wechat.getCheckQuestions')}}";
+        //内容初始化
+        $('.history-list').empty();
+        getItem(now_page,url);
+
+        /**
+         * 分页的ajax请求
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-18
+         * @param   {string}   current 当前页
+         * @param   {string}   url     请求地址
+         */
+        function getItem(current,url){
+            $.ajax({
+                type:'get',
+                url:url,
+                aysnc:true,
+                data:{id:current,pagesize:current},
+                success:function(res){
+                    totalpages = res.total;
+                    var html = '';
+                    var index = (current - 1)*10;
+                    data = res.data.rows;
+                    for(var i in data){
+                        //准备dom
+                        //计数
+                        var key = (index+1+parseInt(i))
+                        html += '<li>'+
+                                    '<div class="content-header">'+
+                                        '<div class="content-l">'+
+                                            '<span>'+key+'F</span>.'+
+                                            '<span class="student">'+data[i].name.name+'</span>.'+
+                                            '<span class="time">'+data[i].time+'</span>'+
+                                        '</div>'+
+                                        '<div class="clearfix"></div>'+
+                                    '</div>'+
+                                    '<p>'+data[i].content+'</p>'+
+                                '</li>';
+
+                    }
+                    //插入
+                    $('.history-list').append(html);
+                }
+            });
+
+        }
+	})
+</script>
 @stop
 
 @section('content')
