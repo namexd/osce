@@ -50,7 +50,7 @@
                         </div>
                     </li>
                     <li class="active">
-                        <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="active J_menuItem" href="{{route('osce.admin.case.getCaseList')}}">病例管理</a>
                             </li>
@@ -68,7 +68,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="active J_menuItem" href="{{route('osce.admin.exam.getExamList')}}">考试安排</a>
                             </li>
@@ -79,6 +79,9 @@
                             <li><a class="active J_menuItem" href="">咨询&通知</a>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">统计分析</span><span class="fa arrow"></span></a>
                     </li>
 					<li>
 						<a href="#"><i class="fa fa-gear"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
