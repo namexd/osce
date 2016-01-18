@@ -30,26 +30,24 @@
                 <h5 class="title-label">考生查询</h5>
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form">
             <div class="panel blank-panel">
-                <div  class="row" style="margin:20px 0;">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <label class="pull-left exam-name">考试名称:</label>
-                        <div class="pull-left exam-list">
-                            <select id="select_Category" required  class="form-control m-b" name="account">
-                                <option>考试1</option>
-                                <option>考试2</option>
-                            </select>
+                <form class="container-fluid ibox-content" action="" method="get" id="list_form">
+                    <div  class="row" style="margin:20px 0;">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="pull-left exam-name">考试名称:</label>
+                            <div class="pull-left exam-list">
+                                <input type="text" placeholder="请输入考试名称" name="exam_name" class="input-md form-control">
+                            </div>
+                        </div>
+                        <div class="input-group col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control">
+                             <span class="input-group-btn">
+                                <button type="submit" class="btn btn-md btn-primary" id="search">搜索</button>
+                            </span>
                         </div>
                     </div>
-                    <div class="input-group col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" placeholder="请输入姓名" class="input-md form-control">
-                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-md btn-primary" id="search">搜索</button>
-                        </span>
-                    </div>
-                </div>
-                <table class="table table-striped" id="table-striped">
+                </form>
+                <table class="table table-striped" id="table-striped" style="background:#fff">
                     <thead>
                     <tr>
                         <th>考试名称</th>
@@ -76,6 +74,5 @@
                 <div class="btn-group pull-right">
                 </div>
             </div>
-        </form>
     </div>
 @stop{{-- 内容主体区域 --}}
