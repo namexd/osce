@@ -190,7 +190,7 @@ class InvigilatePadController extends CommonController
             );
 
         }
-            
+
 //        echo json_encode($standardList);
 //         return response()->json(
 //        $this->success_data($data,1,'数据传送成功')
