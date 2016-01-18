@@ -29,13 +29,16 @@
                 <a  href="{{route('osce.admin.machine.getAddCameras')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
             <div class="panel blank-panel">
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             @forelse($options as $key=>$option)
+<<<<<<< HEAD
                                 <li class="{{($key==1&&!array_key_exists('cate_id',$_GET))||(array_key_exists('cate_id',$_GET)&&$_GET['cate_id']==$option['id'])? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
+=======
+                                <li class="{{($key==1&&(!array_key_exists('cate_id',$_GET)))||(array_key_exists('cate_id',$_GET)&&$_GET['cate_id']==$option['id'])? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
+>>>>>>> osce.0.1.201601130930
                             @empty
                             @endforelse
                         </ul>
@@ -43,25 +46,35 @@
                 </div>
 
                 <div class="input-group" style="margin: 20px 0">
-                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;">
-                    <div class="btn-group" style="margin-right: 10px;">
-                        <button type="button" class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
-                            状态<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            @forelse($machineStatuValues as $status=>$machineStatuValue)
+                    <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
+                        <input type="hidden" name="cate_id" value="1">
+                        <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;" name="name" value="{{(empty($name)?'':$name)}}">
+                        <div class="btn-group" style="margin-right: 10px;">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
                                 @if(array_key_exists('status',$_GET))
-                                    <?php unset($_GET['status']) ?>
+                                    @forelse($machineStatuValues as $status=>$machineStatuValue)
+                                        @if($_GET['status']==$status)
+                                            {{$machineStatuValue}}
+                                            <input type="hidden" name="status" value="{{$status}}">
+                                        @endif
+                                    @empty
+                                    @endforelse
+                                @else
+                                    状态
                                 @endif
-                            <li><a href="{{route('osce.admin.machine.getMachineList',array_add($_GET,'status',$status))}}">{{$machineStatuValue}}</a></li>
-                            @empty
-                                <li><a>请选择</a></li>
-                            @endforelse
-                        </ul>
-                    </div>
-                    <button type="button" class="btn  btn-primary" id="search">&nbsp;搜索&nbsp;</button>
-
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{route('osce.admin.machine.getMachineList')}}">全部</a></li>
+                                @forelse($machineStatuValues as $status=>$machineStatuValue)
+                                    <li><a href="{{route('osce.admin.machine.getMachineList',['status'=>$status])}}">{{$machineStatuValue}}</a></li>
+                                @empty
+                                @endforelse
+                            </ul>
+                        </div>
+                        <button type="submit" class="btn  btn-primary" id="search">&nbsp;搜索&nbsp;</button>
+                    </form>
                 </div>
 
                 <table class="table table-striped" id="table-striped">
@@ -75,13 +88,18 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @forelse($list as $item)
+                        @forelse($list as $key => $item)
                         <tr>
-                            <td>{{$item->id}}</td>
+                            <td>{{$key+1}}</td>
                             <td>{{$item->id}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$machineStatuValues[$item->status]}}</td>
-                            <td><a href="{{route('osce.admin.machine.getEditCameras',['id'=>$item->id])}}">编辑</a></td>
+                            <td>
+                                <a href="{{route('osce.admin.machine.getEditCameras',['id'=>$item->id])}}">
+                                    <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                                </a>
+                                <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x" eid="{{$item->id}}"></i></span></a>
+                            </td>
                         </tr>
                         @empty
                         @endforelse
@@ -89,10 +107,38 @@
                     </tbody>
                 </table>
 
+                <br/>
+                <div class="pull-left">
+                    共{{$list->total()}}条
+                </div>
                 <div class="btn-group pull-right">
                     {!! $list->appends($_GET)->render() !!}
                 </div>
             </div>
-        </form>
+
     </div>
+    <script>
+        $(function(){
+            //删除用户
+            $(".fa-trash-o").click(function(){
+                var thisElement=$(this);
+                var eid=thisElement.attr("eid");
+                layer.alert('确认删除？',function(){
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        url:'{{route('osce.admin.machine.postMachineDelete')}}',
+                        data:{id:eid, cate_id:1},
+                        success:function(data){
+                            if(data.code == 1){
+                                location.reload();
+                            }else {
+                                layer.alert(data.message);
+                            }
+                        }
+                    })
+                });
+            })
+        })
+    </script>
 @stop{{-- 内容主体区域 --}}

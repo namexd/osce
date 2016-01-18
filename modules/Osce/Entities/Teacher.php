@@ -228,40 +228,46 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addInvigilator($data){
-        $mobile =   $data['mobile'];
-        $user   =   User::where('username','=',$mobile)->first();
+    public function addInvigilator($data)
+    {
+        try{
+            $mobile =   $data['mobile'];
+            $user   =   User::where('username', '=', $mobile)->first();
 
-        if(!$user)
-        {
-            $password   =   Common::getRandStr(6);
-            $user       =   $this   ->  registerUser($data,$password);
-            $this       ->  sendRegisterEms($mobile,$password);
-        }
-        $teacher    =   $this   ->  find($user  ->  id);
-        if($teacher)
-        {
-            //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
-            $teacher->name = $data['name'];
-            $teacher = $teacher->save();
-            if (!$teacher) {
-                throw new \Exception('保存老师名字失败，请重试！');
-            } else {
-                return $teacher;
+            if(!$user){
+                $password   =   Common::getRandStr(6);
+                $user       =   $this   ->  registerUser($data,$password);
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'=>$data['role_id'],
+                        'user_id'=>$user->id,
+                        'created_at'=>time(),
+                        'updated_at'=>time(),
+                    ]
+                );
+                $this       ->  sendRegisterEms($mobile,$password);
             }
-//            throw new \Exception('该教职员工已经存在');
-        }
-        else
-        {
-            $data['id'] =   $user    ->  id;
-            if($teacher =   $this   ->  create($data))
-            {
-                return $teacher;
+            $teacher    =   $this   ->  find($user  ->  id);
+            if($teacher){
+                throw new \Exception('该教职员工已经存在');
+//                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
+//                $teacher->name = $data['name'];
+//                $teacher = $teacher->save();
+//                if (!$teacher) {
+//                    throw new \Exception('保存老师名字失败，请重试！');
+//                } else {
+//                    return $teacher;
+//                }
+            } else{
+                $data['id'] =   $user   ->  id;
+                if($teacher =   $this   ->  create($data)){
+                    return $teacher;
+                } else{
+                    throw new \Exception('教职员工创建失败');
+                }
             }
-            else
-            {
-                throw new \Exception('教职员工创建失败');
-            }
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -282,6 +288,7 @@ class Teacher extends CommonModel
     }
     public function sendRegisterEms($mobile,$password){
         //发送短消息
+        Common::sendRegisterEms($mobile,$password);
     }
 
     /**
@@ -308,28 +315,18 @@ class Teacher extends CommonModel
         {
             throw new   \Exception('没有找到该教务人员');
         }
-        if($teacher->name!==$name)
-        {
-            $teacher    ->  name    =   $name;
-        }
-        if($teacher->type!==$type)
-        {
-            $teacher    ->  type    =   $type;
-        }
+        $teacher    ->  name    =   $name;
+        $teacher    ->  type    =   $type;
+
         if(!$teacher->save())
         {
             throw new   \Exception('教务人员名称变更失败');
         }
         //教务人员用户信息变更
         $userInfo   =   $teacher->userInfo;
-        if($userInfo->name!==$name)
-        {
-            $userInfo   ->name  =$name;
-        }
-        if($userInfo->mobile!==$mobile)
-        {
-            $userInfo   ->mobile  =$mobile;
-        }
+        $userInfo   ->  name    =$name;
+        $userInfo   ->  mobile  =$mobile;
+
         if(!$userInfo->save())
         {
             throw new   \Exception('教务人员用户信息变更失败');
@@ -344,28 +341,16 @@ class Teacher extends CommonModel
         {
             throw new   \Exception('没有找到该教务人员');
         }
-        if($teacher->name!==$name)
-        {
-            $teacher    ->  name    =   $name;
-        }
-        if($teacher->case_id!==$caseId)
-        {
-            $teacher    ->  case_id    =   $caseId;
-        }
+        $teacher    ->  name    =   $name;
+        $teacher    ->  case_id =   $caseId;
         if(!$teacher->save())
         {
             throw new   \Exception('教务人员名称变更失败');
         }
         //教务人员用户信息变更
         $userInfo   =   $teacher->userInfo;
-        if($userInfo->name!==$name)
-        {
-            $userInfo   ->name  =$name;
-        }
-        if($userInfo->mobile!==$mobile)
-        {
-            $userInfo   ->mobile  =$mobile;
-        }
+        $userInfo   ->  name    =   $name;
+        $userInfo   ->  mobile  =   $mobile;
         if(!$userInfo->save())
         {
             throw new   \Exception('教务人员用户信息变更失败');

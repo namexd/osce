@@ -461,29 +461,25 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getDelStudent(Request $request, Student $student)
+    public function postDelStudent(Request $request, Student $student)
     {
         //验证
         $this->validate($request, [
-            'id' => 'required|integer'
+            'id'        => 'required|integer',
         ]);
 
         try {
-            //获取id
-            $exam_id = $request->get('exam_id');
+            //获取student_id
             $student_id = $request->get('id');
-
             //进入模型逻辑
             $result = $student->deleteData($student_id);
 
-            if ($result !== true) {
-                throw new \Exception('删除考试失败，请重试！');
-            } else {
-                return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
+            if ($result === true) {
+                return $this->success_data(['删除成功！']);
             }
 
         } catch (\Exception $ex) {
-            return redirect()->back()->withError($ex);
+            return $this->fail($ex);
         }
     }
 
@@ -672,6 +668,7 @@ class ExamController extends CommonController
         try {
 
             //获得上传的数据
+
             $exam_id= $id;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
@@ -728,7 +725,6 @@ class ExamController extends CommonController
          $examModel= new Student();
         //从模型得到数据
         $data=$examModel->getList($formData);
-
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }

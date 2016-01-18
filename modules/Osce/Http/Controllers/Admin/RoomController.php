@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Modules\Osce\Entities\Area;
+use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
@@ -36,29 +37,28 @@ class RoomController extends CommonController
     {
         //验证规则，暂时留空
         $this->validate($request,[
-            'id' => 'sometimes|integer',
-            'keyword' => 'sometimes',
-            'type' => 'sometimes|integer'
+            'id'        => 'sometimes|integer',
+            'type'      => 'sometimes|integer',
+            'keyword'   => 'sometimes'
         ]);
 
         //获取各字段
         $keyword = e($request->input('keyword', ''));
-        $type = $request->input('type', 1);
-        $id = $request->input('id', '');
-//        dd($type);
+        $type    = $request ->input('type', 1);
+        $id      = $request ->input('id', '');
+
         //获取当前场所的类
         list($area,$data) = $room->showRoomList($keyword, $type, $id);
-//        dd($data);
 
         //展示页面
         if ($type == 1) {
-            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         } else if ($type == 2){
-            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         }else if ($type == 3){
-            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         }else{
-            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type]);
+            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         }
 
     }
@@ -164,9 +164,28 @@ class RoomController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getAddRoom()
+    public function getAddRoom($id="")
     {
-        return view('osce::admin.resourcemanage.examroom_add');
+        if ($id == "") {
+            $vcr = Vcr::where('status', 1)
+                ->select(['id', 'name'])
+                ->get();     //关联摄像机
+        } else {
+            //根据station的id找到对应的vcr的id
+            $vcrId = Room::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
+
+            $vcr  = Vcr::where('status', 1)
+                ->orWhere(function($query) use($vcrId){
+                    $query->where('id','=',$vcrId);
+                })
+                ->select(['id', 'name'])
+                ->get();     //关联摄像机
+        }
+
+
+        return view('osce::admin.resourcemanage.examroom_add',[
+            'vcr' =>$vcr,
+        ]);
     }
 
     /**
@@ -182,10 +201,11 @@ class RoomController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postCreateRoom(Request $request, Room $room)
+    public function postCreateRoom(Request $request, RoomVcr $roomVcr)
     {
         //验证
         $this->validate($request, [
+            'vcr_id'        => 'required',
             'name' => 'required',
             'nfc' => 'required',
             'address' => 'required',
@@ -193,10 +213,23 @@ class RoomController extends CommonController
             'description' => 'required'
         ]);
         $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
+        $vcrId =$request->get('vcr_id');
 
         DB::connection('osce_mis')->beginTransaction();
+        $roomSave =DB::connection('osce_mis')->table('room')->insertGetId($formData);
 
-        $result = $room->insertData($formData);
+
+//        if(is_array($vcrId)){
+//           $vcrId= serialize('$vcrId');
+//        }else{
+//        }
+        $vcrId= serialize('$vcrId');
+        $data=[
+            'room_id'=>$roomSave,
+            'vcr_id'=>$vcrId,
+        ];
+        $result = $roomVcr->insertData($data);
+
         if (!$result) {
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors('插入数据失败,请重试!');
@@ -238,10 +271,10 @@ class RoomController extends CommonController
             }
 
             DB::connection('osce_mis')->commit();
-            return json_encode($this->success_data(['删除成功！']));
+            return $this->success_data(['删除成功！']);
         } catch (\Exception $ex) {
             DB::connection('osce_mis')->rollBack();
-            return json_encode($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 

@@ -74,7 +74,7 @@
 
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>新增</h5>
+                <h5>编辑摄像机</h5>
             </div>
             <div class="ibox-content">
                 <div class="row">
@@ -146,8 +146,10 @@
                                 <label class="col-sm-2 control-label">设备状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
-                                        <option value="1">正常</option>
-                                        <option value="0">损坏</option>
+                                        <option value="0" {{($item['status']==0)?'selected="selected"':''}}>离线</option>
+                                        <option value="1" {{($item['status']==1)?'selected="selected"':''}}>在线</option>
+                                        <option value="2" {{($item['status']==2)?'selected="selected"':''}}>维修</option>
+                                        <option value="3" {{($item['status']==3)?'selected="selected"':''}}>报废</option>
                                     </select>
                                 </div>
                             </div>
@@ -162,7 +164,8 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <button class="btn btn-white" type="submit">取消</button>
+                                    <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
+{{--                                    <a class="btn btn-white" href="{{route('osce.admin.machine.getMachineList')}}">取消</a>--}}
 
                                 </div>
                             </div>

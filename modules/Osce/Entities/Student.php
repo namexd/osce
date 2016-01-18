@@ -82,12 +82,13 @@ class Student extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
-
-            if (!$result = $this->where($this->table.'.id', '=', $student_id)->delete())
-            {
-                throw new \Exception('删除考生失败，请重试！');
+            $result = WatchLog::where('student_id', $student_id)->first();
+            if($result){
+                throw new \Exception('该考生已绑定，无法删除！');
             }
-
+            if (!$result = $this->where('id', $student_id)->delete()){
+                throw new \Exception('该考生已绑定，无法删除！');
+            }
             $connection->commit();
             return true;
 
@@ -120,6 +121,7 @@ class Student extends CommonModel
                 $user -> gender = $examineeData['gender'];  //性别
                 $user -> mobile = $examineeData['mobile'];  //手机号
                 $user -> avatar = $examineeData['avator'];  //头像
+
                 $user -> idcard = $examineeData['idcard'];  //身份证号
                 $user -> email  = $examineeData['email'];   //邮箱
                 if(!($user->save())){      //跟新用户
@@ -151,6 +153,8 @@ class Student extends CommonModel
             }else{
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
+
+//                $examineeData['avator'] = $examineeData['avatar'];
                 $examineeData['create_user_id'] = $operator->id;
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');
@@ -191,6 +195,7 @@ class Student extends CommonModel
      * @return bool
      */
 
+
     public  function studentList($teacher_id){
         return Student::leftjoin('exam_queue',function($join){
             $join ->on('student.id','=','exam_queue.student_id');
@@ -230,4 +235,18 @@ class Student extends CommonModel
         $builder->orderBy('exam.begin_dt');
         return $builder->paginate(config('msc.page_size'));
     }
+
+//    public  function studentList($watch_id){
+//        return Student::leftjoin('watch_log',function($join){
+//            $join ->on('student.id','=','watch_log.student_id');
+//        })->where('watch_log.id','=',$watch_id)
+//          ->select([
+//              'student.name as name',
+//              'student.code as code',
+//              'student.idcard as idcard',
+//              'student.mobile as mobile'
+//          ])
+//            ->get();
+//    }
+
 }

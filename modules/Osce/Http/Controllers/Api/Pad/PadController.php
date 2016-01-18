@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 
 use Illuminate\Http\Request;
+
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
@@ -22,6 +23,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class PadController extends  CommonController{
     /**
+
      *根据场所ID获取摄像机列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/room-vcr
@@ -45,6 +47,7 @@ class PadController extends  CommonController{
 
             $id=$request->get('id');
             $data=RoomVcr::where('room_id',$id)->select()->get();
+
             $list=[];
             foreach($data as $item){
                $list[]=[
@@ -113,7 +116,6 @@ class PadController extends  CommonController{
              $exam_id=$request->get('exam_id');
              $examModel=new ExamRoom();
              $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
-
              return response()->json(
                  $this->success_data($stationVcrs,1,'success')
              );
@@ -138,18 +140,16 @@ class PadController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
+
        public function getTimingList(Request $request){
             $this->validate($request,[
                  'vcr_id' =>'required|integer',
-                 'startTime'   =>'required',
-                 'endTime'   =>'required',
+                 'time'   =>'required',
             ]);
             $vcr_id=$request->get('vcr_id');
-            $startTime=$request->get('startTime');
-            $endTime=$request->get('endTime');
+            $time=$request->get('time');
            try{
-               $stationVcr=new StationVcr();
-               $vcrs=$stationVcr->getTime($vcr_id,$startTime,$endTime);
+               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time','<',$time)->select()->get();
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );
@@ -261,4 +261,5 @@ class PadController extends  CommonController{
                    );
                };
        }
+
 }
