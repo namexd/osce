@@ -34,11 +34,7 @@
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             @forelse($options as $key=>$option)
-<<<<<<< HEAD
-                                <li class="{{($key==1&&!array_key_exists('cate_id',$_GET))||(array_key_exists('cate_id',$_GET)&&$_GET['cate_id']==$option['id'])? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
-=======
                                 <li class="{{($key==1&&(!array_key_exists('cate_id',$_GET)))||(array_key_exists('cate_id',$_GET)&&$_GET['cate_id']==$option['id'])? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
->>>>>>> osce.0.1.201601130930
                             @empty
                             @endforelse
                         </ul>
@@ -48,10 +44,14 @@
                 <div class="input-group" style="margin: 20px 0">
                     <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
                         <input type="hidden" name="cate_id" value="1">
-                        <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;" name="name" value="{{(empty($name)?'':$name)}}">
+                        <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;height: 36px;" name="name" value="{{(empty($name)?'':$name)}}">
+
                         <div class="btn-group" style="margin-right: 10px;">
                             <button type="button" class="btn btn-default dropdown-toggle"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
+                                状态<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
                                 @if(array_key_exists('status',$_GET))
                                     @forelse($machineStatuValues as $status=>$machineStatuValue)
                                         @if($_GET['status']==$status)
@@ -63,14 +63,6 @@
                                 @else
                                     状态
                                 @endif
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{route('osce.admin.machine.getMachineList')}}">全部</a></li>
-                                @forelse($machineStatuValues as $status=>$machineStatuValue)
-                                    <li><a href="{{route('osce.admin.machine.getMachineList',['status'=>$status])}}">{{$machineStatuValue}}</a></li>
-                                @empty
-                                @endforelse
                             </ul>
                         </div>
                         <button type="submit" class="btn  btn-primary" id="search">&nbsp;搜索&nbsp;</button>

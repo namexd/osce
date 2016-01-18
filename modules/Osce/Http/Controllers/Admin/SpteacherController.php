@@ -37,17 +37,17 @@ class SpteacherController extends CommonController
     public function getShow(Request $request, Teacher $model)
     {
         //验证略
-
         //得到请求的病例id和已经选择的sp老师id
         $stationId = $request->input('station_id', '');
         $spteacherId = $request->input('spteacher_id', '');
 
         //得到老师的列表
         $stationIds[] = $stationId;
-        $spteacherIds[] =$spteacherId;
+//        $spteacherIds[] =$spteacherId;
+        $spteacherIds=array_unique($spteacherId);
 
         $data = $model->showTeacherData($stationIds, $spteacherIds);
-
+//dd($data);
         return  response()->json($this->success_rows(1,'获取成功',count($data),count($data),1,$data->toArray()));
     }
 

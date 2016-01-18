@@ -54,9 +54,6 @@
 
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.Station.postAddStation')}}">
-
-                            <div class="hr-line-dashed"></div>
-
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站名称</label>
 
@@ -169,7 +166,6 @@
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-{{--                                    <a type="button" class="btn btn-white" href="{{route('osce.admin.Station.getStationList')}}" >取消</a>--}}
                                 </div>
                             </div>
                         </form>

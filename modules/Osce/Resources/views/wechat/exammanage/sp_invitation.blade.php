@@ -51,7 +51,7 @@
             @forelse($list as $data)
             <li>
                 <p class="title">{{$data->name}}</p>
-                <p class="time"><span class="year">{{date('Y-m-d',strtotime($data->created_at))}}</span><span>{{date('H-m-s',strtotime($data->created_at))}}</span></p>
+                <p class="time"><span class="year">{{date('Y-m-d',strtotime($data->created_at))}}</span><span>{{date('H-t-s',strtotime($data->created_at))}}</span></p>
             </li>
             @empty
             <li>

@@ -45,7 +45,8 @@
                 <div class="input-group" style="margin: 20px 0">
                     <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>3])}}" method="get">
                     <input type="hidden" name="cate_id" value="3">
-                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;" name="name" value="{{(empty($name)?'':$name)}}">
+                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;height: 36px;" name="name" value="{{(empty($name)?'':$name)}}">
+
                     <div class="btn-group" style="margin-right: 10px;">
                         <button type="button" class="btn btn-default dropdown-toggle"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">

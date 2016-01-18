@@ -3,7 +3,9 @@
 @section('only_css')
 <link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <style type="text/css">
-	.ibox-title h5{margin-top:10px;}
+	.ibox-title{min-height:34px;line-height:34px;margin:10px 0;background:#F3F7F8;}
+	.ibox-content{border:none;}
+	.ibox-title h5{height:16px;line-height:16px;margin:0;margin-top:-4px;border:0;}
 	.control-label{text-align: right;height:34px;line-height:34px;font-weight: 100;}
 	.form-control-feedback{right:25px;}
 	.checkbox_input{margin:10px 10px 0 0;font-weight:100;cursor:pointer;}

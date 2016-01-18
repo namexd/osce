@@ -182,6 +182,7 @@ class InvigilatePadController extends CommonController
         $exam =Exam::find($examId);
         $StandardModel  =   new Standard();
         $standardList   =   $StandardModel->ItmeList($station->subject_id);
+        dd($standardList);
         if(count($standardList)!=0){
             return response()->json(
         $this->success_data($standardList,1,'数据传送成功')

@@ -36,20 +36,27 @@ class Standard extends CommonModel
     }
 
     public function ItmeList($subjectId){
-        $prointList =   $this->where('subject_id','=',$subjectId)->where('pid','=',0)->get();
+        $prointList =   $this->where('subject_id','=',$subjectId)->get();
         $data       =   [];
-        foreach($prointList as $proint)
+        foreach($prointList as $item)
         {
-            $data[] =   $proint;
-            foreach($proint->childrens as $option)
-            {
-                $data[]=$option;
-            }
+            $data[$item->pid][] =   $item;
         }
-
-//        dd($data);
-//        dd($data[0]->childrens[0]['pid']);
-        return $data;
+        $return =   [];
+        foreach($data[0] as $proint)
+        {
+            $prointData['test_point'] =   $proint;
+            if(array_key_exists($proint->id,$data))
+            {
+                $prointData['test_term']    =   $data[$proint->id];
+            }
+            else
+            {
+                $prointData['options']    =   [];
+            }
+            $return[]=$prointData;
+        }
+        return $return;
     }
 
 
