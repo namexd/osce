@@ -199,7 +199,7 @@ class LabApply  extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function HistoryLaboratoryApplyList($uid){
-        $builder = $this->where('apply_user_id','=',$uid)->with(['Laboratory'=>function($Laboratory){
+        $builder = $this->where('apply_user_id','=',$uid)->whereNotIn('status',[1])->with(['Laboratory'=>function($Laboratory){
             $Laboratory->with('FloorInfo');
         },'PlanApply'=>function($PlanApply){
             $PlanApply->with('OpenPlan');
