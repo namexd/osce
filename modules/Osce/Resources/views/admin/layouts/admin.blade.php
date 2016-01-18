@@ -14,6 +14,11 @@
             font-size: 14px;
         }
         .row.content-tabs,.page-tabs-content,.page-tabs.J_menuTabs,.content-tabs .roll-nav, .page-tabs-list{height: 50px!important;}
+        .roll-nav.roll-left.J_tabLeft,.roll-nav.roll-right.J_tabRight,.roll-nav.roll-right.J_tabClose,.roll-nav.roll-right.J_tabExit{
+            margin: 0;
+            border: 0;
+            border-bottom: 2px solid #2f4050;
+        }
         .page-tabs a {
             height: 48px;
             line-height: 50px;
@@ -39,6 +44,7 @@
             color: #777;
             background: #f2f2f2;
             cursor: pointer;
+            height: 48px;
         }
     </style>
 @stop
