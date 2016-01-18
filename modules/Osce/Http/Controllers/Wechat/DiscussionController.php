@@ -83,8 +83,10 @@ class DiscussionController extends  CommonController{
                 'count' =>$countReply,
             ];
           }
-
-          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
+          return response()->json(
+              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$list)
+          );
+//          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
       }
 
     /**
@@ -171,9 +173,10 @@ class DiscussionController extends  CommonController{
                 'question'   =>$question,
                 'countReply' =>$countReply,
             );
-
-          return view('osce::wechat.discussion.discussion_detail')->with(['row'=>$row,'data' =>$data,'pagination'=>$pagination]);
-
+            $data['row']=$row;
+          return response()->json(
+              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$data)
+          );
       }
 
 
