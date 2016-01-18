@@ -127,9 +127,19 @@
                 success: function (data, status)
                 {
                     if(data.state=='SUCCESS'){
-                        console.log("1");
-                        str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
-                        $(".upload_list").append(str);
+                        str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" />'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                        var ln=$(".upload_list").children("p").length;
+                        if(ln<=1){
+                            $(".upload_list").append(str);
+                        }else{
+                            $.alert({
+                                title: '提示：',
+                                content: '最多上传2个文件!',
+                                confirmButton: '确定',
+                                confirm: function(){
+                                }
+                            });
+                        }
                     }
                 },
 	            error: function (data, status, e)
@@ -210,19 +220,19 @@
 								<input type="file" name="file" id="file0"/>
 							</span>
 							@if($data['attachments'])
-                            @foreach($data['attachments'] as $data)        
-							<div class="upload_list">
-								<p>
-                                    <input type="hidden" name="file[]" id="" value="{{ $data }}" />
-                                        <i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($data,27)  }}&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
-								</p>
-							</div>
-                            @endforeach
+                                <div class="upload_list">
+                                    @foreach($data['attachments'] as $data)
+                                        <p>
+                                            <input type="hidden" name="file[]" id="" value="{{ $data }}" />
+                                                <i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($data,27)  }}&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
+                                        </p>
+                                    @endforeach
+                                </div>
                             @else
-                            <p>
+                                <p>
                                     <input type="hidden" name="file[]" id="" value="" />
-                                        <i class="fa fa-2x fa-delicious"></i>&nbsp;&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
-								</p>
+                                    <i class="fa fa-2x fa-delicious"></i>&nbsp;&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
+                                </p>
                             @endif
                         </div>
                     </div>
