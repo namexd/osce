@@ -622,7 +622,7 @@ class MachineController extends CommonController
     private function addWatch(Request  $request){
         $this   ->  validate($request,[
             'name'          =>  'required',
-            'code'          =>  'required',
+            'code'          =>  'required|unique:watch',
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'required',
