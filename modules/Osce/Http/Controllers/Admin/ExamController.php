@@ -1546,4 +1546,33 @@ class ExamController extends CommonController
         return $this->success_data($data);
 
     }
+    /**
+     * 下载学生导入模板
+     * @url GET /osce/admin/exam/download-student-improt-tpl
+     * @access public
+     *
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getdownloadStudentImprotTpl(){
+        $this->downloadfile('student.xlsx',public_path('download').'/student.xlsx');
+    }
+
+    private function downloadfile($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
 }
