@@ -133,7 +133,7 @@ class PersonalCenterController extends MscWeChatController {
 		$LabApply = new LabApply;
 		$ApplyDetails = $LabApply->GetApplyDetails($apply_id);
 		return response()->json(
-			$this->success_rows(1,'获取成功',$ApplyDetails->total(),config('msc.page_size',10),$ApplyDetails->currentPage(),array('HistoryLaboratoryApplyList'=>$ApplyDetails->toArray()))
+			$this->success_rows(1,'获取成功',1,config('msc.page_size',10),1,array('HistoryLaboratoryApplyList'=>$ApplyDetails->toArray()))
 		);
 	}
 
