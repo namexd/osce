@@ -50,6 +50,7 @@ class LabApply  extends Model
         return  $this->hasOne('Modules\Msc\Entities\Laboratory','id','lab_id');
     }
 
+
     //后台获取审核列表
     public function get_check_list($keyword="",$type=1,$id=''){
         $userDb    = config('database.connections.sys_mis.database');

@@ -77,5 +77,16 @@ class OpenPlan  extends  Model
         return  $this->hasMany('Modules\Msc\Entities\PlanApply','open_plan_id','id');
     }
 
+    /**
+     * @access public
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016年1月18日10:32:52
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function Student(){
+        return  $this->hasMany('Modules\Msc\Entities\Student','id','id');
+    }
+
 
 }

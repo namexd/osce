@@ -204,5 +204,41 @@ class Laboratory extends Model
         }])->first();
     }
 
+//    public function Lab(){
+//        return  $this->hasMany('Modules\Msc\Entities\Laboratory','','id');
+//    }
 
+
+    //后台获取审核列表
+    public function get_check_list($keyword="",$type=1,$id=''){
+        $labDb    = config('database.connections.msc_mis.database');
+        $labTable = $labDb.'.lab';
+
+
+//        if(!empty($keyword)){
+//            $builder = $this->where($userTable.'.name','like','%'.$keyword.'%');
+//        }else{
+//            $builder = $this;
+//        }
+//
+//        if($type == 1){
+//            $builder = $builder->where($lab_applyTable.'.status','=',1);
+//        }else{
+//            $builder = $builder->where($lab_applyTable.'.status','<>',1);
+//        }
+        if(!empty($id)){
+            $builder = $this->where($labTable.'.manager_user_id','=',$id);
+        }
+        $builder =  $builder = $this->leftjoin('location',function($local) use($labTable){
+            $local->on($local->table.'.id', '=', $labTable.'.location_id');
+        })->with(['OpenPlan'=>function($OpenPlan){
+            $OpenPlan->with(['PlanApply'=>function($PlanApply){
+                $PlanApply->with('LabApply');
+            }]);
+        }]);
+        $data = $builder->select($labTable.'.*','location.name as lname')->paginate(config('msc.page_size',10));
+        //dd($data);
+        return $data;
+
+    }
 }
