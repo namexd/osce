@@ -220,4 +220,30 @@ class ExamRoom extends CommonModel
             return $ex;
         }
     }
+
+    //获取候考教室列表
+    public function getWaitRoom($exam_id){
+        $time=time();
+        try{
+            $builder=$this->Join('exam','exam.id','=','exam_room.exam_id');
+            $builder=$builder->Join('room','room.id','=','exam_room.room_id');
+            $builder=$builder->where('exam.id',$exam_id);
+            $builder=$builder->whereRaw(
+                'unix_timestamp('.$this->table.'.begin_dt) > ?',
+                [
+                    $time
+                ]
+            );
+
+            $data= $builder->select([
+                'room.id as room_id',
+                'room.name as room_name',
+                'exam.name as exam_name',
+            ])->get();
+            return $data;
+        }catch (\Exception $ex){
+            throw $ex;
+        }
+
+    }
 }
