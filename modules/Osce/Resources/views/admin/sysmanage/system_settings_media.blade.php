@@ -177,20 +177,13 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-<<<<<<< HEAD
 						<li class="active"><a href="{{route('osce.admin.config.getIndex')}}">媒体设置</a></li>
                         <li class=""><a href="{{route('osce.admin.config.getArea')}}">场所类型</a></li>
-=======
-                        <li class="active"><a href="#">媒体设置</a></li>
-                        <li class=""><a href="#">场所类型</a></li>
->>>>>>> osce.0.1.201601130930
                     </ul>
                 </div>
                 <div class="ibox float-e-margins">
                 	<div class="ibox-title" style="border:none;">
 			            <h5>媒体设置</h5>
-<<<<<<< HEAD
-=======
 			        </div>
 			        <div class="ibox-content">
 			            <div class="row">
@@ -225,7 +218,6 @@
 			        </div>
 			        <div class="ibox-title" style="border:none;">
 			            <h5>媒体分享</h5>
->>>>>>> osce.0.1.201601130930
 			        </div>
 			        <div class="ibox-content">
 			            <div class="row">
@@ -267,7 +259,6 @@
 			                	<div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label">方式选择：</label>
 		                            <div class="col-sm-4">
-<<<<<<< HEAD
 		                            	
 		                            	<select class="form-control" name="sms_cnname">
 		                            		<option value="1">{{$tempConfig['messages']['sms']['cnname']}}</option>
@@ -290,9 +281,6 @@
 		                            <label class="col-sm-2 control-label">密码：</label>
 		                            <div class="col-sm-9">
 		                                <input type="text" class="form-control" id="" name="sms_password" value="{{$tempConfig['messages']['sms']['password']}}">
-=======
-		                            	<input class="form-control" type="text" name="name" id="" placeholder="微信好友"  value="" />
->>>>>>> osce.0.1.201601130930
 		                            </div>
 		                        </div>
 			                </div>
@@ -360,7 +348,6 @@
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label">服务器协议：</label>
 		                            <div class="col-sm-4">
-<<<<<<< HEAD
 		                            	<select class="form-control" name="email_protocol">
 		                            		@if($tempConfig['messages']['email']['protocol']=="POP3")
 		                            		<option value="POP3" selected="selected">POP3</option>
@@ -369,14 +356,6 @@
 		                            		<option value="POP3">POP3</option>
 		                            		<option value="IMAP" selected="selected">IMAP</option>
 		                            		@endif
-=======
-		                            	<select class="form-control" name="country2">
-		                            		<option value="">--请选择--</option>
-		                            		<option value="1" selected="selected">POP3</option>
-		                            		<option value="2">2</option>
-		                            		<option value="3">3</option>
-		                            		<option value="4">4</option>
->>>>>>> osce.0.1.201601130930
 	                            		</select>
 		                            </div>
 		                        </div>
@@ -389,7 +368,6 @@
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label">SSL网关协议：</label>
 		                            <div class="col-sm-4">
-<<<<<<< HEAD
 		                            	<select class="form-control" name="email_ssl">
 		                            		@if($tempConfig['messages']['email']['ssl']=="1")
 		                            		<option value="true"  selected="selected">true</option>
@@ -398,14 +376,6 @@
 		                            		<option value="true">true</option>
 		                            		<option value="flase" selected="selected">false</option>
 		                            		@endif
-=======
-		                            	<select class="form-control" name="country3">
-		                            		<option value="">--请选择--</option>
-		                            		<option value="1" selected="selected">SMTP</option>
-		                            		<option value="2">2</option>
-		                            		<option value="3">3</option>
-		                            		<option value="4">4</option>
->>>>>>> osce.0.1.201601130930
 	                            		</select>
 		                            </div>
 		                        </div>
