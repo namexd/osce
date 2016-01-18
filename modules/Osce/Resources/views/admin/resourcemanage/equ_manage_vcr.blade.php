@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="input-group" style="margin: 20px 0">
-                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;">
+                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;height: 36px;">
                     <div class="btn-group" style="margin-right: 10px;">
                         <button type="button" class="btn btn-default dropdown-toggle"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
@@ -81,7 +81,7 @@
                             <td>{{$item->id}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$machineStatuValues[$item->status]}}</td>
-                            <td><a href="{{route('osce.admin.machine.getEditCameras',['id'=>$item->id])}}">编辑</a></td>
+                            <td><a href="{{route('osce.admin.machine.getEditCameras',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a></td>
                         </tr>
                         @empty
                         @endforelse

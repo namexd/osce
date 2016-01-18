@@ -118,39 +118,39 @@
             }
 		});
  		$(".upload").change(function(){
-	        $.ajaxFileUpload
-	        ({
-	            url:'{{url('/osce/admin/train/upload-file')}}',
-	            secureuri:false,//
-	            fileElementId:'file0',//必须要是 input file标签 ID
-	            dataType: 'json',//
-	            success: function (data, status)
-	            {
-	                if(data.state=='SUCCESS'){
-	                	var type="";//doc或xlsx
-	                	var str="";
-	                	var name="";
-//	                	if (data.original=="docx") {
-	                		str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
-	                		$(".upload_list_doc").append(str);
+//	        $.ajaxFileUpload
+//	        ({
+//	            url:'{{url('/osce/admin/train/add-train')}}',
+//	            secureuri:false,//
+//	            fileElementId:'file0',//必须要是 input file标签 ID
+//	            dataType: 'json',//
+//	            success: function (data, status)
+//	            {
+//	                if(data.code){
+//	                	var type="";//doc或xlsx
+//	                	var str="";
+//	                	var name="";
+//	                	if (type=="doc") {
+//	                		str='<p><input type="hidden" name="doc[]" id="" value="'+name+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+//	                		$(".upload_list_doc").append(str);
 //	                	}
-//	                	if (data.original=="xlsx") {
-//	                		str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+//	                	if (type=="xlsx") {
+//	                		str='<p><input type="hidden" name="xlsx[]" id="" value="'+name+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
 //	                		$(".upload_list_xlsx").append(str);
 //	                	}
-	                }
-	            },
-	            error: function (data, status, e)
-	            {
-	                $.alert({
-	                  	title: '提示：',
-	                  	content: '通讯失败!',
-	                  	confirmButton: '确定',
-	                  	confirm: function(){
-                		}
-	              	});
-	            }
-	        });
+//	                }
+//	            },
+//	            error: function (data, status, e)
+//	            {
+//	                $.alert({
+//	                  	title: '提示：',
+//	                  	content: '通讯失败!',
+//	                  	confirmButton: '确定',
+//	                  	confirm: function(){
+//                		}
+//	              	});
+//	            }
+//	        });
 	    }) ;
 	    $(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
@@ -164,7 +164,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增考前培训</h5>
+            <h5>编辑考前培训</h5>
         </div>
         <div class="ibox-content">
             <form method="post" id="form1" class="form-horizontal" action="#">
@@ -219,9 +219,17 @@
 							</span>
 							<div class="upload_list upload_list_doc">
 								<p>
-									<input type="hidden" name="file" id="" value="" />
+									<input type="hidden" name="doc[]" id="" value="文档名字.doc" />
+									<i class="fa fa-2x fa-delicious"></i>&nbsp;文档名字.doc&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
 								</p>
 							</div>
+							<div class="upload_list upload_list_xlsx">
+								<p>
+									<input type="hidden" name="xlsx[]" id="" value="文档名字.xlsx" />
+									<i class="fa fa-2x fa-delicious"></i>&nbsp;文档名字.xlsx&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
+								</p>
+							</div>
+                        </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">

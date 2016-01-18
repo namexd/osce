@@ -1514,6 +1514,25 @@ function station_assignment(){
     });
     $('#examroom').find('tbody').attr('data',JSON.stringify(arrStore));
 
+    /**
+     * 遍历已选的id
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-18
+     * @return  {array}   id数组
+     */
+    function getStations(){
+        var arrStore = [];
+        $('#examroom').find('tbody').find('tr').each(function(key,elem){
+
+            var selected = $(elem).find('td').eq(1).find('select').val();
+            for(var i in selected){
+                arrStore.push(selected[i]);
+            }
+            
+        });
+        return arrStore;
+    }
 
     /**
      * 获取所有上一张表格里的id
@@ -1898,8 +1917,43 @@ function station_assignment(){
             $('#examroom').find('tbody').attr('index',index);
         $('#examroom').find('tbody').append(html);
 
+
+        $('.js-example-basic-multiple').select2({
+            placeholder: "==请选择==",
+            minimumResultsForSearch: Infinity,
+            ajax:{
+                url:pars.list,     //请求地址
+                delay:0,
+                data: function (elem) {
+                    //请求参数
+                    return {
+                        station_id:getStations()
+                    };
+                },
+                dataType: 'json',
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    for(var i in res.data){
+                        str.push({id:res.data[i].id,text:res.data[i].name});
+                    }
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+
+            }
+
+
+        });
+
+
+
         //ajax请求数据
-        $.ajax({
+        /*$.ajax({
             type:'get',
             async:true,
             url:pars.list,     //请求地址
@@ -1919,7 +1973,7 @@ function station_assignment(){
                     $(".js-example-basic-multiple").select2({data:str});
                 }
             }
-        });
+        });*/
 
     });
 
