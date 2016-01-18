@@ -165,10 +165,10 @@ class LaboratoryCotroller extends MscWeChatController
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryInfo($id,$DateTime,1);
 
         if(!empty($LaboratoryInfo->toArray())){
-            if(empty($LaboratoryInfo->LabApply->toArray())){
-                foreach($LaboratoryInfo->LabApply as $v){
-                    $v['begintime'] = date('H:i',strtotime($v['begintime']));
-                    $v['endtime'] = date('H:i',strtotime($v['endtime']));
+            if(!empty($LaboratoryInfo->LabApply->toArray())){
+                foreach($LaboratoryInfo->LabApply as $k => $v){
+                    $LaboratoryInfo->LabApply[$k]['begintime'] = date('H:i',strtotime($v['begintime']));
+                    $LaboratoryInfo->LabApply[$k]['endtime'] = date('H:i',strtotime($v['endtime']));
                 }
             }
         }
@@ -177,7 +177,6 @@ class LaboratoryCotroller extends MscWeChatController
             'LaboratoryInfo'=>$LaboratoryInfo,
             'LadDeviceList'=>$LadDevice->GetLadDeviceAll($id)
         ];
-       // dd($data);
         return  view('msc::wechat.booking.booking_teacher_ordinary_form',['data'=>$data]);
     }
 
