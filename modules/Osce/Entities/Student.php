@@ -207,4 +207,27 @@ class Student extends CommonModel
             ])
             ->get();
     }
+
+    //考生查询
+    public function getList($formData=''){
+        $builder=$this->Join('exam','student.exam_id','=','exam.id');
+        if($formData['exam_name']){
+            $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'');
+        }
+        if($formData['student_name']){
+            $builder=$builder->where('student.name','like','%'.$formData['student_name'].'');
+        }
+
+        $builder->select([
+            'exam.name as exam_name',
+            'student.name as student_name',
+            'student.code as code',
+            'student.idcard as idCard',
+            'student.mobile as mobile',
+            'student.user_id as user_id',
+        ]);
+
+        $builder->orderBy('exam.begin_dt');
+        return $builder->paginate(config('msc.page_size'));
+    }
 }

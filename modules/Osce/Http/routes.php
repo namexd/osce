@@ -293,10 +293,10 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
 			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
 
-			Route::get('write-student',['uses'=>'PadController@getWriteStudent']);
+			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
 
 			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
-			Route::get('write-room',['uses'=>'PadController@getWriteRoom']);
+			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
 
 		});
 	});
