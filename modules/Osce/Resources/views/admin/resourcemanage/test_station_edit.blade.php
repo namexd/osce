@@ -7,7 +7,19 @@
     <script src="{{asset('osce/plugins/js/plugins/validate/jquery.validate.min.js')}}"></script>
     <script src="{{asset('osce/plugins/js/plugins/messages_zh.min.js')}}"></script>
     <script>
-
+        $(function(){
+            $('#type').change(function(){
+                var choose  =   $(this).find(':selected').val();
+                if(choose=='3')
+                {
+                    $('.noTheory').hide();
+                }
+                else
+                {
+                    $('.noTheory').show();
+                }
+            });
+        })
     </script>
 @stop
 
@@ -38,7 +50,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="type" >
+                                    <select id="type" required  class="form-control m-b" name="type" >
                                         @foreach($placeCate as $key=>$item)
                                             <option value="{{$key}}"
                                                 @if($rollmsg['type'] == $key)
@@ -109,7 +121,8 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
+                            <div class="hr-line-dashed noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}></div>
+                            <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
                                 <label class="col-sm-2 control-label">病例</label>
 
                                 <div class="col-sm-10">
@@ -125,8 +138,8 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
+                            <div class="hr-line-dashed noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}></div>
+                            <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
                                 <label class="col-sm-2 control-label">评分标准</label>
 
                                 <div class="col-sm-10">
@@ -149,7 +162,8 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <input type="button" class="btn btn-white" value="取消">
+                                    <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
+{{--                                    <a type="button" class="btn btn-white" href="{{route('osce.admin.Station.getStationList')}}" >取消</a>--}}
                                 </div>
                             </div>
                         </form>

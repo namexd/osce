@@ -23,11 +23,11 @@ class Vcr extends CommonModel implements MachineInterface
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '损坏',
-        1   =>  '正常',
+        0   =>  '离线',
+        1   =>  '在线',
+        2   =>  '维修',
+        3   =>  '报废',
     ];
-
-
 
     /**
      *  获取设备状态值
@@ -206,14 +206,16 @@ class Vcr extends CommonModel implements MachineInterface
      */
     public function getList($name,$status){
         $bulder =   $this;
-        if(!is_null($name))
+        if($name != '')
         {
-            $bulder =   $bulder    ->  where('name','like','%'.$name.'%');
+            $bulder =   $bulder    ->  where('name', 'like', '%'.$name.'%');
         }
-        if($status!=='')
+        if($status !='')
         {
-            $bulder =   $bulder    ->  where('status','=',$status);
+            $bulder =   $bulder    ->  where('status', '=', $status);
         }
+        $bulder = $bulder -> select(['id', 'name', 'status']);
+
         return  $bulder ->  paginate(config('osce.page_size'));
     }
 }

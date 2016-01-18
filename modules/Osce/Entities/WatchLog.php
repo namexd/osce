@@ -21,5 +21,4 @@ class WatchLog extends CommonModel{
          }
           WatchLog::insert($data);
    }
-
 }

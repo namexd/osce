@@ -9,6 +9,9 @@ $(function(){
         case "examroom":examroom();break;
         case "clinicalcase":clinicalcase();break;
         case "categories":categories();break;
+        case "invigilator":invigilator();break;
+        case "topic":topic();break;
+        case "sp_invigilator":sp_invigilator();break;
     }
 });
 
@@ -66,7 +69,7 @@ function examroom(){
  * @param   {string}   url 请求地址
  */
 function deleteItem(url){
-    console.debug(url);
+
 	$('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
@@ -76,9 +79,19 @@ function deleteItem(url){
                 async:true,
                 url:url,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(res){
-                    location.reload();
+                success:function(data){
+                    console.log(data);
+                    if(data.code==1){
+                        location.reload();
+                    }else{
+                        layer.alert(data.message);
+                    }
+
+                },
+                error:function(){
+                    console.log("错误");
                 }
+
             })
         });
     })
@@ -143,7 +156,7 @@ function categories(){
                 '<td>'+parent+'-'+child+'</td>'+
                 '<td>'+
                 '<div class="form-group">'+
-                '<label class="col-sm-2 control-label">考核点:</label>'+
+                '<label class="col-sm-2 control-label">考核项:</label>'+
                 '<div class="col-sm-10">'+
                 '<input id="select_Category"  class="form-control" name="content['+parent+']['+child+']"/>'+
                 '</div>'+
@@ -151,7 +164,7 @@ function categories(){
                 '<div class="form-group">'+
                 '<label class="col-sm-2 control-label">评分标准:</label>'+
                 '<div class="col-sm-10">'+
-                '<input id="select_Category"  class="form-control" name="description['+parent+']['+child+']"/>'+
+                '<input id="select_Category"  class="form-control"  name="description['+parent+']['+child+']"/>'+
                 '</div>'+
                 '</div>'+
                 '</td>'+
@@ -171,6 +184,19 @@ function categories(){
                 '</tr>';
         //记录计数
         thisElement.attr('current',child);
+
+        //分数自动加减
+        var option = '';
+        for(var k =0;k<=child;k++){
+            option += '<option value="'+k+'">'+k+'</option>';
+        }
+        thisElement.find('td').eq(2).find('select').html(option);
+        thisElement.find('td').eq(2).find('select').val(child);
+        //禁用下拉
+        thisElement.find('td').eq(2).find('select').hide();
+        thisElement.find('td').eq(2).find('span').remove();
+        thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
+
         var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
         thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html)
 
@@ -239,6 +265,37 @@ function categories(){
             //子类删除
             thisElement.remove();
             increment(thisElement);
+
+
+
+            //父亲节点
+            var className = thisElement.attr('class');
+                parent =  className.split('-')[1];
+            //自动加减节点
+            var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
+
+            //改变value值
+            var total = parseInt(change.val())-parseInt(thisElement.find('td').eq(2).find('select').val())+1;
+            var cu = total;
+            //当删除完的时候
+            if(total==0){
+                total = 1;
+                cu = 0;
+                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+                change.show();
+            }
+            var option = '';
+            for(var k =1;k<=total;k++){
+                option += '<option value="'+k+'">'+k+'</option>';
+            }
+            change.html(option);
+            change.val(total);
+            $('.'+className+'[parent='+parent+']').attr('current',cu);
+
+            $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+            change.after('<span>'+parseInt(total)+'</span>');
+
+
         }
     });
 
@@ -332,7 +389,6 @@ function categories(){
 
                         for(var i in res){
                            if(res[i].level==1){
-
                                 index++;
                                //添加父级dom
                                html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
@@ -341,7 +397,7 @@ function categories(){
                                        '<div class="form-group">'+
                                        '<label class="col-sm-2 control-label">考核点:</label>'+
                                        '<div class="col-sm-10">'+
-                                       '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+res[i].sort+'][title]"/>'+
+                                       '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+index+'][title]"/>'+
                                        '</div>'+
                                        '</div>'+
                                        '</td>'+
@@ -370,13 +426,13 @@ function categories(){
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">考核项:</label>'+
                                                '<div class="col-sm-10">'+
-                                               '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+res[i].score+']['+res[j].sort+']"/>'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+index+']['+res[j].sort+']"/>'+
                                                '</div>'+
                                                '</div>'+
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">评分标准:</label>'+
                                                '<div class="col-sm-10">'+
-                                               '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+res[i].score+']['+res[j].sort+']"/>'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+index+']['+res[j].sort+']"/>'+
                                                '</div>'+
                                                '</div>'+
                                                '</td>'+
@@ -401,9 +457,8 @@ function categories(){
                         }
                         $('tbody').attr('index',index);
                         $('tbody').append(html);
-
-
-
+                    }else {
+                        layer.alert('文件导入错误，请参考下载模板！');
                     }
                 },
                 error: function (data, status, e)
@@ -414,4 +469,115 @@ function categories(){
         }) ;
 
 
+
+        $('tbody').on('change','select',function(){
+            var thisElement = $(this).parent().parent();
+            //父亲节点
+            var className = thisElement.attr('class');
+                parent =  className.split('-')[1];
+            //自动加减节点
+            var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
+
+
+
+            //改变value值,消除连续变换值的变化
+            var total = 0;//= parseInt(change.val())+parseInt($(this).val());
+            $('.'+className).each(function(key,elem){
+                if($(elem).attr('parent')==parent){
+                    return;
+                }else{
+                    total += parseInt($(elem).find('td').eq(2).find('select').val());
+                }
+            });
+
+            var option = '';
+            for(var k =1;k<=total;k++){
+                option += '<option value="'+k+'">'+k+'</option>';
+            }
+            change.html(option);
+            change.val(total-1);
+
+            $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+            change.after('<span>'+parseInt(total)+'</span>')
+
+
+        });
+
+
+}
+
+function invigilator(){
+    //删除老师
+    $(".delete").click(function(){
+        var thisElement=$(this);
+
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deletes,
+                data:{id:thisElement.attr('tid')},
+                success:function(data){
+                    if(data.code == 1){
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
+                }
+            })
+        });
+    })
+}
+
+/**
+ * 评分标准列表
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-15
+ * @return  {[type]}   [description]
+ */
+
+function topic(){
+
+
+    alert('ok');
+
+   $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'get',
+                async:false,
+                url:pars.del,
+                data:{id:thisElement.attr('value')},
+                success:function(data){
+                    location.reload();
+                }
+            })
+        });
+    })
+
+}
+
+function sp_invigilator(){
+    //删除老师
+    $(".delete").click(function(){
+        var thisElement=$(this);
+
+        layer.alert('确认删除？',function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deletes,
+                data:{id:thisElement.attr('tid')},
+                success:function(data){
+                    if(data.code == 1){
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
+                }
+            })
+        });
+    })
 }
