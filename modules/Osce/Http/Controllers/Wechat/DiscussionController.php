@@ -400,6 +400,7 @@ class DiscussionController extends  CommonController{
               'id'        =>'required|integer',
               'pagesize'  =>'sometimes|integer',
           ]);
+           $pagesize=$request->get('pagesize',1); 
            $user=Auth::user();
            $userId=$user->id;
            if(!$userId){
@@ -452,7 +453,7 @@ class DiscussionController extends  CommonController{
           }
           
           return response()->json(
-              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$data)
+              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$pagination->currentPage(),$data)
           );
       }
 }

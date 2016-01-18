@@ -176,7 +176,7 @@
                     totalpages = res.total;
                     var html = '';
                     var index = (current - 1)*10;
-                    data = res.data.page;
+                    data = res.data.rows;
                     for(var i in data){
                         //准备dom
                         //计数
