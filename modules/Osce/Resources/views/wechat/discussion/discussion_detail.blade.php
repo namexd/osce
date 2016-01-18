@@ -27,9 +27,9 @@
             border-bottom: 1px solid #eee;
             font-size: 12px;
         }
-        .item-l{width: 20%;color:#42b2b1;}
-        .item-c{width: 60%}
-        .item-r{width: 20%}
+        .item-l{width: 50%;color:#42b2b1;}
+        .item-c{width: 45%}
+        .item-r{width: 5%}
         .title-con{padding-top: 10px;}
 
         /*content*/
@@ -62,16 +62,12 @@
             line-height: 30px;
             text-align: center;
         }
-        .jconfirm.white .jconfirm-box .buttons{
-            float: none;
-            margin-left: 28%;
-        }
-        .jconfirm.white .jconfirm-box .buttons .btn:last-child{
+        .btn.btn-default{
             background: #fff;
-            border: 1px solid #ccc;
+            border: 1px solid #ccc!important;
             color: #333!important;
         }
-        .btn.btn-default{
+        .btn.btn-default:first-child{
             background: #1ab394;
             color: #fff!important;
         }
@@ -106,14 +102,97 @@
                 confirmButton: '确定',
                 cancelButton: '取消',
                 confirm: function(){
-                    var id = (location.href).split('=')[1];
-                    location.href = $this.attr('url')+'?id='+id;
+
+                    $.ajax({
+                        url:"{{route('osce.wechat.getDelQuestion')}}",
+                        type:'get',
+                        data:{id:(location.href).split('=')[1]},
+                        success:function(res){
+                            if(res.code==2){
+                                location.href = 'osce/admin/login/index';
+                            }else if(res.code==3){
+                                $.alert({
+                                    title: '提示：',
+                                    content: '无权限删除!',
+                                    cancelButton:false,
+                                    confirmButton: '确定',
+                                    confirm: function(){
+
+                                    }
+                                });
+                            }
+                            else{ 
+                                var id = (location.href).split('=')[1];
+                                location.href = $this.attr('url')+'?id='+id;
+                            }
+                        }
+                    })
+
                 },
                 cancel: function(){
                     $('.option').fadeOut();
                 }
             });
         });
+
+        /**
+         * 翻页
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-18
+         */
+        $(window).scroll(function(e){
+            if(away_top >= (page_height - window_height)&&now_page<totalpages){
+                now_page++;
+                //qj.page=now_page;//设置页码
+                getItem(now_page,url)
+                /*加载显示*/
+            }
+        });
+
+        //初始化
+        var now_page = 1;
+        getItem(now_page,url);
+
+        /**
+         * 分页的ajax请求
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-18
+         * @param   {string}   current 当前页
+         * @param   {string}   url     请求地址
+         */
+        function getItem(current,url){
+
+            $.ajax({
+                type:'get',
+                url:url,
+                aysnc:true,
+                data:{page:current},
+                success:function(res){
+                    totalpages = res.total;
+                    var html = '';
+                    for(var i in data){
+
+                        html += '<li>'+
+                                    '<div class="content-header">'+
+                                        '<div class="content-l">'+
+                                            '<span>1F</span>.'+
+                                            '<span class="student">'+data[i].name+'</span>.'+
+                                            '<span class="time">'+data[i].time+'</span>'+
+                                        '</div>'+
+                                        '<div class="clearfix"></div>'+
+                                    '</div>'+
+                                    '<p>'+data[i].content+'</p>'+
+                                '</li>';
+
+                    }
+
+                    $('.history-list').append(html);
+                }
+            });
+
+        }
 
 
       })
@@ -134,7 +213,7 @@
         </a>
        查看
         <a class="right header_btn" href="javascript:void(0)">
-            <i class="fa fa-home clof font26 icon_return"></i>
+            <i class="fa fa-ellipsis-h clof font26 icon_return"></i>
         </a>
     </div>
     <div class="content-box">
