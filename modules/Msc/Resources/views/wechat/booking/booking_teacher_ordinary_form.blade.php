@@ -39,6 +39,7 @@
                 data['begintime'] = (new Date("2016-12-11 "+time[0]+":00")).getTime()/1000;
                 data['endtime'] = (new Date("2016-12-11 "+time[1]+":00")).getTime()/1000;
                 data['name'] = $(this).find('span:last').html();
+                console.log(data);
                 Take.push(data);
             })
             var currYear = (new Date()).getFullYear();
@@ -61,15 +62,13 @@
 
             $('#endTime').change(function(){
                 if($('#startTime').val()){
-                    alert($(this).val());
-                    alert(Take[0]['begintime']);
                     console.log(format(Take[0]['begintime']));
                 }
             })
 
             $('#startTime').change(function(){
                 if($('#endTime').val()){
-                    alert($(this).val());
+
                 }
             })
 
@@ -161,7 +160,7 @@
             </div>
         </div>
         <div id="Reason_detail" class="w_94" >
-            <div class="form_title">备注</div>
+            <div class="form_title">预约理由</div>
             <div class="form-group">
                 <textarea name="description" class=" form-control textarea1" ></textarea>
             </div>
