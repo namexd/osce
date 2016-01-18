@@ -99,6 +99,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/lab-order-allcheck', ['uses'=>'LaboratoryController@postLabOrderallcheck','as'=>'msc.admin.laboratory.postLabOrderallcheck']);
 		Route::get('laboratory/lab-order-donot', ['uses'=>'LaboratoryController@getLabOrderDonot','as'=>'msc.admin.laboratory.getLabOrderDonot']);
 		Route::get('laboratory/_check', ['uses'=>'LaboratoryController@_check','as'=>'msc.admin.laboratory._check']);
+		Route::get('laboratory/lab-detail', ['uses'=>'LaboratoryController@getLabdetail','as'=>'msc.admin.laboratory.getLabdetail']);
 		//资源路由
 		Route::controller('resources','ResourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
@@ -140,6 +141,10 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('/personal-center/my-laboratory-apply',['uses'=>'PersonalCenterController@MyLaboratoryApply','as'=>'msc.personalCenter.MyLaboratoryApply']);
 		//已完成的预约信息数据获取
 		Route::get('/personal-center/history-laboratory-apply-list',['uses'=>'PersonalCenterController@HistoryLaboratoryApplyList','as'=>'msc.personalCenter.HistoryLaboratoryApplyList']);
+		//预约数据详情
+		Route::get('/personal-center/get-apply-details',['uses'=>'PersonalCenterController@GetApplyDetails','as'=>'msc.personalCenter.GetApplyDetails']);
+		//取消实验室预约
+		Route::get('/personal-center/cancel-apply',['uses'=>'PersonalCenterController@CancelApply','as'=>'msc.personalCenter.CancelApply']);
 		//开放设备当前预约
 		//Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.wechat.personalCenter.getMyApply']);
 		//开放设备使用历史
@@ -178,6 +183,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//普通实验室验证数据处理
 		Route::post('/laboratory/apply-laboratory-op',['uses'=>'LaboratoryCotroller@ApplyLaboratoryOp','as'=>'msc.Laboratory.ApplyLaboratoryOp']);
 		// /msc/wechat/personal-center/index
+
 	});
 	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){
 		Route::controller('user', 'UserController');

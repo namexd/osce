@@ -47,22 +47,24 @@
                 <div class="col-md-6 marb_25">
                     <div class="show_box overflow">
                         <div class="w_40 left" >
-                            <p class="font14 weight">{{$v['name']}}</p>
-                            <p>{{$v['lname']}} {{$v['floor']}}楼 {{$v['code']}}</p>
+                            <p class="font14 weight">{{@$v['name']}}</p>
+                            <p>{{@$v['lname']}} {{@$v['floor']}}楼 {{@$v['code']}}</p>
                         </div>
                         <div class="w_60 left padl_20 border_left">
-                            @if(@$v['open_plan'])
-                                @foreach($v['open_plan'] as $plan)
+                            @if(@$type == 1)
+                                @foreach(@$v['open_plan'] as $plan)
                                     <div class="marb_10">
-                                        <span>{{$plan['begintime']}}-{{$plan['endtime']}}</span>
-                                        <span class="marl_10"> @if($plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
+                                        <span>{{@$plan['begintime']}}-{{@$plan['endtime']}}</span>
+                                        <span class="marl_10"> @if(@$plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{@$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
                                     </div>
                                 @endforeach
                             @else
-                                <div class="marb_10">
-                                    <span>{{$plan['lab_apply']['begintime']}}-{{$plan['lab_apply']['endtime']}}</span>
-                                    <span class="marl_10"> @if($plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
-                                </div>
+                                @foreach($v['lab_apply'] as $apply)
+                                    <div class="marb_10">
+                                        <span>{{@$apply['begintime']}}-{{@$apply['endtime']}}</span>
+                                        <span class="marl_10"><a href="" class="font16 blue teacher" datatype="{{@$apply['type']}}" data-id="{{@$apply['id']}}" data-toggle="modal" data-target="#myModal">{{@$apply['teacher']['name']}} {{@$apply['course_name']}} 课程使用</a></span>
+                                    </div>
+                                @endforeach
                             @endif
                             {{--<div class="marb_10">--}}
                                 {{--<span>8:00-10:00</span>--}}
@@ -183,7 +185,7 @@
                 <input type="text" class="form-control name add-name" name="timeInterval" value="8:00-10:00" disabled="disabled"/>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group claue">
             <label class="col-sm-3 control-label">教学课程</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control name add-name" name="teaching" value="导尿术" disabled="disabled"/>

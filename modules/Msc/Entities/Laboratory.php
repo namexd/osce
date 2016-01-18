@@ -209,11 +209,12 @@ class Laboratory extends Model
 //    }
 
 
-    //后台获取审核列表
-    public function get_check_list($keyword="",$type=1,$id=''){
+    //后台开放实验室获取审核列表
+    public function get_opencheck_list($keyword="",$type=1,$id=''){
         $labDb    = config('database.connections.msc_mis.database');
         $labTable = $labDb.'.lab';
-
+        $userDb    = config('database.connections.sys_mis.database');
+        $userTable = $userDb.'.users';
 
 //        if(!empty($keyword)){
 //            $builder = $this->where($userTable.'.name','like','%'.$keyword.'%');
@@ -241,4 +242,40 @@ class Laboratory extends Model
         return $data;
 
     }
+
+    /**
+     * @access public
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016年1月18日10:32:52
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function Student(){
+        return  $this->hasOne('Modules\Msc\Entities\Student','id','id');
+    }
+
+
+
+    //后台普通实验室获取审核列表
+    public function get_check_list($nowtime,$type,$id){
+        $labDb    = config('database.connections.msc_mis.database');
+
+        $labTable = $labDb.'.lab';
+
+        $builder = $this->with(['LabApply'=>function($LabApply) use($nowtime,$type){
+            //->where('lab_apply.apply_time','=',$nowtime)
+            $LabApply->where('lab_apply.type','=',$type)->with(['Teacher'=>function($Teacher){
+
+                $Teacher->with('user');
+
+            }]);
+
+        }]);
+        $data = $builder->paginate(config('msc.page_size',10));
+        //dd($data);
+        return $data;
+
+    }
+
+
 }

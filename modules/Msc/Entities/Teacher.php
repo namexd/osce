@@ -31,6 +31,11 @@ class Teacher extends CommonModel {
         return $this->belongsTo('\Modules\Msc\Entities\TeacherDept','teacher_dept');
     }
 
+    //用户管理员
+    public function user(){
+
+        return $this->hasOne('App\Entities\User','id','id');
+    }
     /**
      * 格式化用户证件类型
      * @return mixed
