@@ -327,7 +327,7 @@ class Exam extends CommonModel
            $builder=$builder->where('exam.id',$exam_id);
            $builder=$builder->whereRaw(
                'unix_timestamp('.$this->table.'.begin_dt) > ?',
-        [
+                [
                    $time
                ]
            );
