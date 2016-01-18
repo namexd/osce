@@ -15,12 +15,13 @@
         }
         .row.content-tabs,.page-tabs-content,.page-tabs.J_menuTabs,.content-tabs .roll-nav, .page-tabs-list{height: 50px!important;}
         .page-tabs a {
-            height: 50px;
+            height: 48px;
             line-height: 50px;
         }
         .roll-right.J_tabClose { width: 170px;}
         .roll-nav.roll-right.J_tabClose i{margin: 0 15px;line-height: 50px;}
         .roll-nav.roll-right.J_tabExit{line-height: 50px;}
+        .nav > li.active {border-left: 4px solid #16beb0!important;}
     </style>
 @stop
 
