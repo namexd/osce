@@ -2,7 +2,11 @@
         <style>
          .img-circle{height:46px;}
          .person-info{margin:20px 0;}
-         .person-info span{color: #fff;}
+         .dropdown.profile-element{margin-left: 20px;}
+         .person-info span{
+            color: #fff;
+            margin-left: 5px;
+        }
          .nav-header{height: 50px;}
          .nav-header span{
             font-size:20px;
