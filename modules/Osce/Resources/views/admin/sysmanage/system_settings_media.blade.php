@@ -192,6 +192,40 @@
 		                            <label class="col-sm-2 control-label">通知方式：</label>
 		                            <div class="col-sm-10">
 		                            	<label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">微信</span>
+			                            </label>
+			                            <label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">短信</span>
+			                            </label>
+			                            <label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">邮件</span>
+			                            </label>
+			                            <label class="check_label checkbox_input">
+			                                <div class="check_icon" style="display: inline-block"></div>
+			                                <input type="checkbox" value="">
+			                                <span class="check_name">系统消息</span>
+			                            </label>
+		                            </div>
+		                        </div>
+			                </div>
+			            </div>
+			        </div>
+			        <div class="ibox-title" style="border:none;">
+			            <h5>媒体分享</h5>
+			        </div>
+			        <div class="ibox-content">
+			            <div class="row">
+			                <div class="col-md-12 ">
+		                        <div class="clearfix form-group">
+		                            <label class="col-sm-2 control-label">通知方式：</label>
+		                            <div class="col-sm-10">
+		                            	<label class="check_label checkbox_input">
 			                                <div class="check_icon check" style="display: inline-block"></div>
 			                                <input type="checkbox" checked="checked" name="message_type[]" value="1">
 			                                <span class="check_name">微信</span>
@@ -361,7 +395,7 @@
 			                <div class="form-group">
                                 <div class="col-sm-6 col-sm-offset-2">
                                 	<input class="btn btn-primary"  type="submit" name="" id="" value="保 存" />
-                                	<input class="btn btn-white" type="button" name="" id="" value="取 消" />
+									<a class="btn btn-white" href="{{url('osce/admin/config/index')}}">取消</a>
                                 </div>
                             </div>
 			            </div>

@@ -183,15 +183,6 @@ class InvigilatePadController extends CommonController
         $StandardModel  =   new Standard();
         $standardList   =   $StandardModel->ItmeList($station->subject_id);
         dd($standardList);
-        $data=[];
-            foreach($standardList as $list){
-                $data[]=[
-
-
-
-                ];
-
-            }
         if(count($standardList)!=0){
             return response()->json(
         $this->success_data($standardList,1,'数据传送成功')

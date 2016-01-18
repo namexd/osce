@@ -145,7 +145,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\CustomValidatorServiceProvider::class,
-//        App\Repositories\Message\MessageServiceProvider::class,
+        App\Repositories\Message\MessageServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
 

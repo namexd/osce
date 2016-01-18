@@ -97,17 +97,16 @@ class InvitationController extends CommonController
 
     public function getList()
     {
+
         $user= Auth::user();
         if(empty($user))
         {
             throw new \Exception('未找到当前操作人信息');
         }
         $userId =$user->id;
-
         $notice = new Invite();
-
+//        $list = $notice->get();
         $list = $notice-> where('id','=',$userId)->get();
-//        dd($list);
         return view('osce::wechat.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
     }
 
@@ -130,19 +129,17 @@ class InvitationController extends CommonController
 
     public function getInvitationRespond(Request $request, Teacher $teacher)
     {
-//        dd(1111);
         $this->validate($request, [
             'status' => 'required|integer',
             'id' => 'required|integer'
         ]);
         $status = $request->get('status');
         $teacher_id = $request->get('id');
-
-        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update('status', '=', 4-$status);
-
+        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update(['status'=>$status]);
+//        echo json_decode(11111);die;
         if ($result) {
             return response()->json(
-                $this->success_data(1,'操作成功')
+                $this->success_data($result,1,'操作成功')
             );
         } else {
             return response()->json(

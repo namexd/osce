@@ -40,7 +40,7 @@
             @foreach($list as $list)
                 <tr>
                     <td>1</td>
-                    <td>{{ $list->name }}</td>
+                    <td><a href="{{route('osce.admin.getTrainDetail',array('id'=>$list->id))}}">{{ $list->name }}</a></td>
                     <td>{{ $list->begin_dt }}~{{ $list->end_dt }}</td>
                     <td value="1">
                         <a href="{{ route('osce.admin.getEditTrain',array('id'=>$list->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
@@ -50,7 +50,6 @@
                 @endforeach
             </tbody>
         </table>
-
         <div class="btn-group pull-right">
            
         </div>

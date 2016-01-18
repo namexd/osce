@@ -67,24 +67,45 @@ class TopicController extends CommonController
      */
     public function postAddTopic(Request $request){
         $this   ->  validate($request,[
-            'title' =>  'required',
-            'description' =>  'sometimes',
+            'title'         =>  'required',
+            'content'       =>  'required',
+            'score'         =>  'required',
+            'desc'          =>  'sometimes',
         ],[
-            'title.required'        =>  '评分标准名称必须',
+            'title.required'    =>  '评分标准名称必须',
+            'content.required'  =>  '评分标准必须',
+            'score.required'    =>  '评分必须',
         ]);
 
-        $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
+        $content        = $request  ->get('content');
+        $score          = $request  ->get('score');
+        $answer          = $request ->get('description');
+
+        $formData = SubjectItem::builderItemData($content, $score,$answer);
+        $totalData   =  0;
+
+        foreach($score as $index=>$socrdata)
+        {
+            foreach($socrdata as $key=>$socre)
+            {
+                if($key=='total')
+                {
+                    continue;
+                }
+                $totalData  +=  $socre;
+            }
+        }
+
         $data   =   [
             'title'         =>  e($request  ->  get('title')),
-            'description'   =>  e($request  ->  get('description')),
+            'description'   =>  e($request  ->  get('desc')),
+            'score'         =>  $totalData,
         ];
+
         $subjectModel   =   new Subject();
-        if($subjectModel->  addSubject($data,$formData))
-        {
+        if($subjectModel->  addSubject($data,$formData)){
             return redirect()->route('osce.admin.topic.getList');
-        }
-        else
-        {
+        } else{
             return  redirect()->back()->withErrors(new \Exception('新增失败'));
         }
     }
@@ -114,7 +135,7 @@ class TopicController extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
             'title' =>  'required',
-            'description' =>  'sometimes',
+            'desc' =>  'sometimes',
         ],[
             'id.required'       =>  '课题ID必须',
             'title.required'    =>  '课题名称必须',
@@ -123,14 +144,14 @@ class TopicController extends CommonController
         $data   =   [
 //            'id'            =>  intval($request     ->  get('id')),
             'title'         =>  e($request          ->  get('title')),
-            'description'   =>  e($request          ->  get('description')),
+            'description'   =>  $request          ->  get('description'),
         ];
         $id     =   intval($request ->get('id'));
 
         $subjectModel   =   new Subject();
         try
         {
-            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'));
+            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'),$request->get('description'));
             if($subjectModel   ->  editTopic($id,$data,$formData))
             {
                 return redirect()->route('osce.admin.topic.getList');
@@ -199,9 +220,30 @@ class TopicController extends CommonController
         $subject    =   Subject::find($id);
 
         $items      =   $subject->items;
-
         $items      =   SubjectItem::builderItemTable($items);
-        return view('osce::admin.resourcemanage.edittopic',['item'=>$subject,'list'=>$items]);
+        $prointNum  =   1;
+        $optionNum  =   [
+            0=>0
+        ];
+        foreach($items as $item)
+        {
+            if($item->pid==0)
+            {
+                $prointNum++;
+            }
+            else
+            {
+                if(array_key_exists($item->pid,$optionNum))
+                {
+                    $optionNum[$item->pid]++;
+                }
+                else
+                {
+                    $optionNum[$item->pid]=0;
+                }
+            }
+        }
+        return view('osce::admin.resourcemanage.edittopic',['item'=>$subject,'list'=>$items,'prointNum'=>$prointNum,'optionNum'=>$optionNum]);
     }
 
     /**
@@ -223,7 +265,7 @@ class TopicController extends CommonController
      */
     public function getDelTopic(Request $request){
         $this->validate($request,[
-            'id'=>''
+            'id'=>'required'
         ]);
         $id =   $request->get('id');
         $SubjectModel   =   new Subject();
@@ -259,9 +301,44 @@ class TopicController extends CommonController
             $topicList = array_shift($data);
             //将中文表头，按配置翻译成英文的字段名
             $data = Common::arrayChTOEn($topicList, 'osce.importForCnToEn.standard');
+            foreach ($data as &$items) {
+                foreach ($items as &$item) {
+                    $item = e($item);
+                }
+            }
             echo json_encode($this->success_data($data));
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
         }
+    }
+
+    /**
+     * 下载考核点导入模板
+     * @url GET /osce/admin/topic/toppic-tpl
+     * @access public
+     *
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getToppicTpl(){
+        $this->downloadfile('topic.xlsx',public_path('download').'/topic.xlsx');
+    }
+
+    private function downloadfile($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
     }
 }

@@ -50,5 +50,9 @@ return [
 	'manager'=>[
 		1
 	],
-	'prepare'	=>	10
+	'prepare'	=>	10,
+	'spRoleId'		=>	4,
+	'invigilatorRoleId'	=>	1,
+	'studentRoleId'		=>	2,
+	'adminRoleId'	=>	3,
 ];

@@ -21,6 +21,6 @@ class RoomVcr extends CommonModel
     protected $fillable = ['id','room_id', 'vcr_id', 'create_user_id'];
 
     public function getVcr(){
-        return $this->belongsTo('\Modules\Osce\Entities\Vcr','vcr_id','id');
+        return $this->hasOne('\Modules\Osce\Entities\Vcr','id','vcr_id');
     }
 }

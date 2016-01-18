@@ -5,8 +5,8 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "exam_assignment":exam_assignment();break; 
-        case "exam_add":exam_add();break; 
+        case "exam_assignment":exam_assignment();break;
+        case "exam_add":exam_add();break;
         case "add_basic":add_basic();break;
         case "sp_invitation":sp_invitation();break;
         case "examroom_assignment":examroom_assignment();break;
@@ -52,8 +52,8 @@ function exam_assignment(){
  * @return  {[type]}   [description]
  */
 function exam_add(){
-	//时间选择
-	timePicker(pars.background_img);
+    //时间选择
+    timePicker(pars.background_img);
 
 
     $('#sourceForm').bootstrapValidator({
@@ -80,7 +80,7 @@ function exam_add(){
             }
         }
     });
-	/**
+    /**
      * 新增一条
      * @author  mao
      * @version  1.0
@@ -92,24 +92,24 @@ function exam_add(){
         index = parseInt(index) + 1;
 
         var html = '<tr>'+
-                        '<td>'+parseInt(index)+'</td>'+
-                        '<td class="laydate">'+
-                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
-                        '</td>'+
-                        '<td class="laydate">'+
-                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
-                        '</td>'+
-                        '<td>3:00</td>'+
-                        '<td>'+
-                            '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                        '</td>'+
-                    '</tr>'+
-        //记录计数
-        $('#exam_add').find('tbody').attr('index',index);
+            '<td>'+parseInt(index)+'</td>'+
+            '<td class="laydate">'+
+            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+            '</td>'+
+            '<td class="laydate">'+
+            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '</td>'+
+            '<td>3:00</td>'+
+            '<td>'+
+            '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+            '</td>'+
+            '</tr>'+
+                //记录计数
+            $('#exam_add').find('tbody').attr('index',index);
         $('#exam_add').find('tbody').append(html);
     });
 
-    
+
     /**
      * 删除一条记录
      * @author mao
@@ -143,8 +143,8 @@ function exam_add(){
  * @date    2016-01-04
  */
 function add_basic(){
-	//时间选择
-	timePicker(pars.background_img);
+    //时间选择
+    timePicker(pars.background_img);
 
     /**
      * 表单验证信息
@@ -189,7 +189,7 @@ function add_basic(){
         }
     });
 
-	/**
+    /**
      * 新增一条
      * @author  mao
      * @version  1.0
@@ -201,18 +201,18 @@ function add_basic(){
         index = parseInt(index) + 1;
 
         var html = '<tr>'+
-	                    '<td>'+parseInt(index)+'</td>'+
-                        '<td class="laydate">'+
-                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
-                        '</td>'+
-                        '<td class="laydate">'+
-                            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
-                        '</td>'+
-	                    '<td>3:00</td>'+
-	                    '<td>'+
-	                        '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-	                    '</td>'+
-	                '</tr>';
+            '<td>'+parseInt(index)+'</td>'+
+            '<td class="laydate">'+
+            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+            '</td>'+
+            '<td class="laydate">'+
+            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '</td>'+
+            '<td>3:00</td>'+
+            '<td>'+
+            '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+            '</td>'+
+            '</tr>';
         //记录计数
         $('#add-basic').find('tbody').attr('index',index);
         $('#add-basic').find('tbody').append(html);
@@ -289,7 +289,7 @@ var Time = (function(mod){
             return time;
         }else if(format=='YYYY-MM-DD hh:mm'){
 
-           return time += ' '+Convert(now.getHours())+':'+Convert(now.getMinutes());
+            return time += ' '+Convert(now.getHours())+':'+Convert(now.getMinutes());
         }else{
 
             return time += ' '+Convert(now.getHours())+':'+Convert(now.getMinutes())+':'+Convert(now.getSeconds());
@@ -317,20 +317,20 @@ function timePicker(background){
      * @type {Object}
      */
     var option = {
-         elem: '.end', //需显示日期的元素选择器
-         event: 'click', //触发事件
-         format: 'YYYY-MM-DD hh:mm', //日期格式
-         istime: true, //是否开启时间选择
-         isclear: true, //是否显示清空
-         istoday: true, //是否显示今天
-         issure: true, //是否显示确认
-         festival: true, //是否显示节日
-         min: '1900-01-01 00:00:00', //最小日期
-         max: '2099-12-31 23:59:59', //最大日期
-         start: '2014-6-15 23:00:00',    //开始日期
-         fixed: true, //是否固定在可视区域
-         zIndex: 99999999, //css z-index
-         choose: function(date){ //选择好日期的回调
+        elem: '.end', //需显示日期的元素选择器
+        event: 'click', //触发事件
+        format: 'YYYY-MM-DD hh:mm', //日期格式
+        istime: true, //是否开启时间选择
+        isclear: true, //是否显示清空
+        istoday: true, //是否显示今天
+        issure: true, //是否显示确认
+        festival: true, //是否显示节日
+        min: '1900-01-01 00:00:00', //最小日期
+        max: '2099-12-31 23:59:59', //最大日期
+        start: '2014-6-15 23:00:00',    //开始日期
+        fixed: true, //是否固定在可视区域
+        zIndex: 99999999, //css z-index
+        choose: function(date){ //选择好日期的回调
             var thisElement = $(this.elem).parent();
             if(thisElement.prev().prev().length){
                 var current = Date.parse(date) - Date.parse(thisElement.prev().find('input').val());
@@ -341,9 +341,9 @@ function timePicker(background){
                 var current = Date.parse(thisElement.next().find('input').val()) - Date.parse(date);
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
-                thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes))); 
+                thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
             }
-         }
+        }
     };
 
 
@@ -398,7 +398,7 @@ function sp_invitation(){
      * 获取数据
      * @author mao
      * @version 1.0
-     * @date    2016-01-06  
+     * @date    2016-01-06
      */
     $('.teacher-list').click(function(){
         var thisElement = $(this);
@@ -427,7 +427,7 @@ function sp_invitation(){
 
                         html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
                     }
-                   thisElement.html(html);
+                    thisElement.html(html);
                 }
             }
 
@@ -441,8 +441,8 @@ function sp_invitation(){
         var thisElement = $(this);
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
-                '<div class="pull-left">'+$teacher+'</div>'+
-                '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+            '<div class="pull-left">'+$teacher+'</div>'+
+            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
     })
 
@@ -456,7 +456,7 @@ function sp_invitation(){
 function examroom_assignment(){
 
 
-	//select2初始化
+    //select2初始化
     $(".js-example-basic-multiple").select2();
 
     /**
@@ -465,7 +465,7 @@ function examroom_assignment(){
     var arrStore = [];
     $('#examroom').find('tbody').find('tr').each(function(key,elem){
 
-        
+
         var selected = $(elem).find('td').eq(1).find('select').val();
         for(var i in selected){
             if(arrStore.length==0){
@@ -475,7 +475,7 @@ function examroom_assignment(){
                     if(arrStore[j].id==selected[i]){
                         arrStore[j].count += 1;
                     }else{
-                        arrStore.push({id:selected[i],count:1}); 
+                        arrStore.push({id:selected[i],count:1});
                     }
                 }
             }
@@ -520,7 +520,7 @@ function examroom_assignment(){
         //值初始化
         var current ,
             num = ['必考','必考','二选一','三选一','四选一','五选一','六选一','七选一','八选一','九选一','十选一'];
-        
+
         current = $(this).val();
         if(current==undefined){
 
@@ -530,12 +530,12 @@ function examroom_assignment(){
             $(this).parent().siblings('.necessary').text(num[current.length]);
         }
 
-    /**
-     * 选择数据
-     * @author mao
-     * @version 1.0
-     * @date    2016-01-13                              
-     */
+        /**
+         * 选择数据
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-13
+         */
     }).on("select2:select", function(e){
 
         var select2_data = e.params.data;
@@ -594,7 +594,7 @@ function examroom_assignment(){
                 }else{
                     var data = res.data,
                         html = '';
-                    
+
 
                     //准备dom
                     var station_index = parseInt(thisElement.attr('index'));
@@ -607,42 +607,42 @@ function examroom_assignment(){
                         if(data[i].type==2){
 
                             html += '<tr class="parent-id-'+e.params.data.id+'">'+
-                                    '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
-                                    '<td>'+data[i].name+'</td>'+
-                                    '<td>'+typeValue[data[i].type]+'</td>'+
-                                    '<td>'+
-                                        '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple">'+teacher+'</select>'+
-                                    '</td>'+
-                                    '<td class="sp-teacher">'+
-                                        '<div class="teacher-box pull-left">'+
-                                        '</div>'+
-                                        '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                            '<select name="" class="teacher-list js-example-basic-multiple">'+
-                                                '<option>==请选择==</option>'+
-                                            '</select>'+
-                                        '</div>'+
-                                    '</td>'+
-                                    '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
+                                '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                '<td>'+data[i].name+'</td>'+
+                                '<td>'+typeValue[data[i].type]+'</td>'+
+                                '<td>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple">'+teacher+'</select>'+
+                                '</td>'+
+                                '<td class="sp-teacher">'+
+                                '<div class="teacher-box pull-left">'+
+                                '</div>'+
+                                '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
+                                '<select name="" class="teacher-list js-example-basic-multiple">'+
+                                '<option>==请选择==</option>'+
+                                '</select>'+
+                                '</div>'+
+                                '</td>'+
+                                '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
                                 '</tr>';
                         }else{
 
                             html += '<tr class="parent-id-'+e.params.data.id+'">'+
-                                    '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
-                                    '<td>'+data[i].name+'</td>'+
-                                    '<td>'+typeValue[data[i].type]+'</td>'+
-                                    '<td>'+
-                                        '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
-                                    '</td>'+
-                                    '<td class="sp-teacher">'+
-                                        '<div class="teacher-box pull-left">'+
-                                        '</div>'+
-                                        '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                            '<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
-                                                '<option>==请选择==</option>'+
-                                            '</select>'+
-                                        '</div>'+
-                                    '</td>'+
-                                    '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
+                                '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                '<td>'+data[i].name+'</td>'+
+                                '<td>'+typeValue[data[i].type]+'</td>'+
+                                '<td>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                '</td>'+
+                                '<td class="sp-teacher">'+
+                                '<div class="teacher-box pull-left">'+
+                                '</div>'+
+                                '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
+                                '<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
+                                '<option>==请选择==</option>'+
+                                '</select>'+
+                                '</div>'+
+                                '</td>'+
+                                '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
                                 '</tr>';
                         }
 
@@ -677,9 +677,9 @@ function examroom_assignment(){
                                     //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
                                 });
 
-                              return {
-                                teacher:ids
-                              };
+                                return {
+                                    teacher:ids
+                                };
                             },
                             dataType: 'json',
                             processResults: function (res) {
@@ -727,11 +727,11 @@ function examroom_assignment(){
                                 });
 
 
-                              //请求参数
-                              return {
-                                spteacher_id:ids,
-                                station_id:$(select2_Object).parent().attr('value')
-                              };
+                                //请求参数
+                                return {
+                                    spteacher_id:ids,
+                                    station_id:$(select2_Object).parent().attr('value')
+                                };
                             },
                             dataType: 'json',
                             processResults: function (res) {
@@ -752,23 +752,23 @@ function examroom_assignment(){
 
 
                     });
-                    
+
 
 
 
                     //});
-                    
+
 
                 }
             }
         });
 
-    /**
-     * 删除数据
-     * @author mao
-     * @version 1.0
-     * @date    2016-01-13
-     */
+        /**
+         * 删除数据
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-13
+         */
     }).on("select2:unselect", function(e){
 
         var select2_data_del = e.params.data;
@@ -798,7 +798,7 @@ function examroom_assignment(){
                 current.push({id:rooms[i].id,count:rooms[i].count});
             }
         }
-        
+
         $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
     });
@@ -839,19 +839,19 @@ function examroom_assignment(){
         index = parseInt(index) + 1;
 
         var html = '<tr class="pid-'+index+'">'+
-                    '<td>'+index+'</td>'+
-                    '<td width="498">'+
-                        '<select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+'][]"></select>'+
-                    '</td>'+
-                    '<td class="necessary">必考</td>'+
-                    '<td>'+
-                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
-                    '</td>'+
-                '</tr>'+
-        //记录计数
-        $('#examroom').find('tbody').attr('index',index);
+            '<td>'+index+'</td>'+
+            '<td width="498">'+
+            '<select class="form-control js-example-basic-multiple room-list" multiple="multiple" name="room['+index+'][]"></select>'+
+            '</td>'+
+            '<td class="necessary">必考</td>'+
+            '<td>'+
+            '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+            '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
+            '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+            '</td>'+
+            '</tr>'+
+                //记录计数
+            $('#examroom').find('tbody').attr('index',index);
         $('#examroom').find('tbody').append(html);
 
         //ajax请求数据
@@ -871,7 +871,7 @@ function examroom_assignment(){
                         str.push({id:data[i].id,text:data[i].name});
                     }
                     //动态加载进去数据
-                    $(".js-example-basic-multiple").select2({data:str});
+                    $(".room-list").select2({data:str});
                 }
             }
         });
@@ -903,33 +903,33 @@ function examroom_assignment(){
 
 
         //删除监考数据
-        var now_data = thisElement.find('td').eq(1).find('select').val();  
+        var now_data = thisElement.find('td').eq(1).find('select').val();
         var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
         var current = [];
         for(var j in now_data){
-                for(var i in delStore){
+            for(var i in delStore){
 
-                    if(delStore[i].id==now_data[j]){
-                        if(delStore[i].count>1){
-                            delStore[i].count -= 1;
-                            current.push({id:delStore[i].id,count:delStore[i].count});
-                        }else{
-                            //删除dom
-                            var str = delStore[i].id;
-                            $('.parent-id-'+str).remove();
-                            //重置序号
-                            var station_count = 1;
-                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                                station_count = key + 1;
-                                $(elem).find('td').eq(0).text(station_count);
-                            });
-                            $('#exam-place').find('tbody').attr('index',station_count);
-                            continue;
-                        }
-                    }else{
+                if(delStore[i].id==now_data[j]){
+                    if(delStore[i].count>1){
+                        delStore[i].count -= 1;
                         current.push({id:delStore[i].id,count:delStore[i].count});
+                    }else{
+                        //删除dom
+                        var str = delStore[i].id;
+                        $('.parent-id-'+str).remove();
+                        //重置序号
+                        var station_count = 1;
+                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                            station_count = key + 1;
+                            $(elem).find('td').eq(0).text(station_count);
+                        });
+                        $('#exam-place').find('tbody').attr('index',station_count);
+                        continue;
                     }
+                }else{
+                    current.push({id:delStore[i].id,count:delStore[i].count});
                 }
+            }
         }
 
         $('#examroom').find('tbody').attr('data',JSON.stringify(current));
@@ -970,7 +970,7 @@ function examroom_assignment(){
     $('#examroom').on('click','.fa-arrow-down',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().length){
-            
+
             var thisSelect = thisElement.find('select').val(),
                 nextSelect = thisElement.next().find('select').val();
 
@@ -995,9 +995,9 @@ function examroom_assignment(){
         var thisElement = $(this);
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
-                '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
-                '<div class="pull-left">'+$teacher+'</div>'+
-                '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+            '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
+            '<div class="pull-left">'+$teacher+'</div>'+
+            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
     })
 
@@ -1031,9 +1031,9 @@ function examroom_assignment(){
                     //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
                 });
 
-              return {
-                teacher:ids
-              };
+                return {
+                    teacher:ids
+                };
             },
             dataType: 'json',
             processResults: function (res) {
@@ -1098,7 +1098,7 @@ function exam_notice_add(){
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
-            //上传成功
+                //上传成功
                 var li      =   $('<li>').bind('click',delAttch).css('cursor','pointer');
                 var input   =   $('<input>').attr({
                     'name':'attach[]',
@@ -1115,7 +1115,7 @@ function exam_notice_add(){
         });
     }) ;
 
-    
+
 }
 
 /**
@@ -1212,7 +1212,7 @@ function exam_notice_edit(){
     }
 
 
-    
+
 }
 
 /*
@@ -1220,7 +1220,7 @@ function exam_notice_edit(){
  * @author lizhiyuan
  * @version 2.0
  * @date    2016-01-09
-*/
+ */
 
 function smart_assignment(){
     //var testData={"code":1,"message":"success","data":{"1":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[]},"2":{"begin":"1452557715","end":1452558615,"items":[]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}}},"2":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}}},"4":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}}},"5":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}}}}}
@@ -1529,7 +1529,7 @@ function station_assignment(){
             for(var i in selected){
                 arrStore.push(selected[i]);
             }
-            
+
         });
         return arrStore;
     }
@@ -1954,26 +1954,26 @@ function station_assignment(){
 
         //ajax请求数据
         /*$.ajax({
-            type:'get',
-            async:true,
-            url:pars.list,     //请求地址
-            data:{station_id:getStationID(arrStore)},
-            success:function(res){
-                //数据处理
-                var str = [];
-                if(res.code!=1){
-                    layer.alert(res.message);
-                    return;
-                }else{
-                    var data = res.data;
-                    for(var i in data){
-                        str.push({id:data[i].id,text:data[i].name});
-                    }
-                    //动态加载进去数据
-                    $(".js-example-basic-multiple").select2({data:str});
-                }
-            }
-        });*/
+         type:'get',
+         async:true,
+         url:pars.list,     //请求地址
+         data:{station_id:getStationID(arrStore)},
+         success:function(res){
+         //数据处理
+         var str = [];
+         if(res.code!=1){
+         layer.alert(res.message);
+         return;
+         }else{
+         var data = res.data;
+         for(var i in data){
+         str.push({id:data[i].id,text:data[i].name});
+         }
+         //动态加载进去数据
+         $(".js-example-basic-multiple").select2({data:str});
+         }
+         }
+         });*/
 
     });
 
