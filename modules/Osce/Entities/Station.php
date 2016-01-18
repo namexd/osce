@@ -62,7 +62,7 @@ class Station extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showList($order = ['created_at', 'desc'] , array $stationIdArray = "")
+    public function showList($order = ['created_at', 'desc'] , array $stationIdArray = [])
     {
         try {
             //获得排序

@@ -1079,7 +1079,12 @@ function exam_notice_add(){
         return arr.join("\n");
     }
 
-
+    function delAttch(){
+        if(confirm('确认删除附件？'))
+        {
+            $(this).remove();
+        }
+    }
     /**
      * 附件上传
      * @author mao
@@ -1088,11 +1093,20 @@ function exam_notice_add(){
      */
     $(".images_upload").change(function(){
         $.ajaxFileUpload({
-            url:'url',
+            url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
             //上传成功
+                var li      =   $('<li>').bind('click',delAttch).css('cursor','pointer');
+                var input   =   $('<input>').attr({
+                    'name':'attach[]',
+                    'class':'attach',
+                    'type':'hidden'
+                }).val(data.data.path);
+                var span    =   $('<span>').text(data.data.name);
+                var li      =li.append(span).append(input);
+                $('.attch-box').append(li);
             },
             error: function (data, status, e){
                 //上传失败
@@ -1111,8 +1125,12 @@ function exam_notice_add(){
  */
 function exam_notice_edit(){
 
+    var content =   $('#content').html();
     //初始化
-    var ue = UE.getEditor('editor');
+    var ue = UE.getEditor('editor',{
+        serverUrl:'/osce/api/communal-api/editor-upload'
+    });
+    UE.setContent(content);
 
 
     //测试数据
@@ -1126,7 +1144,6 @@ function exam_notice_edit(){
      * @param   {String}  isAppendTo [插入的内容]
      */
     function setContent(isAppendTo) {
-
         UE.getEditor('editor').setContent(isAppendTo);
     }
 
@@ -1150,20 +1167,28 @@ function exam_notice_edit(){
             },1000);
         }
     });
-
     /**
-     * 附件上传
+     * 附件图片上传
      * @author mao
      * @version 1.0
      * @date    2016-01-15
      */
-    $(".images_upload").change(function(){
+    $(".attch_upload").change(function(){
         $.ajaxFileUpload({
             url:'url',
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
-            //上传成功
+                //上传成功
+                var li      =   $('<li>').bind('click',delAttch).css('cursor','pointer');
+                var input   =   $('<input>').attr({
+                    'name':'attach[]',
+                    'class':'attach',
+                    'type':'hidden'
+                }).val(data.data.path);
+                var span    =   $('<span>').text(data.data.name);
+                var li      =li.append(span).append(input);
+                $('.attch-box').append(li);
             },
             error: function (data, status, e){
                 //上传失败
@@ -1179,7 +1204,7 @@ function exam_notice_edit(){
      * @return  {[type]}   [为本内容]
      */
     function getContent(){
-
+        //
         var arr = [];
         arr.push(UE.getEditor('editor').getContent());
         return arr.join("\n");
@@ -1200,43 +1225,7 @@ function smart_assignment(){
     var testData={"code":1,"message":"success","data":{"1":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[]},"2":{"begin":"1452557715","end":1452558615,"items":[]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}}},"2":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}}},"4":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}}},"5":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}}}}}
     testData=eval(testData);
     var liwidth=0;//表格的列宽
-        //模拟数据
-
-        //var everyli=1000/smartlist.length;
-        //var lists="";//代表列
-        //var rooms="";//代表教室
-        //for(var i=0;i<smartlist.length;i++){
-        //    lists+="<li style='width: "+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt><dl/><li/>";
-        //    for(var j=0;j<smartlist[i].child.length;j++){
-        //        for(var k=0;k<smartlist[i].child[j].items.length;k++){
-        //            $(".classroom-box>ul").append("<li style='width:"+everyli+"px'><dl><dt>"+smartlist[i].name+"</dt>" +
-        //                "<dd>"+smartlist[i].child[j].items[k]+"<dd/></dl></li>");
-        //        }
-        //        console.log(smartlist[i].child[j].items.length);
-        //
-        //
-        //    }
-        //}
     function makeItem(data){
-        //var data    ={
-        //        'begin':1000,
-        //        'end':1600,
-        //        'items':[
-        //            {
-        //                id:1,
-        //                name:'李治远3'
-        //            },
-        //            {
-        //                id:2,
-        //                name:'李治远2'
-        //            },
-        //            {
-        //                id:3,
-        //                name:'李治远1'
-        //            }
-        //        ]
-        //    };
-
         var dl  =   $('<dl class="clearfloat">');
         var items   =   data.items;
         var everyHeight=data.end-data.start;
@@ -1245,51 +1234,81 @@ function smart_assignment(){
         {
             var dd  = $('<dd>').text(items[i].name);
             dd.attr("sid",items[i].id);
-
-            dd.bind("click",changeTwo);
+            dd.addClass('student_'+items[i].id).addClass('stu');
+            dd.attr("data-sid",items[i].id);
+            dd.bind("click",changeStudent);
             dl.append(dd);
         }
         return dl;
     }
+    function changeStudent(){
+        if($(this).hasClass('clicked'))
+        {
+            $(this).removeClass('clicked');
+        }
+        else
+        {
+            $(this).addClass('clicked');
+            if($('.clicked').length==2)
+            {
+                var students    =   new Array;
+                $('.clicked').each(function(){
+                    //场次ID-批次序号-考场ID-考站ID-学生ID
+                    var studentId,batchIndex,screeningId,roomId,stationId;
+                    studentId   =   $(this).data('sid');
+                    batchIndex  =   $(this).parents('.batch_inner_row').data('batchindex');
+                    var roomstation      =   $(this).parents('.roomStatioin').data('roomstation');
+                    var RoomStatioinIdInfo    =   roomstation.split('-');
+                    roomId      =   RoomStatioinIdInfo[0];
+                    stationId   =   RoomStatioinIdInfo[1];
+                    screeningId =   $(this).parents('.table').data('screeningid');
+                    var studentLocationArray =  new Array;
+                    studentLocationArray.push(screeningId);
+                    studentLocationArray.push(roomId);
+                    studentLocationArray.push(stationId);
+                    studentLocationArray.push(batchIndex);
+                    studentLocationArray.push(studentId);
+                    var studentLocation =   studentLocationArray.join('-');
+                    students.push(studentLocation);
+                });
+                var exam_id=$('[name=exam_id]').val();
+                $.get('/osce/admin/exam/change-student',{'first':students[0],'second':students[1],'exam_id':exam_id},function(data){
+                    var redList =   data.data.redmanList;
+                    if(redList.length>0)
+                    {
+
+                    }
+                    var obs =   $('.clicked');
+                    var newObs  =   obs.clone().bind('click',changeStudent);
+                    obs.eq(0).after(newObs.eq(1));
+                    obs.eq(1).after(newObs.eq(0));
+                    obs.remove();
+                    $('.stu').removeClass('red');
+                    for (var i in redList)
+                    {
+
+
+                        $('.student_'+redList[i]).addClass('red');
+                    }
+                    $('.clicked').removeClass('clicked');
+                });
+            }
+        }
+    }
     function makeCols(data){
-        //var data    =   {
-        //    'name':'教室404',
-        //    'child':[
-        //        {
-        //            'begin':1000,
-        //            'end':1500,
-        //            'items':[
-        //                '罗海华2',
-        //                '李治远3',
-        //                '毛云刚5',
-        //            ]
-        //        },
-        //        {
-        //            'begin':1500,
-        //            'end':2800,
-        //            'items':[
-        //                '罗海华6',
-        //                '李治远7',
-        //                '毛云刚6',
-        //            ]
-        //        },
-        //
-        //    ],
-        //
-        //};
-
         var ul  =   $('<ul>');
-
-
         var child   =   data.child;
         var title   =   $('<li class="title">').text(data.name);
         ul.append(title);
+        ul.addClass('roomStatioin')
         for(var i in child)
         {
 
             var itemData    =   child[i];
             var li  =   $('<li>');
             li.addClass("rows"+i);
+            li.addClass("batch_inner_row");
+            li.attr('data-batchIndex',i);
             var item    =   makeItem(itemData);
             ul.append(li);
             li.append(item);
@@ -1301,21 +1320,19 @@ function smart_assignment(){
         var liNums=0;
         var ul =    $('<ul class="clearfloat table">');
 
-
         for(var i in data)
         {
-
             var colData     =   data[i];
             var colul       =   makeCols(colData);
             var li          =   $('<li>');
+            colul.attr('data-roomStation',i);
             li.append(colul);
             li.addClass("cols"+i);
+            li.addClass("room_inner_col");
             ul.append(li);
             liNums++;
-
         }
         liwidth=1400/liNums;
-
         return ul;
     }
 
@@ -1323,7 +1340,7 @@ function smart_assignment(){
         for (var i in data){
             var groupData=data[i];
             var dom =   makeAll(groupData);
-            $('.classroom-box').html('');
+            dom.attr('data-screeningId',i);
             $('.classroom-box').append(dom);
         }
     }
@@ -1331,7 +1348,8 @@ function smart_assignment(){
 
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
-            console.log(testData.data);
+            //console.log(testData.data);
+            $('.classroom-box').html('');
             maketotal(testData.data);
             $(".table>li").css("width",liwidth+"px");//给表格设置列宽
             $('#makePlan').one('click',makePlan);

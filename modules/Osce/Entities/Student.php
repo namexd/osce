@@ -9,7 +9,6 @@
 namespace Modules\Osce\Entities;
 
 use Modules\Osce\Repositories\Common;
-use App\Entities\User;
 use Auth;
 use DB;
 class Student extends CommonModel
@@ -24,6 +23,9 @@ class Student extends CommonModel
     protected $hidden = [];
     protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id'];
 
+    public function userInfo(){
+        return $this->hasOne('\App\Entities\User','id','user_id');
+    }
     /**
      * 展示考生列表的方法
      * @return mixed

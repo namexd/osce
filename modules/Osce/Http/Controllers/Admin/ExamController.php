@@ -678,8 +678,8 @@ class ExamController extends CommonController
             ->select('teacher_id')->get();
 
 
-
-        return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
+        //TODO:请蒋志恒 确认行代码还可以跑    如果 非必要 请及时删除 2016-01-17 22:28 罗海华
+        //return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
     }
 
     /**
@@ -1069,7 +1069,7 @@ class ExamController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return void
+     * @return json
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -1093,6 +1093,15 @@ class ExamController extends CommonController
         $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
         $user   =   Auth::user();
         Cache::pull('plan_'.$exam->id.'_'.$user->id);
+        Cache::pull('plan_time_'.$exam->id.'_'.$user->id);
+        Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
+        $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+            return $ExamPlanModel->getTimeList();
+        });
+        $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+            return $ExamPlanModel->getStationStudent();
+        });
+
         $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
             return $plan;
         });
@@ -1156,18 +1165,17 @@ class ExamController extends CommonController
     }
 
     /**
-     *
+     * 交换考生
      * @url GET /osce/admin/exam/change-student
      * @access public
      *
      * @param Request $request
      * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        first        交换第第一个学生(必须的) e.g:场次ID-批次序号-考场ID-考站ID-学生ID
+     * * string        second       被交换学生(必须的)
+     * * string        exam_id      考试ID(必须的)
      *
-     * @return void
+     * @return json
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -1176,27 +1184,47 @@ class ExamController extends CommonController
      *
      */
     public function getChangeStudent(Request $request){
-        $id =   17;
-        $exam       =   Exam::find($id);
-        $user       =   Auth::user();
-        $fist   ='17-3-0-3';
-        $sec    ='17-3-1-1';
-        $studentA   =   explode('-',$fist);
-        $studentB   =   explode('-',$sec);
-        $studentAInfo   =   [
-            'screening_id'  =>  $studentA[0],
-            'room_id'       =>  $studentA[1],
-            'batch_index'   =>  $studentA[2],
-            'student_id'    =>  $studentA[3],
-        ];
-        $studentBInfo   =   [
-            'screening_id'  =>  $studentB[0],
-            'room_id'       =>  $studentB[1],
-            'batch_index'   =>  $studentB[2],
-            'student_id'    =>  $studentB[3],
-        ];
-        $ExamPlanModel   =   new ExamPlan();
-        $ExamPlanModel      ->changePerson($studentAInfo,$studentBInfo,$exam,$user);
+        $this->validate($request,[
+            'first'     =>  'required',
+            'second'    =>  'required',
+            'exam_id'   =>  'required',
+        ]);
+        $first  =   e($request->get('first'));
+        $second =   e($request->get('second'));
+        $id     =   e($request->get('exam_id'));
+        try{
+            $exam       =   Exam::find($id);
+            $user       =   Auth::user();
+
+            $studentA   =   explode('-',$first);
+            $studentB   =   explode('-',$second);
+            $studentAInfo   =   [
+                'screening_id'  =>  $studentA[0],
+                'room_id'       =>  $studentA[1],
+                'station_id'    =>  $studentA[2],
+                'batch_index'   =>  $studentA[3],
+                'student_id'    =>  $studentA[4],
+            ];
+            $studentBInfo   =   [
+                'screening_id'  =>  $studentB[0],
+                'room_id'       =>  $studentB[1],
+                'station_id'    =>  $studentB[2],
+                'batch_index'   =>  $studentB[3],
+                'student_id'    =>  $studentB[4],
+            ];
+            $ExamPlanModel   =   new ExamPlan();
+            $redMan =   $ExamPlanModel      ->changePerson($studentAInfo,$studentBInfo,$exam,$user);
+
+            return response()->json(
+                $this->success_data(['redmanList'=>$redMan])
+            );
+        }
+        catch(\Exception $ex)
+        {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
     }
 
     public function getExamAssignmentByStation(Request $request)
@@ -1283,6 +1311,46 @@ class ExamController extends CommonController
             $examFlowStation -> createExamAssignment($examId, $formData);
         } else { //否则就是编辑
             $examFlowStation -> updateExamAssignment($examId, $formData);
+        }
+    }
+
+    /**
+     * 保存智能排考计划
+     * @url /osce/admin/exam/save-exam-plan
+     * @access public
+     *
+     * * @param Request $request
+     * <b>get 请求字段：</b>
+     * * string        exam_id        考试ID(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE}${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postSaveExamPlan(Request $request){
+        $this->validate($request, [
+            'exam_id' => 'required|integer'
+        ]);
+        $exam_id    =   $request    ->  get('exam_id');
+        $exam   =   Exam::find($exam_id);
+        $user   =   Auth::user();
+        $plan   =   Cache::get('plan_'.$exam->id.'_'.$user->id);
+
+        $ExamPlanModel  =   new ExamPlan();
+
+        try{
+            if($ExamPlanModel  ->savePlan($exam_id,$plan))
+            {
+                return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$exam->id]);
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 }
