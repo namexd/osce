@@ -93,9 +93,9 @@ class Exam extends CommonModel
                 'end_dt',
                 'description',
                 'total'
-            ])->orderBy('created_at', 'desc');
+            ])->orderBy('begin_dt', 'desc');
 
-            return $builder->paginate(config('msc.page_size'));
+            return $builder->paginate(10);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -244,6 +244,7 @@ class Exam extends CommonModel
     }
 
     //考生查询
+
     public function getList($formData=''){
          $builder=$this->Join('student','student.exam_id','=','exam.id');
         if($formData['exam_name']){

@@ -26,7 +26,7 @@ return array (
       'server' => '123',
       'protocol' => 'POP3',
       'port' => '25',
-      'ssl' => 'flase',
+      'ssl' => 'true',
       'username' => '1234',
       'password' => '123',
     ),

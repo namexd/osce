@@ -721,7 +721,7 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamroomAssignment(Request $request, Exam $exam)
+    public function getExamroomAssignment(Request $request)
     {
         $this->validate($request,[
             'id' => 'required|integer'
@@ -733,7 +733,6 @@ class ExamController extends CommonController
 //        dd($examRoomData->all());
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
-
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
 
@@ -1143,7 +1142,15 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam]);
+        $ExamPlanModel  =   new ExamPlan();
+        $plan   =   $ExamPlanModel  ->  showPlan($exam);
+        $user   =   Auth::user();
+        Cache::pull('plan_'.$exam->id.'_'.$user->id);
+        $plan   =   Cache::rememberForever('plan_'.$exam->id.'_'.$user->id,function() use ($plan){
+            return $plan;
+        });
+
+        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
 
     /**
@@ -1257,15 +1264,14 @@ class ExamController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return void
-     *
+     * @param Teacher $teacher
      * @version 1.0
      * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
      * @date 2016-01-16
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
+     * @return \Illuminate\View\View
      */
-    public function getStationAssignment(Request $request , Teacher $teacher)
+    public function getStationAssignment(Request $request)
     {
         $this->validate($request, [
             'id' => 'required|integer'
@@ -1274,6 +1280,7 @@ class ExamController extends CommonController
         $exam_id = $request->input('id');
 
         //展示已经关联的考站和老师列表
+        $teacher = new Teacher();
         $stationData = $teacher->stationTeacher($exam_id);
 
         return view('osce::admin.exammanage.station_assignment', ['exam_id' => $exam_id, 'stationData' => $stationData]);
@@ -1354,6 +1361,44 @@ class ExamController extends CommonController
         }
         catch(\Exception $ex)
         {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    /**
+     * 判断是以考室还是以考站的考试安排着陆页
+     * @url GET /osce/admin/exam/choose-exam-arrange
+     * @access public
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * id    考试id
+     * @return void
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date  2016-01-18
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getChooseExamArrange(Request $request)
+    {
+        $this->validate($request ,[
+            'id' => 'required|integer',
+        ]);
+
+        try {
+            $id = $request->get('id');
+            //通过id找到对应的模式
+            $examMode = Exam::where('id',$id)->first()->sequence_mode;
+            switch ($examMode) {
+                case '1' :
+                    $result =  $this->getExamroomAssignment($request);
+                    break;
+                case '2' :
+                    $result = $this->getStationAssignment($request);
+                    break;
+            }
+            return $result;
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
