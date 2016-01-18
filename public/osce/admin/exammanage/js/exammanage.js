@@ -1670,7 +1670,7 @@ function station_assignment(){
                         if(data[i].type==2){
 
                             html += '<tr class="parent-id-'+e.params.data.id+'">'+
-                                '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="station['+(station_index+parseInt(i)+1)+'][id]" value="'+data[i].id+'"/></td>'+
+                                '<td>'+(station_index+parseInt(i)+1)+'<input type="hidden" name="form_data['+(station_index+parseInt(i)+1)+'][station_id]" value="'+data[i].id+'"/></td>'+
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
@@ -2094,7 +2094,7 @@ function station_assignment(){
         var thisElement = $(this);
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
-            '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
+            '<input type="hidden" name="form_data['+thisElement.parent().attr('value')+'][spteacher_id]" value="'+id+'">'+
             '<div class="pull-left">'+$teacher+'</div>'+
             '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);

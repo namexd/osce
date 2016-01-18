@@ -209,7 +209,8 @@
                         		上传附件
 								<input type="file" name="file" id="file0"/>
 							</span>
-                            @foreach($data['attachments'] as $data)
+							@if($data['attachments'])
+                            @foreach($data['attachments'] as $data)        
 							<div class="upload_list">
 								<p>
                                     <input type="hidden" name="file[]" id="" value="{{ $data }}" />
@@ -217,6 +218,12 @@
 								</p>
 							</div>
                             @endforeach
+                            @else
+                            <p>
+                                    <input type="hidden" name="file[]" id="" value="" />
+                                        <i class="fa fa-2x fa-delicious"></i>&nbsp;&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
+								</p>
+                            @endif
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
