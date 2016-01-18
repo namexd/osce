@@ -341,8 +341,5 @@ class Exam extends CommonModel
             throw new $ex;
        }
     }
-
-    public function getTodayList($time){
-
-    }
+    
 }
