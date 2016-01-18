@@ -84,7 +84,7 @@ class DiscussionController extends  CommonController{
             ];
           }
           return response()->json(
-              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$list)
+              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$pagination->currentPage(),$list)
           );
 //          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
       }

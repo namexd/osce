@@ -289,7 +289,7 @@ class IndexController extends CommonController
     public function getAddWatch(Request $request){
 
         $this->validate($request,[
-            'code'                  =>  'required',
+            'code'                  =>  'required|unique:watch',
             'status'                =>  'required',
             'create_user_id'        =>  'required|integer',
             'description'           =>  'sometimes',

@@ -39,10 +39,11 @@ class SpteacherController extends CommonController
         //验证略
         //得到请求的病例id和已经选择的sp老师id
         $stationId = $request->input('station_id', '');
-        $spteacherId = $request->input('spteacher_id', '');
+        $spteacherId = $request->input('spteacher_id', []);
 
         //得到老师的列表
         $stationIds[] = $stationId;
+//        dd($spteacherId);
 //        $spteacherIds[] =$spteacherId;
         $spteacherIds=array_unique($spteacherId);
 

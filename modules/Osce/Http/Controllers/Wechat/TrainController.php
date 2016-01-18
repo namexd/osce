@@ -36,7 +36,10 @@ class TrainController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getTrainList(){
+    public function getTrainList(Request $request){
+        $this->validate($request,[
+            'page'  => 'required|integer'
+        ]);
 //      $user=Auth::user();
 //      $userId=$user->id;
 //
@@ -47,7 +50,7 @@ class TrainController extends  CommonController{
 //      }
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
-
+        $page=$request->get('page',1);
         $list=InformTrain::select()->orderBy('begin_dt')->get();
         $data=[];
         foreach($list as $item){
@@ -91,7 +94,12 @@ class TrainController extends  CommonController{
             ];
 
         }
-        return view('osce::wechat.train.train_list')->with(['data'=>$data,'pagination'=>$pagination]);
+//        if($total_page<$page){
+//            return redirect()->route('msc.admin.LadMaintain.LaboratoryDeviceList', ['data' => $data,'page'=>$total_page]);
+//        }
+        return response()->json(
+            $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$pagination->currentPage(),$data)
+        );
     }
 
     /**

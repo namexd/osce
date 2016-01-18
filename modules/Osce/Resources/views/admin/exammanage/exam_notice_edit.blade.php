@@ -90,6 +90,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
+                            <textarea id="content" style="display: none;">{{$item->content}}</textarea>
                             <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content" ></script>
                         </div>
                     </div>
