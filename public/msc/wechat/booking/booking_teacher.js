@@ -244,58 +244,96 @@ function booking_teacher_ordinary_form(){
     var endTime;
     $('#begintime_set').change(function(){
         beginTime= $(this).val().replace(":","").toString();
-        $(Take).each(function () { //循环判定 开始时间是否在已选定的时间段内
-            if (beginTime>=this.begintime&&beginTime<=this.endtime){
-                $.alert({
-                    title: '提示：',
-                    content: '您选择的时间段已被占用，请重新选择其他时间段！',
-                    confirmButton: '确定',
-                });
-                $('#begintime_set').val("");
-            }else if(beginTime>=endTime){
+        if(!Take){
+            $(Take).each(function () { //循环判定 开始时间是否在已选定的时间段内
+                if (beginTime>=this.begintime&&beginTime<=this.endtime){
+                    $.alert({
+                        title: '提示：',
+                        content: '您选择的时间段已被占用，请重新选择其他时间段！',
+                        confirmButton: '确定',
+                    });
+                    $('#begintime_set').val("");
+                }else{
+                    if(beginTime>=endTime){
+                        $.alert({
+                            title: '提示：',
+                            content: '结束时间必须晚于开始时间！',
+                            confirmButton: '确定',
+                        });
+                        $('#begintime').val("");
+                        $('#begintime_set').val("");
+                        return false;
+                    }else{
+                        $("#begintime").val($('#begintime_set').val());
+                    }
+                }
+
+            })
+        }else{
+
+            if(beginTime>=endTime){
                 $.alert({
                     title: '提示：',
                     content: '结束时间必须晚于开始时间！',
                     confirmButton: '确定',
                 });
                 $('#begintime').val("");
+                $('#begintime_set').val("");
                 return false;
             }else{
-                //$("#begintime").parents().addClass("has-success").removeClass("has-error");
-                //$("#begintime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
-                //$("#begintime").next().next("small").hide();
                 $("#begintime").val($('#begintime_set').val());
             }
-        })
+
+        }
+
     })
 
     $('#endTime_set').change(function(){
          endTime= $(this).val().replace(":","").toString();
-        $(Take).each(function () { //循环判定 结束时间时间是否在已选定的时间段内
-            if (endTime>=this.begintime&&endTime<=this.endtime){
-                $.alert({
-                    title: '提示：',
-                    content: '您选择的时间段已被占用，请重新选择其他时间段！',
-                    confirmButton: '确定',
-                });
-                $('#endTime_set').val("");
-                return false;
-            }else if(beginTime>=endTime){
+        if(!Take){
+            $(Take).each(function () { //循环判定 结束时间时间是否在已选定的时间段内
+                if (endTime>=this.begintime&&endTime<=this.endtime){
+                    $.alert({
+                        title: '提示：',
+                        content: '您选择的时间段已被占用，请重新选择其他时间段！',
+                        confirmButton: '确定',
+                    });
+                    $('#endTime_set').val("");
+                    return false;
+                }
+                else{
+                    if(beginTime>=endTime){
+                        $.alert({
+                            title: '提示：',
+                            content: '结束时间必须晚于开始时间！',
+                            confirmButton: '确定',
+                        });
+                        $('#endTime_set').val("");
+                        $('#endTime_set').val("");
+                        return false;
+                    }else{
+                        $("#endtime").val($('#endTime_set').val());
+                    }
+
+                }
+            })
+
+        }else{
+            if(beginTime>=endTime){
                 $.alert({
                     title: '提示：',
                     content: '结束时间必须晚于开始时间！',
                     confirmButton: '确定',
                 });
                 $('#endTime_set').val("");
+                $('#endTime_set').val("");
                 return false;
-            }
-            else{
-                //$("#endTime").parents().addClass("has-success").removeClass("has-error");
-                //$("#endTime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
-                //$("#endTime").next().next("small").hide();
+            }else{
                 $("#endtime").val($('#endTime_set').val());
             }
-        })
+
+        }
+
     })
 
 
