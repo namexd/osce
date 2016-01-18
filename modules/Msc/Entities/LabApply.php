@@ -40,6 +40,15 @@ class LabApply  extends Model
         return $this->hasOne('App\Entities\User','id','apply_user_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月18日11:14:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function Laboratory(){
+        return  $this->hasOne('Modules\Msc\Entities\Laboratory','id','lab_id');
+    }
 
 
     //后台获取审核列表
@@ -165,8 +174,8 @@ class LabApply  extends Model
      * @date   2016年1月14日17:21:30
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function MyApplyList($uid){
-        return  $this->where('status','=',1)->where('type','=',2)->where('apply_user_id','=',$uid)->with(['PlanApply'=>function($PlanApply){
+    public function MyApplyList($status,$uid,$user_type){
+        return  $this->where('status','=',$status)->where('apply_user_id','=',$uid)->where('user_type','=',$user_type)->with(['PlanApply'=>function($PlanApply){
             $PlanApply->with(['OpenPlan']);
         }])->get();
     }
@@ -178,5 +187,21 @@ class LabApply  extends Model
         $builder = $builder->leftJoin('lab', function($join){
             $join->on('lab.id', '=', 'lab_apply.lab_id');
         })->first();
+    }
+
+
+    /**
+     * 获取已经完成的历史预约的数据
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月18日11:09:16
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function HistoryLaboratoryApplyList($uid){
+        $builder = $this->where('apply_user_id','=',$uid)->with(['Laboratory'=>function($Laboratory){
+            $Laboratory->with('FloorInfo');
+        },'PlanApply'=>function($PlanApply){
+            $PlanApply->with('OpenPlan');
+        }]);
+        return  $builder->orderby('id','desc')->paginate(config('msc.page_size',10));
     }
 }

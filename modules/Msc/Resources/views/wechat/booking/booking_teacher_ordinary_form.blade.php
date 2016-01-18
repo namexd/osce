@@ -32,6 +32,15 @@
 
     <script type="text/javascript">
         $(function () {
+            var Take = [];
+            $('#Take').find('p').each(function(){
+                var data = [];
+                var time = $(this).find('span:first').html().split("-");
+                data['begintime'] = (new Date("2016-12-11 "+time[0]+":00")).getTime()/1000;
+                data['endtime'] = (new Date("2016-12-11 "+time[1]+":00")).getTime()/1000;
+                data['name'] = $(this).find('span:last').html();
+                Take.push(data);
+            })
             var currYear = (new Date()).getFullYear();
             var opt={};
             opt.date = {preset : 'date'};
@@ -50,8 +59,36 @@
             $("#startTime").mobiscroll(optTime).time(optTime);
             $("#endTime").mobiscroll(optTime).time(optTime);
 
+            $('#endTime').change(function(){
+                if($('#startTime').val()){
+                    alert($(this).val());
+                    alert(Take[0]['begintime']);
+                    console.log(format(Take[0]['begintime']));
+                }
+            })
+
+            $('#startTime').change(function(){
+                if($('#endTime').val()){
+                    alert($(this).val());
+                }
+            })
+
+            function format(shijianchuo)
+            {
+//shijianchuo是整数，否则要parseInt转换
+                var time = new Date(shijianchuo);
+                var y = time.getFullYear();
+                var m = time.getMonth()+1;
+                var d = time.getDate();
+                var h = time.getHours();
+                var mm = time.getMinutes();
+                var s = time.getSeconds();
+                return y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm)+':'+add0(s);
+            }
+            function add0(m){return m<10?'0'+m:m }
 
         });
+
     </script>
     <!-- E 可根据自己喜好引入样式风格文件 -->
 @stop
@@ -93,10 +130,9 @@
                 </div>
                 <div class="form-group">
                     <label for="">已占用时段</label>
-                    <div class="txt">
-
+                    <div class="txt" id="Take">
                         @foreach($data['LaboratoryInfo']['LabApply'] as $val)
-                            <p><span>{{ @$val['begintime'] }}-{{ @$val['endtime'] }}</span>&nbsp;&nbsp;&nbsp;<span>{{ @$val['audit_user'] }}</span></p>
+                            <p><span>{{ @$val['begintime'] }}-{{ @$val['endtime'] }}</span>&nbsp;&nbsp;&nbsp;<span>{{ @$val['user']['name'] }}</span></p>
                         @endforeach
                     </div>
                 </div>
