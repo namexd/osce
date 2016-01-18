@@ -39,7 +39,6 @@ class Invite extends CommonModel
                 'end_dt' => $data[$k]['end_dt'],
                 'exam_screening_id' => $data[$k]['exam_id'],
             ];
-//            dd($inviteData);
             if ($notice = $this->firstOrCreate($inviteData)) {
                 $invitelist = $this->where('id', '=', $data[$k]['teacher_id'])->first()->toArray();
                 $list = [
@@ -68,8 +67,6 @@ class Invite extends CommonModel
 
     public function sendMsg($notice, $data)
     {
-
-
         try {
             foreach ($data as $k => $v) {
             }
@@ -86,6 +83,7 @@ class Invite extends CommonModel
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
 //            oI7UquLMNUjVyUNaeMP0sRcF4VyU
+
         } catch (\Exception $ex) {
             throw $ex;
         }

@@ -135,6 +135,7 @@
             });
         });
 
+
         /**
          * 翻页
          * @author mao
@@ -152,6 +153,9 @@
 
         //初始化
         var now_page = 1;
+        var url = "{{route('osce.wechat.getCheckQuestions')}}";
+        //内容初始化
+        $('.history-list').empty();
         getItem(now_page,url);
 
         /**
@@ -163,23 +167,25 @@
          * @param   {string}   url     请求地址
          */
         function getItem(current,url){
-
             $.ajax({
                 type:'get',
                 url:url,
                 aysnc:true,
-                data:{page:current},
+                data:{id:current,pagesize:current},
                 success:function(res){
                     totalpages = res.total;
                     var html = '';
                     var index = (current - 1)*10;
+                    data = res.data.rows;
                     for(var i in data){
                         //准备dom
+                        //计数
+                        var key = (index+1+parseInt(i))
                         html += '<li>'+
                                     '<div class="content-header">'+
                                         '<div class="content-l">'+
-                                            '<span>'+index+parseInt(i)+1+'F</span>.'+
-                                            '<span class="student">'+data[i].name+'</span>.'+
+                                            '<span>'+key+'F</span>.'+
+                                            '<span class="student">'+data[i].name.name+'</span>.'+
                                             '<span class="time">'+data[i].time+'</span>'+
                                         '</div>'+
                                         '<div class="clearfix"></div>'+
@@ -246,16 +252,5 @@
         </li>
            @endforeach
     </ul>
-    <div class="row">
-        <div class="pull-left">
-            共{{$pagination->total()}}条
-        </div>
-        <div class="pull-right">
-            <nav>
-                <ul class="pagination">
-                    {!! $pagination->render() !!}
-                </ul>
-            </nav>
-        </div>
-    </div>
+   
 @stop

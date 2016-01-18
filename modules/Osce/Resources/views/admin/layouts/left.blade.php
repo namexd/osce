@@ -2,7 +2,11 @@
         <style>
          .img-circle{height:46px;}
          .person-info{margin:20px 0;}
-         .person-info span{color: #fff;}
+         .dropdown.profile-element{margin-left: 20px;}
+         .person-info span{
+            color: #fff;
+            margin-left: 5px;
+        }
          .nav-header{height: 50px;}
          .nav-header span{
             font-size:20px;
@@ -15,6 +19,11 @@
          .nav > li.active {
             border-left: 4px solid #19aa8d;
             background: #1d2a2f;
+        }
+        .navbar-default .nav > li > a:hover,
+        .navbar-default .nav > li > a:focus {
+          background-color: #1d2a2f;
+          color: white;
         }
         </style>
         <nav class="navbar-default navbar-static-side" role="navigation">
@@ -41,11 +50,11 @@
                         </div>
                     </li>
                     <li class="active">
-                        <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="active J_menuItem" href="{{route('osce.admin.case.getCaseList')}}">病例管理</a>
                             </li>
-                            <li><a class="active J_menuItem" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">人员管理</a>
+                            <li><a class="active J_menuItem" href="{{route('osce.admin.invigilator.getInvigilatorList')}}">人员管理</a>
                             </li>
                             <li><a class="active J_menuItem" href="{{route('osce.admin.Station.getStationList')}}">考站管理</a>
                             </li>
@@ -53,13 +62,13 @@
                             </li>
                             <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}">监考设备管理</a>
                             </li>
-							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">考核标准</a>
+							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">科目管理</a>
                             </li>
 							
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="active J_menuItem" href="{{route('osce.admin.exam.getExamList')}}">考试安排</a>
                             </li>
@@ -71,8 +80,11 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">统计分析</span><span class="fa arrow"></span></a>
+                    </li>
 					<li>
-						<a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
+						<a href="#"><i class="fa fa-gear"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
                             <li>
 								<a class="active J_menuItem" href="{{route('osce.admin.user.getStaffList')}}">用户管理</a>

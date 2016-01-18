@@ -37,34 +37,86 @@
     <script type="text/javascript">
 
         $(function(){
-             $('.agree').click(function(){
+
+            $('.agree').click(function(){
+
                    var id =$(this).attr('data');
                    var status = $(this).val();
-                   var url ='/osce/wechat/invitation/invitation-respond';
-                 $.ajax({
-                     url:url,
-                     type:get,
+//                 var url ='/osce/wechat/invitation/invitation-respond';
+                 $.ajax("{{route('osce.wechat.invitation.getInvitationRespond')}}",{
+//                     url:url,
+                     type:'get',
                      dataType:"json",
                      data:{
                          id:id,
-                         status:status,
+                         status:status
+
                      },
-                     success:function(result){
-                         if(resule.code==1){
-                             location.reload();
-                         }else{
-//                             layer.alert((result.message).split(":")[1],function(){
-//                                 location.reload();
-//                             })
+
+                     success:function(data){
+                         if(data.code==1){
+                             $.alert({
+                                 title: '提示：',
+                                 content: '操作成功!',
+                                 confirmButton: '确定',
+                                 confirm: function(){
+                                 }
+                             });
+
                          }
 
+                     },
+                     error:function() {
+                         $.alert({
+                             title: '提示：',
+                             content: '操作失败!',
+                             confirmButton: '确定',
+                             confirm: function(){
+                             }
+                         });
                      }
-
-
-
                  })
              })
 
+            $('.rejected').click(function(){
+
+                var id =$(this).attr('data');
+                var status = $(this).val();
+//                 var url ='/osce/wechat/invitation/invitation-respond';
+                $.ajax("{{route('osce.wechat.invitation.getInvitationRespond')}}",{
+//                     url:url,
+                    type:'get',
+                    dataType:"json",
+                    data:{
+                        id:id,
+                        status:status
+
+                    },
+
+                    success:function(data){
+                        if(data.code==1){
+                            $.alert({
+                                title: '提示：',
+                                content: '操作成功!',
+                                confirmButton: '确定',
+                                confirm: function(){
+                                }
+                            });
+
+                        }
+
+                    },
+                    error:function() {
+                        $.alert({
+                            title: '提示：',
+                            content: '操作失败!',
+                            confirmButton: '确定',
+                            confirm: function(){
+                            }
+                        });
+                    }
+                })
+            })
 
         })
 

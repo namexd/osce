@@ -118,39 +118,41 @@
             }
 		});
  		$(".upload").change(function(){
-//	        $.ajaxFileUpload
-//	        ({
-//	            url:'{{url('/osce/admin/train/add-train')}}',
-//	            secureuri:false,//
-//	            fileElementId:'file0',//必须要是 input file标签 ID
-//	            dataType: 'json',//
-//	            success: function (data, status)
-//	            {
-//	                if(data.code){
-//	                	var type="";//doc或xlsx
-//	                	var str="";
-//	                	var name="";
-//	                	if (type=="doc") {
-//	                		str='<p><input type="hidden" name="doc[]" id="" value="'+name+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
-//	                		$(".upload_list_doc").append(str);
-//	                	}
-//	                	if (type=="xlsx") {
-//	                		str='<p><input type="hidden" name="xlsx[]" id="" value="'+name+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
-//	                		$(".upload_list_xlsx").append(str);
-//	                	}
-//	                }
-//	            },
-//	            error: function (data, status, e)
-//	            {
-//	                $.alert({
-//	                  	title: '提示：',
-//	                  	content: '通讯失败!',
-//	                  	confirmButton: '确定',
-//	                  	confirm: function(){
-//                		}
-//	              	});
-//	            }
-//	        });
+	        $.ajaxFileUpload
+	        ({
+                url:'{{url('/osce/admin/train/upload-file')}}',
+	            secureuri:false,//
+	            fileElementId:'file0',//必须要是 input file标签 ID
+	            dataType: 'json',//
+                success: function (data, status)
+                {
+                    if(data.state=='SUCCESS'){
+                        str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" />'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                        var ln=$(".upload_list").children("p").length;
+                        if(ln<=1){
+                            $(".upload_list").append(str);
+                        }else{
+                            $.alert({
+                                title: '提示：',
+                                content: '最多上传2个文件!',
+                                confirmButton: '确定',
+                                confirm: function(){
+                                }
+                            });
+                        }
+                    }
+                },
+	            error: function (data, status, e)
+	            {
+	                $.alert({
+	                  	title: '提示：',
+	                  	content: '通讯失败!',
+	                  	confirmButton: '确定',
+	                  	confirm: function(){
+                		}
+	              	});
+	            }
+	        });
 	    }) ;
 	    $(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
@@ -171,42 +173,42 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
-                            <input type="text"  id="" name="name" class="form-control">
+                            <input type="text" value="{{ $data['name']  }}" id="" name="name" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训地点:</label>
                         <div class="col-sm-10">
-                            <input type="text"  id="" name="address" class="form-control">
+                            <input type="text" value="{{ $data['address']  }}"  id="" name="address" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" type="text" name="begin_dt" id="start" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" value="{{ $data['begin_dt']  }}" type="text" name="begin_dt" id="start" placeholder="YYYY/MM/DD hh:mm:ss">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">结束时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" type="text" name="end_dt" id="end" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" value="{{ $data['end_dt']  }}" type="text" name="end_dt" id="end" placeholder="YYYY/MM/DD hh:mm:ss">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训讲师:</label>
                         <div class="col-sm-10">
-                            <input type="text"  id="" name="teacher" class="form-control">
+                            <input type="text"  value="{{ $data['teacher']  }}" id="" name="teacher" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content"></script>
+                            <script id="editor"  type="text/plain" style="width:100%;height:500px;" name="content">{{ $data['content']  }}</script>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -217,18 +219,21 @@
                         		上传附件
 								<input type="file" name="file" id="file0"/>
 							</span>
-							<div class="upload_list upload_list_doc">
-								<p>
-									<input type="hidden" name="doc[]" id="" value="文档名字.doc" />
-									<i class="fa fa-2x fa-delicious"></i>&nbsp;文档名字.doc&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
-								</p>
-							</div>
-							<div class="upload_list upload_list_xlsx">
-								<p>
-									<input type="hidden" name="xlsx[]" id="" value="文档名字.xlsx" />
-									<i class="fa fa-2x fa-delicious"></i>&nbsp;文档名字.xlsx&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
-								</p>
-							</div>
+							@if($data['attachments'])
+                                <div class="upload_list">
+                                    @foreach($data['attachments'] as $data)
+                                        <p>
+                                            <input type="hidden" name="file[]" id="" value="{{ $data }}" />
+                                                <i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($data,27)  }}&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
+                                        </p>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p>
+                                    <input type="hidden" name="file[]" id="" value="" />
+                                    <i class="fa fa-2x fa-delicious"></i>&nbsp;&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
+                                </p>
+                            @endif
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

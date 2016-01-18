@@ -45,10 +45,10 @@ class Standard extends CommonModel
         $return =   [];
         foreach($data[0] as $proint)
         {
-            $prointData['proint'] =   $proint;
+            $prointData['test_point'] =   $proint;
             if(array_key_exists($proint->id,$data))
             {
-                $prointData['options']    =   $data[$proint->id];
+                $prointData['test_term']    =   $data[$proint->id];
             }
             else
             {

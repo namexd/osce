@@ -38,62 +38,60 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
-                        	<label class="control-label">培训名称</label>
+                        	<p class="form-control-static">{{ $data['name']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训地点:</label>
                         <div class="col-sm-10">
-                           	<label class="control-label">地点</label>
+                        	<p class="form-control-static">{{ $data['address']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10">
-                        	<label class="control-label">2015 11-22 11:00</label>
+                        	<p class="form-control-static">{{ $data['begin_dt']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">结束时间:</label>
                         <div class="col-sm-10">
-                        	<label class="control-label">2015 11-22 11:00</label>
+                        	<p class="form-control-static">{{ $data['end_dt']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训讲师:</label>
                         <div class="col-sm-10">
-                            <label class="control-label">123</label>
+                        	<p class="form-control-static">{{ $data['teacher']  }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <textarea class="col-sm-6" style="height:200px;resize:none;" name="" rows="" cols="" disabled="disabled">qweqweqweqw</textarea>
+                            <textarea class="col-sm-6" style="height:200px;resize:none;" name="" rows="" cols="" disabled="disabled">{{ $data['content']  }}</textarea>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
-                    <div class="form-group">
+                @foreach($data['attachments'] as $key=>$list)
+                <div class="form-group">
                         <label class="col-sm-2 control-label">附件:</label>
                         <div class="col-sm-10">
 							<div class="upload_list upload_list_doc">
 								<p>
-									<input type="hidden" name="doc[]" id="" value="文档名字.doc" />
-									<i class="fa fa-2x fa-delicious"></i>&nbsp;文档名字.doc
-								</p>
-							</div>
-							<div class="upload_list upload_list_xlsx">
-								<p>
-									<input type="hidden" name="xlsx[]" id="" value="文档名字.xlsx" />
-									<i class="fa fa-2x fa-delicious"></i>&nbsp;文档名字.xlsx
+									<a href="{{ route('osce.admin.getDownloadDocument',['id'=>$data['id'],'attch_index'=>$key])}}">
+                                    <input type="hidden" name="file[]" id="" value="{{ $list }}" />
+									<i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($list,27)  }}
+                                    </a>
 								</p>
 							</div>
                         </div>
                     </div>
+                @endforeach
             </form>
         </div>
     </div>

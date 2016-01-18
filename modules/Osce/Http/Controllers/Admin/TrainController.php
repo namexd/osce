@@ -83,14 +83,15 @@ class TrainController extends  CommonController{
             'teacher'                 =>'required',
             'content'                 =>'required',
         ]);
+
         $user=Auth::user();
         $userId=$user->id;
-        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status']);
+        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
         $data['attachments']=serialize($request->input('file'));
-        $data['create_user_id']=$userId;
+//      $data['create_user_id']=$userId;
         $result=InformTrain::insert($data);
         if($result){
-         return view('osce::admin.train.train_list')->with('success','新增成功');
+         return redirect('/osce/admin/train/train-list')->with('success','新增成功');
         }
         return redirect()->back()->withInput()->withErrors('新增失败');
     }
@@ -142,7 +143,6 @@ class TrainController extends  CommonController{
                 'create_user_id' =>$item->create_user_id,
             ];
         }
-        $data['attachments']=unserialize($data['attachments']);
         if($data['attachments']){
             $data['attachments']=unserialize($data['attachments']);
         }
@@ -177,6 +177,7 @@ class TrainController extends  CommonController{
             'content'                 =>'required',
         ]);
         $data=$request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
+
 //        $user=Auth::user();
 //        $userId=$user->id;
 //        $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
@@ -186,22 +187,7 @@ class TrainController extends  CommonController{
 //                $this->success_rows(3,'false')
 //            );
 //        }
-        $list=InformTrain::where('id',$data['id'])->select()->get();
-
-        foreach($list as $item){
-            $data=[
-                'attachments' =>$item->attachments,
-            ];
-        }
-        if($data['attachments']){
-            $data['attachments']=unserialize(  $data['attachments']);
-            foreach($data['attachments'] as $itm){
-                $result=\File::delete($itm);
-                if(!$result){
-                    return redirect()->back()->withInput()->withErrors('编辑失败');
-                }
-            }
-        }
+        $data['attachments']=serialize($request->input('file'));
         $result=InformTrain::where('id',$data['id'])->update($data);
         if($result){
             return view('osce::admin.train.train_list')->with('success','编辑成功');
@@ -241,22 +227,7 @@ class TrainController extends  CommonController{
 //                $this->success_rows(3,'false')
 //            );
 //        }
-        $list=InformTrain::where('id',$id)->select()->get();
 
-        foreach($list as $item){
-            $data=[
-                'attachments' =>$item->attachments,
-            ];
-        }
-        if(  $data['attachments']){
-            $data['attachments']=unserialize(  $data['attachments']);
-            foreach($data['attachments'] as $itm){
-              $result=\File::delete($itm);
-              if(!$result){
-                  return redirect()->back()->withInput()->withErrors('删除失败');
-              }
-            }
-        }
         $result=InformTrain::where('id',$id)->delete();
         if($result){
             return view()->with('success','删除成功');
@@ -284,7 +255,24 @@ class TrainController extends  CommonController{
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
         $train=InformTrain::where('id',$id)->select()->get();
-        return view('osce::admin.train.train_detail')->with('train',$train);
+        foreach($train as $item){
+            $data=[
+                'id'    =>$item->id,
+                'name' =>$item->name,
+                'address' =>$item->address,
+                'begin_dt' =>$item->begin_dt,
+                'end_dt' =>$item->end_dt,
+                'teacher' =>$item->teacher,
+                'content' =>$item->content,
+                'status' =>$item->status,
+                'attachments' =>$item->attachments,
+                'create_user_id' =>$item->create_user_id,
+            ];
+        }
+        if($data['attachments']){
+            $data['attachments']=unserialize($data['attachments']);
+        }
+        return view('osce::admin.train.train_detail')->with('data',$data);
     }
 
     /**
@@ -313,7 +301,7 @@ class TrainController extends  CommonController{
                $path   =   'osce/file/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                $destinationPath    =   public_path($path);
                $fileName           =   $file->getClientOriginalName();
-               $file   ->  move($destinationPath);
+               $file   ->  move($destinationPath,iconv("UTF-8","gb2312",$fileName));
                $pathReturn    =   '/'.$path.$fileName;
            }
            echo json_encode(
@@ -351,10 +339,10 @@ class TrainController extends  CommonController{
                     'name'=>$fileName
                 ];
             }
-            return $data;
-//            echo json_encode(
-//                $this->success_data($data,1,'上传成功')
-//            );
+//            return $data;
+            echo json_encode(
+                $this->success_data($data,1,'上传成功')
+            );
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -380,4 +368,49 @@ class TrainController extends  CommonController{
     public function getAddTrain(){
     	return view('osce::admin.train.train_add');
     }
+
+    /**
+     *下载文件
+     * @method post
+     * @url /osce/admin/train/download-document
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id                培训id(必须的)
+     * * int        attch_index       文件排序(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDownloadDocument(Request $request){
+        $this->validate($request,[
+            'id'=>'required|integer',
+            'id'=>'required|integer',
+        ]);
+        $id     =   $request->get('id');
+        $key    =   $request->get('attch_index');
+        $info  =   InformTrain::find($id);
+        $attchments =   unserialize($info->attachments);
+
+        $thisFile   =   $attchments[$key];
+        $fileNameArray   =   explode('/',$thisFile);
+        $this->downloadfile(array_pop($fileNameArray),public_path().$thisFile);
+    }
+    private function downloadfile($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
+
 }

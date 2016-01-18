@@ -32,8 +32,6 @@
         </div>
         <form class="container-fluid ibox-content" id="list_form">
             <div class="panel blank-panel">
-
-
                 <div  class="row" style="margin:20px 0;">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <label class="pull-left exam-name">考试名称:</label>
@@ -65,19 +63,30 @@
                     <tbody>
                   @foreach($data as $item)
                      <tr>
+<<<<<<< HEAD
                          <td>{{ $item['exam_name']}}</td>
                          <td>{{ $item['student_name'] }}</td>
                          <td>{{ $item->userInfo->gender }}</td>
                          <td>{{ $item['code'] }}</td>
          @                <td>{{ $item['idCard'] }}</td>
                          <td>{{ $item['mobile'] }}</td>
+=======
+                         <td>{{ $item->exam_name  }}</td>
+                         <td>{{ $item-> student_name }}</td>
+                         @if( $item-> getUser->gender==2)
+                         <td>女</td>
+                         @elseif($item-> getUser->gender==1)
+                         <td>男</td>
+                         @endif
+                         <td>{{ $item-> code }}</td>
+                         <td>{{ $item-> idCard }}</td>
+                         <td>{{ $item-> mobile }}</td>
+>>>>>>> osce.0.1.201601130930
                      </tr>
                    @endforeach
                     </tbody>
                 </table>
-
                 <div class="btn-group pull-right">
-
                 </div>
             </div>
         </form>
