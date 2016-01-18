@@ -35,7 +35,7 @@
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             @forelse($options as $key=>$option)
-                                <li class="{{($key==0&&!array_key_exists('cate_id',$_GET))||(array_key_exists('cate_id',$_GET)&&$_GET['cate_id']==$option['id'])? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
+                                <li class="{{($key==1&&!array_key_exists('cate_id',$_GET))||(array_key_exists('cate_id',$_GET)&&$_GET['cate_id']==$option['id'])? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
                             @empty
                             @endforelse
                         </ul>
