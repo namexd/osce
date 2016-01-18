@@ -543,7 +543,7 @@ class ExamController extends CommonController
             'idcard'         => $request  ->  get('idcard'),        //身份证号
             'mobile'         => $request  ->  get('tell'),          //手机号
             'code'           => $request  ->  get('examinee_id'),   //学号
-            'avatar'         => $request  ->  get('images_path')[0],//照片
+            'avator'         => $request  ->  get('images_path')[0],//照片
             'email'          => $request  ->  get('email'),         //邮箱
         ];
 
@@ -1142,7 +1142,15 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam]);
+        $ExamPlanModel  =   new ExamPlan();
+        $plan   =   $ExamPlanModel  ->  showPlan($exam);
+        $user   =   Auth::user();
+        Cache::pull('plan_'.$exam->id.'_'.$user->id);
+        $plan   =   Cache::rememberForever('plan_'.$exam->id.'_'.$user->id,function() use ($plan){
+            return $plan;
+        });
+
+        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
 
     /**
