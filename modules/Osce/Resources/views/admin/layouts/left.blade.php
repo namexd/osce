@@ -21,10 +21,10 @@
             background: #1d2a2f;
         }
         .navbar-default .nav > li > a:hover,
-            .navbar-default .nav > li > a:focus {
-              background-color: #1d2a2f;
-              color: white;
-            }
+        .navbar-default .nav > li > a:focus {
+          background-color: #1d2a2f;
+          color: white;
+        }
         </style>
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="nav-close"><i class="fa fa-times-circle"></i>
@@ -68,7 +68,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">考试管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="active J_menuItem" href="{{route('osce.admin.exam.getExamList')}}">考试安排</a>
                             </li>
@@ -81,7 +81,7 @@
                         </ul>
                     </li>
 					<li>
-						<a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
+						<a href="#"><i class="fa fa-gear"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
                             <li>
 								<a class="active J_menuItem" href="{{route('osce.admin.user.getStaffList')}}">用户管理</a>

@@ -18,10 +18,28 @@
             height: 48px;
             line-height: 50px;
         }
-        .roll-right.J_tabClose { width: 170px;}
-        .roll-nav.roll-right.J_tabClose i{margin: 0 15px;line-height: 50px;}
+        .roll-right.J_tabClose { 
+            width: 170px;
+            padding: 0;
+            border: 0;
+        }
+        .roll-nav.roll-right.J_tabClose i{
+            margin: 0;
+            line-height: 50px;
+            width: 53.6px;
+        }
         .roll-nav.roll-right.J_tabExit{line-height: 50px;}
         .nav > li.active {border-left: 4px solid #16beb0!important;}
+        .content-tabs .roll-nav:hover, .page-tabs a:hover {
+            color: #999;
+            background: #fff;
+            cursor: pointer;
+        }
+        .roll-nav.roll-right.J_tabClose i:hover{
+            color: #777;
+            background: #f2f2f2;
+            cursor: pointer;
+        }
     </style>
 @stop
 
