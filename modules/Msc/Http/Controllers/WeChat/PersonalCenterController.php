@@ -154,8 +154,9 @@ class PersonalCenterController extends MscWeChatController {
 		$LabApplyBuilder = $LabApply->where('apply_user_id','=',$user->id)->where('id','=',$apply_id);
 		$updateRew = $LabApplyBuilder->update(['status'=>4]);
 		if($updateRew){
+			$LabPlanInfo = $MscMis->table('lab_plan')->where('lab_apply_id','=',$apply_id)->first();
 			$delRew = $MscMis->table('lab_plan')->where('lab_apply_id','=',$apply_id)->delete();
-			if($delRew){
+			if((!empty($LabPlanInfo->id) && $delRew) || empty($LabPlanInfo->id)){
 				$LabApplyInfo = $LabApplyBuilder->first();
 				switch($LabApplyInfo['type']){
 					case 1://TODO 取消普通实验室的预约
@@ -188,6 +189,7 @@ class PersonalCenterController extends MscWeChatController {
 				$MscMis->rollBack();
 				return	$this->success_rows(2,'取消失败');
 			}
+
 		}else{
 			$MscMis->rollBack();
 			return	$this->success_rows(2,'取消失败');
