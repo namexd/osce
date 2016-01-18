@@ -72,7 +72,11 @@ class InvitationController extends CommonController
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
 //            dd(11111);
+<<<<<<< HEAD
             return view('osce::admin.exammanage.examroom_assignment');
+=======
+            return redirect()->back('osce::admin.exammanage.examroom_assignment');
+>>>>>>> osce.0.1.201601130930
         } else {
             throw new \Exception('邀请创建失败');
         }
@@ -97,6 +101,7 @@ class InvitationController extends CommonController
 
     public function getList()
     {
+<<<<<<< HEAD
         $user= Auth::user();
         if(empty($user))
         {
@@ -105,6 +110,12 @@ class InvitationController extends CommonController
         $userId =$user->id;
 
         $notice = new Invite();
+=======
+        $notice = new Invite();
+
+        $list = $notice->get();
+        dd($list);
+>>>>>>> osce.0.1.201601130930
 
         $list = $notice-> where('id','=',$userId)->get();
 //        dd($list);
@@ -130,19 +141,17 @@ class InvitationController extends CommonController
 
     public function getInvitationRespond(Request $request, Teacher $teacher)
     {
-//        dd(1111);
         $this->validate($request, [
             'status' => 'required|integer',
             'id' => 'required|integer'
         ]);
         $status = $request->get('status');
         $teacher_id = $request->get('id');
-
-        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update('status', '=', 4-$status);
-
+        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update(['status'=>$status]);
+//        echo json_decode(11111);die;
         if ($result) {
             return response()->json(
-                $this->success_data(1,'操作成功')
+                $this->success_data($result,1,'操作成功')
             );
         } else {
             return response()->json(

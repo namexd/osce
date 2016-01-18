@@ -5,6 +5,14 @@
         margin-bottom: 0;
     }
     td input{margin: 5px 0;}
+    #file0{
+        height: 34px;
+        width: 70px;
+        opacity: 0;
+        position: relative;
+        top: -20px;
+        left: 0;
+    }
 </style>
 @stop
 
@@ -19,7 +27,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增评分标准</h5>
+            <h5>新增科目</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -41,7 +49,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="description"/>
+                                <input id="select_Category" required  class="form-control m-b" name="desc"/>
                             </div>
                         </div>
                         <div class="row">
@@ -51,10 +59,10 @@
                                     <div class="ibox-title">
                                         <h5>评分标准：</h5>
                                         <div class="ibox-tools">
-                                            <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
-                                                <input type="file" name="topic" id="file0" multiple="multiple" />
+                                            <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
+                                                导入<input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
-                                            
+                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
@@ -84,7 +92,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
-                                <button class="btn btn-white" type="submit">取消</button>
+                                <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                             </div>
                         </div>
                     </form>

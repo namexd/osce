@@ -13,8 +13,10 @@
     </style>
 @stop
 @section('only_js')
+    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 @stop
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}'}" />
     <div class="ibox-title header">
         <div class="pull-left">
             <h3>人员管理</h3>
@@ -32,26 +34,24 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>
-                        姓名
-                    </th>
+                    <th>姓名</th>
                     <th>联系电话</th>
                     <th>最后登录时间</th>
-                    <th>
-                        操作
-                    </th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($list as  $item)
+                @forelse($list as $key => $item)
                 <tr>
-                    <td>{{$item->id}}</td>
+                    <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->userInfo->mobile or '-'}}</td>
                     <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                     <td>
-                        <a href="{{route('osce.admin.invigilator.postEditInvigilator',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="{{route('osce.admin.invigilator.getDelInvitation',['id'=>$item->id])}}"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="{{route('osce.admin.invigilator.postEditInvigilator',['id'=>$item->id])}}">
+                            <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                        </a>
+                        <a href="javascript:void(0)" class="delete" tid="{{$item->id}}"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
                 @empty
@@ -60,7 +60,7 @@
         </table>
         <div class="row">
             <div class="pull-left">
-                共2条
+                共{{$list->total()}}条
             </div>
             <div class="pull-right">
                 <nav>

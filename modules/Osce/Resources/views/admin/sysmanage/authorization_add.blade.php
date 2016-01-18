@@ -12,11 +12,12 @@
 @stop
 
 @section('only_js')
-    
+    <script src="{{asset('osce/admin/sysmanage/js/sysmanage.js')}}" ></script>
 @stop
 
 
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'authorization_add'}" />
 <div class="ibox-title route-nav">
     <ol class="breadcrumb">
         <li><a href="#">资源管理</a></li>

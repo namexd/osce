@@ -5,7 +5,9 @@ namespace Modules\Osce\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+
 use Modules\Osce\Entities\ExamScreening;
+
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Watch;
@@ -36,6 +38,7 @@ class IndexController extends CommonController
      */
     public function getWatchStatus(Request $request){
         $this->validate($request,[
+
             'code' =>'required'
         ]);
            $code=$request->get('code');
@@ -96,7 +99,6 @@ class IndexController extends CommonController
                    );
                }
            }
-
     }
 
     /**
@@ -151,8 +153,8 @@ class IndexController extends CommonController
                     'watch_id' => $id,
                     'action' => $action,
                     'context' => array('time' => $updated_at, 'status' => 1),
-                    'student_id' => $student_id,
-                );
+                    'student_id' => $student_id
+        );
                 $watchModel = new WatchLog();
                 $watchModel->historyRecord($data);
                 return \Response::json(array('code' => 1));
@@ -198,7 +200,7 @@ class IndexController extends CommonController
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
-            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->first()->updated_at;
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,
                     'action'         =>$action,
@@ -237,6 +239,7 @@ class IndexController extends CommonController
 
         $idCard=$request->get('id_card');
 
+
         $student_id=Student::where('idcard',$idCard)->select('id')->first();
 
         if(!$student_id){
@@ -244,16 +247,12 @@ class IndexController extends CommonController
                $this->success_rows(2,'未找到学生相关信息')
            );
         }
-        $student_id=$student_id->id;
-        $data=array('code'=>$student_id);
 
-        $watch_id=ExamScreeningStudent::where('student_id',$student_id)->select('watch_id')->first();
+        $data=array('code'=>$student_id->student_id);
 
-        if($watch_id){
-
-            $watch_id=$watch_id->watch_id;
-            $status=Watch::where('id',$watch_id)->select('status')->first()->status;
-
+        $watch_id=ExamScreeningStudent::where('student_id',$student_id->student_id)->select()->first();
+        if(count($watch_id)>0){
+            $status=Watch::where('watch_id',$watch_id)->select('status')->first()->status;
             if($status==1){
                 return response()->json(
                     $this->success_data($data,1,'已绑定腕表')
@@ -441,6 +440,7 @@ class IndexController extends CommonController
         );
     }
 
+
     /**
      *编辑返回设备信息
      * @method GET
@@ -538,9 +538,9 @@ class IndexController extends CommonController
 
         $code = $request->get('code');
         $status = $request->get('status');
-        try{
-            $watchModel=new Watch();
-            $list=$watchModel->getWatch($code,$status);
+        try {
+            $watchModel = new Watch();
+            $list = $watchModel->getWatch($code, $status);
             $data = [];
             foreach ($list as $item) {
                 $data[] = ['id' => $item->id,
@@ -608,11 +608,11 @@ class IndexController extends CommonController
             return response()->json(
                 $this->success_data($list, 1, 'success')
             );
-        } catch( \Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
             );
-        };
-
+        }
     }
+
 }

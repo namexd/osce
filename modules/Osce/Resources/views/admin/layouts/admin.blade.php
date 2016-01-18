@@ -7,19 +7,45 @@
     <link href="{{asset('osce/admin/plugins/css/font-awesome.min.css?v=4.3.0')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/plugins/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('app/index/style.min.css')}}" rel="stylesheet">
+
     <style>
         body{
             font-family: 微软雅黑;
             font-size: 14px;
         }
         .row.content-tabs,.page-tabs-content,.page-tabs.J_menuTabs,.content-tabs .roll-nav, .page-tabs-list{height: 50px!important;}
+        .roll-nav.roll-left.J_tabLeft,.roll-nav.roll-right.J_tabRight,.roll-nav.roll-right.J_tabClose,.roll-nav.roll-right.J_tabExit{
+            margin: 0;
+            border: 0;
+            border-bottom: 2px solid #2f4050;
+        }
         .page-tabs a {
-            height: 50px;
+            height: 48px;
             line-height: 50px;
         }
-        .roll-right.J_tabClose { width: 170px;}
-        .roll-nav.roll-right.J_tabClose i{margin: 0 18px;line-height: 50px;}
+        .roll-right.J_tabClose { 
+            width: 170px;
+            padding: 0;
+            border: 0;
+        }
+        .roll-nav.roll-right.J_tabClose i{
+            margin: 0;
+            line-height: 50px;
+            width: 53.6px;
+        }
         .roll-nav.roll-right.J_tabExit{line-height: 50px;}
+        .nav > li.active {border-left: 4px solid #16beb0!important;}
+        .content-tabs .roll-nav:hover, .page-tabs a:hover {
+            color: #999;
+            background: #fff;
+            cursor: pointer;
+        }
+        .roll-nav.roll-right.J_tabClose i:hover{
+            color: #777;
+            background: #f2f2f2;
+            cursor: pointer;
+            height: 48px;
+        }
     </style>
 @stop
 
@@ -54,8 +80,11 @@
                     <i class="fa fa-bell"></i>
                     <i class="fa fa-gear"></i>
                 </button>
-
-                <a href="login.html" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+                @if(Auth::user())
+                    <a href="{{route('osce.admin.user.getLogout')}}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+                @else
+                    <a href="{{route('osce.admin.getIndex')}}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 登录</a>
+                @endif
             </div>
             <div class="row J_mainContent" id="content-main">
 
@@ -81,8 +110,18 @@
     <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未使用-->
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+<<<<<<< HEAD
 
 
+=======
+    <script>
+        $(function(){
+            $("#side-menu li").click(function(){
+                $("body").removeClass("mini-navbar");
+            })
+        })
+    </script>
+>>>>>>> osce.0.1.201601130930
     <!-- 自定义js -->
     <script src="{{asset('osce/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
     <script type="text/javascript" src="{{asset('osce/admin/plugins/js/contabs.min.js')}}"></script>

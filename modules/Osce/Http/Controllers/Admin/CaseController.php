@@ -77,6 +77,11 @@ class CaseController extends CommonController
     public function postCreateCase(Request $request, CaseModel $caseModel)
     {
         //验证略过
+        $this->validate($request, [
+            'name' => 'required'
+        ],[
+            'name.required'     =>  '病例名称不能为空'
+        ]);
 
         //获得提交的字段
         $formData = $request->only('name', 'description');
@@ -140,6 +145,11 @@ class CaseController extends CommonController
     public function postEditCase(Request $request, CaseModel $caseModel)
     {
         //验证,略过
+        $this->validate($request, [
+            'name' => 'required'
+        ],[
+            'name.required'     =>  '病例名称不能为空'
+        ]);
 
         $id = $request->input('id');
         $formData = $request->only('name', 'description');
@@ -174,10 +184,10 @@ class CaseController extends CommonController
             //将id传入删除的方法
             $result = $caseModel->deleteData($id);
             if ($result) {
-                return redirect()->json($this->success_data(['删除成功！']));
+                return $this->success_data(['删除成功！']);
             }
         } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 }

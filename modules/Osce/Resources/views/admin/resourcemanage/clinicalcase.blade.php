@@ -7,6 +7,7 @@
         font-weight: bolder;
     }
     #start,#end{width: 160px;}
+
     </style>
 @stop
 
@@ -33,7 +34,7 @@
                 <th>#</th>
                 <th>病例</th>
                 <th>描述</th>
-                <th>操作</th>
+                <th width="80px">操作</th>
 
             </tr>
             </thead>
@@ -41,8 +42,8 @@
             @foreach($data as $key => $item)
                 <tr>
                     <td>{{$key+1}}</td>
-                    <td>{{$item->name}}</td>
-                    <td>{{$item->description}}</td>
+                    <td><p class="description" title="{{$item->name}}">{{$item->name}}</p></td>
+                    <td><p class="description" title="{{$item->description}}">{{$item->description}}</p></td>
                     <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
@@ -52,7 +53,15 @@
             </tbody>
         </table>
 
+        <div class="pull-left">
+            共{{$data->total()}}条
+        </div>
         <div class="btn-group pull-right">
+            <nav>
+                <ul class="pagination">
+                    {!! $data->appends($_GET)->render() !!}
+                </ul>
+            </nav>
            
         </div>
     </form>

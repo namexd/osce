@@ -235,6 +235,7 @@ class ExamController extends CommonController
 
         //判断输入的时间是否有误
         foreach($examScreeningData as $key => $value){
+
             if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
                 throw new \Exception('输入的时间有误！');
             }
@@ -388,7 +389,7 @@ class ExamController extends CommonController
             'sequence_cate'  => $request  ->  get('sequence_cate'),
             'sequence_mode'  => $request  ->  get('sequence_mode'),
         ];
-        
+
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
@@ -461,29 +462,25 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getDelStudent(Request $request, Student $student)
+    public function postDelStudent(Request $request, Student $student)
     {
         //验证
         $this->validate($request, [
-            'id' => 'required|integer'
+            'id'        => 'required|integer',
         ]);
 
         try {
-            //获取id
-            $exam_id = $request->get('exam_id');
+            //获取student_id
             $student_id = $request->get('id');
-
             //进入模型逻辑
             $result = $student->deleteData($student_id);
 
-            if ($result !== true) {
-                throw new \Exception('删除考试失败，请重试！');
-            } else {
-                return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
+            if ($result === true) {
+                return $this->success_data(['删除成功！']);
             }
 
         } catch (\Exception $ex) {
-            return redirect()->back()->withError($ex);
+            return $this->fail($ex);
         }
     }
 
@@ -672,6 +669,7 @@ class ExamController extends CommonController
         try {
 
             //获得上传的数据
+
             $exam_id= $id;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
@@ -728,7 +726,6 @@ class ExamController extends CommonController
          $examModel= new Student();
         //从模型得到数据
         $data=$examModel->getList($formData);
-
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }
@@ -843,14 +840,10 @@ class ExamController extends CommonController
         try{
             DB::beginTransaction();
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $exam_id        = $request  ->  get('id');       //考试id
+            $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
-//            dd($request->all());
-//            $flows = new Flows();
-//            if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)) {
-//                throw new \Exception('考场安排保存失败，请重试！');
-//            }
+
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -1391,7 +1384,7 @@ class ExamController extends CommonController
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-        try {
+//        try {
             //验证
             $this->validate($request, [
                 'form_data' => 'required|array',
@@ -1401,18 +1394,17 @@ class ExamController extends CommonController
             //获取数据
             $examId = $request->get('id');
             $formData = $request->get('form_data'); //所有的考站数据
-            dd($formData);
             //查看是新建还是编辑
-            if (ExamFlowStation::where('exam_id',$examId)->get()->isEmpty()) {  //若是为真，就说明是添加
+            if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $formData);
             } else { //否则就是编辑
                 $examFlowStation -> updateExamAssignment($examId, $formData);
             }
 
-            return redirect()->route('osce.admin.exam.getExamList');
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//            return redirect()->route('osce.admin.exam.getExamList');
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
@@ -1521,7 +1513,35 @@ class ExamController extends CommonController
         //在模型里查询
         $station = new Station();
         $data = $station->showList($stationIds, $ajax);
-        
+
         return $this->success_data($data);
+    }
+
+    /**
+     * 用ajax的方式返回一条考站数据
+     * @url GET /osce/admin/exam/ajax-station-row
+     * @access public
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * id    考试id
+     * @return void
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date  2016-01-18
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAjaxStationRow(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+        $id = $request->input('id');
+        //获得考站的信息
+        $data = Station::where('id',$id)->get();
+
+        return $this->success_data($data);
+
     }
 }
