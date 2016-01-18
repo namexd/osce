@@ -175,7 +175,9 @@ class LabApply  extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function MyApplyList($status,$uid,$user_type){
-        return  $this->where('status','=',$status)->where('apply_user_id','=',$uid)->where('user_type','=',$user_type)->with(['PlanApply'=>function($PlanApply){
+        return  $this->where('status','=',$status)->where('apply_user_id','=',$uid)->where('user_type','=',$user_type)->with(['Laboratory'=>function($Laboratory){
+            $Laboratory->with('FloorInfo');
+        },'PlanApply'=>function($PlanApply){
             $PlanApply->with(['OpenPlan']);
         }])->get();
     }
@@ -219,4 +221,5 @@ class LabApply  extends Model
         }]);
         return  $builder->first();
     }
+
 }

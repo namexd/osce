@@ -142,6 +142,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('/personal-center/history-laboratory-apply-list',['uses'=>'PersonalCenterController@HistoryLaboratoryApplyList','as'=>'msc.personalCenter.HistoryLaboratoryApplyList']);
 		//预约数据详情
 		Route::get('/personal-center/get-apply-details',['uses'=>'PersonalCenterController@GetApplyDetails','as'=>'msc.personalCenter.GetApplyDetails']);
+		//取消实验室预约
+		Route::get('/personal-center/cancel-apply',['uses'=>'PersonalCenterController@CancelApply','as'=>'msc.personalCenter.CancelApply']);
 		//开放设备当前预约
 		//Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.wechat.personalCenter.getMyApply']);
 		//开放设备使用历史

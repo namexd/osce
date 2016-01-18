@@ -9,7 +9,7 @@ use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use App\Entities\User;
 use Modules\Msc\Entities\LabApply;
-
+use DB;
 class PersonalCenterController extends MscWeChatController {
 	public function getTest(){
 		return view('msc::wechat.myreservation.current_reser');
@@ -134,7 +134,45 @@ class PersonalCenterController extends MscWeChatController {
 		return response()->json(
 			$this->success_rows(1,'获取成功',$ApplyDetails->total(),config('msc.page_size',10),$ApplyDetails->currentPage(),array('HistoryLaboratoryApplyList'=>$ApplyDetails->toArray()))
 		);
+	}
 
+	/**
+	 * @method	GET
+	 * @url /msc/wechat/personal-center/cancel-apply
+	 * @access public
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+	public function CancelApply(){
+		$LabApply = new LabApply;
+		$user = Auth::user();
+		$apply_id = Input::get('apply_id');
+		$MscMis = DB::connection('msc_mis');
+		$MscMis->beginTransaction();
+		$LabApplyBuilder = $LabApply->where('apply_user_id','=',$user->id)->where('id','=',$apply_id);
+		$updateRew = $LabApplyBuilder->update(['status'=>4]);
+		if($updateRew){
+			$delRew = $MscMis->table('lab_plan')->where('lab_apply_id','=',$apply_id)->delete();
+			if($delRew){
+				$LabApplyInfo = $LabApplyBuilder->first();
+				switch($LabApplyInfo['type']){
+					case 1:
+						$MscMis->commit();
+						return	$this->success_rows(1,'取消成功');
+						break;
+					case 2:
+
+						break;
+				}
+
+			}else{
+				$MscMis->rollBack();
+			}
+			//$MscMis->commit();
+		}else{
+			$MscMis->rollBack();
+		}
 	}
 
 
