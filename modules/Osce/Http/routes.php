@@ -18,6 +18,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
+	Route::get('admin/index/dashboard', ['uses'=>'Admin\IndexController@dashboard','as'=>'osce.admin.index.dashboard']);
 	Route::get('/index', 'OsceController@index');
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		//房间
@@ -118,7 +119,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
 		Route::get('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/choose-exam-arrange', 	['uses'=>'ExamController@getChooseExamArrange','as'=>'osce.admin.exam.getChooseExamArrange']);  //判定应该载入哪个安排页面
+		Route::post('exam/station-assignment', 	['uses'=>'ExamController@postStationAssignment','as'=>'osce.admin.exam.postStationAssignment']);
 
+		Route::get('exam/ajax-station', ['uses'=>'ExamController@getAjaxStation','as'=>'osce.admin.exam.getAjaxStation']);  //以json返回考站信息
 		Route::get('exam/add-exam', 	['uses'=>'ExamController@getAddExam','as'=>'osce.admin.exam.getAddExam']);		//新增考试
 		Route::post('exam/add-exam', 	['uses'=>'ExamController@postAddExam','as'=>'osce.admin.exam.postAddExam']);
 		Route::get('exam/examinee-manage', 	['uses'=>'ExamController@getExamineeManage','as'=>'osce.admin.exam.getExamineeManage']);  //考生管理
@@ -226,12 +229,14 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('index/index',['uses'=>'IndexController@getIndex','as'=>'osce.wechat.index.getIndex']);
 		//通知
 		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
+		Route::get('notice/view',['uses'=>'NoticeController@getView','as'=>'osce.wechat.notice.getView']);
 		//sp邀请
 		Route::get('invitation/invitation-list',['uses'=>'InvitationController@getInvitationList','as'=>'osce.wechat.invitation.getInvitationList']);
 		Route::get('invitation/invitation-respond',['uses'=>'InvitationController@getInvitationRespond','as'=>'osce.wechat.invitation.getInvitationRespond']);
 		Route::get('invitation/msg',['uses'=>'InvitationController@getMsg','as'=>'osce.wechat.invitation.getMsg']);
 		Route::get('invitation/list',['uses'=>'InvitationController@getList','as'=>'osce.wechat.invitation.getList']);
 
+		//讨论区
 		Route::get('discussion/question-list',['uses'=>'DiscussionController@getQuestionList','as'=>'osce.wechat.getQuestionList']);
 		Route::get('discussion/check-question',['uses'=>'DiscussionController@getCheckQuestion','as'=>'osce.wechat.getCheckQuestion']);
 		Route::get('discussion/del-question',['uses'=>'DiscussionController@getDelQuestion','as'=>'osce.wechat.getDelQuestion']);
@@ -244,6 +249,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('discussion/edit-question',['uses'=>'DiscussionController@getEditQuestion','as'=>'osce.wechat.getEditQuestion']);
 		Route::post('discussion/edit-question',['uses'=>'DiscussionController@postEditQuestion','as'=>'osce.wechat.postEditQuestion']);
 
+		//考前培训
 		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.wechat.getTrainList']);
 		Route::get('train/train-detail',['uses'=>'TrainController@getTrainDetail','as'=>'osce.wechat.getTrainDetail']);
 

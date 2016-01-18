@@ -322,4 +322,23 @@ class Exam extends CommonModel
     }
 
 
+    //获取候考教室列表
+    public function getWriteRoom($exam_id){
+       $time=time();
+       try {
+           $builder = $this->Join('exam_room', 'exam.id', '=', 'exam_room.exam_id');
+           $builder = $builder->Join('room', 'room.id', '=', 'exam_room.room_id');
+           $builder = $builder->where('exam.id', $exam_id);
+           $builder = $builder->whereRaw(
+               'unix_timestamp(' . $this->table . '.begin_dt) > ?',
+               [
+                   $time
+               ]
+           );
+       }
+       catch(\Exception $ex)
+       {
+            throw new $ex;
+       }
+    }
 }

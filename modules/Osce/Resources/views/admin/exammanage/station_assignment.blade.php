@@ -77,7 +77,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getRoomListData')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'station_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getAjaxStation')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
@@ -92,8 +92,8 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$id}}">基础信息</a></li>
-                        <li class="active"><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getEditExam',['id'=>$id])}}">基础信息</a></li>
+                        <li class="active"><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
                     </ul>
@@ -103,7 +103,7 @@
             <div class="ibox float-e-margins">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postExamroomAssignmen')}}">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postStationAssignment')}}">
                             <input type="hidden" name="id" value="{{$id}}">
                             <!-- <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
@@ -124,21 +124,21 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>考场列表</th>
+                                            <th>考站列表</th>
                                             <th>必考&选考</th>
                                             <th>操作</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="{{count($examRoomData)}}">
+                                        <tbody index="{{count($stationData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
 
-                                        @forelse($examRoomData as $item)
+                                        @forelse($stationData as $item)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
-                                                    <select class="form-control js-example-basic-multiple room-station" multiple="multiple" name="room[{{$k2++}}][]">
+                                                    <select class="form-control js-example-basic-multiple room-station" multiple="multiple">
 
-                                                        <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+                                                        <option value="{{$item->station_id}}" selected="selected">{{$item->station_name}}</option>
 
                                                     </select>
                                                 </td>
@@ -175,24 +175,25 @@
                                             <th>邀请SP老师</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="{{count($examStationData)}}">
-                                        @forelse($examStationData as $key => $item)
+                                        <tbody index="{{count($stationData)}}">
+                                        @forelse($stationData as $key => $item)
                                             <tr class="parent-id-{{$item->room_id}}">
-                                                <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->id}}"/></td>
+                                                <td>{{$key+1}}<input type="hidden" name="form_data[{{$key+1}}][station_id]" value="{{$item->station_id}}"/></td>
                                                 <td>{{$item->station_name}}</td>
-                                                <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
+                                                <td>{{($item->station_type==1)?'技能操作站':(($item->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station[{{$key+1}}][teacher_id]">
-                                                        @if($item->type == 1)
-                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="form_data[{{$key+1}}][teacher_id]">
+                                                        @if($item->teacher_type == 1)
+                                                            <option value="{{$item->teacher_id}}" selected="selected">{{$item->teacher_name}}</option>
                                                         @endif
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
-                                                        @if($item->type == 2)
-                                                        <div class="input-group teacher pull-left" value="{{$item->status}}">
-                                                            <div class="pull-left">{{$item->name}}</div>
+                                                        @if($item->teacher_type == 2)
+                                                        <div class="input-group teacher pull-left" name="form_data[{{$key+1}}][spteacher_id]" value="{{$item->teacher_status}}">
+                                                            <input type="hidden" name="form_data[{{$key+1}}][spteacher_id]" value="{{$item->teacher_id}}">
+                                                            <div class="pull-left">{{$item->teacher_name}}</div>
                                                             <div class="pull-left"><i class="fa fa-times"></i></div>
                                                         </div>
                                                         @endif
