@@ -91,7 +91,7 @@ class Flows extends CommonModel
                         'created_user_id'   =>  $user ->id,
                         'exam_id'           =>  $exam_id
                     ];
-
+//                    dd($examFlowRoom);
                     if(!$test3 = ExamFlowRoom::create($examFlowRoom)){
                         throw new \Exception('考试流程-房间关系添加失败！');
                     }
@@ -115,12 +115,10 @@ class Flows extends CommonModel
                 $station_id = $item['id'];
                 //根据考站id，获取对应的病例id
                 $stationCase = StationCase::where('station_id', $station_id)->first();
-                if(count($stationCase) == 0){
-                    $case_id = $stationCase->case_id;
-                }else{
-                    $case_id = '';
+                if(empty($stationCase)){
+                    throw new \Exception('找不到考站对应的病例对象');
                 }
-
+                $case_id = $stationCase->case_id;
                 foreach ($teacherIDs as $teacherID) {
                     //考站-老师关系表 数据
                     $stationTeacher = [
@@ -188,41 +186,25 @@ class Flows extends CommonModel
             }
 
             //删除考试考场关联
-            if (ExamRoom::where('exam_id',$id)->first()) {
+            if (count(ExamRoom::where('exam_id',$id)->first()) != 0) {
                 if (!ExamRoom::where('exam_id',$id)->delete()) {
                     throw new \Exception('删除考试考场关联失败，请重试！');
                 }
             }
 
             //删除考试流程关联
-            if (ExamFlow::where('exam_id',$id)->first()) {
+            if (count(ExamFlow::where('exam_id',$id)->first()) != 0) {
                 if (!ExamFlow::where('exam_id',$id)->delete()) {
                     throw new \Exception('删除考试流程关联失败，请重试！');
                 }
             }
 
             //删除考试考场流程关联
-            if (ExamFlowRoom::where('exam_id',$id)->first()) {
+//            dd(ExamFlowRoom::where('exam_id',$id)->first());
+            if (count(ExamFlowRoom::where('exam_id',$id)->first()) != 0) {
+
                 if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
                     throw new \Exception('删除考试考场流程关联失败，请重试！');
-                }
-            }
-
-            //通过考试流程-考站关系表得到考站信息
-            $station = ExamFlowStation::whereIn('flow_id',$flowIds);
-            $stationIds = $station->select('station_id')->get();
-
-            if (count($stationIds) != 0) {
-                //删除考试流程-考站关系表信息
-                if (!$station->delete()) {
-                    throw new \Exception('删除考试考站流程关联失败，请重试！');
-                }
-
-                //通过考站id找到对应的考站-老师关系表
-                foreach ($stationIds as $stationId) {
-                    if (!StationTeacher::where('station_id',$stationId)->delete()) {
-                        throw new \Exception('删除考站老师关联失败，请重试！');
-                    }
                 }
             }
 
@@ -232,6 +214,13 @@ class Flows extends CommonModel
                     if (!Flows::where('id',$flowId->flow_id)->delete()) {
                         throw new \Exception('删除流程失败，请重试！');
                     }
+                }
+            }
+
+            //删除stationTeacher表
+            if (!StationTeacher::where('exam_id',$id)->get()->isEmpty()) {
+                if (!StationTeacher::where('exam_id',$id)->delete()) {
+                    throw new \Exception('删除教师考站关联失败，请重试！');
                 }
             }
 
