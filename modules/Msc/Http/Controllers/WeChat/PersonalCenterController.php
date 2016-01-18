@@ -82,21 +82,21 @@ class PersonalCenterController extends MscWeChatController {
 	public function MyLaboratoryApply(){
 		$LabApply = new LabApply;
 		$user = Auth::user();
+		$MyApplyList = [];
+		$MyPlanList = [];
 		if($user->user_type == 1){//TODO 老师
 			$MyApplyList = $LabApply->MyApplyList(1,$user->id,2);
 			$MyPlanList = $LabApply->MyApplyList(2,$user->id,2);
-			$data = [
-				'MyApplyList'=>$MyApplyList,
-				'MyPlanList'=>$MyPlanList
-			];
 		}elseif($user->user_type == 2){//TODO 学生
 			$MyApplyList = $LabApply->MyApplyList(1,$user->id,1);
 			$MyPlanList = $LabApply->MyApplyList(2,$user->id,1);
-			$data = [
-				'MyApplyList'=>$MyApplyList,
-				'MyPlanList'=>$MyPlanList
-			];
+
 		}
+		$data = [
+			'MyApplyList'=>$MyApplyList,
+			'MyPlanList'=>$MyPlanList
+		];
+		
 	}
 	/**
 	 * 我已经完成的实验室预约信息；
@@ -117,6 +117,24 @@ class PersonalCenterController extends MscWeChatController {
 	}
 
 
+	/**
+	 * 预约详情
+	 * @method	GET
+	 * @url /msc/wechat/personal-center/get-apply-details
+	 * @access public
+	 * @author tangjun <tangjun@misrobot.com>
+	 * @date	2016年1月18日11:41:25
+	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+	public function GetApplyDetails(){
+		$apply_id = Input::get('apply_id');
+		$LabApply = new LabApply;
+		$ApplyDetails = $LabApply->GetApplyDetails($apply_id);
+		return response()->json(
+			$this->success_rows(1,'获取成功',$ApplyDetails->total(),config('msc.page_size',10),$ApplyDetails->currentPage(),array('HistoryLaboratoryApplyList'=>$ApplyDetails->toArray()))
+		);
+
+	}
 
 
 

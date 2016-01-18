@@ -140,6 +140,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('/personal-center/my-laboratory-apply',['uses'=>'PersonalCenterController@MyLaboratoryApply','as'=>'msc.personalCenter.MyLaboratoryApply']);
 		//已完成的预约信息数据获取
 		Route::get('/personal-center/history-laboratory-apply-list',['uses'=>'PersonalCenterController@HistoryLaboratoryApplyList','as'=>'msc.personalCenter.HistoryLaboratoryApplyList']);
+		//预约数据详情
+		Route::get('/personal-center/get-apply-details',['uses'=>'PersonalCenterController@GetApplyDetails','as'=>'msc.personalCenter.GetApplyDetails']);
 		//开放设备当前预约
 		//Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.wechat.personalCenter.getMyApply']);
 		//开放设备使用历史
@@ -178,6 +180,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//普通实验室验证数据处理
 		Route::post('/laboratory/apply-laboratory-op',['uses'=>'LaboratoryCotroller@ApplyLaboratoryOp','as'=>'msc.Laboratory.ApplyLaboratoryOp']);
 		// /msc/wechat/personal-center/index
+
 	});
 	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){
 		Route::controller('user', 'UserController');

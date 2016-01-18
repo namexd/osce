@@ -203,4 +203,19 @@ class LabApply  extends Model
         }]);
         return  $builder->orderby('id','desc')->paginate(config('msc.page_size',10));
     }
+
+    /**
+     * @param $apply_id
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月18日12:03:44
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetApplyDetails($apply_id){
+        $builder = $this->where('id','=',$apply_id)->with(['Laboratory'=>function($Laboratory){
+            $Laboratory->with('FloorInfo');
+        },'PlanApply'=>function($PlanApply){
+            $PlanApply->with('OpenPlan');
+        }]);
+        return  $builder->first();
+    }
 }
