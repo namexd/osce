@@ -23,9 +23,6 @@
 
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.Station.postAddStation')}}">
-
-                            <div class="hr-line-dashed"></div>
-
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站名称</label>
 
@@ -124,7 +121,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <input type="button" class="btn btn-white" value="取消">
+                                    <a href=""><input type="button" class="btn btn-white" value="取消"></a>
                                 </div>
                             </div>
                         </form>

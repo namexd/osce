@@ -104,11 +104,11 @@ a{-webkit-touch-callout:none;}
  */
 .btn{
     padding: 7px 20px;
-    margin: 0 10px;
+   margin-right: 10px;
 }
 .btn-primary{
-    background-color: #1ab394;
-    border-color: #1ab394;
+    background-color: #16beb0;
+    border-color: #16beb0;
 }
 .btn-primary:focus{background-color:#1ab394;border-color:#1ab394;}
 .btn-primary:hover{background-color: #42b2b1;border-color: #42b2b1}

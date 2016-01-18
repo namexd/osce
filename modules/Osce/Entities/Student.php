@@ -22,7 +22,7 @@ class Student extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id'];
+    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id','description'];
 
     public function userInfo(){
         return $this->hasOne('\App\Entities\User','id','user_id');
