@@ -174,7 +174,7 @@ class TrainController extends  CommonController{
             'teacher'                 =>'required',
             'content'                 =>'required',
         ]);
-        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
+        $data=$request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
 //        $user=Auth::user();
 //        $userId=$user->id;
 //        $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
@@ -184,6 +184,22 @@ class TrainController extends  CommonController{
 //                $this->success_rows(3,'false')
 //            );
 //        }
+        $list=InformTrain::where('id',$data['id'])->select()->get();
+
+        foreach($list as $item){
+            $data=[
+                'attachments' =>$item->attachments,
+            ];
+        }
+        if($data['attachments']){
+            $data['attachments']=unserialize(  $data['attachments']);
+            foreach($data['attachments'] as $itm){
+                $result=\File::delete($itm);
+                if(!$result){
+                    return redirect()->back()->withInput()->withErrors('编辑失败');
+                }
+            }
+        }
         $result=InformTrain::where('id',$data['id'])->update($data);
         if($result){
             return view('osce::admin.train.train_list')->with('success','编辑成功');
@@ -223,6 +239,22 @@ class TrainController extends  CommonController{
 //                $this->success_rows(3,'false')
 //            );
 //        }
+        $list=InformTrain::where('id',$id)->select()->get();
+
+        foreach($list as $item){
+            $data=[
+                'attachments' =>$item->attachments,
+            ];
+        }
+        if(  $data['attachments']){
+            $data['attachments']=unserialize(  $data['attachments']);
+            foreach($data['attachments'] as $itm){
+              $result=\File::delete($itm);
+              if(!$result){
+                  return redirect()->back()->withInput()->withErrors('删除失败');
+              }
+            }
+        }
         $result=InformTrain::where('id',$id)->delete();
         if($result){
             return view()->with('success','删除成功');
@@ -249,7 +281,7 @@ class TrainController extends  CommonController{
      */
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
-        $train=InformTrain::find($id);
+        $train=InformTrain::where('id',$id)->select()->get();
         return view('osce::admin.train.train_detail')->with('train',$train);
     }
 
