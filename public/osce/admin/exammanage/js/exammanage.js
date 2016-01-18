@@ -1515,9 +1515,17 @@ function station_assignment(){
     $('#examroom').find('tbody').attr('data',JSON.stringify(arrStore));
 
 
-    //传所有已选id
-    var stations_ids = [];
-    for(var i in arrStore){station_ids.push(arrStore[i].id)}
+    /**
+     * 获取所有上一张表格里的id
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-18
+     */
+    function getStationID(data){
+        var station_ids = [];
+        for(var i in arrStore){station_ids.push(arrStore[i].id)}
+        return station_ids;
+    }
     /**
      * select2初始化
      * @author mao
@@ -1528,7 +1536,7 @@ function station_assignment(){
         type:'get',
         async:true,
         url:pars.list,     //请求地址
-        data:{id:stations_ids}
+        data:{station_id:getStationID(arrStore)},
         success:function(res){
             //数据处理
             var str = [];
@@ -1895,6 +1903,7 @@ function station_assignment(){
             type:'get',
             async:true,
             url:pars.list,     //请求地址
+            data:{station_id:getStationID(arrStore)},
             success:function(res){
                 //数据处理
                 var str = [];
