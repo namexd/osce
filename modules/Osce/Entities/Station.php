@@ -24,6 +24,15 @@ class Station extends CommonModel
     protected $fillable = ['name', 'mins', 'type', 'subject_id', 'description', 'code'];
 
     /**
+     * 考站与老师的关联
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function stationTeacher()
+    {
+        return $this->belongsToMany('\Modules\Osce\Entities\Teacher','station_teacher','station_id','teacher_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function room()
@@ -31,6 +40,9 @@ class Station extends CommonModel
         return $this->belongsToMany('\Modules\Osce\Entities\room','room_station','station_id','room_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function roomStation(){
         return $this->hasOne('\Modules\Osce\Entities\RoomStation','station_id','id');
     }
@@ -50,18 +62,27 @@ class Station extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showList($order = ['created_at', 'desc'])
+    public function showList($order = ['created_at', 'desc'] , array $stationIdArray = [])
     {
         try {
             //获得排序
             list($orderType, $orderBy) = $order;
 
+            $builder = $this;
+
+            //如果传入了stationArray，就排除里面的内容
+            if ($stationIdArray != "") {
+                $builder = $builder->whereNotIn('id',$stationIdArray);
+            }
             //开始查询
-            $builder = $this->select([
+            $builder = $builder->select([
                 'id',
                 'name',
+                'code',
                 'type',
-                'description'
+                'description',
+                'subject_id',
+                'mins'
             ])->orderBy($orderType, $orderBy);
 
             return $builder->paginate(10);

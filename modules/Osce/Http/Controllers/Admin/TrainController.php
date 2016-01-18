@@ -27,9 +27,6 @@ class TrainController extends  CommonController{
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
      *
      * @return ${response}
      *
@@ -48,8 +45,10 @@ class TrainController extends  CommonController{
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
 
-        $list=InformTrain::select()->orderBy('begin_dt')->get();
+        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
+
         return view('osce::admin.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
+
     }
 
 
@@ -110,10 +109,7 @@ class TrainController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        id        培训id(必须的)
      *
      * @return ${response}
      *
@@ -164,9 +160,6 @@ class TrainController extends  CommonController{
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
      *
      * @return ${response}
      *
@@ -212,10 +205,7 @@ class TrainController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        id        培训id(必须的)
      *
      * @return ${response}
      *
@@ -254,10 +244,7 @@ class TrainController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        id        培训id(必须的)
      *
      * @return ${response}
      *

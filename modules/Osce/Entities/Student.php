@@ -24,6 +24,9 @@ class Student extends CommonModel
     protected $hidden = [];
     protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id'];
 
+    public function userInfo(){
+        return $this->hasOne('\App\Entities\User','id','user_id');
+    }
     /**
      * 展示考生列表的方法
      * @return mixed
@@ -113,11 +116,10 @@ class Student extends CommonModel
             $user = User::where(['username' => $examineeData['mobile']])->first();
             //如果查找到了，对用户信息 进行编辑处理
             if(count($user) != 0){
-                //var_dump('##');
                 $user -> name   = $examineeData['name'];    //姓名
                 $user -> gender = $examineeData['gender'];  //性别
                 $user -> mobile = $examineeData['mobile'];  //手机号
-//                $user -> avator = $examineeData['avator'];  //头像
+                $user -> avatar = $examineeData['avator'];  //头像
                 $user -> idcard = $examineeData['idcard'];  //身份证号
                 $user -> email  = $examineeData['email'];   //邮箱
                 if(!($user->save())){      //跟新用户
@@ -142,15 +144,13 @@ class Student extends CommonModel
                 $student->idcard  = $examineeData['idcard'];
                 $student->mobile  = $examineeData['mobile'];
                 $student->code    = $examineeData['code'];
-                //$student->avator  = $examineeData['avatar'];
+                $student->avator  = $examineeData['avator'];
                 if (!($student->save())) {
                     throw new \Exception('新增考生失败！');
                 }
             }else{
-//                var_dump(11111);
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
-                $examineeData['avator'] = $examineeData['avator'];
                 $examineeData['create_user_id'] = $operator->id;
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');

@@ -65,4 +65,28 @@ class ExamQueue extends  CommonModel{
        }
         return $data;
     }
+
+
+    //查询学生队列下的考试
+    public  function  StudentExamInfo($watchStudent){
+        $todayStart = date('Y-m-d 00:00:00');
+        $todayEnd = date('Y-m-d 23:59:59');
+        $data=ExamQueue::leftJoin('room',function($join){
+            $join ->on('room.id','=','exam_queue.room_id');
+        })->leftJoin('station',function($join){
+            $join ->on('station.id','=','exam_queue.station_id');
+        })->leftJoin('student',function($join){
+            $join ->on('student.id','=','exam_queue.student_id');
+        })->where($this->table.'.student_id','=',$watchStudent)
+            ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
+         AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+            ->select([
+                'room.name as room_name',
+                'student.name as name',
+                'exam_queue.begin_dt as begin_dt',
+                'exam_queue.end_dt as end_dt',
+            ])->get()->toArray();
+
+        return $data;
+    }
 }

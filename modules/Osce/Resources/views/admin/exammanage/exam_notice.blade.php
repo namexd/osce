@@ -23,7 +23,7 @@
                 <h5 class="title-label">资讯&通知</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.notice.getAddNotice')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -42,8 +42,8 @@
                         <td>{{$item['name']}}</td>
                         <td>{{$item['created_at']}}</td>
                         <td>
-                            <a href="{{route('osce.admin.notice.getEditNotice')}}?id={{$item['id']}}"><span class="read  state1"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            <a href="{{route('osce.admin.notice.getEditNotice',['id'=>$item['id']])}}"><span class="read  state1"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                            <a href="{{route('osce.admin.notice.getDelNotice',['id'=>$item['id']])}}" onclick="return confirm('确认删除？')"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                     @empty

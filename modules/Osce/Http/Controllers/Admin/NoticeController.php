@@ -87,21 +87,23 @@ class NoticeController extends CommonController
             'title'     =>  'required',
             'content'   =>  'required',
             'exam_id'   =>  'required',
+            'attach'    =>  'sometimes',
         ]);
 
         $title      =   $request    ->  get('title');
         $content    =   $request    ->  get('content');
         $exam_id    =   $request    ->  get('exam_id');
-        $groups    =   $request     ->  get('groups');
+        $groups     =   $request     ->  get('groups');
+        $attach     =   e(implode(',',$request     ->  get('attach')));
 
-        try
-        {
+//        try
+//        {
             if(!is_array($groups))
             {
                 throw new \Exception('请选择接收人所属角色');
             }
             $noticeModel    =   new Notice();
-            if($noticeModel    ->  sendNotice($title,$content,$exam_id,$groups))
+            if($noticeModel    ->  sendNotice($title,$content,$exam_id,$groups,$attach))
             {
                 return redirect()->route('osce.admin.notice.getList');
             }
@@ -109,11 +111,11 @@ class NoticeController extends CommonController
             {
                 throw new \Exception('通知创建失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()   ->  back()  ->withErrors($ex);
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            return redirect()   ->  back()  ->withErrors($ex);
+//        }
     }
 
     /**
@@ -141,9 +143,10 @@ class NoticeController extends CommonController
         $this   ->  validate($request,[
             'id'        =>  'required',
         ]);
+        $list   =   Exam::get();
         $id     =   $request    ->  get('id');
         $item   =   Notice::find($id);
-        return view('osce::admin.exammanage.exam_notice_edit',['item'=>$item]);
+        return view('osce::admin.exammanage.exam_notice_edit',['item'=>$item,'list'=>$list]);
     }
 
     /**
@@ -167,19 +170,24 @@ class NoticeController extends CommonController
      */
     public function postEditNotice(Request $request){
         $this   ->  validate($request,[
-            'title'     =>  'required',
+            'name'     =>  'required',
             'content'   =>  'required',
+            'attach'    =>  'sometimes',
             'id'        =>  'required',
         ]);
 
-        $id             =   $this   ->  get('id');
-        $content        =   $this   ->  get('content');
-        $title          =   $this   ->  get('title');
+        $id         =   $request   ->  get('id');
+
+        $name       =   $request    ->  get('name');
+        $content    =   $request    ->  get('content');
+        $exam_id    =   $request    ->  get('exam_id');
+        $groups     =   $request    ->  get('accept');
+        $attach     =   e(implode(',',$request     ->  get('attach')));
 
         $NoticeModel    =   new Notice();
         try
         {
-            if($NoticeModel    ->editNotice($id,$title,$content))
+            if($NoticeModel    ->editNotice($id,$name,$content,$attach,$groups))
             {
                 return redirect()->route('osce.admin.notice.getList');
             }

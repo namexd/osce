@@ -59,6 +59,7 @@
         dd{
             float: left;
             width: 60px;
+            cursor: pointer;
         }
         /*dl:hover{
             background-color: #f4f4f4;
@@ -88,6 +89,15 @@
         .classroom-box{
             min-height: 500px;
         }
+        .room_inner_col{
+            margin: 5px 0px;
+        }
+        .batch_inner_row{
+            margin: 5px 0px;
+        }
+        .clicked{
+            background-color: #0a6aa1;
+        }
     </style>
 @stop
 
@@ -104,15 +114,16 @@
 
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form">
+        <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.exam.postSaveExamPlan')}}" method="post">
+            <input type="hidden" name="exam_id" value="{{$_GET['id']}}">
             <div class="panel blank-panel">
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            <li class=""><a href="">基础信息</a></li>
-                            <li class=""><a href="">考场安排</a></li>
-                            <li class=""><a href="">考生管理</a></li>
-                            <li class="active"><a href="">智能排考</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$_GET['id']}}">基础信息</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$_GET['id']])}}">考场安排</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$_GET['id']])}}">考生管理</a></li>
+                            <li class="active"><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$_GET['id']])}}">智能排考</a></li>
                         </ul>
                     </div>
                 </div>
@@ -121,11 +132,13 @@
                 <div class="classroom-box">
 
                 </div>
+
+                <textarea id="plan" style="display: none;">{{json_encode($plan)}}</textarea>
             </div>
             <div class="operate">
                 <button class="btn btn-default" type="button" id="makePlan">智能排考</button>
-                <button class="btn btn-default save" type="button">保存方案</button>
-                <button class="btn btn-default" type="button">导出excel</button>
+                <button class="btn btn-default save" type="submit">保存方案</button>
+                <button class="btn btn-default" type="button" style="display: none;">导出excel</button>
             </div>
         </form>
     </div>

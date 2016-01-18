@@ -42,7 +42,7 @@
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="{{route('osce.admin.exam.getEditExam',['id'=>$id])}}">基础信息</a></li>
-                        <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$id])}}">考场安排</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
                     </ul>
@@ -73,11 +73,15 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
+
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="sequence_cate" value="{{$examData['sequence_cate']}}">
+                                    <select class="form-control" style="width:200px;" name="sequence_cate" >
+                                        <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
+                                        <option value="2" {{($examData['sequence_cate']==2)?'selected=selected':''}}>顺序</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -85,10 +89,14 @@
                                 <label class="col-sm-2 control-label">排序方式</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="sequence_mode" value="{{$examData['sequence_mode']}}">
+                                    <select class="form-control" style="width:200px;" name="sequence_mode" v>
+                                        <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
+                                        <option value="2" {{($examData['sequence_mode']==2)?'selected=selected':''}}>以考站分组</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
+
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试时间</label>

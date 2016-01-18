@@ -220,6 +220,7 @@ class Common{
         $weixinservice= App::make('wechat.staff');
         try{
             return $weixinservice->send($message)->to($openId);
+
         }
         catch(\Exception $ex)
         {
