@@ -121,7 +121,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <input type="button" class="btn btn-white" value="取消">
+                                    <a href=""><input type="button" class="btn btn-white" value="取消"></a>
                                 </div>
                             </div>
                         </form>
