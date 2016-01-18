@@ -83,10 +83,15 @@ class PersonalCenterController extends MscWeChatController {
 		$LabApply = new LabApply;
 		$user = Auth::user();
 		if($user->user_type == 1){//TODO 老师
-
+			$MyApplyList = $LabApply->MyApplyList(1,$user->id,2);
+			$MyPlanList = $LabApply->MyApplyList(2,$user->id,2);
+			$data = [
+				'MyApplyList'=>$MyApplyList,
+				'MyPlanList'=>$MyPlanList
+			];
 		}elseif($user->user_type == 2){//TODO 学生
-			$MyApplyList = $LabApply->MyApplyList(1,$user->id);
-			$MyPlanList = $LabApply->MyApplyList(2,$user->id);
+			$MyApplyList = $LabApply->MyApplyList(1,$user->id,1);
+			$MyPlanList = $LabApply->MyApplyList(2,$user->id,1);
 			$data = [
 				'MyApplyList'=>$MyApplyList,
 				'MyPlanList'=>$MyPlanList
@@ -103,8 +108,16 @@ class PersonalCenterController extends MscWeChatController {
 	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
 	 */
 	public function HistoryLaboratoryApplyList(){
-
+		$LabApply = new LabApply;
+		$user = Auth::user();
+		$HistoryLaboratoryApplyList = $LabApply->HistoryLaboratoryApplyList($user->id);
+		return response()->json(
+			$this->success_rows(1,'获取成功',$HistoryLaboratoryApplyList->total(),config('msc.page_size',10),$HistoryLaboratoryApplyList->currentPage(),array('HistoryLaboratoryApplyList'=>$HistoryLaboratoryApplyList->toArray()))
+		);
 	}
+
+
+
 
 
 
