@@ -841,7 +841,7 @@ function examroom_assignment(){
         var html = '<tr class="pid-'+index+'">'+
             '<td>'+index+'</td>'+
             '<td width="498">'+
-            '<select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+'][]"></select>'+
+            '<select class="form-control js-example-basic-multiple room-list" multiple="multiple" name="room['+index+'][]"></select>'+
             '</td>'+
             '<td class="necessary">必考</td>'+
             '<td>'+
@@ -871,7 +871,7 @@ function examroom_assignment(){
                         str.push({id:data[i].id,text:data[i].name});
                     }
                     //动态加载进去数据
-                    $(".js-example-basic-multiple").select2({data:str});
+                    $(".room-list").select2({data:str});
                 }
             }
         });
