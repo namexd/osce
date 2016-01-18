@@ -1127,11 +1127,12 @@ function exam_notice_add(){
 function exam_notice_edit(){
 
     var content =   $('#content').html();
+    console.log(content)
     //初始化
     var ue = UE.getEditor('editor',{
         serverUrl:'/osce/api/communal-api/editor-upload'
     });
-    UE.setContent(content);
+    //UE.setContent(content);
 
 
     //测试数据
@@ -1154,20 +1155,14 @@ function exam_notice_edit(){
      * @version 1.0
      * @date    2016-01-15
      */
-    $.ajax({
-        type:'get',
-        async:true,
-        url:'http://127.0.0.1:3000/getjson',
-        success:function(res){
+    //数据编辑显示
+    var thisID = setInterval(function(){
+            setContent(content)
+            clearInterval(thisID);
+        },1000);
 
-            //延后执行
-            var thisID = setInterval(function(){
-
-                setContent(test_data)
-                clearInterval(thisID);
-            },1000);
-        }
-    });
+    
+    
     /**
      * 附件图片上传
      * @author mao
