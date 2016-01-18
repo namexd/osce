@@ -33,6 +33,10 @@
         .delete{
             cursor: pointer;
         }
+        #file1{
+            margin-left: -110px;
+            opacity: 0;
+        }
     </style>
 @stop
 
@@ -74,8 +78,8 @@
                     </form>
                     <div class="operate pull-right">
                         <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}" class="btn btn-outline btn-default">新增考生</a>
-                        导入考生
-                        <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="{{$id}}" style="height:34px;padding:5px;width:184px;">
+                        <a href="javascript:void(0)" class="btn btn-outline btn-default insert">导入考生</a>
+                        <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="{{$id}}" style="height:34px;padding:5px;width:98px;">
                             <input type="file" name="student" id="file0" multiple="multiple" />
                         </a>
                     </div>
@@ -100,7 +104,7 @@
                             <td>{{$item->idcard}}</td>
                             <td>{{$item->mobile}}</td>
                             <td>
-                                {{--<a href="{{route('osce.admin.exam.getDelStudent')}}?id={{$item->id}}&exam_id={{$id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>--}}
+                                <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                                 <span class="read  state2 delete" sid="{{$item->id}}" examid="{{$id}}"><i class="fa fa-trash-o fa-2x"></i></span>
                             </td>
                         </tr>

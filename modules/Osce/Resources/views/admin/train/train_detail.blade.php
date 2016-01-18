@@ -1,84 +1,99 @@
 @extends('osce::admin.layouts.admin_index')
-
 @section('only_css')
+	<link rel="stylesheet" href="{{asset('osce/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/demo/webuploader-demo.css')}}">
     <style>
-    button.btn.btn-white.dropdown-toggle {
-        border: none;
-        font-weight: bolder;
+    .col-sm-1{margin-top: 6px;}
+    .col-sm-1>input[type="checkbox"]{vertical-align: sub;}
+    .form-group.col-sm-1{margin-bottom: 0!important;}
+    .upload{
+        display:block;
+        height: 34px!important;
+        width: 100px!important;
+        cursor: pointer;
+        background-image:none!important;
+        position:relative;
+        margin:0!important;
     }
-    #start,#end{width: 160px;}
+    #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
+    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .fa-remove{cursor:pointer;}
+    .laydate-icon{width:200px;}
     </style>
 @stop
 
+
 @section('only_js')
-    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 @stop
 
-
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':''}" />
+<input type="hidden" id="parameter" value="{'pagename':'exam_notice_add'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row table-head-style1 ">
-        <div class="col-xs-6 col-md-2">
-            <h5 class="title-label">考前培训</h5>
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>编辑考前培训</h5>
         </div>
-        <div class="col-xs-6 col-md-2" style="float: right;">
-            <a  href="#" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
+        <div class="ibox-content">
+            <form method="post" id="form1" class="form-horizontal" action="#">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">培训名称:</label>
+                        <div class="col-sm-10">
+                        	<label class="control-label">{{ $data['name']  }}</label>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">培训地点:</label>
+                        <div class="col-sm-10">
+                           	<label class="control-label">{{ $data['address']  }}</label>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">开始时间:</label>
+                        <div class="col-sm-10">
+                        	<label class="control-label">{{ $data['begin_dt']  }}</label>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">结束时间:</label>
+                        <div class="col-sm-10">
+                        	<label class="control-label">{{ $data['end_dt']  }}</label>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">培训讲师:</label>
+                        <div class="col-sm-10">
+                            <label class="control-label">{{ $data['teacher']  }}</label>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" >内容:</label>
+                        <div class="col-sm-10">
+                            <textarea class="col-sm-6" style="height:200px;resize:none;" name="" rows="" cols="" disabled="disabled">{{ $data['content']  }}</textarea>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                @foreach($data['attachments'] as $key=>$list)
+                <div class="form-group">
+                        <label class="col-sm-2 control-label">附件:</label>
+                        <div class="col-sm-10">
+							<div class="upload_list upload_list_doc">
+								<p>
+									<a href="{{ route('osce.admin.getDownloadDocument',['id'=>$data['id'],'attch_index'=>$key])}}">
+                                    <input type="hidden" name="file[]" id="" value="{{ $list }}" />
+									<i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($list,27)  }}
+                                    </a>
+								</p>
+							</div>
+                        </div>
+                    </div>
+                @endforeach
+            </form>
         </div>
     </div>
-    <form class="container-fluid ibox-content" id="list_form">
-        <table class="table table-striped" id="table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>标题</th>
-                <th>发布时间</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
-                    <td value="1">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
-                    <td value="2">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
-                    <td value="3">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>2015年第3期技能考试-考生须知</td>
-                    <td>2015/11/22/12:00:00</td>
-                    <td value="4">
-                        <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="btn-group pull-right">
-           
-        </div>
-    </form>
 </div>
 @stop{{-- 内容主体区域 --}}
