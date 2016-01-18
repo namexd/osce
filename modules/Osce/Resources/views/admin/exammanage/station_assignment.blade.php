@@ -77,7 +77,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'station_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getStationData')}}','list':'{{route('osce.admin.exam.getAjaxStation')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'station_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getAjaxStationRow')}}','list':'{{route('osce.admin.exam.getAjaxStation')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
@@ -191,7 +191,7 @@
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
                                                         @if($item->teacher_type == 2)
-                                                        <div class="input-group teacher pull-left" name="form_data[{{$key+1}}][spteacher_id]" value="{{$item->teacher_status}}">
+                                                        <div class="input-group teacher pull-left" value="{{$item->teacher_id}}">
                                                             <input type="hidden" name="form_data[{{$key+1}}][spteacher_id]" value="{{$item->teacher_id}}">
                                                             <div class="pull-left">{{$item->teacher_name}}</div>
                                                             <div class="pull-left"><i class="fa fa-times"></i></div>

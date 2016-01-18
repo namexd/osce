@@ -52,7 +52,6 @@ class Flows extends CommonModel
             foreach($roomData as $key => $value){
                 foreach($value as $room_id){
                     //考试房间关系表 数据
-
                     $examRoom = [
                         'exam_id'           =>  $exam_id,
                         'room_id'           =>  $room_id,
@@ -103,7 +102,6 @@ class Flows extends CommonModel
             //保存  考站监考老师、sp老师安排数据
             foreach ($stationData as $key => $item) {
 
-
                 $teacherIDs = [];
 
                 //拼装一下老师的数据
@@ -116,18 +114,25 @@ class Flows extends CommonModel
                     }
                 }
                 $station_id = $item['id'];
+                //根据考站id，获取对应的病例id
+                $stationCase = StationCase::where('station_id', $station_id)->first();
+                if(count($stationCase) == 0){
+                    $case_id = $stationCase->case_id;
+                }else{
+                    $case_id = '';
+                }
 
                 foreach ($teacherIDs as $teacherID) {
                     //考站-老师关系表 数据
                     $stationTeacher = [
                         'station_id'        =>  $station_id,
                         'user_id'           =>  $teacherID,
-                        'case_id'           =>  StationCase::where('station_id', $station_id)->first()->case_id,
+                        'case_id'           =>  $case_id,
                         'exam_id'           =>  $exam_id,
                         'created_user_id'   =>  $user ->id,
                         'type'              =>  empty($item['teacher_id']) ? 2 : 1
                     ];
-//                    dd($stationTeacher);
+
                     if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
                         throw new \Exception('考站-老师关系添加失败！');
                     }
