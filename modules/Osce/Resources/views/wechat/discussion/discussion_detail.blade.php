@@ -172,12 +172,13 @@
                 success:function(res){
                     totalpages = res.total;
                     var html = '';
+                    var index = (current - 1)*10;
                     for(var i in data){
-
+                        //准备dom
                         html += '<li>'+
                                     '<div class="content-header">'+
                                         '<div class="content-l">'+
-                                            '<span>1F</span>.'+
+                                            '<span>'+index+parseInt(i)+1+'F</span>.'+
                                             '<span class="student">'+data[i].name+'</span>.'+
                                             '<span class="time">'+data[i].time+'</span>'+
                                         '</div>'+
@@ -187,7 +188,7 @@
                                 '</li>';
 
                     }
-
+                    //插入
                     $('.history-list').append(html);
                 }
             });
