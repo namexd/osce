@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
+use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\StationVcr;
@@ -44,8 +45,15 @@ class PadController extends  CommonController{
 
             $id=$request->get('id');
             $data=RoomVcr::where('room_id',$id)->select()->get();
+            $list=[];
+            foreach($data as $item){
+               $list[]=[
+                   $item->getVcr
+               ];
+            }
+
             return response()->json(
-                $this->success_data($data,1,'success')
+                $this->success_data($list,1,'success')
             );
        }
 
@@ -103,15 +111,11 @@ class PadController extends  CommonController{
              ]);
              $room_id=$request->get('room_id');
              $exam_id=$request->get('exam_id');
-//             $examVcrs=RoomVcr::where('room_id',$room_id)->select()->get();
              $examModel=new ExamRoom();
-             $stationVcrs=$examModel->getStionVcr($exam_id,$room_id);
-             $data=array(
-//                 'exam_vcr'  =>$examVcrs,
-                 'station_vcr'  =>$stationVcrs,
-             );
+             $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
+
              return response()->json(
-                 $this->success_data($data,1,'success')
+                 $this->success_data($stationVcrs,1,'success')
              );
        }
 
@@ -195,44 +199,7 @@ class PadController extends  CommonController{
           };
        }
 
-//    /**
-//     *更新考前提醒
-//     * @method GET
-//     * @url api/1.0/private/osce/pad/write-remind
-//     * @access public
-//     *
-//     * @param Request $request post请求<br><br>
-//     * <b>post请求字段：</b>
-//     * * string        description      考前提醒(必须的)
-//     * * int           exam_id         考试Id(必须的)
-//     *
-//     * @return ${response}
-//     *
-//     * @version 1.0
-//     * @author zhouchong <zhouchong@misrobot.com>
-//     * @date ${DATE} ${TIME}
-//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-//     */
-//       public function getWriteRemind(Request $request){
-//           $this->validate($request,[
-//               'description'   => 'required',
-//               'exam_id'       => 'required|integer',
-//           ]);
-//           $description=$request->get('description');
-//           $exam_id=$request->get('exam_id');
-//
-//            $count=  Exam::where('id',$exam_id)->update([
-//                  'description'  =>$description
-//              ]);
-//            if($count>0) {
-//                return response()->json(
-//                    $this->success_data()
-//                );
-//            }
-//            return response()->json(
-//                $this->fail(new \Exception('更新考前提醒失败'))
-//            );
-//       }
+
     /**
      *根据考试id获取考试场所列表(接口)
      * @method GET
@@ -241,7 +208,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        exam_id        考试id(必须的)
      *
      * @return ${response}
      *
@@ -254,11 +221,10 @@ class PadController extends  CommonController{
               $this->validate($request,[
                   'exam_id'  =>'required|integer'
               ]);
-              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get()->paginate(config('msc.page_size'));
-              $data=$examList->toArray();
-           return response()->json(
-               $this->success_rows(1,'success',$examList->total(),config('msc.page_size'),$examList->currentPage(),$data['data'])
-              );
+              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
+              return response()->json(
+               $this->success_data($examList,1,'success')
+           );
        }
 
     /**
@@ -269,7 +235,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        exam_id        考试id(必须的)
      *
      * @return ${response}
      *
@@ -286,10 +252,9 @@ class PadController extends  CommonController{
              $exam_id=$request->get('exam_id');
          try{
              $examList=$examModel->getWriteRoom($exam_id);
-             $data=$examList->toArray();
-               return response()->json(
-                   $this->success_rows(1,'success',$examList->total(),config('msc.page_size'),$examList->currentPage(),$data['data'])
-               );
+             return response()->json(
+                 $this->success_data($examList,1,'success')
+             );
            }catch( \Exception $ex){
                    return response()->json(
                        $this->fail($ex)
