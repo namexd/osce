@@ -1514,6 +1514,10 @@ function station_assignment(){
     });
     $('#examroom').find('tbody').attr('data',JSON.stringify(arrStore));
 
+
+    //传所有已选id
+    var stations_ids = [];
+    for(var i in arrStore){station_ids.push(arrStore[i].id)}
     /**
      * select2初始化
      * @author mao
@@ -1524,6 +1528,7 @@ function station_assignment(){
         type:'get',
         async:true,
         url:pars.list,     //请求地址
+        data:{id:stations_ids}
         success:function(res){
             //数据处理
             var str = [];
