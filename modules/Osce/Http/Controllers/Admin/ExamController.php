@@ -219,8 +219,10 @@ class ExamController extends CommonController
     {
         $this   ->  validate($request,[
             'name'          =>  'required',
+            'time'          =>  'required',
         ],[
             'name.required'     =>  '考试名称必填',
+            'time.required'     =>  '考试时间必填',
         ]);
 
         $user   =   Auth::user();
