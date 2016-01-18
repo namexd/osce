@@ -384,10 +384,11 @@ class ExamController extends CommonController
             'name'           => $request  ->  get('name'),
             'begin_dt'       => $begin_dt,
             'end_dt'         => $end_dt,
+            'total'          => count(Student::where('exam_id', $exam_id)->get()),
             'sequence_cate'  => $request  ->  get('sequence_cate'),
             'sequence_mode'  => $request  ->  get('sequence_mode'),
         ];
-
+        
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
