@@ -93,11 +93,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-<<<<<<< HEAD
-                            <label class="col-sm-2 control-label">监巡考老师</label>
-=======
                             <label class="col-sm-2 control-label">教师类别</label>
->>>>>>> osce.0.1.201601130930
                             <div class="col-sm-10">
                                 <select class="form-control" name="type">
                                     <option value="1">监考老师</option>

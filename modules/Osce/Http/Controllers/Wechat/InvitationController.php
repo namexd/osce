@@ -72,11 +72,7 @@ class InvitationController extends CommonController
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
 //            dd(11111);
-<<<<<<< HEAD
             return view('osce::admin.exammanage.examroom_assignment');
-=======
-            return redirect()->back('osce::admin.exammanage.examroom_assignment');
->>>>>>> osce.0.1.201601130930
         } else {
             throw new \Exception('邀请创建失败');
         }
@@ -101,24 +97,16 @@ class InvitationController extends CommonController
 
     public function getList()
     {
-<<<<<<< HEAD
+
         $user= Auth::user();
         if(empty($user))
         {
             throw new \Exception('未找到当前操作人信息');
         }
         $userId =$user->id;
-
         $notice = new Invite();
-=======
-        $notice = new Invite();
-
-        $list = $notice->get();
-        dd($list);
->>>>>>> osce.0.1.201601130930
-
+//        $list = $notice->get();
         $list = $notice-> where('id','=',$userId)->get();
-//        dd($list);
         return view('osce::wechat.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
     }
 
