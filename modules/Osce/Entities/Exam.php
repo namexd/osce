@@ -93,9 +93,9 @@ class Exam extends CommonModel
                 'end_dt',
                 'description',
                 'total'
-            ])->orderBy('created_at', 'desc');
+            ])->orderBy('begin_dt', 'desc');
 
-            return $builder->paginate(config('msc.page_size'));
+            return $builder->paginate(10);
         } catch (\Exception $ex) {
             throw $ex;
         }
