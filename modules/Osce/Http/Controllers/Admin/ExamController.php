@@ -543,7 +543,7 @@ class ExamController extends CommonController
             'idcard'         => $request  ->  get('idcard'),        //身份证号
             'mobile'         => $request  ->  get('tell'),          //手机号
             'code'           => $request  ->  get('examinee_id'),   //学号
-            'avatar'         => $request  ->  get('images_path')[0],//照片
+            'avator'         => $request  ->  get('images_path')[0],//照片
             'email'          => $request  ->  get('email'),         //邮箱
         ];
 
