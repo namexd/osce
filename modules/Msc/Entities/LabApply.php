@@ -41,6 +41,7 @@ class LabApply  extends Model
     }
 
 
+
     //后台获取审核列表
     public function get_check_list($keyword="",$type=1,$id=''){
         $userDb    = config('database.connections.sys_mis.database');
