@@ -32,13 +32,13 @@ class DiscussionController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
       public function getQuestionList(){
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        if(!$userId){
-//            return response()->json(
-//                $this->success_rows(2,'请先登陆')
-//            );
-//        }
+        $user=Auth::user();
+        $userId=$user->id;
+        if(!$userId){
+            return response()->json(
+                $this->success_rows(2,'请先登陆')
+            );
+        }
 
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
@@ -59,15 +59,20 @@ class DiscussionController extends  CommonController{
                           if ($time < 86400) {
                               $time= floor($time / 3600) . '小时前';
                           } else {
-                              if ($time < 259200) {
+                              if ($time < 2592000) {
                                   $time= floor($time / 86400) . '天前';
                               } else {
-                                  $time =  $time;
+                                  if($time<31536000){
+                                      $time =  floor($time / 2592000).'月前';
+                                  }else{
+                                      $time=floor($time/31536000).'年前';
+                                  }
                               }
                           }
                       }
                   }
               }
+
               $list[]=[
                 'id' =>$item->id,
                 'title' =>$item->title,
@@ -78,8 +83,10 @@ class DiscussionController extends  CommonController{
                 'count' =>$countReply,
             ];
           }
-
-          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
+          return response()->json(
+              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$list)
+          );
+//          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
       }
 
     /**
@@ -140,10 +147,14 @@ class DiscussionController extends  CommonController{
                           if ($time < 86400) {
                               $time= floor($time / 3600) . '小时前';
                           } else {
-                              if ($time < 259200) {
+                              if ($time < 2592000) {
                                   $time= floor($time / 86400) . '天前';
                               } else {
-                                  $time =  $time;
+                                  if($time<31536000){
+                                      $time =  floor($time / 2592000).'月前';
+                                  }else{
+                                      $time=floor($time/31536000).'年前';
+                                  }
                               }
                           }
                       }
@@ -162,9 +173,11 @@ class DiscussionController extends  CommonController{
                 'question'   =>$question,
                 'countReply' =>$countReply,
             );
-
-          return view('osce::wechat.discussion.discussion_detail')->with(['row'=>$row,'data' =>$data,'pagination'=>$pagination]);
-
+            $data['row']=$row;
+          return response()->json(
+              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$data)
+              
+          );
       }
 
 
@@ -285,9 +298,7 @@ class DiscussionController extends  CommonController{
          $user=Auth::user();
          $userId=$user->id;
          if(!$userId){
-             return response()->json(
-                 $this->success_rows(2,'请登陆')
-             );
+             return \Response::json(array('code'=>2));
          }
          $id=$request->get('id');
          $createId=Discussion::where('id',$id)->select()->first()->create_user_id;
