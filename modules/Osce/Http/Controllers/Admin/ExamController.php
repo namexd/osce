@@ -1243,7 +1243,7 @@ class ExamController extends CommonController
 
     /**
      *以考站为中心的考试安排着陆页
-     * @url GET /osce/admin/exam/change-student
+     * @url GET /osce/admin/exam/station-assignment
      * @access public
      *
      * @param Request $request
@@ -1256,8 +1256,8 @@ class ExamController extends CommonController
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-29 17:09
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-16
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
@@ -1277,7 +1277,7 @@ class ExamController extends CommonController
 
     /**
      *以考站为中心的考试安排逻辑处理页
-     * @url GET /osce/admin/exam/change-student
+     * @url GET /osce/admin/exam/station-assignment
      * @access public
      *
      * @param Request $request
@@ -1290,8 +1290,8 @@ class ExamController extends CommonController
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2015-12-29 17:09
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date  2016-01-16
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
