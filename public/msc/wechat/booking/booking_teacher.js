@@ -257,6 +257,7 @@ function booking_teacher_ordinary_form(){
                 //$("#begintime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
                 //$("#begintime").next().next("small").hide();
                 $("#begintime").val($('#begintime_set').val());
+                $("#begintime").val("");
             }
         })
     })
@@ -286,6 +287,7 @@ function booking_teacher_ordinary_form(){
                 //$("#endTime").next("i").addClass("glyphicon glyphicon-ok").removeClass("glyphicon-remove").show();
                 //$("#endTime").next().next("small").hide();
                 $("#endtime").val($('#endTime_set').val());
+                $("#endtime").val("");
             }
         })
     })
