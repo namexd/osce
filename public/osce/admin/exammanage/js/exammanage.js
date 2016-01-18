@@ -1904,7 +1904,7 @@ function station_assignment(){
         var html = '<tr class="pid-'+index+'">'+
             '<td>'+index+'</td>'+
             '<td width="498">'+
-            '<select class="form-control js-example-basic-multiple" multiple="multiple" name="room['+index+'][]"></select>'+
+            '<select class="form-control js-example-basic-multiple room-list" multiple="multiple" name="room['+index+'][]"></select>'+
             '</td>'+
             '<td class="necessary">必考</td>'+
             '<td>'+
@@ -1918,7 +1918,7 @@ function station_assignment(){
         $('#examroom').find('tbody').append(html);
 
 
-        $('.js-example-basic-multiple').select2({
+        $('.room-list').select2({
             placeholder: "==请选择==",
             minimumResultsForSearch: Infinity,
             ajax:{
