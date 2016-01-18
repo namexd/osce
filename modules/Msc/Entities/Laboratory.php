@@ -216,17 +216,6 @@ class Laboratory extends Model
         $userDb    = config('database.connections.sys_mis.database');
         $userTable = $userDb.'.users';
 
-//        if(!empty($keyword)){
-//            $builder = $this->where($userTable.'.name','like','%'.$keyword.'%');
-//        }else{
-//            $builder = $this;
-//        }
-//
-//        if($type == 1){
-//            $builder = $builder->where($lab_applyTable.'.status','=',1);
-//        }else{
-//            $builder = $builder->where($lab_applyTable.'.status','<>',1);
-//        }
         if(!empty($id)){
             $builder = $this->where($labTable.'.manager_user_id','=',$id);
         }
@@ -234,7 +223,9 @@ class Laboratory extends Model
             $local->on($local->table.'.id', '=', $labTable.'.location_id');
         })->with(['OpenPlan'=>function($OpenPlan){
             $OpenPlan->with(['PlanApply'=>function($PlanApply){
-                $PlanApply->with('LabApply');
+                $PlanApply->with(['LabApply'=>function($LabApply){
+                    $LabApply->with('user');
+                }]);
             }]);
         }]);
         $data = $builder->select($labTable.'.*','location.name as lname')->paginate(config('msc.page_size',10));

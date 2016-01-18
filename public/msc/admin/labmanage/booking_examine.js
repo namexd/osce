@@ -229,6 +229,18 @@ function booking_examine_other(){
 }
 //实验室预约记录查看页面
 function lab_booking(){
+    //alert('qqq');
+    //$('#fm').delegate('.btn-pl','click',function(){
+    //    alert();
+    //});
+    $('.sub').click(function(){
+
+        $('.type').each(function(){
+            if($(this).hasClass('.check')){
+                alert($(this).children('input').val());
+            }
+        });
+    });
     //            获取当前时间
     var d=new Date();
     var year= d.getFullYear();
@@ -280,9 +292,10 @@ function lab_booking(){
                 $('input[name=teaching]').val(msg.course_name);
                 $('input[name=number]').val(msg.total);
                 $('input[name=bookingPerson]').val(msg.user.name);
-                $('input[name=detail]').val(msg.description);
+                $('.detail').val(msg.description);
                 $('input[name=applyTime]').val(msg.created_at);
             }
         });
     })
+
 }

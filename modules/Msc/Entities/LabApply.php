@@ -227,9 +227,6 @@ class LabApply  extends Model
     //查找普通实验室详情
     public function getLabdetail($id){
         $labapply = 'lab_apply';
-        $userDb    = config('database.connections.sys_mis.database');
-        $userTable = $userDb.'.users';
-        //$builder = $this->where($labapply.'.type','=',1);
         $builder = $this->where('lab_apply.id','=',$id)->leftjoin('lab',function($lab) use($labapply){
             $lab->on('lab.id','=',$labapply.'.lab_id');
         })->leftjoin('location',function($local){
