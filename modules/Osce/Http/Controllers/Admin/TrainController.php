@@ -83,14 +83,14 @@ class TrainController extends  CommonController{
             'teacher'                 =>'required',
             'content'                 =>'required',
         ]);
-        $user=Auth::user();
-        $userId=$user->id;
+//      $user=Auth::user();
+//      $userId=$user->id;
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status']);
         $data['attachments']=serialize($request->input('file'));
-        $data['create_user_id']=$userId;
+//      $data['create_user_id']=$userId;
         $result=InformTrain::insert($data);
         if($result){
-         return view('osce::admin.train.train_list')->with('success','新增成功');
+         return redirect('/osce/admin/train/train-list')->with('success','新增成功');
         }
         return redirect()->back()->withInput()->withErrors('新增失败');
     }
