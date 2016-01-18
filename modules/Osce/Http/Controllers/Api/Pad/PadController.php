@@ -164,7 +164,7 @@ class PadController extends  CommonController{
     /**
      *候考提醒(接口)
      * @method GET
-     * @url api/1.0/private/osce/pad/write-student
+     * @url api/1.0/private/osce/pad/wait-student
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -178,7 +178,7 @@ class PadController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-       public function getWriteStudent(Request $request){
+       public function getWaitStudent(Request $request){
            $this->validate($request,[
                'exam_id' =>'required|integer'
            ]);
@@ -244,16 +244,16 @@ class PadController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-       public function getWriteRoom(Request $request){
+       public function getWaitRoom(Request $request){
              $this->validate($request,[
                  'exam_id'   =>'required|integer'
              ]);
-             $examModel = new Exam();
+             $examModel = new ExamRoom();
              $exam_id=$request->get('exam_id');
          try{
-             $examList=$examModel->getWriteRoom($exam_id);
+             $examRoomList=$examModel->getWaitRoom($exam_id);
              return response()->json(
-                 $this->success_data($examList,1,'success')
+                 $this->success_data($examRoomList,1,'success')
              );
            }catch( \Exception $ex){
                    return response()->json(

@@ -479,20 +479,22 @@ class InvigilatePadController extends CommonController
             $diff = $itemEnd - $itemStart;
             $key = $itemStart - $time;
             $endDiff = $time - $itemEnd;
+            //待考信息
 
-            //
+
+            //开考前通知
             if ($key<0 && ($this->timeDiff+$key) > 0 ) {
                 $status = self::EXAM_WILL_BEGIN;
                 $curExam = $item;
                 break;
             }
-
+          // 考试中提醒时间
             if ( $itemStart <= $time &&  $itemEnd >= $time) {
                 $status = self::EXAM_TAKING;
                 $curExam = $item;
                 break;
             }
-
+             //考试完成通知下一场
             // self::EXAM_JUST_AFTER
             if ( $endDiff > 0 && $endDiff < $this->timeDiff ) {
                 $status = self::EXAM_JUST_AFTER;
@@ -501,7 +503,7 @@ class InvigilatePadController extends CommonController
 
             $list[$key] = $item;
         }
-
+       //对考试时间排序
         ksort($list);
 
 

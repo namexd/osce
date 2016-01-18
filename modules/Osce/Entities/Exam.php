@@ -93,9 +93,9 @@ class Exam extends CommonModel
                 'end_dt',
                 'description',
                 'total'
-            ])->orderBy('created_at', 'desc');
+            ])->orderBy('begin_dt', 'desc');
 
-            return $builder->paginate(config('msc.page_size'));
+            return $builder->paginate(10);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -244,6 +244,7 @@ class Exam extends CommonModel
     }
 
     //考生查询
+
     public function getList($formData=''){
          $builder=$this->Join('student','student.exam_id','=','exam.id');
         if($formData['exam_name']){
@@ -268,7 +269,7 @@ class Exam extends CommonModel
 //查询今日考试
     public function getTodayList($startTime,$endtime){
 
-          $list=$this->select(DB::raw(
+          $builder=$this->select(DB::raw(
               implode(',',[
                   $this->table.'.id as id',
                   $this->table.'.name as exam_name',
@@ -278,19 +279,21 @@ class Exam extends CommonModel
               ])
             )
           );
-         $list=$list->whereRaw(
+        $builder=$builder->whereRaw(
              'unix_timestamp('.$this->table.'.begin_dt) > ?',
              [
                  $startTime
              ]
          );
-         $list=$list->whereRaw(
+        $builder=$builder->whereRaw(
              'unix_timestamp('.$this->table.'.end_dt) < ?',
              [
                  $endtime
              ]
          );
-        return $list->get();
+        $data=$builder->get();
+
+        return $data;
     }
 
     public function getExamRoomData($exam_id)
@@ -318,6 +321,7 @@ class Exam extends CommonModel
         }
     }
 
+
     //获取候考教室列表
     public function getWriteRoom($exam_id){
        $time=time();
@@ -332,15 +336,4 @@ class Exam extends CommonModel
                ]
            );
 
-       $builder= $builder->select([
-           'room.id as room_id',
-           'room.name as room_name',
-           'exam.name as exam_name',
-       ])->get();
-        return $builder;
-       }catch (\Exception $ex){
-           throw $ex;
-       }
-
-    }
 }
