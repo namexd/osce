@@ -136,7 +136,6 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    {{--<a class="btn btn-primary" href="javascript:void(0);">保存</a>--}}
                                     <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
                                 </div>
                             </div>
