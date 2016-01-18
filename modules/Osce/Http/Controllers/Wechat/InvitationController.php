@@ -96,7 +96,6 @@ class InvitationController extends CommonController
 
     public function getList()
     {
-        dd('邀请已发送');
         $notice = new Invite();
 
         $list = $notice->get();

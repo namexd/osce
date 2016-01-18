@@ -150,7 +150,7 @@ function add_basic(){
      * 表单验证信息
      * @type {String}
      */
-    $('.container-fluid.ibox-content').bootstrapValidator({
+    $('#sourceForm').bootstrapValidator({
         message: 'This value is not valid',
         feedbackIcons: {/*输入框不同状态，显示图片的样式*/
             valid: 'glyphicon glyphicon-ok',

@@ -65,16 +65,12 @@
                     <tbody>
                   @foreach($data as $item)
                      <tr>
-                         <td>{{ $item->exam_name  }}</td>
-                         <td>{{ $item-> student_name }}</td>
-                         @if( $item-> getUser->gender==2)
-                         <td>女</td>
-                         @elseif($item-> getUser->gender==1)
-                         <td>男</td>
-                         @endif
-                         <td>{{ $item-> code }}</td>
-                         <td>{{ $item-> idCard }}</td>
-                         <td>{{ $item-> mobile }}</td>
+                         <td>{{ $item['exam_name']}}</td>
+                         <td>{{ $item['student_name'] }}</td>
+                         <td>{{ $item->userInfo->gender }}</td>
+                         <td>{{ $item['code'] }}</td>
+                         <td>{{ $item['idCard'] }}</td>
+                         <td>{{ $item['mobile'] }}</td>
                      </tr>
                    @endforeach
                     </tbody>
