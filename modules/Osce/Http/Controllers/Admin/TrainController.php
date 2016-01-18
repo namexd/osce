@@ -74,7 +74,6 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postAddTrain(Request $request){
-    	dd($request);
         $this->validate($request,[
             //验证规则
             'name'                    =>'required|max:64',
@@ -83,20 +82,15 @@ class TrainController extends  CommonController{
             'end_dt'                  =>'required',
             'teacher'                 =>'required',
             'content'                 =>'required',
-            'status'                  =>'required',
         ]);
         $user=Auth::user();
         $userId=$user->id;
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status']);
+        $data['attachments']=serialize($request->input('file'));
         $data['create_user_id']=$userId;
-        $id=InformTrain::insertGetId($data);
-        $array=array(
-            'id'      =>$id,
-            'userId'  =>$userId,
-        );
-        $result= $this->postUploadFile($request,$array);
+        $result=InformTrain::insert($data);
         if($result){
-         return view('osce::admin.train.train_add')->with('success','新增成功');
+         return view('osce::admin.train.train_list')->with('success','新增成功');
         }
         return redirect()->back()->withInput()->withErrors('新增失败');
     }
@@ -123,16 +117,16 @@ class TrainController extends  CommonController{
             'id'  => 'required|integer'
         ]);
         $id=intval($request->get('id'));
-        $user=Auth::user();
-        $userId=$user->id;
-        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-        $manager=config('osce.manager');
-        if($userId!==$id || $creteId!==$manager[0]){
-            return response()->json(
-                $this->success_rows(3,'false')
-            );
-        }
-        $list=InformTrain::find($id);
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//        $manager=config('osce.manager');
+//        if($userId!==$id || $creteId!==$manager[0]){
+//            return response()->json(
+//                $this->success_rows(3,'false')
+//            );
+//        }
+        $list=InformTrain::where('id',$id)->select()->get();
 
         foreach($list as $item){
             $data=[
@@ -147,8 +141,10 @@ class TrainController extends  CommonController{
                 'create_user_id' =>$item->create_user_id,
             ];
         }
-        $data['attachments']=unserialize($data['attachments']);
-        return view()->with('data',$data);
+        if($data['attachments']){
+            $data['attachments']=unserialize($data['attachments']);
+        }
+        return view('osce::admin.train.train_edit')->with('data',$data);
     }
 
     /**
@@ -177,22 +173,36 @@ class TrainController extends  CommonController{
             'end_dt'                  =>'required',
             'teacher'                 =>'required',
             'content'                 =>'required',
-            'status'                  =>'required',
-            'create_user_id'          =>'required',
         ]);
-        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content','status','create_user_id']);
-        $user=Auth::user();
-        $userId=$user->id;
-        $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
-        $manager=config('osce.manager');
-        if($userId!==$creteId || $creteId!==$manager[0]){
-            return response()->json(
-                $this->success_rows(3,'false')
-            );
+        $data=$request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
+//        $manager=config('osce.manager');
+//        if($userId!==$creteId || $creteId!==$manager[0]){
+//            return response()->json(
+//                $this->success_rows(3,'false')
+//            );
+//        }
+        $list=InformTrain::where('id',$data['id'])->select()->get();
+
+        foreach($list as $item){
+            $data=[
+                'attachments' =>$item->attachments,
+            ];
+        }
+        if($data['attachments']){
+            $data['attachments']=unserialize(  $data['attachments']);
+            foreach($data['attachments'] as $itm){
+                $result=\File::delete($itm);
+                if(!$result){
+                    return redirect()->back()->withInput()->withErrors('编辑失败');
+                }
+            }
         }
         $result=InformTrain::where('id',$data['id'])->update($data);
         if($result){
-            return view()->with('success','编辑成功');
+            return view('osce::admin.train.train_list')->with('success','编辑成功');
         }
         return redirect()->back()->withInput()->withErrors('编辑失败');
     }
@@ -220,14 +230,30 @@ class TrainController extends  CommonController{
         ]);
 
         $id=intval($request->get('id'));
-        $user=Auth::user();
-        $userId=$user->id;
-        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-        $manager=config('osce.manager');
-        if($userId!==$creteId || $creteId!==$manager[0]){
-            return response()->json(
-                $this->success_rows(3,'false')
-            );
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//        $manager=config('osce.manager');
+//        if($userId!==$creteId || $creteId!==$manager[0]){
+//            return response()->json(
+//                $this->success_rows(3,'false')
+//            );
+//        }
+        $list=InformTrain::where('id',$id)->select()->get();
+
+        foreach($list as $item){
+            $data=[
+                'attachments' =>$item->attachments,
+            ];
+        }
+        if(  $data['attachments']){
+            $data['attachments']=unserialize(  $data['attachments']);
+            foreach($data['attachments'] as $itm){
+              $result=\File::delete($itm);
+              if(!$result){
+                  return redirect()->back()->withInput()->withErrors('删除失败');
+              }
+            }
         }
         $result=InformTrain::where('id',$id)->delete();
         if($result){
@@ -255,21 +281,18 @@ class TrainController extends  CommonController{
      */
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
-        $train=InformTrain::find($id);
+        $train=InformTrain::where('id',$id)->select()->get();
         return view('osce::admin.train.train_detail')->with('train',$train);
     }
 
     /**
      *上传文件
      * @method GET
-     * @url /osce/wechat/train/upload-file
+     * @url /osce/admin/train/upload-file
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
      * @return ${response}
@@ -279,91 +302,79 @@ class TrainController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postUploadFile(Request $request, Array $array){
+    public function postUploadFile(Request $request){
        try {
-           $time = date('Y-m-d');
-           list($id, $userId) = $array;
-           $username=User::findOrFail($userId)->first()->name;
-           $params=[
-               'username' =>$username,
-               'userId'   =>$userId,
-           ];
-           list($userId,$time)=$array;
-           if(!$request->hasFile('word')){
-               throw new \Exception('上传的word文档不存在');
-           }
-           if(!$request->hasFile('excel')){
-               throw new \Exception('上传的excel文件不存在');
-           }
 
-           $words=$request->file('word');
-           $excels=$request->file('excel');
-
-           if (!$words->isValid()) {
-               throw new \Exception('上传的word文档出错');
+           if ($request->hasFile('file'))
+           {
+               $file   =   $request->file('file');
+               $path   =   'osce/file/'.date('Y-m-d').'/'.rand(1000,9999).'/';
+               $destinationPath    =   public_path($path);
+               $fileName           =   $file->getClientOriginalName();
+               $file   ->  move($destinationPath);
+               $pathReturn    =   '/'.$path.$fileName;
            }
-           if (!$excels->isValid()) {
-               throw new \Exception('上传的excel文件出错');
-           }
-           //拼装文件名
-           $resultPhoto[] = self::uploadFile($words, $time, $params, $id);
-           $resultRadio[] = self::uploadFile($excels, $time, $params, $id);
-
-           $result = [$resultPhoto, $resultRadio];
-           return $result;
+           echo json_encode(
+               array(
+                   "state" => 'SUCCESS',
+                   "url" => $pathReturn,
+                   "title" => $fileName,
+                   "original" => $file->getClientOriginalExtension(),
+                   "type" => $file->getClientMimeType(),
+                   "size" => $file->getClientSize()
+               )
+           );
        }catch (\Exception $ex){
            throw $ex;
        }
     }
 
 
-    protected function uploadFile($files, $date, array $params,$id){
+    protected function uploadFile(Request $request){
         try {
-            //将上传的文件遍历
-            foreach ($files as $key => $file) {
-                //拼凑文件名字
-                $fileName = '';
-                $fileMime = $file->getMimeType();
-                foreach ($params as $param) {
-                    $fileName .= $param;
-                }
-                $fileName .= $file->getClientOriginalExtension(); //获取文件名的正式版
-
-                $savePath = public_path('osce/Train/') . $fileMime . '/' . $date . '/' . $params['username'] . '/';
-                $savePath = realpath($savePath);
-
-
-                if (!file_exists($savePath)) {
-                    mkdir($savePath, 0755, true);
-                }
-
-                //将文件放到自己的定义的目录下
-                if (!$file->move($savePath, $fileName)) {
-                    throw new \Exception('文件保存失败！请重试！');
-                }
-
-                //生成附件url地址
-                $attachUrl = $savePath . $fileName;
-
-                //将要插入数据库的数据拼装成数组
-                $data = [
-                    'url' => $attachUrl,
-                    'type' => $fileMime,
-                    'name' => $fileName,
-                    'description' => $date . '-' . $params['username'],
+            $data   =   [
+                'path'  =>  ''
+            ];
+            if ($request->hasFile('file'))
+            {
+                $file   =   $request->file('file');
+                $path   =   'osce/file/'.date('Y-m-d').'/'.rand(1000,9999).'/';
+                $destinationPath    =   public_path($path);
+                //.'.'.$file->getClientOriginalExtension()
+                $fileName           =   $file->getClientOriginalName();
+                $file->move($destinationPath,$fileName);
+                $pathReturn    =   '/'.$path.$fileName;
+                $data   =   [
+                    'path'=>$pathReturn,
+                    'name'=>$fileName
                 ];
-
-                //将内容插入数据库
-                if (!$result = InformTrain::where('id',$id)->update(['attachments'=>serialize($data)])) {
-                    throw new \Exception('附件数据保存失败');
-                }
-                return $result;
             }
+            return $data;
+//            echo json_encode(
+//                $this->success_data($data,1,'上传成功')
+//            );
         } catch (\Exception $ex) {
             throw $ex;
         }
     }
 
+    /**
+     *跳转新增页面
+     * @method GET
+     * @url /osce/admin/train/add-train
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getAddTrain(){
     	return view('osce::admin.train.train_add');
     }
