@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\RoomVcr;
+use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Pad;
@@ -109,7 +111,7 @@ class MachineController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Luohaihua <Luohaihua@misrobot.com> Zhoufuxiang 2016-01-13 15:21:48
      * @date 2015-12-30 11:45
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
@@ -118,14 +120,14 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'cate_id'   =>  'sometimes|integer',
             'name'      =>  'sometimes',
-            'status'      =>  'sometimes'
+            'status'    =>  'sometimes'
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
         $cate_id    =   $cate_id==0? 1:$cate_id;
-        $name       =   intval($request   ->  get('name'));
+        $name       =   e($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
-        $cate   =   config('osce.machine_category');
+        $cate       =   config('osce.machine_category');
         if(is_null($cate))
         {
             abort(404,'设备类别不存在，请检查数据或联系管理员');
@@ -135,22 +137,20 @@ class MachineController extends CommonController
             abort(404,'设备类别不存在，请检查数据或联系管理员');
         }
         $model  =   $this   ->  getMachineModel($cate_id);
-        $list   =   $model  ->  getList($name,$status);
+        $list   =   $model  ->  getList($name, $status);
 
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)
         {
-            case 1:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
-                break;
             case 2:
-                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 3:
-                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
+            case 1:
             default:
-                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues]);
+                return view('osce::admin.resourcemanage.equ_manage_vcr',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
         }
     }
 
@@ -218,35 +218,26 @@ class MachineController extends CommonController
             'cate_id'   =>  'required|integer'
         ]);
 
-        $cate_id    =   $request    ->  get('cate_id');
+        $cate_id    =   intval($request    ->  get('cate_id'));
         try{
             switch($cate_id)
             {
-                case 1:
-                    $machine    =     $this   ->  addCameras($request);
-                    break;
-                case 2:
-                    $machine    =     $this   ->  addPad($request);
-                    break;
-                case 3:
-                    $machine    =     $this   ->  addWatch($request);
-                    break;
-
+                case 1: $machine    =     $this   ->  addCameras($request);
+                        break;
+                case 2: $machine    =     $this   ->  addPad($request);
+                        break;
+                case 3: $machine    =     $this   ->  addWatch($request);
+                        break;
                 default :
-                    $machine    =     $this   ->  addCameras($request);
+                        $machine    =     $this   ->  addCameras($request);
             }
-            if($machine)
-            {
+            if($machine){
                 return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增设备失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex) {
+            return redirect()->back()->withError($ex->getMessage());
         }
     }
 
@@ -280,35 +271,25 @@ class MachineController extends CommonController
             'cate_id'   =>  'required|integer'
         ]);
 
-        $cate_id    =   $request    ->  get('cate_id');
+        $cate_id    =   intval($request    ->  get('cate_id'));
         try{
             switch($cate_id)
             {
+                case 2: $machine    =     $this   ->  editPad($request);
+                        break;
+                case 3: $machine    =     $this   ->  editWatch($request);
+                        break;
                 case 1:
-                    $machine    =     $this   ->  editCameras($request);
-                    break;
-                case 2:
-                    $machine    =     $this   ->  editPad($request);
-                    break;
-                case 3:
-                    $machine    =     $this   ->  editWatch($request);
-                    break;
-
                 default :
-                    $machine    =     $this   ->  editCameras($request);
+                        $machine    =     $this   ->  editCameras($request);
             }
-            if($machine)
-            {
-                return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
-            }
-            else
-            {
+            if($machine) {
+                return redirect() ->route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
+            } else{
                 throw new \Exception('编辑设备失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex);
+        } catch(\Exception $ex) {
+            return redirect()->back()->withError($ex->getMessage());
         }
     }
 
@@ -370,18 +351,13 @@ class MachineController extends CommonController
         try{
 
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($cameras =   $model  ->  addMachine($data))
-            {
+            if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增摄像头失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -435,22 +411,18 @@ class MachineController extends CommonController
             'port'          =>  $request    ->  get('port'),
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
+            'status'        =>  $request    ->  get('status'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
         try{
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($cameras =   $model  ->  editMachine($data))
-            {
+            if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('编辑摄像头失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -517,7 +489,6 @@ class MachineController extends CommonController
      *
      */
     private function addPad(Request $request){
-
         $this   ->  validate($request,[
             'name'          =>  'required',
             'code'          =>  'required',
@@ -527,9 +498,9 @@ class MachineController extends CommonController
             'code.required'     =>  '设备编号必填',
             'status.required'   =>  '设备状态必填',
         ]);
+
         $user   =   Auth::user();
-        if(empty($user))
-        {
+        if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
@@ -539,21 +510,17 @@ class MachineController extends CommonController
             'create_user_id'=>  $user       ->  id
         ];
         $cate_id    =   $request    ->  get('cate_id');
-        try{
 
+        try{
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($pad =   $model  ->  addMachine($data))
-            {
+            if($pad =   $model  ->  addMachine($data)){
                 return $pad;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增PAD失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -576,20 +543,17 @@ class MachineController extends CommonController
             'status'        =>  $request    ->  get('status'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
+
         try{
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($cameras =   $model  ->  editMachine($data))
-            {
+            if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
+            } else {
+                throw new \Exception('编辑摄像机失败');
             }
-            else
-            {
-                throw new \Exception('编辑摄像头失败');
-            }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex) {
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -659,32 +623,36 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'name'          =>  'required',
             'code'          =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
             'status'        =>  'required',
         ],[
             'name.required'     =>  '腕表名称必填',
             'code.required'     =>  '腕表编号必填',
+            'factory.required'  =>  '生产厂家必填',
+            'sp.required'       =>  '型号规格必填',
             'status.required'   =>  '腕表状态必选',
         ]);
 
         $user   =   Auth::user();
-        if(empty($user))
-        {
+        if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
 
         $data   =   [
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
             'status'        =>  $request    ->  get('status'),
+            'description'   =>  $request    ->  get('description'),
             'create_user_id'=>  $user       ->  id
         ];
 
         $cate_id    =   $request    ->  get('cate_id');
         try{
-
             $model      =   $this   ->  getMachineModel($cate_id);
-            if($watch =   $model  ->  addMachine($data))
-            {
+            if($watch =   $model  ->  addMachine($data)){
 //                $action='新增';
 //                $data=array(
 //                    'create_user_id'=>$data['create_user_id'],
@@ -694,15 +662,12 @@ class MachineController extends CommonController
 //                $watchModel=new WatchLog();
 //                $watchModel->historyRecord($data);
                 return $watch;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('新增腕表失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
     private function editWatch(Request $request){
@@ -710,17 +675,24 @@ class MachineController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'code'          =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
             'status'        =>  'sometimes',
         ],[
             'id.required'       =>'设备ID必填',
             'name.required'     =>'设备名称必填',
             'code.required'     =>'设备编码必填',
+            'factory.required'  =>'生产厂家必填',
+            'sp.required'       =>'型号规格必填',
             'status.required'   =>'设备状态必填',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
@@ -738,15 +710,12 @@ class MachineController extends CommonController
 //                $watchModel=new WatchLog();
 //                $watchModel->historyRecord($data);
                 return $cameras;
-            }
-            else
-            {
+            } else{
                 throw new \Exception('编辑摄像头失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            throw $ex;
+
+        } catch(\Exception $ex){
+            return response()->back()->withError($ex->getMessage());
         }
     }
 
@@ -789,9 +758,52 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
-        $watch    =   Watch::find($id);
+        $watch  =   Watch::find($id);
 
         return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
+    }
+
+    /**
+     * 监考设备的删除
+     * @api       POST /osce/admin/machine/postMachineDelete
+     * @access    public
+     * @param Request $request post请求<br><br>
+     * @param Machine $machine
+     * @return view
+     * @internal param Machine $model Machine
+     * @version   1.0
+     * @author    Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postMachineDelete(Request $request)
+    {
+        try {
+            $this->validate($request,[
+                'id'        =>  'required|integer',
+                'cate_id'   =>  'required|integer'
+            ]);
+            //获取删除的id
+            $id      = $request ->input('id');
+            $cate_id = $request ->input('cate_id');
+            if($cate_id ==1){
+                if($result = StationVcr::where('vcr_id',$id)->first()){
+                    throw new \Exception('该设备已于其他设备关联,无法删除!');
+                }
+                if($result = RoomVcr::where('vcr_id',$id)->first()){
+                    throw new \Exception('该设备已于其他设备关联,无法删除!');
+                }
+            }
+
+            $model   = $this    ->getMachineModel($cate_id);
+            //通过id删除相应的设备
+            if($result = $model->where('id', $id)->delete()) {
+                return $this->success_data(['删除成功！']);
+            }else{
+                throw new \Exception('该设备已于其他设备关联,无法删除!');
+            }
+        } catch (\Exception $ex){
+            return $this->fail($ex);
+        }
     }
 
 

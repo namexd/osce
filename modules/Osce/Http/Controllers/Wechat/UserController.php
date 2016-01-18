@@ -319,4 +319,6 @@ class UserController  extends CommonController
             return  redirect()  ->  back()  ->  withErrors($ex);
         }
     }
+
+
 }

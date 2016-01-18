@@ -256,17 +256,15 @@ class Station extends CommonModel
             $obj = StationVcr::where('station_id', '=', $id)->first();
             //修改其状态
             $obj->vcr_id = $vcrId;
-            if (!($obj->save)) {
+            if (!($obj->save())) {
                 $connection->rollBack();
                 throw new \Exception('更改考站摄像头关联失败');
             }
 
-
             //更改摄像机表中摄像机的状态
             $vcr = Vcr::findOrFail($vcrId);  //找到选择的摄像机
-            $vcr->status = 0;  //变更状态,但是不一定是0
-            $result = $vcr->save();
-            if (!$result) {
+            $vcr ->status = 0;  //变更状态,但是不一定是0
+            if (!$result = $vcr->save()) {
                 $connection->rollBack();
                 throw new \Exception('更改摄像机状态失败');
             }
@@ -276,7 +274,7 @@ class Station extends CommonModel
                 'case_id'=>$caseId,
             ];
             $result = StationCase::where('station_id','=',$station_id)->update($stationCaseData);
-            if ($result === false) {
+            if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改病例关联失败');
             }
@@ -290,6 +288,7 @@ class Station extends CommonModel
                 $connection->rollBack();
                 throw new \Exception('更改房间关联失败');
             }
+
             $connection->commit();
             return true;
 

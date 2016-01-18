@@ -173,13 +173,13 @@ class DiscussionController extends  CommonController{
                 'question'   =>$question,
                 'countReply' =>$countReply,
             );
-            $data['row']=$row;
-          return response()->json(
-              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$data)
+     
 
-          );
+          return view('osce::wechat.discussion.discussion_detail')->with(['data'=>$data,'row'=>$row]);
       }
 
+
+      
 
      public function getAddQuestion(){
          return view('osce::wechat.discussion.discussion_quiz');
@@ -392,4 +392,69 @@ class DiscussionController extends  CommonController{
            return \Response::json(array('code'=>0));
 
      }
+
+
+
+     public function getCheckQuestions(Request $request){
+          $this->validate($request,[
+              'id'        =>'required|integer',
+              'pagesize'  =>'sometimes|integer',
+          ]);
+           $pagesize=$request->get('pagesize',1); 
+           $user=Auth::user();
+           $userId=$user->id;
+           if(!$userId){
+               return \Response::json(array('code'=>2));
+           }
+          $id    =   intval($request   ->  get('id'));
+          $list=Discussion::where('id',$id)->select()->get();
+          $discussionModel  = new Discussion();
+          $pagination       = $discussionModel  ->  getReplyPagination($id);
+
+          //回复内容
+           $replys=Discussion::where('pid',$id)->select()->get();
+           $data=[];
+          foreach($replys as $itm){
+              $time=time()-strtotime($itm->created_at);
+
+              if ($time < 0) {
+                  $time = $time;
+              } else {
+                  if ($time < 60) {
+                      $time= $time . '秒前';
+                  } else {
+                      if ($time < 3600) {
+                          $time=  floor($time / 60) . '分钟前';
+                      } else {
+                          if ($time < 86400) {
+                              $time= floor($time / 3600) . '小时前';
+                          } else {
+                              if ($time < 2592000) {
+                                  $time= floor($time / 86400) . '天前';
+                              } else {
+                                  if($time<31536000){
+                                      $time =  floor($time / 2592000).'月前';
+                                  }else{
+                                      $time=floor($time/31536000).'年前';
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+              $data[]=[
+                  'id'             =>$itm->id,
+                  'title'          =>$itm->title,
+                  'content'        =>$itm->content,
+                  'name'           =>$itm->getAuthor,
+                  'time'           =>$time,
+                  'update_at'      =>$itm->update_at,
+              ];
+          }
+          
+          return response()->json(
+              $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$pagination->currentPage(),$data)
+          );
+      }
 }
+

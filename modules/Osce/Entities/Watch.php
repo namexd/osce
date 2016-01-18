@@ -25,9 +25,8 @@ class Watch extends CommonModel implements MachineInterface
     protected $statuValues  =   [
         0   =>  '未使用',
         1   =>  '使用中',
-        2   =>  '报废',
-        3   =>  '损坏',
-        4   =>  '维修',
+        2   =>  '维修',
+        3   =>  '报废',
     ];
 
     /**
@@ -197,16 +196,17 @@ class Watch extends CommonModel implements MachineInterface
     public function getList($name='',$status=''){
         $builder =   Watch::select();
 
-        if($name)
+        if($name != '')
         {
-            $builder =   $builder    ->  where('name','like','%'.$name.'%');
+            $builder =   $builder    ->  where('name', 'like', '%'.$name.'%');
         }
         if($status || ($status==0&&$status!=''))
         {
-            $builder =   $builder    ->  where('status','=',$status);
+            $builder =   $builder    ->  where('status', '=', $status);
         }
+        $builder = $builder -> select(['id', 'code','name', 'status']);
 
-        return  $builder ->  paginate(config('osce.page_size'));
+        return  $builder -> orderBy('created_at','desc') ->  paginate(config('osce.page_size'));
     }
 
     //返回全部数据

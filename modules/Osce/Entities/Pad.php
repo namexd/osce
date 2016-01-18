@@ -22,8 +22,10 @@ class Pad extends CommonModel implements MachineInterface
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '损坏',
-        1   =>  '正常',
+        0   =>  '未使用',
+        1   =>  '使用中',
+        2   =>  '维修',
+        3   =>  '报废',
     ];
 
     public function getMachineStatuValues(){
@@ -173,21 +175,24 @@ class Pad extends CommonModel implements MachineInterface
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Luohaihua <Luohaihua@misrobot.com> Zhoufuxiang 2016-01-13 15:21:48
      * @date ${DATE}${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name,$status){
+    public function getList($name, $status){
         $bulder =   $this;
-        if(!is_null($name))
+        if($name != '')
         {
-            $bulder =   $bulder    ->  where('name','like','%'.$name.'%');
+            $bulder =   $bulder    ->  where('name', 'like', '%'.$name.'%');
         }
-        if(!is_null($status))
+
+        if($status != '')
         {
-            $bulder =   $bulder    ->  where('status','=',$status);
+            $bulder =   $bulder    ->  where('status', '=', $status);
         }
+        $bulder = $bulder -> select(['id', 'name', 'status']);
+
         return  $bulder ->  paginate(config('osce.page_size'));
     }
 }

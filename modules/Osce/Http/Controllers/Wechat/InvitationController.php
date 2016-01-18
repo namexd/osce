@@ -97,17 +97,16 @@ class InvitationController extends CommonController
 
     public function getList()
     {
+
         $user= Auth::user();
         if(empty($user))
         {
             throw new \Exception('未找到当前操作人信息');
         }
         $userId =$user->id;
-
         $notice = new Invite();
-
+//        $list = $notice->get();
         $list = $notice-> where('id','=',$userId)->get();
-//        dd($list);
         return view('osce::wechat.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
     }
 
