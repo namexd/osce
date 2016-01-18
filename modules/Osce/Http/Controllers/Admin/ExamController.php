@@ -1440,10 +1440,13 @@ class ExamController extends CommonController
         ]);
 
         $stationIds = $request->get('station_id');
+        $stationIds = empty($stationIds) ? [] : $stationIds;
+        //是用ajax返回
+        $ajax = true;
         //在模型里查询
         $station = new Station();
-        $data = $station->showList(['created_at','desc'],$stationIds);
-
-        return response()->json($this->success_data($data));
+        $data = $station->showList($stationIds, $ajax);
+        
+        return $this->success_data($data);
     }
 }

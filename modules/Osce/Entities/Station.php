@@ -62,18 +62,18 @@ class Station extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showList($order = ['created_at', 'desc'] , array $stationIdArray = [])
+    public function showList(array $stationIdArray = [], $ajax = false)
     {
         try {
-            //获得排序
-            list($orderType, $orderBy) = $order;
 
             $builder = $this;
 
             //如果传入了stationArray，就排除里面的内容
-            if ($stationIdArray != "") {
+            if ($stationIdArray != []) {
                 $builder = $builder->whereNotIn('id',$stationIdArray);
             }
+
+
             //开始查询
             $builder = $builder->select([
                 'id',
@@ -83,7 +83,11 @@ class Station extends CommonModel
                 'description',
                 'subject_id',
                 'mins'
-            ])->orderBy($orderType, $orderBy);
+            ])->orderBy('created_at', 'desc');
+
+            if ($ajax === true) {
+                return $builder->get();
+            }
 
             return $builder->paginate(10);
         } catch (\Exception $ex) {
