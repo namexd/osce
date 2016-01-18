@@ -69,7 +69,6 @@
                          <td>{{ $item['code'] }}</td>
                         <td>{{ $item['idCard'] }}</td>
                          <td>{{ $item['mobile'] }}</td>
-
                      </tr>
                    @endforeach
                     </tbody>
