@@ -5,6 +5,14 @@
         margin-bottom: 0;
     }
     td input{margin: 5px 0;}
+    #file0{
+        height: 34px;
+        width: 70px;
+        opacity: 0;
+        position: relative;
+        top: -20px;
+        left: 0;
+    }
 </style>
 @stop
 
@@ -51,10 +59,10 @@
                                     <div class="ibox-title">
                                         <h5>评分标准：</h5>
                                         <div class="ibox-tools">
-                                            <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;width:184px;">
-                                                <input type="file" name="topic" id="file0" multiple="multiple" />
+                                            <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
+                                                导入<input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
-                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;">下载模板</a>
+                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
