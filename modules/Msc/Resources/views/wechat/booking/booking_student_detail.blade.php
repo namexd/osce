@@ -108,7 +108,8 @@
                             <p>时段：<span>{{ @$val['begintime']}}-{{ @$val['endtime']}}</span></p>
                             <p>已预约/容量：<span>{{$data['LaboratoryInfo']['total']}}/{{$data['LaboratoryInfo']['total']}}</span></p>
                         </div>
-                        <div class="w_30 right mart_12">
+                        <div class="w_30 right mart_12 cloc">
+                            已被老师占用
                         </div>
                     @endif
                 </div>

@@ -116,7 +116,6 @@ function booking_student_detail(){
         var dateDocArr = $('.date_list').find('input');
         if(dateDocArr.length>0){
             dateDocArr.each(function(){
-
                 if(labid == $(this).val()){
                     $(this).remove();
                     make = true;
