@@ -64,7 +64,6 @@ class ExamController extends CommonController
 
         //从模型得到数据
         $data = $exam->showExamList($formData);
-
         return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
 
     }
