@@ -622,7 +622,7 @@ class MachineController extends CommonController
     private function addWatch(Request  $request){
         $this   ->  validate($request,[
             'name'          =>  'required',
-            'code'          =>  'required|unique:watch',
+            'code'          =>  'required',
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'required',
@@ -632,6 +632,7 @@ class MachineController extends CommonController
             'factory.required'  =>  '生产厂家必填',
             'sp.required'       =>  '型号规格必填',
             'status.required'   =>  '腕表状态必选',
+            'code.unique'       =>  '腕表编码已存在',
         ]);
 
         $user   =   Auth::user();
@@ -685,6 +686,7 @@ class MachineController extends CommonController
             'factory.required'  =>'生产厂家必填',
             'sp.required'       =>'型号规格必填',
             'status.required'   =>'设备状态必填',
+            'code.unique'       =>'腕表编码已存在',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
