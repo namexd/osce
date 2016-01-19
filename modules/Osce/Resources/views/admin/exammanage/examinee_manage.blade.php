@@ -46,11 +46,7 @@
     'background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}',
     'excel':'{{route('osce.admin.exam.postImportStudent')}}',
     'id':'{{$id}}',
-<<<<<<< HEAD
-    'deleteUrl':'{{route('osce.admin.exam.getDelStudent')}}'}"/>
-=======
     'deleteUrl':'{{route('osce.admin.exam.postDelStudent')}}'}"/>
->>>>>>> osce.0.1.201601130930
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -82,6 +78,7 @@
                     </form>
                     <div class="operate pull-right">
                         <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}" class="btn btn-outline btn-default">新增考生</a>
+                        <a href="{{route('osce.admin.exam.getdownloadStudentImprotTpl')}}" class="btn btn-outline btn-default">下载模板</a>
                         <a href="javascript:void(0)" class="btn btn-outline btn-default insert">导入考生</a>
                         <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="{{$id}}" style="height:34px;padding:5px;width:98px;">
                             <input type="file" name="student" id="file0" multiple="multiple" />
@@ -108,7 +105,7 @@
                             <td>{{$item->idcard}}</td>
                             <td>{{$item->mobile}}</td>
                             <td>
-                                <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                                <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                 <span class="read  state2 delete" sid="{{$item->id}}" examid="{{$id}}"><i class="fa fa-trash-o fa-2x"></i></span>
                             </td>
                         </tr>

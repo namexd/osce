@@ -30,6 +30,7 @@
         <table class="table table-striped" id="table-striped">
             <thead>
             <tr>
+                <th>#</th>
                 <th>考试名称</th>
                 <th>时间</th>
                 <th>考试组成</th>
@@ -38,8 +39,9 @@
             </tr>
             </thead>
             <tbody>
-                @foreach($data as $item)
+                @foreach($data as $key=>$item)
                 <tr>
+                    <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->begin_dt}}~{{$item->end_dt}}</td>
                     <td>{{$item->description}}</td>

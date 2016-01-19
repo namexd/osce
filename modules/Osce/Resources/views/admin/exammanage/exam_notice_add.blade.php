@@ -17,9 +17,9 @@
 @stop
 
 @section('only_js')
- </script><script src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/ueditor.config.js"></script>
- </script><script src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js"></script>
- <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}">
+ <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.config.js')}}"></script>
+ <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
+ <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 @stop
