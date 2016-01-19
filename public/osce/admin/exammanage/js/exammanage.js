@@ -1462,7 +1462,7 @@ function examinee_manage(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
         layer.alert('确认删除？',function(){
-            location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
+            window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
         });
     })
 }
