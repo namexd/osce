@@ -121,7 +121,7 @@
                                     }
                                 });
                             }
-                            else{ 
+                            else{
                                 var id = (location.href).split('=')[1];
                                 location.href = $this.attr('url')+'?id='+id;
                             }
