@@ -13,6 +13,6 @@ use Modules\Osce\Http\Controllers\CommonController;
 class RolesController extends CommonController
 {
     public function getUserRole(){
-        
+
     }
 }
