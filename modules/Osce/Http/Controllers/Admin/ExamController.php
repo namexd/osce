@@ -809,7 +809,7 @@ class ExamController extends CommonController
         $examRoomData = $examRoom -> getExamRoomData($exam_id);
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
-
+//dd($examStationData);
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
     }
 
@@ -832,7 +832,7 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
-        try{
+//        try{
             DB::beginTransaction();
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
@@ -859,9 +859,9 @@ class ExamController extends CommonController
             DB::commit();
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
-        } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch(\Exception $ex){
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
 
     }
 
