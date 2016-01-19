@@ -28,7 +28,7 @@
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
-            <div class="panel blank-panel">
+            <div class="">
                 <div class="input-group" style="width: 290px;margin:20px 0;">
                     <input type="text" placeholder="请输入关键字" class="form-control">
                     <span class="input-group-btn">
@@ -67,18 +67,17 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                <div class="btn-group pull-right">
-
+                <div class="pull-left">
+                    共{{$data->total()}}条
                 </div>
+                <div class="pull-right">
+                    {!! $data->render() !!}
+                </div>
+
             </div>
+
         </form>
-        <div class="pull-left">
-            共{{$data->total()}}条
-        </div>
-        <div class="pull-right">
-            {!! $data->render() !!}
-        </div>
+
     </div>
 
 @stop{{-- 内容主体区域 --}}
