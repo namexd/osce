@@ -313,7 +313,7 @@ class ExamController extends CommonController
 
             return view('osce::admin.exammanage.add_basic',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -632,7 +632,7 @@ class ExamController extends CommonController
             }
 
         } catch(\Exception $ex) {
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
     /**
@@ -1449,7 +1449,7 @@ class ExamController extends CommonController
      * @param Request $request
      * <b>get请求字段：</b>
      * id    考试id
-     * @return void
+     * @return View
      * @version 1.0
      * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
      * @date  2016-01-18
@@ -1473,6 +1473,8 @@ class ExamController extends CommonController
                 case '2' :
                     $result = $this->getStationAssignment($request);
                     break;
+                default:
+                    $result =  $this->getExamroomAssignment($request);
             }
             return $result;
         } catch (\Exception $ex) {
