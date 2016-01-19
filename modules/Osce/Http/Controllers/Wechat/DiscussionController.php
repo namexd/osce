@@ -92,8 +92,24 @@ class DiscussionController extends  CommonController{
           );
 //          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
       }
-     
-	 
+
+    /**
+     *请求登录页
+     * @method GET
+     * @url /osce/wechat/train/train-lists
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
 	 public  function getDiscussionLists(){
 	 	return view('osce::wechat.discussion.discussion_list');
 	 }

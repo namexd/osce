@@ -93,6 +93,7 @@
             $(".images_upload").change(function(){
                 $.ajaxFileUpload
                 ({
+
                     url:'{{ url('commom/upload-image') }}',
                     secureuri:false,//
                     fileElementId:'file0',//必须要是 input file标签 ID
@@ -101,6 +102,7 @@
                     {
                         if(data.code){
                             var href=data.data.path;
+                            $('.img_box').find('li').remove();
                             $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
                         }
                     },

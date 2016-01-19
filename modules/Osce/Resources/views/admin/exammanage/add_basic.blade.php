@@ -24,7 +24,6 @@
     </style>
 @stop
 
-
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'add_basic','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -155,4 +154,11 @@
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 
+<script>
+    $(function(){
+        @if(isset($_GET['succ']))
+            layer.alert('保存成功！');
+        @endif
+    })
+</script>
 @stop

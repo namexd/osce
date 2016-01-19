@@ -41,6 +41,7 @@
         border: 1px solid #ccc;
         border-radius: 5px;
         cursor: pointer;
+        margin: 5px;
     }
     .teacher-list{
         height: 34px!important;
@@ -58,9 +59,6 @@
         margin: 5px;
     }
     .pull-right>select{width: 120px;}
-    .teacher{
-        margin: 0 5px;
-    }
     .teacher-box{
         width: 254px;
     }
@@ -131,15 +129,14 @@
                                         </thead>
                                         <tbody index="{{count($examRoomData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
-
-                                        @forelse($examRoomData as $item)
+                                        @forelse($examRoomData as $items)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
                                                     <select class="form-control js-example-basic-multiple room-station" multiple="multiple" name="room[{{$k2++}}][]">
-
-                                                        <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
-
+                                                        @foreach($items as $item)
+                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>

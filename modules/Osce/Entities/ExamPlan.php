@@ -581,9 +581,16 @@ class ExamPlan extends CommonModel
         $connection =   \DB::connection($this->connection);
         $connection ->  beginTransaction();
         try{
+            $oldPlanList    =   $this   -> getOldPlanByExamId($exam_id);
+            foreach($oldPlanList as $oldPlan)
+            {
+                if(!$oldPlan    ->  delete())
+                {
+                    throw new \Exception('弃用旧计划失败');
+                }
+            }
             foreach($data as $item)
             {
-//                dd($item);
                 if(!$this->create($item))
                 {
                     throw new \Exception('保存考试计划失败');
@@ -597,6 +604,10 @@ class ExamPlan extends CommonModel
             $connection ->  rollBack();
             throw $ex;
         }
+    }
+
+    public function getOldPlanByExamId($exam_id){
+        return $this->where('exam_id','=',$exam_id)->get();
     }
 
     public function showPlan($exam){

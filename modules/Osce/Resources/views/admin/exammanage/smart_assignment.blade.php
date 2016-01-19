@@ -35,9 +35,11 @@
             height: 0;
         }
         .time-list{
-            width: 50px;
-            height: 500px;
-            background-color: #ccc;
+            width: 100px;
+            margin-top: 5px;
+        }
+        .time-list li{
+            border: 1px solid #ccc;
         }
         .assign-box>div{
             float: left;
@@ -58,7 +60,6 @@
         }
         dd{
             float: left;
-            width: 60px;
             cursor: pointer;
         }
         /*dl:hover{
@@ -92,11 +93,11 @@
         .room_inner_col{
             margin: 5px 0px;
         }
-        .batch_inner_row{
-            margin: 5px 0px;
-        }
         .clicked{
             background-color: #0a6aa1;
+        }
+        p{
+            margin: 0 10px;
         }
     </style>
 @stop
@@ -129,12 +130,19 @@
                 </div>
             </div>
             <div class="assign-box clearfloat">
+                <div class="time-list">
+                   <ul>
+
+
+                   </ul>
+                </div>
                 <div class="classroom-box">
 
                 </div>
 
-                <textarea id="plan" style="display: none;">{{json_encode($plan)}}</textarea>
+
             </div>
+            <textarea id="plan" style="display: none;">{{json_encode($plan)}}</textarea>
             <div class="operate">
                 <button class="btn btn-default" type="button" id="makePlan">智能排考</button>
                 <button class="btn btn-default save" type="submit">保存方案</button>
