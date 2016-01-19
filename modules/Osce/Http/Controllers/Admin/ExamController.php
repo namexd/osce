@@ -724,7 +724,7 @@ class ExamController extends CommonController
         //获取当前场所的类
          $examModel= new Student();
         //从模型得到数据
-        $data=$examModel->getList($formData);
+           $data=$examModel->getList($formData);
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }
