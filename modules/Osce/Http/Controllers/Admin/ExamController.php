@@ -582,10 +582,10 @@ class ExamController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'examinee_id'   =>  'somtimes',
+            'examinee_id'   =>  'sometimes',
             'gender'        =>  'required',
             'mobile'        =>  'required',
-            'description'   =>  'somtimes',
+            'description'   =>  'sometimes',
             'images_path'   =>  'required',
         ],[
             'name.required'         =>  '姓名必填',
