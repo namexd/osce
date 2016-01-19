@@ -80,12 +80,10 @@
                 </tbody>
             </table>
         </form>
-    </div>
-    <div>
-    {{--分页--}}
-    <div class="btn-group pull-right">
-        <?php echo $pagination->appends(['keyword'=>$keyword,'status'=>$status])->render();?>
-    </div>
+        {{--分页--}}
+        <div class="btn-group pull-right">
+            <?php echo $pagination->appends(['keyword'=>$keyword,'status'=>$status])->render();?>
+        </div>
     </div>
 @stop
 
