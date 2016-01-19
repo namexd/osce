@@ -34,6 +34,7 @@ class SubjectItem extends CommonModel
     public function parent(){
         return $this->hasOne('Modules\Osce\Entities\SubjectItem','id','pid');
     }
+
     /**
      * 新增 考核标准详情
      * @access public
