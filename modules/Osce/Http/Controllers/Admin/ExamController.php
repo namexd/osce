@@ -420,7 +420,7 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamineeManage(Request $request)
+    public function getExamineeManage(Request $request, Student $student)
     {
         //验证规则
         $this->validate($request, [
@@ -428,17 +428,14 @@ class ExamController extends CommonController
         ]);
 
         try {
-            //获取id
-            $exam_id = $request->input('id');
-            //获取各字段
-            $keyword = $request->only('keyword');
+            $exam_id = intval($request->input('id'));            //获取id
+            $keyword = e($request->input('keyword'));            //获取搜索关键字
 
-            $student = new Student();
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
 
             //展示页面
-            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data]);
+            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withError($ex);
@@ -468,13 +465,15 @@ class ExamController extends CommonController
         //验证
         $this->validate($request, [
             'id'        => 'required|integer',
+            'exam_id'   => 'required|integer',
         ]);
 
         try {
-            //获取student_id
-            $student_id = $request->get('id');
+            $student_id = $request->get('id');          //获取student_id
+            $exam_id    = $request->get('exam_id');     //获取考试id
+
             //进入模型逻辑
-            $result = $student->deleteData($student_id);
+            $result = $student->deleteStudent($student_id,$exam_id);
 
             if ($result === true) {
                 return $this->success_data(['删除成功！']);
@@ -573,7 +572,6 @@ class ExamController extends CommonController
         ]);
 
         $id =   $request    ->  get('id');
-
         $student    =   Student::find($id);
 
         return view('osce::admin.exammanage.examinee_edit', ['item' => $student]);
@@ -602,7 +600,7 @@ class ExamController extends CommonController
             'name'          =>  $request->get('name'),
             'idcard'        =>  $request->get('idcard'),
             'mobile'        =>  $request->get('mobile'),
-            'code'          =>  $request->get('code'),
+            'code'          =>  $request->get('examinee_id'),
             'avator'        =>  $images[count($images)-1],
             'description'   =>  $request->get('description'),
         ];
@@ -617,6 +615,7 @@ class ExamController extends CommonController
 
                 if($student->save()) {
                     $user   =   $student->userInfo;
+                    $user   ->  email  = $request->get('email');
                     $user   ->  gender = $request->get('gender');
                     $user   ->  avatar = $data['avator'];
                     if(!$user->save()) {
@@ -664,7 +663,6 @@ class ExamController extends CommonController
         try {
 
             //获得上传的数据
-
             $exam_id= $id;
             $data = Common::getExclData($request, 'student');
             //去掉sheet
@@ -675,15 +673,21 @@ class ExamController extends CommonController
             //将数组导入到模型中的addInvigilator方法
             foreach($examineeData as $studentData)
             {
+                if($studentData['gender'] == '男'){
+                    $studentData['gender'] = 1;
+                }elseif($studentData['gender'] == '女'){
+                    $studentData['gender'] = 2;
+                }else{
+                    $studentData['gender'] = 0;
+                }
+
                 if (!$student->addExaminee($exam_id, $studentData))
                 {
                     throw new \Exception('学生导入数据失败，请稍后重试');
                 }
-
-
             }
-//               echo json_encode(['result' => true, 'data' =>['code'=>1] ]);
             echo json_encode($this->success_data(['code'=>1]));
+
         } catch (\Exception $ex) {
             echo json_encode($this->fail($ex));
         }
