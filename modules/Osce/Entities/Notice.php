@@ -67,6 +67,8 @@ class Notice extends CommonModel
                 }
                 //关联消息接收用户和消息
                 //$to     =   $this   ->  getNoticeToOpendIds($notice,$groups);
+
+
                 $to     =   $this   ->  getGroupsOpendIds($groups,$notice->exam_id);
                 //通知用户
                 $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
@@ -271,14 +273,12 @@ class Notice extends CommonModel
      *
      * @param int $exam_id 考试id
      * @param array $data
-     *
      * @return array
-     *
+     * @throws \Exception
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2015-12-29 17:09
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     private function getStudentsOpendIds($exam_id,array $data=[]){
         $list   =   Student::where('exam_id','=',$exam_id)->get();

@@ -30,6 +30,13 @@
 @section('only_head_js')
     <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
+        $.(function(){
+            $('.check').click(function(){
+                alert(1111);
+            })
+
+
+        })
       
     </script>
 
@@ -42,15 +49,16 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        考试邀请
-        <a class="right header_btn" href="">
+        <a class="right header_btn" href="{{route('osce.wechat.invitation.getMsg')}}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>
-    <div class="history-box">
+    <div class="history-box ">
         <ul class="history-list">
             @forelse($list as $data)
             <li>
-                <p class="title">{{$data->name}}</p>
+                <a class="title check" href="{{route('osce.wechat.invitation.getMsg',['id'=>$data->id])}}"> {{$data->name}}</a>
+                {{--<p class="title check">{{$data->name}}</p>--}}
                 <p class="time"><span class="year">{{date('Y-m-d',strtotime($data->created_at))}}</span><span>{{date('H-i-s',strtotime($data->created_at))}}</span></p>
             </li>
             @empty

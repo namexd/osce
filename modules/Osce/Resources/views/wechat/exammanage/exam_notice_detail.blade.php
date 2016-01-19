@@ -58,7 +58,7 @@
                         <img src="" alt="">
                     </div>
                     <div>
-                      {{  $notice->content  }}
+                      {!! $notice->content !!}
                     </div>
                 </div>
             </li>

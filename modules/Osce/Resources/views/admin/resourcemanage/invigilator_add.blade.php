@@ -1,6 +1,8 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    
+    <style>
+
+    </style>
 @stop
 
 @section('only_js')
