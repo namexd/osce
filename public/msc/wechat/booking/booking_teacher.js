@@ -21,11 +21,13 @@ function booking_teacher(){
         var url=pars.url2;
         var target_url=pars.target_url2;
     }
-
-    $("#order_time").val(nextday);
-    var qj={DateTime:nextday};
-    getlist(qj);
     //加载入页面的时候，自动加载隔天的实验室
+    var now_page=1;
+    $("#order_time").val(nextday);
+    var qj={DateTime:nextday,page:now_page};
+    getlist(qj);
+    //end
+    //日期改变时
     $("#order_time").change(function(){
         var qj=getqj();
         getlist(qj);
@@ -34,11 +36,20 @@ function booking_teacher(){
         select_ban();
         get_layer();
     });
+    //翻页插件
+    $(window).scroll(function(e){//判定到底底部
+        if(away_top >= (page_height - window_height)&&now_page<totalpages){
+            now_page++;
+            qj.page=now_page;//设置页码
+            getlist(qj);
+            /*加载显示*/
+        }
+    });
     //弹出层选择楼层
     function select_ban(){
         $("#ban").change(function(){
             var floor_top =$(this).find("option:selected").attr("floor_top");
-            var floor_bottom = parseInt($(this).find("option:selected").attr("floor_buttom"));
+            var floor_bottom = parseInt($(this).find("option:selected").attr("floor_bottom"));
             $("#floor").empty();
             $("#floor").append('<option value="">全部楼层</option>');
             for(var i=1;i<=floor_bottom;i++){
@@ -51,15 +62,16 @@ function booking_teacher(){
         })
     }
     function submit_select(){
-        $("#submit_layer").click(function(){
+        $("#submit_layer").click(function(){//执行筛选
             getlist(qj);
         });
     }
     function getqj(){//得到所有的查询条件内容
+        $(".manage_list").empty();
         var floor_id= $("#ban").find("option:selected").attr("value");
         var floor_num= $("#floor").find("option:selected").attr("value");
         var DateTime=$("#order_time").val();
-        var qj={floor_id:floor_id,floor_num:floor_num,DateTime:DateTime}
+        var qj={floor_id:floor_id,floor_num:floor_num,DateTime:DateTime,page:"1"}
         return qj;
     }
 
@@ -72,7 +84,7 @@ function booking_teacher(){
             data:qj,
             success: function (result) {
                 if(result.code==1){
-                    $(".manage_list").empty();
+                    totalpages=Math.ceil(result.data.total/result.data.pagesize);
                     $(result.data.rows.ClassroomApplyList.data).each(function(){
                         $(".manage_list").append('<a href="'+target_url+'?DateTime='+qj.DateTime+'&id='+this.id+'">'
                             +'<div class="all_list">'

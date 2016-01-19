@@ -16,7 +16,13 @@
     <input type="hidden" id="parameter" value="{'pagename':'booking_teacher','url':'{{ route('msc.Laboratory.OpenLaboratoryListData') }}','type':'{{$type}}',
     'target_url':'{{ route('msc.Laboratory.ApplyOpenLaboratory') }}','url2':'{{ route('msc.Laboratory.LaboratoryListData') }}','target_url2':'{{ route('msc.Laboratory.ApplyLaboratory') }}'}" />
     <div class="user_header">
+        <a class="left header_btn" href="javascript:history.back(-1)">
+            <i class="fa fa-angle-left clof font26 icon_return"></i>
+        </a>
         预约实验室
+        <a class="right header_btn" href="#">
+
+        </a>
     </div>
     <div class="main_body">
         <div class="time_select w_90">
@@ -43,7 +49,7 @@
                 <select   class="select1" id="ban"  style="width:100%;">
                     <option value="" >全部楼栋</option>
                     @foreach($FloorData as $val)
-                        <option value="{{@$val['id']}}" floor_top="{{ @$val['floor_top'] }}" floor_buttom="{{ @$val['floor_bottom'] }}">{{@$val['name']}}</option>
+                        <option value="{{@$val['id']}}" floor_top="{{ @$val['floor_top'] }}" floor_bottom="{{ @$val['floor_buttom'] }}">{{@$val['name']}}</option>
                     @endforeach
                 </select>
 

@@ -114,7 +114,9 @@
 .manage_list{
     width:100%;margin-top:10px;overflow:hidden;
     background:#fff;border-bottom:1px solid #DCE0E4;
-    box-shadow: 0 1px 4px #DCE0E4;}
+    box-shadow: 0 1px 4px #DCE0E4;
+    margin-bottom: 20px;
+}
 
 .manage_list div p:last-child{padding:0 8px 5px 3%;}
 .manage_list .all_list{ overflow: hidden;border-top:1px solid #dce0e4}

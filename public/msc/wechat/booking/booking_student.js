@@ -15,9 +15,12 @@ $(function(){
 function booking_student(){
     var url=pars.url;
     var target_url=pars.target_url;
+    //加载入页面的时候，自动加载隔天的实验室
+    var now_page=1;
     $("#order_time").val(nextday);
-    var qj={DateTime:nextday};
+    var qj={DateTime:nextday,page:now_page};
     getlist(qj);
+    //end
     //加载入页面的时候，自动加载隔天的实验室
     $("#order_time").change(function(){
         var qj=getqj();
@@ -26,6 +29,15 @@ function booking_student(){
     $("#select_submit").click(function(){
         select_ban();
         get_layer();
+    });
+    //翻页插件
+    $(window).scroll(function(e){//判定到底底部
+        if(away_top >= (page_height - window_height)&&now_page<totalpages){
+            now_page++;
+            qj.page=now_page;//设置页码
+            getlist(qj);
+            /*加载显示*/
+        }
     });
     //弹出层选择楼层
     function select_ban(){
@@ -49,10 +61,11 @@ function booking_student(){
         });
     }
     function getqj(){//得到所有的查询条件内容
+        $(".manage_list").empty();
         var floor_id= $("#ban").find("option:selected").attr("value");
         var floor_num= $("#floor").find("option:selected").attr("value");
         var DateTime=$("#order_time").val();
-        var qj={floor_id:floor_id,floor_num:floor_num,DateTime:DateTime}
+        var qj={floor_id:floor_id,floor_num:floor_num,DateTime:DateTime,page:"1"}
         return qj;
     }
 
@@ -65,7 +78,7 @@ function booking_student(){
             data:qj,
             success: function (result) {
                 if(result.code==1){
-                    $(".manage_list").empty();
+                    totalpages=Math.ceil(result.data.total/result.data.pagesize);
                     $(result.data.rows.ClassroomApplyList.data).each(function(){
                         $(".manage_list").append('<a href="'+target_url+'?DateTime='+qj.DateTime+'&id='+this.id+'">'
                             +'<div class="all_list">'
