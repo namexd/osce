@@ -108,6 +108,7 @@
                         type:'get',
                         data:{id:(location.href).split('=')[1]},
                         success:function(res){
+                            console.log(res)
                             if(res.code==2){
                                 location.href = 'osce/admin/login/index';
                             }else if(res.code==3){
