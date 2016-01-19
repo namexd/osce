@@ -38,7 +38,7 @@ class TrainController extends  CommonController{
      */
     public function getTrainList(Request $request){
         $this->validate($request,[
-            'page'  => 'required|integer'
+            'pagesize'  => 'required|integer'
         ]);
 //      $user=Auth::user();
 //      $userId=$user->id;
@@ -50,7 +50,7 @@ class TrainController extends  CommonController{
 //      }
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
-        $page=$request->get('page',1);
+        $page=$request->get('pagesize',1);
         $list=InformTrain::select()->orderBy('begin_dt')->get();
         $data=[];
         foreach($list as $item){
@@ -97,6 +97,7 @@ class TrainController extends  CommonController{
 //        if($total_page<$page){
 //            return redirect()->route('msc.admin.LadMaintain.LaboratoryDeviceList', ['data' => $data,'page'=>$total_page]);
 //        }
+
         return response()->json(
             $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$pagination->currentPage(),$data)
         );
@@ -124,4 +125,8 @@ class TrainController extends  CommonController{
         $train=InformTrain::find($id);
         return view('osce::wechat.train.train_detail')->with('train',$train);
     }
+	
+	public function getTrainlists(){
+		return view('osce::wechat.train.train_list');
+	}
 }
