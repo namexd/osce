@@ -110,10 +110,6 @@
     <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未使用-->
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
-<<<<<<< HEAD
-
-
-=======
     <script>
         $(function(){
             $("#side-menu li").click(function(){
@@ -121,7 +117,6 @@
             })
         })
     </script>
->>>>>>> osce.0.1.201601130930
     <!-- 自定义js -->
     <script src="{{asset('osce/admin/plugins/js/hplus.min.js?v=3.0.0')}}"></script>
     <script type="text/javascript" src="{{asset('osce/admin/plugins/js/contabs.min.js')}}"></script>
