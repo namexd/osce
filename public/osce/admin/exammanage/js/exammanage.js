@@ -117,9 +117,18 @@ function exam_add(){
      * @date    2016-01-05
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
+        //var thisElement = $(this).parent().parent().parent().parent();
+        //thisElement.remove();
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index');
         if(index<1){
@@ -226,9 +235,18 @@ function add_basic(){
      * @date    2016-01-05
      */
     $('#add-basic').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
+        //var thisElement = $(this).parent().parent().parent().parent();
+        //thisElement.remove();
         //计数器标志
         var index = $('#add-basic').find('tbody').attr('index');
         if(index<1){
@@ -896,9 +914,16 @@ function examroom_assignment(){
      * @date    2016-01-05
      */
     $('#examroom').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
         //计数器标志
         var index = $('#examroom').find('tbody').attr('index');
         if(index<1){
@@ -2034,9 +2059,18 @@ function station_assignment(){
      * @date    2016-01-05
      */
     $('#examroom').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
+        //var thisElement = $(this).parent().parent().parent().parent();
+        //thisElement.remove();
         //计数器标志
         var index = $('#examroom').find('tbody').attr('index');
         if(index<1){
