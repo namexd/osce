@@ -48,6 +48,10 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '类别不能为空'
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/,
+                                message: '只能输入数字'
                             }
                         }
                     },

@@ -811,10 +811,13 @@ class ExamController extends CommonController
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
         $examRoomData = $examRoom -> getExamRoomData($exam_id);
+        $serialnumberGroup = [];
+        foreach ($examRoomData as $item) {
+            $serialnumberGroup[$item->serialnumber][] = $item;
+        }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
-//dd($examStationData);
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
+        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
     }
 
     /**
@@ -825,14 +828,12 @@ class ExamController extends CommonController
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
-     *
      * @return redirect
-     *
+     * @throws \Exception
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function postExamroomAssignmen(Request $request)
     {
@@ -842,7 +843,6 @@ class ExamController extends CommonController
             $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
-
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -1431,7 +1431,7 @@ class ExamController extends CommonController
         $exam   =   Exam::find($exam_id);
         $user   =   Auth::user();
         $plan   =   Cache::get('plan_'.$exam->id.'_'.$user->id);
-
+//        dd($plan);
         $ExamPlanModel  =   new ExamPlan();
 
         try{

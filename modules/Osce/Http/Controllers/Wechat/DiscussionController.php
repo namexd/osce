@@ -35,13 +35,13 @@ class DiscussionController extends  CommonController{
         $this->validate($request,[
             'page'  =>          'sometimes|integer'
         ]);
-//      $user=Auth::user();
-//      $userId=$user->id;
-//      if(!$userId){
-//          return response()->json(
-//              $this->success_rows(2,'请先登陆')
-//          );
-//      }
+          $user=Auth::user();
+          $userId=$user->id;
+          if(!$userId){
+              return response()->json(
+                  $this->success_rows(2,'请先登陆')
+              );
+          }
           $page=$request->get('page',1);
 
           $discussionModel	=	new Discussion();
@@ -230,9 +230,9 @@ class DiscussionController extends  CommonController{
           $data['pid']=0;
           $result=Discussion::create($data);
           if($result){
-              return \Response::json(array('code'=>1));
+              return redirect('osce/wechat/discussion/question-lists')->with('success','提交问题成功');
           }
-          return \Response::json(array('code'=>0));
+          return  redirect()->back()->withErrors(new \Exception('提交问题失败'));
       }
 
 
@@ -289,16 +289,14 @@ class DiscussionController extends  CommonController{
           $user=Auth::user();
           $userId=$user->id;
           if(!$userId){
-              return response()->json(
-                  $this->success_rows(2,'请先登陆')
-              );
+              return redirect('osce/admin/login/index');
           }
           $data=$request->only(['id','content']);
           $result=Discussion::create(['content'=>$data['content'],'pid'=>$data['id'],'create_user_id'=>$userId]);
           if($result){
-              return \Response::json(array('code'=>1));
+              return  redirect('/osce/wechat/discussion/check-question?id='.$data['id'])->withErrors('回复成功');
           }
-          return \Response::json(array('code'=>0));
+              return  redirect()->back()->withErrors('回复失败');
       }
 
     /**
@@ -325,11 +323,15 @@ class DiscussionController extends  CommonController{
          $user=Auth::user();
          $userId=$user->id;
          if(!$userId){
-             return \Response::json(array('code'=>2));
+             return redirect('osce/admin/login/index');
          }
          $id=$request->get('id');
-         $createId=Discussion::where('id',$id)->select()->first()->create_user_id;
-
+         $createId=Discussion::where('id',$id)->select()->first();
+         if(!$createId){
+//             return  redirect()->back()->withErrors('删除失败');
+             return \Response::json(array('code' => 2));
+         }
+         $createId=$createId->create_user_id;
          $manager=config('osce.manager');
          if(($userId==$createId) || ($userId==$manager[0])){
              $pid=Discussion::where('pid',$id)->select('pid')->first();
@@ -338,22 +340,31 @@ class DiscussionController extends  CommonController{
                  if($result){
                      $result=Discussion::where('id',$id)->delete();
                      if($result){
-                         return \Response::json(array('code'=>1));
+//                         return redirect('osce/wechat/discussion/question-lists')->with('success','删除问题成功');
+                         return \Response::json(array('code' => 1));
+
                      }else{
-                         return \Response::json(array('code'=>0));
+//                         return  redirect()->back()->withErrors('删除失败');
+                         return \Response::json(array('code' => 0));
+
                      }
                  }
              }else{
                  $result=Discussion::where('id',$id)->delete();
                  if($result){
-                     return \Response::json(array('code'=>1));
+//                     return redirect('osce/wechat/discussion/question-lists')->with('success','删除成功');
+                     return \Response::json(array('code' => 1));
+
                  }else{
-                     return \Response::json(array('code'=>0));
+//                     return  redirect()->back()->withErrors('删除失败');
+                     return \Response::json(array('code' => 0));
+
                  }
              }
          }
 
-         return \Response::json(array('code'=>3));
+//         return  redirect()->back()->withErrors(new \Exception('删除失败'));
+         return \Response::json(array('code' => 3));
 
      }
 
@@ -414,14 +425,31 @@ class DiscussionController extends  CommonController{
 
          $result=Discussion::where('id',$id)->update(['title'=>$title,'content'=>$content]);
          if($result){
-             return \Response::json(array('code'=>1));
+             return redirect('osce/wechat/discussion/question-lists')->with('success','编辑问题成功');
          }
-           return \Response::json(array('code'=>0));
+         return  redirect()->back()->withErrors(new \Exception('编辑失败'));
 
      }
 
 
-
+    /**
+     *获取回复内容
+     * @method GET
+     * @url osce/wechat/discussion/check-question-json
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int              id               问题id(必须的)
+     * * int              pagesize         页码(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
      public function getCheckQuestions(Request $request){
           $this->validate($request,[
               'id'        =>'required|integer',
@@ -431,7 +459,7 @@ class DiscussionController extends  CommonController{
            $user=Auth::user();
            $userId=$user->id;
            if(!$userId){
-               return \Response::json(array('code'=>2));
+               return redirect('osce/admin/login/index');
            }
           $id    =   intval($request   ->  get('id'));
           $discussionModel  = new Discussion();
