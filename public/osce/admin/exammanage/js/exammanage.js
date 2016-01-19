@@ -629,7 +629,7 @@ function examroom_assignment(){
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
