@@ -246,7 +246,13 @@ function lab_booking(){
     var month= d.getMonth() + 1;
     var day= d.getDate();
     var nowTime=year+"-"+month+"-"+day;
-    $("#laydate").val(nowTime);
+    $('#laydate').val();
+    if(!$('#laydate').val()){
+        $("#laydate").val(nowTime);
+    }else{
+        $("#laydate").val($('#laydate').val());
+    }
+
 //            日期选择
     laydate({
         elem:"#laydate",
@@ -279,10 +285,6 @@ function lab_booking(){
         var address = $(this).parent().parent().parent().siblings('div').children().eq(1).html();
         var time = $(this).parent().siblings('span').html();
         var date = $(this).attr('data-time');
-        alert(labname);
-        alert(address);
-        alert(time);
-        alert(date);
         $('.labname').html(labname);
         $('.address').html(address);
         $('.date').html(date);
@@ -325,6 +327,7 @@ function lab_booking(){
         if($(this).attr('datatype') == 1){
             $('.claue').remove();
         }
+        var time = $(this).parent().siblings('span').html();
         $.ajax({
             type: "GET",
             url: "/msc/admin/laboratory/lab-detail",
@@ -334,7 +337,7 @@ function lab_booking(){
                 $('input[name=name]').val(msg.lname);
                 $('input[name=address]').val(msg.localname+' 教学楼 '+msg.floor+'楼 '+msg.lcode);
                 $('input[name=bookingTime]').val(msg.apply_time);
-                $('input[name=timeInterval]').val(msg.begintime+'~'+msg.endtime);
+                $('input[name=timeInterval]').val(time);
                 $('input[name=teaching]').val(msg.course_name);
                 $('input[name=number]').val(msg.total);
                 $('input[name=bookingPerson]').val(msg.user.name);

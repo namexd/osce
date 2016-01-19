@@ -591,6 +591,7 @@ class LaboratoryController extends MscController
         //$this->start_sql(1);
         $LabOrderList = $LabApply->get_check_list($keyword, $type,$id);
         //$this->end_sql(1);
+        //dd($LabOrderList);
         foreach ($LabOrderList as $v) {
             $v->address = $v->labname . $v->floor . '楼' . $v->code;
             if (empty($v->begintime) && empty($v->endtime)) {
@@ -604,7 +605,7 @@ class LaboratoryController extends MscController
             }
             //$v->playdate = htmlentities($v->playdate);
         }
-        //dd($LabOrderList);
+
         // exit;
         if ($type == 1) {
             $view = 'booking_examine';
@@ -1082,35 +1083,32 @@ class LaboratoryController extends MscController
         if($type == 2){
             $laboratory = $Laboratory->get_opencheck_list($nowtime,$type,$id);
             $laboratory = $laboratory->toArray();
+           // dd($laboratory);
             foreach($laboratory['data'] as $k=>$v) {
                 if(empty($v['open_plan'])){
                     unset($laboratory['data'][$k]);
                 }else{
                     foreach($v['open_plan'] as $k1=>$v1){
-                        $laboratory['data'][$k]['open_plan'][$k1]['begintime'] = date('H:i',strtotime($v1['begintime']));
-                        $laboratory['data'][$k]['open_plan'][$k1]['endtime'] = date('H:i',strtotime($v1['endtime']));
-                        if(!empty($v1)){
-                            if($v1['plan_apply']){
-                                foreach($v1['plan_apply'] as $key => $val){
-                                    if(!empty($val['lab_apply'])){
-                                       // if($val['lab_apply']['user_type'] == 2){
-                                            $laboratory['data'][$k]['open_plan'][$k1]['apply_id'] = $val['lab_apply']['id'];
-                                            $laboratory['data'][$k]['open_plan'][$k1]['apply_name'] = $val['lab_apply']['user']['name'];
-                                            $laboratory['data'][$k]['open_plan'][$k1]['course_name'] = $val['lab_apply']['course_name'];
-                                            $laboratory['data'][$k]['open_plan'][$k1]['user_type'] = $val['lab_apply']['user_type'];
-                                            $laboratory['data'][$k]['open_plan'][$k1]['apply_time'] = $val['lab_apply']['apply_time'];
-                                            break;
-                                        //}
-                                    }
+                        if($v1['plan_apply']) {
+                            foreach ($v1['plan_apply'] as $key => $val) {
+                                if (!empty($val['lab_apply'])) {
+                                    $laboratory['data'][$k]['open_plan'][$k1]['apply_id'] = $val['lab_apply']['id'];
+                                    $laboratory['data'][$k]['open_plan'][$k1]['apply_name'] = $val['lab_apply']['user']['name'];
+                                    $laboratory['data'][$k]['open_plan'][$k1]['course_name'] = $val['lab_apply']['course_name'];
+                                    $laboratory['data'][$k]['open_plan'][$k1]['user_type'] = $val['lab_apply']['user_type'];
+                                    $laboratory['data'][$k]['open_plan'][$k1]['apply_time'] = $val['lab_apply']['apply_time'];
+                                    $laboratory['data'][$k]['open_plan'][$k1]['begintime'] = date('H:i',strtotime($v1['begintime']));
+                                    $laboratory['data'][$k]['open_plan'][$k1]['endtime'] = date('H:i',strtotime($v1['endtime']));
+                                    break;
                                 }
-                            }else{
-                                $laboratory['data'][$k]['open_plan'][$k1]['user_type'] = 1;
                             }
-
                         }
                     }
                 }
+                //dd($laboratory);
             }
+
+           // exit;
             //普通实验室
         }else{
             $laboratory = $Laboratory->get_check_list($nowtime,$type,$id);
@@ -1128,6 +1126,7 @@ class LaboratoryController extends MscController
             }
 
         }
+        //dd($laboratory);
         return view('msc::admin.labmanage.lab_booking',[
             'Laboratory' => $laboratory,
             'type' => $type,
