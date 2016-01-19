@@ -60,7 +60,7 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">评分标准：</label>
+                            <label class="col-sm-2 control-label">评分标准</label>
                             <div class="col-sm-10">
                                 <div class="ibox float-e-margins">
                                     <div class="ibox-title">
