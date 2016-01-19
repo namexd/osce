@@ -50,8 +50,16 @@
                     @endforelse
                     </tbody>
                 </table>
+                <div class="pull-left">
+                    共{{$list->total()}}条
+                </div>
                 <div class="btn-group pull-right">
-
+                    <nav>
+                        <ul class="pagination">
+                            {!! $list->appends($_GET)->render() !!}
+                        </ul>
+                    </nav>
+                   
                 </div>
             </div>
         </form>

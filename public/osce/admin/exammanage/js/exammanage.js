@@ -683,7 +683,6 @@ function examroom_assignment(){
                             url: pars.teacher_list,
                             delay:0,
                             data: function (params) {
-
                                 var ids = [];
                                 $('#exam-place').find('tbody').find('tr').each(function(key,elem){
                                     var id = $(elem).find('td').eq(3).find('select option:selected').val();
@@ -695,8 +694,20 @@ function examroom_assignment(){
                                     //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
                                 });
 
+                                var data    =   new Array;
+                                $('.teacher-teach').each(function(){
+                                    id  =   $(this).val();
+                                    if(id==null){
+                                        return;
+                                    }else{
+                                        for (var i in id)
+                                        {
+                                            data.push(id[i]);
+                                        }
+                                    }
+                                });
                                 return {
-                                    teacher:ids
+                                    teacher:data
                                 };
                             },
                             dataType: 'json',

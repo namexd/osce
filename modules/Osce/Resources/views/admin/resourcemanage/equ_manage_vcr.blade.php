@@ -29,7 +29,7 @@
                 <a  href="{{route('osce.admin.machine.getAddCameras')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-            <div class="panel blank-panel">
+        <div class="ibox-content">
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
