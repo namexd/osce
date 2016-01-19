@@ -674,7 +674,7 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
-            'code'          =>  'required',
+            'code'          =>  'required|unique:watch',
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'sometimes',

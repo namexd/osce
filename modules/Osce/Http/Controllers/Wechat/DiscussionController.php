@@ -22,7 +22,7 @@ class DiscussionController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        page        页码(必须的)
      *
      * @return ${response}
      *
@@ -31,7 +31,10 @@ class DiscussionController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-      public function getQuestionList(){
+      public function getQuestionList(Request $request){
+        $this->validate($request,[
+            'page'  =>          'sometimes|integer'
+        ]);
         $user=Auth::user();
         $userId=$user->id;
         if(!$userId){
@@ -39,6 +42,7 @@ class DiscussionController extends  CommonController{
                 $this->success_rows(2,'请先登陆')
             );
         }
+          $page=$request->get('page',1);
 
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
@@ -226,6 +230,24 @@ class DiscussionController extends  CommonController{
           return \Response::json(array('code'=>0));
       }
 
+
+    /**
+     *跳转回复页面
+     * @method GET
+     * @url /osce/wechat/discussion/add-reply
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        问题id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
      public function getAddReply(Request $request){
          $this->validate($request,[
              'id'  =>'required|integer'
@@ -238,7 +260,7 @@ class DiscussionController extends  CommonController{
 
     /**
      *提交回复
-     * @method GET
+     * @method POST
      * @url /osce/wechat/discussion/add-reply
      * @access public
      *
@@ -407,7 +429,6 @@ class DiscussionController extends  CommonController{
                return \Response::json(array('code'=>2));
            }
           $id    =   intval($request   ->  get('id'));
-          $list=Discussion::where('id',$id)->select()->get();
           $discussionModel  = new Discussion();
           $pagination       = $discussionModel  ->  getReplyPagination($id);
 
