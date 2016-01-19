@@ -475,7 +475,7 @@ function examroom_assignment(){
 
 
     //select2初始化
-    $(".js-example-basic-multiple").select2();
+    //$(".js-example-basic-multiple").select2();
 
     /**
      * 将保存的数据保存
@@ -629,7 +629,7 @@ function examroom_assignment(){
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
@@ -649,7 +649,7 @@ function examroom_assignment(){
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
@@ -727,7 +727,7 @@ function examroom_assignment(){
 
                         }
                     });
-
+                    
 
                     /**
                      * sp老师选择
@@ -1799,7 +1799,7 @@ function station_assignment(){
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="form_data['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" name="form_data['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
@@ -1819,7 +1819,7 @@ function station_assignment(){
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="form_data['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" name="form_data['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
