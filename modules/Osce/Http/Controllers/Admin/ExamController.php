@@ -582,10 +582,10 @@ class ExamController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'examinee_id'   =>  'somtimes',
+            'examinee_id'   =>  'sometimes',
             'gender'        =>  'required',
             'mobile'        =>  'required',
-            'description'   =>  'somtimes',
+            'description'   =>  'sometimes',
             'images_path'   =>  'required',
         ],[
             'name.required'         =>  '姓名必填',
@@ -724,7 +724,7 @@ class ExamController extends CommonController
         //获取当前场所的类
          $examModel= new Student();
         //从模型得到数据
-        $data=$examModel->getList($formData);
+           $data=$examModel->getList($formData);
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }

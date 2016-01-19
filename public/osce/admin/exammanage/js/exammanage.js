@@ -1133,6 +1133,7 @@ function exam_notice_add(){
      */
     $(".images_uploads").change(function(){
         $.ajaxFileUpload({
+
             url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
