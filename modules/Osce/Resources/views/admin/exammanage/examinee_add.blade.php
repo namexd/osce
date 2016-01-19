@@ -101,6 +101,7 @@
                     {
                         if(data.code){
                             var href=data.data.path;
+                            $('.img_box').find('li').remove();
                             $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
                         }
                     },
