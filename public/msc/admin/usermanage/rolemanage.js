@@ -128,5 +128,31 @@ function rolemanage(){
         $('#Form2').delegate('#sure-notice','click', function () {
             $("#Form2").submit();
         });
+        $('#Form1').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {/*验证*/
+                name: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '用户名不能为空'
+                        }
+                    }
+                },
+                description: {
+                    validators: {
+                        notEmpty: {
+                            /*非空提示*/
+                            message: '地址不能为空'
+                        }
+                    }
+                }
+            }
+        });
     });
 }
