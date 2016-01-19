@@ -56,17 +56,19 @@ class Student extends CommonModel
     public function selectExamStudent($exam_id, $keyword)
     {
         try {
-            $result = $this->where('exam_id', '=', $exam_id);
+            $Builder = $this->where('exam_id', '=', $exam_id);
 
             //如果keyword不为空，那么就进行模糊查询
-            if ($keyword['keyword'] !== null) {
-                $result = $result->where($this->table . '.name', 'like', '%' . $keyword['keyword'] . '%')
-                    ->orWhere($this->table . '.idcard', 'like', '%' . $keyword['keyword'] . '%')
-                    ->orWhere($this->table . '.mobile', 'like', '%' . $keyword['keyword'] . '%')
-                    ->orWhere($this->table . '.code', 'like', '%' . $keyword['keyword'] . '%');
+            if (($keyword != '') && (isset($keyword))) {
+                $Builder = $Builder->where(function ($query) use ($keyword){
+                                $query->orWhere('name',   'like', '%' . $keyword . '%')
+                                      ->orWhere('idcard', 'like', '%' . $keyword . '%')
+                                      ->orWhere('mobile', 'like', '%' . $keyword . '%')
+                                      ->orWhere('code',   'like', '%' . $keyword . '%');
+                            });
             }
+            return $Builder->paginate(10);
 
-            return $result->paginate(10);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -77,7 +79,7 @@ class Student extends CommonModel
      * @param $id
      * @return bool
      */
-    public function deleteData($student_id)
+    public function deleteStudent($student_id,$exam_id)
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
@@ -89,6 +91,15 @@ class Student extends CommonModel
             if (!$result = $this->where('id', $student_id)->delete()){
                 throw new \Exception('该考生已绑定，无法删除！');
             }
+            $examData   = [
+                'total' => count(Student::where('exam_id', $exam_id)->get())
+            ];
+            //更新考试信息
+            $exam = new Exam();
+            if (!$result = $exam->updateData($exam_id, $examData)) {
+                throw new \Exception('修改考试信息失败!');
+            }
+
             $connection->commit();
             return true;
 
@@ -153,11 +164,15 @@ class Student extends CommonModel
             }else{
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
-
-//                $examineeData['avator'] = $examineeData['avatar'];
                 $examineeData['create_user_id'] = $operator->id;
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');
+                }
+                //更新考试信息
+                $exam = new Exam();
+                $examData = ['total' => count(Student::where('exam_id', $exam_id)->get())];
+                if (!$result = $exam->updateData($exam_id, $examData)) {
+                    throw new \Exception('修改考试信息失败!');
                 }
             }
 
