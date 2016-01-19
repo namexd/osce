@@ -154,8 +154,7 @@
             </div>
             <div class="ibox-content">
                 <div class="row">
-                    <form method="post" class="form-horizontal" id="sourceForm"
-                          action="{{route('osce.admin.exam.postEditExaminee')}}">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postEditExaminee')}}">
                         <input type="hidden" name="exam_id" value="{{$item->exam_id}}"/>
                         <input type="hidden" name="id" value="{{$item->id}}"/>
                         <input type="hidden" name="resources_type" id="resources_type" value="TOOLS"/>
@@ -163,31 +162,25 @@
                         <div class="col-md-3 col-sm-3">
                             <ul class="img_box">
                                 <li>
-                                    <img src="{{$item->avator}}"><input type="hidden" value="{{$item->avator}}"
-                                                                        name="images_path[]"><i
-                                            class="fa fa-remove font16 del_img"></i>
+                                    <img src="{{$item->avator}}"/>
+                                    <input type="hidden" value="{{$item->avator}}" name="images_path[]">
+                                    <i class="fa fa-remove font16 del_img"></i>
                                 </li>
-                                </span>
-                               <span class="images_upload">
-                                   <input type="file" name="images" id="file0"/>
-                               </span>
+                               <span class="images_upload"><input type="file" name="images" id="file0"/></span>
                             </ul>
                         </div>
                         <div class="col-md-9 col-sm-9">
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">姓名:</label>
-
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="name" id="name"
-                                           value="{{$item->name}}"/>
+                                    <input type="text" class="form-control" name="name" id="name" value="{{$item->name}}"/>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <input type="hidden" name="" id="cate_id" value="-1"/>
                                 <label class="col-sm-2 control-label">性别:</label>
-
                                 <div class="col-sm-10 select_code">
                                     <select id="select_Category" class="form-control m-b" name="gender">
                                         <option value="1" {{$item->userInfo->gender=='男'? 'selected="selected"':''}}>男
@@ -200,7 +193,6 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">学号:</label>
-
                                 <div class="col-sm-10">
                                     <input type="text" id="examinee_id" name="examinee_id" class="form-control"
                                            value="{{$item->code}}">
@@ -209,7 +201,6 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">身份证号:</label>
-
                                 <div class="col-sm-10">
                                     <input type="text" id="id_number" name="idcard" class="form-control"
                                            value="{{$item->idcard}}">
@@ -218,7 +209,6 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">联系电话:</label>
-
                                 <div class="col-sm-10">
                                     <input type="text" id="tell" name="mobile" class="form-control"
                                            value="{{$item->mobile}}">
@@ -227,16 +217,14 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">电子邮箱:</label>
-
                                 <div class="col-sm-10">
                                     <input type="text" id="email" name="email" class="form-control"
-                                           value="{{$item->email}}">
+                                           value="{{$item->userInfo->email}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">备注:</label>
-
                                 <div class="col-sm-10">
                                     <textarea name="note" id="" cols="" rows=""
                                               class="form-control">{{$item->note}}</textarea>

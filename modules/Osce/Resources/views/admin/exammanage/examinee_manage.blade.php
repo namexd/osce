@@ -100,7 +100,7 @@
                     @forelse($data as $item)
                         <tr>
                             <td>{{$item->name}}</td>
-                            <td>&nbsp;</td>
+                            <td>{{$item->userInfo->gender}}</td>
                             <td>{{$item->code}}</td>
                             <td>{{$item->idcard}}</td>
                             <td>{{$item->mobile}}</td>
