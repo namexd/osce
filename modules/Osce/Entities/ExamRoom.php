@@ -156,6 +156,7 @@ class ExamRoom extends CommonModel
 
     /**
      * 获取 考试对应的 考场数据
+     * @param $exam_id
      * @return mixed
      * @throws \Exception
      */
