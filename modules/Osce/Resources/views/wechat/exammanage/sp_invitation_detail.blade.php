@@ -131,7 +131,7 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         考试邀请详情
-        <a class="right header_btn" href="">
+        <a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>
