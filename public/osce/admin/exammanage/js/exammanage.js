@@ -958,8 +958,10 @@ function examroom_assignment(){
                         //重置序号
                         var station_count = 1;
                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                            var html = '';
                             station_count = key + 1;
-                            $(elem).find('td').eq(0).text(station_count);
+                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                            $(elem).find('td').eq(0).html(html);
                         });
                         $('#exam-place').find('tbody').attr('index',station_count);
                         continue;
@@ -2119,8 +2121,10 @@ function station_assignment(){
                         //重置序号
                         var station_count = 1;
                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                            var html = '';
                             station_count = key + 1;
-                            $(elem).find('td').eq(0).text(station_count);
+                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                            $(elem).find('td').eq(0).html(html);
                         });
                         $('#exam-place').find('tbody').attr('index',station_count);
                         continue;
