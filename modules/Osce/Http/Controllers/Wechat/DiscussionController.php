@@ -82,7 +82,7 @@ class DiscussionController extends  CommonController{
                 'title' =>$item->title,
                 'content' =>$item->content,
                 'create_at' =>$item->created_at,
-                'name'   =>$item->getAuthor,
+                'user'   =>$item->getAuthor,
                 'time' =>$time,
                 'count' =>$countReply,
             ];
