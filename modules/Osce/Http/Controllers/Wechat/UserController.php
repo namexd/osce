@@ -114,7 +114,7 @@ class UserController  extends CommonController
         catch (\Exception $ex)
         {
             \DB::rollBack();
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
 
     }
@@ -316,7 +316,7 @@ class UserController  extends CommonController
         }
         catch(\Exception $ex)
         {
-            return  redirect()  ->  back()  ->  withErrors($ex);
+            return  redirect()  ->  back()  ->  withErrors($ex->getMessage());
         }
     }
 
