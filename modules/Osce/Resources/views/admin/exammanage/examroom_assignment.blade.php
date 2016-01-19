@@ -179,7 +179,7 @@
                                                 <td>{{$item->station_name}}</td>
                                                 <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station[{{$key+1}}][teacher_id]">
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$key+1}}][teacher_id]">
                                                         @if($item->type == 1)
                                                             <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
                                                         @endif
