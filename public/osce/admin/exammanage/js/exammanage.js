@@ -1544,7 +1544,21 @@ function examinee_manage(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
         layer.alert('确认删除？',function(){
-            window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deleteUrl,
+                data:{id:sid,exam_id:examId},
+                success:function(data){
+                    if(data.code ==1){
+                        layer.alert('删除成功！');
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
+                }
+            })
+            //window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
         });
     })
 }
