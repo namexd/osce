@@ -125,7 +125,7 @@
             $(".fa-trash-o").click(function(){
                 var thisElement=$(this);
                 var eid=thisElement.attr("eid");
-                layer.alert('确认删除？',function(){
+                layer.alert('确认删除？',{btn:['确认','取消']},function(){
                     $.ajax({
                         type:'post',
                         async:true,
@@ -135,7 +135,7 @@
                             if(data.code == 1){
                                 location.reload();
                             }else {
-                                layer.alert(data.message);
+                                layer.msg(data.message);
                             }
                         }
                     })
