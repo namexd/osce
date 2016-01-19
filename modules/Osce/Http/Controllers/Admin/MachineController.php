@@ -687,10 +687,20 @@ class MachineController extends CommonController
             'sp.required'       =>'型号规格必填',
             'status.required'   =>'设备状态必填',
         ]);
-        
-        $id=$request->get('id');
-        $code=Watch::where('id',$id)->select('code')->first()->code;
+
+        $code=$request->get('code');
+        $id=Watch::where('code',$code)->select('id')->first();
+        if($id){
+            $id=$id->id;
+            if($id!=$request->get('id')){
+                return  redirect()->back()->withErrors('设备编号已存在');
+            }else{
+
+            }
+        }
+        $code=Watch::where('id',$request->get('id'))->select('code')->first()->code;
         if($code==$request->get('code')){
+
             $data   =   [
                 'id'            =>  $request    ->  get('id'),
                 'name'          =>  $request    ->  get('name'),
