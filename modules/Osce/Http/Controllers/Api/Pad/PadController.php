@@ -23,7 +23,6 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class PadController extends  CommonController{
     /**
-
      *根据场所ID获取摄像机列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/room-vcr
@@ -187,10 +186,10 @@ class PadController extends  CommonController{
            $time=time();
            $examQueue=new ExamQueue();
           try {
-              $students = $examQueue->getStudent($time, $mode);
-              $students = $students->toArray();
+              $pagination=$examQueue->getPagination();
+              $students = $examQueue->getStudent($mode, $exam_id);
               return response()->json(
-                  $this->success_rows(1, 'success', $students->total(), config('msc.page_size'), $students->currentPage(), $students['data'])
+                  $this->success_rows(1, 'success', $pagination->total(), config('msc.page_size'), $pagination->currentPage(), $students)
               );
           }catch( \Exception $ex){
               return response()->json(
@@ -230,7 +229,7 @@ class PadController extends  CommonController{
     /**
      *根据考试id获取候考场所列表(接口)
      * @method GET
-     * @url api/1.0/private/osce/pad/write-room
+     * @url api/1.0/private/osce/pad/wait-room
      * @access public
      *
      * @param Request $request post请求<br><br>

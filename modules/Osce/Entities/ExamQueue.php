@@ -89,4 +89,8 @@ class ExamQueue extends  CommonModel{
 
         return $data;
     }
+
+    public function getPagination(){
+        return $this->paginate(config('msc.page_size'));
+    }
 }
