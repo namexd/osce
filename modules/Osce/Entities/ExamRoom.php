@@ -129,16 +129,13 @@ class ExamRoom extends CommonModel
     public function getExamStation($exam_id)
     {
         try{
-            return  Teacher::leftJoin('station_teacher',function($join){
+            return  Teacher::Join('station_teacher',function($join){
                 $join    ->  on('teacher.id','=','station_teacher.user_id');
-            })  ->leftJoin('room_station',function($join){
-                $join    ->  on('room_station.station_id','=','station_teacher.station_id');
-            })  ->leftJoin($this->table,function($join){
-                $join    ->  on('room_station.room_id','=','exam_room.room_id');
-            }) ->leftJoin('station',function($join){
-                $join    ->  on('station.id','=','station_teacher.station_id');
+            })  ->Join('station',function($join) {
+                $join->on('station.id', '=', 'station_teacher.station_id');
+            })  ->Join('room_station',function($join) use($exam_id){
+                $join->on('room_station.station_id','=','station_teacher.station_id');
             })
-                ->where('exam_room.exam_id','=',$exam_id)
                 ->where('station_teacher.exam_id' , '=' , $exam_id)
                 ->select([
                     'teacher.id as id',
@@ -151,7 +148,7 @@ class ExamRoom extends CommonModel
                     'station.id as station_id',
                     'room_station.room_id as room_id'
                 ])
-                ->get();
+                ->distinct()->get();
         } catch(\Exception $ex){
             throw $ex;
         }
@@ -159,6 +156,7 @@ class ExamRoom extends CommonModel
 
     /**
      * 获取 考试对应的 考场数据
+     * @param $exam_id
      * @return mixed
      * @throws \Exception
      */
@@ -229,7 +227,7 @@ class ExamRoom extends CommonModel
             $builder=$builder->Join('room','room.id','=','exam_room.room_id');
             $builder=$builder->where('exam.id',$exam_id);
             $builder=$builder->whereRaw(
-                'unix_timestamp('.$this->table.'.begin_dt) > ?',
+                'unix_timestamp('.'exam.begin_dt'.') > ?',
                 [
                     $time
                 ]

@@ -9,6 +9,7 @@
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
     .input-group input{height: 34px;}
+    .ibox-content{padding: 0 20px  20px;}
     </style>
 @stop
 
@@ -28,7 +29,7 @@
                 <a  href="{{route('osce.admin.topic.getAddTopic')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-    <form class="container-fluid ibox-content" id="list_form">
+    <div class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
           <form method="post" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
@@ -57,7 +58,7 @@
                         <td>{{$item->description}}</td>
                         <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.topic.getEditTopic',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                 @empty
@@ -77,7 +78,7 @@
                 </nav>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 <script>
 $(function(){

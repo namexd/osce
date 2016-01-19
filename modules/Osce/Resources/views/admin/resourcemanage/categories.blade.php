@@ -13,6 +13,8 @@
         top: -20px;
         left: 0;
     }
+    .ibox-content{padding-top: 20px;}
+    .btn-outline:hover{color: #fff!important;}
 </style>
 @stop
 
@@ -34,8 +36,6 @@
 
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postAddTopic')}}">
-
-                        <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
@@ -73,7 +73,7 @@
                                                     <th>序号</th>
                                                     <th>考核内容</th>
                                                     <th width="120">分数</th>
-                                                    <th>操作</th>
+                                                    <th width="160">操作</th>
                                                 </tr>
                                             </thead>
                                             <tbody index="0">
