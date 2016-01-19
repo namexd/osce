@@ -229,7 +229,7 @@ class ExamRoom extends CommonModel
             $builder=$builder->Join('room','room.id','=','exam_room.room_id');
             $builder=$builder->where('exam.id',$exam_id);
             $builder=$builder->whereRaw(
-                'unix_timestamp('.$this->table.'.begin_dt) > ?',
+                'unix_timestamp('.'exam.begin_dt'.') > ?',
                 [
                     $time
                 ]

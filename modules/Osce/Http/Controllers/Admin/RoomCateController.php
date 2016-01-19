@@ -59,7 +59,7 @@ class RoomCateController extends CommonController
             }
         } catch (\Exception $ex) {
 
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -121,7 +121,7 @@ class RoomCateController extends CommonController
                 return redirect()->route('osce.admin.place.getRoomCateList');
             }
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
