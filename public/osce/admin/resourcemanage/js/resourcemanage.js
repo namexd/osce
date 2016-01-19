@@ -548,7 +548,7 @@ function sp_invigilator(){
 
 //删除方法封装,其中id为当前dom的value值
 function deleteItems(type,url,id){
-    layer.alert('确认删除？',function(){
+    layer.alert('确认删除',{btn:['确认','取消']},function(){
         $.ajax({
             type:type,
             async:false,

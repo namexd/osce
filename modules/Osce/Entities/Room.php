@@ -76,10 +76,11 @@ class Room extends CommonModel
 
 
             $area = Area::where('area.cate', '=', $type)->first();
+
 			//0.1 测试分支 合并到0.2时 因冲突注释
             //$area = Area::where('area.cate', '=', $type)->get();
             if (!$area) {
-                throw new \Exception('传入的场所区域不合法！');
+                throw new \Exception('传入的场所区域不合法!');
             }
 
             //根据type选择要查询的对象
