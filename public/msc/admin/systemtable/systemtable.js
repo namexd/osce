@@ -413,7 +413,7 @@ function title_table(){
             $('input[name=name]').val($(this).parent().parent().find('.name').html());
             $('input[name=description]').val($(this).parent().parent().find('.describe').html());
             var status = '';
-            if($(this).parent().parent().find('.status').html() ==='正常'){
+            if($(this).parent().parent().find('.status').children("span").html() ==='正常'){
                 status = 1;
             }else{
                 status = 0;
