@@ -19,7 +19,7 @@ class Exam extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'code', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'description'];
+    protected $fillable = ['code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id', 'description', 'sequence_cate', 'sequence_mode', 'rules'];
 
     /**
      * 考试与考站的关联
@@ -161,6 +161,7 @@ class Exam extends CommonModel
             {
                 throw new \Exception('创建考试基本信息失败');
             }
+
             //将考试对应的考次关联数据写入考试场次表中
             foreach($examScreeningData as $key => $value){
                 $value['exam_id']    =   $result->id;

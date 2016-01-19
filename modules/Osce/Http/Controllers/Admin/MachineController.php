@@ -675,7 +675,7 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
-            'code'          =>  'required|unique:osce_mis.watch',
+            'code'          =>  'required',
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'sometimes',
@@ -686,18 +686,31 @@ class MachineController extends CommonController
             'factory.required'  =>'生产厂家必填',
             'sp.required'       =>'型号规格必填',
             'status.required'   =>'设备状态必填',
-            'code.unique'       =>'腕表编码已存在',
         ]);
+        
+        $id=$request->get('id');
+        $code=Watch::where('id',$id)->select('code')->first()->code;
+        if($code==$request->get('code')){
+            $data   =   [
+                'id'            =>  $request    ->  get('id'),
+                'name'          =>  $request    ->  get('name'),
+                'factory'       =>  $request    ->  get('factory'),
+                'sp'            =>  $request    ->  get('sp'),
+                'description'   =>  $request    ->  get('description'),
+                'status'        =>  $request    ->  get('status'),
+            ];
+        }else{
+            $data   =   [
+                'id'            =>  $request    ->  get('id'),
+                'name'          =>  $request    ->  get('name'),
+                'code'          =>  $request    ->  get('code'),
+                'factory'       =>  $request    ->  get('factory'),
+                'sp'            =>  $request    ->  get('sp'),
+                'description'   =>  $request    ->  get('description'),
+                'status'        =>  $request    ->  get('status'),
+            ];
+        }
 
-        $data   =   [
-            'id'            =>  $request    ->  get('id'),
-            'name'          =>  $request    ->  get('name'),
-            'code'          =>  $request    ->  get('code'),
-            'factory'       =>  $request    ->  get('factory'),
-            'sp'            =>  $request    ->  get('sp'),
-            'description'   =>  $request    ->  get('description'),
-            'status'        =>  $request    ->  get('status'),
-        ];
         $cate_id    =   $request    ->  get('cate_id');
         try{
             $model      =   $this   ->  getMachineModel($cate_id);

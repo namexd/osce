@@ -1133,6 +1133,7 @@ function exam_notice_add(){
      */
     $(".images_uploads").change(function(){
         $.ajaxFileUpload({
+
             url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
@@ -1547,7 +1548,6 @@ function smart_assignment(){
 function examinee_manage(){
     //导入考生
     $("#file1").change(function(){
-
         var id=pars.id;
         var url = pars.excel;
         url += '/'+id;
@@ -1559,22 +1559,16 @@ function examinee_manage(){
             dataType: 'json',
             success: function (data, status)
             {
-                //data    =   data.replace('<pre>','').replace('</pre>','');
-                //data    =   eval('('+data+')');
-                //console.log(data);
                 if(data.code == 1){
-
                     layer.alert('导入成功！');
                     location.reload();
+                }else{
+                    layer.alert(data.message);
                 }
-                //layer.alert('导入成功！');
-
-
             },
             error: function (data, status, e)
             {
-                //console.log(data);
-                layer.alert('导入失败！');
+                layer.alert(data.message);
             }
         });
 
