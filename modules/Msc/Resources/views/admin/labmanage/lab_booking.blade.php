@@ -21,19 +21,19 @@
                 <div class="col-xs-3">
                     <form action="" method="get">
                         <div class="laydate_div">
-                            <input type="text" class="laydate-icon" name="laydate" id="laydate" placeholder="日期格式：YYYY-MM-DD" value="">
+                            <input type="text" class="laydate-icon" name="laydate" id="laydate" placeholder="日期格式：YYYY-MM-DD" value="{{$nowtime}}">
                         </div>
                     </form>
                 </div>
                 <div class="col-xs-9">
                     <label class="check_label checkbox_input check_one mart_5">
-                        <div class="check_real check_icon display_inline marl_10 mart_3 type" ></div>
-                        <input type="hidden" name="type1" value="1">
+                        <div class="check_real check_icon display_inline marl_10 mart_3 type @if($type == 2) check @endif" ></div>
+                        <input type="hidden" name="type1" value="2">
                         <span class="right text-indent clof font14">开放实验室</span>
                     </label>
                     <label class="check_label checkbox_input check_one mart_5">
-                        <div class="check_real check_icon display_inline marl_10 mart_3 type" ></div>
-                        <input type="hidden" name="type2" value="2">
+                        <div class="check_real check_icon display_inline marl_10 mart_3 type @if($type == 1) check @endif" ></div>
+                        <input type="hidden" name="type2" value="1">
                         <span class="right text-indent clof font14">普通实验室</span>
                     </label>
                     <button class="btn btn-success btn-pl marl_10 sub" type="button" style="margin-top: -10px">查询</button>
@@ -54,10 +54,10 @@
                         <div class="w_60 left padl_20 border_left">
                             @if(@$type == 2)
                                 @foreach(@$v['open_plan'] as $plan)
-                                    @if(@$plan['user_type'] == 1)
+                                    @if(@$plan['user_type'] === 1)
                                     <div class="marb_10">
                                         <span>{{@$plan['begintime']}}-{{@$plan['endtime']}}</span>
-                                        <span class="marl_10"> @if(@$plan['apply_num']) 已预约<a href="" class="font16 blue student" data-toggle="modal" data-target="#myModal">{{@$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
+                                        <span class="marl_10"> @if(@$plan['apply_num'] && @$plan['plan_apply']) 已预约<a href="" class="font16 blue student" data-id="{{@$plan['apply_id']}}" data-time="{{@$plan['apply_time']}}" data-toggle="modal" data-target="#myModal">{{@$plan['apply_num']}}</a>人 @else 空闲 @endif</span>
                                     </div>
 
                                     @else
@@ -117,13 +117,13 @@
         </div>
         <div class="modal-body">
             <div class="marb_25">
-                <div class="w_60 left font14 weight">
-                    <span>临床医学实验室</span>
-                    <span>（临床教学楼3楼3-13）</span>
+                <div class="w_60 left font14 weight lab">
+                    <span class="labname">临床医学实验室</span>
+                    <span class="address">（临床教学楼3楼3-13）</span>
                 </div>
                 <div class="w_40 right font14 weight txta_r">
-                    <span>2015-12-31</span>
-                    <span class="marl_10">8:00-10:00</span>
+                    <span class="date">2015-12-31</span>
+                    <span class="marl_10 time">8:00-10:00</span>
                 </div>
             </div>
             <table class="table table-striped">
@@ -137,23 +137,8 @@
                         <th>电话</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>888888888</td>
-                        <td>张三</td>
-                        <td>2015级</td>
-                        <td>临床医学</td>
-                        <td>13888888888</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>888888888</td>
-                        <td>张三</td>
-                        <td>2015级</td>
-                        <td>临床医学</td>
-                        <td>13888888888</td>
-                    </tr>
+                <tbody id="list">
+
                 </tbody>
             </table>
             <div class="hr-line-dashed"></div>
