@@ -189,8 +189,11 @@
 
                 <label for="work_id">专业<span>*</span></label>
 
-                <select name="professional" id="Professional" style="width: 100%"   class="form-control">
-
+                <select name="professional" id="Professional" style="width: 100%"   class="form-control normal_select">
+                    <option value="">选择专业</option>
+                    @foreach($StudentProfessionalList as $v)
+                        <option value="{{ $v['id'] }}">{{ $v['name'] }}</option>
+                    @endforeach
                 </select>
 
             </div>
