@@ -6,6 +6,11 @@
     }
     .btn-outline:hover{color: #fff!important;}
     .ibox-content{padding-top: 20px;}
+    .ibox-title{border-top: 0;}
+    .ibox-content{
+        border-top: 0;
+        padding-left: 0;
+    }
 </style>
 @stop
 
@@ -44,12 +49,14 @@
                                 <input id="select_Category" required  class="form-control m-b" name="description" value="{{$item->description}}"/>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-8">
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">评分标准</label>
+                            <div class="col-sm-10">
                                 <div class="ibox float-e-margins">
                                     <div class="ibox-title">
-                                        <h5>评分标准：</h5>
+                                        <h5></h5>
                                         <div class="ibox-tools">
                                             <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
@@ -62,7 +69,7 @@
                                                     <th>序号</th>
                                                     <th>考核内容</th>
                                                     <th width="80">分数</th>
-                                                    <th>操作</th>
+                                                    <th width="160">操作</th>
                                                 </tr>
                                             </thead>
                                             <tbody index="{{$prointNum}}">
@@ -117,7 +124,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2"></div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
