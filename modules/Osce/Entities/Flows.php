@@ -48,93 +48,96 @@ class Flows extends CommonModel
                 throw new \Exception('未找到当前操作人信息！');
             }
 
+            if ($roomData !== null) {
             //保存考场安排数据
-            foreach($roomData as $key => $value){
-                foreach($value as $room_id){
-                    //考试房间关系表 数据
-                    $examRoom = [
-                        'exam_id'           =>  $exam_id,
-                        'room_id'           =>  $room_id,
-                        'create_user_id'    =>  $user ->id
-                    ];
-                    if(!$test1 = ExamRoom::create($examRoom)){
-                        throw new \Exception('考试房间关系添加失败！');
-                    }
+                foreach($roomData as $key => $value){
+                    foreach($value as $room_id){
+                        //考试房间关系表 数据
+                        $examRoom = [
+                            'exam_id'           =>  $exam_id,
+                            'room_id'           =>  $room_id,
+                            'create_user_id'    =>  $user ->id
+                        ];
+                        if(!$test1 = ExamRoom::create($examRoom)){
+                            throw new \Exception('考试房间关系添加失败！');
+                        }
 
-                    $examName = Exam::where('id', $exam_id)->select(['name'])->first();     //查询考试名
-                    $roomName = Room::where('id', $room_id)->select(['name'])->first();     //查询考场名
-                    //考试流程表 数据
-                    $flowsData = [
-                        'name'              =>  $examName->name.'-'.$roomName->name,
-                        'created_user_id'   =>  $user ->id
-                    ];
-                    if(!$result = $this->create($flowsData)){
-                        throw new \Exception('考试流程添加失败！');
-                    }
+                        $examName = Exam::where('id', $exam_id)->select(['name'])->first();     //查询考试名
+                        $roomName = Room::where('id', $room_id)->select(['name'])->first();     //查询考场名
+                        //考试流程表 数据
+                        $flowsData = [
+                            'name'              =>  $examName->name.'-'.$roomName->name,
+                            'created_user_id'   =>  $user ->id
+                        ];
+                        if(!$result = $this->create($flowsData)){
+                            throw new \Exception('考试流程添加失败！');
+                        }
 
-                    //考试流程关联表 数据
-                    $examFlow = [
-                        'exam_id'           =>  $exam_id,
-                        'flow_id'           =>  $result->id,
-                        'created_user_id'   =>  $user ->id
-                    ];
+                        //考试流程关联表 数据
+                        $examFlow = [
+                            'exam_id'           =>  $exam_id,
+                            'flow_id'           =>  $result->id,
+                            'created_user_id'   =>  $user ->id
+                        ];
 
-                    if(!$test2 = ExamFlow::create($examFlow)){
-                        throw new \Exception('考试流程关联添加失败！');
-                    }
+                        if(!$test2 = ExamFlow::create($examFlow)){
+                            throw new \Exception('考试流程关联添加失败！');
+                        }
 
-                    //考试流程-房间关系表 数据
-                    $examFlowRoom = [
-                        'serialnumber'      =>  $key,
-                        'room_id'           =>  $room_id,
-                        'flow_id'           =>  $result->id,
-                        'created_user_id'   =>  $user ->id,
-                        'exam_id'           =>  $exam_id
-                    ];
-//                    dd($examFlowRoom);
-                    if(!$test3 = ExamFlowRoom::create($examFlowRoom)){
-                        throw new \Exception('考试流程-房间关系添加失败！');
+                        //考试流程-房间关系表 数据
+                        $examFlowRoom = [
+                            'serialnumber'      =>  $key,
+                            'room_id'           =>  $room_id,
+                            'flow_id'           =>  $result->id,
+                            'created_user_id'   =>  $user ->id,
+                            'exam_id'           =>  $exam_id
+                        ];
+    //                    dd($examFlowRoom);
+                        if(!$test3 = ExamFlowRoom::create($examFlowRoom)){
+                            throw new \Exception('考试流程-房间关系添加失败！');
+                        }
                     }
                 }
             }
 
             //保存  考站监考老师、sp老师安排数据
-            foreach ($stationData as $key => $item) {
+            if ($stationData) {
+                foreach ($stationData as $key => $item) {
 
-                $teacherIDs = [];
-                //拼装一下老师的数据
-                if (isset($item['teacher_id'])) {
-                    $teacherIDs[] =  $item['teacher_id'];
-                }
-                if (isset($item['spteacher_id'])) {
-                    foreach ($item['spteacher_id'] as $value) {
-                        $teacherIDs[] = $value;
+                    $teacherIDs = [];
+                    //拼装一下老师的数据
+                    if (isset($item['teacher_id'])) {
+                        $teacherIDs[] =  $item['teacher_id'];
                     }
-                }
-
-                $station_id = $item['id'];
-                //根据考站id，获取对应的病例id
-                $stationCase = StationCase::where('station_id', $station_id)->first();
-                if(empty($stationCase)){
-                    throw new \Exception('找不到考站对应的病例对象');
-                }
-                $case_id = $stationCase->case_id;
-                foreach ($teacherIDs as $teacherID) {
-                    //考站-老师关系表 数据
-                    $stationTeacher = [
-                        'station_id'        =>  $station_id,
-                        'user_id'           =>  $teacherID,
-                        'case_id'           =>  $case_id,
-                        'exam_id'           =>  $exam_id,
-                        'created_user_id'   =>  $user ->id,
-                        'type'              =>  empty($item['teacher_id']) ? 2 : 1
-                    ];
-                    if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
-                        throw new \Exception('考站-老师关系添加失败！');
+                    if (isset($item['spteacher_id'])) {
+                        foreach ($item['spteacher_id'] as $value) {
+                            $teacherIDs[] = $value;
+                        }
+                    }
+    //                dd($stationData);
+                    $station_id = $item['id'];
+                    //根据考站id，获取对应的病例id
+                    $stationCase = StationCase::where('station_id', $station_id)->first();
+                    if(empty($stationCase)){
+                        throw new \Exception('找不到考站对应的病例对象');
+                    }
+                    $case_id = $stationCase->case_id;
+                    foreach ($teacherIDs as $teacherID) {
+                        //考站-老师关系表 数据
+                        $stationTeacher = [
+                            'station_id'        =>  $station_id,
+                            'user_id'           =>  $teacherID,
+                            'case_id'           =>  $case_id,
+                            'exam_id'           =>  $exam_id,
+                            'created_user_id'   =>  $user ->id,
+                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
+                        ];
+                        if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
+                            throw new \Exception('考站-老师关系添加失败！');
+                        }
                     }
                 }
             }
-
             $connection->commit();
             return true;
 
@@ -146,6 +149,7 @@ class Flows extends CommonModel
 
     public function editExamroomAssignmen($exam_id, $roomData, $stationData)
     {
+//dd($roomData);
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
@@ -200,7 +204,6 @@ class Flows extends CommonModel
             }
 
             //删除考试考场流程关联
-//            dd(ExamFlowRoom::where('exam_id',$id)->first());
             if (count(ExamFlowRoom::where('exam_id',$id)->first()) != 0) {
 
                 if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
@@ -209,7 +212,7 @@ class Flows extends CommonModel
             }
 
             //如果有flow的话，就删除
-            if (count($flowIds) != 0) {
+            if (!$flowIds->isEmpty()) {
                 foreach ($flowIds as $flowId) {
                     if (!Flows::where('id',$flowId->flow_id)->delete()) {
                         throw new \Exception('删除流程失败，请重试！');
@@ -223,7 +226,6 @@ class Flows extends CommonModel
                     throw new \Exception('删除教师考站关联失败，请重试！');
                 }
             }
-
             //保存新的数据
             $this->saveExamroomAssignmen($exam_id,$roomData,$stationData);
 

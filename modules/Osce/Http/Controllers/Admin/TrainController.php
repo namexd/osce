@@ -89,7 +89,7 @@ class TrainController extends  CommonController{
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
         $data['attachments']=serialize($request->input('file'));
 //      $data['create_user_id']=$userId;
-        $result=InformTrain::insert($data);
+        $result=InformTrain::create($data);
         if($result){
          return redirect('/osce/admin/train/train-list')->with('success','新增成功');
         }
@@ -190,7 +190,7 @@ class TrainController extends  CommonController{
         $data['attachments']=serialize($request->input('file'));
         $result=InformTrain::where('id',$data['id'])->update($data);
         if($result){
-            return view('osce::admin.train.train_list')->with('success','编辑成功');
+            return redirect('/osce/admin/train/train-list')->with('success','编辑成功');
         }
         return redirect()->back()->withInput()->withErrors('编辑失败');
     }
@@ -230,7 +230,7 @@ class TrainController extends  CommonController{
 
         $result=InformTrain::where('id',$id)->delete();
         if($result){
-            return view()->with('success','删除成功');
+            return redirect('/osce/admin/train/train-list')->with('success','删除成功');
         }
         return redirect()->back()->withInput()->withErrors('删除失败');
     }

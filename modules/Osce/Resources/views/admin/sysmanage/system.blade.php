@@ -49,7 +49,7 @@
                     <td>系统管理员</td>
                     <td>
                         <a href="#"><span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o"></i></span></a>
                     </td>
                 </tr>
             </tbody>

@@ -117,9 +117,18 @@ function exam_add(){
      * @date    2016-01-05
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
+        //var thisElement = $(this).parent().parent().parent().parent();
+        //thisElement.remove();
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index');
         if(index<1){
@@ -226,9 +235,18 @@ function add_basic(){
      * @date    2016-01-05
      */
     $('#add-basic').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
+        //var thisElement = $(this).parent().parent().parent().parent();
+        //thisElement.remove();
         //计数器标志
         var index = $('#add-basic').find('tbody').attr('index');
         if(index<1){
@@ -333,12 +351,12 @@ function timePicker(background){
         choose: function(date){ //选择好日期的回调
             var thisElement = $(this.elem).parent();
             if(thisElement.prev().prev().length){
-                var current = Date.parse(date) - Date.parse(thisElement.prev().find('input').val());
+                var current = Date.parse(date.split('-').join('/')) - Date.parse((thisElement.prev().find('input[type=text]').val()).split('-').join('/'));
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
                 thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
             }else{
-                var current = Date.parse(thisElement.next().find('input').val()) - Date.parse(date);
+                var current = Date.parse((thisElement.next().find('input[type=text]').val()).split('-').join('/')) - Date.parse(date.split('-').join('/'));
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
                 thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
@@ -611,7 +629,7 @@ function examroom_assignment(){
                                 '<td>'+data[i].name+'</td>'+
                                 '<td>'+typeValue[data[i].type]+'</td>'+
                                 '<td>'+
-                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple">'+teacher+'</select>'+
+                                '<select class="form-control teacher-teach js-example-basic-multiple" multiple="multiple" name="station['+(station_index+parseInt(i)+1)+'][teacher_id]">'+teacher+'</select>'+
                                 '</td>'+
                                 '<td class="sp-teacher">'+
                                 '<div class="teacher-box pull-left">'+
@@ -896,9 +914,16 @@ function examroom_assignment(){
      * @date    2016-01-05
      */
     $('#examroom').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
         //计数器标志
         var index = $('#examroom').find('tbody').attr('index');
         if(index<1){
@@ -931,8 +956,10 @@ function examroom_assignment(){
                         //重置序号
                         var station_count = 1;
                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                            var html = '';
                             station_count = key + 1;
-                            $(elem).find('td').eq(0).text(station_count);
+                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                            $(elem).find('td').eq(0).html(html);
                         });
                         $('#exam-place').find('tbody').attr('index',station_count);
                         continue;
@@ -1557,7 +1584,21 @@ function examinee_manage(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
         layer.alert('确认删除？',function(){
-            window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.deleteUrl,
+                data:{id:sid,exam_id:examId},
+                success:function(data){
+                    if(data.code ==1){
+                        layer.alert('删除成功！');
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
+                }
+            })
+            //window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
         });
     })
 }
@@ -2074,9 +2115,18 @@ function station_assignment(){
      * @date    2016-01-05
      */
     $('#examroom').on('click','.fa-trash-o',function(){
-
         var thisElement = $(this).parent().parent().parent().parent();
-        thisElement.remove();
+        $.alert({
+            title: '提示：',
+            content: '确认为删除？',
+            confirmButton: '确定',
+            confirm: function(){
+                thisElement.remove();
+            }
+        });
+
+        //var thisElement = $(this).parent().parent().parent().parent();
+        //thisElement.remove();
         //计数器标志
         var index = $('#examroom').find('tbody').attr('index');
         if(index<1){
@@ -2109,8 +2159,10 @@ function station_assignment(){
                         //重置序号
                         var station_count = 1;
                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                            var html = '';
                             station_count = key + 1;
-                            $(elem).find('td').eq(0).text(station_count);
+                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                            $(elem).find('td').eq(0).html(html);
                         });
                         $('#exam-place').find('tbody').attr('index',station_count);
                         continue;

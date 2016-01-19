@@ -9,6 +9,7 @@
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
     .input-group input{height: 34px;}
+    .panel>.panel-collapse>.table, .panel>.table, .panel>.table-responsive>.table {margin-bottom: 20px;}
     </style>
 @stop
 
