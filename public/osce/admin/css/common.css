@@ -243,3 +243,10 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .panel-options .nav.nav-tabs{
     width: 102.3%!important;
 }
+/*输入框左侧文字*/
+.control-label{
+    padding-right: 5px;
+}
+.panel-heading {
+    padding: 10px 0;
+}
