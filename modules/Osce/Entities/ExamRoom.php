@@ -181,7 +181,7 @@ class ExamRoom extends CommonModel
             ->select([
                 'room.id',
                 'room.name',
-                'exam_flow_room.serialnumber',
+                'exam_flow_room.serialnumber as serialnumber',
                 $this->table.'.room_id as room_id',
                 $this->table.'.exam_id as exam_id',
                 $this->table.'.id as exam_room_id',
