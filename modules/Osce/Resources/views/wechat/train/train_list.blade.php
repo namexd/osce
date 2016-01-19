@@ -20,7 +20,7 @@
         //内容初始化
         $('.history-list').empty();
         getItem(now_page,url);
-
+		
         function getItem(current,url){
             $.ajax({
                 type:'get',
@@ -32,17 +32,17 @@
                     var html = '';
                     var index = (current - 1)*10;
                     data = res.data.rows;
-                    console.log(data);
                     for(var i in data){
                         //准备dom
                         //计数
                         var key = (index+1+parseInt(i))
                         html += '<li>'+
-						        	'<a class="nou" href="#">'+
-						        		'<p class="font14 fontb clo3 p_title">'+data[i].address+'</p>'+
-						        		'<p class="font12 clo9 main_txt">'+data[i].content+'</p>'+
+						        	'<a class="nou" href="{{route('osce.wechat.getTrainDetail')}}?id='+data[i].id+'">'+
+						        		'<p class="font14 fontb clo3 p_title">'+data[i].name+'</p>'+
+						        		'<p class="font12 clo9 main_txt">'+data[i].address+'</p>'+
+						        		'<p class="font12 clo9 main_txt">'+data[i].begin_dt+'~'+data[i].end_dt+'</p>'+
 						        		'<p class="font12 p_bottom">'+
-						        			'<span class="font14 student_name">'+data[i].name+'</span>'+
+						        			'<span class="font14 student_name">'+data[i].author.name+'</span>'+
 						        			'<span class="clo9">&nbsp;'+data[i].time+'</span>'+
 						        			'<span class="right comment">已读&nbsp;66</span>'+
 						        		'</p>'+
@@ -58,6 +58,7 @@
 	})
 </script>
 @stop
+
 
 
 @section('content')

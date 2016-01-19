@@ -99,7 +99,6 @@
                     </tbody>
                 </table>
 
-                <br/>
                 <div class="pull-left">
                     共{{$list->total()}}条
                 </div>
