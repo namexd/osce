@@ -15,12 +15,26 @@
     }
     input#file0 {
         position: relative;
-        top: -5px;
+        top: -27px;
         left: -5px;
         height: 34px;
         width: 70px;
         opacity: 0;
     }
+
+    /*文件上传*/
+    .upload{
+        display:block;
+        height: 34px!important;
+        width: 100px!important;
+        cursor: pointer;
+        background-image:none!important;
+        position:relative;
+        margin:0!important;
+    }
+    #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
+    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .fa-remove{cursor:pointer;}
     </style>
 @stop
 
@@ -30,18 +44,10 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
- <script>
-     function delAttch(){
-         if(confirm('确认删除附件？'))
-         {
-             $(this).remove();
-         }
-     }
- </script>
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'exam_notice_edit'}" />
+<input type="hidden" id="parameter" value="{'pagename':'exam_notice_edit','url':'{{route('osce.api.communal-api.postAttchUpload')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -97,17 +103,16 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">附件:</label>
-
                         <div class="col-sm-10">
-                            <span class="images_upload">
-                                <input type="file" name="images" id="file0"/>
+                            <span class="images_uploads upload btn btn-white">上传附件
+                                <input type="file"  name="attchment" id="file0"/>
                             </span>
-                            <ul class="attch-box" style="padding: 15px 0;">
+                            <div class="upload_list upload_list_doc">
                                 @forelse(explode(',',$item->attachments) as $attachment)
-                                <li style="cursor: pointer;" onclick="return delAttch()"><span><?php $pathInfo=explode('/',$attachment)?>{{array_pop($pathInfo)}}</span><input name="attach[]" class="attach" type="hidden" value="{{$attachment}}" /></li>
+                                <p><input type="hidden" name="attach[]" id="" value="{{$attachment}}" /><?php $pathInfo=explode('/',$attachment)?>{{array_pop($pathInfo)}}&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>
                                 @empty
                                 @endforelse
-                            </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
