@@ -131,15 +131,14 @@
                                         </thead>
                                         <tbody index="{{count($examRoomData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
-
-                                        @forelse($examRoomData as $item)
+                                        @forelse($examRoomData as $items)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
                                                     <select class="form-control js-example-basic-multiple room-station" multiple="multiple" name="room[{{$k2++}}][]">
-
-                                                        <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
-
+                                                        @foreach($items as $item)
+                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
