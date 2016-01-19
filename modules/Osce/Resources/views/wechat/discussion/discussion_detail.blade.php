@@ -108,7 +108,7 @@
                         type:'get',
                         data:{id:(location.href).split('=')[1]},
                         success:function(res){
-                            console.log(res)
+                            console.log(res);
                             if(res.code==2){
                                 location.href = 'osce/admin/login/index';
                             }else if(res.code==3){
@@ -118,13 +118,12 @@
                                     cancelButton:false,
                                     confirmButton: '确定',
                                     confirm: function(){
-
+                                        $('.option').fadeOut();
                                     }
                                 });
                             }
                             else{
-                                var id = (location.href).split('=')[1];
-                                location.href = $this.attr('url')+'?id='+id;
+                                location.href = "{{route('osce.wechat.getQuestionList')}}";
                             }
                         }
                     })
@@ -154,6 +153,7 @@
 
         //初始化
         var now_page = 1;
+        var thisId = (location.href).split('=')[1];
         var url = "{{route('osce.wechat.getCheckQuestions')}}";
         //内容初始化
         $('.history-list').empty();
@@ -172,8 +172,9 @@
                 type:'get',
                 url:url,
                 aysnc:true,
-                data:{id:current,pagesize:current},
+                data:{id:thisId,pagesize:current},
                 success:function(res){
+                    console.log(res)
                     totalpages = res.total;
                     var html = '';
                     var index = (current - 1)*10;
