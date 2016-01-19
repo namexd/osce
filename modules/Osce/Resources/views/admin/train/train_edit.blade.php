@@ -31,8 +31,7 @@
 <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
- <script type="text/javascript">
- 	
+<script type="text/javascript">
  	$(function(){
  		var start={
 			elem: '#start',

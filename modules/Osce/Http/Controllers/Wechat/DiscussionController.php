@@ -35,13 +35,13 @@ class DiscussionController extends  CommonController{
         $this->validate($request,[
             'page'  =>          'sometimes|integer'
         ]);
-        $user=Auth::user();
-        $userId=$user->id;
-        if(!$userId){
-            return response()->json(
-                $this->success_rows(2,'请先登陆')
-            );
-        }
+//      $user=Auth::user();
+//      $userId=$user->id;
+//      if(!$userId){
+//          return response()->json(
+//              $this->success_rows(2,'请先登陆')
+//          );
+//      }
           $page=$request->get('page',1);
 
           $discussionModel	=	new Discussion();
@@ -92,6 +92,11 @@ class DiscussionController extends  CommonController{
           );
 //          return view('osce::wechat.discussion.discussion_list')->with(['list'=>$list,'pagination'=>$pagination]);
       }
+     
+	 
+	 public  function getDiscussionLists(){
+	 	return view('osce::wechat.discussion.discussion_list');
+	 }
 
     /**
      *查看问题
