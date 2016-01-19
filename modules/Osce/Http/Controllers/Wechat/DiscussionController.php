@@ -294,9 +294,9 @@ class DiscussionController extends  CommonController{
           $data=$request->only(['id','content']);
           $result=Discussion::create(['content'=>$data['content'],'pid'=>$data['id'],'create_user_id'=>$userId]);
           if($result){
-              return redirect('osce/wechat/discussion/question-lists')->with('success','提交问题成功');
+              return  redirect('/osce/wechat/discussion/check-question?id='.$data['id'])->withErrors('回复成功');
           }
-              return  redirect()->back()->withErrors(new \Exception('回复失败'));
+              return  redirect()->back()->withErrors('回复失败');
       }
 
     /**
@@ -328,7 +328,8 @@ class DiscussionController extends  CommonController{
          $id=$request->get('id');
          $createId=Discussion::where('id',$id)->select()->first();
          if(!$createId){
-             return redirect('discussion/question-lists');
+//             return  redirect()->back()->withErrors('删除失败');
+             return \Response::json(array('code' => 2));
          }
          $createId=$createId->create_user_id;
          $manager=config('osce.manager');
@@ -339,22 +340,31 @@ class DiscussionController extends  CommonController{
                  if($result){
                      $result=Discussion::where('id',$id)->delete();
                      if($result){
-                         return redirect('osce/wechat/discussion/question-lists')->with('success','删除问题成功');
+//                         return redirect('osce/wechat/discussion/question-lists')->with('success','删除问题成功');
+                         return \Response::json(array('code' => 1));
+
                      }else{
-                         return  redirect()->back()->withErrors(new \Exception('删除失败'));
+//                         return  redirect()->back()->withErrors('删除失败');
+                         return \Response::json(array('code' => 0));
+
                      }
                  }
              }else{
                  $result=Discussion::where('id',$id)->delete();
                  if($result){
-                     return redirect('osce/wechat/discussion/question-lists')->with('success','删除问题成功');
+//                     return redirect('osce/wechat/discussion/question-lists')->with('success','删除成功');
+                     return \Response::json(array('code' => 1));
+
                  }else{
-                     return  redirect()->back()->withErrors(new \Exception('删除失败'));
+//                     return  redirect()->back()->withErrors('删除失败');
+                     return \Response::json(array('code' => 0));
+
                  }
              }
          }
 
-         return \Response::json(array('code'=>3));
+//         return  redirect()->back()->withErrors(new \Exception('删除失败'));
+         return \Response::json(array('code' => 3));
 
      }
 
