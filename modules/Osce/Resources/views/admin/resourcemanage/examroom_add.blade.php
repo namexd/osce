@@ -89,7 +89,7 @@
                             <label class="col-sm-2 control-label">关联摄像机</label>
 
                             <div class="col-sm-10">
-                                <select name="vcr" id="" class="form-control">
+                                <select name="vcr_id" id="" class="form-control">
                                     @foreach($vcr as $key=>$item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
                                     @endforeach
@@ -115,8 +115,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
 
-
-
+                        {{--<input type="hidden" class="description"  name="vcr_id" value="{{@$vcr->id}}"/>--}}
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>

@@ -204,26 +204,25 @@ class RoomController extends CommonController
     public function postCreateRoom(Request $request, RoomVcr $roomVcr)
     {
         //验证
+//        dd($request);
         $this->validate($request, [
             'vcr_id'        => 'required',
             'name' => 'required',
-            'nfc' => 'required',
+//            'nfc' => 'required',
             'address' => 'required',
             'code' => 'required',
             'description' => 'required'
         ]);
-        $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
+//        $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
+        //todo   表单内容变化没有提交nfc字段
+        $formData = $request->only('name', 'address', 'code', 'description');
         $vcrId =$request->get('vcr_id');
 
         DB::connection('osce_mis')->beginTransaction();
         $roomSave =DB::connection('osce_mis')->table('room')->insertGetId($formData);
 
-
-//        if(is_array($vcrId)){
-//           $vcrId= serialize('$vcrId');
-//        }else{
-//        }
-        $vcrId= serialize('$vcrId');
+        //  todo   摄像机是可以多选的  待完善。。。。。。。。。
+//        $vcrId= serialize($vcrId);
         $data=[
             'room_id'=>$roomSave,
             'vcr_id'=>$vcrId,
