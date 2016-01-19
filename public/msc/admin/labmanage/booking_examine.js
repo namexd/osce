@@ -229,7 +229,6 @@ function booking_examine_other(){
 }
 //实验室预约记录查看页面
 function lab_booking(){
-    //alert('qqq');
     //$('#fm').delegate('.btn-pl','click',function(){
     //    alert();
     //});
@@ -266,10 +265,57 @@ function lab_booking(){
             $(this).siblings(".check_one").children(".check_icon").removeClass("check");
         }
     });
+
 //            学生表单
     $(".student").click(function(){
-        $("#stu_from").show();
+        var str = '';
+        var id = $(this).attr('data-id');
+        var scode = '';
+        var name = '';
+        var grade = '';
+        var professional = '';
+        var mobile = '';
+        var labname = $(this).parent().parent().parent().siblings('div').children().eq(0).html();
+        var address = $(this).parent().parent().parent().siblings('div').children().eq(1).html();
+        var time = $(this).parent().siblings('span').html();
+        var date = $(this).attr('data-time');
+        alert(labname);
+        alert(address);
+        alert(time);
+        alert(date);
+        $('.labname').html(labname);
+        $('.address').html(address);
+        $('.date').html(date);
+        $('.time').html(time);
+        $.ajax({
+            type: "GET",
+            url: "/msc/admin/laboratory/student-lab-detail",
+            data: {id:id},
+            success: function(msg){
+                $(msg).each(function (i,v) {
+                    if(v.scode){
+                        scode = v.scode;
+                    }
+                    if(v.user){
+                        name = v.user.name;
+                    }
+                    if(v.grade){
+                        grade = v.grade;
+                    }
+                    if(v.professional){
+                        professional = v.professional;
+                    }
+                    if(v.user){
+                        mobile = v.user.mobile;
+                    }
+                    str += '<tr> <td>'+(i+1)+'</td> <td>'+scode+'</td> <td>'+name+'</td> <td>'+grade+'</td> <td>'+professional+'</td> <td>'+mobile+'</td> </tr>';
+                });
+                //console.log(str);
+                $('#list').html(str);
+            }
+        });
         $("#teacher_from").hide();
+        $("#stu_from").show();
     });
 //            老师表单
     $(".teacher").click(function(){
@@ -298,4 +344,16 @@ function lab_booking(){
         });
     })
 
+    $('.sub').click(function(){
+        var val = '';
+        $('.type').each(function(){
+            if($(this).hasClass('check')){
+                val = $(this).siblings('input').val();
+            }
+        });
+        if(val){
+            $('#fm').append('<input type="hidden" name="type" value="'+val+'">');
+        }
+        $('#fm').submit();
+    });
 }

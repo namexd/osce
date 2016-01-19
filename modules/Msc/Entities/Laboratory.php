@@ -210,7 +210,7 @@ class Laboratory extends Model
 
 
     //后台开放实验室获取审核列表
-    public function get_opencheck_list($keyword="",$type=1,$id=''){
+    public function get_opencheck_list($nowtime,$type,$id=''){
         $labDb    = config('database.connections.msc_mis.database');
         $labTable = $labDb.'.lab';
         $userDb    = config('database.connections.sys_mis.database');
@@ -219,12 +219,12 @@ class Laboratory extends Model
         if(!empty($id)){
             $builder = $this->where($labTable.'.manager_user_id','=',$id);
         }
-        $builder =  $builder = $this->leftjoin('location',function($local) use($labTable){
+        $builder = $this->leftjoin('location',function($local) use($labTable){
             $local->on($local->table.'.id', '=', $labTable.'.location_id');
-        })->with(['OpenPlan'=>function($OpenPlan){
-            $OpenPlan->with(['PlanApply'=>function($PlanApply){
-                $PlanApply->with(['LabApply'=>function($LabApply){
-                    $LabApply->with('user');
+        })->with(['OpenPlan'=>function($OpenPlan,$type,$nowtime){
+            $OpenPlan->with(['PlanApply'=>function($PlanApply,$type,$nowtime){
+                $PlanApply->with(['LabApply'=>function($LabApply,$type,$nowtime){
+                    $LabApply->where('lab_apply.type','=',$type)->where('lab_apply.apply_time','like','%'.$nowtime.'%')->with('user');
                 }]);
             }]);
         }]);
@@ -250,15 +250,13 @@ class Laboratory extends Model
     //后台普通实验室获取审核列表
     public function get_check_list($nowtime,$type,$id){
         $labDb    = config('database.connections.msc_mis.database');
-
         $labTable = $labDb.'.lab';
-
-        $builder = $this->with(['LabApply'=>function($LabApply) use($nowtime,$type){
-            //->where('lab_apply.apply_time','=',$nowtime)
-            $LabApply->where('lab_apply.type','=',$type)->with(['Teacher'=>function($Teacher){
-
+        if(!empty($id)){
+            $builder = $this->where($labTable.'.manager_user_id','=',$id);
+        }
+        $builder = $builder->with(['LabApply'=>function($LabApply) use($nowtime,$type){
+            $LabApply->where('lab_apply.type','=',$type)->where('lab_apply.apply_time','like','%'.$nowtime.'%')->with(['Teacher'=>function($Teacher){
                 $Teacher->with('user');
-
             }]);
 
         }]);
