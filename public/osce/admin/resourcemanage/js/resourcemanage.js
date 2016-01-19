@@ -274,8 +274,15 @@ function categories(){
             //自动加减节点
             var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
 
-            //改变value值
-            var total = parseInt(change.val())-parseInt(thisElement.find('td').eq(2).find('select').val())+1;
+            //改变value值,消除连续变换值的变化
+            var total = 0;//= parseInt(change.val())+parseInt($(this).val());
+            $('.'+className).each(function(key,elem){
+                if($(elem).attr('parent')==parent){
+                    return;
+                }else{
+                    total += parseInt($(elem).find('td').eq(2).find('select').val());
+                }
+            });
             var cu = total;
             //当删除完的时候
             if(total==0){
@@ -283,6 +290,15 @@ function categories(){
                 cu = 0;
                 $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
                 change.show();
+                //dom
+                var option = '';
+                for(var k =1;k<=4;k++){
+                    option += '<option value="'+k+'">'+k+'</option>';
+                }
+                change.html(option);
+                change.val(total);
+                $('.'+className+'[parent='+parent+']').attr('current',cu);
+                return;
             }
             var option = '';
             for(var k =1;k<=total;k++){
@@ -490,6 +506,11 @@ function categories(){
                 }
             });
 
+            //当没有子类的时候
+            if(total==0){
+                return;
+            }
+
             var option = '';
             for(var k =1;k<=total;k++){
                 option += '<option value="'+k+'">'+k+'</option>';
@@ -548,7 +569,7 @@ function sp_invigilator(){
 
 //删除方法封装,其中id为当前dom的value值
 function deleteItems(type,url,id){
-    layer.alert('确认删除？',function(){
+    layer.alert('确认删除',{btn:['确认','取消']},function(){
         $.ajax({
             type:type,
             async:false,

@@ -289,13 +289,15 @@ class IndexController extends CommonController
     public function getAddWatch(Request $request){
 
         $this->validate($request,[
-            'code'                  =>  'required|unique:watch',
+            'code'                  =>  'required|unique:osce_mis.watch',
             'status'                =>  'required',
             'create_user_id'        =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
             'purchase_dt'           =>  'sometimes',
+        ],[
+            'code.unique'       =>  '腕表编码已存在',
         ]);
 
         try{
@@ -408,13 +410,15 @@ class IndexController extends CommonController
     public function getUpdateWatch(Request $request){
 
         $this->validate($request,[
-            'code'                  =>  'required',
+            'code'                  =>  'required|unique:osce_mis.watch',
             'status'                =>  'required',
             'create_user_id'       =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
             'purchase_dt'           =>  'sometimes',
+        ],[
+            'code.unique'       =>  '腕表编码已存在',
         ]);
 
 

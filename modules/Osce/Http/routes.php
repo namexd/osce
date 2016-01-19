@@ -260,7 +260,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('discussion/check-question',['uses'=>'DiscussionController@getCheckQuestion','as'=>'osce.wechat.getCheckQuestion']);
 		Route::get('discussion/check-question-json',['uses'=>'DiscussionController@getCheckQuestions','as'=>'osce.wechat.getCheckQuestions']);
 		Route::get('discussion/del-question',['uses'=>'DiscussionController@getDelQuestion','as'=>'osce.wechat.getDelQuestion']);
-
+        Route::get('discussion/question-lists',['uses'=>'DiscussionController@getDiscussionLists','as'=>'osce.wechat.getDiscussionLists']);
+		
 
 		Route::post('discussion/add-question',['uses'=>'DiscussionController@postAddQuestion','as'=>'osce.wechat.postAddQuestion']);
 		Route::get('discussion/add-question',['uses'=>'DiscussionController@getAddQuestion','as'=>'osce.wechat.getAddQuestion']);

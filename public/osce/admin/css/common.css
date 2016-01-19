@@ -236,3 +236,6 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/*tabs下部距离*/
+.panel.blank-panel>.panel-heading{margin-bottom: 20px!important;}

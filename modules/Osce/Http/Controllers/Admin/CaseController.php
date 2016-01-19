@@ -126,7 +126,7 @@ class CaseController extends CommonController
             $data = CaseModel::findOrFail($id);
             return view('osce::admin.resourcemanage.clinicalcase_edit',['data'=>$data]);
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

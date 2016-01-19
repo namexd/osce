@@ -141,7 +141,7 @@ class UserController extends CommonController
         }
         catch(\Exception $ex)
         {
-            return redirect()->back()->withErrors($ex);
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

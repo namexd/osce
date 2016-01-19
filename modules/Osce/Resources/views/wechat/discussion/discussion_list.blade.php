@@ -4,6 +4,60 @@
 <link rel="stylesheet" href="{{asset('osce/wechat/css/discussion.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
+<script type="text/javascript">
+	$(function(){
+        $(window).scroll(function(e){
+            if(away_top >= (page_height - window_height)&&now_page<totalpages){
+                now_page++;
+                //qj.page=now_page;//设置页码
+                getItem(now_page,url)
+                /*加载显示*/
+            }
+        });
+        //初始化
+        var now_page = 1;
+        var url = "{{route('osce.wechat.getQuestionList')}}";
+        //内容初始化
+        $('.history-list').empty();
+        getItem(now_page,url);
+
+        function getItem(current,url){
+            $.ajax({
+                type:'get',
+                url:url,
+                aysnc:true,
+                data:{id:current,pagesize:current},
+                success:function(res){
+                    totalpages = res.total;
+                    var html = '';
+                    var index = (current - 1)*10;
+                    data = res.data.rows;
+                  console.log(data);
+                    for(var i in data){
+                        //准备dom
+                        //计数
+                        console.log(i+"::::"+data[i]);
+                        var key = (index+1+parseInt(i))
+                        html += '<li>'+
+						        	'<a class="nou" href="{{ route('osce.wechat.getCheckQuestion')}}?id='+data[i].id+'">'+
+						        		'<p class="font14 fontb clo3 p_title">'+data[i].title+'</p>'+
+						        		'<p class="font12 clo9 main_txt">'+data[i].content+'</p>'+
+						        		'<p class="font12 p_bottom">'+
+						        			'<span class="student_name">'+data[i].name.name+'</span>'+
+						        			'<span class="clo0">·</span>'+
+						        			'<span class="clo9">'+data[i].time+'</span>'+
+						        			'<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>'+data[i].count+'&nbsp;</span>'+
+						        		'</p>'+
+						        	'</a>'+
+						        '</li>';
+                    }
+                    //插入
+                    $('#discussion_ul').append(html);
+                }
+            });
+        }
+	})
+</script>
 @stop
 
 @section('content')
@@ -12,34 +66,12 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        	讨论区
-        <a class="right header_btn nou clof header_a" href="{{ route('osce.wechat.getAddQuestion')  }}">提问</a>
+        <a class="right header_btn nou clof header_a" href="{{ route('osce.wechat.getAddQuestion') }}">提问</a>
     </div>
     <ul id="discussion_ul">
-		@foreach($list as $list)
-        <li>
-        	<a class="nou" href="{{ route('osce.wechat.getCheckQuestion',array('id'=>$list['id']))  }}">
-        		<p class="font14 fontb clo3 p_title">{{  $list['title']  }}</p>
-        		<p class="font12 clo9 main_txt">{{  $list['content']  }}</p>
-        		<p class="font12 p_bottom">
-        			<span class="student_name">{{ $list['name']->name  }}</span>
-        			<span class="clo0">·</span>
-        			<span class="clo9">{{ $list['time']  }}</span>
-        			<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;{{ $list['count']  }}</span>
-        		</p>
-        	</a>
-        </li>
-		@endforeach
+
+        
+		
     </ul>
-	<div class="row">
-		<div class="pull-left">
-			共{{$pagination->total()}}条
-		</div>
-		<div class="pull-right">
-			<nav>
-				<ul class="pagination">
-					{!! $pagination->render() !!}
-				</ul>
-			</nav>
-		</div>
-	</div>
+
 @stop

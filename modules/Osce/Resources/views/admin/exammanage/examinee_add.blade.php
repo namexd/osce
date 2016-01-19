@@ -42,6 +42,10 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '学号不能为空'
+                            },
+                            regexp:{
+                                regexp: /^\d+$/,
+                                message: '请输入正确的学号'
                             }
                         }
                     },

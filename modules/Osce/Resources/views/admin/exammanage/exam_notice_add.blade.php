@@ -13,6 +13,20 @@
         background-image:none!important;
         /*background: url(../images/add_img.png) no-repeat center; */
     }
+
+    /*文件上传*/
+    .upload{
+        display:block;
+        height: 34px!important;
+        width: 100px!important;
+        cursor: pointer;
+        background-image:none!important;
+        position:relative;
+        margin:0!important;
+    }
+    #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
+    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .fa-remove{cursor:pointer;}
     </style>
 @stop
 
@@ -80,23 +94,22 @@
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">附件:</label>
-
                     <div class="col-sm-10">
-                            <span class="images_upload">
-                                <input type="file"  name="attchment" id="file0"/>
-                            </span>
-                            <ul class="attch-box" style="padding: 15px 0;">
-                            </ul>
-
-                    </div>
-                </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">保存</button>
-                            <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
+                        <span class="images_uploads upload btn btn-white">上传附件
+                            <input type="file"  name="attchment" id="file0"/>
+                        </span>
+                        <div class="upload_list upload_list_doc">
+                            
                         </div>
                     </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-primary" type="submit">保存</button>
+                        <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

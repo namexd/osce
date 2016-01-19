@@ -38,6 +38,11 @@ class ConfigController extends CommonController
         $tempConfig = config('message');
         //从数据库获取配置
         $tempDB = Config::all();
+        if (count($tempDB) != 0) {
+            $tempDB[0]['value'] = json_decode($tempDB[0]->value);
+        } else {
+            $tempDB[0]['value'] = ['0' => '1'];
+        }
         return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
     }
 
@@ -60,9 +65,8 @@ class ConfigController extends CommonController
      */
     public function postStore(Request $request, Config $config)
     {
-    	//dd($request->all());
         try {
-            DB::beginTransaction();
+            DB::connection('osce_mis')->beginTransaction();
             //验证
             $this->validate($request, [
                 'message_type' => 'array',
@@ -93,17 +97,18 @@ class ConfigController extends CommonController
             //将拿到的数组分别作处理
             //如果是要插入数据库的就插入数据库
             $result =  $config->store($formData);
+
             if (!$result) {
-                DB::rollBack();
+                DB::connection('osce_mis')->rollBack();
             }
 
             //如果是要插入配置文件
             $result = $config->config($file);
             if (!$result) {
-                DB::rollBack();
+                DB::connection('osce_mis')->rollBack();
             }
 
-            DB::commit();
+            DB::connection('osce_mis')->commit();
             return redirect()->route('osce.admin.config.getIndex');
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());

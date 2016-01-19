@@ -367,7 +367,8 @@ class Teacher extends CommonModel
             $teacher = $this->whereIn('type', [1,3]);
                 if(!empty($formData)){
                     if(count($formData) == 1){
-                        $teacher->where('id', '<>', implode(',', $formData));
+                        //$teacher->where('id', '<>', implode(',', $formData));
+                        $teacher    ->  whereNotIn('id',$formData);
                     }else{
                         $teacher->whereNotIn('id', $formData);
                     }
