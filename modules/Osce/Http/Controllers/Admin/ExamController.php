@@ -262,7 +262,7 @@ class ExamController extends CommonController
             'end_dt'         => $end_dt,
             'status'         => 1,
             'total'          => 0,
-            'create_user_id' => $user     ->  id,
+            'create_user_id' => $user -> id,
             'sequence_cate'  => e($request  ->  get('sequence_cate')),
             'sequence_mode'  => e($request  ->  get('sequence_mode'))
         ];
@@ -394,7 +394,7 @@ class ExamController extends CommonController
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
-                return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id]);
+                return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
             } else {
                 throw new \Exception('修改考试失败');
             }
@@ -562,7 +562,7 @@ class ExamController extends CommonController
                 throw new \Exception('新增考试失败');
             }
         } catch(\Exception $ex) {
-            throw $ex;
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -582,7 +582,7 @@ class ExamController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'code'          =>  'somtimes',
+            'examinee_id'   =>  'somtimes',
             'gender'        =>  'required',
             'mobile'        =>  'required',
             'description'   =>  'somtimes',
@@ -681,7 +681,7 @@ class ExamController extends CommonController
                     $studentData['gender'] = 0;
                 }
 
-                if (!$student->addExaminee($exam_id, $studentData))
+                if(!$student->addExaminee($exam_id, $studentData))
                 {
                     throw new \Exception('学生导入数据失败，请稍后重试');
                 }
@@ -811,10 +811,13 @@ class ExamController extends CommonController
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
         $examRoomData = $examRoom -> getExamRoomData($exam_id);
+        $serialnumberGroup = [];
+        foreach ($examRoomData as $item) {
+            $serialnumberGroup[$item->serialnumber][] = $item;
+        }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id);
-//dd($examStationData);
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $examRoomData, 'examStationData' => $examStationData]);
+        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
     }
 
     /**
@@ -825,14 +828,12 @@ class ExamController extends CommonController
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
-     *
      * @return redirect
-     *
+     * @throws \Exception
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function postExamroomAssignmen(Request $request)
     {
@@ -842,7 +843,6 @@ class ExamController extends CommonController
             $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
-
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -1431,7 +1431,7 @@ class ExamController extends CommonController
         $exam   =   Exam::find($exam_id);
         $user   =   Auth::user();
         $plan   =   Cache::get('plan_'.$exam->id.'_'.$user->id);
-
+//        dd($plan);
         $ExamPlanModel  =   new ExamPlan();
 
         try{

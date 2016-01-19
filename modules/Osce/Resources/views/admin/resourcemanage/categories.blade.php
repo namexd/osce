@@ -15,6 +15,11 @@
     }
     .ibox-content{padding-top: 20px;}
     .btn-outline:hover{color: #fff!important;}
+    .ibox-title{border-top: 0;}
+    .ibox-content{
+        border-top: 0;
+        padding-left: 0;
+    }
 </style>
 @stop
 
@@ -52,12 +57,14 @@
                                 <input id="select_Category" required  class="form-control m-b" name="desc"/>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-8">
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">评分标准：</label>
+                            <div class="col-sm-10">
                                 <div class="ibox float-e-margins">
                                     <div class="ibox-title">
-                                        <h5>评分标准：</h5>
+                                        <h5></h5>
                                         <div class="ibox-tools">
                                             <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
                                                 导入<input type="file" name="topic" id="file0" multiple="multiple" />
@@ -83,8 +90,9 @@
 
                                     </div>
                                 </div>
+
+
                             </div>
-                            <div class="col-sm-2"></div>
                         </div>
                         <div class="hr-line-dashed"></div>
 

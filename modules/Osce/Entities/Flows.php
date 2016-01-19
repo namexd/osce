@@ -100,7 +100,6 @@ class Flows extends CommonModel
                 }
             }
 
-//            dd($stationData);
             //保存  考站监考老师、sp老师安排数据
             if ($stationData) {
                 foreach ($stationData as $key => $item) {
@@ -150,6 +149,7 @@ class Flows extends CommonModel
 
     public function editExamroomAssignmen($exam_id, $roomData, $stationData)
     {
+//dd($roomData);
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
@@ -226,7 +226,6 @@ class Flows extends CommonModel
                     throw new \Exception('删除教师考站关联失败，请重试！');
                 }
             }
-//            dd($stationData);
             //保存新的数据
             $this->saveExamroomAssignmen($exam_id,$roomData,$stationData);
 
