@@ -93,6 +93,7 @@
             $(".images_upload").change(function(){
                 $.ajaxFileUpload
                 ({
+
                     url:'{{ url('commom/upload-image') }}',
                     secureuri:false,//
                     fileElementId:'file0',//必须要是 input file标签 ID

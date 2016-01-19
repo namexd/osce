@@ -29,7 +29,7 @@
         </div>
         <form class="container-fluid ibox-content" id="list_form">
             <div class="">
-                <div class="input-group" style="width: 290px;margin:20px 0;">
+                <div class="input-group" style="width: 290px;margin-bottom: 20px;">
                     <input type="text" placeholder="请输入关键字" class="form-control">
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
