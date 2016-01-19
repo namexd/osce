@@ -1427,7 +1427,7 @@ class ExamController extends CommonController
         $exam   =   Exam::find($exam_id);
         $user   =   Auth::user();
         $plan   =   Cache::get('plan_'.$exam->id.'_'.$user->id);
-
+//        dd($plan);
         $ExamPlanModel  =   new ExamPlan();
 
         try{
