@@ -16,7 +16,7 @@ class ExamFlowRoom extends CommonModel
     protected $table 		= 	'exam_flow_room';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected $fillable 	=   ['serialnumber','room_id','flow_id','created_user_id'];
+    protected $fillable 	=   ['serialnumber','room_id','flow_id','created_user_id', 'exam_id'];
 
     /*
      * 所属房间
