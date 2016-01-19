@@ -81,6 +81,15 @@ class StdProfessional extends Model
          return $result;
     }
 
+    /**
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年1月19日16:54:41
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getProfessionalList(){
+        return  $this->where('status','=',1)->get();
+    }
 
 
 }

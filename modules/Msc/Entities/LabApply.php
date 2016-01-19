@@ -239,4 +239,18 @@ class LabApply  extends Model
         //dd($builder);
         return $builder;
     }
+
+    //查找开放实验室详情
+    public function getStudentLabdetail($id){
+        $labapply = 'lab_apply';
+        $builder = $this->where('lab_apply.id','=',$id)->leftjoin('lab',function($lab) use($labapply){
+            $lab->on('lab.id','=',$labapply.'.lab_id');
+        })->leftjoin('location',function($local){
+            $local->on('location.id','=','lab.location_id');
+        })->leftjoin('student',function($student){
+            $student->on('student.id','=','lab_apply.apply_user_id');
+        })->with('user')->select('lab_apply.*','lab.floor','lab.code as lcode','lab.name as lname','location.name as localname','student.name','student.code as scode','student.grade','student.professional','student.name')->get();
+        //dd($builder);
+        return $builder;
+    }
 }

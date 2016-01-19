@@ -279,6 +279,11 @@ class LaboratoryCotroller extends MscWeChatController
         $LaboratoryInfo = $this->Laboratory->GetLaboratoryOpenInfo($id,$DateTime,2);
         if(!empty($LaboratoryInfo['OpenPlan'])){
             foreach($LaboratoryInfo['OpenPlan'] as $key => $val){
+                if($val['is_teacher_apply'] == 1){
+                    $LaboratoryInfo['OpenPlan'][$key]['apply_num'] = $LaboratoryInfo['total'];
+                }else{
+                    $LaboratoryInfo['OpenPlan'][$key]['apply_num'] = $val['apply_num'];
+                }
                 if(count($val['PlanApply'])>0){
                     foreach($val['PlanApply'] as $k => $v){
                         if(!empty($v['LabApply'])){
@@ -491,14 +496,14 @@ class LaboratoryCotroller extends MscWeChatController
         $req = $Request->all();
         $user = Auth::user();
         $open_plan_id = $req['open_plan_id'];
-
+        $user_type = ($user->user_type == 1)?2:1;
         $data = [
             'lab_id'=>$req['lab_id'],
             'type'=>2,
             'description'=>$req['description'],
             'apply_user_id'=>$user->id,
             'apply_time'=>$req['date_time'],
-            'user_type'=>($user->user_type == 1)?2:1,
+            'user_type'=>$user_type,
         ];
 
         //TODO 新建数据库对象 准备事物操作
@@ -545,8 +550,13 @@ class LaboratoryCotroller extends MscWeChatController
                     ];
                 }
                 if($MscMis->table('plan_apply')->insert($PlanApplyData)){
-
-                    if($MscMis->table('open_plan')->whereIn('id',$open_plan_id)->increment('apply_num',1)){
+                    $incrementRew = false;
+                    if($user_type == 2){
+                        $incrementRew = $MscMis->table('open_plan')->whereIn('id',$open_plan_id)->update(['is_teacher_apply'=>1]);
+                    }else{
+                        $incrementRew = $MscMis->table('open_plan')->whereIn('id',$open_plan_id)->increment('apply_num',1);
+                    }
+                    if($incrementRew){
                         $MscMis->commit();
                         return  view('msc::wechat.booking.booking_success');
                     }else{

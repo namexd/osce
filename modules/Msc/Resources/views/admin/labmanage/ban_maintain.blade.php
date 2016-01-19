@@ -111,7 +111,7 @@
                                         @else
                                             <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                                         @endif
-                                        <a data="{{$v->id}}" class=" edit_role modal-control @if($v->dtype) not @else delete state2 @endif">删除</a>
+                                        <a data="{{$v->id}}" class=" edit_role modal-control delete state2">删除</a>
                                         <input type="hidden" class="setid" value="1"/>
                                     </td>
                                 </tr>

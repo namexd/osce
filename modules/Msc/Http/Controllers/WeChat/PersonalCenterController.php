@@ -169,7 +169,12 @@ class PersonalCenterController extends MscWeChatController {
 						$OpenPlan = new OpenPlan;
 						//TODO 找到对应的开放日历减去预约次数
 						if(!empty($PlanIdArr)){
-							$decrementRew = $OpenPlan->whereIn('id',$PlanIdArr)->decrement('apply_num',1);
+							$decrementRew = false;
+							if($LabApplyInfo['user_type'] == 2){
+								$decrementRew = $OpenPlan->whereIn('id',$PlanIdArr)->update(['is_teacher_apply'=>0]);
+							}else{
+								$decrementRew = $OpenPlan->whereIn('id',$PlanIdArr)->decrement('apply_num',1);
+							}
 							if($decrementRew){
 								$MscMis->commit();
 								return	$this->success_rows(1,'取消成功');
