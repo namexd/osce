@@ -207,7 +207,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <script id="editor"  type="text/plain" style="width:100%;height:500px;" name="content">{{ $data['content']  }}</script>
+                            <script id="editor"  type="text/plain" style="width:100%;height:500px;" name="content">{!! $data['content']  !!}  </script>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

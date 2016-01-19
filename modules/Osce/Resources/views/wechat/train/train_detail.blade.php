@@ -39,7 +39,7 @@
         </div>
         <div class="form-group">
             <label for="">描述</label>
-            <div class="txt">{{ $train->description }}</div>
+            <div class="txt">{!! $train->content !!}</div>
         </div>
     </div>
     <div class="add_main">
