@@ -4,6 +4,8 @@
     table tr td .form-group {
         margin-bottom: 0;
     }
+    .btn-outline:hover{color: #fff!important;}
+    .ibox-content{padding-top: 20px;}
 </style>
 @stop
 
@@ -25,8 +27,6 @@
 
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postEditTopic')}}">
-
-                        <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
@@ -51,7 +51,7 @@
                                     <div class="ibox-title">
                                         <h5>评分标准：</h5>
                                         <div class="ibox-tools">
-                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;下载模板&nbsp;&nbsp;</a>
+                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>

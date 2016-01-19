@@ -30,7 +30,7 @@
             </div>
         </div>
 
-            <div class="panel blank-panel">
+            <div class="ibox-content">
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">

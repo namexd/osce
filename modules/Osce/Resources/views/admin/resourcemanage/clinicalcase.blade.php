@@ -42,11 +42,11 @@
             @foreach($data as $key => $item)
                 <tr>
                     <td>{{$key+1}}</td>
-                    <td><p class="description" title="{{$item->name}}">{{$item->name}}</p></td>
-                    <td><p class="description" title="{{$item->description}}">{{$item->description}}</p></td>
+                    <td><span class="description" title="{{$item->name}}">{{$item->name}}</span></td>
+                    <td><span class="description" title="{{$item->description}}">{{$item->description}}</span></td>
                     <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
                 @endforeach

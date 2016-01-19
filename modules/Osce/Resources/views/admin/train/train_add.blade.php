@@ -222,6 +222,7 @@
 									<input type="hidden" name="file" id="" value="" />
 								</p>
 							</div>
+                        </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
