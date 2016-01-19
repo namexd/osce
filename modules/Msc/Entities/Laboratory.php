@@ -215,20 +215,17 @@ class Laboratory extends Model
         $labTable = $labDb.'.lab';
         $userDb    = config('database.connections.sys_mis.database');
         $userTable = $userDb.'.users';
-
-        if(!empty($id)){
-            $builder = $this->where($labTable.'.manager_user_id','=',$id);
-        }
+        $time = explode('-',$nowtime);
         $builder = $this->leftjoin('location',function($local) use($labTable){
             $local->on($local->table.'.id', '=', $labTable.'.location_id');
-        })->with(['OpenPlan'=>function($OpenPlan,$type,$nowtime){
-            $OpenPlan->with(['PlanApply'=>function($PlanApply,$type,$nowtime){
-                $PlanApply->with(['LabApply'=>function($LabApply,$type,$nowtime){
-                    $LabApply->where('lab_apply.type','=',$type)->where('lab_apply.apply_time','like','%'.$nowtime.'%')->with('user');
+        })->with(['OpenPlan'=>function($OpenPlan) use($type,$time){
+            $OpenPlan->where(['open_plan.year'=>$time[0],'open_plan.month'=>$time[1],'open_plan.day'=>$time[2]])->with(['PlanApply'=>function($PlanApply) use($type){
+                $PlanApply->with(['LabApply'=>function($LabApply) use($type){
+                    $LabApply->where('lab_apply.type','=',$type)->with('user');
                 }]);
             }]);
         }]);
-        $data = $builder->select($labTable.'.*','location.name as lname')->paginate(config('msc.page_size',10));
+        $data = $builder->where('lab.manager_user_id','=',$id)->select($labTable.'.*','location.name as lname')->paginate(config('msc.page_size',10));
         //dd($data);
         return $data;
 
@@ -253,6 +250,8 @@ class Laboratory extends Model
         $labTable = $labDb.'.lab';
         if(!empty($id)){
             $builder = $this->where($labTable.'.manager_user_id','=',$id);
+        }else{
+            $builder = $this;
         }
         $builder = $builder->with(['LabApply'=>function($LabApply) use($nowtime,$type){
             $LabApply->where('lab_apply.type','=',$type)->where('lab_apply.apply_time','like','%'.$nowtime.'%')->with(['Teacher'=>function($Teacher){
