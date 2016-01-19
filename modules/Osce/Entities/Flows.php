@@ -98,7 +98,7 @@ class Flows extends CommonModel
                 }
             }
 
-            dd($stationData);
+//            dd($stationData);
             //保存  考站监考老师、sp老师安排数据
             foreach ($stationData as $key => $item) {
 
@@ -112,7 +112,7 @@ class Flows extends CommonModel
                         $teacherIDs[] = $value;
                     }
                 }
-
+                dd($stationData);
                 $station_id = $item['id'];
                 //根据考站id，获取对应的病例id
                 $stationCase = StationCase::where('station_id', $station_id)->first();
@@ -201,7 +201,6 @@ class Flows extends CommonModel
             }
 
             //删除考试考场流程关联
-//            dd(ExamFlowRoom::where('exam_id',$id)->first());
             if (count(ExamFlowRoom::where('exam_id',$id)->first()) != 0) {
 
                 if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
@@ -210,7 +209,7 @@ class Flows extends CommonModel
             }
 
             //如果有flow的话，就删除
-            if (count($flowIds) != 0) {
+            if (!$flowIds->isEmpty()) {
                 foreach ($flowIds as $flowId) {
                     if (!Flows::where('id',$flowId->flow_id)->delete()) {
                         throw new \Exception('删除流程失败，请重试！');
@@ -224,7 +223,7 @@ class Flows extends CommonModel
                     throw new \Exception('删除教师考站关联失败，请重试！');
                 }
             }
-
+//            dd($stationData);
             //保存新的数据
             $this->saveExamroomAssignmen($exam_id,$roomData,$stationData);
 

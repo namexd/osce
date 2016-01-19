@@ -354,12 +354,14 @@ function timePicker(background){
                 var current = Date.parse(date) - Date.parse(thisElement.prev().find('input').val());
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
+                console.log(hours+':'+(minutes>9?minutes:('0'+minutes)))
                 thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
             }else{
                 var current = Date.parse(thisElement.next().find('input').val()) - Date.parse(date);
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
                 thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
+                console.log(hours+':'+(minutes>9?minutes:('0'+minutes)))
             }
         }
     };
@@ -956,8 +958,10 @@ function examroom_assignment(){
                         //重置序号
                         var station_count = 1;
                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                            var html = '';
                             station_count = key + 1;
-                            $(elem).find('td').eq(0).text(station_count);
+                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                            $(elem).find('td').eq(0).html(html);
                         });
                         $('#exam-place').find('tbody').attr('index',station_count);
                         continue;
@@ -2117,8 +2121,10 @@ function station_assignment(){
                         //重置序号
                         var station_count = 1;
                         $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                            var html = '';
                             station_count = key + 1;
-                            $(elem).find('td').eq(0).text(station_count);
+                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                            $(elem).find('td').eq(0).html(html);
                         });
                         $('#exam-place').find('tbody').attr('index',station_count);
                         continue;
