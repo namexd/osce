@@ -30,7 +30,7 @@
         <table class="table table-striped" id="table-striped">
             <thead>
             <tr>
-                <th>#</th>
+                <th>考试编号</th>
                 <th>考试名称</th>
                 <th>时间</th>
                 <th>考试组成</th>
