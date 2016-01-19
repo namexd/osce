@@ -133,9 +133,10 @@ class ExamRoom extends CommonModel
                 $join    ->  on('teacher.id','=','station_teacher.user_id');
             })  ->Join('station',function($join) {
                 $join->on('station.id', '=', 'station_teacher.station_id');
-            })  ->Join('exam_room',function($join) use($exam_id){
-                $join->on('exam_room.exam_id','=','station_teacher.exam_id');
-            })  ->where('station_teacher.exam_id' , '=' , $exam_id)
+            })  ->Join('room_station',function($join) use($exam_id){
+                $join->on('room_station.station_id','=','station_teacher.station_id');
+            })
+                ->where('station_teacher.exam_id' , '=' , $exam_id)
                 ->select([
                     'teacher.id as id',
                     'teacher.name as name',
@@ -145,9 +146,9 @@ class ExamRoom extends CommonModel
                     'teacher.status as status',
                     'station.name as station_name',
                     'station.id as station_id',
-                    'exam_room.room_id as room_id'
+                    'room_station.room_id as room_id'
                 ])
-                ->get();
+                ->distinct()->get();
         } catch(\Exception $ex){
             throw $ex;
         }
@@ -155,6 +156,7 @@ class ExamRoom extends CommonModel
 
     /**
      * 获取 考试对应的 考场数据
+     * @param $exam_id
      * @return mixed
      * @throws \Exception
      */
