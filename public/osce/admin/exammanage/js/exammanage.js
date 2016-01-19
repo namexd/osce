@@ -665,7 +665,6 @@ function examroom_assignment(){
                             url: pars.teacher_list,
                             delay:0,
                             data: function (params) {
-
                                 var ids = [];
                                 $('#exam-place').find('tbody').find('tr').each(function(key,elem){
                                     var id = $(elem).find('td').eq(3).find('select option:selected').val();
@@ -677,8 +676,20 @@ function examroom_assignment(){
                                     //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
                                 });
 
+                                var data    =   new Array;
+                                $('.teacher-teach').each(function(){
+                                    id  =   $(this).val();
+                                    if(id==null){
+                                        return;
+                                    }else{
+                                        for (var i in id)
+                                        {
+                                            data.push(id[i]);
+                                        }
+                                    }
+                                });
                                 return {
-                                    teacher:ids
+                                    teacher:data
                                 };
                             },
                             dataType: 'json',
@@ -1086,34 +1097,56 @@ function exam_notice_add(){
             $(this).remove();
         }
     }
+
     /**
      * 附件上传
      * @author mao
      * @version 1.0
      * @date    2016-01-15
      */
-    $(".images_upload").change(function(){
+    $(".images_uploads").change(function(){
         $.ajaxFileUpload({
             url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
-                //上传成功
-                var li      =   $('<li>').bind('click',delAttch).css('cursor','pointer');
-                var input   =   $('<input>').attr({
-                    'name':'attach[]',
-                    'class':'attach',
-                    'type':'hidden'
-                }).val(data.data.path);
-                var span    =   $('<span>').text(data.data.name);
-                var li      =li.append(span).append(input);
-                $('.attch-box').append(li);
+                if(data.code==1){
+                   str='<p><input type="hidden" name="attach[]" id="" value="'+data.data.path+'" />'+data.data.name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                    //var ln=$(".upload_list").children("p").length;
+                    //添加
+                    $(".upload_list").append(str);
+                }
             },
             error: function (data, status, e){
-                //上传失败
+                $.alert({
+                    title: '提示：',
+                    content: '通讯失败!',
+                    confirmButton: '确定',
+                    confirm: function(){
+                    }
+                });
             }
         });
     }) ;
+
+    /**
+     * 删除
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-19
+     */
+    $(".upload_list").on("click",".fa-remove",function(){
+
+        var thisElement = $(this);
+            $.alert({
+                title: '提示：',
+                content: '确认为删除？',
+                confirmButton: '确定',
+                confirm: function(){
+                    thisElement.parent("p").remove();
+                }
+            });
+    });
 
 
 }
@@ -1161,36 +1194,58 @@ function exam_notice_edit(){
             clearInterval(thisID);
         },1000);
 
-    
-    
+
     /**
-     * 附件图片上传
+     * 附件上传
      * @author mao
      * @version 1.0
      * @date    2016-01-15
      */
-    $(".attch_upload").change(function(){
+    $(".images_uploads").change(function(){
         $.ajaxFileUpload({
-            url:'url',
+            url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
-                //上传成功
-                var li      =   $('<li>').bind('click',delAttch).css('cursor','pointer');
-                var input   =   $('<input>').attr({
-                    'name':'attach[]',
-                    'class':'attach',
-                    'type':'hidden'
-                }).val(data.data.path);
-                var span    =   $('<span>').text(data.data.name);
-                var li      =li.append(span).append(input);
-                $('.attch-box').append(li);
+                if(data.code==1){
+                   str='<p><input type="hidden" name="attach[]" id="" value="'+data.data.path+'" />'+data.data.name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                    //var ln=$(".upload_list").children("p").length;
+                    //添加
+                    $(".upload_list").append(str);
+                }
             },
             error: function (data, status, e){
-                //上传失败
+                $.alert({
+                    title: '提示：',
+                    content: '通讯失败!',
+                    confirmButton: '确定',
+                    confirm: function(){
+                    }
+                });
             }
         });
     }) ;
+
+    /**
+     * 删除
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-19
+     */
+    $(".upload_list").on("click",".fa-remove",function(){
+
+        var thisElement = $(this);
+            $.alert({
+                title: '提示：',
+                content: '确认为删除？',
+                confirmButton: '确定',
+                confirm: function(){
+                    thisElement.parent("p").remove();
+                }
+            });
+    });
+
+
 
     /**
      * 获取文本编辑内容
