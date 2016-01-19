@@ -262,7 +262,7 @@ class ExamController extends CommonController
             'end_dt'         => $end_dt,
             'status'         => 1,
             'total'          => 0,
-            'create_user_id' => $user     ->  id,
+            'create_user_id' => $user -> id,
             'sequence_cate'  => e($request  ->  get('sequence_cate')),
             'sequence_mode'  => e($request  ->  get('sequence_mode'))
         ];
@@ -394,7 +394,7 @@ class ExamController extends CommonController
         try{
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
-                return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id]);
+                return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
             } else {
                 throw new \Exception('修改考试失败');
             }
@@ -562,7 +562,7 @@ class ExamController extends CommonController
                 throw new \Exception('新增考试失败');
             }
         } catch(\Exception $ex) {
-            throw $ex;
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -582,10 +582,10 @@ class ExamController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'code'          =>  'somtimes',
+            'examinee_id'   =>  'sometimes',
             'gender'        =>  'required',
             'mobile'        =>  'required',
-            'description'   =>  'somtimes',
+            'description'   =>  'sometimes',
             'images_path'   =>  'required',
         ],[
             'name.required'         =>  '姓名必填',
@@ -681,7 +681,7 @@ class ExamController extends CommonController
                     $studentData['gender'] = 0;
                 }
 
-                if (!$student->addExaminee($exam_id, $studentData))
+                if(!$student->addExaminee($exam_id, $studentData))
                 {
                     throw new \Exception('学生导入数据失败，请稍后重试');
                 }
@@ -724,7 +724,7 @@ class ExamController extends CommonController
         //获取当前场所的类
          $examModel= new Student();
         //从模型得到数据
-        $data=$examModel->getList($formData);
+           $data=$examModel->getList($formData);
         //展示页面
         return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
     }

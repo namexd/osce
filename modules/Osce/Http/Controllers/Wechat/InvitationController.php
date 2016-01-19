@@ -104,9 +104,11 @@ class InvitationController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $userId =$user->id;
+
         $notice = new Invite();
 //        $list = $notice->get();
         $list = $notice-> where('id','=',$userId)->get();
+//        dd($list);
         return view('osce::wechat.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
     }
 
@@ -165,10 +167,17 @@ class InvitationController extends CommonController
     public function getMsg()
     {
         $id = intval(Input::get('id'));//老师的id
-          $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt')->first();
-         $caseId =ExamSpTeacher::where('teacher_id','=',$id)->select('case_id')->first()->case_id;
-         $caseModel =CaseModel:: where('id','=',$caseId)->select('name')->first()->name;
-//         dd($inviteModel->name);
+        $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt')->first();
+          if($inviteModel){
+              $caseId =ExamSpTeacher::where('teacher_id','=',$id)->select('case_id')->first()->case_id;
+              if(!$caseId){
+                  throw new \Exception('没有找到相关病例');
+              }else{
+                  $caseModel =CaseModel:: where('id','=',$caseId)->select('name')->first()->name;
+              }
+        }else{
+              throw new \Exception('请检查登陆稍后再试!');
+          }
         $list=[
              'exam_name' =>$inviteModel->name,
              'begin_dt' =>$inviteModel->begin_dt,

@@ -207,7 +207,7 @@ a.btn:hover {text-decoration: none;}
     -webkit-align-items:center;
     align-items:center;}
 .swiper-slide img{width: 100%;}
-.wrapper img{width:100%;}
+.wrapper img{width:100%;height:158px;}
 .swiper-pagination{ bottom: 0; left:50%; margin-left:-20px;}
 .swiper-pagination span{margin:0 0.2em 0 0 }
 
@@ -241,5 +241,12 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .panel.blank-panel>.panel-heading{margin-bottom: 20px!important;}
 
 .panel-options .nav.nav-tabs{
-    width: 102.3%!important;
+    width: 101.1%!important;
+}
+/*输入框左侧文字*/
+.control-label{
+    padding-right: 5px;
+}
+.panel-heading {
+    padding: 10px 0;
 }

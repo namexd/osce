@@ -33,25 +33,25 @@
                     var index = (current - 1)*10;
                     data = res.data.rows;
                   	console.log(data);
-//                  for(var i in data){
-//                      //准备dom
-//                      //计数
-//                      var key = (index+1+parseInt(i))
-//                      html += '<li>'+
-//						        	'<a class="nou" href="route('osce.wechat.getCheckQuestion')?id='+data[i].id+'">'+
-//						        		'<p class="font14 fontb clo3 p_title">'+data[i].title+'</p>'+
-//						        		'<p class="font12 clo9 main_txt">'+data[i].content+'</p>'+
-//						        		'<p class="font12 p_bottom">'+
-//						        			'<span class="student_name">'+data[i].name.name+'</span>'+
-//						        			'<span class="clo0">&nbsp;·&nbsp;</span>'+
-//						        			'<span class="clo9">'+data[i].time+'</span>'+
-//						        			'<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;'+data[i].count+'&nbsp;</span>'+
-//						        		'</p>'+
-//						        	'</a>'+
-//						        '</li>';
-//                  }
+                    for(var i in data){
+                        //准备dom
+                        //计数
+                        var key = (index+1+parseInt(i))
+                        html += '<li>'+
+						        	'<a class="nou" href="{{route('osce.wechat.getCheckQuestion')}}?id='+data[i].id+'">'+
+						        		'<p class="font14 fontb clo3 p_title">'+data[i].title+'</p>'+
+						        		'<p class="font12 clo9 main_txt">'+data[i].content+'</p>'+
+						        		'<p class="font12 p_bottom">'+
+						        			'<span class="student_name">'+data[i].name.name+'</span>'+
+						        			'<span class="clo0">&nbsp;·&nbsp;</span>'+
+						        			'<span class="clo9">'+data[i].time+'</span>'+
+						        			'<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;'+data[i].count+'&nbsp;</span>'+
+						        		'</p>'+
+						        	'</a>'+
+						        '</li>';
+                    }
                     //插入
-                    //$('#discussion_ul').append(html);
+                      $('#discussion_ul').append(html);
                 }
             });
         }

@@ -151,16 +151,17 @@ class Student extends CommonModel
 
             //存在考生信息,则更新数据, 否则新增
             if($student){
-                //跟新考生数据
-                $student->name    = $examineeData['name'];
-                $student->exam_id = $exam_id;
-                $student->idcard  = $examineeData['idcard'];
-                $student->mobile  = $examineeData['mobile'];
-                $student->code    = $examineeData['code'];
-                $student->avator  = $examineeData['avator'];
-                if (!($student->save())) {
-                    throw new \Exception('新增考生失败！');
-                }
+                throw new \Exception('该考生已经存在，不能再次添加！');
+//                //跟新考生数据
+//                $student->name    = $examineeData['name'];
+//                $student->exam_id = $exam_id;
+//                $student->idcard  = $examineeData['idcard'];
+//                $student->mobile  = $examineeData['mobile'];
+//                $student->code    = $examineeData['code'];
+//                $student->avator  = $examineeData['avator'];
+//                if (!($student->save())) {
+//                    throw new \Exception('新增考生失败！');
+//                }
             }else{
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
