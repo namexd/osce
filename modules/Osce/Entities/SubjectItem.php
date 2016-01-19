@@ -34,6 +34,7 @@ class SubjectItem extends CommonModel
     public function parent(){
         return $this->hasOne('Modules\Osce\Entities\SubjectItem','id','pid');
     }
+
     /**
      * 新增 考核标准详情
      * @access public
@@ -121,16 +122,17 @@ class SubjectItem extends CommonModel
         foreach($content as $prointIndex => $item){
             $child  =   [];
             $itemScore  =   $score[$prointIndex];
-            $itemAnswer  =   $answer[$prointIndex];
+            $itemAnswer =   array_key_exists($prointIndex,$answer)? $answer[$prointIndex]:[];
+            $itemScore  =   array_key_exists($prointIndex,$score)?   $score[$prointIndex]:[];
             foreach($item as $contentIndex  =>  $content){
                 if($contentIndex=='title'){
                     continue;
                 }
                 $contentData    =   [
                     'content'   =>  $content,
-                    'score'     =>  $itemScore[$contentIndex],
+                    'score'     =>  array_key_exists($contentIndex,$itemScore)? $itemScore[$contentIndex]:0,
                     'sort'      =>  $contentIndex,
-                    'answer'    =>  $itemAnswer[$contentIndex]
+                    'answer'    =>  array_key_exists($contentIndex,$itemAnswer)? $itemAnswer[$contentIndex]:''
                 ];
                 $child[]=$contentData;
             }
@@ -176,7 +178,8 @@ class SubjectItem extends CommonModel
         foreach($list as $item)
         {
             $data[]     =   $item;
-            $childItem  =   $child[$item->id];
+
+            $childItem  =   array_key_exists($item->id,$child)? $child[$item->id]:[];
 
             $indexArray =   array_pluck($childItem,'sort');
             array_multisort($indexArray, SORT_ASC, $childItem);

@@ -273,6 +273,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//考前培训
 		Route::get('train/train-list',['uses'=>'TrainController@getTrainList','as'=>'osce.wechat.getTrainList']);
 		Route::get('train/train-detail',['uses'=>'TrainController@getTrainDetail','as'=>'osce.wechat.getTrainDetail']);
+		Route::get('train/train-lists',['uses'=>'TrainController@getTrainlists','as'=>'osce.wechat.getTrainlists']);
 
 
 		//考前培训

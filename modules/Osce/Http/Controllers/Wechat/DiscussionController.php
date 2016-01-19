@@ -432,7 +432,24 @@ class DiscussionController extends  CommonController{
      }
 
 
-
+    /**
+     *获取回复内容
+     * @method GET
+     * @url osce/wechat/discussion/check-question-json
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int              id               问题id(必须的)
+     * * int              pagesize         页码(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
      public function getCheckQuestions(Request $request){
           $this->validate($request,[
               'id'        =>'required|integer',
