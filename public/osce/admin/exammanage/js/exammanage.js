@@ -354,12 +354,14 @@ function timePicker(background){
                 var current = Date.parse(date) - Date.parse(thisElement.prev().find('input').val());
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
+                console.log(hours+':'+(minutes>9?minutes:('0'+minutes)))
                 thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
             }else{
                 var current = Date.parse(thisElement.next().find('input').val()) - Date.parse(date);
                 var hours = Math.floor(current/(1000*60*60)),
                     minutes = Math.round((current/(1000*60*60)-hours)*60);
                 thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
+                console.log(hours+':'+(minutes>9?minutes:('0'+minutes)))
             }
         }
     };
