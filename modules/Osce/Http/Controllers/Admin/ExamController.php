@@ -463,8 +463,9 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postDelStudent(Request $request, Student $student)
+    public function getDelStudent(Request $request, Student $student)
     {
+//        dd(11111);
         //验证
         $this->validate($request, [
             'id'        => 'required|integer',
@@ -477,11 +478,11 @@ class ExamController extends CommonController
             $result = $student->deleteData($student_id);
 
             if ($result === true) {
-                return $this->success_data(['删除成功！']);
+                return redirect()->back()->withErrors(['删除成功']);
             }
 
         } catch (\Exception $ex) {
-            return $this->fail($ex);
+            throw $ex;
         }
     }
 
