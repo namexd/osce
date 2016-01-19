@@ -130,8 +130,8 @@ function categories(){
                 '</td>'+
                 '<td>'+
                 '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>'+
+                '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>'+
                 '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                 '</td>'+
                 '</tr>';
@@ -180,8 +180,8 @@ function categories(){
                 '</td>'+
                 '<td>'+
                 '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>'+
+                '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>'+
                 '</td>'+
                 '</tr>';
         //记录计数
@@ -323,7 +323,7 @@ function categories(){
      * @date    2015-12-31
      * @version [1.0]
      */
-    $('tbody').on('click','.fa-arrow-up',function(){
+    $('tbody').on('click','.child-up',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.prev().attr('child')!=undefined){
             var thisInput = thisElement.find('input:first').val(),
@@ -351,7 +351,7 @@ function categories(){
      * @date    2015-12-31
      * @version [1.0]
      */
-    $('tbody').on('click','.fa-arrow-down',function(){
+    $('tbody').on('click','.child-down',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().attr('child')!=undefined){
             var thisInput = thisElement.find('input:first').val(),
@@ -371,6 +371,61 @@ function categories(){
         }else{
             return;
         }
+    });
+
+
+    $('tbody').on('click','.parent-up',function(){
+
+        var thisElement = $(this).parent().parent().parent().parent();
+        var className = thisElement.attr('class');
+        var parent =  1;
+        var value = [];
+
+        console.log(className)
+        //存储select的值
+        $('.'+className).each(function(key,elem){
+            if($(elem).attr('parent')==undefined){
+                value.push($(elem).find('td').eq(2).find('select').val());
+            }else{
+               return;
+            }
+        });
+
+        //存储dom结构
+        var thisDOM = $('.'+className).clone();
+        var preIndex = parseInt(className.split('-')[1])-1;
+        var preDOM = $('.pid-'+preIndex).clone();
+
+        //上移
+        $('.'+className).remove();
+        $('.pid-'+preIndex).before(thisDOM);
+
+        //更新序号
+        $('tbody tr').each(function(key,elem){
+            if($(elem).attr('child')==undefined){
+                $(elem).attr('parent',parent);
+                $(elem).find('td').eq(0).text(parent);
+                $(elem).attr('class','pid-'+parent);
+                parent += 1;
+            }else{
+                var child = $(elem).attr('child'),
+                        parent_p = parent - 1;
+                $(elem).find('td').eq(0).text(parent_p+'-'+child);
+                $(elem).attr('class','pid-'+parent_p);
+                child += 1;
+            }
+        });
+        
+        //更新数据
+        /*$('.pid-'+preIndex).each(function(key,elem){
+            if($(elem).attr('parent')==undefined){
+                $(elem).find('td').eq(2).find('select option="'+value[key]+'"').attr("selected",true)
+                $(elem).find('td').eq(2).find('select').val(value[key]);
+            }else{
+               return;
+            }
+        });*/
+
     });
 
     /**

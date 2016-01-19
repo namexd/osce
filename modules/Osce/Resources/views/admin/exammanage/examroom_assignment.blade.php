@@ -41,6 +41,7 @@
         border: 1px solid #ccc;
         border-radius: 5px;
         cursor: pointer;
+        margin: 5px;
     }
     .teacher-list{
         height: 34px!important;
@@ -58,9 +59,6 @@
         margin: 5px;
     }
     .pull-right>select{width: 120px;}
-    .teacher{
-        margin: 0 5px;
-    }
     .teacher-box{
         width: 254px;
     }
