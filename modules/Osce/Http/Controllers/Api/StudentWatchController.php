@@ -203,14 +203,23 @@ class StudentWatchController extends  CommonController
               $status =2;
               $curExam = $nowQueue;
               break;
+
           }
          if($nowQueue->status == 3){
              $status =3;
              $curExam = $nowQueue;
-             break;
+
           }
-            switch($status){
-                case 1;
+
+
+
+        }
+
+
+
+        switch($status){
+            case 1;
+                dump('待考');
                     $willStudents = ExamQueue::where('room_id','=',$nowQueue['room_id'])
                         ->whereBetween('status',[1,2])
                         ->count();
@@ -224,25 +233,22 @@ class StudentWatchController extends  CommonController
                     return response()->json(
                         $this->success_data($data,'考生等待信息')
                     );
-                    break;
+                break;
 
-                case 2;
-                    $nowTime =time();
-                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
-                    $surplus = floor($surplus/60) . ':' . $surplus%60;
-                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
+            case 2;
+                dump('考试中');
+//                    $nowTime =time();
+//                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
+//                    $surplus = floor($surplus/60) . ':' . $surplus%60;
+//                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
 
-                    break;
+                break;
 
-                case 3;
+            case 3;
 
-                    dump('当前考试已完成');
-                    break;
-            }
-
-
+                dump('当前考试已完成');
+                break;
         }
-
 
 
     }
