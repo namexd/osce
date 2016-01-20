@@ -237,6 +237,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
 
 		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
+		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
 	});
 
 

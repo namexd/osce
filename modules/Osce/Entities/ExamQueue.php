@@ -118,8 +118,19 @@ class ExamQueue extends  CommonModel{
     static public function examineeByRoomId($room_id)
     {
         try {
-            return ExamQueue::where('room_id', $room_id)
+            return ExamQueue::leftJoin('student', 'student.exam_id', '=', 'exam_queue.exam_id')
+                ->where('room_id', $room_id)
                 ->where('status', 2)
+                ->select([
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.user_id as student_user_id',
+                    'student.idcard as student_idcard',
+                    'student.mobile as student_mobile',
+                    'student.code as student_code',
+                    'student.avator as student_avator',
+                    'student.description as student_description',
+                ])
                 ->get();
         } catch (\Exception $ex) {
             throw $ex;
