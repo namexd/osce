@@ -6,11 +6,13 @@ Route::group(['prefix' => 'msc', 'namespace' => 'Modules\Msc\Http\Controllers'],
 {
 	Route::get('/', 'MscController@index');
 
+
 });
 
 
 Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','middleware' => []], function()
 {
+
 
 	//http://www.mis.hx/msc/admin/resources-manager/user-register
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
@@ -190,5 +192,8 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::controller('user', 'UserController');
 		Route::get('/user/user-login',['uses'=>'UserCotroller@getUserLogin','as'=>'msc.User.getUserLogin']);
 		// /msc/wechat/personal-center/index
+	});
+	Route::group(['prefix'=>'wechat'],function(){
+		Route::any('/token', 'WechatController@serve');
 	});
 });
