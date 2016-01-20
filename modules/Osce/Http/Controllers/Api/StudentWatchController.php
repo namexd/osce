@@ -125,6 +125,33 @@ class StudentWatchController extends  CommonController
         dump($list);die;
 
     }
-
+    //    public function getStudentQueues($student_id){
+//        $ExamQueueModel  =   new ExamQueue();
+//        $examQueueCollect   =   $ExamQueueModel ->where('student_id','=',$student_id)->get();
+//
+//
+//        $nowTime    =   time();
+//        $nowQueue   =   $this->nowQueue($examQueueCollect,$nowTime);
+//        if(empty($nowQueue))
+//        {
+//
+//            //当前无考试  待考/开考通知
+//            //$nowQueue->roomid
+//        }
+//        else
+//        {
+//            $nextQueue  =   $this->nextQueue($examQueueCollect,$nowTime);
+//            if(empty($nextQueue))
+//            {
+//                //考完了
+//            }
+//            else
+//            {
+//                //当前剩余考试时间
+//            }
+//
+//        }
+//
+//    }
 
 }

@@ -518,11 +518,11 @@ class InvigilatePadController extends CommonController
                 $willStudents = ExamQueue::where('room_id','=',$curExam['room_id'])
                     ->whereBetween('status',[1,2])
                     ->count();
-                dump('前面还有'.($willStudents-1). ' 考生'.  ' 预计考试时间'.$diff. '即将进入考场'.$curExam['room_name'] );
+                dump('前面还有'.($willStudents-1));
                 break;
 
             case self::EXAM_WILL_BEGIN:
-                //dump('你即将开始考试'.$curExam['room_name']);
+                dump('你即将开始考试'.$curExam['room_name']);
 
 
                 return response()->json(
@@ -543,7 +543,6 @@ class InvigilatePadController extends CommonController
                 break;
             case self::EXAM_JUST_AFTER:
                 //dump('考试已完成');
-                dd($list);
                 $studentStatus= ExamQueue::where('student_id','=',$watchStudent->student_id)
                     ->whereBetween('status',[1,2])
                     ->count();
@@ -571,6 +570,9 @@ class InvigilatePadController extends CommonController
     public function nowQueue($examQueueCollect,$nowTime)
     {
         foreach ($examQueueCollect as $examQueue) {
+            if(strtotime($examQueue->begin_dt) > $nowTime){
+                     return $examQueue;
+                 }
             if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime)
             {
                 return $examQueue;
@@ -580,9 +582,11 @@ class InvigilatePadController extends CommonController
     }
     public function nextQueue($examQueueCollect,$nowTime){
         $nowQueue   =   $this->nowQueue($examQueueCollect,$nowTime);
+//        dd($nowQueue);
         $queueLeave =   [];
         foreach ($examQueueCollect as $examQueue)
         {
+
             if(strtotime($examQueue->begin_dt)>strtotime($nowQueue->end_dt))
             {
                 $queueLeave[$examQueue->begin_dt]   =   $examQueue;
@@ -591,40 +595,9 @@ class InvigilatePadController extends CommonController
         ksort($queueLeave);
         return array_shift($queueLeave);
     }
-
 //    public function getCheckStatus(){
 //        $this->nowQueue();
 //    }
-
-    public function getStudentQueues($student_id){
-        $ExamQueueModel  =   new ExamQueue();
-        $examQueueCollect   =   $ExamQueueModel ->where('student_id','=',$student_id)->get();
-
-
-        $nowTime    =   time();
-        $nowQueue   =   $this->nowQueue($examQueueCollect,$nowTime);
-        if(empty($nowQueue))
-        {
-
-            //当前无考试  待考/开考通知
-            //$nowQueue->roomid
-        }
-        else
-        {
-            $nextQueue  =   $this->nextQueue($examQueueCollect,$nowTime);
-            if(empty($nextQueue))
-            {
-                //考完了
-            }
-            else
-            {
-                //当前剩余考试时间
-            }
-
-        }
-
-    }
-
 
     public function getWaitExamList(Request $request){
 
@@ -642,6 +615,61 @@ class InvigilatePadController extends CommonController
         }
         $ExamQueueModel= new ExamQueue();
         $examQueueCollect =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
-         $this->nextQueue($examQueueCollect,$nowTime);
+        dump($examQueueCollect);
+        $nowQueue   =   $this->nowQueue($examQueueCollect,$nowTime);
+        if(empty($nowQueue))
+        {
+        //当前无考试
+            return response()->json(
+                $this->success_data('当前无考试')
+            );
+        }
+        else
+        {
+            //            待考/开考通知
+            if(strtotime($nowQueue->begin_dt)-$nowTime > 200){
+                $willStudents = ExamQueue::where('room_id','=',$nowQueue['room_id'])
+                    ->whereBetween('status',[1,2])
+                    ->count();
+                    $examtimes= strtotime($nowQueue->end_dt) -strtotime($nowQueue->begin_dt);
+                    $examRoomName=$nowQueue->room_name;
+                     $data=[
+                         'willStudents'=>$willStudents,
+                         'examtimes'=>$examtimes,
+                         'examRoomName'=>$examRoomName
+                     ];
+                return response()->json(
+                    $this->success_data($data,'考生等待信息')
+                );
+            }elseif(strtotime($nowQueue->begin_dt)-$nowTime <= 200 && strtotime($nowQueue->begin_dt)-$nowTime>0) {
+                $examRoomName=$nowQueue->room_name;
+                return response()->json(
+                    $this->success_data($examRoomName,'考生开考通知')
+                );
+            }
+
+            $nextQueue  =   $this->nextQueue($examQueueCollect,$nowTime);
+            if(empty($nextQueue))
+            {
+                //考完了
+                dd(22222);
+
+                return response()->json(
+                    $this->success_data('考试完成')
+                );
+            }
+            else
+            {
+//
+                //当前剩余考试时间
+                $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
+                $surplus = floor($surplus/60) . ':' . $surplus%60;
+                dump('当前考试剩余时间'.$surplus);
+
+            }
+
+        }
+
+
     }
 }
