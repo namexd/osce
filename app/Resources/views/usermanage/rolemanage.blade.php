@@ -75,12 +75,12 @@
                 <label class="col-sm-3 control-label">角色描述：</label>
                 <div class="col-sm-9">
                     <input type="text" name="description" class="form-control" placeholder="请输入文本">
-
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-success" id='sure' class="notAgree" data-dismiss="modal" aria-hidden="true">确定</button>
+            <button type="submit" class="btn btn-success" id='sure' class="notAgree" data-dismiss="modal" aria-hidden="true">确定</button>
+            <button type="button" class="btn btn-white"data-dismiss="modal" aria-hidden="true">取消</button>
         </div>
     </form>
 

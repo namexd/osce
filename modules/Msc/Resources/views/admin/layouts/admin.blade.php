@@ -67,7 +67,6 @@
         @section('filledScript')
         @show{{-- 在document ready 里面填充一些JS代码 --}}
     });
-
 </script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('jk/js/jk.js') }}" type="text/javascript"></script>

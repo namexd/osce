@@ -13,8 +13,14 @@ class OsceDatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Model::unguard();
-		
-		// $this->call("OthersTableSeeder");
+
+		$this   ->  call(\AreaSeeder::class);
+		$this   ->  command ->  info('Area Data Creating......');
+
+		$this   ->  call(\CaseSeeder::class);
+		$this   ->  command ->  info('Case Data Creating......');
+
+		Model::reguard();
 	}
 
 }

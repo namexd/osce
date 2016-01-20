@@ -6,7 +6,7 @@ class OsceController extends Controller {
 	
 	public function index()
 	{
-		return view('osce::index');
+		return view('osce::admin.layouts.admin');
 	}
 	
 }
