@@ -118,15 +118,10 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
-            }
+        var index1=layer.alert('确认删除',{btn:['确认','取消']},function(){
+            thisElement.remove();
+            layer.close(index1);
         });
-
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
         //计数器标志
@@ -1577,7 +1572,7 @@ function examinee_manage(){
     $(".delete").click(function(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
-        layer.alert('确认删除？',function(){
+        layer.alert('确认删除？',{btn:['确认','取消']},function(){
             $.ajax({
                 type:'post',
                 async:true,
@@ -1585,10 +1580,10 @@ function examinee_manage(){
                 data:{id:sid,exam_id:examId},
                 success:function(data){
                     if(data.code ==1){
-                        layer.alert('删除成功！');
+                        layer.msg('删除成功！');
                         location.reload();
                     }else {
-                        layer.alert(data.message);
+                        layer.msg(data.message);
                     }
                 }
             })

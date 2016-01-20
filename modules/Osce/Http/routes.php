@@ -112,8 +112,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
 		//场所分类
-		Route::get('room-cate/room-cate-list',['uses'=>'RoomCateController@getRoomCateList','as'=>'osce.admin.room.getRoomCateList']);
-		Route::get('room-cate/edit-room-cate',['uses'=>'RoomCateController@getEditRoomCate','as'=>'osce.admin.room.getEditRoomCate']);
+		Route::get('room-cate/room-cate-list',['uses'=>'RoomCateController@getRoomCateList','as'=>'osce.admin.room-cate.getRoomCateList']);
+		Route::get('room-cate/edit-room-cate',['uses'=>'RoomCateController@getEditRoomCate','as'=>'osce.admin.room-cate.getEditRoomCate']);
+		Route::post('room-cate/delete',['uses'=>'RoomCateController@postDelete','as'=>'osce.admin.room-cate.postDelete']);   //场所的删除
 
 		//考场
 		Route::post('room/delete',['uses'=>'RoomController@postDelete','as'=>'osce.admin.room.postDelete']);
@@ -235,7 +236,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
 		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
 
-		Route::get('drawlots',['uses'=>'DrawlotsController@getRoomId','as'=>'osce.pad.getRoomId']);  //pad端通过教师查询考室id
+		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
 	});
 
 

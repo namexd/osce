@@ -127,28 +127,32 @@ class RoomCateController extends CommonController
 
     /**
      * 删除场所类
-     * @api       POST /osce/admin/room-cate/delete-room-cate
+     * @api       POST /osce/admin/room-cate/delete
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
+     * @param Area|RoomCate $model
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postDeleteRoomCate(Request $request, RoomCate $model)
+    public function postDelete(Request $request, Area $model)
     {
         $this->validate($request, [
             'id' => 'required|integer',
         ]);
 
         $id = $request->input('id');
+        try {
+            $result = $model->where('id',$id)->delete();
 
-        $result = $model->deleteData($id);
-
-        if (!$result) {
-            return redirect()->back()->withErrors('删除失败,请重试!');
+            if (!$result) {
+                return response()->json($this->success_data(['删除成功！']));
+            }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
         }
-        return redirect()->route('osce.admin.place.getRoomCateList');
+
     }
 }

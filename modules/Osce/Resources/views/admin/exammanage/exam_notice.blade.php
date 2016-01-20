@@ -43,7 +43,7 @@
                         <td>{{$item['created_at']}}</td>
                         <td>
                             <a href="{{route('osce.admin.notice.getEditNotice',['id'=>$item['id']])}}"><span class="read  state1"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                            <a href="{{route('osce.admin.notice.getDelNotice',['id'=>$item['id']])}}" onclick="return confirm('确认删除？')"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            <a href="{{route('osce.admin.notice.getDelNotice',['id'=>$item['id']])}}" onclick="return confirm('确认删除？')"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                     @empty
