@@ -69,8 +69,8 @@ class ExamQueue extends  CommonModel{
            $students=$examFlowStation ->queueStation()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
            foreach($students as $ExamQueue ){
                foreach($ExamQueue->student as $student){
-                   $student->stationName=$stationName;
-                   $data[$ExamQueue->station_id][]=$student;
+//                   $student->stationName=$stationName;
+                   $data[$stationName][]=$student;
                }
            }
        }
