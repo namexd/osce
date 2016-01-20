@@ -39,7 +39,7 @@
 
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <div class="col-sm-offset-2" style="padding-left:15px;">
+                            <div class="col-sm-offset-2" style="padding-left:15px;padding-top:5px;">
                                 <input type="radio" class="check_icon edit-man" name="gender" {!! $item->gender=='男'? 'checked="checked"':'' !!}   value="1"/> <span style="padding-right: 40px;">男</span>
                                 <input type="radio" class="check_icon edit-woman" name="gender" {!! $item->gender=='女'? 'checked="checked"':'' !!}  value="2" /> <span>女</span>
                             </div>
