@@ -196,4 +196,37 @@ class ConfigController extends CommonController
         }
     }
 
+    /**
+     * 删除考试区域
+     * @url GET /osce/admin/config/postDelArea
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        考试区域id(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postDelArea(Request $request, Area $area){
+        //验证
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+        $id = intval($request->get('id'));
+        try{
+            $result = $area->deleteArea($id);
+            if($result ==true){
+                return $this->success_data('删除成功！');
+            }
+
+        } catch(\Exception $ex){
+            return $this->fail($ex);
+        }
+    }
+
 }

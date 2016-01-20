@@ -52,8 +52,8 @@ class InvigilatorController extends CommonController
     public function getSpInvigilatorList(Request $request){
        $Invigilator    =   new Teacher();
 
-        $list       =   $Invigilator    ->getSpInvigilatorList();
-        $isSpValues =   $Invigilator    ->  getIsSpValues();
+        $list       =   $Invigilator    ->getSpInvigilatorInfo();
+        $isSpValues =   $Invigilator    ->getIsSpValues();
         return view('osce::admin.resourcemanage.sp_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
 
@@ -171,8 +171,7 @@ class InvigilatorController extends CommonController
             'create_user_id'    =>  $user->id,
             'role_id'           =>  config('osce.invigilatorRoleId',1)
         ];
-//        'spRoleId'		=>	4,
-//	'invigilatorRoleId'	=>	1,
+
         $Invigilator    =   new Teacher();
         try{
             if($Invigilator    ->  addInvigilator($data)){

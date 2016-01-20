@@ -182,6 +182,15 @@ class Teacher extends CommonModel
             ->  paginate(config('osce.page_size'));
     }
 
+    public function getSpInvigilatorInfo(){
+        return  $this   ->  where('type','=',2)
+            ->leftjoin('cases',function($join){
+                $join ->on('cases.id','=',$this->table.'.case_id');
+            })
+            ->select([$this->table.'.*', 'cases.name as case_name'])
+            ->  paginate(config('osce.page_size'));
+    }
+
     /**
      * 获取非SP监考老师列表
      * @access public

@@ -20,6 +20,7 @@ use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
+use Modules\Osce\Entities\InformInfo;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
@@ -99,15 +100,14 @@ class ExamController extends CommonController
             $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get(); //获得流程的id
             $examScreening = ExamScreening::where('exam_id',$id);
 
-
             //删除考试考场学生表
-                foreach ($examScreening->select('id')->get() as $item) {
-                    if (count(ExamScreeningStudent::where('exam_screening_id',$item->id)->get()) != 0) {
-                        if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->delete()) {
-                            throw new \Exception('删除考试考场学生关系表失败，请重试！');
-                        }
+            foreach ($examScreening->select('id')->get() as $item) {
+                if (count(ExamScreeningStudent::where('exam_screening_id',$item->id)->get()) != 0) {
+                    if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->delete()) {
+                        throw new \Exception('删除考试考场学生关系表失败，请重试！');
                     }
                 }
+            }
 
             //删除考试考场关联表
             if (count($examScreening-> get()) != 0) {
@@ -122,7 +122,6 @@ class ExamController extends CommonController
                     throw new \Exception('删除考试考场关联失败，请重试！');
                 }
             }
-
 
             //删除考试流程关联
             if (count(ExamFlow::where('exam_id',$id)->first()) != 0) {
@@ -139,7 +138,6 @@ class ExamController extends CommonController
             }
 
             //通过考试流程-考站关系表得到考站信息
-
             $station = ExamFlowStation::whereIn('flow_id',$flowIds);
             $stationIds = $station->select('station_id')->get();
             if (count($stationIds) != 0) {
@@ -155,12 +153,19 @@ class ExamController extends CommonController
                         throw new \Exception('删除考站老师关联失败，请重试！');
                     }
                 }
-
             }
 
+            //删除考试对应的资讯通知
+            $informInfo = InformInfo::where('exam_id', $id)->get();
+            if(count($informInfo) !=0){
+                foreach ($informInfo as $item) {
+                    if(!$item->delete()){
+                        throw new \Exception('删除考试对应的资讯通知失败，请重试！');
+                    }
+                }
+            }
             //删除考试本体
-            $result = $exam->where('id',$id)->delete();
-            if ($result != true) {
+            if (!$result = $exam->where('id',$id)->delete()) {
                 throw new \Exception('删除考试失败，请重试！');
             }
 
@@ -174,10 +179,12 @@ class ExamController extends CommonController
             }
 
             DB::commit();
-            return response()->json($this->success_data(['删除成功！']));
+            return $this->success_data(['删除成功！']);
+//            return response()->json($this->success_data(['删除成功！']));
         } catch (\Exception $ex) {
             DB::rollback();
-            return response()->json($this->fail($ex));
+            return $this->fail($ex);
+//            return response()->json($this->fail($ex));
         }
     }
 
