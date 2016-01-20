@@ -62,7 +62,7 @@
                     <td>{{ $list->begin_dt }}~{{ $list->end_dt }}</td>
                     <td value="{{$list->id}}">
                         <a href="{{ route('osce.admin.getEditTrain',array('id'=>$list->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
                 @endforeach
