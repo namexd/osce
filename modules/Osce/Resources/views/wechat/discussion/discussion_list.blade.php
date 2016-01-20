@@ -1,11 +1,13 @@
 @extends('osce::wechat.layouts.admin')
 
 @section('only_head_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('osce/wechat/css/discussion.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
 <script type="text/javascript">
 	$(function(){
+
         $(window).scroll(function(e){
             if(away_top >= (page_height - window_height)&&now_page<totalpages){
                 now_page++;
