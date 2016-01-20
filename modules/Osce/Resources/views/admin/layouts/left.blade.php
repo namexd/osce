@@ -76,7 +76,7 @@
                             </li>
                             <li><a class="active J_menuItem" href="">成绩查询</a>
                             </li>
-                            <li><a class="active J_menuItem" href="{{route('osce.admin.notice.getList')}}">咨询&通知</a></li>
+                            <li><a class="active J_menuItem" href="{{route('osce.admin.notice.getList')}}">资讯&通知</a></li>
                             <li><a class="active J_menuItem" href="{{route('osce.admin.getTrainList')}}">考前培训</a>
                             </li>
                         </ul>
