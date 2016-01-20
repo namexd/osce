@@ -138,7 +138,7 @@ return [
 
         //队列
         'queue' => [
-			'host'     => '192.168.0.254',
+			'host'     => env('REDIS_HOST','192.168.0.254'),
             'port'     => 6379,
             'database' => 0,
         ],
