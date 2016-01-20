@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="container-fluid ibox-content">
-            <div class="panel blank-panel">
+            <div class="">
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
@@ -113,8 +113,6 @@
                     @endforelse
                     </tbody>
                 </table>
-
-                <br/>
                 <div class="pull-left">
                     共{{$data->total()}}条
                 </div>
