@@ -619,15 +619,14 @@ class InvigilatePadController extends CommonController
         $nowQueue   =   $this->nowQueue($examQueueCollect,$nowTime);
         if(empty($nowQueue))
         {
-        //当前无考试
             return response()->json(
                 $this->success_data('当前无考试')
             );
         }
         else
         {
-            //            待考/开考通知
-            if(strtotime($nowQueue->begin_dt)-$nowTime > 200){
+            //   待考/开考通知
+            if(strtotime($nowQueue->begin_dt)-$nowTime > 120){
                 $willStudents = ExamQueue::where('room_id','=',$nowQueue['room_id'])
                     ->whereBetween('status',[1,2])
                     ->count();
@@ -641,7 +640,7 @@ class InvigilatePadController extends CommonController
                 return response()->json(
                     $this->success_data($data,'考生等待信息')
                 );
-            }elseif(strtotime($nowQueue->begin_dt)-$nowTime <= 200 && strtotime($nowQueue->begin_dt)-$nowTime>0) {
+            }elseif(strtotime($nowQueue->begin_dt)-$nowTime <= 120 && strtotime($nowQueue->begin_dt)-$nowTime>0) {
                 $examRoomName=$nowQueue->room_name;
                 return response()->json(
                     $this->success_data($examRoomName,'考生开考通知')
@@ -651,21 +650,32 @@ class InvigilatePadController extends CommonController
             $nextQueue  =   $this->nextQueue($examQueueCollect,$nowTime);
             if(empty($nextQueue))
             {
-                //考完了
-                dd(22222);
-
-                return response()->json(
+                if(strtotime($nowQueue['end_dt']) - $nowTime >=0 ){
+                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
+                    $surplus = floor($surplus/60) . ':' . $surplus%60;
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>2]);
+                    dump('当前考试剩余时间'.$surplus);
+                }else{
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>3]);
+                    return response()->json(
                     $this->success_data('考试完成')
                 );
+                }
             }
             else
             {
-//
                 //当前剩余考试时间
-                $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
-                $surplus = floor($surplus/60) . ':' . $surplus%60;
-                dump('当前考试剩余时间'.$surplus);
+                if(strtotime($nowQueue['end_dt']) - $nowTime >= 60 ){
 
+                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
+                    $surplus = floor($surplus/60) . ':' . $surplus%60;
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>2]);
+                    dump('当前考试剩余时间'.$surplus);
+
+                }else{
+                    dump($nextQueue['room_name'].'下一场考试');
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>3]);
+                }
             }
         }
 
