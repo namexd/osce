@@ -26,7 +26,7 @@ class NoticeController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return void
+     * @return view
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>

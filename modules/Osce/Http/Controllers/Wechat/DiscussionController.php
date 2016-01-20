@@ -15,7 +15,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 class DiscussionController extends  CommonController{
 
     /**
-     *问题列表页面
+     *问题列表页面数据
      * @method GET
      * @url /osce/wechat/discussion/question-list
      * @access public
@@ -82,7 +82,7 @@ class DiscussionController extends  CommonController{
                 'title' =>$item->title,
                 'content' =>$item->content,
                 'create_at' =>$item->created_at,
-                'name'   =>$item->getAuthor,
+                'user'   =>$item->getAuthor,
                 'time' =>$time,
                 'count' =>$countReply,
             ];
@@ -94,9 +94,9 @@ class DiscussionController extends  CommonController{
       }
 
     /**
-     *请求登录页
+     *请求列表登录页
      * @method GET
-     * @url /osce/wechat/train/train-lists
+     * @url /osce/wechat/discussion/discussion-lists
      * @access public
      *
      * @param Request $request post请求<br><br>

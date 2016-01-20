@@ -122,8 +122,26 @@ class TrainController extends  CommonController{
      */
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
-        $train=InformTrain::find($id);
-        return view('osce::wechat.train.train_detail')->with('train',$train);
+        $train=InformTrain::where('id',$id)->select()->get();
+        foreach($train as $item){
+            $data=[
+                'id'    =>$item->id,
+                'name' =>$item->name,
+                'address' =>$item->address,
+                'begin_dt' =>$item->begin_dt,
+                'end_dt' =>$item->end_dt,
+                'teacher' =>$item->teacher,
+                'content' =>$item->content,
+                'status' =>$item->status,
+                'attachments' =>$item->attachments,
+                'create_user_id' =>$item->create_user_id,
+            ];
+        }
+
+        if($data['attachments']){
+            $data['attachments']=unserialize($data['attachments']);
+        }
+        return view('osce::wechat.train.train_detail')->with('data',$data);
     }
 	
 	public function getTrainlists(){

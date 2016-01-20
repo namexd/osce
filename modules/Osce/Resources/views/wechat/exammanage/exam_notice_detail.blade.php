@@ -44,7 +44,7 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         资讯&通知
-        <a class="right header_btn" href="">
+        <a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>
@@ -58,7 +58,7 @@
                         <img src="" alt="">
                     </div>
                     <div>
-                      {{  $notice->content  }}
+                      {!! $notice->content !!}
                     </div>
                 </div>
             </li>

@@ -53,11 +53,11 @@ class ExamRoom extends CommonModel
     public function getRoomSpTeachersByExamId($exam_id){
         return  Teacher::leftJoin('station_teacher',function($join){
             $join    ->  on('teacher.id','=','station_teacher.user_id');
-        })  ->leftJoin($this->table,function($join){
-            $join    ->  on('exam_room.room_id','=','room_station.room_id');
+        })  ->leftJoin('room_station',function($join){
+            $join    ->  on('station_teacher.station_id','=','room_station.station_id');
         })
             ->where('teacher.type','=',2)
-            ->where('exam_room.exam_id','=',$exam_id)
+            ->where('station_teacher.exam_id','=',$exam_id)
             ->select([
                 'teacher.id as id',
                 'teacher.name as name',
@@ -66,7 +66,6 @@ class ExamRoom extends CommonModel
                 'teacher.case_id as case_id',
                 'teacher.status as status',
                 'room_station.room_id',
-                'exam_room.room_id',
             ])
             ->get();
     }
@@ -75,11 +74,9 @@ class ExamRoom extends CommonModel
             $join    ->  on('teacher.id','=','station_teacher.user_id');
         })  ->leftJoin('room_station',function($join){
             $join    ->  on('room_station.station_id','=','station_teacher.station_id');
-        })  ->leftJoin($this->table,function($join){
-            $join    ->  on('room_station.room_id','=','exam_room.room_id');
         })
             ->whereIn('teacher.type',[1,3])
-            ->where('exam_room.exam_id','=',$exam_id)
+            ->where('station_teacher.exam_id','=',$exam_id)
             ->select(DB::raw(implode(',',[
                 'teacher.id as id',
                 'teacher.name as name',

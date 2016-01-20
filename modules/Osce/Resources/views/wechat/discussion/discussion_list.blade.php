@@ -37,12 +37,20 @@
                         //准备dom
                         //计数
                         var key = (index+1+parseInt(i))
+                        if(data[i].user==null)
+                        {
+                            var ThisName    ='-';
+                        }
+                        else
+                        {
+                            var ThisName    =   data[i].user.name;
+                        }
                         html += '<li>'+
 						        	'<a class="nou" href="{{route('osce.wechat.getCheckQuestion')}}?id='+data[i].id+'">'+
 						        		'<p class="font14 fontb clo3 p_title">'+data[i].title+'</p>'+
 						        		'<p class="font12 clo9 main_txt">'+data[i].content+'</p>'+
 						        		'<p class="font12 p_bottom">'+
-						        			'<span class="student_name">'+data[i].name.name+'</span>'+
+						        			'<span class="student_name">'+ThisName+'</span>'+
 						        			'<span class="clo0">&nbsp;·&nbsp;</span>'+
 						        			'<span class="clo9">'+data[i].time+'</span>'+
 						        			'<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;'+data[i].count+'&nbsp;</span>'+
