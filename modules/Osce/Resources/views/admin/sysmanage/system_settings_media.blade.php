@@ -10,6 +10,7 @@
 	.form-control-feedback{right:25px;}
 	.checkbox_input{margin:10px 10px 0 0;font-weight:100;cursor:pointer;}
 	.check_name{padding:0;height:16px;position: relative;top:-3px;}
+	#checkbox_div .glyphicon{display:none!important;}
 </style>
 @stop
 
@@ -23,7 +24,7 @@
 				}else{
 					$(this).find(".check_icon").removeClass("check");
 				}
-    		})
+    		});
    			/**
 		     * 下面是进行插件初始化
 		     * 你只需传入相应的键值对
@@ -187,10 +188,10 @@
 			        </div>
 			        <div class="ibox-content">
 			            <div class="row">
-			                <div class="col-md-12 ">
+			                <div class="col-md-12">
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label">通知方式：</label>
-		                            <div class="col-sm-10">
+		                            <div class="col-sm-10" id="checkbox_div">
 		                            	<label class="check_label checkbox_input">
 			                                <div class="check_icon @if(array_search('1',$tempDB[0]['value']) !== false) check @endif" style="display: inline-block"></div>
 			                                <input type="checkbox" @if(array_search('1',$tempDB[0]['value']) !== false) checked="checked" @endif name="message_type[]" value="1">
@@ -359,8 +360,9 @@
 		                        </div>
 			                </div>
 			                <div class="form-group">
-                                <div class="col-sm-6 col-sm-offset-2">
-                                	<input class="btn btn-primary"  type="submit" name="" id="" value="保 存" />
+			                	<label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-9">
+                                	<input class="btn btn-primary" style="margin-left:10px;"  type="submit" name="" id="" value="保 存" />
 									<a class="btn btn-white" href="{{url('osce/admin/config/index')}}">取消</a>
                                 </div>
                             </div>

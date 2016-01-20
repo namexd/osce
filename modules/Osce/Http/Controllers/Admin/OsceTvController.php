@@ -17,14 +17,14 @@ class OsceTvController extends  CommonController{
 
 
     /**
-     *ºò¿¼ÂÖ²¥¿¼ÉúÁÐ±í
+     *å€™è€ƒè½®æ’­è€ƒç”Ÿåˆ—è¡¨
      * @method GET
      * @url /osce/admin/oscetv/write-detail
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * int        exam_id       ¿¼ÊÔId
+     * @param Request $request postè¯·æ±‚<br><br>
+     * <b>postè¯·æ±‚å­—æ®µï¼š</b>
+     * * int        exam_id       è€ƒè¯•Id
      *
      * @return ${response}
      *
@@ -33,7 +33,7 @@ class OsceTvController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-      public function getWriteDetail(Request $request){
+    public function getWaitDetail(Request $request){
           $this->validate($request,[
               'exam_id'  => 'required|integer'
           ]);
@@ -43,7 +43,8 @@ class OsceTvController extends  CommonController{
           $examQueModel= new ExamQueue();
           $list=$examQueModel->getStudent($mode,$exam_id);
 
-          return view()->with(['list'=>$list,'description'=>$description]);
-      }
+          return view('osce::admin.exammanage.exam_remind')->with(['list'=>$list,'description'=>$description]);
+//        return view('osce::admin.exammanage.exam_remind');
+    }
 
 }

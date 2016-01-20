@@ -1,10 +1,29 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
+<style type="text/css">
+	#table-striped{margin-top:15px;}
+</style>
 @stop
 
 @section('only_js')
-    
+    <script type="text/javascript">
+    	$(function(){
+    		$(".fa-trash-o").click(function(){
+		        var thisElement=$(this);
+		        layer.alert('确认删除？',function(){
+		            $.ajax({
+		                type:'post',
+		                async:false,
+		                url:"{{route('osce.admin.room-cate.postDelete')}}?id="+thisElement.parent().parent().parent().attr('value'),
+		                success:function(data){
+		                    location.reload();
+		                }
+		            })
+		        });
+		    })
+    	})
+    </script>
 @stop
 
 
@@ -39,8 +58,8 @@
 	                    <tr>
 	                        <td>{{$item->name}}</td>
 	                        <td>{{$item->description}}</td>
-	                        <td>
-	                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
+	                        <td value="{{$item->id}}">
+	                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
 	                        </td>
 	                    </tr>
 					@endforeach

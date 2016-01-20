@@ -84,7 +84,7 @@
 								<p>
 									<a href="{{ route('osce.admin.getDownloadDocument',['id'=>$data['id'],'attch_index'=>$key])}}">
                                     <input type="hidden" name="file[]" id="" value="{{ $list }}" />
-									<i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($list,27)  }}
+									<i class="fa fa-2x fa-delicious"></i>&nbsp;<?php $pathInfo=explode('/',$list)?>{{array_pop($pathInfo)}}
                                     </a>
 								</p>
 							</div>

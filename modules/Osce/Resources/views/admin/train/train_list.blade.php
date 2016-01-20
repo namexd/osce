@@ -12,6 +12,24 @@
 
 @section('only_js')
     <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
+    
+    <script>
+		$(function(){
+		    $(".fa-trash-o").click(function(){
+		        var thisElement=$(this);
+		        layer.alert('确认删除？',function(){
+		            $.ajax({
+		                type:'get',
+		                async:false,
+		                url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
+		                success:function(data){
+		                    location.reload();
+		                }
+		            })
+		        });
+		    })
+		})
+	</script>
 @stop
 
 
@@ -42,9 +60,9 @@
                     <td>1</td>
                     <td><a href="{{route('osce.admin.getTrainDetail',array('id'=>$list->id))}}">{{ $list->name }}</a></td>
                     <td>{{ $list->begin_dt }}~{{ $list->end_dt }}</td>
-                    <td value="1">
+                    <td value="{{$list->id}}">
                         <a href="{{ route('osce.admin.getEditTrain',array('id'=>$list->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                        <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
                 @endforeach

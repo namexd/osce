@@ -3,22 +3,22 @@
 	<link rel="stylesheet" href="{{asset('osce/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
     <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/demo/webuploader-demo.css')}}">
     <style>
-    .col-sm-1{margin-top: 6px;}
-    .col-sm-1>input[type="checkbox"]{vertical-align: sub;}
-    .form-group.col-sm-1{margin-bottom: 0!important;}
-    .upload{
-        display:block;
-        height: 34px!important;
-        width: 100px!important;
-        cursor: pointer;
-        background-image:none!important;
-        position:relative;
-        margin:0!important;
-    }
-    #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
-    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
-    .fa-remove{cursor:pointer;}
-    .laydate-icon{width:200px;}
+	    .col-sm-1{margin-top: 6px;}
+	    .col-sm-1>input[type="checkbox"]{vertical-align: sub;}
+	    .form-group.col-sm-1{margin-bottom: 0!important;}
+	    .upload{
+	        display:block;
+	        height: 34px!important;
+	        width: 100px!important;
+	        cursor: pointer;
+	        background-image:none!important;
+	        position:relative;
+	        margin:0!important;
+	    }
+	    #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
+	    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+	    .fa-remove{cursor:pointer;}
+	    .laydate-icon{width:200px;}
     </style>
 @stop
 
@@ -32,7 +32,6 @@
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
  <script type="text/javascript">
- 	
  	$(function(){
  		var start={
 			elem: '#start',

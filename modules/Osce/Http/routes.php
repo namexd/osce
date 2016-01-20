@@ -112,8 +112,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
 		//场所分类
-		Route::get('room-cate/room-cate-list',['uses'=>'RoomCateController@getRoomCateList','as'=>'osce.admin.room.getRoomCateList']);
-		Route::get('room-cate/edit-room-cate',['uses'=>'RoomCateController@getEditRoomCate','as'=>'osce.admin.room.getEditRoomCate']);
+		Route::get('room-cate/room-cate-list',['uses'=>'RoomCateController@getRoomCateList','as'=>'osce.admin.room-cate.getRoomCateList']);
+		Route::get('room-cate/edit-room-cate',['uses'=>'RoomCateController@getEditRoomCate','as'=>'osce.admin.room-cate.getEditRoomCate']);
+		Route::post('room-cate/delete',['uses'=>'RoomCateController@postDelete','as'=>'osce.admin.room-cate.postDelete']);   //场所的删除
 
 		//考场
 		Route::post('room/delete',['uses'=>'RoomController@postDelete','as'=>'osce.admin.room.postDelete']);
@@ -200,7 +201,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
 		//候考
-		Route::get('oscetv/write-detail',['uses'=>'OsceTvController@getWriteDetail','as'=>'osce.admin.getWriteDetail']);
+		Route::get('oscetv/wait-detail',['uses'=>'OsceTvController@getWaitDetail','as'=>'osce.admin.getWaitDetail']);
 
 		//测试
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);
@@ -235,7 +236,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
 		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
 
+		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
 	});
+
 
 });
 
@@ -331,19 +334,19 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 
 
 
-//		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
-//			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
-//			Route::get('vcr',['uses'=>'PadController@getVcr']);
-//
-//			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
-//			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
-//
-//			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
-//
-//			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
-//			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
-//
-//		});
+		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
+			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
+			Route::get('vcr',['uses'=>'PadController@getVcr']);
+
+			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+
+			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
+
+			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
+			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
+
+		});
 	});
 
 
