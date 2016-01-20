@@ -55,6 +55,7 @@
                         },
                         stringLength: {
                         	min:6,
+                        	max:20,
                             message: '密码为6~20个字符'
                         }
                     }

@@ -43,9 +43,6 @@ class OsceTvController extends  CommonController{
           $examQueModel= new ExamQueue();
           $list=$examQueModel->getStudent($mode,$exam_id);
 
-//         foreach($list as $key=>$v){
-//            dd($v[1]->name);
-//         }
           return view('osce::admin.exammanage.exam_remind')->with(['list'=>$list,'description'=>$description]);
 //        return view('osce::admin.exammanage.exam_remind');
     }
