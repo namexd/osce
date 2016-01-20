@@ -439,7 +439,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddCameras(){
-        return view('osce::admin.resourcemanage.vcr_add');
+        $model = new Vcr();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.vcr_add', ['status'=>$status]);
     }
 
     /**
@@ -465,9 +467,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Vcr();
+        $status   =   $model  ->  getMachineStatuValues();
         $vcr    =   Vcr::find($id);
 
-        return view('osce::admin.resourcemanage.vcr_edit',['item'=>$vcr]);
+        return view('osce::admin.resourcemanage.vcr_edit',['item'=>$vcr, 'status'=>$status]);
     }
 
     /**
@@ -570,7 +574,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddPad(){
-        return view('osce::admin.resourcemanage.pad_add');
+        $model = new Pad();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.pad_add',['status'=>$status]);
     }
 
     /**
@@ -596,9 +602,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Pad();
+        $status   =   $model  ->  getMachineStatuValues();
         $pad    =   Pad::find($id);
 
-        return view('osce::admin.resourcemanage.pad_edit',['item'=>$pad]);
+        return view('osce::admin.resourcemanage.pad_edit',['item'=>$pad, 'status'=>$status]);
     }
 
     /**
@@ -758,7 +766,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddWatch(){
-        return view('osce::admin.resourcemanage.watch_add');
+        $model = new Watch();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.watch_add',['status'=>$status]);
     }
 
     /**
@@ -784,9 +794,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Watch();
+        $status   =   $model  ->  getMachineStatuValues();
         $watch  =   Watch::find($id);
 
-        return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
+        return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch, 'status'=>$status]);
     }
 
     /**
