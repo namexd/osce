@@ -49,7 +49,7 @@ return [
         ],
         'images'=>[
             'driver' => 'local',
-            'root'   =>public_path('images'),
+            'root'   => public_path('images'),
         ],
         'ftp' => [
             'driver'   => 'ftp',

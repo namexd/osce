@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Overtrue\Wechat\Message;
+use Overtrue\Wechat\Messages\BaseMessage;
 use Overtrue\Wechat\Staff;
+use Overtrue\Wechat\Broadcast;
 use Queue;
 use App;
 use Illuminate\Http\Request;
@@ -117,6 +119,7 @@ class Common{
 
 
     public static function getExclData($request,$name,$cnHeader=true){
+
         $excl=$request->file($name);
         if(empty($excl))
         {
@@ -218,6 +221,7 @@ class Common{
         $weixinservice= App::make('wechat.staff');
         try{
             return $weixinservice->send($message)->to($openId);
+
         }
         catch(\Exception $ex)
         {
@@ -240,28 +244,35 @@ class Common{
                 foreach($msgArray as $key=>$item)
                 {
                     $itemData=Message::make('news_item')->title($item['title']);
-                    if($key=='desc')
+                    foreach($item as $feild=>$value)
                     {
-                        $itemData=$itemData->description($item);
+                        if($feild==='desc')
+                        {
+                            $itemData=$itemData->description($value);
+                        }
+                        if($feild==='url')
+                        {
+                            $itemData=$itemData->url($value);
+                        }
+                        if($feild==='picUrl')
+                        {
+                            $itemData=$itemData->picUrl($value);
+                        }
                     }
-                    if($key=='url')
-                    {
-                        $itemData=$itemData->url($item);
-                    }
-                    if($key=='picUrl')
-                    {
-                        $itemData=$itemData->picUrl($item);
-                    }
+                    $msgData[]=$itemData;
                 }
-                $msgData[]=$itemData;
                 return $msgData;
             }
         );
         return $message;
     }
+
     /**
      * 将Excl导入产生的数组(二维) ，其中 中文的字段换成对应的英文
-     * return array
+     * @param $data
+     * @param array $nameToEn
+     * @return array
+     * @throws \Exception
      */
     public static function arrayChTOEn($data,$nameToEn=[]){
         if(is_string($nameToEn))
@@ -283,6 +294,15 @@ class Common{
         }
         return $newData;
     }
+
+    /**
+     * 微信的发送方法
+     * @param $openid
+     * @param $msg
+     * @return bool
+     * @throws \Exception
+     * @throws \Overtrue\Wechat\Exception
+     */
     public static function sendMsg($openid,$msg){
         if(empty($openid))
         {
@@ -323,4 +343,43 @@ class Common{
         return $data;
     }
     */
+    //微信群发
+
+
+    /**
+     * 微信群发
+     * @access public
+     *
+     * @param object    $message        微信消息对象（可以使用Common::CreateWeiXinMessage 创建）
+     * @param array $   OpendIdArray    接收的微信opendID列表 e.g:['oI7UquKmahFwGV0l2nyu_f51nDJ4','oI7UquPKycumti7NU4HQYjVnRjPo']
+     * @return void
+     *
+     * <pre>
+     * $Message  =   Common::CreateWeiXinMessage(
+     *      [
+     *          [
+     *              'title' =>'邀请通知',
+     *              'desc'  =>'osce考试第一期邀请',
+     *              'url'=>'http://www.baidu.com'
+     *          ],
+     *          //['title'=>'osce考试第一期邀请','url'=>'http://www.baidu.com'],
+     *      ]
+     * );
+     *  //Common::sendWeiXin('oI7UquKmahFwGV0l2nyu_f51nDJ4',$Message);//单发
+     *  Common::sendWeixinToMany($Message,['oI7UquKmahFwGV0l2nyu_f51nDJ4','oI7UquPKycumti7NU4HQYjVnRjPo']);//群发
+     * </pre>
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-07 21:04
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    static public function sendWeixinToMany(BaseMessage $message,array $OpendIdArray){
+        if(count($OpendIdArray)==0)
+        {
+            throw new \Exception('你选择的接收用户数量为0');
+        }
+        $broadcast = new Broadcast(config('wechat.app_id'), config('wechat.secret'));
+        $broadcast->send($message)->to($OpendIdArray);
+    }
 }

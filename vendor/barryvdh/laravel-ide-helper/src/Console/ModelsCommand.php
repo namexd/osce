@@ -416,7 +416,9 @@ class ModelsCommand extends Command
 
     protected function setMethod($name, $type = '', $arguments = array())
     {
-        if (!isset($this->methods[$name])) {
+        $methods = array_change_key_case($this->methods, CASE_LOWER);
+
+        if (!isset($methods[strtolower($name)])) {
             $this->methods[$name] = array();
             $this->methods[$name]['type'] = $type;
             $this->methods[$name]['arguments'] = $arguments;
@@ -520,10 +522,11 @@ class ModelsCommand extends Command
         //Loop through the default values for paremeters, and make the correct output string
         $params = array();
         $paramsWithDefault = array();
+        /** @var \ReflectionParameter $param */
         foreach ($method->getParameters() as $param) {
             $paramStr = '$' . $param->getName();
             $params[] = $paramStr;
-            if ($param->isOptional()) {
+            if ($param->isOptional() && $param->isDefaultValueAvailable()) {
                 $default = $param->getDefaultValue();
                 if (is_bool($default)) {
                     $default = $default ? 'true' : 'false';

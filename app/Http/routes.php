@@ -1,6 +1,8 @@
 <?php
 
 $version='1.0';
+
+
 /*
  * 后台页面
  * */
@@ -21,7 +23,10 @@ Route::group(['prefix' => "admin",'middleware' => []], function()
 
 Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
 {
-    Route::post('oauth/access_token', function(){return Response::json(Authorizer::issueAccessToken());});
+    Route::post('oauth/access_token', function(){
+
+        return Response::json(Authorizer::issueAccessToken());
+    });
     Route::group(['prefix'=>'msc','namespace' => 'V1\Sys'],function()
     {
         Route::controller('user', 'UserController');
