@@ -32,11 +32,12 @@ class Teacher extends CommonModel
     ];
 
     /**
+     * 通过教师去寻找对应的考站
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function teacherStation()
     {
-        return $this->belongsToMany('\Modules\Osce\Entities\Station','station_teacher','teacher_id','station_id');
+        return $this->belongsToMany('\Modules\Osce\Entities\Station','station_teacher','user_id','station_id');
     }
     /**
      * 用户关联
