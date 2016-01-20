@@ -132,7 +132,6 @@ class Student extends CommonModel
                 $user -> gender = $examineeData['gender'];  //性别
                 $user -> mobile = $examineeData['mobile'];  //手机号
                 $user -> avatar = $examineeData['avator'];  //头像
-
                 $user -> idcard = $examineeData['idcard'];  //身份证号
                 $user -> email  = $examineeData['email'];   //邮箱
                 if(!($user->save())){      //跟新用户
@@ -145,6 +144,11 @@ class Student extends CommonModel
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);
             }
 
+            //查询学号是否存在
+            $code = $this->where('code', $examineeData['code'])->where('user_id','<>',$user->id)->first();
+            if(!empty($code)){
+                throw new \Exception('该学号已经有别人使用！');
+            }
             //根据用户ID和考试号查找考生
             $student = $this->where('user_id', '=', $user->id)
                 ->where('exam_id', '=', $exam_id)->first();
