@@ -1121,6 +1121,20 @@ function exam_notice_add(){
     }
 
     /**
+     * checkbox
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-20
+     */
+    $(".checkbox_input").click(function(){
+        if($(this).find("input").is(':checked')){
+            $(this).find(".check_icon ").addClass("check");
+        }else{
+            $(this).find(".check_icon").removeClass("check");
+        }
+    });
+
+    /**
      * 附件上传
      * @author mao
      * @version 1.0
@@ -1141,13 +1155,7 @@ function exam_notice_add(){
                 }
             },
             error: function (data, status, e){
-                $.alert({
-                    title: '提示：',
-                    content: '通讯失败!',
-                    confirmButton: '确定',
-                    confirm: function(){
-                    }
-                });
+                layer.alert('通讯失败!');
             }
         });
     }) ;
@@ -1161,14 +1169,10 @@ function exam_notice_add(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-            $.alert({
-                title: '提示：',
-                content: '确认为删除？',
-                confirmButton: '确定',
-                confirm: function(){
-                    thisElement.parent("p").remove();
-                }
-            });
+        layer.alert('确认为删除？',function(index){
+            thisElement.parent("p").remove();
+            layer.close(index);
+        })
     });
 
 
@@ -1193,6 +1197,21 @@ function exam_notice_edit(){
 
     //测试数据
     var test_data = '<p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160115/1452835178916146.jpg" title="1452835178916146.jpg">1452835178916146.jpg</a></p><p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160115/1452834723154699.jpg" title="1452834723154699.jpg">1452834723154699.jpg</a></p><p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160107/1452155293584887.jpg" title="1452155293584887.jpg">1452155293584887.jpg</a></p><p style="line-height: 16px;"><img style="vertical-align: middle; margin-right: 2px;" src="http://www.mis.hx/osce/admin/plugins/js/plugins/UEditor/dialogs/attachment/fileTypeImages/icon_jpg.gif"/><a style="font-size:12px; color:#0066cc;" href="/ueditor/php/upload/file/20160107/1452154121985298.jpg" title="1452154121985298.jpg">1452154121985298.jpg</a></p><p><em>fdsafd</em><br/></p><p><span style="font-size: 24px; text-decoration: underline;">csavfdf</span></p><p><strong><span style="font-size: 24px;">fdsafgdsaf</span></strong></p><p><br/></p><p><br/></p><p><span style="font-size: 24px; background-color: rgb(255, 255, 0);">fdsafdaf<img src="http://img.baidu.com/hi/jx2/j_0058.gif"/><span style="font-size: 24px; background-color: rgb(255, 255, 0);"></span></span></p>'
+
+    /**
+     * checkbox
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-20
+     */
+    $(".checkbox_input").click(function(){
+        if($(this).find("input").is(':checked')){
+            $(this).find(".check_icon ").addClass("check");
+        }else{
+            $(this).find(".check_icon").removeClass("check");
+        }
+    });
+
 
     /**
      * 插入插入内容
@@ -1238,13 +1257,7 @@ function exam_notice_edit(){
                 }
             },
             error: function (data, status, e){
-                $.alert({
-                    title: '提示：',
-                    content: '通讯失败!',
-                    confirmButton: '确定',
-                    confirm: function(){
-                    }
-                });
+                layer.alert('通讯失败!');
             }
         });
     }) ;
@@ -1258,14 +1271,10 @@ function exam_notice_edit(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-            $.alert({
-                title: '提示：',
-                content: '确认为删除？',
-                confirmButton: '确定',
-                confirm: function(){
-                    thisElement.parent("p").remove();
-                }
-            });
+        layer.alert('确认为删除？',function(index){
+            thisElement.parent("p").remove();
+            layer.close(index);
+        })
     });
 
 
