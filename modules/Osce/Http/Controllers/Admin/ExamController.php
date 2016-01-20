@@ -226,9 +226,11 @@ class ExamController extends CommonController
         $this   ->  validate($request,[
             'name'          =>  'required',
             'time'          =>  'required',
+            'address'       =>  'required',
         ],[
             'name.required'     =>  '考试名称必填',
             'time.required'     =>  '考试时间必填',
+            'address.required'  =>  '考试地址必填',
         ]);
 
         $user   =   Auth::user();
@@ -273,7 +275,8 @@ class ExamController extends CommonController
                 'total'          => 0,
                 'create_user_id' => $user -> id,
                 'sequence_cate'  => e($request  ->  get('sequence_cate')),
-                'sequence_mode'  => e($request  ->  get('sequence_mode'))
+                'sequence_mode'  => e($request  ->  get('sequence_mode')),
+                'address'        => e($request  ->  get('address'))
             ];
 
             if($exam = $model -> addExam($examData, $examScreeningData))
@@ -351,10 +354,12 @@ class ExamController extends CommonController
         $this->validate($request, [
             'exam_id'   => 'required',
             'name'      => 'required',
-            'time'      => 'required'
+            'time'      => 'required',
+            'address'   => 'required'
         ],[
             'name.required'     => '考试名称必须',
             'time.required'     => '考试时间必须',
+            'address.required'  => '考试地址必须',
         ]);
 
         //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
@@ -394,12 +399,13 @@ class ExamController extends CommonController
             }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
-                'name'           => $request  ->  get('name'),
-                'begin_dt'       => $begin_dt,
-                'end_dt'         => $end_dt,
-                'total'          => count(Student::where('exam_id', $exam_id)->get()),
-                'sequence_cate'  => $request  ->  get('sequence_cate'),
-                'sequence_mode'  => $request  ->  get('sequence_mode'),
+                'name'          => e($request  ->  get('name')),
+                'begin_dt'      => $begin_dt,
+                'end_dt'        => $end_dt,
+                'total'         => count(Student::where('exam_id', $exam_id)->get()),
+                'sequence_cate' => $request  ->  get('sequence_cate'),
+                'sequence_mode' => $request  ->  get('sequence_mode'),
+                'address'       => e($request  ->  get('address')),
             ];
 
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
