@@ -16,12 +16,6 @@
 
 
 @section('content')
-<div class="ibox-title route-nav">
-    <ol class="breadcrumb">
-        <li><a href="#">系统管理</a></li>
-        <li class="route-active">用户管理</li>
-    </ol>
-</div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
