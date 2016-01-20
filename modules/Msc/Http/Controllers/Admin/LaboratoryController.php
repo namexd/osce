@@ -506,49 +506,55 @@ class LaboratoryController extends MscController
             $post[$aa]['created_at'] = date('Y-m-d H:i:s');
             $post[$aa]['updated_at'] = date('Y-m-d H:i:s');
         }
-
+        //var_dump($where);
+        //dd($post);
         for ($q = 0; $q < count($post); $q++) {
             foreach ($where as $o => $time) {
                 $plan1[] = array_merge($time, $post[$q]);
             }
+        }
+        foreach ($plan1 as $t1 => $v1) {
+            $begintime = explode('*', $v1['begintime']);
+            //var_dump($begintime);
+            $endtime = explode('*', $v1['endtime']);
+            $plan1[$t1]['begintime'] = @$begintime[1];
+            $plan1[$t1]['endtime'] = @$endtime[1];
+            $plan1[$t1]['period_type'] = $this->get_n($endtime[0]);
+        }
+        //var_dump($plan1);
+        //exit;
             try {
-                foreach ($plan1 as $t1 => $v1) {
-                    $begintime = explode('*', $v1['begintime']);
-                    $endtime = explode('*', $v1['endtime']);
-                    $plan1[$t1]['begintime'] = @$begintime[1];
-                    $plan1[$t1]['endtime'] = @$endtime[1];
-                    $plan1[$t1]['period_type'] = $this->get_n($endtime[0]);
-                }
-
                 $cnt = count($plan1);
                 if ($dataid) {
-                    if ($cnt > $count) {
-                        for ($i = 0; $i < $cnt; $i++) {
-                            unset($plan1[$i]['created_at']);
-                            //当时间数大于ID数
+                    for ($p = 0; $p < $cnt; $p++) {
+                        if ($cnt > $count) {
+                            for ($i = 0; $i < $cnt; $i++) {
+                                unset($plan1[$i]['created_at']);
+                                //当时间数大于ID数
+                                if ($i < $count) {
+                                    OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
+                                } else {
+                                    OpenPlan::insert($plan1[$i]);
+                                }
+                            }
+                        } else {
+                            for ($i = 0; $i < $count; $i++) {
+                                unset($plan1[$i]['created_at']);
+                                //时间数小于ID数
 
-                            if ($i < $count) {
-                                OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
-                            } else {
-                                OpenPlan::insert($plan1[$i]);
+                                if ($i < $cnt) {
+                                    OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
+                                } else {
+                                    OpenPlan::where('id', '=', $dataid[$i])->delete();
+                                }
                             }
                         }
-                    } else {
-                        for ($i = 0; $i < $count; $i++) {
-                            unset($plan1[$i]['created_at']);
-                            //时间数小于ID数
-
-                            if ($i < $cnt) {
-                                OpenPlan::where('id', '=', $dataid[$i])->update($plan1[$i]);
-                            } else {
-                                OpenPlan::where('id', '=', $dataid[$i])->delete();
-                            }
-                        }
-
-
                     }
-                } else {
+                }else{
+                   // dd($plan1);
+                    //$this->start_sql(1);
                     OpenPlan::insert($plan1);
+                   // $this->end_sql(1);
                 }
                 //exit;
             } catch (Exception $e) {
@@ -556,7 +562,6 @@ class LaboratoryController extends MscController
                 return ['status' => 1, 'info' => $e];
                 exit;
             }
-        }
 
         DB::connection('msc_mis')->commit();
         //當前添加的實驗室的开放日历
