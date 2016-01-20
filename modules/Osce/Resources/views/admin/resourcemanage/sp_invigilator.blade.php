@@ -44,7 +44,7 @@
                         <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
                         <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}">
-                                <span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span>
+                                <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                             </a>
                             <a href="javascript:void(0)" class="delete" tid="{{$item->id}}"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
