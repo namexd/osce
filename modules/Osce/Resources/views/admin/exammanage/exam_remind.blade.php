@@ -34,7 +34,9 @@
                 @endforeach
             </tr>
             <tr>
-                <td>阿斯经典</td>
+                @foreach($list as $key=>$v)
+                    <td>{{$v[1]->name}}</td>
+                @endforeach
                 <td>考生2</td>
                 <td>考生3</td>
                 <td>考生4</td>
