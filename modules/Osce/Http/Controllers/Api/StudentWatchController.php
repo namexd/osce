@@ -61,7 +61,6 @@ class StudentWatchController extends  CommonController
 
         $ExamQueueModel= new ExamQueue();
         $result =  $ExamQueueModel->StudentExamInfo($watchStudent);
-        dump($result);
 
         //获取到当前时间;
         $time = time();
@@ -80,7 +79,7 @@ class StudentWatchController extends  CommonController
             if ($key<0 && ($this->timeDiff+$key) > 0 ) {
                 $status = self::EXAM_WILL_BEGIN;
                 $curExam = $item;
-                break;
+                continue;
             }
 
             if ( $itemStart <= $time &&  $itemEnd >= $time) {
@@ -116,9 +115,10 @@ class StudentWatchController extends  CommonController
                 ]);
                 break;
             case self::EXAM_JUST_AFTER:
+                dd($list);
                 foreach ($list as $key => $item) {
                     if ($curKey == $key) {
-                        $nextExam = current($list);
+                        $nextExam = $list[$key];//current($list);
                     }
                 }
                 $nextExam['room_id'];
