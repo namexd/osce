@@ -41,8 +41,8 @@ class Devices  extends Model
         {
             $builder = $builder->where($this->table.'.name','like','%'.$keyword.'%');
         }
-        if(in_array($status,[0,1])){
-               $builder = $builder->where($this->table.'.status',$status);
+        if(in_array($status,[1,2])){
+               $builder = $builder->where($this->table.'.status',$status-1);
            }
         if($devices_cate_id){
                $builder = $builder->where($this->table.'.devices_cate_id',$devices_cate_id);
@@ -58,7 +58,7 @@ class Devices  extends Model
                 );
             }
         )->select($this->table.'.*','device_cate.name as catename');
-        return $builder->orderBy( $this->table.'.id')->paginate(config('msc.page_size',10));
+        return $builder->orderBy( $this->table.'.status','desc')->orderBy( $this->table.'.id','desc')->paginate(config('msc.page_size',10));
     }
 
 

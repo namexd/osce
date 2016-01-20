@@ -17,78 +17,13 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('msc/admin/js/ajaxupload.js')}}"></script>
     <script src="{{asset('msc/admin/systemtable/systemtable.js')}}"></script>
-    <script>
-        $(function(){
-//            删除
-            $(".delete").click(function(){
-                var this_id = $(this).attr('data');
-//                alert(this_id);
-                var url = "{{ route('msc.admin.profession.ProfessionDeletion') }}"+"?id="+this_id;
-                //询问框
-                layer.confirm('您确定要删除该专业？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    window.location.href=url;
-                });
-            });
-//            停用
-            $(".stop").click(function(){
-                var this_id = $(this).attr('data');
-                var type = $(this).attr('data-type');
-                var url = "{{ route('msc.admin.profession.ProfessionStatus') }}"+"?id="+this_id+"&type="+type;
-                var str = '';
-                if(type == 1){
-                    str = '您确定要启用该专业？';
-                }else{
-                    str = '您确定要停用该专业？';
-                }
-                //询问框
-                layer.confirm(str, {
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                   window.location.href=url;
-                });
-            });
-//            导入
-            $("#in").change(function(){
-                var str=$("#load_in").val().substring($("#load_in").val().lastIndexOf(".")+1);
-                if(str!="xlsx"){
-                    layer.alert(
-                            "请上传正确的文件格式？",
-                            {title:["温馨提示","font-size:16px;color:#408aff"]}
-                    );
-                }else{
-                    $.ajaxFileUpload({
-                        type:"post",
-                        url:"{{route('msc.admin.profession.ProfessionImport')}}",
-                        fileElementId:'load_in',//必须要是 input file标签 ID
-                        dataType: 'json',
-                        success: function (data, status){
-                            if(data.status = true){
-                                layer.msg("导入成功，有"+data.dataHavenInfo.count+"条已有数据未被导入", {icon: 1,time: 4000});
-                                window.location.href = window.location.href;
-                            }else{
-                                layer.msg("导入失败", {icon: 1,time: 1000});
-                            }
-                        },
-                        error: function (data, status, e){
-                            layer.alert(
-                                    "上传失败！",
-                                    {title:["温馨提示","font-size:16px;color:#408aff"]}
-                            );
-                        }
-                    });
-                }
-            });
 
-        })
-    </script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'major_table'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'major_table','deleteUrl':'{{ route('msc.admin.profession.ProfessionDeletion') }}','stopUrl':'{{ route('msc.admin.profession.ProfessionStatus') }}','inUrl':'{{route('msc.admin.profession.ProfessionImport')}}'}" />
 	<div class="wrapper wrapper-content animated fadeInRight">
 		<div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
@@ -129,10 +64,10 @@
                                             <a href="{{ route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword])}}">全部</a>
                                         </li>
                                         <li>
-                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
+                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'2'])}}">正常</a>
                                         </li>
                                         <li>
-                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
+                                            <a href="{{route('msc.admin.profession.ProfessionList',['keyword'=>@$keyword,'status'=>'1'])}}">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -142,9 +77,9 @@
                         </thead>
                         <tbody>
                        @if(!empty($list))
-                           @foreach($list as $list)
+                           @foreach($list as $k => $list)
                         <tr>
-                            <td>{{$list['id']}}</td>
+                            <td>{{($number+$k)}}</td>
                             <td class="code">{{$list['code']}}</td>
                             <td class="name">{{$list['name']}}</td>
                             <td class="status" data="{{$list['status']}}">@if($list['status']==1)正常@else<span class="state2">停用</span>@endif</td>
@@ -155,7 +90,7 @@
                                 @else
                                     <a   data="{{$list['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
                                 @endif
-                                <span  data="{{$list['id']}}"  class="state2 edit_role modal-control delete">删除</span>
+                                <a  data="{{$list['id']}}"  class="state2 edit_role modal-control delete">删除</a>
                                 <input type="hidden" class="setid" value="1"/>
                             </td>
                         </tr>
@@ -168,7 +103,7 @@
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
-            <?php echo $pagination->render();?>
+            <?php echo $pagination->appends(['keyword'=>$keyword,'status'=>$status])->render();?>
         </div>
     </div>
 

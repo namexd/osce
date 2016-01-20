@@ -59,8 +59,7 @@ class DeptController extends MscController
         $this->validate($request,[
             'name'   => 'required|max:50',
             'pid'   => 'required|integer',
-            'level'  => 'required|integer',
-            'description' => 'required|max:255'
+            'level'  => 'required|integer'
         ]);
         $user = Auth::user();
         $requests = $request->all();
@@ -100,7 +99,6 @@ class DeptController extends MscController
         $this->validate($request,[
             'id'   => 'required|integer',
             'name'   => 'required|max:50',
-            'description' => 'required|max:255'
         ]);
         $requests = $request->all();
         $data = [

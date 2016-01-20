@@ -40,13 +40,15 @@ class ProfessionController extends MscController
    public function getProfessionList(Request $request){
       $this->validate($request, [
          'keyword '   =>    'sometimes',
-         'status'  =>   'sometimes|in:0,1,2'
+         'status'  =>   'sometimes|in:1,2,3'
       ]);
-      $keyword  =   urldecode(e($request->input('keyword')));
-      $status  = (int)$request->input('status',2);
+      $keyword  =   $request->input('keyword');
+      $status  = (int)$request->input('status',3);
 //       dd($keyword);
       $profession = new StdProfessional();
-      $pagination=$profession-> getprofessionList( $keyword,$status);
+
+      $pagination=$profession-> getprofessionList($keyword,$status);
+
 //       dd($pagination);
       $list=[];
       foreach($pagination as $itme){
@@ -63,9 +65,10 @@ class ProfessionController extends MscController
     return view('msc::admin.systemtable.major_table',[
         'pagination'=>$pagination,
         'list'         =>       $list,
-        'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
-        'status'=>$request->input('status')?$request->input('status'):'',
-        'ProfessionStatus'=>$ProfessionStatus
+        'keyword'=>$keyword?$keyword:'',
+        'status'=>$status?$status:0,
+        'ProfessionStatus'=>$ProfessionStatus,
+        'number'=>$this->getNumber()
     ]);
    }
 
@@ -90,14 +93,13 @@ class ProfessionController extends MscController
      */
     public function postProfessionAdd(Request $request){
     $this->validate($request,[
-        'name'   => 'required|max:50|unique:msc_mis.student_professional',
-        'code'   =>  'required|max:32|unique:msc_mis.student_professional',
+        'name'   => 'required|max:50',
+        'code'   =>  'required|max:32|unique:msc_mis.student_professional,code,name,""',
         'status' =>   'required|in:0,1'
     ],[
         'name.required'=>'专业名称必填',
         'name.max'=>'专业名称最长50个字节',
 
-        'name.unique'=>'专业名称不能重复添加',
         'code.required'=>'专业专业代码必填',
         'code.max'=>'专业代码最长32个字节',
 
@@ -105,6 +107,7 @@ class ProfessionController extends MscController
         'status.required'=>'状态值必填',
         'status'=>'状态值只能为0或1'
     ]);
+
         $data=[
             'name'=>Input::get('name'),
             'code'=>Input::get('code'),
@@ -173,25 +176,24 @@ class ProfessionController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public  function postProfessionSave(Request $request){
+        $profession = new StdProfessional();
         $this->validate($request,[
             'id' => 'sometimes|min:0|max:10',
-            'name'   => 'required|max:50|unique:msc_mis.student_professional',
-            'code'   =>  'required|max:32|unique:msc_mis.student_professional',
+            'name'   => 'required|max:50',
+            'code'   =>  'required|max:32|unique:msc_mis.student_professional,code,'.$request->get('id').',id',
             'status' =>   'required|in:0,1'
         ],[
             'name.required'=>'专业名称必填',
             'name.max'=>'专业名称最长50个字节',
 
-            'name.unique'=>'专业名称不能重复添加',
             'code.required'=>'专业专业代码必填',
             'code.max'=>'专业代码最长32个字节',
-
-            'code.unique'=>'专业代码不能重复添加',
+            'code.unique'=>'专业代码不能重复',
             'status.required'=>'状态值必填',
             'status'=>'状态值只能为0或1'
         ]);
+
         $data = $request->only(['name','code','status','id']);
-        $profession = new StdProfessional();
         $result =$profession->postSaveProfession($data);
         if ($result) {
             return redirect()->back()->withInput()->withErrors('修改成功');

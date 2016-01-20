@@ -151,7 +151,7 @@ class Laboratory extends Model
         if(!empty($dateTime)){
             return $this->where('id','=',$id)->with(['FloorInfo','LabApply'=>function($LabApply) use ($dateTime,$type){
                 if($type == 1){
-                    $LabApply->where('apply_time','=',$dateTime)->whereIn('status',[1,2])->where('type','=',$type);
+                    $LabApply->where('apply_time','=',$dateTime)->whereIn('status',[1,2])->where('type','=',$type)->with('user');
                 }
             }])->first();
         }else{
@@ -202,6 +202,67 @@ class Laboratory extends Model
         return  $this->where('id','=',$LabId)->with(['OpenPlan'=>function($OpenPlan) use ($OpenPlanIdRrr){
             $OpenPlan->whereIn('id',$OpenPlanIdRrr);
         }])->first();
+    }
+
+//    public function Lab(){
+//        return  $this->hasMany('Modules\Msc\Entities\Laboratory','','id');
+//    }
+
+
+    //后台开放实验室获取审核列表
+    public function get_opencheck_list($nowtime,$type,$id=''){
+        $labDb    = config('database.connections.msc_mis.database');
+        $labTable = $labDb.'.lab';
+        $userDb    = config('database.connections.sys_mis.database');
+        $userTable = $userDb.'.users';
+        $time = explode('-',$nowtime);
+        $builder = $this->leftjoin('location',function($local) use($labTable){
+            $local->on($local->table.'.id', '=', $labTable.'.location_id');
+        })->with(['OpenPlan'=>function($OpenPlan) use($type,$time){
+            $OpenPlan->where(['open_plan.year'=>$time[0],'open_plan.month'=>$time[1],'open_plan.day'=>$time[2]])->with(['PlanApply'=>function($PlanApply) use($type){
+                $PlanApply->with(['LabApply'=>function($LabApply) use($type){
+                    $LabApply->where('lab_apply.type','=',$type)->with('user');
+                }]);
+            }]);
+        }]);
+        $data = $builder->where('lab.manager_user_id','=',$id)->select($labTable.'.*','location.name as lname')->paginate(config('msc.page_size',10));
+        //dd($data);
+        return $data;
+
+    }
+
+    /**
+     * @access public
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016年1月18日10:32:52
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function Student(){
+        return  $this->hasOne('Modules\Msc\Entities\Student','id','id');
+    }
+
+
+
+    //后台普通实验室获取审核列表
+    public function get_check_list($nowtime,$type,$id){
+        $labDb    = config('database.connections.msc_mis.database');
+        $labTable = $labDb.'.lab';
+        if(!empty($id)){
+            $builder = $this->where($labTable.'.manager_user_id','=',$id);
+        }else{
+            $builder = $this;
+        }
+        $builder = $builder->with(['LabApply'=>function($LabApply) use($nowtime,$type){
+            $LabApply->where('lab_apply.type','=',$type)->where('lab_apply.apply_time','like','%'.$nowtime.'%')->with(['Teacher'=>function($Teacher){
+                $Teacher->with('user');
+            }]);
+
+        }]);
+        $data = $builder->paginate(config('msc.page_size',10));
+        //dd($data);
+        return $data;
+
     }
 
 

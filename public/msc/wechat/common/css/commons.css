@@ -72,14 +72,18 @@ a{-webkit-touch-callout:none;}
 .w_94{width:94%;margin:0 auto; }
 .w_96{width:96%;margin:0 auto; }
 .w_98{width:98%;margin:0 auto; }
-.w_45{width:45%;margin:0 auto; }
 .w_85{width: 85%;}
+.w_70{width: 70%;}
+.w_50{width: 50%;}
+.w_45{width:45%;margin:0 auto; }
+.w_30{width: 30%;}
 .w_15{width: 15%;}
 /*margin*/
 .mart_3{margin-top:0.3em}
 .mart_5{margin-top:0.5em}
 .mart_8{margin-top:0.8em}
 .mart_10{margin-top:1em}
+.mart_12{margin-top:1.2em}
 .mart_15{margin-top:1.5em}
 .mart_20{margin-top:2em}
 .marb_5{margin-bottom:0.5em}

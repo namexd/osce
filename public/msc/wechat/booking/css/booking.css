@@ -1,13 +1,13 @@
-/*Ô¤Ô¼ÊµÑéÊÒ-È·ÈÏÊ¹ÓÃÉêÇë±í*/
+/*Ô¤Ô¼Êµï¿½ï¿½ï¿½ï¿½-È·ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 #now_borrow .submit_box{
-    width: 15%;
-    min-width:100px;
+    width: 20%;
+    max-width:120px;
     position: absolute;
-    top:99px;
+    bottom:32px;
     right: 3%;
 }
 
-/*ÎÒµÄÔ¤Ô¼*/
+/*ï¿½Òµï¿½Ô¤Ô¼*/
 #mybooking{
     background-color: #fff; overflow: hidden;
     height: 38px; line-height: 36px;
@@ -21,3 +21,6 @@
     bottom:32px;
     right: 3%;
 }
+
+/*Ô¤Ô¼Êµï¿½ï¿½ï¿½Ò£ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
+.all_list .w_30{ text-align: center;}

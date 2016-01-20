@@ -152,12 +152,14 @@
                     str += '}';
                     codropsEvents = eval('('+str+')');
                     load();
+                    $('#savedate').empty();
                 }
             })
         }
 
 
             function load(){
+
                 var transEndEventNames = {
                             'WebkitTransition' : 'webkitTransitionEnd',
                             'MozTransition' : 'transitionend',
@@ -166,37 +168,65 @@
                             'transition' : 'transitionend'
                         },
                         transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
+                        $wrapper = $( '#custom-inner' ),
                         $calendar = $( '#calendar' );
-                cal = $calendar.calendario( {
-                    onDayClick : function( $el, $contentEl, dateProperties,savedate) {
-                        if(dateProperties.month<10){
-                            dateProperties.month="0"+dateProperties.month;
-                        }
-                        if(dateProperties.day<10){
-                            dateProperties.day="0"+dateProperties.day;
-                        }
-                        var savedate_one=dateProperties.year+"-"+dateProperties.month+"-"+dateProperties.day;
-                        var make = false;
-                        var dateDocArr = $('#savedate').find('input');
-                        if(dateDocArr.length>0){
-                            dateDocArr.each(function(){
-                                if(savedate_one == $(this).val()){
-                                    $(this).remove();
-                                    make = true;
-                                    return false;
+                        var event=false;
+                        cal = $calendar.calendario( {
+                            onDayClick : function( $el, $contentEl,dateProperties) {
+                                if(dateProperties.month<10){
+                                    dateProperties.month="0"+dateProperties.month;
                                 }
-                            })
-                        }
-                        if(make){
-                            return false;
-                        }
-                        $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+                                if(dateProperties.day<10){
+                                    dateProperties.day="0"+dateProperties.day;
+                                }
+                                var savedate_one=dateProperties.year+"-"+dateProperties.month+"-"+dateProperties.day;
 
-                        //清空时间段
-                    },
-                    caldata : codropsEvents,
-                    displayWeekAbbr : true
-                } ),
+                                if( $contentEl.length > 0 ) {//判断是否是有开放事件
+                                    var dateDocArr1 = $('#savedate').find('input');
+                                    if(dateDocArr1.length>0){
+                                        dateDocArr1.each(function(){
+                                            if(savedate_one == $(this).val()){//第二次点击取消操作
+                                                $(this).remove();
+                                            }else{//未发现当前点击日期
+                                                $('#savedate').empty();
+                                                $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+                                            }
+                                        })
+                                    }else{
+                                        $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+                                    }
+
+                                    event=true;
+                               }else{
+                                    var make = false;
+                                    if(event){//判定之前是否点击过有开放事件的日期
+                                        $('#savedate').empty();
+                                        event=false;
+                                    }
+                                    var dateDocArr = $('#savedate').find('input');
+                                    if(dateDocArr.length>0){
+                                        dateDocArr.each(function(){
+                                            if(savedate_one == $(this).val()){
+                                                $(this).remove();
+                                                make = true;
+                                                return false;
+                                            }
+                                        })
+                                    }
+                                    if(make){
+                                        return false;
+                                    }
+                                    $('#savedate').append('<input type="hidden" name="savedate[]" class="dataarr" value="'+savedate_one+'">');
+
+                                }
+
+
+                                //清空时间段
+
+                            },
+                            caldata : codropsEvents,
+                            displayWeekAbbr : true
+                        } ),
                         $month = $( '#custom-month' ).html( cal.getMonthName() ),
                         $year = $( '#custom-year' ).html( cal.getYear() );
 
@@ -209,151 +239,153 @@
                     calendar_lick();
                 } );
                 calendar_lick();
-               function calendar_lick(){
-                   $("#calendar .fc-body .fc-row div").unbind().click(function(){
+                function calendar_lick(){
+                    $("#calendar .fc-body .fc-row div").unbind().click(function(){
 
-                       $(this).toggleClass("check");
-                       cleardate();//清理掉下面部分的日期显
+                        if($(this).children("div").size() > 0){
+                            $(this).toggleClass("check");
+                            cleardate();//清理掉下面部分的日期显
+                            $(this).siblings().removeClass("check");//去掉已选择状态
+                            $(this).parents().siblings(".fc-row").children().removeClass("check");
 
-                       if($(this).children("div").size() > 0){
-                           $(this).siblings().removeClass("check");//去掉已选择状态
-                           $(this).parents().siblings(".fc-row").children().removeClass("check");
+                            var mark_morning = false;
+                            var mark_noon = false;
+                            var  mark_afternoon = false;
+                            var  mark_night = false;
+                            var  inuput_num= 5;//初始设定添加的为第五个
 
-                           var mark_morning = false;
-                           var mark_noon = false;
-                           var  mark_afternoon = false;
-                           var  mark_night = false;
-                           var  inuput_num= 5;//初始设定添加的为第五个
+                            $(this).children("div").find(".timesave").each(function(){
+                                var period_type= $(this).attr("period_type");
+                                var begintime= $(this).attr("begintime");
+                                var endtime= $(this).attr("endtime");
 
-                           $(this).children("div").find(".timesave").each(function(){
-                               var period_type= $(this).attr("period_type");
-                               var begintime= $(this).attr("begintime");
-                               var endtime= $(this).attr("endtime");
+                                if(period_type=="1"){//上午
+                                    $(".morning").children().children().children(".check_icon").addClass("check");
+                                    if(!mark_morning){
+                                        $(".morning").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein1']").val(begintime) ;
+                                        $(".morning").children().children(".overflow").children(".col-sm-8").children("input[name='time-end1']").val(endtime);
+                                        mark_morning = true;
+                                    }else{
+                                        $(".morning").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                        inuput_num++;
+                                    }
 
-                               if(period_type=="1"){//上午
-                                   $(".morning").children().children().children(".check_icon").addClass("check");
-                                   if(!mark_morning){
-                                       $(".morning").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein1']").val(begintime) ;
-                                       $(".morning").children().children(".overflow").children(".col-sm-8").children("input[name='time-end1']").val(endtime);
-                                       mark_morning = true;
-                                   }else{
-                                       $(".morning").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<span class="fa fa-trash-o"></span>'
-                                               +'</div>'
-                                               +'</div>');
-                                       inuput_num++;
-                                   }
+                                }
+                                else if(period_type=="2"){
+                                    //中午
 
-                               }
-                               else if(period_type=="2"){
-                                   //中午
+                                    $(".noon").children().children().children().addClass("check");
+                                    if(!mark_noon){
+                                        $(".noon").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein2']").val(begintime) ;
+                                        $(".noon").children().children(".overflow").children(".col-sm-8").children("input[name='time-end2']").val(endtime);
+                                        mark_noon = true;
+                                    }else{
+                                        $(".noon").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                        inuput_num++;
+                                    }
 
-                                   $(".noon").children().children().children().addClass("check");
-                                   if(!mark_noon){
-                                       $(".noon").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein2']").val(begintime) ;
-                                       $(".noon").children().children(".overflow").children(".col-sm-8").children("input[name='time-end2']").val(endtime);
-                                       mark_noon = true;
-                                   }else{
-                                       $(".noon").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<span class="fa fa-trash-o"></span>'
-                                               +'</div>'
-                                               +'</div>');
-                                       inuput_num++;
-                                   }
+                                }
+                                else  if(period_type=="3"){
 
-                               }
-                               else  if(period_type=="3"){
+                                    //下午
+                                    $(".afternoon").children().children().children().addClass("check");
+                                    if(!mark_afternoon){
+                                        $(".afternoon").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein3']").val(begintime) ;
+                                        $(".afternoon").children().children(".overflow").children(".col-sm-8").children("input[name='time-end3']").val(endtime);
+                                        mark_afternoon = true;
+                                    }else{
+                                        $(".afternoon").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                        inuput_num++;
+                                    }
 
-                                   //下午
-                                   $(".afternoon").children().children().children().addClass("check");
-                                   if(!mark_afternoon){
-                                       $(".afternoon").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein3']").val(begintime) ;
-                                       $(".afternoon").children().children(".overflow").children(".col-sm-8").children("input[name='time-end3']").val(endtime);
-                                       mark_afternoon = true;
-                                   }else{
-                                       $(".afternoon").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<span class="fa fa-trash-o"></span>'
-                                               +'</div>'
-                                               +'</div>');
-                                       inuput_num++;
-                                   }
+                                }else{
+                                    //晚上
+                                    $(".night").children().children().children().addClass("check");
+                                    if(!mark_night){
+                                        $(".night").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein4']").val(begintime) ;
+                                        $(".night").children().children(".overflow").children(".col-sm-8").children("input[name='time-end4']").val(endtime);
+                                        mark_night = true;
+                                    }else{
+                                        $(".night").children(".col-sm-10").append('<div class=" overflow form-group">'
+                                                +'<div class="col-sm-8">'
+                                                +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
+                                                +'<lable>至</lable>'
+                                                +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
+                                                +'</div>'
+                                                +'<div class="col-sm-4">'
+                                                +'<span class="fa fa-trash-o"></span>'
+                                                +'</div>'
+                                                +'</div>');
+                                        inuput_num++;
+                                    }
+                                }
 
-                               }else{
-                                   //晚上
-                                   $(".night").children().children().children().addClass("check");
-                                   if(!mark_night){
-                                       $(".night").children().children(".overflow").children(".col-sm-8").children("input[name='time-begein4']").val(begintime) ;
-                                       $(".night").children().children(".overflow").children(".col-sm-8").children("input[name='time-end4']").val(endtime);
-                                       mark_night = true;
-                                   }else{
-                                       $(".night").children(".col-sm-10").append('<div class=" overflow form-group">'
-                                               +'<div class="col-sm-8">'
-                                               +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" value="'+begintime+'"placeholder="08：00"/>'
-                                               +'<lable>至</lable>'
-                                               +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" value="'+endtime+'"  placeholder="09：00"/>'
-                                               +'</div>'
-                                               +'<div class="col-sm-4">'
-                                               +'<span class="fa fa-trash-o"></span>'
-                                               +'</div>'
-                                               +'</div>');
-                                       inuput_num++;
-                                   }
-                               }
+                            })
 
-                           })
+                            deletetime();
+                            $(".add_time_button").click(function(){ //添加时间段
+                                var inuput_num=$(".add_time_list  .form-group").size()+1;
+                                var time_frame=$(this).attr("id");
+                                $(this).parent().parent().parent().append('<div class=" overflow form-group">'
+                                        +'<div class="col-sm-8">'
+                                        +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" frame="'+time_frame+'"placeholder="08：00" value="" />'
+                                        +'<lable>至</lable>'
+                                        +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" frame="'+time_frame+'"   placeholder="09：00" value="" />'
+                                        +'</div>'
+                                        +'<div class="col-sm-4">'
+                                        +'<span class="fa fa-trash-o"></span>'
+                                        +'</div>'
+                                        +'</div>')
+                                deletetime();
+                            })
+                            function  deletetime(){
+                                $(".fa-trash-o").click(function(){
+                                    $(this).parent().parent().remove();
+                                });
+                            }
 
-                           deletetime();
-                           $(".add_time_button").click(function(){ //添加时间段
-                               var inuput_num=$(".add_time_list  .form-group").size()+1;
-                               var time_frame=$(this).attr("id");
-                               $(this).parent().parent().parent().append('<div class=" overflow form-group">'
-                                       +'<div class="col-sm-8">'
-                                       +'<input type="text"  class="form-control time-set" name="time-begein'+inuput_num+'" frame="'+time_frame+'"placeholder="08：00" value="" />'
-                                       +'<lable>至</lable>'
-                                       +'<input type="text"  class="form-control time-set" name="time-end'+inuput_num+'" frame="'+time_frame+'"   placeholder="09：00" value="" />'
-                                       +'</div>'
-                                       +'<div class="col-sm-4">'
-                                       +'<span class="fa fa-trash-o"></span>'
-                                       +'</div>'
-                                       +'</div>')
-                               deletetime();
-                           })
-                           function  deletetime(){
-                               $(".fa-trash-o").click(function(){
-                                   $(this).parent().parent().remove();
-                               });
+                        }else{
+                           if($(this).children("span").size()!=0){
+                               $(this).toggleClass("check");
+                               cleardate();//清理掉下面部分的日期显
+                               $(this).siblings(".fc-content").removeClass("check");//去掉已选择状态
+                               $(this).parents().siblings(".fc-row").children(".fc-content").removeClass("check");
+                               addtime()
+                               $(".morning").children().children().children().removeClass("check");
+                               $(".noon").children().children().children().removeClass("check");
+                               $(".afternoon").children().children().children().removeClass("check");
+                               $(".night").children().children().children().removeClass("check");
                            }
-
-                       }else{
-                           $(this).siblings(".fc-content").removeClass("check");//去掉已选择状态
-                           $(this).parents().siblings(".fc-row").children(".fc-content").removeClass("check");
-                           addtime()
-                           $(".morning").children().children().children().removeClass("check");
-                           $(".noon").children().children().children().removeClass("check");
-                           $(".afternoon").children().children().children().removeClass("check");
-                           $(".night").children().children().children().removeClass("check");
-                       }
-                   })
-               }
-
+                        }
+                    })
+                }
 
                 function cleardate(){
                     $(".add_time_list").children(".col-sm-10").empty();
@@ -377,17 +409,16 @@
                     $(".night").children().children().children().removeClass("check");
                 }
 
+                function updateMonthYear() {
+                    $month.html( cal.getMonthName() );
+                    $year.html( cal.getYear() );
+                }
+
             }
-
-
-            function updateMonthYear() {
-                $month.html( cal.getMonthName() );
-                $year.html( cal.getYear() );
-            }
-
 
             //保存提交日历设置
             $('#edit_save').click(function(){
+                var check = true;
                 var datestr = '';
                 var timestr = '';
                 var start = '';
@@ -397,18 +428,22 @@
                 var str = '';
                 var name = '';
                 var timeBrr = '';
+                //console.log($('.dataarr').val());
                 if(!$('.dataarr').val()){
-                    layer.alert('请选择日期');
+                    layer.msg("请选择日期", {icon: 2,time: 1000});
+                    check = false;
                     return false;
                 }
 
                 if(!$('.check_real').hasClass('check')){
-                    layer.alert('未勾选时间段');
+                    layer.msg("未勾选时间段", {icon: 2,time: 1000});
+                    check = false;
                     return false;
                 }
                 $('.dataarr').each(function(){
                     datestr += $(this).val()+"&";
                 });
+
                 $('.check_real').each(function(k){
                     if($(this).hasClass('check')){
                         var name = '';
@@ -427,12 +462,18 @@
                                     name = '下午';
                                 }else if(type == 'night'){
                                     name = '晚上';
+                                }else{
+                                    name='';
                                 }
-                                layer.alert(name+'的时间段未填写完整');
-                                return false;
+
                             }
 
                         });
+                        if(name){
+                            layer.msg(name+'的时间段未填写完整', {icon: 2,time: 1000});
+                            check = false;
+                            return false;
+                        }
                         timeBrr = timeArr;
                         timeArr = '';
 
@@ -445,33 +486,37 @@
                     if($(this).hasClass('check')){
 
                         timestr += $('.'+$(this).attr('data')).val()+'@';
-                        //console.log(timestr);
+                        console.log(timestr);
                     }
                 });
                 if(!$('.labid').val()){
-                    layer.alert('请选择实验室');
+                    layer.msg("请选择实验室", {icon: 2,time: 1000});
+                    check = false;
                     return false;
                 }
                 var dateid = {};
                 $('.fc-row .check').children('div').children().each(function(i){
                             dateid[i] = $(this).attr('data-id');
                 });
+                //console.log(dateid);
                 //console.log(dateid.length);
                 if(dateid.length <= 0){
                     layer.msg('请选择日期', {icon: 2,time: 2000});
+                    check = false;
                     return false;
                 }
                 //return false;
                // console.log(timestr);
                 //console.log(datestr);return false;
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('msc.admin.laboratory.postOperatingLabCleander')}}",
-                    data: {date:datestr,timestr:timestr,lid:$('.labid').val(),dateid:dateid},
-                    success: function(msg){
-                        if(msg.status){
+                if(check) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('msc.admin.laboratory.postOperatingLabCleander')}}",
+                        data: {date: datestr, timestr: timestr, lid: $('.labid').val(), dateid: dateid},
+                        success: function (msg) {
+                            if (msg.status) {
 
-                            layer.msg(msg.info, {icon: 1,time: 1000});
+                                layer.msg(msg.info, {icon: 1, time: 1000});
 //                            layer.confirm(msg.info, {
 //                                btn: ['確定'] //按钮
 //                            }, function(){
@@ -479,14 +524,17 @@
 //                                //确定之后-把已添加的数据返回并显示
 //                                //location.reload();
 //                            });
-                            load();
+                                getEvent($('.labid').val());
+                                load();
+                                $('#savedate').empty();
 
-                        }else{
-                            layer.msg(msg.info, {icon: 2,time: 1000});
-                            return false;
+                            } else {
+                                layer.msg(msg.info, {icon: 2, time: 1000});
+                                return false;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
         });
 
@@ -515,6 +563,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="savedate">
+
         </div>
         <div class="col-sm-7">
             <div class="ibox">
@@ -638,9 +689,7 @@
                     <input type="hidden" name="" class="afternoon">
                     <input type="hidden" name="" class="night">
                     <div class="hr-line-dashed"></div>
-                    <div id="savedate">
 
-                    </div>
                     <div class="form-group overflow">
                         <div class=" right">
                             <button class="btn btn-primary"  type="button" id="edit_save" >保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存</button>

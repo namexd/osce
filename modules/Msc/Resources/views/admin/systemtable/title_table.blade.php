@@ -21,7 +21,7 @@
                     <div class="input-group">
                         <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-sm btn-default" id="search"><i class="fa fa-search"></i></button>
+                            <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
                     </div>
                 </form>
@@ -42,13 +42,13 @@
                             <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button">状态<span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'2'])}}">全部</a>
+                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'3'])}}">全部</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'1'])}}">正常</a>
+                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'2'])}}">正常</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'0'])}}">停用</a>
+                                    <a href="{{route('msc.admin.professionaltitle.JobTitleIndex',['keyword'=>@$keyword,'status'=>'1'])}}">停用</a>
                                 </li>
                             </ul>
                         </div>
@@ -58,12 +58,12 @@
                 </thead>
                 <tbody>
                 @if(!empty($list))
-                    @foreach($list as $val)
+                    @foreach($list as $k => $val)
                         <tr>
-                            <td class="number">{{ @$val['id'] }}</td>
+                            <td class="number">{{ ($number+$k) }}</td>
                             <td class="name">{{ @$val['name'] }}</td>
                             <td class="describe">{{ @$val['description'] }}</td>
-                            <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
+                            <td class="status" data="{{@$val['status']}}">@if(@$val['status']==1)<span>正常</span>@else<span class="state2">停用</span>@endif</td>
                             <td class="opera">
                                 <a href=""   data="{{@$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal"><span>编辑</span></a>
                                 @if($val['status']==1)
@@ -80,12 +80,10 @@
                 </tbody>
             </table>
         </form>
-    </div>
-    <div>
-    {{--分页--}}
-    <div class="btn-group pull-right">
-        <?php echo $pagination->render();?>
-    </div>
+        {{--分页--}}
+        <div class="btn-group pull-right">
+            <?php echo $pagination->appends(['keyword'=>$keyword,'status'=>$status])->render();?>
+        </div>
     </div>
 @stop
 

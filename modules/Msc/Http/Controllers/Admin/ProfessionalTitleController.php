@@ -12,10 +12,11 @@ namespace Modules\Msc\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Msc\Entities\ProfessionalTitle;
+use Modules\Msc\Http\Controllers\MscController;
 use Pingpong\Modules\Routing\Controller;
 use URL;
 use DB;
-class ProfessionalTitleController extends Controller
+class ProfessionalTitleController extends MscController
 {
 
     /**
@@ -39,11 +40,11 @@ class ProfessionalTitleController extends Controller
     public function  getJobTitleIndex(Request $request)
     {
         $this->validate($request, [
-            'status' => 'sometimes|in:0,1,2'
+            'status' => 'sometimes|in:1,2,3'
         ]);
 
         $keyword = urldecode(e($request->input('keyword')));
-        $status = (int)$request->input('status',2);
+        $status = (int)$request->input('status',3);
         $tabulate = new ProfessionalTitle();
         $pagination =  $tabulate->getJobTitleList($keyword, $status);
         $list = [];
@@ -63,6 +64,7 @@ class ProfessionalTitleController extends Controller
             'list'         =>       $list,
             'keyword'=>$request->input('keyword')?$request->input('keyword'):'',
             'status'=>$request->input('status')?$request->input('status'):'',
+            'number'=>$this->getNumber()
         ]);
     }
 

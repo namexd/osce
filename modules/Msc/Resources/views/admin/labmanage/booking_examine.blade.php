@@ -48,7 +48,7 @@
                                         </form>
                                     </div>
                                     <div class="col-xs-6 col-md-9 user_btn">
-                                        <button class="right btn btn-success all_refuse">批量不通过</button>
+                                        <button class="right btn btn-success all_refuse" data-toggle="modal" data-target="#myModal">批量不通过</button>
                                         <button class="right btn btn-success all_pass" style="margin-right: 10px">批量通过</button>
                                     </div>
                                 </div>
@@ -89,11 +89,11 @@
                                                     <td class="name">{{@$list->labname}}</td>
                                                     <td class="status">{{@$list->address}}</td>
                                                     <td>
-                                                        @if(empty(@$list->begintime) && empty(@$list->endtime))
-                                                            {{@$list->playyear}}
-                                                        @else
-                                                            {{@$list->apply_time}}
-                                                        @endif
+                                                        {{--@if(empty(@$list->begintime) && empty(@$list->endtime))--}}
+                                                            {{--{{@$list->playyear}}--}}
+                                                        {{--@else--}}
+                                                        {{@$list->apply_time}}
+                                                        {{--@endif--}}
 
                                                     </td>
                                                     @if(empty(@$list->begintime) && empty(@$list->endtime))
@@ -132,6 +132,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        {{--分页--}}
+        <div class="btn-group pull-right">
+            <?php echo $LabOrderList->render();?>
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}
@@ -231,6 +235,24 @@
                 <div class="col-sm-4 col-sm-offset-2 right">
                     <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                     <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    {{--提示至少选择一个--}}
+    <form class="form-horizontal" id="choose_from" novalidate="novalidate" action="" method="get">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">提示</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-5 control-label">请至少选择一条记录进行操作！</label>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2 right">
+                    <button class="btn btn-primary right" type="submit" data-dismiss="modal">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
                 </div>
             </div>
         </div>

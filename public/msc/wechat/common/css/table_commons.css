@@ -48,7 +48,7 @@
 /*textarea样式*/
 .textarea1{
     width: 100%;border:1px solid #dce0e4;
-    height: 100px;
+    height: 100px!important;
     line-height: 20px;
     border-radius: 4px;
     padding:10px 5px;
@@ -114,9 +114,11 @@
 .manage_list{
     width:100%;margin-top:10px;overflow:hidden;
     background:#fff;border-bottom:1px solid #DCE0E4;
-    box-shadow: 0 1px 4px #DCE0E4;}
+    box-shadow: 0 1px 4px #DCE0E4;
+    margin-bottom: 20px;
+}
 
-.manage_list div p:last-child{padding:0 8px 2px 3%;}
+.manage_list div p:last-child{padding:0 8px 5px 3%;}
 .manage_list .all_list{ overflow: hidden;border-top:1px solid #dce0e4}
 .manage_list .all_list p{padding: 5px 8px 0 3%; color:#3c3c3c;}
 .manage_list .all_list p span{color: #9c9c9c; font-size: 12px;  }
@@ -124,7 +126,7 @@
 
 /*列表样式2列表样式1*/
 .add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
-.add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
+.add_main .form-group  label{position:absolute;z-index:10;font-size:16px;margin-top:6px;width:82px;
     padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
 .add_main .form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:16px;padding-left:95px}
 .add_main .form-group .xuan_type{padding-left:95px;text-align:left!important;color:#999}

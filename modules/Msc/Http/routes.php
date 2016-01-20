@@ -6,20 +6,18 @@ Route::group(['prefix' => 'msc', 'namespace' => 'Modules\Msc\Http\Controllers'],
 {
 	Route::get('/', 'MscController@index');
 
-
 });
 
 
 Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','middleware' => []], function()
 {
 
-
 	//http://www.mis.hx/msc/admin/resources-manager/user-register
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
-		//²âÊÔÂ·ÓÉ
+		//æµ‹è¯•è·¯ç”±
 		Route::get('test/index', ['uses'=>'TestController@Index','as'=>'msc.Test.Index']);
 
-		//¿ÆÊÒÂ·ÓÉ×é
+		//ç§‘å®¤è·¯ç”±ç»„
 		Route::post('dept/add-dept', ['uses'=>'DeptController@AddDept','as'=>'msc.Dept.AddDept']);
 		Route::post('dept/update-dept', ['uses'=>'DeptController@UpdateDept','as'=>'msc.Dept.UpdateDept']);
 		Route::post('dept/del-dept', ['uses'=>'DeptController@DelDept','as'=>'msc.Dept.DelDept']);
@@ -46,7 +44,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 
 		Route::post('user/student-add', ['uses'=>'UserController@postStudentAdd','as'=>'msc.admin.user.StudentAdd']);
 		Route::post('user/student-save', ['uses'=>'UserController@postStudentSave','as'=>'msc.admin.user.StudentSaveEdit']);
-		//Ñ§ÉúÓÃ»§µ¼Èëµ¼³ö
+		//å­¦ç”Ÿç”¨æˆ·å¯¼å…¥å¯¼å‡º
 		Route::get('user/export-student-user',['uses'=>'UserController@getExportStudentUser','as'=>'msc.admin.user.ExportStudentUser']);
 		Route::post('user/import-student-user',['uses'=>'UserController@postImportStudentUser','as'=>'msc.admin.user.ImportStudentUser']);
 		Route::post('user/student-info',['uses'=>'UserController@getStudentInfo','as'=>'msc.admin.user.StudentInfo']);
@@ -58,11 +56,11 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::post('user/teacher-add', ['uses'=>'UserController@postTeacherAdd','as'=>'msc.admin.user.TeacherAdd']);
 		Route::post('user/teacher-save', ['uses'=>'UserController@postTeacherSave','as'=>'msc.admin.user.TeacherSaveEdit']);
 
-		//½ÌÊ¦ÓÃ»§µ¼³ö£¬µ¼Èë
+		//æ•™å¸ˆç”¨æˆ·å¯¼å‡ºï¼Œå¯¼å…¥
 		Route::get('user/export-teacher-user', ['uses'=>'UserController@getExportTeacherUser','as'=>'msc.admin.user.ExportTeacherUser']);
 		Route::post('user/import-teacher-user', ['uses'=>'UserController@getImportTeacherUser','as'=>'msc.admin.user.ImportTeacherUser']);
 		Route::get('user/teacher-info', ['uses'=>'UserController@getTeacherInfo','as'=>'msc.admin.user.TeacherInfo']);
-		//Â¥¶°Â·ÓÉ
+		//æ¥¼æ ‹è·¯ç”±
 		Route::get('floor/index', ['uses'=>'FloorController@index','as'=>'msc.admin.floor.index']);
 		Route::post('floor/add-floor-insert', ['uses'=>'FloorController@postAddFloorInsert','as'=>'msc.admin.floor.postAddFloorInsert']);
 
@@ -71,7 +69,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
 		Route::get('floor/stop-floor', ['uses'=>'FloorController@getStopFloor','as'=>'msc.admin.floor.getStopFloor']);
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
-         //×¨Òµ±íÂ·ÓÉ
+         //ä¸“ä¸šè¡¨è·¯ç”±
 		 //Route::controller('profession','ProfessionController');
 		 Route::get('profession/profession-list',['uses'=>'ProfessionController@getProfessionList','as'=>'msc.admin.profession.ProfessionList']);
 		 Route::post('profession/profession-add',['uses'=>'ProfessionController@postProfessionAdd','as'=>'msc.admin.profession.ProfessionAdd']);
@@ -80,7 +78,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		 Route::get('profession/profession-status',['uses'=>'ProfessionController@getProfessionStatus','as'=>'msc.admin.profession.ProfessionStatus']);
 		 Route::get('profession/profession-deletion',['uses'=>'ProfessionController@getProfessionDeletion','as'=>'msc.admin.profession.ProfessionDeletion']);
 		 Route::post('profession/profession-import',['uses'=>'ProfessionController@postProfessionImport','as'=>'msc.admin.profession.ProfessionImport']);
-		//ÊµÑéÊÒÂ·ÓÉ
+		//å®žéªŒå®¤è·¯ç”±
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
@@ -103,7 +101,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('laboratory/_check', ['uses'=>'LaboratoryController@_check','as'=>'msc.admin.laboratory._check']);
 		Route::get('laboratory/lab-detail', ['uses'=>'LaboratoryController@getLabdetail','as'=>'msc.admin.laboratory.getLabdetail']);
 		Route::get('laboratory/student-lab-detail', ['uses'=>'LaboratoryController@getStudentLabDetail','as'=>'msc.admin.laboratory.getStudentLabDetail']);
-		//×ÊÔ´Â·ÓÉ
+		//èµ„æºè·¯ç”±
 		Route::controller('resources','ResourcesController');
 		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
 		Route::post('resources/resources-add',['uses'=>'ResourcesController@postResourcesAdd','as'=>'msc.admin.resources.ResourcesAdd']);
@@ -112,7 +110,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('resources/resources-status/{id}',['uses'=>'ResourcesController@postResourcesStatus','as'=>'msc.admin.resources.ResourcesStatus']);
 		Route::get('resources/resources-remove/{id}',['uses'=>'ResourcesController@getResourcesRemove','as'=>'msc.admin.resources.ResourcesRemove']);
 
-		//Ö°³ÆÂ·ÓÉ
+		//èŒç§°è·¯ç”±
 		Route::controller('professionaltitle','ProfessionalTitleController');
 		Route::get('professionaltitle/job-title-index',['uses'=>'ProfessionalTitleController@getJobTitleIndex','as'=>'msc.admin.professionaltitle.JobTitleIndex']);
 		Route::post('professionaltitle/holder-add',['uses'=>'ProfessionalTitleController@postHolderAdd','as'=>'msc.admin.professionaltitle.HolderAdd']);
@@ -121,7 +119,7 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('professionaltitle/holder-status/{id}',['uses'=>'ProfessionalTitleController@getHolderStatus','as'=>'msc.admin.professionaltitle.HolderStatus']);
 		Route::get('professionaltitle/holder-remove',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
 
-		//ÊµÑéÊÒ×ÊÔ´Î¬»¤Â·ÓÉ
+		//å®žéªŒå®¤èµ„æºç»´æŠ¤è·¯ç”±
 		//Route::controller('LadMaintain','LadMaintainController');
 		Route::get('ladMaintain/laboratory-list',['uses'=>'LadMaintainController@getLaboratoryList','as'=>'msc.admin.LadMaintain.LaboratoryList']);
 		Route::get('ladMaintain/laboratory-list-data',['uses'=>'LadMaintainController@getLaboratoryListData','as'=>'msc.admin.LadMaintain.LaboratoryListData']);
@@ -140,50 +138,50 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		//Route::controller('personal-center', 'PersonalCenterController');
 		Route::get('personal-center/index',['uses'=>'PersonalCenterController@getIndex','as'=>'msc.personalCenter.getIndex']);
 		//Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
-		//ÎÒµÄÊµÑéÊÒÔ¤Ô¼
+		//æˆ‘çš„å®žéªŒå®¤é¢„çº¦
 		Route::get('/personal-center/my-laboratory-apply',['uses'=>'PersonalCenterController@MyLaboratoryApply','as'=>'msc.personalCenter.MyLaboratoryApply']);
-		//ÒÑÍê³ÉµÄÔ¤Ô¼ÐÅÏ¢Êý¾Ý»ñÈ¡
+		//å·²å®Œæˆçš„é¢„çº¦ä¿¡æ¯æ•°æ®èŽ·å–
 		Route::get('/personal-center/history-laboratory-apply-list',['uses'=>'PersonalCenterController@HistoryLaboratoryApplyList','as'=>'msc.personalCenter.HistoryLaboratoryApplyList']);
-		//Ô¤Ô¼Êý¾ÝÏêÇé
+		//é¢„çº¦æ•°æ®è¯¦æƒ…
 		Route::get('/personal-center/get-apply-details',['uses'=>'PersonalCenterController@GetApplyDetails','as'=>'msc.personalCenter.GetApplyDetails']);
-		//È¡ÏûÊµÑéÊÒÔ¤Ô¼
+		//å–æ¶ˆå®žéªŒå®¤é¢„çº¦
 		Route::get('/personal-center/cancel-apply',['uses'=>'PersonalCenterController@CancelApply','as'=>'msc.personalCenter.CancelApply']);
-		//¿ª·ÅÉè±¸µ±Ç°Ô¤Ô¼
+		//å¼€æ”¾è®¾å¤‡å½“å‰é¢„çº¦
 		//Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.wechat.personalCenter.getMyApply']);
-		//¿ª·ÅÉè±¸Ê¹ÓÃÀúÊ·
+		//å¼€æ”¾è®¾å¤‡ä½¿ç”¨åŽ†å²
 		//Route::get('personal-center/user-open-device-histroy-data',['uses'=>'PersonalCenterController@getUserOpenDeviceHistroyData','as'=>'msc.personalCenter.userOpenDeviceHistroyData']);
-		//¿ª·ÅÉè±¸È¡ÏûÔ¤Ô¼
+		//å¼€æ”¾è®¾å¤‡å–æ¶ˆé¢„çº¦
 		//Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
 		//Route::get('personal-center/info-manage',['uses'=>'PersonalCenterController@getInfoManage','as'=>'msc.personalCenter.infoManage']);
-		//ÎÒµÄÕn³Ì
+		//æˆ‘çš„èª²ç¨‹
 		//Route::get('personal-center/my-course',['uses'=>'PersonalCenterController@getMyCourse','as'=>'msc.personalCenter.MyCourse']);
 
 		// /personal-center/history-laboratory-apply-list
-		//ÎÒµÄ¿ª·ÅÊµÑéÊÒÔ¤Ô¼
+		//æˆ‘çš„å¼€æ”¾å®žéªŒå®¤é¢„çº¦
 		Route::get('/personal-center/my-opening-laboratory',['uses'=>'PersonalCenterController@getMyOpeningLaboratory','as'=>'msc.personalCenter.getMyOpeningLaboratory']);
 
-		//È¡ÏûÔ¤Ô¼
+		//å–æ¶ˆé¢„çº¦
 		Route::get('/personal-center/cancel-laboratory',['uses'=>'PersonalCenterController@getCancelLaboratory','as'=>'msc.personalCenter.getCancelLaboratory']);
 
-		//´ýÔ¤Ô¼ÁÐ±í
+		//å¾…é¢„çº¦åˆ—è¡¨
 		Route::get('/laboratory/laboratory-list',['uses'=>'LaboratoryCotroller@LaboratoryList','as'=>'msc.Laboratory.LaboratoryList']);
-		//»ñÈ¡ÊµÑéÊÒ´ýÔ¤Ô¼ÁÐ±íÊý¾Ý
+		//èŽ·å–å®žéªŒå®¤å¾…é¢„çº¦åˆ—è¡¨æ•°æ®
 		Route::get('/laboratory/laboratory-list-data',['uses'=>'LaboratoryCotroller@LaboratoryListData','as'=>'msc.Laboratory.LaboratoryListData']);
-		//»ñÈ¡¿ª·ÅÊµÑéÊÒ´ýÔ¤Ô¼ÁÐ±íÊý¾Ý
+		//èŽ·å–å¼€æ”¾å®žéªŒå®¤å¾…é¢„çº¦åˆ—è¡¨æ•°æ®
 		Route::get('/laboratory/open-laboratory-list-data',['uses'=>'LaboratoryCotroller@OpenLaboratoryListData','as'=>'msc.Laboratory.OpenLaboratoryListData']);
-		//¸ù¾ÝÊµÑéÊÒidÓëÊ±¼ä ½øÈëÊµÑéÊÒÔ¤Ô¼ÌîÐ´±íµ¥Ò³Ãæ
+		//æ ¹æ®å®žéªŒå®¤idä¸Žæ—¶é—´ è¿›å…¥å®žéªŒå®¤é¢„çº¦å¡«å†™è¡¨å•é¡µé¢
 		Route::get('/laboratory/apply-laboratory',['uses'=>'LaboratoryCotroller@ApplyLaboratory','as'=>'msc.Laboratory.ApplyLaboratory']);
-		//¸ù¾ÝÊµÑéÊÒidÓëÊ±¼ä ½øÈë¿ª·ÅÊµÑéÊÒÔ¤Ô¼ÈÕÀú°²ÅÅÒ³Ãæ
+		//æ ¹æ®å®žéªŒå®¤idä¸Žæ—¶é—´ è¿›å…¥å¼€æ”¾å®žéªŒå®¤é¢„çº¦æ—¥åŽ†å®‰æŽ’é¡µé¢
 		Route::get('/laboratory/apply-open-laboratory',['uses'=>'LaboratoryCotroller@ApplyOpenLaboratory','as'=>'msc.Laboratory.ApplyOpenLaboratory']);
-		//¿ª·ÅÊµÑéÌîÐ´Ô¤Ô¼±íµ¥Ò³Ãæ
+		//å¼€æ”¾å®žéªŒå¡«å†™é¢„çº¦è¡¨å•é¡µé¢
 		Route::post('/laboratory/open-laboratory-form',['uses'=>'LaboratoryCotroller@OpenLaboratoryForm','as'=>'msc.Laboratory.OpenLaboratoryForm']);
-		//´¦Àí¿ª·ÅÊµÑéÔ¤Ô¼±íµ¥
+		//å¤„ç†å¼€æ”¾å®žéªŒé¢„çº¦è¡¨å•
 		Route::post('/laboratory/open-laboratory-form-op',['uses'=>'LaboratoryCotroller@OpenLaboratoryFormOp','as'=>'msc.Laboratory.OpenLaboratoryFormOp']);
-		//ÀÏÊ¦µÄ¿ª·ÅÊµÑéÊÒºÍÆÕÍ¨ÊµÑéÊÒÒ³Ãæ
+		//è€å¸ˆçš„å¼€æ”¾å®žéªŒå®¤å’Œæ™®é€šå®žéªŒå®¤é¡µé¢
 		Route::get('/laboratory/laboratory-teacher-list',['uses'=>'LaboratoryCotroller@LaboratoryTeacherList','as'=>'msc.Laboratory.LaboratoryTeacherList']);
-		//ÀÏŽŸîA¼sé_·ÅŒòžÊÒ”µ“þÌŽÀí
+		//è€å¸«é ç´„é–‹æ”¾å¯¦é©—å®¤æ•¸æ“šè™•ç†
 		Route::post('/laboratory/open-laboratory-form-teacher-op',['uses'=>'LaboratoryCotroller@OpenLaboratoryFormTeacherOp','as'=>'msc.Laboratory.OpenLaboratoryFormTeacherOp']);
-		//ÆÕÍ¨ÊµÑéÊÒÑéÖ¤Êý¾Ý´¦Àí
+		//æ™®é€šå®žéªŒå®¤éªŒè¯æ•°æ®å¤„ç†
 		Route::post('/laboratory/apply-laboratory-op',['uses'=>'LaboratoryCotroller@ApplyLaboratoryOp','as'=>'msc.Laboratory.ApplyLaboratoryOp']);
 		// /msc/wechat/personal-center/index
 
@@ -192,8 +190,5 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::controller('user', 'UserController');
 		Route::get('/user/user-login',['uses'=>'UserCotroller@getUserLogin','as'=>'msc.User.getUserLogin']);
 		// /msc/wechat/personal-center/index
-	});
-	Route::group(['prefix'=>'token'],function(){
-		Route::any('/wechat', 'WechatController@serve');
 	});
 });
