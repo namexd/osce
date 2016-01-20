@@ -96,6 +96,9 @@ class ExamQueue extends  CommonModel{
                 'student.name as name',
                 'exam_queue.begin_dt as begin_dt',
                 'exam_queue.end_dt as end_dt',
+                'exam_queue.room_id as room_id',
+                'exam_queue.station_id as station_id',
+                'exam_queue.status as status'
             ])->get()->toArray();
 
         return $data;

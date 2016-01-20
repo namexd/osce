@@ -448,11 +448,10 @@ class InvigilatePadController extends CommonController
 //    url   /osce/admin/invigilatepad/wait_exam
 
     protected $timeDiff = 120;
-    const EXAM_BEFORE = 0;// 待考
-    const EXAM_WILL_BEGIN = 1; //将要开始 考试开始两分钟内提醒
-    const EXAM_TAKING = 2; // 考试中
+    const EXAM_TAKING = 1; // 考试中
+    const EXAM_BEFORE = 2;// 待考
     const EXAM_JUST_AFTER = 3;// 刚考完,下一场提示 考试完成后两分钟内提醒
-
+    const EXAM_WILL_BEGIN = 4; //将要开始 考试开始两分钟内提醒
 
     public  function getWaitExam(Request $request){
         $this->validate($request,[
@@ -460,12 +459,17 @@ class InvigilatePadController extends CommonController
         ]);
         $watchId=$request->input('watch_id');
 
-        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first()->student_id;
+        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
+        if(!$watchStudent){
+            return response()->json(
+                $this->fail(new \Exception('没有找到学生的腕表信息'))
+            );
+        }
         //查到该学生的所有考试
 //        dd($watchStudent);
 
         $ExamQueueModel= new ExamQueue();
-        $result =  $ExamQueueModel->StudentExamInfo($watchStudent);
+        $result =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
         dump($result);
 
         //获取到当前时间;
@@ -481,14 +485,18 @@ class InvigilatePadController extends CommonController
             $key = $itemStart - $time;
             $endDiff = $time - $itemEnd;
             //待考信息
-
-
+             if($key>200){
+                 $status = self::EXAM_BEFORE;
+                 $curExam = $item;
+                 break;
+             }
             //开考前通知
-            if ($key<0 && ($this->timeDiff+$key) > 0 ) {
+            if ($key>200 && ($this->timeDiff-$key) >0 ) {
                 $status = self::EXAM_WILL_BEGIN;
                 $curExam = $item;
                 break;
             }
+
           // 考试中提醒时间
             if ( $itemStart <= $time &&  $itemEnd >= $time) {
                 $status = self::EXAM_TAKING;
@@ -501,38 +509,47 @@ class InvigilatePadController extends CommonController
                 $status = self::EXAM_JUST_AFTER;
                 $curKey = $key;
             }
-
             $list[$key] = $item;
         }
-       //对考试时间排序
+        //对考试时间排序
         ksort($list);
-
-
-        switch ( $status ) {
+        switch ($status) {
             case self::EXAM_BEFORE:
+                $willStudents = ExamQueue::where('room_id','=',$curExam['room_id'])
+                    ->whereBetween('status',[1,2])
+                    ->count();
+
+                dump('前面还有'.$willStudents .' 考生'.  ' 预计考试时间'  . '即将进入考场' ,$willStudents);
                 break;
             case self::EXAM_WILL_BEGIN:
+
                 $curExam['room_id'];
+                dump('你即将开始考试222');
                 // todo ..
                 break;
             case self::EXAM_TAKING:
+                dump('3333');
                 $surplus = $curExam['end_time'] - $time;
                 $surplus = floor($surplus/60) . ':' . $surplus%60;
-                return response()->json([
-
-                ]);
+                dump('当前考试剩余时间'.$surplus);
+//                return response()->json([
+//
+//                ]);
                 break;
             case self::EXAM_JUST_AFTER:
+                dump('下一场考试4444');
                 foreach ($list as $key => $item) {
                     if ($curKey == $key) {
                         $nextExam = current($list);
                     }
                 }
+
+
                 $nextExam['room_id'];
                 // todo ..
                 break;
         }
-
+    dd($nextExam ,$curExam);
         dump($list);die;
 
     }
