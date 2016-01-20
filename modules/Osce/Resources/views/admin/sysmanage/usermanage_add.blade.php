@@ -93,7 +93,7 @@
                         <div class="hr-line-dashed"></div>
 	                    <div class="form-group">
                     		<label class="col-sm-2 control-label">性别</label>
-			                <div class="col-sm-offset-2" style="padding-left:15px;">
+			                <div class="col-sm-offset-2" style="padding-left:15px;padding-top:5px;">
 			                    <input type="radio" class="check_icon edit-man" name="gender" value="1"/>
 								<span style="padding-right: 40px;">男</span>
 			                    <input type="radio" class="check_icon edit-woman" name="gender" value="2" />

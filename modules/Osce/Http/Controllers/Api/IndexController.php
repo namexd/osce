@@ -200,7 +200,7 @@ class IndexController extends CommonController
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
-            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at','DESC')->first()->updated_at;
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->orderBy('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,
                     'action'         =>$action,

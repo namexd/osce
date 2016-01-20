@@ -221,5 +221,4 @@ return [
         'Menu'      => Pingpong\Menus\MenuFacade::class,
         'Message'   =>  App\Repositories\Message\MessageFacade::class,
     ],
-
 ];
