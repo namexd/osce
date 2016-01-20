@@ -60,7 +60,7 @@
                     @endforelse
                 </tbody>
             </table>
-                <div class="pull-left total-nums">
+                <div class="pull-left">
                     共{{$list->total()}}条
                 </div>
                 <div class="pull-right">
