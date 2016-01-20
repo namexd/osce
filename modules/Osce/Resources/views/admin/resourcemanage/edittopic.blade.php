@@ -7,8 +7,9 @@
     td input{margin: 5px 0;}
     .btn-outline:hover{color: #fff!important;}
     .ibox-content{padding-top: 20px;}
-    .ibox-title{border-top: 0;}
-    .ibox-content{
+    .btn-outline:hover{color: #fff!important;}
+    .form-group .ibox-title{border-top: 0;}
+    .form-group .ibox-content{
         border-top: 0;
         padding-left: 0;
     }
