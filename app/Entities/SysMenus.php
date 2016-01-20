@@ -56,6 +56,7 @@ class SysMenus extends Model
                             'permission_id'=>$PermissionsObj->id,
                             'menu_id'=>$MenusObj->id,
                         ]);
+
                         //添加成功之後 返回的菜單表和權限表 關聯的id
                         if(!empty($PermissionMenuObj->id)){
                             if(SysPermissions::where('id','=',$PermissionsObj->id)->update(['itemid'=>$PermissionMenuObj->id])){

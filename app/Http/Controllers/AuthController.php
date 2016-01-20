@@ -271,7 +271,42 @@ class AuthController extends BaseController
      */
     public function AddAuth(SysPermissions $SysPermissions,SysMenus $SysMenus){
         $data = [
-
+            0=>[
+                'moduleid'=>'msc',
+                'name'=>'资源管理',
+                'url'=>'',
+                'pid'=>'11',
+                'ico'=>'',
+                'order'=>'',
+                'descrition'=>'',
+            ],
+        1=>[
+                'moduleid'=>'msc',
+                'name'=>'考试管理',
+                'url'=>'',
+                'pid'=>'11',
+                'ico'=>'',
+                'order'=>'',
+                'descrition'=>'',
+            ],
+        2=>[
+                'moduleid'=>'msc',
+                'name'=>'统计分析',
+                'url'=>'',
+                'pid'=>'11',
+                'ico'=>'',
+                'order'=>'',
+                'descrition'=>'',
+            ],
+        3=>[
+                'moduleid'=>'msc',
+                'name'=>'系统管理',
+                'url'=>'',
+                'pid'=>'11',
+                'ico'=>'',
+                'order'=>'',
+                'descrition'=>'',
+            ]
         ];
 
         $SysMenus->AddMenus($data);

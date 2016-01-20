@@ -62,6 +62,16 @@ class ExamPlan extends CommonModel
      *
      */
     public function IntelligenceEaxmPlan($exam){
+
+
+
+
+        $ExamPlanForRoom =   new ExamPlanForRoom();
+
+        $ExamPlanForRoom    ->  IntelligenceEaxmPlan($exam);
+
+        dd(123);
+
         $this   ->  stations   =   $this   ->  getAllStation($exam);
         $this   ->  allStudent =   $this   ->  getExamStudent($exam);
         $mins   =   $this   ->  getMaxStationTime();
@@ -124,7 +134,7 @@ class ExamPlan extends CommonModel
         foreach($batchStudnet as $index=>$student)
         {
             $newIndex           =   $index+1;
-            if($newIndex>=$total)
+            if($newIndex        >=  $total)
             {
                 $newIndex       =   $newIndex-$total;
             }
