@@ -14,6 +14,16 @@ class WatchLog extends CommonModel{
     protected   $fillable 	=	[ 'watch_id', 'action','context','create_user_id'];
     public      $search    =   [];
 
+    /**
+     * 腕表和学生的关联关系
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @author Jiangzhiheng
+     */
+    public function student()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\student', 'id', 'student_id');
+    }
+
 
    public function historyRecord($data){
          if($data['context']){
