@@ -270,8 +270,9 @@ class Teacher extends CommonModel
     }
 
     public function registerUser($data,$password){
-        $form_user=$data;
         $form_user['username']  =   $data['mobile'];
+        $form_user['name']      =   $data['name'];
+        $form_user['mobile']    =   $data['mobile'];
         $form_user['openid']    =   '';
         $form_user['password']  =   bcrypt($password);
         $user=User::create($form_user);

@@ -171,8 +171,7 @@ class InvigilatorController extends CommonController
             'create_user_id'    =>  $user->id,
             'role_id'           =>  config('osce.invigilatorRoleId',1)
         ];
-//        'spRoleId'		=>	4,
-//	'invigilatorRoleId'	=>	1,
+
         $Invigilator    =   new Teacher();
         try{
             if($Invigilator    ->  addInvigilator($data)){
