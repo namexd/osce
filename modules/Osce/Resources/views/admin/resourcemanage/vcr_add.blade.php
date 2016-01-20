@@ -155,10 +155,9 @@
                                 <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
                                     <select id=""   class="form-control m-b" name="status">
-                                        <option value="0">离线</option>
-                                        <option value="1">在线</option>
-                                        <option value="2">维修</option>
-                                        <option value="3">报废</option>
+                                        @foreach($status as $key => $value)
+                                            <option value="{{$key}}">{{$value}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

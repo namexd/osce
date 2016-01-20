@@ -19,14 +19,14 @@ class Watch extends CommonModel implements MachineInterface
     protected $table 		= 	'watch';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	[ 'name', 'code','factory','sp','description','status','create_user_id'];
+    protected   $fillable 	=	['code', 'name', 'status', 'description', 'factory', 'sp', 'create_user_id', 'purchase_dt'];
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '未使用',
         1   =>  '使用中',
-        2   =>  '维修',
-        3   =>  '报废',
+        0   =>  '未使用',
+        2   =>  '报废',
+        3   =>  '维修',
     ];
 
     /**
