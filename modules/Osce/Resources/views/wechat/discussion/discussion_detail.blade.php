@@ -123,7 +123,7 @@
                                 });
                             }
                             else{
-                                location.href = "{{route('osce.wechat.getQuestionList')}}";
+                                location.href = "{{route('osce.wechat.getDiscussionLists')}}";
                             }
                         }
                     })

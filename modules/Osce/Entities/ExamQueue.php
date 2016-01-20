@@ -20,9 +20,9 @@ class ExamQueue extends  CommonModel{
     public $search = [];
 
     protected $statuValues  =   [
-        1   =>  '正在考试',
-        2   =>  '未进行考试',
-        3   =>  '考试完毕',
+        1   =>  '姝ｅ湪鑰冭瘯',
+        2   =>  '鏈繘琛岃?冭瘯',
+        3   =>  '鑰冭瘯瀹屾瘯',
     ];
 
     public function student(){
@@ -41,7 +41,7 @@ class ExamQueue extends  CommonModel{
     }
 
 
-    //获取候考教室
+    //鑾峰彇鍊欒?冩暀瀹?
     protected function getWaitRoom($exam){
         $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
         $data=[];
@@ -60,7 +60,7 @@ class ExamQueue extends  CommonModel{
         return $data;
     }
 
-    //获取候考考站
+    //鑾峰彇鍊欒?冭?冪珯
     protected function getWaitStation($exam){
        $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
         $data=[];
@@ -78,7 +78,7 @@ class ExamQueue extends  CommonModel{
     }
 
 
-    //获取考试详情
+    //鑾峰彇鑰冭瘯璇︽儏
     public  function  StudentExamInfo($watchStudent){
         $todayStart = date('Y-m-d 00:00:00');
         $todayEnd = date('Y-m-d 23:59:59');
@@ -98,7 +98,9 @@ class ExamQueue extends  CommonModel{
                 'exam_queue.end_dt as end_dt',
                 'exam_queue.room_id as room_id',
                 'exam_queue.station_id as station_id',
-                'exam_queue.status as status'
+                'exam_queue.status as status',
+                'exam_queue.id as id',
+
             ])->get()->toArray();
 
         return $data;
@@ -109,7 +111,7 @@ class ExamQueue extends  CommonModel{
     }
 
     /**
-     * 根据room_id来获取对应的考生列表
+     * 鏍规嵁room_id鏉ヨ幏鍙栧搴旂殑鑰冪敓鍒楄〃
      * @param $room_id
      * @return
      * @throws \Exception
@@ -125,4 +127,9 @@ class ExamQueue extends  CommonModel{
             throw $ex;
         }
     }
+
+
+
+    //学生考试成绩推送
+
 }
