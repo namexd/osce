@@ -3,6 +3,7 @@
 namespace Modules\Msc\Entities;
 
 use Modules\Msc\Entities\CommonModel;
+use App\Entities\User;
 
 class Teacher extends CommonModel {
 
@@ -14,7 +15,7 @@ class Teacher extends CommonModel {
     protected $primaryKey	=	'id';
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
-    protected $fillable 	=	['name','code','teacher_dept','validated','id'];
+    protected $fillable 	=	['name','code','teacher_dept','validated','id','professionalTitle'];
 
 
     /**
@@ -30,6 +31,15 @@ class Teacher extends CommonModel {
         return $this->belongsTo('\Modules\Msc\Entities\TeacherDept','teacher_dept');
     }
 
+    public function role(){
+        
+    }
+
+    //用户管理员
+    public function user(){
+
+        return $this->hasOne('App\Entities\User','id','id');
+    }
     /**
      * 格式化用户证件类型
      * @return mixed
@@ -311,5 +321,16 @@ class Teacher extends CommonModel {
             );
         $result=$this->create($teacher);
         return $result;
+    }
+
+    //user表关联
+    public function aboutUser(){
+        return $this->hasOne('App\Entities\User','id','id');
+    }
+    ////获取和老师管理的用户数据
+    public  function getdata(){
+        $builder = $this;
+        $builder = $builder->with('aboutUser')->get();
+        return $builder;
     }
 }

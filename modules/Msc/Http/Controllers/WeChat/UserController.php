@@ -1,8 +1,9 @@
 <?php namespace Modules\Msc\Http\Controllers\WeChat;
 
 use Illuminate\Support\Facades\Input;
-use Modules\Msc\Http\Controllers\MscWeChatController;
+use Modules\Msc\Http\Controllers\MscController;
 use App\Repositories\UserRepository;
+use Modules\Msc\Entities\StdProfessional;
 use Illuminate\Http\Request;
 use App\Extensions\OAuth\PasswordGrantVerifier;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,8 @@ use Illuminate\Support\Facades\Session;
 use Modules\Msc\Entities\Student;
 use Modules\Msc\Entities\Teacher;
 use App\Entities\User;
-class UserController extends MscWeChatController {
+use Modules\Msc\Entities\ProfessionalTitle;
+class UserController extends MscController {
 
 	/**
 	 * 用户登录
@@ -110,21 +112,21 @@ class UserController extends MscWeChatController {
 	 */
 	public function getUserRegister(UserRepository $userRepository)
 	{
-		//获取专业  关键字搜索  keyword  关键字(必须的) page
-		//$userRepository->getProfessionalList();
-		//获取科室列表 关键字搜索 keyword  关键字(必须的) page
-		//$userRepository->getTeacherDeptList();
-
+		$ProfessionalTitle = new ProfessionalTitle;
+		$StdProfessional = new StdProfessional;
 		$data = [
+			//职称
+			'ProfessionalTitleList'=>$ProfessionalTitle->getProfessionalTitleList(),
 			//年级列表
 			'GreadeList'=>$userRepository->getGreadeList(),
 			//学生类型列表
-			'StudentTypeList'=>$userRepository->getStudentTypeList()
+			'StudentTypeList'=>$userRepository->getStudentTypeList(),
+
+			'StudentProfessionalList'=>$StdProfessional->getProfessionalList()
 		];
 
-
 		return view('msc::wechat.user.register',$data);
-		//$GreadeList
+
 	}
 	/**
 	 * 学生注册
@@ -219,19 +221,23 @@ class UserController extends MscWeChatController {
 	//处理老师注册
 	public function postRegTeacherOp(Request $request,UserRepository $userRepository)
 	{
+
 		$this->validate($request,[
 			'name'=>'required',
 			'code'=>'required|integer',
 			'password'=>'required',
 			'mobile'=>'required|mobile_phone',
-			'teacher_dept'=>'required|integer',
-			'gender'=>'required|integer'
+			'gender'=>'required|integer',
+			'professionalTitle'=>'required|integer',
+			'professional'=>'required|integer'
 		]);
 		$request['openid'] = \Illuminate\Support\Facades\Session::get('openid','');
 		//判断手机号码 有无注册
 		if ($this->CheckPhoneRegister($request['mobile'])) {
 			if ($this->CheckCodeRegister($request['code'])) {
+
 				if ($userRepository->regTeacher($request))
+
 					return redirect()->intended('/msc/wechat/user/user-login');
 				else {
 					return view('msc::wechat.index.index_error', array('error_msg' => '注册失败'));

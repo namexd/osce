@@ -35,7 +35,7 @@ return [
 			'手机' => 'mobile',
 			'分组' => 'group',
 		],
-
+       //导入学生的组
 		'student_group'=>[
 			'姓名'=>'name',
 			'学号'=>'code',
@@ -47,6 +47,7 @@ return [
 			'性别'=> 'gender',
 			'状态'=>'status',
 		],
+		//导入教师的组
 		'teacher_group'=>[
 			'姓名'=>'name',
 			'胸牌号'=>'code',
@@ -70,13 +71,21 @@ return [
 			"使用面积" => 'area',
 			"实验室类型" => "type",
 			"管理教师" => "manager_name",
-			"实验室类型代码" => 'typeCode'
+			"实验室类型代码" => 'typeCode',
 		],
+       //导入专业的组
+		'profession_group' =>[
+			'专业代码' => 'name',
+			'专业名称' => 'code',
+			'状态'    => 'status',
+		]
+
 	],
 	'idcard_type'  	=>		[	1=>'身份证',	2=>'护照'],
 	'page_size'		=>		10,
 	'video_host'	=>		'192.168.1.200',
 	'video_port'	=>		'9090',
 	'student_type'  =>      [1=>'本科', 2=>'专科'],
-	'user_status'   =>      [1=>'正常', 2=>'禁用', 3=>'删除']
+	'user_status'   =>      [1=>'正常', 2=>'禁用', 3=>'删除'],
+	'profession_status' =>  [1=>'正常', 2=>'停用']
 ];

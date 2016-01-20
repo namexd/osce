@@ -273,12 +273,14 @@ class Student extends CommonModel {
         );
 
         $users_mobile=$connection->table('users')->where('mobile',$data['mobile'])->select('mobile')->first();
+         if($users_mobile){
+             $users_mobile=$users_mobile->mobile;
 
-        $users_mobile=$users_mobile->mobile;
-        
-        if($users_mobile==$data['mobile']){
-            return false;
-        }
+             if($users_mobile==$data['mobile']){
+                 return false;
+             }
+         }
+
 
 
         $id=$connection->table('users')->insertGetId($users);
