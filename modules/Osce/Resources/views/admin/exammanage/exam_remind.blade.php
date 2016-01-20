@@ -35,43 +35,35 @@
             </tr>
             <tr>
                 @foreach($list as $key=>$v)
-                    <td>{{$v[1]->name}}</td>
+                   @foreach($v as $z=>$k)
+                   @if($z==1)
+                    <td>{{$k->name}}</td>
+                   @endif
+                   @endforeach
                 @endforeach
-                <td>考生2</td>
-                <td>考生3</td>
-                <td>考生4</td>
-                <td>考生5</td>
-                <td>考生6</td>
             </tr>
             <tr>
-                <td>考生1</td>
-                <td>考生2</td>
-                <td>考生3</td>
-                <td>考生4</td>
-                <td>考生5</td>
-                <td>考生6</td>
+                @foreach($list as $key=>$v)
+                    @foreach($v as $z=>$k)
+                        @if($z==2)
+                            <td>{{$k->name}}</td>
+                        @endif
+                    @endforeach
+                @endforeach
             </tr>
             <tr>
-                <td>考生1</td>
-                <td>考生2</td>
-                <td>考生3</td>
-                <td>考生4</td>
-                <td>考生5</td>
-                <td>考生6</td>
+                @foreach($list as $key=>$v)
+                    @foreach($v as $z=>$k)
+                        @if($z==3)
+                            <td>{{$k->name}}</td>
+                        @endif
+                    @endforeach
+                @endforeach
             </tr>
         </table>
         <marquee id="marquee" style="width:100%;height:200px" Behaviour="alternate" scrollamount="2" direction="up" >
             <p style="font-size:18px;color:#ED5565;">考场纪律说明：</p>
-            <p>1.这里是文字显示这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>2.这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>3.这里是文字显示这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>4.这里是文字显示这里是文字显示这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>5.这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>1.这里是文字显示这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>2.这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>3.这里是文字显示这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>4.这里是文字显示这里是文字显示这里是文字显示这里是文字显示这里是文字显示</p>
-            <p>5.这里是文字显示这里是文字显示这里是文字显示</p>
+           {{ $description  }}
         </marquee>
     </div>
 @stop{{-- 内容主体区域 --}}

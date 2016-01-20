@@ -21,6 +21,7 @@ class ExamQueue extends  CommonModel{
     protected $statuValues  =   [
         1   =>  '正在考试',
         2   =>  '未进行考试',
+        3   =>  '考试完毕',
     ];
 
     public function student(){
