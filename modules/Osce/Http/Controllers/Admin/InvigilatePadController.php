@@ -667,7 +667,6 @@ class InvigilatePadController extends CommonController
                 dump('当前考试剩余时间'.$surplus);
 
             }
-
         }
 
 
