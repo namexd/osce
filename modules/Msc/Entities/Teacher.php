@@ -31,6 +31,10 @@ class Teacher extends CommonModel {
         return $this->belongsTo('\Modules\Msc\Entities\TeacherDept','teacher_dept');
     }
 
+    public function role(){
+        
+    }
+
     //用户管理员
     public function user(){
 
