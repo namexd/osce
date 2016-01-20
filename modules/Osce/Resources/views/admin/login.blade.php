@@ -6,67 +6,101 @@
 <head>
  <meta charset="utf-8">
  <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <title>四川大学-华西医院</title>
+ <title>OSCE考试智能管理系统</title>
  <meta name="description" content="">
  <meta name="viewport" content="width=device-width, initial-scale=1">
- <link href="{{asset('osce/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
- <link href="{{asset('osce/admin/css/animate.css')}}" rel="stylesheet">
- <link href="{{asset('osce/admin/css/style.css')}}" rel="stylesheet">
+	<link href="{{asset('osce/admin/plugins/css/bootstrap.min.css?v=3.4.0')}}" rel="stylesheet">
+	<link href="{{asset('osce/admin/css/animate.css')}}" rel="stylesheet">
+	<link href="{{asset('osce/admin/css/style.css')}}" rel="stylesheet">
+ 	<link rel="stylesheet" type="text/css" href="{{asset('osce/admin/css/login.css')}}"/>
+	<link href="{{asset('osce/admin/css/style.css')}}" rel="stylesheet">
+	<script type="text/javascript" src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}" ></script>
+	<link rel="stylesheet" type="text/txt" src="{{asset('osce/common/css/bootstrapValidator.css')}}"/>
+	<script type="text/javascript" src="{{asset('osce/common/js/bootstrapValidator.js')}}"> </script>
+	<script type="text/javascript">
+		$(function(){
+			$(".checkbox_input").click(function(){
+    			if($(this).find("input").is(':checked')){
+					$(this).find(".check_icon ").addClass("check");
+				}else{
+					$(this).find(".check_icon").removeClass("check");
+				}
+    		});
+    		
+    		$('#loginForm').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {/*验证*/
+                username: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                        	min:2,
+                            max:64,
+                            message: '用户名2~64个字符'
+                        }
+                    }
+                },
+                password: {
+                	validators: {
+	                	notEmpty: {/*非空提示*/
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                        	min:6,
+                            message: '密码为6~20个字符'
+                        }
+                    }
+                }
+            }
+		});
+		})
+	</script>
 </head>
-<style>
- .tag{
-  background:lightskyblue;
- }
-</style>
-
 <body>
-<style>
- body{background-color: #f3f3f4;}
- .logo{padding-bottom:20px;}
- .logo img{margin-left:-10px;}
- h3{text-align:left}
- h3.hh{margin-bottom:50px;color:#99a3b1}
- h3.tt{color:#999;margin:20px 0 10px;padding-left:2px;font-size:14px}
- .form-control{padding:0 12px;border-radius:3px;}
- .btn{margin-top:20px;font-weight:bold}
- .clearfix:after{visibility:hidden;display:block;font-size: 0;content:" ";clear: both;height:0}
- .clearfix{*zoom:1;}
- .txt{color:#b7bbc2;font-size:12px;font-weight:100;}
- .check{float:left;margin-left:3px;}
- .btn-primary:hover{background:#286090;}
- .form-control:focus{border-color: #408aff!important;}
- .btn-primary{background: #408aff;color: #408aff;color: #fff;}
- .btn-primary:hover{border:1px solid #286090}
-</style>
-
-<div class="middle-box text-center loginscreen  animated fadeInDown">
- <div>
-  <div class="logo">
-   <!--<h1 class="logo-name">LOGO</h1>-->
-   <img src="{{asset('msc/images/logo2.png')}}" width="300"/>
-  </div>
-  <!--<h3 class="hh">West China School of Medicial / West China Hospital Sichuan University.</h3>-->
-  <form class="m-t" role="form" id="loginForm" method="post" action="{{ route('osce.admin.postIndex') }}">
-   <h3 class="tt">用户名</h3>
-   <div class="form-group">
-    <input type="text" class="form-control" id="username" name="username"  placeholder="用户名">
-   </div>
-   <h3 class="tt">密码</h3>
-   <div class="form-group">
-    <input type="password" class="form-control" id="password" name="password" placeholder="密码">
-   </div>
-   <input type="hidden" name="grant_type" id="grant_type" value="password">
-   <input type="hidden" name="client_id"  id="client_id" value="ios">
-   <input type="hidden" name="client_secret" id="client_secret" value="111">
-   <div class="clearfix">
-    <label class="check">
-     <input style="position: relative;top:2px" type="checkbox" id="checkbox"/><span class="txt">&nbsp;记住密码</span>
-    </label>
-    <a style="float:right" href="javascript:;"><small class="txt">忘记密码？</small></a>
-   </div>
-   <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
-  </form>
- </div>
-</div>
-</body>
+		<div class="middle-box loginscreen animated fadeInDown">
+			<div style="background:#fff;margin-top:60px;padding:20px;border-top:3px solid #1dc5a3;">
+				<div class="logo">
+					<img src="{{asset('osce/images/logo.png')}}" width="100%"/>
+				</div>
+				<form class="m-t" role="form" id="loginForm" method="post" action="{{ route('osce.admin.postIndex') }}">
+					<h3 class="tt">
+						用户名
+					</h3>
+					<div class="form-group">
+						<input type="text" class="form-control" id="username" name="username"  placeholder="用户名">
+					</div>
+					<h3 class="tt">
+						密码
+					</h3>
+					<div class="form-group">
+						<input type="password" class="form-control" id="password" name="password" placeholder="密码">
+					</div>
+					<input type="hidden" name="grant_type" id="grant_type" value="password">
+					<input type="hidden" name="client_id"  id="client_id" value="ios">
+					<input type="hidden" name="client_secret" id="client_secret" value="111">
+					<div class="clearfix">
+						<label class="check_label checkbox_input">
+                            <div class="check_icon check" style="display: inline-block"></div>
+                            <input type="checkbox" name="message_type[]" value="1" data-bv-field="message_type[]">
+                            <span class="check_name">记住密码</span>
+                        </label>
+						<a style="float:right" href="javascript:;">
+							<small class="txt">忘记密码？</small>
+						</a>
+					</div>
+					<button type="submit" class="btn btn-primary block full-width m-b">
+						登 录
+					</button>
+				</form>
+			</div>
+		</div>
+	</body>
 </html>
