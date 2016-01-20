@@ -21,6 +21,10 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '名称不能为空'
+                            },
+                            stringLength: {
+                                max:20,
+                                message: '名称字数不超过20个'
                             }
                         }
                     },
