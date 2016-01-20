@@ -208,6 +208,22 @@ function add_basic(){
         }
     });
 
+
+    $('tbody').on('keyup','.end',function(e){
+        
+        var re = RegExp('/^\d{4}-(?:0\d|1[0-2])-(?:[0-2]\d|3[01])( (?:[01]\d|2[0-3])\:[0-5]\d)?$/');
+        var thisElement = $(this);
+        if(e.keyCode){
+            if(!re.test(thisElement.val())){
+                layer.alert('时间不能为空！');
+                thisElement.focus();
+                return;
+            }else{
+                return;
+            }
+        }
+    });
+
     /**
      * 新增一条
      * @author  mao
