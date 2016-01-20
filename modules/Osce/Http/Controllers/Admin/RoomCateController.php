@@ -131,12 +131,13 @@ class RoomCateController extends CommonController
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
+     * @param Area|RoomCate $model
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postDelete(Request $request, RoomCate $model)
+    public function postDelete(Request $request, Area $model)
     {
         $this->validate($request, [
             'id' => 'required|integer',
