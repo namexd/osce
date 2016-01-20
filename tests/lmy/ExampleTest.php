@@ -7,8 +7,196 @@ use App\Jobs\SendReminderSms;
 use App\Repositories\Common;
 
 
+
+class Std{
+
+    //姓名
+    public $name='';
+
+    //编号（顺序号）
+    public $order=0;
+
+}
+
+class Station{
+
+    //病例
+    public $case='';
+
+    //考试时长
+    public $time=5;
+
+    //准备时长
+    public $ready=5;
+}
+
+class Room{
+
+    public $name='';
+
+    public $stations=[];
+}
+
+class ExamQueue{
+
+    protected $q=[];
+
+    public $name='';
+
+    public function add($order,$std,$station){
+        $this->q=array_add($this->q,$order,[
+            'std'=>$std,
+            'station'=>$station
+        ]);
+    }
+
+}
+
+
+
 class ExampleTest extends TestCase
 {
+
+    public function testQueue(){
+
+
+
+
+        $s1=new Station();
+        $s1->case='病1';
+        $s1->time=3;
+        $s1->ready=5;
+
+        $s2=new Station();
+        $s2->case='病2';
+        $s2->time=5;
+        $s2->ready=5;
+
+        $s3=new Station();
+        $s3->case='病3';
+        $s3->time=10;
+        $s3->ready=5;
+
+        $s4=new Station();
+        $s4->case='病1';
+        $s4->time=3;
+        $s4->ready=5;
+
+
+        $r1=new Room();
+        $r1->name='601';
+        $r1->stations=[$s1,$s4];
+
+        $r2=new Room();
+        $r2->name='602';
+        $r2->stations=[$s2];
+
+        $r3=new Room();
+        $r3->name='603';
+        $r3->stations=[$s3];
+
+        $plan=[
+            1=>$r1,
+            2=>$r2,
+            3=>$r3,
+        ];
+
+        $std1=new Std();
+        $std1->name='A';
+        $std1->order=2;
+
+        $std2=new Std();
+        $std2->name='B';
+        $std2->order=4;
+
+        $std3=new Std();
+        $std3->name='C';
+        $std3->order=5;
+
+        $std4=new Std();
+        $std4->name='D';
+        $std4->order=1;
+
+        $std5=new Std();
+        $std5->name='E';
+        $std5->order=6;
+
+        //排序后的考生
+        $students=[$std4,$std1,$std2,$std3,$std5];
+
+
+
+        //按考站排序
+
+        //1、获取所有考站
+        $stations=[$s1,$s4,$s2,$s3,];
+
+        //学生总数量 5人
+        $students_total=count($students);
+
+        //考站总数量 4个
+        $stations_total=count($stations);
+
+        //忽略时长
+        //每次参加考试的人数量=考站数量=4
+        for($i=0,$j=1;$i<$students_total-1;$i+=4,$j++){
+
+            //当前批次的学生
+            $current_std=[];
+            for($index=$i,$_index=0;$index<4;$index++,$_index++){
+                $current_std[$_index]=$students[$index];
+            }
+
+            //dd($current_std);
+
+
+            //1个考站1个队列
+            $result=[];
+            for($_sta=0;$_sta<4;$_sta++){ //4个考站
+
+                $q=new ExamQueue();
+                for($_std=0;$_std<4;$_std++){
+                    $q->add($_std,$current_std[($_sta+$_std)%4],$stations[$_sta]);
+                }
+
+
+                $result[$_sta]=$q;
+            }
+
+            Log::info($result);
+            dd($result);
+
+
+
+
+        }
+
+
+        $queue=new ExamQueue();
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*   public function testSendSms(){
            //mobi
           $sender=App::make('messages.sms');
@@ -49,7 +237,7 @@ class ExampleTest extends TestCase
     }*/
 
     public function testApi(){
-        $response = $this->call('POST',
+/*        $response = $this->call('POST',
             'http://192.168.1.205/api/1.0/public/oauth/access_token',
         [
             'username'=>'13699456588',
@@ -65,7 +253,7 @@ class ExampleTest extends TestCase
 
         $result=json_decode($response->content());
         dd($result);
-        $token=$result->access_token;
+        $token=$result->access_token;*/
         //dd($token);
 
 
@@ -108,21 +296,21 @@ class ExampleTest extends TestCase
          *      * id int 设备id
          * user_id int 操作用户编号
          */
-        $url='http://192.168.1.205/api/1.0/private/osce/winapp/delete-watch';
+ /*       $url='http://192.168.1.205/api/1.0/private/osce/winapp/delete-watch';
 
         $url='http://192.168.1.205/api/1.0/private/osce/winapp/watch-status';
         $url='http://192.168.1.205/api/1.0/private/osce/winapp/bound-watch';
         $url='http://192.168.1.205/api/1.0/private/osce/winapp/unwrap-watch';
-        $url='http://192.168.1.205/api/1.0/private/osce/winapp/student-details';
+        $url='http://192.168.1.205/api/1.0/private/osce/winapp/student-details';*/
 
 
 
-        $result=$this->ajax($url,[
-            'access_token'=>$token,
-            'user_id'=>1,
-            'code'=>'999'
-        ]);
-        dd($result);
+//        $result=$this->ajax($url,[
+//            'access_token'=>$token,
+//            'user_id'=>1,
+//            'code'=>'999'
+//        ]);
+//        dd($result);
 
     }
 
