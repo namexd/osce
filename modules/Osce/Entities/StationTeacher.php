@@ -20,4 +20,8 @@ class StationTeacher extends CommonModel
     protected $hidden = [];
     protected $fillable = ['station_id', 'user_id', 'case_id', 'created_user_id', 'type', 'exam_id'];
 
+    public function station()
+    {
+        return $this->belongsTo('\Modules\Osce\Entities\Station','station_id','id');
+    }
 }

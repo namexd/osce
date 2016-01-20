@@ -7,6 +7,7 @@
  */
 namespace Modules\Osce\Entities;
 
+use DB;
 class ExamQueue extends  CommonModel{
     protected $connection = 'osce_mis';
     protected $table = 'exam_queue';
@@ -18,6 +19,12 @@ class ExamQueue extends  CommonModel{
     protected $fillable = ['exam_id', 'exam_screening_id','student_id','station_id','room_id','begin_dt','end_dt','status','created_user_id'];
     public $search = [];
 
+    protected $statuValues  =   [
+        1   =>  'æ­£åœ¨è€ƒè¯•',
+        2   =>  'æœªè¿›è¡Œè€ƒè¯•',
+        3   =>  'è€ƒè¯•å®Œæ¯•',
+    ];
+
     public function student(){
         return $this->hasMany('\Modules\Osce\Entities\student','id','student_id');
     }
@@ -25,41 +32,45 @@ class ExamQueue extends  CommonModel{
     public function getStudent($mode,$exam_id){
         $exam   =Exam::find($exam_id);
         if($mode==1){
-            return   $this->getWriteRoom($exam);
+            return   $this->getWaitRoom($exam);
 
         }elseif($mode==2){
-           return $this->getWriteStation($exam);
+           return $this->getWaitStation($exam);
         }
 
     }
 
 
-    //µ±¿¼ÊÔÅÅÐòÄ£Ê½Îª1µÄÊ±ºò
-    protected function getWriteRoom($exam){
+    //èŽ·å–å€™è€ƒæ•™å®¤
+    protected function getWaitRoom($exam){
         $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
         $data=[];
         foreach($examFlowRoomList as $examFlowRoom)
         {
+            $roomName=$examFlowRoom->room->name;
             $students    =   $examFlowRoom->queueStudent()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
           foreach($students as $examQueue){
               foreach($examQueue->student as $student){
-                  $data[$examQueue->room_id][]=$student;
+//                  $student->roomName=$roomName;
+                  $data[$roomName][]=$student;
               }
           }
         }
+
         return $data;
     }
 
-    //µ±¿¼ÊÔÅÅÐòÄ£Ê½Îª2µÄÊ±ºò
-    protected function getWriteStation($exam){
+    //èŽ·å–å€™è€ƒè€ƒç«™
+    protected function getWaitStation($exam){
        $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
         $data=[];
        foreach ($examFlowStationList as $examFlowStation){
-
+           $stationName=$examFlowStation->station->name;
            $students=$examFlowStation ->queueStation()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
            foreach($students as $ExamQueue ){
                foreach($ExamQueue->student as $student){
-                   $data[$ExamQueue->room_id][$ExamQueue->station_id]=$student;
+                   $student->stationName=$stationName;
+                   $data[$ExamQueue->station_id][]=$student;
                }
            }
        }
@@ -67,7 +78,7 @@ class ExamQueue extends  CommonModel{
     }
 
 
-    //²éÑ¯Ñ§Éú¶ÓÁÐÏÂµÄ¿¼ÊÔ
+    //èŽ·å–è€ƒè¯•è¯¦æƒ…
     public  function  StudentExamInfo($watchStudent){
         $todayStart = date('Y-m-d 00:00:00');
         $todayEnd = date('Y-m-d 23:59:59');
@@ -85,6 +96,9 @@ class ExamQueue extends  CommonModel{
                 'student.name as name',
                 'exam_queue.begin_dt as begin_dt',
                 'exam_queue.end_dt as end_dt',
+                'exam_queue.room_id as room_id',
+                'exam_queue.station_id as station_id',
+                'exam_queue.status as status'
             ])->get()->toArray();
 
         return $data;
@@ -92,5 +106,23 @@ class ExamQueue extends  CommonModel{
 
     public function getPagination(){
         return $this->paginate(config('msc.page_size'));
+    }
+
+    /**
+     * æ ¹æ®room_idæ¥èŽ·å–å¯¹åº”çš„è€ƒç”Ÿåˆ—è¡¨
+     * @param $room_id
+     * @return
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
+    static public function examineeByRoomId($room_id)
+    {
+        try {
+            return ExamQueue::where('room_id', $room_id)
+                ->where('status', 2)
+                ->get();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }

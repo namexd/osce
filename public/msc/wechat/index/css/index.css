@@ -1,6 +1,6 @@
 /*信息管理页面css*/
 .container_index a:hover{text-decoration: none;}
-.container_index { padding-bottom:65px;}
+.container_index { padding-bottom:65px; margin-top: 20%;}
 .container_index .row1  span{float: left;line-height: 60px; margin-right:20px; font-size: 16px;}
 .container_index .row1 .normal_background{
     padding:10px 15px;
@@ -27,25 +27,6 @@
 .manageindex .icon5{ background-position:0 -280px;}
 .manageindex .icon6{ background-position:0 -350px;}
 .manageindex .icon7{ background-position:0 -420px;}
-
-.footer{ height: auto; position:fixed;width: 100%; margin: 0;
-    bottom: 0; background-color: #f7f7f7; padding:5px 0;}
-.footer ul li{ float: left; width:33.33%; text-align: center;}
-.footer ul a span{ display:inline-block;width:25px; height:25px;
-    background:url("../img/footer_1.png"); background-repeat:no-repeat;background-size:25px;}
-.footer ul .check  span{display:inline-block;width:25px; height:25px; color: #acc0d0;
-    background:url("../img/footer_2.png"); background-repeat:no-repeat;background-size:25px;}
-.footer ul  a  p{ color: #7698b4;}
-.footer ul .check  p{ color: #0799fc;}
-
-.footer .icon1{ background-position:0 0px;}
-.footer  ul li:first-child a p{color: #ccc;}
-.footer .icon2{ background-position:0 -26px;}
-.footer .icon3{ background-position:0 -55px;}
-
-.footer .check .icon1{ background-position:0 0px;}
-.footer .check .icon2{ background-position:0 -26px;}
-.footer .check .icon3{ background-position:0 -55px;}
 
 
 .error_attention{
