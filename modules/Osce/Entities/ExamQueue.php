@@ -34,7 +34,7 @@ class ExamQueue extends  CommonModel{
     }
 
 
-    //µ±¿¼ÊÔÅÅÐòÄ£Ê½Îª1µÄÊ±ºò
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Îª1ï¿½ï¿½Ê±ï¿½ï¿½
     protected function getWriteRoom($exam){
         $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
         $data=[];
@@ -50,7 +50,7 @@ class ExamQueue extends  CommonModel{
         return $data;
     }
 
-    //µ±¿¼ÊÔÅÅÐòÄ£Ê½Îª2µÄÊ±ºò
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Îª2ï¿½ï¿½Ê±ï¿½ï¿½
     protected function getWriteStation($exam){
        $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
         $data=[];
@@ -67,7 +67,7 @@ class ExamQueue extends  CommonModel{
     }
 
 
-    //²éÑ¯Ñ§Éú¶ÓÁÐÏÂµÄ¿¼ÊÔ
+    //ï¿½ï¿½Ñ¯Ñ§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄ¿ï¿½ï¿½ï¿½
     public  function  StudentExamInfo($watchStudent){
         $todayStart = date('Y-m-d 00:00:00');
         $todayEnd = date('Y-m-d 23:59:59');
@@ -92,5 +92,10 @@ class ExamQueue extends  CommonModel{
 
     public function getPagination(){
         return $this->paginate(config('msc.page_size'));
+    }
+
+    public function examineeByRoomId($room_id)
+    {
+
     }
 }
