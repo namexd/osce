@@ -72,13 +72,7 @@ class Laboratory extends Model
         $builder = $builder->with(['floors'=>function($f){
             $f->where('status','=',1);
         },'user']);
-//        dd($builder);
-//        $builder = $builder->leftJoin('location', function($join) use($local, $lab) {
-//            $join->on($local.'.id', '=', $lab.'.location_id');
-//        })->leftJoin('user', function($join) use($user, $lab) {
-//            $join->on($user.'.id', '=', $lab.'.manager_user_id');
-//        })->select($lab.'.*',$local.'.name as lname',$local.'.school_id',$user.'.name as tname',$user.'.id as tid');
-        return $builder->orderBy('id')->paginate(config('msc.page_size',10));
+        return $builder->orderBy('id','desc')->paginate(config('msc.page_size',10));
     }
 
     /**

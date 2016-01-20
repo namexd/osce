@@ -18,7 +18,7 @@ class Floor extends Model
     public $incrementing	=	true;
     protected $guarded 		= 	[];
     protected $hidden 		= 	[];
-    protected $fillable 	=	['name', 'floor_top', 'floor_buttom','address','status','school_id','created_user_id'];
+    protected $fillable 	=	['name', 'floor_top', 'floor_bottom','address','status','school_id','created_user_id'];
     public $search          =   [];
 
     // 获得分页列表

@@ -146,7 +146,7 @@ function ban_maintain(){
                             }
                         }
                     },
-                    floor_buttom: {/*键名username和input name值对应*/
+                    floor_bottom: {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
@@ -208,7 +208,7 @@ function ban_maintain(){
                             }
                         }
                     },
-                    floor_buttom: {/*键名username和input name值对应*/
+                    floor_bottom: {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/

@@ -50,6 +50,7 @@
                 $treeview.empty();
                 var $thisId=$(this).val();
                 var url="/msc/admin/laboratory/floor-lab?lid="+$thisId;
+
                 $.ajax({
                     type:"get",
                     url:url,
@@ -73,7 +74,9 @@
                                 });
                             }
 
+
                         })
+
                     }
                 })
             });
@@ -428,7 +431,6 @@
                 var str = '';
                 var name = '';
                 var timeBrr = '';
-                //console.log($('.dataarr').val());
                 if(!$('.dataarr').val()){
                     layer.msg("请选择日期", {icon: 2,time: 1000});
                     check = false;
@@ -486,7 +488,6 @@
                     if($(this).hasClass('check')){
 
                         timestr += $('.'+$(this).attr('data')).val()+'@';
-                        console.log(timestr);
                     }
                 });
                 if(!$('.labid').val()){
@@ -498,16 +499,11 @@
                 $('.fc-row .check').children('div').children().each(function(i){
                             dateid[i] = $(this).attr('data-id');
                 });
-                //console.log(dateid);
-                //console.log(dateid.length);
                 if(dateid.length <= 0){
                     layer.msg('请选择日期', {icon: 2,time: 2000});
                     check = false;
                     return false;
                 }
-                //return false;
-               // console.log(timestr);
-                //console.log(datestr);return false;
                 if(check) {
                     $.ajax({
                         type: "POST",
@@ -517,13 +513,6 @@
                             if (msg.status) {
 
                                 layer.msg(msg.info, {icon: 1, time: 1000});
-//                            layer.confirm(msg.info, {
-//                                btn: ['確定'] //按钮
-//                            }, function(){
-//                                console.log(msg.data);
-//                                //确定之后-把已添加的数据返回并显示
-//                                //location.reload();
-//                            });
                                 getEvent($('.labid').val());
                                 load();
                                 $('#savedate').empty();

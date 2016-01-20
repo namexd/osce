@@ -98,7 +98,7 @@
                                 <tr>
                                     <td>{{@$k+1}}</td>
                                     <td class="name">{{@$v->name}}</td>
-                                    <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_buttom}}">{{intval(@$v->floor_top) + intval(@$v->floor_buttom)}}</td>
+                                    <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_bottom}}">{{intval(@$v->floor_top) + intval(@$v->floor_bottom)}}</td>
                                     <td class="sname" data="{{@$v->school_id}}">{{@$v->sname}}</td>
                                     <td class="address">{{@$v->address}}</td>
                                     <td class="status" data="{{@$v->status}}">@if($v->status)正常@else<span class="state2">停用</span>@endif</td>
@@ -157,7 +157,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
                     <div class="col-sm-9">
-                        <input type="number" class="form-control name add-name floor_buttom" name="floor_buttom" value="" />
+                        <input type="number" class="form-control name add-name floor_bottom" name="floor_bottom" value="" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -221,7 +221,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
                     <div class="col-sm-9">
-                        <input type="number" class="form-control name add-name" name="floor_buttom" value="" />
+                        <input type="number" class="form-control name add-name" name="floor_bottom" value="" />
                     </div>
                 </div>
                 <div class="form-group">

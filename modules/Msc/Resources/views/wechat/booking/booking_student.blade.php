@@ -43,7 +43,7 @@
             <select   class="select1" id="ban"  style="width:100%;">
                 <option value="" >全部楼栋</option>
                 @foreach($FloorData as $val)
-                    <option value="{{@$val['id']}}" floor_top="{{ @$val['floor_top'] }}" floor_buttom="{{ @$val['floor_bottom'] }}">{{@$val['name']}}</option>
+                    <option value="{{@$val['id']}}" floor_top="{{ @$val['floor_top'] }}" floor_bottom="{{ @$val['floor_bottom'] }}">{{@$val['name']}}</option>
                 @endforeach
             </select>
 
