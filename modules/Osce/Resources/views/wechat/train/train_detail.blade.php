@@ -19,36 +19,37 @@
     <div class="add_main">
         <div class="form-group">
             <label for="">培训名称</label>
-            <div class="txt">{{ $train->name  }}</div>
+            <div class="txt">{{ $data['name']  }}</div>
         </div>
         <div class="form-group">
             <label for="">培训地点</label>
-            <div class="txt">{{ $train->address  }}</div>
+            <div class="txt">{{ $data['address']  }}</div>
         </div>
         <div class="form-group">
             <label for="">开始时间</label>
-            <div class="txt">{{ $train->begin_dt  }}</div>
+            <div class="txt">{{ $data['begin_dt']  }}</div>
         </div>
         <div class="form-group">
             <label for="">结束时间</label>
-            <div class="txt">{{ $train->end_dt  }}</div>
+            <div class="txt">{{ $data['end_dt']  }}</div>
         </div>
         <div class="form-group">
             <label for="">培训讲师</label>
-            <div class="txt">{{ $train->teacher  }}</div>
+            <div class="txt">{{ $data['teacher']  }}</div>
         </div>
         <div class="form-group">
             <label for="">描述</label>
-            <div class="txt">{!! $train->content !!}</div>
+            <div class="txt">{!! $data['content'] !!}</div>
         </div>
     </div>
     <div class="add_main">
 		<div  class="form-group">
         	<label for="">附件</label>
             <div class="txt">
-            	<a href="#">2015年第3季度技能培训学生考前培训附件1</a><br />
-            	<a href="#">学生考前培训附件2</a><br />
-            	<a href="#">学生考前培训附件3</a>
+            	<a href="#">2015年第3季度技能培训学生考前培训附件</a><br />
+                @foreach($data['attachments'] as $key=>$list)
+                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$data['id'],'attch_index'=>$key])}}"><?php $pathInfo=explode('/',$list)?>{{array_pop($pathInfo)}}</a><br />
+            	@endforeach
         	</div>
         </div>
     </div>

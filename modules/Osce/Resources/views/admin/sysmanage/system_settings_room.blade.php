@@ -1,10 +1,29 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
+<style type="text/css">
+	#table-striped{margin-top:15px;}
+</style>
 @stop
 
 @section('only_js')
-    
+    <script type="text/javascript">
+    	$(function(){
+    		$(".fa-trash-o").click(function(){
+		        var thisElement=$(this);
+		        layer.alert('确认删除？',function(){
+		            $.ajax({
+		                type:'get',
+		                async:false,
+		                url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
+		                success:function(data){
+		                    location.reload();
+		                }
+		            })
+		        });
+		    })
+    	})
+    </script>
 @stop
 
 
