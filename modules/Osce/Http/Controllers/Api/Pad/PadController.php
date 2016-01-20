@@ -96,7 +96,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        room_id        考场ID(必须的)
+     * * int        room_id          考场ID(必须的)
      * * int        exam_id           考试ID(必须的)
      *
      * @return ${response}
@@ -221,8 +221,12 @@ class PadController extends  CommonController{
                   'exam_id'  =>'required|integer'
               ]);
               $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
+              $rooms=[];
+              foreach($examList as $examRoom){
+                $rooms[]=$examRoom->room;
+              }
               return response()->json(
-               $this->success_data($examList,1,'success')
+               $this->success_data($rooms,1,'success')
            );
        }
 
