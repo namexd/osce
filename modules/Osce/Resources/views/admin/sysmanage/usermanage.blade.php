@@ -54,7 +54,7 @@
                     <td>{{$item->gender}}</td>
                     <td>-</td>
                     <td>{{$item->mobile}}</td>
-                    <td>{{$item->lastlogindate}}</td>
+                    <td>{{(empty($item->lastlogindate)?'-':$item->lastlogindate)}}</td>
                     <td>
                         <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}">
                             <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>

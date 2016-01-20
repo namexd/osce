@@ -545,12 +545,14 @@ class ExamController extends CommonController
             'exam_id'       =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'tell'          =>  'required',
+            'mobile'        =>  'required',
+            'code'          =>  'required',
             'images_path'   =>  'required',
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
-            'tell.required'         =>  '手机号必填',
+            'mobile.required'       =>  '手机号必填',
+            'code.required'         =>  '学号必填',
             'images_path.required'  =>  '请上传照片',
         ]);
 
@@ -559,10 +561,10 @@ class ExamController extends CommonController
         //考生数据
         $examineeData = [
             'name'           => $request  ->  get('name'),          //姓名
-            'gender'         => $request  ->  get('sex'),           //性别
+            'gender'         => $request  ->  get('gender'),        //性别
             'idcard'         => $request  ->  get('idcard'),        //身份证号
-            'mobile'         => $request  ->  get('tell'),          //手机号
-            'code'           => $request  ->  get('examinee_id'),   //学号
+            'mobile'         => $request  ->  get('mobile'),        //手机号
+            'code'           => $request  ->  get('code'),          //学号
             'avator'         => $request  ->  get('images_path')[0],//照片
             'email'          => $request  ->  get('email'),         //邮箱
         ];
@@ -595,7 +597,7 @@ class ExamController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'examinee_id'   =>  'sometimes',
+            'code'          =>  'sometimes',
             'gender'        =>  'required',
             'mobile'        =>  'required',
             'description'   =>  'sometimes',
@@ -613,8 +615,8 @@ class ExamController extends CommonController
             'name'          =>  $request->get('name'),
             'idcard'        =>  $request->get('idcard'),
             'mobile'        =>  $request->get('mobile'),
-            'code'          =>  $request->get('examinee_id'),
-            'avator'        =>  $images[count($images)-1],
+            'code'          =>  $request->get('code'),
+            'avator'        =>  $images[0],
             'description'   =>  $request->get('description'),
         ];
 
