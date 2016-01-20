@@ -9,14 +9,29 @@
 namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 
+use Illuminate\Http\Request;
 use Modules\Osce\Entities\StationTeacher;
-use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
 class DrawlotsController extends CommonController
 {
-    public function getRoomId()
+    /**
+     *根据老师的id获取对应的考场(接口)
+     * @method GET
+     * @url /osce/drawlots/room-id
+     * @access public
+     * @return \Illuminate\Http\JsonResponse ${response}
+     *
+     * @internal param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     *
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-20 12:01
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    private function getRoomId()
     {
         try {
             //首先得到登陆者信息
@@ -29,9 +44,37 @@ class DrawlotsController extends CommonController
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
             }
-            return response()->json($this->success_data($room->first()));
+            return $room->first();
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 根据考场ID获取当前时间段的考生列表(接口)
+     * @method GET
+     * @url api/1.0/private/osce/pad/wait-room
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse ${response}
+     *
+     * @internal param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     *
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-20 12:01
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExaminee(Request $request)
+    {
+        //获取当前老师的考场对象
+        $room = $this->getRoomId();
+
+        //获得考场的id
+        $room_id = $room->id;
+
+        //从队列表中通过考场ID得到对应的考生信息
+
     }
 }
