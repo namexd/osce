@@ -612,15 +612,20 @@ function categories(){
         }) ;
 
 
-
+        /**
+         * 考核分数自动加减
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-20
+         */
         $('tbody').on('change','select',function(){
             var thisElement = $(this).parent().parent();
             //父亲节点
-            var className = thisElement.attr('class');
+            var className = thisElement.attr('class'),
                 parent =  className.split('-')[1];
+
             //自动加减节点
             var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
-
 
 
             //改变value值,消除连续变换值的变化
