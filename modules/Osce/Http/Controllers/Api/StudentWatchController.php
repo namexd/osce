@@ -38,12 +38,10 @@ class StudentWatchController extends  CommonController
     //    url   /osce/watch/studentwatch/wait_exam
 
     protected $timeDiff = 120;
-
-    const EXAM_BEFORE = 0;// ¥˝øº
-    const EXAM_WILL_BEGIN = 1; //Ω´“™ø™ º øº ‘ø™ º¡Ω∑÷÷”ƒ⁄Ã·–—
-    const EXAM_TAKING = 2; // øº ‘÷–
-    const EXAM_JUST_AFTER = 3;// ∏’øºÕÍ,œ¬“ª≥°Ã· æ øº ‘ÕÍ≥…∫Û¡Ω∑÷÷”ƒ⁄Ã·–—
-
+    const EXAM_TAKING = 1; // ËÄÉËØï‰∏≠
+    const EXAM_BEFORE = 2;// ÂæÖËÄÉ
+    const EXAM_JUST_AFTER = 3;// ÂàöËÄÉÂÆå,‰∏ã‰∏ÄÂú∫ÊèêÁ§∫ ËÄÉËØïÂÆåÊàêÂêé‰∏§ÂàÜÈíüÂÜÖÊèêÈÜí
+    const EXAM_WILL_BEGIN = 4; //Â∞ÜË¶ÅÂºÄÂßã ËÄÉËØïÂºÄÂßã‰∏§ÂàÜÈíüÂÜÖÊèêÈÜí
 
     public  function getWaitExam(Request $request){
 
@@ -56,13 +54,11 @@ class StudentWatchController extends  CommonController
         $watchId=$request->input('watch_id');
 
         $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first()->student_id;
-        //≤ÈµΩ∏√—ß…˙µƒÀ˘”–øº ‘
-//        dd($watchStudent);
+
 
         $ExamQueueModel= new ExamQueue();
         $result =  $ExamQueueModel->StudentExamInfo($watchStudent);
 
-        //ªÒ»°µΩµ±«∞ ±º‰;
         $time = time();
         $status = self::EXAM_BEFORE;
         $curExam = $nextExam =  null;

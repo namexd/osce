@@ -101,7 +101,7 @@ class ExamQueue extends  CommonModel{
                 'exam_queue.status as status',
                 'exam_queue.id as id',
 
-            ])->get()->toArray();
+            ])->get();
 
         return $data;
     }

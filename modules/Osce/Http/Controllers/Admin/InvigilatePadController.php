@@ -564,22 +564,74 @@ class InvigilatePadController extends CommonController
 
     }
 
-    public function nowQueue(){
-        //exam_queue
 
 
+
+
+    public function nowQueue($examQueueCollect,$nowTime)
+    {
+        foreach ($examQueueCollect as $examQueue) {
+            if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime)
+            {
+                return $examQueue;
+            }
+        }
+        return [];
+    }
+    public function nextQueue($examQueueCollect,$nowTime){
+        $nowQueue   =   $this->nowQueue($examQueueCollect,$nowTime);
+        $queueLeave =   [];
+        foreach ($examQueueCollect as $examQueue)
+        {
+            if(strtotime($examQueue->begin_dt)>strtotime($nowQueue->end_dt))
+            {
+                $queueLeave[$examQueue->begin_dt]   =   $examQueue;
+            }
+        }
+        ksort($queueLeave);
+        return array_shift($queueLeave);
+    }
+
+//    public function getCheckStatus(){
+//        $this->nowQueue();
+//    }
+
+    public function getStudentQueues($student_id){
+        $ExamQueueModel  =   new ExamQueue();
+        $examQueueCollect   =   $ExamQueueModel ->where('student_id','=',$student_id)->get();
+
+
+        $nowTime    =   time();
+        $nowQueue   =   $this->nowQueue($examQueueCollect,$nowTime);
+        if(empty($nowQueue))
+        {
+
+            //当前无考试  待考/开考通知
+            //$nowQueue->roomid
+        }
+        else
+        {
+            $nextQueue  =   $this->nextQueue($examQueueCollect,$nowTime);
+            if(empty($nextQueue))
+            {
+                //考完了
+            }
+            else
+            {
+                //当前剩余考试时间
+            }
+
+        }
 
     }
-    public function nextQueue(){
-        //exam_queue
 
 
-
-    }
     public function getWaitExamList(Request $request){
+
         $this->validate($request,[
             'watch_id'=>'required|integer'
         ]);
+        $nowTime    =   time();
         $watchId=$request->input('watch_id');
 
         $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
@@ -589,7 +641,7 @@ class InvigilatePadController extends CommonController
             );
         }
         $ExamQueueModel= new ExamQueue();
-        $result =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
-        dump($result);
+        $examQueueCollect =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
+         $this->nextQueue($examQueueCollect,$nowTime);
     }
 }
