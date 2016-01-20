@@ -250,11 +250,22 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .panel-heading {
     padding: 10px 0;
 }
+/*layer alert*/
+.layui-layer-title{
+    background: #fff!important;
+    color: #1ab394!important;
+    font-size: 16px!important;
+}
+.layui-layer-btn {
+    background: #fff !important;
+    border-top: 1px #fff solid !important;
+}
 /*公用页码样式调整*/
 .pagination{
     margin: 0!important;
 }
-.total-pages{
+/*总条数*/
+.pull-left{
     line-height: 34px;
 }
 /*教师下方间隔*/

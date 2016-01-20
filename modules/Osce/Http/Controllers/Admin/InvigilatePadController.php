@@ -485,13 +485,13 @@ class InvigilatePadController extends CommonController
             $key = $itemStart - $time;
             $endDiff = $time - $itemEnd;
             //待考信息
-             if($key>200){
+             if($key<3000 && $key>200){
                  $status = self::EXAM_BEFORE;
                  $curExam = $item;
                  break;
              }
             //开考前通知
-            if ($key>200 && ($this->timeDiff-$key) >0 ) {
+            if ($key>0 && ($this->timeDiff-$key) >0 ) {
                 $status = self::EXAM_WILL_BEGIN;
                 $curExam = $item;
                 break;
@@ -518,23 +518,26 @@ class InvigilatePadController extends CommonController
                 $willStudents = ExamQueue::where('room_id','=',$curExam['room_id'])
                     ->whereBetween('status',[1,2])
                     ->count();
+                $curExamlist= ExamQueue::where('id','=',$curExam['id'])->select()->first();
 
-                dump('前面还有'.$willStudents .' 考生'.  ' 预计考试时间'  . '即将进入考场' ,$willStudents);
+                dump('前面还有'.($willStudents-1). ' 考生'.  ' 预计考试时间'  . '即将进入考场'  );
                 break;
-            case self::EXAM_WILL_BEGIN:
 
-                $curExam['room_id'];
-                dump('你即将开始考试222');
+            case self::EXAM_WILL_BEGIN:
+                dump('你即将开始考试'.$curExam['room_name']);
+                return response()->json(
+                    $this->success_data($curExam['room_name'],'你即将开始考试')
+                );
                 // todo ..
                 break;
             case self::EXAM_TAKING:
-                dump('3333');
+
                 $surplus = $curExam['end_time'] - $time;
                 $surplus = floor($surplus/60) . ':' . $surplus%60;
                 dump('当前考试剩余时间'.$surplus);
-//                return response()->json([
-//
-//                ]);
+                return response()->json(
+                    $this->success_data($surplus,'当前考试剩余时间')
+                );
                 break;
             case self::EXAM_JUST_AFTER:
                 dump('下一场考试4444');
@@ -543,13 +546,17 @@ class InvigilatePadController extends CommonController
                         $nextExam = current($list);
                     }
                 }
+                $studentStatus= ExamQueue::where('student_id','=',$watchStudent->student_id)
+                    ->whereBetween('status',[1,2])
+                    ->get();
+                   if($studentStatus){
 
-
+                   }
                 $nextExam['room_id'];
                 // todo ..
                 break;
         }
-    dd($nextExam ,$curExam);
+//    dd($nextExam ,$curExam);
         dump($list);die;
 
     }

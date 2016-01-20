@@ -2,7 +2,8 @@
 @section('only_css')
     <style>
     .col-sm-1{margin-top: 6px;}
-    .col-sm-1>input[type="checkbox"]{vertical-align: sub;}
+    .check_label{top: 8px;}
+    .check_icon.check,.check_icon{vertical-align: middle;}
     .form-group.col-sm-1{margin-bottom: 0!important;}
     .images_upload {
         display: inline-block;
@@ -70,19 +71,22 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">接收人:</label>
-                        <div class="col-sm-10 select_code">
-                            <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
-                                <label>考生</label>
-                            </div>
-                            <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
-                                <label>老师</label>
-                            </div>
-                            <div class="form-group col-sm-1">
-                                <input type="checkbox" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
-                                <label>sp老师</label>
-                            </div>
+                        <div class="col-sm-10 select_code" id="checkbox_div">
+                            <label class="check_label checkbox_input">
+                                <div class="check_icon {{in_array(1,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
+                                <input type="checkbox" checked="checked" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <span class="check_name">考生</span>
+                            </label>
+                            <label class="check_label checkbox_input">
+                                <div class="check_icon {{in_array(2,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
+                                <input type="checkbox" checked="checked" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <span class="check_name">老师</span>
+                            </label>
+                            <label class="check_label checkbox_input">
+                                <div class="check_icon {{in_array(3,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
+                                <input type="checkbox" checked="checked" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <span class="check_name">sp老师</span>
+                            </label>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
