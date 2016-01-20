@@ -81,20 +81,6 @@
 </div>
 <script>
     $(function(){
-        {{--$(".fa-trash-o").click(function(){--}}
-            {{--var thisElement=$(this);--}}
-
-            {{--layer.alert('确认删除？',function(){--}}
-                {{--$.ajax({--}}
-                    {{--type:'get',--}}
-                    {{--async:false,--}}
-                    {{--url:"{{route('osce.admin.user.getDelUser')}}?id="+thisElement.attr('uid'),--}}
-                    {{--success:function(data){--}}
-                        {{--location.reload();--}}
-                    {{--}--}}
-                {{--})--}}
-            {{--});--}}
-        {{--})--}}
         //删除用户
         $(".fa-trash-o").click(function(){
             var thisElement=$(this);

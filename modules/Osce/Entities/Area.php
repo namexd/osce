@@ -9,6 +9,8 @@
 namespace Modules\Osce\Entities;
 
 
+use Illuminate\Support\Facades\DB;
+
 class Area extends CommonModel
 {
 
@@ -40,5 +42,29 @@ class Area extends CommonModel
         return $this->select('id','name','cate')->get();
     }
 
+    /**
+     * 删除考试区域
+     * @return mixed
+     */
+    public function deleteArea($id)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try{
+            if($result = AreaVcr::where('area_id',$id)->first()){
+                throw new \Exception('该考试区域已与摄像机关联，无法删除！');
+            }
+            //删除考试区域
+            if(!$result = $this->where('id',$id)->delete()){
+                throw new \Exception('删除失败，请重试！');
+            }
+            $connection->commit();
+            return true;
+
+        } catch(\Exception $ex){
+            $connection->rollback();
+            throw $ex;
+        }
+    }
 
 }
