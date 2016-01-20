@@ -264,7 +264,8 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .pagination{
     margin: 0!important;
 }
-.total-pages{
+/*总条数*/
+.pull-left{
     line-height: 34px;
 }
 /*教师下方间隔*/
