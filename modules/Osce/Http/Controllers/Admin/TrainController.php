@@ -152,7 +152,7 @@ class TrainController extends  CommonController{
     /**
      *保存编辑培训
      * @method POST
-     * @url /osce/wechat/train/edit-train
+     * @url /osce/admin/train/edit-train
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -198,7 +198,7 @@ class TrainController extends  CommonController{
     /**
      *删除培训
      * @method GET
-     * @url /osce/wechat/train/del-train
+     * @url /osce/admin/train/del-train
      * @access public
      *
      * @param Request $request post请求<br><br>

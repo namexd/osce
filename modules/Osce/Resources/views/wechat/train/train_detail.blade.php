@@ -47,9 +47,11 @@
         	<label for="">附件</label>
             <div class="txt">
             	<a href="#">2015年第3季度技能培训学生考前培训附件</a><br />
+                @if($data['attachments'])
                 @foreach($data['attachments'] as $key=>$list)
                 <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$data['id'],'attch_index'=>$key])}}"><?php $pathInfo=explode('/',$list)?>{{array_pop($pathInfo)}}</a><br />
             	@endforeach
+                @endif
         	</div>
         </div>
     </div>
