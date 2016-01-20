@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 
+use App\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -26,9 +27,9 @@ class LoginController extends  CommonController
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
 
-
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
+            $user = User::where('username', $username)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
             return redirect()->route('osce.admin.index');
         }
         else
