@@ -22,10 +22,10 @@ class Pad extends CommonModel implements MachineInterface
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '未使用',
         1   =>  '使用中',
-        2   =>  '维修',
-        3   =>  '报废',
+        0   =>  '未使用',
+        2   =>  '报废',
+        3   =>  '维修',
     ];
 
     public function getMachineStatuValues(){

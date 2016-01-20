@@ -23,10 +23,11 @@ class Vcr extends CommonModel implements MachineInterface
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '离线',
         1   =>  '在线',
-        2   =>  '维修',
-        3   =>  '报废',
+        0   =>  '离线',
+        2   =>  '报废',
+        3   =>  '维修',
+        4   =>  '未使用',
     ];
 
     /**
