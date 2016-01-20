@@ -8,19 +8,8 @@ class MscWeChatController extends Controller {
 
 	public function  __construct(Student $student,Teacher $teacher){
 		$user = Auth::user();
-		
         $uid = @$user->id;
-        $stu = $student->where('id','=',$uid)->first();
-        if($stu){
-        	@$user->user_type = 2;
-        }else{
-        	$tea = $teacher->where('id','=',$uid)->first();
-        	if($tea){
-        		@$user->user_type = 1;
-        	}else{
-        		@$user->user_type = '';
-        	}
-        }
+		$user->user_type = $this->checkUserType($uid);
 	}
 
 	/**
