@@ -67,13 +67,14 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="pull-left">
-                    共{{$data->total()}}条
+                <div>
+                    <div class="pull-left">
+                        共{{$data->total()}}条
+                    </div>
+                    <div class="pull-right">
+                        {!! $data->render() !!}
+                    </div>
                 </div>
-                <div class="pull-right">
-                    {!! $data->render() !!}
-                </div>
-
             </div>
 
         </form>

@@ -36,13 +36,8 @@ function exam_assignment(){
                 async:true,
                 url:pars.deletes,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(data){
-                    if(data.code ==1){
-                        layer.alert('删除成功！');
-                        location.reload();
-                    }else {
-                        layer.alert(data.message);
-                    }
+                success:function(res){
+                    location.reload();
                 }
             })
         });
@@ -96,11 +91,6 @@ function exam_add(){
         var index = $('#exam_add').find('tbody').attr('index');
         index = parseInt(index) + 1;
 
-        //时长默认值
-        var timeLength = (Time.getTime('YYYY-MM-DD hh:mm')).split(' ')[1];
-        var hours = timeLength.split(':')[0];
-        var minutes = timeLength.split(':')[1];
-
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
@@ -109,13 +99,13 @@ function exam_add(){
             '<td class="laydate">'+
             '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
-            '<td>0天'+hours+'小时'+minutes+'分</td>'+
+            '<td>3:00</td>'+
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
             '</tr>'+
-        //记录计数
-        $('#exam_add').find('tbody').attr('index',index);
+                //记录计数
+            $('#exam_add').find('tbody').attr('index',index);
         $('#exam_add').find('tbody').append(html);
     });
 
@@ -128,15 +118,10 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
-            }
+        var index1=layer.alert('确认删除',{btn:['确认','取消']},function(){
+            thisElement.remove();
+            layer.close(index1);
         });
-
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
         //计数器标志
@@ -208,22 +193,6 @@ function add_basic(){
         }
     });
 
-
-    $('tbody').on('keyup','.end',function(e){
-        
-        var re = RegExp('/^\d{4}-(?:0\d|1[0-2])-(?:[0-2]\d|3[01])( (?:[01]\d|2[0-3])\:[0-5]\d)?$/');
-        var thisElement = $(this);
-        if(e.keyCode){
-            if(!re.test(thisElement.val())){
-                layer.alert('时间不能为空！');
-                thisElement.focus();
-                return;
-            }else{
-                return;
-            }
-        }
-    });
-
     /**
      * 新增一条
      * @author  mao
@@ -235,11 +204,6 @@ function add_basic(){
         var index = $('#add-basic').find('tbody').attr('index');
         index = parseInt(index) + 1;
 
-        //时长默认值
-        var timeLength = (Time.getTime('YYYY-MM-DD hh:mm')).split(' ')[1];
-        var hours = timeLength.split(':')[0];
-        var minutes = timeLength.split(':')[1];
-
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
@@ -248,7 +212,7 @@ function add_basic(){
             '<td class="laydate">'+
             '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
-            '<td>0天'+hours+'小时'+minutes+'分</td>'+
+            '<td>3:00</td>'+
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
@@ -383,16 +347,14 @@ function timePicker(background){
             var thisElement = $(this.elem).parent();
             if(thisElement.prev().prev().length){
                 var current = Date.parse(date.split('-').join('/')) - Date.parse((thisElement.prev().find('input[type=text]').val()).split('-').join('/'));
-                var days = Math.floor(current/(1000*60*60*24)),
-                    hours = Math.floor((current/(1000*60*60*24)-days)*24),
-                    minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
-                thisElement.next().text(days+'天'+hours+'小时'+minutes+'分');
+                var hours = Math.floor(current/(1000*60*60)),
+                    minutes = Math.round((current/(1000*60*60)-hours)*60);
+                thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
             }else{
                 var current = Date.parse((thisElement.next().find('input[type=text]').val()).split('-').join('/')) - Date.parse(date.split('-').join('/'));
-                var days = Math.floor(current/(1000*60*60*24)),
-                    hours = Math.floor((current/(1000*60*60*24)-days)*24),
-                    minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
-                thisElement.next().next().text(days+'天'+hours+'小时'+minutes+'分');
+                var hours = Math.floor(current/(1000*60*60)),
+                    minutes = Math.round((current/(1000*60*60)-hours)*60);
+                thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
             }
         }
     };
@@ -405,16 +367,6 @@ function timePicker(background){
      * @date    2016-01-04
      */
     $('table').on('click','.end',function(){
-
-        //限制时间选择
-        var thisElement = $(this).parent();
-        if(!thisElement.prev().prev().length){
-
-            option.max = thisElement.next().find('input').val();
-        }else{
-            option.min = thisElement.prev().find('input').val();
-        }
-
         //每一次点击都进行一次随机
         var id = Math.floor(Math.random()*9999);
         id = id.toString();
@@ -1620,7 +1572,7 @@ function examinee_manage(){
     $(".delete").click(function(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
-        layer.alert('确认删除？',function(){
+        layer.alert('确认删除？',{btn:['确认','取消']},function(){
             $.ajax({
                 type:'post',
                 async:true,
@@ -1628,10 +1580,10 @@ function examinee_manage(){
                 data:{id:sid,exam_id:examId},
                 success:function(data){
                     if(data.code ==1){
-                        layer.alert('删除成功！');
+                        layer.msg('删除成功！');
                         location.reload();
                     }else {
-                        layer.alert(data.message);
+                        layer.msg(data.message);
                     }
                 }
             })
