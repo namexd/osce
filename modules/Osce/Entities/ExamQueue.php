@@ -18,6 +18,11 @@ class ExamQueue extends  CommonModel{
     protected $fillable = ['exam_id', 'exam_screening_id','student_id','station_id','room_id','begin_dt','end_dt','status','created_user_id'];
     public $search = [];
 
+    protected $statuValues  =   [
+        1   =>  'æ­£åœ¨è€ƒè¯•',
+        2   =>  'æœªè¿›è¡Œè€ƒè¯•',
+    ];
+
     public function student(){
         return $this->hasMany('\Modules\Osce\Entities\student','id','student_id');
     }
@@ -25,41 +30,45 @@ class ExamQueue extends  CommonModel{
     public function getStudent($mode,$exam_id){
         $exam   =Exam::find($exam_id);
         if($mode==1){
-            return   $this->getWriteRoom($exam);
+            return   $this->getWaitRoom($exam);
 
         }elseif($mode==2){
-           return $this->getWriteStation($exam);
+           return $this->getWaitStation($exam);
         }
 
     }
 
 
-    //µ±¿¼ÊÔÅÅĞòÄ£Ê½Îª1µÄÊ±ºò
-    protected function getWriteRoom($exam){
+    //è·å–å€™è€ƒæ•™å®¤
+    protected function getWaitRoom($exam){
         $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
         $data=[];
         foreach($examFlowRoomList as $examFlowRoom)
         {
+            $roomName=$examFlowRoom->room->name;
             $students    =   $examFlowRoom->queueStudent()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
           foreach($students as $examQueue){
               foreach($examQueue->student as $student){
-                  $data[$examQueue->room_id][]=$student;
+//                  $student->roomName=$roomName;
+                  $data[$roomName][]=$student;
               }
           }
         }
+
         return $data;
     }
 
-    //µ±¿¼ÊÔÅÅĞòÄ£Ê½Îª2µÄÊ±ºò
-    protected function getWriteStation($exam){
+    //è·å–å€™è€ƒè€ƒç«™
+    protected function getWaitStation($exam){
        $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
         $data=[];
        foreach ($examFlowStationList as $examFlowStation){
-
+           $stationName=$examFlowStation->station->name;
            $students=$examFlowStation ->queueStation()->where('exam_id','=',$exam->id)->take(config('osce.num'))->get();
            foreach($students as $ExamQueue ){
                foreach($ExamQueue->student as $student){
-                   $data[$ExamQueue->room_id][$ExamQueue->station_id]=$student;
+                   $student->stationName=$stationName;
+                   $data[$ExamQueue->station_id][]=$student;
                }
            }
        }
@@ -67,7 +76,7 @@ class ExamQueue extends  CommonModel{
     }
 
 
-    //²éÑ¯Ñ§Éú¶ÓÁĞÏÂµÄ¿¼ÊÔ
+    //è·å–è€ƒè¯•è¯¦æƒ…
     public  function  StudentExamInfo($watchStudent){
         $todayStart = date('Y-m-d 00:00:00');
         $todayEnd = date('Y-m-d 23:59:59');
