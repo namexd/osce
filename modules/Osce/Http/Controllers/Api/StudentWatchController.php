@@ -105,10 +105,24 @@ class StudentWatchController extends  CommonController
                     dump('当前考试剩余时间'.$surplus);
                 }else{
                     $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
+                    //考试完成后成绩推送
+                    $TestResultModel= new TestResult();
+                    $studentId= $nowQueue['student_id'];
 
-                    return response()->json(
-                        $this->success_data('考试完成')
-                    );
+                    $TestResult =$TestResultModel->AcquireExam($studentId);
+
+                    if($TestResult){
+                        $studentExamScore  =$TestResult->score;
+                        return response()->json(
+                            $this->success_data( $studentExamScore, '考试完成')
+                        );
+                    }else{
+                        return response()->json(
+                            $this->success_data(0,'考试完成')
+                        );
+                    }
+
+
                 }
             }
             else
