@@ -6,6 +6,7 @@
  * Time: 15:43
  */
 namespace Modules\Osce\Entities;
+use Modules\Osce\Entities\ExamQueue;
 class WatchLog extends CommonModel{
     protected $connection	=	'osce_mis';
     protected $table 		= 	'watch_log';
@@ -25,7 +26,9 @@ class WatchLog extends CommonModel{
     }
 
 
-   public function historyRecord($data){
+   public function historyRecord($data,$student_id,$exam_id){
+       $examQue=new ExamQueue();
+       $examQue->createExamQueue($exam_id, $student_id);
          if($data['context']){
              $data['context']=serialize($data['context']);
          }

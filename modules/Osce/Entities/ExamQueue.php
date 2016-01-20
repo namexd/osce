@@ -22,9 +22,10 @@ class ExamQueue extends CommonModel
     public $search = [];
 
     protected $statuValues = [
-        1 => '姝ｅ湪鑰冭瘯',
-        2 => '鏈繘琛岃?冭瘯',
-        3 => '鑰冭瘯瀹屾瘯',
+        1 => '候考',
+        2 => '正在考试',
+        3 => '结束考试',
+        4 => '缺考',
     ];
 
     public function student()
