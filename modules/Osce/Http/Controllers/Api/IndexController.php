@@ -200,7 +200,7 @@ class IndexController extends CommonController
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
-            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at','DESC')->first()->updated_at;
+            $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->orderBy('updated_at','DESC')->first()->updated_at;
                 $data=array(
                     'watch_id'       =>$id,
                     'action'         =>$action,
@@ -298,6 +298,11 @@ class IndexController extends CommonController
             'purchase_dt'           =>  'sometimes',
         ]);
 
+        $code=$request->get('code');
+        $id=Watch::where('code',$code)->select()->first();
+        if($id){
+            return \Response::json(array('code'=>3));
+        }
         try{
             $watch=Watch::create([
                 'code'          =>  $request->get('code'),
@@ -420,13 +425,13 @@ class IndexController extends CommonController
 
         $count=Watch::where('code'   ,'=', $request->get('code'))
             ->update([
-                'name'          =>  $request->get('name',''),
-                'status'        =>  $request->get('status'),
-                'description'   =>  $request->get('description'),
-                'factory'       =>  $request->get('factory'),
-                'sp'            =>  $request->get('sp'),
-                'create_user_id'=> $request->get('create_user_id'),
-                'purchase_dt'   => $request->get('purchase_dt'),
+                          'name'          =>  $request    ->  get('name'),
+                          'code'          =>  $request    ->  get('code'),
+                          'factory'       =>  $request    ->  get('factory'),
+                          'sp'            =>  $request    ->  get('sp'),
+                          'description'   =>  $request    ->  get('description'),
+                          'status'        =>  $request    ->  get('status'),
+                          'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             ]);
 
         if($count>0){

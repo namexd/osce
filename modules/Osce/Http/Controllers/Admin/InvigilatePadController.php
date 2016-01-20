@@ -485,13 +485,13 @@ class InvigilatePadController extends CommonController
             $key = $itemStart - $time;
             $endDiff = $time - $itemEnd;
             //待考信息
-             if($key>200){
+             if($key<3000 && $key>200){
                  $status = self::EXAM_BEFORE;
                  $curExam = $item;
                  break;
              }
             //开考前通知
-            if ($key>200 && ($this->timeDiff-$key) >0 ) {
+            if ($key>0 && ($this->timeDiff-$key) >0 ) {
                 $status = self::EXAM_WILL_BEGIN;
                 $curExam = $item;
                 break;
@@ -505,7 +505,7 @@ class InvigilatePadController extends CommonController
             }
              //考试完成通知下一场
             // self::EXAM_JUST_AFTER
-            if ( $endDiff > 0 && $endDiff < $this->timeDiff ) {
+            if ( $endDiff > 0 && $endDiff < $this->timeDiff) {
                 $status = self::EXAM_JUST_AFTER;
                 $curKey = $key;
             }
@@ -518,42 +518,78 @@ class InvigilatePadController extends CommonController
                 $willStudents = ExamQueue::where('room_id','=',$curExam['room_id'])
                     ->whereBetween('status',[1,2])
                     ->count();
-
-                dump('前面还有'.$willStudents .' 考生'.  ' 预计考试时间'  . '即将进入考场' ,$willStudents);
+                dump('前面还有'.($willStudents-1). ' 考生'.  ' 预计考试时间'.$diff. '即将进入考场'.$curExam['room_name'] );
                 break;
-            case self::EXAM_WILL_BEGIN:
 
-                $curExam['room_id'];
-                dump('你即将开始考试222');
+            case self::EXAM_WILL_BEGIN:
+                //dump('你即将开始考试'.$curExam['room_name']);
+
+
+                return response()->json(
+                    $this->success_data($curExam['room_name'],'你即将开始考试')
+                );
                 // todo ..
                 break;
             case self::EXAM_TAKING:
-                dump('3333');
+
                 $surplus = $curExam['end_time'] - $time;
                 $surplus = floor($surplus/60) . ':' . $surplus%60;
+                $changeStatus= ExamQueue::where('id','=',$curExam['id'])->update(['status'=>2]);
+
                 dump('当前考试剩余时间'.$surplus);
-//                return response()->json([
-//
-//                ]);
+                return response()->json(
+                    $this->success_data($surplus,'当前考试剩余时间')
+                );
                 break;
             case self::EXAM_JUST_AFTER:
-                dump('下一场考试4444');
-                foreach ($list as $key => $item) {
-                    if ($curKey == $key) {
-                        $nextExam = current($list);
+                //dump('考试已完成');
+                dd($list);
+                $studentStatus= ExamQueue::where('student_id','=',$watchStudent->student_id)
+                    ->whereBetween('status',[1,2])
+                    ->count();
+                if($studentStatus==0){
+                     dump('考试已完成');
+                }else{
+                    foreach ($list as $key => $item) {
+                        if ($curKey == $key) {
+                            $nextExam = current($list);
+                        }
                     }
                 }
-
-
-                $nextExam['room_id'];
                 // todo ..
                 break;
         }
     dd($nextExam ,$curExam);
-        dump($list);die;
+        //dump($list);die;
 
     }
 
+    public function nowQueue(){
+        //exam_queue
 
 
+
+    }
+    public function nextQueue(){
+        //exam_queue
+
+
+
+    }
+    public function getWaitExamList(Request $request){
+        $this->validate($request,[
+            'watch_id'=>'required|integer'
+        ]);
+        $watchId=$request->input('watch_id');
+
+        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
+        if(!$watchStudent){
+            return response()->json(
+                $this->fail(new \Exception('没有找到学生的腕表信息'))
+            );
+        }
+        $ExamQueueModel= new ExamQueue();
+        $result =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
+        dump($result);
+    }
 }

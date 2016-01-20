@@ -152,7 +152,7 @@ class TrainController extends  CommonController{
     /**
      *保存编辑培训
      * @method POST
-     * @url /osce/wechat/train/edit-train
+     * @url /osce/admin/train/edit-train
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -198,7 +198,7 @@ class TrainController extends  CommonController{
     /**
      *删除培训
      * @method GET
-     * @url /osce/wechat/train/del-train
+     * @url /osce/admin/train/del-train
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -218,15 +218,15 @@ class TrainController extends  CommonController{
         ]);
 
         $id=intval($request->get('id'));
-        $user=Auth::user();
-        $userId=$user->id;
-        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-        $manager=config('osce.manager');
-        if($userId!==$creteId || $creteId!==$manager[0]){
-            return response()->json(
-                $this->success_rows(3,'false')
-            );
-        }
+//        $user=Auth::user();
+//        $userId=$user->id;
+//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//        $manager=config('osce.manager');
+//        if($userId!==$creteId || $creteId!==$manager[0]){
+//            return response()->json(
+//                $this->success_rows(3,'false')
+//            );
+//        }
 
         $result=InformTrain::where('id',$id)->delete();
         if($result){

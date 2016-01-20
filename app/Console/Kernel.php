@@ -25,7 +25,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('inspire')
-                 ->hourly();
+        $moduleSchedulesList    =   config('config.ModuleSchedulesList',[]);
+        foreach($moduleSchedulesList as $moduleSchedule)
+        {
+            $defaultCommand =   new $moduleSchedule($schedule);
+            $defaultCommand ->osceScheduling();
+        }
+//        $schedule->command('inspire')
+//                 ->hourly();
     }
 }

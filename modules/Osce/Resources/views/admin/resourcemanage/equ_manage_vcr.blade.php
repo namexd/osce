@@ -98,14 +98,14 @@
 
                     </tbody>
                 </table>
-                <div class="clearfix">
-                    <div class="pull-left total-pages">
+
+                    <div class="pull-left">
                         共{{$list->total()}}条
                     </div>
                     <div class="pull-right">
                         {!! $list->appends($_GET)->render() !!}
                     </div>
-                </div>
+
         </div>
 
     </div>

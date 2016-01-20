@@ -76,6 +76,7 @@
                             <div class="txt col-sm-10">{!! $data['content'] !!}</div>
                         </div>
                     <div class="hr-line-dashed"></div>
+                @if($data['attachments'])
                 @foreach($data['attachments'] as $key=>$list)
                 <div class="form-group">
                         <label class="col-sm-2 control-label">附件:</label>
@@ -91,6 +92,7 @@
                         </div>
                     </div>
                 @endforeach
+                 @endif
             </form>
         </div>
     </div>
