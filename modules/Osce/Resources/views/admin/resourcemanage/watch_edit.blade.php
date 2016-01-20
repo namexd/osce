@@ -120,9 +120,10 @@
                                 <label class="col-sm-2 control-label">设备状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
-                                        @foreach($status as $key => $value)
-                                            <option value="{{$key}}" {{($item['status']==$key)?'selected="selected"':''}}>{{$value}}</option>
-                                        @endforeach
+                                        <option value="0" {{($item['status']==0)?'selected="selected"':''}}>未使用</option>
+                                        <option value="1" {{($item['status']==1)?'selected="selected"':''}}>使用中</option>
+                                        <option value="2" {{($item['status']==2)?'selected="selected"':''}}>维修</option>
+                                        <option value="3" {{($item['status']==3)?'selected="selected"':''}}>报废</option>
                                     </select>
                                 </div>
                             </div>
