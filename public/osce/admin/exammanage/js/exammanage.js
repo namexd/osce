@@ -36,8 +36,13 @@ function exam_assignment(){
                 async:true,
                 url:pars.deletes,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(res){
-                    location.reload();
+                success:function(data){
+                    if(data.code ==1){
+                        layer.alert('删除成功！');
+                        location.reload();
+                    }else {
+                        layer.alert(data.message);
+                    }
                 }
             })
         });
