@@ -86,20 +86,20 @@
                         }
                     }
                 },
-                begin_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '开始时间不能为空'
-                        }
-                   }
-                },
-                end_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '结束时间不能为空'
-                        }
-                   }
-                },
+//              begin_dt: {
+//              	validators: {
+//	                	notEmpty: {/*非空提示*/
+//                          message: '开始时间不能为空'
+//                      }
+//                 }
+//              },
+//              end_dt: {
+//              	validators: {
+//	                	notEmpty: {/*非空提示*/
+//                          message: '结束时间不能为空'
+//                      }
+//                 }
+//              },
                 teacher: {
                 	validators: {
 	                	notEmpty: {/*非空提示*/
@@ -154,6 +154,34 @@
 	    $(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
 	    });
+	    
+	    $(".fabu_btn").click(function(){
+	    	var start=$("#start").val();
+	    	var end=$("#end").val();
+	    	if(start==""){
+	    		$.alert({
+                  	title: '提示：',
+                  	content: '你还没有选择开始时间!',
+                  	confirmButton: '确定',
+                  	confirm: function(){
+                  		$(".fabu_btn").removeAttr("disabled");
+            		}
+              	});
+              	return false;
+	    	}
+	    	if(end==""){
+	    		$.alert({
+                  	title: '提示：',
+                  	content: '你还没有选择结束时间!',
+                  	confirmButton: '确定',
+                  	confirm: function(){
+                  		$(".fabu_btn").removeAttr("disabled");
+            		}
+              	});
+              	return false;
+	    	}
+    		$("#form1").submit();
+	    })
  	})
  </script>
 @stop
@@ -162,11 +190,12 @@
 <input type="hidden" id="parameter" value="{'pagename':'exam_notice_add'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
-        <div class="ibox-title">
+        <div class="ibox-title" style="position: relative;">
             <h5>新增考前培训</h5>
+            <a href="javascript:history.back(-1)" class="btn btn-default" style="position: absolute;right:10px;top:4px;">&nbsp;返回&nbsp;</a>
         </div>
         <div class="ibox-content">
-            <form method="post" id="form1" class="form-horizontal" action="#">
+            <form method="post"  id="form1" class="form-horizontal" action="#">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
@@ -226,7 +255,7 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">发布</button>
+                            <input class="btn btn-primary fabu_btn" type="button" value="发布">
                             <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>
