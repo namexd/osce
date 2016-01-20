@@ -30,7 +30,7 @@
             </div>
         </div>
 
-            <div class="ibox-content">
+            <div class="ibox-content container-fluid">
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="input-group" style="margin: 20px 0">
+                <div class="input-group" style="margin-bottom: 20px;margin-top: 10px;">
                     <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>3])}}" method="get">
                     <input type="hidden" name="cate_id" value="3">
                     <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;height: 36px;" name="name" value="{{(empty($name)?'':$name)}}">
@@ -105,17 +105,14 @@
                     </tbody>
                 </table>
 
+                    <div class="pull-left">
+                        共{{$list->total()}}条
+                    </div>
+                    <div class="pull-right">
+                        {!! $list->appends($_GET)->render() !!}
+                    </div>
 
-                <div class="pull-left">
-                    共{{$list->total()}}条
-                </div>
-                <div class="btn-group pull-right">
-                    <nav>
-                        <ul class="pagination">
-                            {!! $list->appends($_GET)->render() !!}
-                        </ul>
-                    </nav>
-                </div>
+
             </div>
     </div>
 

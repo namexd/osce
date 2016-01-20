@@ -7,7 +7,9 @@
         .route-nav{
             margin-bottom: 30px;
         }
-
+        ul{
+            margin: 0;
+        }
 
     </style>
 @stop
@@ -26,7 +28,7 @@
             </div>
         </div>
         <div class="container-fluid ibox-content">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs teacher-tabs">
                 <li role="presentation" class="active"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监巡考老师</a></li>
                 <li role="presentation"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
             </ul>
@@ -46,7 +48,7 @@
                         <td>{{$key+1}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
-                        <td>{{(!is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
+                        <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                         <td>
                             <a href="{{route('osce.admin.invigilator.postEditInvigilator',['id'=>$item->id])}}">
                                 <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
@@ -58,19 +60,12 @@
                     @endforelse
                 </tbody>
             </table>
-
-                <div class="pull-left total-nums">
+                <div class="pull-left">
                     共{{$list->total()}}条
                 </div>
                 <div class="pull-right">
-                    <nav>
-                        <ul class="pagination">
-                            {!! $list->appends($_GET)->render() !!}
-                        </ul>
-                    </nav>
+                    {!! $list->appends($_GET)->render() !!}
                 </div>
-
-
         </div>
     </div>
 @stop

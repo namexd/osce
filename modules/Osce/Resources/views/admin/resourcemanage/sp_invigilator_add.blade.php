@@ -21,6 +21,10 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '名称不能为空'
+                            },
+                            stringLength: {
+                                max:20,
+                                message: '名称字数不超过20个'
                             }
                         }
                     },
@@ -111,6 +115,7 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit" id="save">保存</button>
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
+{{--								<a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>--}}
                             </div>
                         </div>
                     </form>
