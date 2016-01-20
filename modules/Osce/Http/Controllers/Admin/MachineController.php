@@ -496,11 +496,17 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'name'          =>  'required',
             'code'          =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
             'status'        =>  'required',
         ],[
-            'name.required'     =>  '设备名称必填',
-            'code.required'     =>  '设备编号必填',
-            'status.required'   =>  '设备状态必填',
+            'name.required'         =>  '设备名称必填',
+            'code.required'         =>  '设备ID必填',
+            'factory.required'      =>  '厂家必填',
+            'sp.required'           =>  '型号必填',
+            'purchase_dt.required'  =>  '采购日期必填',
+            'status.required'       =>  '设备状态必填',
         ]);
 
         $user   =   Auth::user();
@@ -508,8 +514,11 @@ class MachineController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
-            'name'          =>  $request    ->  get('name'),
+            'name'          =>  e($request    ->  get('name')),
             'code'          =>  $request    ->  get('code'),
+            'factory'       =>  e($request    ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             'status'        =>  $request    ->  get('status'),
             'create_user_id'=>  $user       ->  id
         ];
@@ -636,11 +645,11 @@ class MachineController extends CommonController
             'status'        =>  'required',
         ],[
             'name.required'     =>  '腕表名称必填',
-            'code.required'     =>  '腕表编号必填',
-            'factory.required'  =>  '生产厂家必填',
-            'sp.required'       =>  '型号规格必填',
-            'status.required'   =>  '腕表状态必选',
-            'code.unique'       =>  '腕表编码已存在',
+            'code.required'     =>  '腕表ID必填',
+            'factory.required'  =>  '厂家必填',
+            'sp.required'       =>  '型号必填',
+            'status.required'   =>  '状态必选',
+            'code.unique'       =>  '腕表ID已存在',
         ]);
 
         $user   =   Auth::user();
@@ -649,13 +658,14 @@ class MachineController extends CommonController
         }
 
         $data   =   [
-            'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
-            'factory'       =>  $request    ->  get('factory'),
-            'sp'            =>  $request    ->  get('sp'),
+            'name'          =>  $request    ->  get('name'),
             'status'        =>  $request    ->  get('status'),
             'description'   =>  $request    ->  get('description'),
-            'create_user_id'=>  $user       ->  id
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'create_user_id'=>  $user       ->  id,
+            'purchase_dt'   =>  $request    ->  get('purchase_dt')
         ];
 
         $cate_id    =   $request    ->  get('cate_id');

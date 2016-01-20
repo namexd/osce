@@ -56,7 +56,7 @@
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.machine.postAddMachine')}}">
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">名称</label>
+                                <label class="col-sm-2 control-label">设备名称</label>
 
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="name" name="name">
@@ -66,15 +66,40 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">编号</label>
-
+                                <label class="col-sm-2 control-label">设备ID</label>
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="code" name="code">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">设备状态</label>
+                                <label class="col-sm-2 control-label">厂家</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="factory" name="factory">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">型号</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="sp" name="sp">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">采购日期</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control laydate-icon" id="end" name="purchase_dt" value="">
+
+                                    {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
                                     <select id=""   class="form-control m-b" name="status">
                                         @foreach($status as $key => $value)
@@ -87,16 +112,10 @@
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-{{--                                    <a class="btn btn-white" href="{{route('osce.admin.machine.getMachineList', ['cate_id'=>2])}}">取消</a>--}}
-
                                 </div>
                             </div>
-
-
                         </form>
-
                     </div>
-
                 </div>
             </div>
         </div>

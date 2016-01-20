@@ -18,7 +18,7 @@ class Pad extends CommonModel implements MachineInterface
     protected $table 		= 	'pad';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	[ 'name', 'code','status','create_user_id'];
+    protected   $fillable 	=	['code', 'name', 'status', 'create_user_id', 'factory', 'sp', 'purchase_dt'];
     public      $search    =   [];
 
     protected $statuValues  =   [
@@ -72,7 +72,7 @@ class Pad extends CommonModel implements MachineInterface
             {
                 throw new \Exception('没有找到PAD新增数据');
             }
-            //$machine    =   Machine::create($machineData);
+
             $machine    =   true;
             if($machine)
             {

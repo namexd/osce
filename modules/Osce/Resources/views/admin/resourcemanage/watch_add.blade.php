@@ -56,8 +56,7 @@
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.machine.postAddMachine')}}">
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">名称</label>
-
+                                <label class="col-sm-2 control-label">设备名称</label>
                                 <div class="col-sm-10">
                                     <input type="text" required class="form-control" id="name" name="name">
                                     <input type="hidden" required class="form-control" id="cate_id" name="cate_id" value="3" />
@@ -66,28 +65,36 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">编号</label>
-
+                                <label class="col-sm-2 control-label">设备ID</label>
                                 <div class="col-sm-10">
                                     <input type="text" required class="form-control" id="code" name="code">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">生产厂家</label>
-
+                                <label class="col-sm-2 control-label">厂家</label>
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="factory">
+                                    <input type="text" required class="form-control" id="factory" name="factory">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">型号</label>
-
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="sp">
+                                    <input type="text" required class="form-control" id="sp" name="sp">
                                 </div>
                             </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">采购日期</label>
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="purchase_dt" name="purchase_dt">
+                                </div>
+                            </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">设备状态</label>
@@ -99,12 +106,12 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">描述</label>
-
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="description">
+                                    <input type="text" required class="form-control" id="description" name="description">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -112,20 +119,13 @@
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-{{--                                    <a class="btn btn-white" href="{{route('osce.admin.machine.getMachineList', ['cate_id'=>3])}}">取消</a>--}}
-
                                 </div>
                             </div>
-
-
                         </form>
-
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
 
 @stop{{-- 内容主体区域 --}}
