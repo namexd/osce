@@ -37,17 +37,6 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
- <script type="text/javascript">
- $(function(){
-            $(".checkbox_input").click(function(){
-                if($(this).find("input").is(':checked')){
-                    $(this).find(".check_icon ").addClass("check");
-                }else{
-                    $(this).find(".check_icon").removeClass("check");
-                }
-            });
-})
- </script>
 @stop
 
 @section('content')
