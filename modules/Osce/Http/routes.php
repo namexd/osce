@@ -306,6 +306,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('communal-api/attch-upload',['uses'=>'CommunalApiController@postAttchUpload','as'=>'osce.api.communal-api.postAttchUpload']);
 		Route::get('communal-api/editor-upload',['uses'=>'CommunalApiController@getEditorUpload','as'=>'osce.api.communal-api.getEditorUpload']);
 		Route::post('communal-api/editor-upload',['uses'=>'CommunalApiController@postEditorUpload','as'=>'osce.api.communal-api.postEditorUpload']);
+
+		//学生腕表
+		Route::get('student-watch/wait-exam-list',['uses'=>'StudentWatchController@getWaitExamList']);
+
 	});
 });
 
