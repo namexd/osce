@@ -237,14 +237,15 @@ class StudentWatchController extends  CommonController
 
             case 2;
                 dump('考试中');
-//                    $nowTime =time();
-//                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
-//                    $surplus = floor($surplus/60) . ':' . $surplus%60;
-//                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
+                    $nowTime =time();
+                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
+                    $surplus = floor($surplus/60) . ':' . $surplus%60;
+                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
 
                 break;
 
             case 3;
+
 
                 dump('当前考试已完成');
                 break;

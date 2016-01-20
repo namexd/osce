@@ -135,8 +135,7 @@ class ExamQueue extends CommonModel
          })->leftJoin('student', function ($join) {
              $join->on('student.id', '=', 'exam_queue.student_id');
               })
-            ->where($this->table . '.student_id', '=',$studentId)
-             ->orderBy('begin_dt','desc')
+            ->where($this->table . '.student_id', '=',$studentId)->orderBy('begin_dt','desc')
              ->select([
                  'room.name as room_name',
                  'student.name as name',
