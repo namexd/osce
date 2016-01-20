@@ -4,10 +4,12 @@
     table tr td .form-group {
         margin-bottom: 0;
     }
+    td input{margin: 5px 0;}
     .btn-outline:hover{color: #fff!important;}
     .ibox-content{padding-top: 20px;}
-    .ibox-title{border-top: 0;}
-    .ibox-content{
+    .btn-outline:hover{color: #fff!important;}
+    .form-group .ibox-title{border-top: 0;}
+    .form-group .ibox-content{
         border-top: 0;
         padding-left: 0;
     }
@@ -111,8 +113,8 @@
                                                     @else
                                                     <td>
                                                         <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
                                                     </td>
                                                     @endif
                                                 </tr>

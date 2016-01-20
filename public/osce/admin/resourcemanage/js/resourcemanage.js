@@ -468,7 +468,7 @@ function categories(){
 
         //上移
         $('.'+className).remove();
-        $('.pid-'+preIndex+'[parent="'+preIndex+'"]').after(thisDOM);
+        $('.pid-'+preIndex+':last').after(thisDOM);
 
         //更新序号
         $('tbody tr').each(function(key,elem){
@@ -554,8 +554,10 @@ function categories(){
                                        '</select>'+
                                        '</td>'+
                                        '<td>'+
-                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>'+
+                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>'+
+                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                        '</td>'+
                                        '</tr>';
                         
@@ -590,9 +592,8 @@ function categories(){
                                                '</td>'+
                                                '<td>'+
                                                '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
-                                               '</td>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>'+                                               '</td>'+
                                                '</tr>';
                                    }
                                }
@@ -612,15 +613,20 @@ function categories(){
         }) ;
 
 
-
+        /**
+         * 考核分数自动加减
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-20
+         */
         $('tbody').on('change','select',function(){
             var thisElement = $(this).parent().parent();
             //父亲节点
-            var className = thisElement.attr('class');
+            var className = thisElement.attr('class'),
                 parent =  className.split('-')[1];
+
             //自动加减节点
             var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
-
 
 
             //改变value值,消除连续变换值的变化
@@ -643,7 +649,7 @@ function categories(){
                 option += '<option value="'+k+'">'+k+'</option>';
             }
             change.html(option);
-            change.val(total-1);
+            change.val(total);
 
             $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
             change.after('<span>'+parseInt(total)+'</span>')

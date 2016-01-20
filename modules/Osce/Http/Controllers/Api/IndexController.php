@@ -279,7 +279,7 @@ class IndexController extends CommonController
      * * string		code			设备编码(必须的)
      * * int		user_id			操作人编号(必须的)
      *
-     * @return object
+     * @return json
      *
      * @version 1.0
      * @author limingyao <limingyao@misrobot.com>

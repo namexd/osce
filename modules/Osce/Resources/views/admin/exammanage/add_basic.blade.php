@@ -66,7 +66,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试地点</label>
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="code" value="{{$examData['name']}}">
+                                    <input type="text" required class="form-control" id="address" name="address" value="{{$examData['address']}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -117,7 +117,15 @@
                                                 <td class="laydate">
                                                     <input type="text" class="laydate-icon end" name="time[{{$key}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
                                                 </td>
-                                                <td>3:00</td>
+                                                <?php
+                                                    $one = strtotime($item->begin_dt);  //开始时间 时间戳
+                                                    $tow = strtotime($item->end_dt);    //结束时间 时间戳
+                                                    $cle = $tow - $one;                 //得出时间戳差值
+                                                    $d = floor($cle/3600/24);
+                                                    $h = floor(($cle%(3600*24))/3600);  //%取余
+                                                    $m = floor(($cle%(3600*24))%3600/60);
+                                                ?>
+                                                <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                 </td>
