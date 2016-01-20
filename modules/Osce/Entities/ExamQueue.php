@@ -7,6 +7,7 @@
  */
 namespace Modules\Osce\Entities;
 
+use DB;
 class ExamQueue extends  CommonModel{
     protected $connection = 'osce_mis';
     protected $table = 'exam_queue';
@@ -95,6 +96,9 @@ class ExamQueue extends  CommonModel{
                 'student.name as name',
                 'exam_queue.begin_dt as begin_dt',
                 'exam_queue.end_dt as end_dt',
+                'exam_queue.room_id as room_id',
+                'exam_queue.station_id as station_id',
+                'exam_queue.status as status'
             ])->get()->toArray();
 
         return $data;
@@ -104,8 +108,21 @@ class ExamQueue extends  CommonModel{
         return $this->paginate(config('msc.page_size'));
     }
 
-    public function examineeByRoomId($room_id)
+    /**
+     * 根据room_id来获取对应的考生列表
+     * @param $room_id
+     * @return
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
+    static public function examineeByRoomId($room_id)
     {
-
+        try {
+            return ExamQueue::where('room_id', $room_id)
+                ->where('status', 2)
+                ->get();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }
