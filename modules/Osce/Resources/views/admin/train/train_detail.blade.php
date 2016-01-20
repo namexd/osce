@@ -19,6 +19,7 @@
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
     .fa-remove{cursor:pointer;}
     .laydate-icon{width:200px;}
+    .txt{padding-top:7px;line-height:1.5em}
     </style>
 @stop
 
@@ -70,12 +71,10 @@
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" >内容:</label>
-                        <div class="col-sm-10">
-                            <textarea class="col-sm-6" style="height:200px;resize:none;" name="" rows="" cols="" disabled="disabled">{{ $data['content']  }}</textarea>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" >内容:</label>
+                            <div class="txt col-sm-10">{!! $data['content'] !!}</div>
                         </div>
-                    </div>
                     <div class="hr-line-dashed"></div>
                 @foreach($data['attachments'] as $key=>$list)
                 <div class="form-group">
