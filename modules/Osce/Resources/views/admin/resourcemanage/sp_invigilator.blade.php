@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="container-fluid ibox-content">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs teacher-tabs">
                 <li role="presentation"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监巡考老师</a></li>
                 <li role="presentation"  class="active"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
             </ul>
@@ -30,7 +30,6 @@
                 <tr>
                     <th>#</th>
                     <th>姓名</th>
-                    <th>病例</th>
                     <th>联系电话</th>
                     <th>最后登录时间</th>
                     <th>操作</th>
@@ -41,12 +40,11 @@
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$item->name}}</td>
-                        <td>{{$item->case_name}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
-                        <td>{{(!is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
+                        <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
                         <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}">
-                                <span class="read  state1 detail"><i class="fa fa-pencil-square-o"></i></span>
+                                <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                             </a>
                             <a href="javascript:void(0)" class="delete" tid="{{$item->id}}"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
@@ -60,11 +58,9 @@
                     共{{$list->total()}}条
                 </div>
                 <div class="pull-right">
-                    <nav>
-                        <ul class="pagination">
+
                             {!! $list->appends($_GET)->render() !!}
-                        </ul>
-                    </nav>
+
                 </div>
 
 

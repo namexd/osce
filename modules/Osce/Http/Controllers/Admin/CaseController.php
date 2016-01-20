@@ -157,6 +157,11 @@ class CaseController extends CommonController
         $formData = $request->only('name', 'description');
 
         DB::connection('osce_mis')->beginTransaction();
+        $case = CaseModel::where('name', str_replace(' ','',$formData['name']))->where('id','<>',$id)->first();
+        if ($case) {
+            DB::connection('osce_mis')->rollBack();
+            return redirect()->back()->withErrors('该病例名称已存在!');
+        }
         $result = $caseModel->updateData($id, $formData);
         if ($result != true) {
             DB::connection('osce_mis')->rollBack();
