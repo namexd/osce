@@ -71,7 +71,7 @@ function exam_add(){
                     }
                 }
             },
-            code: {
+            address: {
                 validators: {
                     notEmpty: {
                         message: '考试地点不能为空'
@@ -108,7 +108,7 @@ function exam_add(){
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
-            '</tr>'+
+            '</tr>';
         //记录计数
         $('#exam_add').find('tbody').attr('index',index);
         $('#exam_add').find('tbody').append(html);
@@ -123,29 +123,29 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+        
+        layer.alert('确认为删除？',function(thisID){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#exam_add').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
+            $('#exam_add').find('tbody').attr('index',index);
+            //更新序号
+            $('#exam_add tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
+
+            layer.close(thisID);
         });
 
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
-        //计数器标志
-        var index = $('#exam_add').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#exam_add').find('tbody').attr('index',index);
-        //更新序号
-        $('#exam_add tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        
 
     });
 }
@@ -179,7 +179,7 @@ function add_basic(){
                     }
                 }
             },
-            code: {
+            address: {
                 validators: {
                     notEmpty: {
                         message: '考试地点不能为空'
@@ -262,29 +262,29 @@ function add_basic(){
      */
     $('#add-basic').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+
+        layer.alert('确认为删除？',function(thisID){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#add-basic').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
+            $('#add-basic').find('tbody').attr('index',index);
+            //更新序号
+            $('#add-basic tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
+
+            layer.close(thisID);
         });
 
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
-        //计数器标志
-        var index = $('#add-basic').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#add-basic').find('tbody').attr('index',index);
-        //更新序号
-        $('#add-basic tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        
 
     });
 
@@ -1140,6 +1140,43 @@ function examroom_assignment(){
  */
 function exam_notice_add(){
 
+
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            'groups[]': {
+                validators: {
+                    notEmpty: {
+                        message: '请勾选'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '标题不能为空'
+                    }
+                }
+            },
+            content: {
+                validators: {
+                    notEmpty: {
+                        message: '内容不能为空'
+                    }
+                }
+            }
+        }
+    });
+
     var ue = UE.getEditor('editor');
 
     /**
@@ -1229,8 +1266,45 @@ function exam_notice_add(){
  */
 function exam_notice_edit(){
 
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            'groups[]': {
+                validators: {
+                    notEmpty: {
+                        message: '请勾选'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '标题不能为空'
+                    }
+                }
+            },
+            content: {
+                validators: {
+                    notEmpty: {
+                        message: '内容不能为空'
+                    }
+                }
+            }
+        }
+    });
+
+
     var content =   $('#content').val();
-    console.log(content)
+
     //初始化
     var ue = UE.getEditor('editor',{
         serverUrl:'/osce/api/communal-api/editor-upload'

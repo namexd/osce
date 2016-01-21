@@ -121,7 +121,7 @@ function categories(){
                 '</div>'+
                 '</td>'+
                 '<td>'+
-                '<select class="form-control" name="score['+index+'][total]">'+
+                '<select style="display:none;" class="form-control" name="score['+index+'][total]">'+
                 '<option value="1">1</option>'+
                 '<option value="2">2</option>'+
                 '<option value="3">3</option>'+
@@ -195,7 +195,7 @@ function categories(){
         thisElement.find('td').eq(2).find('select').html(option);
         thisElement.find('td').eq(2).find('select').val(child);
         //禁用下拉
-        thisElement.find('td').eq(2).find('select').hide();
+        //thisElement.find('td').eq(2).find('select').hide();
         thisElement.find('td').eq(2).find('span').remove();
         thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
 
@@ -290,8 +290,8 @@ function categories(){
             if(total==0){
                 total = 1;
                 cu = 0;
-                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
-                change.show();
+                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').text('');
+                //change.show();
                 //dom
                 var option = '';
                 for(var k =1;k<=4;k++){
@@ -648,7 +648,7 @@ function categories(){
                 option += '<option value="'+k+'">'+k+'</option>';
             }
             change.html(option);
-            change.val(total-1);
+            change.val(total);
 
             $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
             change.after('<span>'+parseInt(total)+'</span>')

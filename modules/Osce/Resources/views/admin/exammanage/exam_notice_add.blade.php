@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
     <style>
     .col-sm-1{margin-top: 6px;}
     .check_label{top: 8px;}
@@ -28,6 +29,8 @@
     #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
     .fa-remove{cursor:pointer;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-ok {top: -2px;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-remove {top: -2px;}
     </style>
 @stop
 
@@ -36,18 +39,8 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+ <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
- <script type="text/javascript">
- $(function(){
-            $(".checkbox_input").click(function(){
-                if($(this).find("input").is(':checked')){
-                    $(this).find(".check_icon ").addClass("check");
-                }else{
-                    $(this).find(".check_icon").removeClass("check");
-                }
-            });
-})
- </script>
 @stop
 
 @section('content')
@@ -58,7 +51,7 @@
             <h5>新增通知</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal" action="{{route('osce.admin.notice.postAddNotice')}}">
+            <form id="sourceForm" method="post" class="form-horizontal" action="{{route('osce.admin.notice.postAddNotice')}}">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">
@@ -76,18 +69,18 @@
                         <label class="col-sm-2 control-label">接收人:</label>
                         <div class="col-sm-10 select_code" id="checkbox_div">
                             <label class="check_label checkbox_input">
-                                <div class="check_icon check" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="groups[]" value="1" data-bv-field="message_type[]">
+                                <div class="check_icon" style="display: inline-block"></div>
+                                <input type="checkbox" name="groups[]" value="1">
                                 <span class="check_name">考生</span>
                             </label>
                             <label class="check_label checkbox_input">
-                                <div class="check_icon check" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="groups[]" value="2" data-bv-field="message_type[]">
+                                <div class="check_icon" style="display: inline-block"></div>
+                                <input type="checkbox" name="groups[]" value="2">
                                 <span class="check_name">老师</span>
                             </label>
                             <label class="check_label checkbox_input">
-                                <div class="check_icon check" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="groups[]" value="3" data-bv-field="message_type[]">
+                                <div class="check_icon" style="display: inline-block"></div>
+                                <input type="checkbox" name="groups[]" value="3">
                                 <span class="check_name">sp老师</span>
                             </label>
                         </div>

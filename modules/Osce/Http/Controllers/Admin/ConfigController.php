@@ -186,6 +186,9 @@ class ConfigController extends CommonController
         $formData = $request->all();
         $formData['created_user_id'] = \Auth::user()->id;
         try {
+            if(Area::where('cate', $formData['cate'])->first()){
+                throw new \Exception('该数字 类别已存在，请重新填写！');
+            }
             if (!Area::create($formData)) {
                 throw new \Exception('数据保存失败！请重试');
             }
