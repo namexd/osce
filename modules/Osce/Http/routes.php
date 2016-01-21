@@ -198,7 +198,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.admin.invigilatepad.postSaveExamResult']);
 		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.admin.invigilatepad.getSaveExamEvaluate']);
 		Route::get('invigilatepad/wait_exam', 	['uses'=>'InvigilatePadController@getWaitExam','as'=>'osce.admin.invigilatepad.getWaitExam']);
-
+		Route::get('invigilatepad/wait_exam_list', 	['uses'=>'InvigilatePadController@getWaitExamList','as'=>'osce.admin.invigilatepad.getWaitExamList']);
 
 		//候考
 		Route::get('oscetv/wait-detail',['uses'=>'OsceTvController@getWaitDetail','as'=>'osce.admin.getWaitDetail']);
@@ -306,6 +306,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('communal-api/attch-upload',['uses'=>'CommunalApiController@postAttchUpload','as'=>'osce.api.communal-api.postAttchUpload']);
 		Route::get('communal-api/editor-upload',['uses'=>'CommunalApiController@getEditorUpload','as'=>'osce.api.communal-api.getEditorUpload']);
 		Route::post('communal-api/editor-upload',['uses'=>'CommunalApiController@postEditorUpload','as'=>'osce.api.communal-api.postEditorUpload']);
+
+		//学生腕表
+		Route::get('student-watch/wait-exam-list',['uses'=>'StudentWatchController@getWaitExamList']);
+
 	});
 });
 

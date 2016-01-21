@@ -31,104 +31,103 @@ class StudentWatchController extends  CommonController
 {
 
 
-
-
-
-
-    //    url   /osce/watch/studentwatch/wait_exam
-
-    protected $timeDiff = 120;
-
-    const EXAM_BEFORE = 0;// ´ı¿¼
-    const EXAM_WILL_BEGIN = 1; //½«Òª¿ªÊ¼ ¿¼ÊÔ¿ªÊ¼Á½·ÖÖÓÄÚÌáĞÑ
-    const EXAM_TAKING = 2; // ¿¼ÊÔÖĞ
-    const EXAM_JUST_AFTER = 3;// ¸Õ¿¼Íê,ÏÂÒ»³¡ÌáÊ¾ ¿¼ÊÔÍê³ÉºóÁ½·ÖÖÓÄÚÌáĞÑ
-
-
-    public  function getWaitExam(Request $request){
-
-        dd(222222);
-
-
+    /**
+     * å­¦ç”Ÿè…•è¡¨ä¿¡æ¯
+     * @method GET
+     * @url /osce/api/StudentWatch/wait-exam-list
+     * @access public
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string     watch_id    è…•è¡¨ id   (å¿…é¡»çš„)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWaitExamList(Request $request){
         $this->validate($request,[
             'watch_id'=>'required|integer'
         ]);
+        $nowTime    =   time();
         $watchId=$request->input('watch_id');
 
-        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first()->student_id;
-        //²éµ½¸ÃÑ§ÉúµÄËùÓĞ¿¼ÊÔ
-//        dd($watchStudent);
-
+        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
+        if(!$watchStudent){
+            return response()->json(
+                $this->fail(new \Exception('æ²¡æœ‰æ‰¾åˆ°å­¦ç”Ÿçš„è…•è¡¨ä¿¡æ¯'))
+            );
+        }
         $ExamQueueModel= new ExamQueue();
-        $result =  $ExamQueueModel->StudentExamInfo($watchStudent);
+        $examQueueCollect =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
 
-        //»ñÈ¡µ½µ±Ç°Ê±¼ä;
-        $time = time();
-        $status = self::EXAM_BEFORE;
-        $curExam = $nextExam =  null;
-        $list=[];
-
-        foreach($result as $item){
-            $itemStart = $item['begin_time'] = strtotime($item['begin_dt']);
-            $itemEnd   = $item['end_time'] = strtotime($item['end_dt']);
-            $diff = $itemEnd - $itemStart;
-            $key = $itemStart - $time;
-            $endDiff = $time - $itemEnd;
-
-            //
-            if ($key<0 && ($this->timeDiff+$key) > 0 ) {
-                $status = self::EXAM_WILL_BEGIN;
-                $curExam = $item;
-                continue;
-            }
-
-            if ( $itemStart <= $time &&  $itemEnd >= $time) {
-                $status = self::EXAM_TAKING;
-                $curExam = $item;
-                break;
-            }
-
-            // self::EXAM_JUST_AFTER
-            if ( $endDiff > 0 && $endDiff < $this->timeDiff ) {
-                $status = self::EXAM_JUST_AFTER;
-                $curKey = $key;
-            }
-
-            $list[$key] = $item;
+        dump($examQueueCollect);
+        $nowQueue   =   $ExamQueueModel->nowQueue($examQueueCollect,$nowTime);
+        if(empty($nowQueue))
+        {
+            return response()->json(
+                $this->success_data('å½“å‰æ— è€ƒè¯•')
+            );
         }
+        else
+        {
+            //   å¾…è€ƒ/å¼€è€ƒé€šçŸ¥
+            if(strtotime($nowQueue->begin_dt)-$nowTime > 120){
+                $willStudents = ExamQueue::where('room_id','=',$nowQueue['room_id'])
+                    ->whereBetween('status',[1,2])
+                    ->count();
+                $examtimes= strtotime($nowQueue->end_dt) -strtotime($nowQueue->begin_dt);
+                $examRoomName=$nowQueue->room_name;
+                $data=[
+                    'willStudents'=>$willStudents,
+                    'examtimes'=>$examtimes,
+                    'examRoomName'=>$examRoomName
+                ];
+                return response()->json(
+                    $this->success_data($data,'è€ƒç”Ÿç­‰å¾…ä¿¡æ¯')
+                );
+            }elseif(strtotime($nowQueue->begin_dt)-$nowTime <= 120 && strtotime($nowQueue->begin_dt)-$nowTime>0) {
+                $examRoomName=$nowQueue->room_name;
+                return response()->json(
+                    $this->success_data($examRoomName,'è€ƒç”Ÿå¼€è€ƒé€šçŸ¥')
+                );
+            }
 
-        ksort($list);
-
-
-        switch ( $status ) {
-            case self::EXAM_BEFORE:
-                break;
-            case self::EXAM_WILL_BEGIN:
-                $curExam['room_id'];
-                // todo ..
-                break;
-            case self::EXAM_TAKING:
-                $surplus = $curExam['end_time'] - $time;
-                $surplus = floor($surplus/60) . ':' . $surplus%60;
-                return response()->json([
-
-                ]);
-                break;
-            case self::EXAM_JUST_AFTER:
-                dd($list);
-                foreach ($list as $key => $item) {
-                    if ($curKey == $key) {
-                        $nextExam = $list[$key];//current($list);
-                    }
+            $nextQueue  =   $ExamQueueModel->nextQueue($examQueueCollect,$nowTime);
+            if(empty($nextQueue))
+            {
+                if(strtotime($nowQueue['end_dt']) - $nowTime >=0 ){
+                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
+                    $surplus = floor($surplus/60) . ':' . $surplus%60;
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>2]);
+                    dump('å½“å‰è€ƒè¯•å‰©ä½™æ—¶é—´'.$surplus);
+                }else{
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>3]);
+                    return response()->json(
+                        $this->success_data('è€ƒè¯•å®Œæˆ')
+                    );
                 }
-                $nextExam['room_id'];
-                // todo ..
-                break;
+            }
+            else
+            {
+                //å½“å‰å‰©ä½™è€ƒè¯•æ—¶é—´
+                if(strtotime($nowQueue['end_dt']) - $nowTime >= 60 ){
+
+                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
+                    $surplus = floor($surplus/60) . ':' . $surplus%60;
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>2]);
+                    dump('å½“å‰è€ƒè¯•å‰©ä½™æ—¶é—´'.$surplus);
+
+                }else{
+                    dump($nextQueue['room_name'].'ä¸‹ä¸€åœºè€ƒè¯•');
+                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>3]);
+                }
+            }
         }
 
-        dump($list);die;
 
     }
-
 
 }
