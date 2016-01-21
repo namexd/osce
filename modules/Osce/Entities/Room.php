@@ -67,14 +67,9 @@ class Room extends CommonModel
                     throw new \Exception('查无此考场！');
                 }
                 return $result;
-                
-
             }
 
-
             //判断传入的type是否合法
-
-
             $area = Area::where('area.cate', '=', $type)->first();
 
 			//0.1 测试分支 合并到0.2时 因冲突注释
