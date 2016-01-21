@@ -446,7 +446,7 @@ class InvigilatePadController extends CommonController
      * <b>get请求字段：</b>
      * * string     student_id    学生id   (必须的)
      *
-     * @return view
+     * @return json
      *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
@@ -454,17 +454,77 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStartExam(Request $request){
-
         $this->validate($request,[
-            'student_id'=>'required|integer'
+            'student_id'=>'required|integer',
+            'start_time'=>'required|integer',
+            'station_id'=>'required|integer'
+
+        ],[
+            'student_id.required'=>'考生编号信息必须',
+            'station_id.required'=>'考站编号信息必须'
         ]);
 
         $studentId= Input::get('student_id');
+        $stationId= Input::get('student_id');
+        $StartTime= Input::get('start_time');
 
         $ExamQueueModel= new ExamQueue();
+        $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId ,$StartTime);
+        if($AlterResult){
+            return response()->json(
+                $this->success_data(1,'开始考试成功')
+            );
+        }
+        return response()->json(
+            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
+        );
+    }
 
+    /**
+     *  结束考试
+     * @method GET
+     * @url /osce/api/invigilatepad/end-exam
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     student_id    学生id   (必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function getEndExam(Request $request){
+        $this->validate($request,[
+            'student_id'=>'required|integer',
+            'end_time'=>'required|integer',
+            'station_id'=>'required|integer'
+
+        ],[
+            'student_id.required'=>'考生编号信息必须',
+            'station_id.required'=>'考站编号信息必须'
+        ]);
+
+        $studentId= Input::get('student_id');
+        $stationId= Input::get('student_id');
+        $EndTime= Input::get('end_time');
+
+        $ExamQueueModel= new ExamQueue();
+        $EndResult  =  $ExamQueueModel->EndExamAlterStatus($studentId,$stationId ,$EndTime);
+        if($EndResult){
+            return response()->json(
+                $this->success_data(1,'结束考试成功')
+            );
+        }
+        return response()->json(
+            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
+        );
 
     }
+
 
 
 

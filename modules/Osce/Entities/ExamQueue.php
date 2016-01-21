@@ -210,10 +210,34 @@ class ExamQueue extends CommonModel
         ksort($queueLeave);
         return array_shift($queueLeave);
     }
+    /**
+     * 开始考试时，改变时间和状态
+     * @param  $studentId $stationId
+     * @return
+     * @throws  \Exception
+     * @author  zhouqiang
+     */
+      public function AlterTimeStatus($studentId ,$stationId ,$StartTime){
+          $nowTime=   date('Y-m-d H:i:s',$StartTime);
+          return ExamQueue::where('student_id','=',$studentId)
+              ->whereRaw('station_id','=',$stationId)
+              ->update(['begin_dt'=>$nowTime,'status'=>2]);
+      }
 
+    /**
+     * 结束考试时，改变时间和状态
+     * @param  $studentId
+     * @return
+     * @throws  \Exception
+     * @author  zhouqiang
+     */
+     public function EndExamAlterStatus($studentId ,$stationId,$EndTime){
+         $nowTime=   date('Y-m-d H:i:s',$EndTime);
+         return ExamQueue::where('student_id','=',$studentId)
+             ->whereRaw('station_id','=',$stationId)
+             ->update(['end_dt'=>$nowTime,'status'=>3]);
+     }
 
-
-    
 
 
 }
