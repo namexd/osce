@@ -287,7 +287,7 @@ class ExamController extends CommonController
                 throw new \Exception('新增考试失败');
             }
         } catch(\Exception $ex) {
-            return redirect()->back()->withError($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
