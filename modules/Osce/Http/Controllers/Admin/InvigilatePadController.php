@@ -642,6 +642,7 @@ class InvigilatePadController extends CommonController
         }
         $ExamQueueModel= new ExamQueue();
         $examQueueCollect =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
-         $this->nextQueue($examQueueCollect,$nowTime);
+        $this->nextQueue($examQueueCollect,$nowTime);
+
     }
 }
