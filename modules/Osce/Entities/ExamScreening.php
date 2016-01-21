@@ -85,6 +85,8 @@ class ExamScreening extends CommonModel
 
     }
 
+    public function closeExam($exam_id){
 
+    }
 
 }
