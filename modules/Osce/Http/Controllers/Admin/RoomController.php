@@ -47,19 +47,24 @@ class RoomController extends CommonController
         $type    = $request ->input('type', 1);
         $id      = $request ->input('id', '');
 
-        //获取当前场所的类
-        list($area,$data) = $room->showRoomList($keyword, $type, $id);
+        try{
+            //获取当前场所的类
+            list($area,$data) = $room->showRoomList($keyword, $type, $id);
 
-        //展示页面
-        if ($type == 1) {
-            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-        } else if ($type == 2){
-            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-        }else if ($type == 3){
-            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-        }else{
-            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            //展示页面
+            if ($type == 1) {
+                return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            } else if ($type == 2){
+                return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            }else if ($type == 3){
+                return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            }else{
+                return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            }
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
+
 
     }
 
