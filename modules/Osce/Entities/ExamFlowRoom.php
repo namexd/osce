@@ -14,6 +14,7 @@ class ExamFlowRoom extends CommonModel
 {
     protected $connection	=	'osce_mis';
     protected $table 		= 	'exam_flow_room';
+    protected $primaryKey = 'id';
     public $incrementing	=	true;
     public $timestamps	    =	true;
     protected $fillable 	=   ['serialnumber','room_id','flow_id','created_user_id', 'exam_id'];

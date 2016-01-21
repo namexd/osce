@@ -42,6 +42,25 @@ use DB;
 class ExamController extends CommonController
 {
     /**
+     * 配置考场安排里，考场、考站选项
+     */
+    private function getSelect(){
+        $config =   [
+            0   =>  '必考',
+            1   =>  '必考',
+            2   =>  '二选一',
+            3   =>  '三选一',
+            4   =>  '四选一',
+            5   =>  '五选一',
+            6   =>  '六选一',
+            7   =>  '七选一',
+            8   =>  '八选一',
+            9   =>  '九选一',
+            10  =>  '十选一'
+        ];
+        return  $config;
+    }
+    /**
      * 获取考试列表
      * @url       GET /osce/admin/exam/exam-list
      * @access    public
@@ -743,12 +762,18 @@ class ExamController extends CommonController
         $examRoomData = $examRoom -> getExamRoomData($exam_id);
         $serialnumberGroup = [];
         foreach ($examRoomData as $item) {
-            $serialnumberGroup[$item->serialnumber][] = $item;
+            $serialnumberGroup[$item->serialnumber][$item->id] = $item;
         }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
-//        dd($examStationData->toArray());
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
+
+
+        return view('osce::admin.exammanage.examroom_assignment', [
+            'id'                => $exam_id,
+            'examRoomData'      => $serialnumberGroup,
+            'examStationData'   => $examStationData,
+            'getSelect'         => $this->getSelect()
+        ]);
     }
 
     /**
@@ -768,12 +793,15 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
-//        dd($request->all());
         try{
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
+            //查看是否有本场考试
+            $exam = Exam::findOrFail($exam_id);
+
+
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -1299,8 +1327,13 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
-//        dd($stationData->all());
-        return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'roomData'=>$roomData, 'stationData' => $stationData]);
+
+        return view('osce::admin.exammanage.station_assignment', [
+            'id'          => $exam_id,
+            'roomData'    => $roomData,
+            'stationData' => $stationData,
+            'getSelect'   => $this->getSelect()
+        ]);
     }
 
     /**
@@ -1336,6 +1369,9 @@ class ExamController extends CommonController
             $examId = $request->get('id');
             $room = $request->get('room');
             $formData = $request->get('form_data'); //所有的考站数据
+
+            $exam = Exam::findOrFail($examId);
+            //判断是否有本场考试
             //查看是新建还是编辑
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $room, $formData);
@@ -1412,7 +1448,7 @@ class ExamController extends CommonController
         try {
             $id = $request->get('id');
             //通过id找到对应的模式
-            $examMode = Exam::where('id',$id)->first()->sequence_mode;
+            $examMode = Exam::findOrFail($id)->sequence_mode;
             switch ($examMode) {
                 case '1' :
                     $result =  $this->getExamroomAssignment($request);
@@ -1531,4 +1567,20 @@ class ExamController extends CommonController
         $id = $request->input('id');
 		return view('osce::admin.exammanage.waiting_area', ['id'=>$id]);
 	}
+
+    public function postExamRemind(Request $request){
+        $this->validate($request,[
+            'content'  => 'required',
+            'id'       => 'required|integer'
+        ]);
+
+        $content=$request->get('content');
+        $id=$request->get('id');
+        $result=Exam::where('id',$id)->update([
+            'rules'  => $content
+        ]);
+        if($result){
+
+        }
+    }
 }

@@ -154,7 +154,6 @@ class IndexController extends CommonController
             );
             $watchModel = new WatchLog();
             $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
-//            $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
             ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
             return \Response::json(array('code' => 1));
         } else {
@@ -203,10 +202,7 @@ class IndexController extends CommonController
             $action='解绑';
             $result=ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
             if($result){
-//            $result=ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>3]);
-//            if($result){
-
-                $updated_at=ExamScreeningStudent::where('watch_id',$id)->select('updated_at')->orderBy('updated_at','DESC')->first()->updated_at;
+                $updated_at =date('Y-m-d H:i:s',time());
                 $data=array(
                     'watch_id'       =>$id,
                     'action'         =>$action,
@@ -216,7 +212,6 @@ class IndexController extends CommonController
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
             }
-//            }
             return \Response::json(array('code'=>1));
         }else{
             return \Response::json(array('code'=>0));
@@ -258,22 +253,15 @@ class IndexController extends CommonController
 
         $data=array('code'=>$student_id->student_id);
 
-        $watch_id=ExamScreeningStudent::where('student_id',$student_id->student_id)->select()->orderBy('id','DESC')->first();
-        if(count($watch_id)>0){
-            $status=Watch::where('watch_id',$watch_id)->select('status')->first()->status;
-            if($status==1){
-                return response()->json(
-                    $this->success_data($data,1,'已绑定腕表')
-                );
-            }else{
+        $action=WatchLog::where('student_id',$student_id->student_id)->select('action')->orderBy('id','DESC')->first();
+        if($action=='绑定') {
+            return response()->json(
+                $this->success_data($data, 1, '已绑定腕表'));
+        }else{
                 return response()->json(
                     $this->success_data($data,0,'未绑定腕表')
                 );
             }
-        }
-        return response()->json(
-            $this->success_data($data,0,'未绑定腕表')
-        );
     }
 
     /**
@@ -304,10 +292,16 @@ class IndexController extends CommonController
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
             'purchase_dt'           =>  'sometimes',
+            'nfc'                   =>  'sometimes',
         ]);
 
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select()->first();
+        if($id){
+            return \Response::json(array('code'=>3));
+        }
+        $nfc=$request->get('nfc_code');
+        $id=Watch::where('nfc_code',$nfc)->select()->first();
         if($id){
             return \Response::json(array('code'=>3));
         }
@@ -321,6 +315,7 @@ class IndexController extends CommonController
                 'sp'            =>  $request->get('sp',''),
                 'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
+                'nfc_code'      => $request->get('nfc',''),
             ]);
 
             if($watch->id>0){
@@ -413,9 +408,16 @@ class IndexController extends CommonController
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
             'purchase_dt'           =>  'sometimes',
+            'nfc'                   =>  'sometimes',
         ]);
 
-
+        $code=$request->get('code');
+        $id=Watch::where('code',$code)->select()->first();
+        $nfc=$request->get('nfc_code');
+        $watch_id=Watch::where('nfc_code',$nfc)->select()->first();
+        if($id->id!=$watch_id->id){
+            return \Response::json(array('code'=>3));
+        }
         $count=Watch::where('code'   ,'=', $request->get('code'))
             ->update([
                 'name'          =>  $request    ->  get('name'),
@@ -425,6 +427,7 @@ class IndexController extends CommonController
                 'description'   =>  $request    ->  get('description'),
                 'status'        =>  $request    ->  get('status'),
                 'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+                'nfc_code'           =>  $request    ->  get('nfc',''),
             ]);
 
         if($count>0){
@@ -545,19 +548,21 @@ class IndexController extends CommonController
                     'status' => $item->status,
                     'name' => $item->name,
                     'code' => $item->code,
+                    'nfc' => $item->nfc_code,
                 ];
 
             }
             $row = [];
             foreach ($data as $itm) {
                 if ($itm['status'] == 1) {
-                    $studentId = ExamScreeningStudent::where('watch_id', $itm['id'])->select('student_id')->first();
+                    $studentId = ExamScreeningStudent::where('watch_id', $itm['id'])->select('student_id')->orderBy('id','DESC')->first();
                     if (!$studentId) {
                         $row[] = [
                             'id' => $itm['id'],
                             'status' => $itm['status'],
                             'name' => $itm['name'],
-                            'code' => $itm['name'],
+                            'code' => $itm['code'],
+                            'nfc' => $itm['nfc'],
                             'studentId' => '',
                         ];
                     } else {
@@ -566,6 +571,7 @@ class IndexController extends CommonController
                             'status' => $itm['status'],
                             'name' => $itm['name'],
                             'code' => $itm['code'],
+                            'nfc' => $itm['nfc'],
                             'studentId' => $studentId->student_id,
                         ];
                     }
@@ -576,6 +582,7 @@ class IndexController extends CommonController
                         'status' => $itm['status'],
                         'name' => $itm['name'],
                         'code' => $itm['code'],
+                        'nfc' => $itm['nfc'],
                         'studentId' => '',
                     ];
                 }
@@ -590,6 +597,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
+                        'nfc' => $itm['nfc'],
                         'studentName' => $studentName,
                     ];
                 } else {
@@ -598,6 +606,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
+                        'nfc' => $itm['nfc'],
                         'studentName' => '-',
                     ];
                 }

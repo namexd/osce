@@ -47,8 +47,8 @@ class UserController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postRegister(Request $request){
-
+    public function postRegister(Request $request)
+    {
         $this   ->validate($request,[
             'mobile'    =>  'required',
             'password'  =>  'required|confirmed',
@@ -58,6 +58,7 @@ class UserController  extends CommonController
             'gender'    =>  'sometimes',
             'nickname'  =>  'sometimes',
             'idcard'    =>  'sometimes',
+            'code'      =>  'required',
         ],[
             'mobile.required'       =>  '手机号必填',
             'password.required'     =>  '密码必填',
@@ -65,6 +66,7 @@ class UserController  extends CommonController
             'repassword.confirmed'  =>  '两次密码输入不一致',
             'name.required'         =>  '姓名必填',
             'type.required'         =>  '注册类型必选',
+            'code.required'         =>  '验证码必填',
         ]);
         $mobile     =   $request    ->  get('mobile');
         $password   =   $request    ->  get('password');
@@ -73,11 +75,10 @@ class UserController  extends CommonController
         $gender     =   $request    ->  get('gender');
         $nickname   =   $request    ->  get('nickname');
         $idcard     =   $request    ->  get('idcard');
+        $code       =   $request    ->  get('code');        //验证码
         \DB::beginTransaction();
-        try
-        {
-//            dd($mobile,$password,$type,$name,$gender,$nickname,$idcard);
-            if($type)
+        try{
+            if($type==1)
             {
                 $idcard =   $request    ->  get('idcard');
                 if(empty($idcard))
@@ -92,6 +93,13 @@ class UserController  extends CommonController
             }
             else
             {
+                //验证 验证码
+                $codeDate = ['mobile'=>$mobile, 'code'=>$code];
+                $userRepository = new UserRepository();
+                if(!($userRepository->getRegCheckMobileVerfiy($codeDate))){
+                    throw new \Exception('验证码错误');
+                }
+
                 $user   =   Common::registerUser(['username'=>$mobile],$password);
                 $user   ->  name        =   $name;
                 $user   ->  gender      =   $gender;
@@ -118,6 +126,7 @@ class UserController  extends CommonController
         }
 
     }
+
 
     /**
      * 登录表单
@@ -317,6 +326,27 @@ class UserController  extends CommonController
         catch(\Exception $ex)
         {
             return  redirect()  ->  back()  ->  withErrors($ex->getMessage());
+        }
+    }
+
+
+    /**
+     * 异步发送验证码
+     */
+    public function postRevertCode(UserRepository $userR, Request $request){
+        $this->validate($request,[
+            'mobile'    =>  'required'
+        ]);
+        $mobile = $request  ->  get('mobile');
+        $result = $userR->getRegMoblieVerify($mobile);
+        if($result){
+            return response()->json(
+                $this->success_data('发送成功！')
+            );
+        }else{
+            return response()->json(
+                $this->fail('发送失败！')
+            );
         }
     }
 
