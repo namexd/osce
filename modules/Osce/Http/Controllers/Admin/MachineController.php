@@ -326,15 +326,21 @@ class MachineController extends CommonController
             'channel'       =>  'required',
             'description'   =>  'sometimes',
             'status'        =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'设备编码必填',
-            'ip.required'       =>'设备IP地址必填',
-            'username.required' =>'设备登录用户名必填',
-            'password.required' =>'设备登录密码必填',
-            'port.required'     =>'设备端口必填',
-            'channel.required'  =>'设备网口必填',
-            'status.required'   =>'设备状态必选',
+            'name.required'         =>'设备名称必填',
+            'code.required'         =>'设备编码必填',
+            'ip.required'           =>'设备IP地址必填',
+            'username.required'     =>'设备登录用户名必填',
+            'password.required'     =>'设备登录密码必填',
+            'port.required'         =>'设备端口必填',
+            'channel.required'      =>'设备网口必填',
+            'status.required'       =>'设备状态必选',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
         $data   =   [
             'name'          =>  $request    ->  get('name'),
@@ -346,6 +352,9 @@ class MachineController extends CommonController
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
         try{
@@ -391,6 +400,9 @@ class MachineController extends CommonController
             'port'          =>  'required',
             'channel'       =>  'required',
             'description'   =>  'sometimes',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
             'id.required'       =>'设备ID必填',
             'name.required'     =>'设备名称必填',
@@ -400,6 +412,9 @@ class MachineController extends CommonController
             'password.required' =>'设备登录密码必填',
             'port.required'     =>'设备端口必填',
             'channel.required'  =>'设备网口必填',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
@@ -412,6 +427,9 @@ class MachineController extends CommonController
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
         try{
@@ -543,17 +561,26 @@ class MachineController extends CommonController
             'name'          =>  'required',
             'code'          =>  'required',
             'status'        =>  'sometimes',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'id.required'       =>'设备ID必填',
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'设备编码必填',
-            'status.required'   =>'设备状态必填',
+            'id.required'           =>'ID必填',
+            'name.required'         =>'设备名称必填',
+            'code.required'         =>'设备ID必填',
+            'status.required'       =>'状态必填',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
             'status'        =>  $request    ->  get('status'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
 
@@ -643,13 +670,15 @@ class MachineController extends CommonController
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'name.required'     =>  '腕表名称必填',
-            'code.required'     =>  '腕表ID必填',
-            'factory.required'  =>  '厂家必填',
-            'sp.required'       =>  '型号必填',
-            'status.required'   =>  '状态必选',
-            'code.unique'       =>  '腕表ID已存在',
+            'name.required'         =>  '腕表名称必填',
+            'code.required'         =>  '腕表ID必填',
+            'code.unique'           =>  '腕表ID已存在',
+            'factory.required'      =>  '厂家必填',
+            'sp.required'           =>  '型号必填',
+            'status.required'       =>  '状态必选',
+            'purchase_dt.required'  =>  '采购日期必填',
         ]);
 
         $user   =   Auth::user();
@@ -697,13 +726,15 @@ class MachineController extends CommonController
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'sometimes',
+            'purchase_dt'   =>  'required',
         ],[
-            'id.required'       =>'设备ID必填',
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'腕表编码必填',
-            'factory.required'  =>'生产厂家必填',
-            'sp.required'       =>'型号规格必填',
-            'status.required'   =>'设备状态必填',
+            'id.required'           =>'设备ID必填',
+            'name.required'         =>'设备名称必填',
+            'code.required'         =>'腕表编码必填',
+            'factory.required'      =>'生产厂家必填',
+            'sp.required'           =>'型号规格必填',
+            'status.required'       =>'设备状态必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
 
         $code=$request->get('code');
