@@ -71,7 +71,7 @@ function exam_add(){
                     }
                 }
             },
-            code: {
+            address: {
                 validators: {
                     notEmpty: {
                         message: '考试地点不能为空'
@@ -179,7 +179,7 @@ function add_basic(){
                     }
                 }
             },
-            code: {
+            address: {
                 validators: {
                     notEmpty: {
                         message: '考试地点不能为空'
