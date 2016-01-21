@@ -152,16 +152,20 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-                <div class="col-md-3 col-sm-3">
-                    <ul class="img_box">
-                        <span class="images_upload">
-                            <input type="file" name="images" id="file0"/>
-                            图片大小为280X180
-                        </span>
-                    </ul>
-                </div>
-                <div class="col-md-9 col-sm-9">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postEditSpInvigilator')}}">
+                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postEditSpInvigilator')}}">
+                    <div class="col-md-3 col-sm-3">
+                        <ul class="img_box">
+                            <li>
+                                <img src="{{$item->userInfo->avatar}}"/>
+                                <input type="hidden" value="{{$item->userInfo->avatar}}" name="images_path[]">
+                                <i class="fa fa-remove font16 del_img"></i>
+                            </li>
+                            <span class="images_upload">
+                                <input type="file" name="images" id="file0"/>图片大小为280X180
+                            </span>
+                        </ul>
+                    </div>
+                    <div class="col-md-9 col-sm-9">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
@@ -171,44 +175,50 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">性别</label>
                             <div class="col-sm-10">
-                                <select name="gender" id="" class="form-control">
-                                    <option value="1">男</option>
-                                    <option value="2">女</option>
+                                <select name="gender" id="gender" class="form-control">
+                                    <option value="1" {{$item->userInfo->gender=='男'? 'selected="selected"':''}}>男</option>
+                                    <option value="2" {{$item->userInfo->gender=='女'? 'selected="selected"':''}}>女</option>
                                 </select>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">教师编号</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="code" id="">
+                                <input type="text" class="form-control" name="code" id="code" value="{{$item->code}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">身份证号</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="idcard" id="">
+                                <input type="text" class="form-control" name="idcard" id="idcard" value="{{$item->userInfo->idcard}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">联系电话</label>
                             <div class="col-sm-10">
-                                <input type="text" ng-model="location" id="location" class="form-control" name="mobile" value="{{$item->userInfo->mobile}}">
+                                <input type="text" ng-model="mobile" id="mobile" class="form-control" name="mobile" value="{{$item->userInfo->mobile}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">电子邮箱</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="email" id="">
+                                <input type="text" class="form-control" name="email" id="" value="{{$item->userInfo->email}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <div class="select-floor">
                                 <label class="col-sm-2 control-label">病例</label>
@@ -224,10 +234,11 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="note" id="">
+                                <input type="text" class="form-control" name="note" id="note" {{$item->note}}>
                             </div>
                         </div>
                         <div class="form-group">
@@ -237,12 +248,9 @@
 {{--								<a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>--}}
                             </div>
                         </div>
+                    </div>
 
-
-                    </form>
-
-                </div>
-
+                </form>
             </div>
         </div>
     </div>

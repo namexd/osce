@@ -136,56 +136,27 @@ class Vcr extends CommonModel implements MachineInterface
     public function editMachine($data){
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
-        try
-        {
-            $vcr            =   $this   ->  find($data['id']);
-            if($vcr)
-            {
-                foreach($data as $feild=> $value)
-                {
-                    if($feild=='id')
-                    {
+        try{
+            $vcr = $this    -> find($data['id']);
+            if($vcr) {
+                foreach($data as $feild=> $value) {
+                    if($feild=='id') {
                         continue;
                     }
                     $vcr    ->  $feild  =   $value;
                 }
-                if($vcr     ->  save())
-                {
-//                    $machine    =   Machine ::where('item_id','=',$vcr    ->  id)
-//                                            ->where('type','=',1)
-//                                            ->first();
+
+                if(!$result = $vcr -> save()) {
+                    throw new \Exception('修改失败，请重试！');
                 }
-                else
-                {
-                    $machine    =   false;
-                }
-            }
-            else
-            {
+
+            } else {
                 throw new \Exception('没有找到该摄像机');
             }
+            $connection -> commit();
+            return $vcr;
 
-//            if($machine)
-//            {
-//                $machine    ->  name    =   $data['name'];
-//                if($machine->save())
-//                {
-                    $connection -> commit();
-//                }
-//                else
-//                {
-//                    throw new \Exception('保存摄像机资源信息失败');
-//                }
-
-                return $vcr;
-//            }
-//            else
-//            {
-//                throw new   \Exception('没有找到摄像机资源信息');
-//            }
-        }
-        catch(\Exception $ex)
-        {
+        } catch(\Exception $ex){
             $connection->rollBack();
             throw $ex;
         }
