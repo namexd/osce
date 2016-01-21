@@ -4,6 +4,7 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script>
         $(function(){
             $('#sourceForm').bootstrapValidator({
@@ -35,9 +36,51 @@
                                 message: '请输入正确的编号'
                             }
                         }
+                    },
+                    factory: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '厂家不能为空'
+                            }
+                        }
+                    },
+                    sp: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '型号不能为空'
+                            }
+                        }
+                    },
+                    purchase_dt: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '采购日期不能为空'
+                            }
+                        }
                     }
+
                 }
             });
+            /*时间选择*/
+            var start = {
+                elem: "#purchase_dt",
+                format: "YYYY-MM-DD",
+                min: "1970-00-00",
+                max: "2099-06-16",
+                istime: true,
+                istoday: false,
+                choose: function (a) {
+                    end.min = a;
+                    end.start = a
+                }
+            };
+            laydate(start);
         })
     </script>
 @stop
@@ -91,7 +134,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control laydate-icon" id="purchase_dt" name="purchase_dt" value="">
+                                    <input type="text" class="form-control" id="purchase_dt" name="purchase_dt" value="">
 
                                     {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
                                 </div>

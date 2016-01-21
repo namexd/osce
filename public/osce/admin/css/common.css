@@ -231,6 +231,7 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 
 /*描述超出显示省略号*/
 .description{
+    display: inline-block;
     width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -87,20 +87,6 @@
                         }
                     }
                 },
-                begin_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '开始时间不能为空'
-                        }
-                   }
-                },
-                end_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '结束时间不能为空'
-                        }
-                   }
-                },
                 teacher: {
                 	validators: {
 	                	notEmpty: {/*非空提示*/
@@ -155,6 +141,34 @@
 	    $(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
 	    });
+	    
+	    $(".fabu_btn").click(function(){
+	    	var start=$("#start").val();
+	    	var end=$("#end").val();
+	    	if(start==""){
+	    		$.alert({
+                  	title: '提示：',
+                  	content: '你还没有选择开始时间!',
+                  	confirmButton: '确定',
+                  	confirm: function(){
+                  		$(".fabu_btn").removeAttr("disabled");
+            		}
+              	});
+              	return false;
+	    	}
+	    	if(end==""){
+	    		$.alert({
+                  	title: '提示：',
+                  	content: '你还没有选择结束时间!',
+                  	confirmButton: '确定',
+                  	confirm: function(){
+                  		$(".fabu_btn").removeAttr("disabled");
+            		}
+              	});
+              	return false;
+	    	}
+    		$("#form1").submit();
+	    })
  	})
  </script>
 @stop
@@ -227,7 +241,7 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">发布</button>
+                            <input class="btn btn-primary fabu_btn" type="button" value="发布">
                             <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>
