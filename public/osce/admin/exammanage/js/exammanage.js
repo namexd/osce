@@ -1140,6 +1140,43 @@ function examroom_assignment(){
  */
 function exam_notice_add(){
 
+
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            'groups[]': {
+                validators: {
+                    notEmpty: {
+                        message: '请勾选'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '标题不能为空'
+                    }
+                }
+            },
+            content: {
+                validators: {
+                    notEmpty: {
+                        message: '内容不能为空'
+                    }
+                }
+            }
+        }
+    });
+
     var ue = UE.getEditor('editor');
 
     /**
@@ -1229,8 +1266,45 @@ function exam_notice_add(){
  */
 function exam_notice_edit(){
 
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            'groups[]': {
+                validators: {
+                    notEmpty: {
+                        message: '请勾选'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '标题不能为空'
+                    }
+                }
+            },
+            content: {
+                validators: {
+                    notEmpty: {
+                        message: '内容不能为空'
+                    }
+                }
+            }
+        }
+    });
+
+
     var content =   $('#content').val();
-    console.log(content)
+
     //初始化
     var ue = UE.getEditor('editor',{
         serverUrl:'/osce/api/communal-api/editor-upload'
