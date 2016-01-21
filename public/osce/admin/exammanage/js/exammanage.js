@@ -1164,6 +1164,20 @@ function exam_notice_add(){
     }
 
     /**
+     * checkbox
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-20
+     */
+    $(".checkbox_input").click(function(){
+        if($(this).find("input").is(':checked')){
+            $(this).find(".check_icon ").addClass("check");
+        }else{
+            $(this).find(".check_icon").removeClass("check");
+        }
+    });
+
+    /**
      * 附件上传
      * @author mao
      * @version 1.0
@@ -1184,13 +1198,7 @@ function exam_notice_add(){
                 }
             },
             error: function (data, status, e){
-                $.alert({
-                    title: '提示：',
-                    content: '通讯失败!',
-                    confirmButton: '确定',
-                    confirm: function(){
-                    }
-                });
+                layer.alert('通讯失败!');
             }
         });
     }) ;
@@ -1204,14 +1212,10 @@ function exam_notice_add(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-            $.alert({
-                title: '提示：',
-                content: '确认为删除？',
-                confirmButton: '确定',
-                confirm: function(){
-                    thisElement.parent("p").remove();
-                }
-            });
+        layer.alert('确认为删除？',function(index){
+            thisElement.parent("p").remove();
+            layer.close(index);
+        })
     });
 
 
@@ -1260,6 +1264,20 @@ function exam_notice_edit(){
             clearInterval(thisID);
         },1000);
 
+    /**
+     * checkbox
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-20
+     */
+    $(".checkbox_input").click(function(){
+        if($(this).find("input").is(':checked')){
+            $(this).find(".check_icon ").addClass("check");
+        }else{
+            $(this).find(".check_icon").removeClass("check");
+        }
+    });
+
 
     /**
      * 附件上传
@@ -1281,13 +1299,7 @@ function exam_notice_edit(){
                 }
             },
             error: function (data, status, e){
-                $.alert({
-                    title: '提示：',
-                    content: '通讯失败!',
-                    confirmButton: '确定',
-                    confirm: function(){
-                    }
-                });
+                layer.alert('通讯失败!');
             }
         });
     }) ;
@@ -1301,14 +1313,10 @@ function exam_notice_edit(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-            $.alert({
-                title: '提示：',
-                content: '确认为删除？',
-                confirmButton: '确定',
-                confirm: function(){
-                    thisElement.parent("p").remove();
-                }
-            });
+        layer.alert('确认为删除？',function(index){
+            thisElement.parent("p").remove();
+            layer.close(index);
+        })
     });
 
 

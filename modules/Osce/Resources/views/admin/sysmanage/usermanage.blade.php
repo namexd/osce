@@ -16,12 +16,6 @@
 
 
 @section('content')
-<div class="ibox-title route-nav">
-    <ol class="breadcrumb">
-        <li><a href="#">系统管理</a></li>
-        <li class="route-active">用户管理</li>
-    </ol>
-</div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
@@ -54,7 +48,7 @@
                     <td>{{$item->gender}}</td>
                     <td>-</td>
                     <td>{{$item->mobile}}</td>
-                    <td>{{(empty($item->lastlogindate)?'-':$item->lastlogindate)}}</td>
+                    <td>{{$item->lastlogindate}}</td>
                     <td>
                         <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}">
                             <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
@@ -81,6 +75,20 @@
 </div>
 <script>
     $(function(){
+        {{--$(".fa-trash-o").click(function(){--}}
+            {{--var thisElement=$(this);--}}
+
+            {{--layer.alert('确认删除？',function(){--}}
+                {{--$.ajax({--}}
+                    {{--type:'get',--}}
+                    {{--async:false,--}}
+                    {{--url:"{{route('osce.admin.user.getDelUser')}}?id="+thisElement.attr('uid'),--}}
+                    {{--success:function(data){--}}
+                        {{--location.reload();--}}
+                    {{--}--}}
+                {{--})--}}
+            {{--});--}}
+        {{--})--}}
         //删除用户
         $(".fa-trash-o").click(function(){
             var thisElement=$(this);
