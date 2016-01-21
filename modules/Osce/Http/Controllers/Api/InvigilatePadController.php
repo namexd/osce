@@ -199,7 +199,7 @@ class InvigilatePadController extends CommonController
 //            );
 //
 //        }
-        $data=[
+        $data=array([
             "test_point1"=>[
                 0=>[
                     "id"=> 142,
@@ -290,7 +290,8 @@ class InvigilatePadController extends CommonController
             ],
         ],
        ]
-    ];
+        ]);
+
 //        echo json_encode($data);
          return response()->json(
         $this->success_data($data,1,'数据传送成功')
@@ -350,7 +351,7 @@ class InvigilatePadController extends CommonController
 
     /**
      * 提交成绩评分详情，考试结果
-     * @method GET
+     * @method post
      * @url /osce/api/invigilatepad/save-exam-result
      * @access public
      * @param Request $request get请求<br><br>
@@ -365,29 +366,33 @@ class InvigilatePadController extends CommonController
 
       public  function postSaveExamResult(Request $request){
            $this->validate($request,[
-               'student_id'=>'required|integer',
-               'station_id'=>'required|integer',
-               'exam_screening_id'=>'required|integer',
-               'begin_dt'=>'required|integer',
-               'end_dt'=>'required|integer',
-               'time'=>'required|integer',
-               'score'=>'required|integer',
-               'score_dt'=>'required|integer',
-               'teacher_id'=>'required|integer',
-           ]);
-          $data=[
-              'station_id'=>Input::get('station_id'),
-              'student_id'=>Input::get('student_id'),
-              'exam_screening_id'=>Input::get('exam_screening_id'),
-              'begin_dt'=>Input::get('begin_dt'),//考试开始时间
-              'end_dt'=>Input::get('end_dt'),//考试实际结束时间
-              'time'=>Input::get('time'),//考试用时
-              'score'=>Input::get('score'),//最终成绩
-              'score_dt'=>Input::get('score_dt'),//评分时间
-              'teacher_id'=>Input::get('teacher_id'),
-          ];
-            $TestResultModel  =new TestResult();
-            $result= $TestResultModel->addTestResult($data);
+              'student_id'=>'required|integer',
+              'station_id'=>'required|integer',
+              'exam_screening_id'=>'required',
+              'begin_dt'=>'required',
+              'end_dt'=>'required',
+              'time'=>'required',
+              'score'=>'required|integer',
+              'score_dt'=>'required',
+              'teacher_id'=>'required|integer',
+          ]);
+
+        $data   =   [
+          'station_id'=>Input::get('station_id'),
+          'student_id'=>Input::get('student_id'),
+          'exam_screening_id'=>Input::get('exam_screening_id'),
+          'begin_dt'=>Input::get('begin_dt'),//考试开始时间
+          'end_dt'=>Input::get('end_dt'),//考试实际结束时间
+          'time'=>Input::get('time'),//考试用时
+          'score'=>Input::get('score'),//最终成绩
+          'score_dt'=>Input::get('score_dt'),//评分时间
+          'teacher_id'=>Input::get('teacher_id'),
+        ];
+
+        $TestResultModel  =new TestResult();
+        $result= $TestResultModel->addTestResult($data);
+
+
           //得到考试结果id
           $ExamResultId =$result->id;
           //考站id
@@ -402,19 +407,23 @@ class InvigilatePadController extends CommonController
               'student_id'=>$studentId,
               'exam_screening_id'=>$ExamScreeningId,
           ];
+
+
           //调用照片上传方法，传入数据。
            $this->postTestAttach($request, $array);
 
           //存入考试评分详情表
-          $SaveEvaluate = $this->postSaveExamEvaluate($request,$ExamResultId);
 
+          $SaveEvaluate = $this->postSaveExamEvaluate($request,$ExamResultId);
+//           dd($result);
           if($result){
+
               return response()->json(
-                  $this->success_data(1,'详情保存成功')
+                  $this->success_data('',1,'详情保存成功')
               );
           }else{
               return response()->json(
-                  $this->success_data(0,'详情保存失败')
+                  $this->success_data('',0,'详情保存失败')
               );
           }
 
@@ -554,7 +563,7 @@ class InvigilatePadController extends CommonController
     public function getStartExam(Request $request){
         $this->validate($request,[
             'student_id'=>'required|integer',
-            'start_time'=>'required|integer',
+//            'start_time'=>'required|integer',
             'station_id'=>'required|integer'
 
         ],[
@@ -564,10 +573,10 @@ class InvigilatePadController extends CommonController
 
         $studentId= Input::get('student_id');
         $stationId= Input::get('student_id');
-        $StartTime= Input::get('start_time');
+//        $StartTime= Input::get('start_time');
 
         $ExamQueueModel= new ExamQueue();
-        $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId ,$StartTime);
+        $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId);
         if($AlterResult){
             return response()->json(
                 $this->success_data(1,'开始考试成功')
@@ -598,7 +607,6 @@ class InvigilatePadController extends CommonController
     public function getEndExam(Request $request){
         $this->validate($request,[
             'student_id'=>'required|integer',
-            'end_time'=>'required|integer',
             'station_id'=>'required|integer'
 
         ],[
@@ -608,10 +616,9 @@ class InvigilatePadController extends CommonController
 
         $studentId= Input::get('student_id');
         $stationId= Input::get('student_id');
-        $EndTime= Input::get('end_time');
 
         $ExamQueueModel= new ExamQueue();
-        $EndResult  =  $ExamQueueModel->EndExamAlterStatus($studentId,$stationId ,$EndTime);
+        $EndResult  =  $ExamQueueModel->EndExamAlterStatus($studentId,$stationId);
         if($EndResult){
             return response()->json(
                 $this->success_data(1,'结束考试成功')

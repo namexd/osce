@@ -10,26 +10,27 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
+use Illuminate\Support\Facades\App;
 class InvigilatePadTest extends TestCase
 {
-  public function  testInvigilatePad(){
-      $standard_id =   1;
-      $subject_id =2;
-      $data    =   [
-          'standard_id'           =>$standard_id,
-          'subject_id'        =>  $subject_id,
-          'score'           =>  rand(1000,9999) ,
-          'evaluate'             =>  '测试评分内容'.rand(1000,9999),
-      ];
-      $respone =   $this->action('post','\Modules\Osce\Http\Controllers\api\InvigilatePadController@postSaveExamEvaluate','',$data);
-      $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamEvaluate');
-  }
+//  public function  testInvigilatePad(){
+//      $standard_id =   1;
+//      $subject_id =2;
+//      $data    =   [
+//          'standard_id'           =>$standard_id,
+//          'subject_id'        =>  $subject_id,
+//          'score'           =>  rand(1000,9999) ,
+//          'evaluate'             =>  '测试评分内容'.rand(1000,9999),
+//      ];
+//      $respone =   $this->action('post','\Modules\Osce\Http\Controllers\api\InvigilatePadController@postSaveExamEvaluate','',$data);
+//      $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamEvaluate');
+//  }
     public function testSaveExamResult(){
-        $student_id =   1;
-        $station_id =2;
-        $exam_screening_id=30;
-        $teacher_id    =  45;
+
+        $student_id = 1;
+        $station_id =5;
+        $exam_screening_id=65;
+        $teacher_id    =  51;
         $Nowtime =date('Y-m-d H:i:s',time());
 
         $data    =   [
@@ -43,7 +44,9 @@ class InvigilatePadTest extends TestCase
             'score_dt'=>      $Nowtime,
             'teacher_id'=>    $teacher_id,
         ];
-        $respone =   $this->action('post','\Modules\Osce\Http\Controllers\api\InvigilatePadController@postSaveExamResult','',$data);
+
+       $this->action('post','\Modules\Osce\Http\Controllers\Api\InvigilatePadController@postSaveExamResult','',$data);
+
         $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamResult');
 
     }

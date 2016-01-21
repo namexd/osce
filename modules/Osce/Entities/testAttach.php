@@ -12,7 +12,7 @@ namespace Modules\Osce\Entities;
 class TestAttach extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'test_attach';
+    protected $table = 'exam_attach';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
