@@ -108,13 +108,7 @@
                     },
                     error: function (data, status, e)
                     {
-                        $.alert({
-                            title: '提示：',
-                            content: '通讯失败!',
-                            confirmButton: '确定',
-                            confirm: function(){
-                            }
-                        });
+                        layer.msg("通讯失败");
                     }
                 });
             }) ;

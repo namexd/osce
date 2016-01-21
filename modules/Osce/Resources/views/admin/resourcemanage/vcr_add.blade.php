@@ -4,6 +4,7 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script>
         $(function(){
             $('#sourceForm').bootstrapValidator({
@@ -32,12 +33,66 @@
                             }
                         }
                     },
+                    factory: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '厂家不能为空'
+                            }
+                        }
+                    },
+                    sp: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '型号不能为空'
+                            }
+                        }
+                    },
+                    purchase_dt: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '采购日期不能为空'
+                            }
+                        }
+                    },
                     ip: {
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: 'IP不能为空'
+                            }
+                        }
+                    },
+                    port: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '端口不能为空'
+                            }
+                        }
+                    },
+                    channel: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '通道号不能为空'
+                            }
+                        }
+                    },
+                    description: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '功能描述不能为空'
                             }
                         }
                     },
@@ -58,25 +113,9 @@
                                 message: '密码不能为空'
                             }
                         }
-                    },
-                    port: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '端口不能为空'
-                            }
-                        }
-                    },
-                    channel: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '地址不能为空'
-                            }
-                        }
-                    },
+                    }
+
+
 //                    description: {
 //                        /*键名username和input name值对应*/
 //                        message: 'The username is not valid',
@@ -92,6 +131,20 @@
 //                    }
                 }
             });
+            /*时间选择*/
+            var start = {
+                elem: "#purchase_dt",
+                format: "YYYY-MM-DD",
+                min: "1970-00-00",
+                max: "2099-06-16",
+                istime: true,
+                istoday: false,
+                choose: function (a) {
+                    end.min = a;
+                    end.start = a
+                }
+            };
+            laydate(start);
         })
     </script>
 @stop
