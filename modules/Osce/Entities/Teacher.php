@@ -238,8 +238,8 @@ class Teacher extends CommonModel
     public function addInvigilator($data)
     {
         try{
-            $mobile =   $data['mobile'];
-            $user   =   User::where('username', '=', $mobile)->first();
+            $mobile = $data['mobile'];
+            $user   = User::where('username', '=', $mobile)->first();
 
             if(!$user){
                 $password   =   Common::getRandStr(6);
@@ -252,9 +252,10 @@ class Teacher extends CommonModel
                         'updated_at'=>time(),
                     ]
                 );
-                $this       ->  sendRegisterEms($mobile,$password);
+                $this -> sendRegisterEms($mobile,$password);
             }
-            $teacher    =   $this   ->  find($user  ->  id);
+            //查询老师是否存在
+            $teacher = $this->where('id', $user->id)->first();
             if($teacher){
                 throw new \Exception('该教职员工已经存在');
 //                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
