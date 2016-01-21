@@ -199,7 +199,7 @@ class ExamPlan extends CommonModel
         $this   ->  batchTime   =   $batchTime;
         return $this;
     }
-    /*
+    /**
      * 获取报考学生
      */
     public function getExamStudent($exam){
@@ -248,7 +248,7 @@ class ExamPlan extends CommonModel
         $this   ->  flowsIndex  =   $flowsIndex;
         return $data;
     }
-    /*
+    /**
      * 获取考试所有流程节点
      */
     public function getExamFlow($exam){
@@ -704,5 +704,17 @@ class ExamPlan extends CommonModel
             }
         }
         return $examPlanData;
+    }
+
+    /**
+     * 将exam_plan按begin_dt这个列分组,并返回分组后的一维对象
+     * @author Jiangzhiheng
+     */
+    public function getBegindtList()
+    {
+        return $this->select('begin_dt')
+            ->groupBy('begin_dt')
+            ->get()
+            ->pluck('begin_dt');
     }
 }
