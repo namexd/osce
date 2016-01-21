@@ -114,8 +114,8 @@ class PadController extends  CommonController{
              ]);
              $room_id=$request->get('room_id');
              $exam_id=$request->get('exam_id');
-             $examModel=new ExamRoom();
-             $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
+             $stationModel=new StationVcr();
+             $stationVcrs=$stationModel->getStionVcr($room_id,$exam_id);
              return response()->json(
                  $this->success_data($stationVcrs,1,'success')
              );
