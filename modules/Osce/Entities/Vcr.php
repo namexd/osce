@@ -15,19 +15,18 @@ use DB;
 
 class Vcr extends CommonModel implements MachineInterface
 {
-    protected $connection	=	'osce_mis';
+    protected $connection   =	'osce_mis';
     protected $table 		= 	'vcr';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status'];
-    public      $search    =   [];
+    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status','created_user_id','sp','factory','purchase_dt'];
+    public      $search     =   [];
 
     protected $statuValues  =   [
         1   =>  '在线',
         0   =>  '离线',
         2   =>  '报废',
         3   =>  '维修',
-        4   =>  '未使用',
     ];
 
     /**
