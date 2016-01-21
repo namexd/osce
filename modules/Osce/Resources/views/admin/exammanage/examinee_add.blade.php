@@ -150,11 +150,11 @@
                             <ul class="img_box">
 	                    		<span class="images_upload">
 	                        		<input type="file" name="images" id="file0"/>
+                                    图片大小为280X180
 	                        	</span>
                             </ul>
                         </div>
                         <div class="col-md-9 col-sm-9">
-                            <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">姓名:</label>
                                 <div class="col-sm-10">
