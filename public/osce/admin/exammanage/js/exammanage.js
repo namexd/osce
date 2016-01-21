@@ -123,29 +123,29 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+        
+        layer.alert('确认为删除？',function(thisID){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#exam_add').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
+            $('#exam_add').find('tbody').attr('index',index);
+            //更新序号
+            $('#exam_add tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
+
+            layer.close(thisID);
         });
 
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
-        //计数器标志
-        var index = $('#exam_add').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#exam_add').find('tbody').attr('index',index);
-        //更新序号
-        $('#exam_add tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        
 
     });
 }
@@ -262,29 +262,29 @@ function add_basic(){
      */
     $('#add-basic').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+
+        layer.alert('确认为删除？',function(thisID){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#add-basic').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
+            $('#add-basic').find('tbody').attr('index',index);
+            //更新序号
+            $('#add-basic tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
+
+            layer.close(thisID);
         });
 
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
-        //计数器标志
-        var index = $('#add-basic').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#add-basic').find('tbody').attr('index',index);
-        //更新序号
-        $('#add-basic tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        
 
     });
 
