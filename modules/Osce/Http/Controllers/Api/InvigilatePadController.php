@@ -447,6 +447,7 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttach(Request $request, Array $array)
     {
+        dd(22222);
         try {
             //获取考站、考生、和考试关联的id
             list($stationId, $studentId, $examScreenId, $testResultId) = $array;
