@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
@@ -177,53 +178,74 @@ class StudentWatchController extends  CommonController
         $watchId=$request->input('watch_id');
 
         $watchStudent= WatchLog::where('watch_id','=',$watchId)->where('action','绑定')->select('student_id')->orderBy('id','desc')->first();
+
         if(!$watchStudent){
             return response()->json(
                 $this->fail(new \Exception('没有找到学生的腕表信息'))
             );
         }
+
         $studentId = $watchStudent->student_id;
 
+        $examInfo= Student::where('id','=',$studentId)->select('exam_id')->first();
+
+        $examId= $examInfo->exam_id;
         $ExamQueueModel= new ExamQueue();
 
         $examQueueCollect =  $ExamQueueModel->StudentExamQueue($studentId);
-
         dump($examQueueCollect);
-          $status = 0;
-        $curExam = $nextExam =  null;
-
-        foreach($examQueueCollect as $nowQueue){
-          if($nowQueue->status == 1) {
-              $status = 1;
-              $curExam = $nowQueue;
-              break;
-          }
-
-          if($nowQueue->status == 2){
-              $status =2;
-              $curExam = $nowQueue;
-              break;
-
-          }
-         if($nowQueue->status == 3){
-             $status =3;
-             $curExam = $nowQueue;
-
-          }
+        $nowQueue   =   $ExamQueueModel->nowQueue($examQueueCollect);
+        $nowTime =time();
 
 
-
-        }
-
+        if(empty($nowQueue)){
 
 
-        switch($status){
-            case 1;
+            //查询出学生所有应该的考试
+
+            $ExamFlowModel = new  ExamFlow();
+            $studentExamSum = $ExamFlowModel->studentExamSum($examId);
+            //学生完成的考试
+            $ExamFinishStatus =ExamQueue::where('status','=',3)->count();
+
+            if($ExamFinishStatus == 0){
+                return response()->json(
+                    $this->success_data(3,'你目前没有考试')
+                );
+            }
+            if($ExamFinishStatus < $studentExamSum ){
+                 return response()->json(
+                     $this->success_data(2 ,'你还有考试还未完成，请到候考区候考')
+                 );
+             }else {
+                 $TestResultModel = new TestResult();
+                 $TestResult = $TestResultModel->AcquireExam($studentId);
+                 if ($TestResult) {
+                     $studentExamScore = $TestResult->score;
+                     return response()->json(
+                         $this->success_data($studentExamScore, '考试完成 最终成绩')
+                     );
+                 }else{
+                     return response()->json(
+                         $this->success_data(0,'成绩推送失败')
+                     );
+                 }
+             }
+
+        }else{
+
+            if($nowQueue->status==1){
                 dump('待考');
+                if(strtotime($nowQueue->begin_dt)-$nowTime <= 120 && strtotime($nowQueue->begin_dt)-$nowTime>0){
+                    $examRoomName=$nowQueue->room_name;
+                    return response()->json(
+                        $this->success_data($examRoomName,'考生开考通知')
+                    );
+                }else{
                     $willStudents = ExamQueue::where('room_id','=',$nowQueue['room_id'])
                         ->whereBetween('status',[1,2])
                         ->count();
-                    $examtimes= strtotime($nowQueue->end_dt) -strtotime($nowQueue->begin_dt);
+                    $examtimes=   strtotime($nowQueue->begin_dt);
                     $examRoomName=$nowQueue->room_name;
                     $data=[
                         'willStudents'=>$willStudents,
@@ -233,23 +255,19 @@ class StudentWatchController extends  CommonController
                     return response()->json(
                         $this->success_data($data,'考生等待信息')
                     );
-                break;
+                }
 
-            case 2;
+            }else{
                 dump('考试中');
-                    $nowTime =time();
-                    $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
-                    $surplus = floor($surplus/60) . ':' . $surplus%60;
-                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
+                $surplus =  strtotime($nowQueue['begin_dt']) + strtotime($nowQueue['mins']);
+                $surplus = floor($surplus/60) . ':' . $surplus%60;
+                dump('当前考站剩余时间'.$surplus);
 
-                break;
+            }
 
-            case 3;
-
-
-                dump('当前考试已完成');
-                break;
         }
+
+
 
 
     }
