@@ -10,7 +10,8 @@ namespace Modules\Osce\Commands;
 
 
 use Illuminate\Console\Scheduling\Schedule;
-
+use Modules\Osce\Entities\ExamPlan;
+use Cache;
 class DefaultCommand
 {
     protected $schedule;
@@ -20,5 +21,13 @@ class DefaultCommand
     }
     public function osceScheduling(){
         //TODO:请将 所有的任务在此 调用
+        $this->schedule->call(function(){
+
+        });
+    }
+
+    public function dataHandle()
+    {
+
     }
 }
