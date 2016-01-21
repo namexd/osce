@@ -435,9 +435,9 @@ class InvigilatePadController extends CommonController
                   $this->success_data($vcrdata,1,'摄像头可用')
               );
           }
-
-
+          
       }
+
 
 
 
@@ -671,4 +671,5 @@ class InvigilatePadController extends CommonController
 
 
     }
+
 }
