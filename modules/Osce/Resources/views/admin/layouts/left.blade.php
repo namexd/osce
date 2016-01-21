@@ -60,7 +60,7 @@
                             </li>
                             <li><a  class="J_menuItem" href="{{route('osce.admin.room.getRoomList')}}">场所管理</a>
                             </li>
-                            <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}">监考设备管理</a>
+                            <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}">设备管理</a>
                             </li>
 							<li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">科目管理</a>
                             </li>
@@ -91,7 +91,7 @@
 								<a class="active J_menuItem" href="{{route('osce.admin.user.getStaffList')}}">用户管理</a>
                             </li>
                             <li>
-                                <a class="J_menuItem" href="{{ route('auth.AuthManage') }}">角色权限管理</a>
+                                <a class="J_menuItem" href="{{ route('auth.AuthManage') }}">权限管理</a>
                             </li>
                             <li>
                                 <a class="J_menuItem" href="{{route('osce.admin.config.getIndex')}}">系统设置</a>
