@@ -4,7 +4,6 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script>
         $(function(){
             $('#sourceForm').bootstrapValidator({
@@ -93,20 +92,6 @@
 //                    }
                 }
             });
-            /*时间选择*/
-            var start = {
-                elem: "#buy_dt",
-                format: "YYYY-MM-DD",
-                min: "1970-00-00",
-                max: "2099-06-16",
-                istime: true,
-                istoday: false,
-                choose: function (a) {
-                    end.min = a;
-                    end.start = a
-                }
-            };
-            laydate(start);
         })
     </script>
 @stop
@@ -125,8 +110,7 @@
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.machine.postAddMachine')}}">
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">名称</label>
-
+                                <label class="col-sm-2 control-label">设备名称</label>
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="name" name="name">
                                     <input type="hidden"  class="form-control" id="cate_id" name="cate_id" value="1" />
@@ -136,35 +120,35 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">设备ID</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="code" name="code">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">厂家</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="factory" name="factory">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">型号</label>
-
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="code" name="sp">
+                                    <input type="text"  class="form-control" id="sp" name="sp">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">采购日期</label>
-
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control layer-date laydate-icon" id="buy_dt" name="buy_dt">
+                                    <input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">状态</label>
@@ -176,53 +160,54 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">IP地址</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="ip" name="ip">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">端口</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="port" name="port">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">通道号</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="channel" name="channel">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div><div class="form-group">
                                 <label class="col-sm-2 control-label">功能描述</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  id="description" class="form-control" name="description">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">账号</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="username" name="username">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">密码</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="password" name="password">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
@@ -230,16 +215,11 @@
                                     <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                                 </div>
                             </div>
-
-
                         </form>
-
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
 
 @stop{{-- 内容主体区域 --}}

@@ -92,12 +92,13 @@
                                 <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
                                     <input type="text" required class="form-control" id="purchase_dt" name="purchase_dt">
+
                                 </div>
                             </div>
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">设备状态</label>
+                                <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
                                         @foreach($status as $key => $value)

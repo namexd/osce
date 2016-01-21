@@ -57,7 +57,6 @@
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">设备名称</label>
-
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="name" name="name">
                                     <input type="hidden"  class="form-control" id="cate_id" name="cate_id" value="2" />
@@ -92,7 +91,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control laydate-icon" id="end" name="purchase_dt" value="">
+                                    <input type="text" class="form-control laydate-icon" id="purchase_dt" name="purchase_dt" value="">
 
                                     {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
                                 </div>
