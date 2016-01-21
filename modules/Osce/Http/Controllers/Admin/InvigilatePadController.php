@@ -607,7 +607,7 @@ class InvigilatePadController extends CommonController
         $nowTime    =   time();
         $watchId=$request->input('watch_id');
 
-        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
+        $watchStudent= WatchLog::where('watch_id','=',$watchId)->where('action','绑定')->select('student_id')->orderBy('id','desc')->first();
         if(!$watchStudent){
             return response()->json(
                 $this->fail(new \Exception('没有找到学生的腕表信息'))
