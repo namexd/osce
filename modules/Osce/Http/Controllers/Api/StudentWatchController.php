@@ -77,10 +77,7 @@ class StudentWatchController extends  CommonController
         $nowTime =time();
 
         if(empty($nowQueue)){
-
-
             //查询出学生所有应该的考试
-
             $ExamFlowModel = new  ExamFlow();
             $studentExamSum = $ExamFlowModel->studentExamSum($examId);
             //学生完成的考试
@@ -139,13 +136,16 @@ class StudentWatchController extends  CommonController
                 dump('考试中');
                 $surplus =((strtotime($nowQueue['begin_dt']) + ($nowQueue->mins*60)) - $nowTime);
                 if($surplus <=0){
+
                        dump('下一场');
+
                 }else{
                     $surplus = floor($surplus/60) . ':' . $surplus%60;
                     dump('当前考站剩余时间'.$surplus);
+                    return response()->json(
+                        $this->success_data($surplus,'当前考站剩余时间')
+                    );
                 }
-
-
 
             }
 

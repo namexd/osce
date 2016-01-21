@@ -436,4 +436,36 @@ class InvigilatePadController extends CommonController
           }
 
       }
+
+    /**
+     *  开始考试
+     * @method GET
+     * @url /osce/api/invigilatepad/start-exam
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     student_id    学生id   (必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStartExam(Request $request){
+
+        $this->validate($request,[
+            'student_id'=>'required|integer'
+        ]);
+
+        $studentId= Input::get('student_id');
+
+        $ExamQueueModel= new ExamQueue();
+
+
+    }
+
+
+
 }
