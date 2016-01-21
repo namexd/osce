@@ -164,6 +164,7 @@ class InvigilatePadController extends CommonController
 
 
     public function getExamGrade(Request $request,Collection $collection){
+
       $this->validate($request,[
             'station_id' =>'required|integer',
             //'exam_id'  => 'required|integer'
@@ -181,7 +182,7 @@ class InvigilatePadController extends CommonController
         $exam =Exam::find($examId);
         $StandardModel  =   new Standard();
         $standardList   =   $StandardModel->ItmeList($station->subject_id);
-        dd($standardList);
+//        dd($standardList);
         if(count($standardList)!=0){
             return response()->json(
         $this->success_data($standardList,1,'数据传送成功')
