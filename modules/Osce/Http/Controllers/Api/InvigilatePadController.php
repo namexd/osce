@@ -621,10 +621,11 @@ class InvigilatePadController extends CommonController
             'station_id.required'=>'考站编号信息必须'
         ]);
 
-        $studentId= Input::get('student_id');
-        $stationId= Input::get('student_id');
-//        $StartTime= Input::get('start_time');
 
+
+        $studentId= $request->get('student_id');
+        $stationId= $request->get('station_id');
+//        $StartTime= Input::get('start_time');
         $ExamQueueModel= new ExamQueue();
         $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId);
         if($AlterResult){
@@ -665,7 +666,7 @@ class InvigilatePadController extends CommonController
         ]);
 
         $studentId= Input::get('student_id');
-        $stationId= Input::get('student_id');
+        $stationId= Input::get('station_id');
 
         $ExamQueueModel= new ExamQueue();
         $EndResult  =  $ExamQueueModel->EndExamAlterStatus($studentId,$stationId);
