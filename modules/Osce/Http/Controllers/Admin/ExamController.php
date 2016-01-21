@@ -622,6 +622,11 @@ class ExamController extends CommonController
 
         try{
             if($student) {
+                //查询学号是否存在
+                $code = Student::where('code', $data['code'])->where('user_id','<>',$student->user_id)->first();
+                if(!empty($code)){
+                    throw new \Exception('该学号已经有别人使用！');
+                }
                 foreach($data as $feild => $value) {
                     if(!empty($value)){
                         $student->  $feild  =   $value;

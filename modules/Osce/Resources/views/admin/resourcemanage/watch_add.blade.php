@@ -101,8 +101,11 @@
                                 <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
+                                        <option value="0">正常</option>
                                         @foreach($status as $key => $value)
-                                            <option value="{{$key}}">{{$value}}</option>
+                                            @if($key >1)
+                                                <option value="{{$key}}">{{$value}}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>

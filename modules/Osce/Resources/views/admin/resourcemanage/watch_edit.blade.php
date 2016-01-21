@@ -129,8 +129,15 @@
                                 <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
                                     <select id="status" required  class="form-control m-b" name="status">
+                                        @if($item['status'] >1)
+                                            <option value="0">正常</option>
+                                        @endif
                                         @foreach($status as $key => $value)
-                                            <option value="{{$key}}" {{($item['status']==$key)?'selected="selected"':''}}>{{$value}}</option>
+                                            @if($key >1)
+                                                <option value="{{$key}}" {{($item['status']==$key)?'selected="selected"':''}}>{{$value}}</option>
+                                            @elseif($item['status']==$key)
+                                                <option value="{{$item['status']}}" {{($item['status']==$key)?'selected="selected"':''}}>正常</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
