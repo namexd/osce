@@ -174,7 +174,7 @@ class InvigilatorController extends CommonController
 
         $Invigilator    =   new Teacher();
         try{
-            if($Invigilator    ->  addInvigilator($data)){
+            if($Invigilator -> addInvigilator($data)){
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             } else{
                 throw new \Exception('新增失败');
