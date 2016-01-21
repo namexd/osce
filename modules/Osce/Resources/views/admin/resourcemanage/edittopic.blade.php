@@ -94,7 +94,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <select class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
+                                                        <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
                                                             <option value="1" {{$data->score==1? 'selected="selected"':''}}>1</option>
                                                             <option value="2" {{$data->score==2? 'selected="selected"':''}}>2</option>
                                                             <option value="3" {{$data->score==3? 'selected="selected"':''}}>3</option>
@@ -103,6 +103,7 @@
                                                             <option value="6" {{$data->score==6? 'selected="selected"':''}}>6</option>
                                                             <option value="7" {{$data->score==7? 'selected="selected"':''}}>7</option>
                                                         </select>
+                                                        <span {!! $data->pid!=0? 'style="display:none;"':''!!}>{{$data->score}}</span>
                                                     </td>
                                                     @if($data->pid==0)
                                                     <td>
