@@ -135,9 +135,7 @@ class IndexController extends CommonController
         }
         $student_id=$student_id->id;
         $examId=ExamPlan::where('student_id',$student_id)->select('exam_id')->get();
-        if(!$examId){
-            return \Response::json(array('code' =>4));
-        }elseif(!in_array($exam_id,$examId)){
+        if((!$examId) && (!in_array($exam_id,$examId))){
             return \Response::json(array('code' =>4));
         }
         $screen_id=ExamPlan::where('exam_id',$exam_id)->where('student_id',$student_id)->select('id')->get();
