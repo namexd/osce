@@ -4,6 +4,7 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script>
         $(function(){
             $('#sourceForm').bootstrapValidator({
@@ -92,6 +93,20 @@
 //                    }
                 }
             });
+            /*时间选择*/
+            var start = {
+                elem: "#buy_dt",
+                format: "YYYY-MM-DD",
+                min: "1970-00-00",
+                max: "2099-06-16",
+                istime: true,
+                istoday: false,
+                choose: function (a) {
+                    end.min = a;
+                    end.start = a
+                }
+            };
+            laydate(start);
         })
     </script>
 @stop
@@ -131,7 +146,7 @@
                                 <label class="col-sm-2 control-label">厂家</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="code" name="factory">
+                                    <input type="text"  class="form-control" id="factory" name="factory">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -147,7 +162,7 @@
                                 <label class="col-sm-2 control-label">采购日期</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="code" name="buy_dt">
+                                    <input type="text"  class="form-control layer-date laydate-icon" id="buy_dt" name="buy_dt">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
