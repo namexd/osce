@@ -757,6 +757,7 @@ class MachineController extends CommonController
                 'sp'            =>  $request    ->  get('sp'),
                 'description'   =>  $request    ->  get('description'),
                 'status'        =>  $request    ->  get('status'),
+                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             ];
         }else{
             $data   =   [
@@ -767,6 +768,7 @@ class MachineController extends CommonController
                 'sp'            =>  $request    ->  get('sp'),
                 'description'   =>  $request    ->  get('description'),
                 'status'        =>  $request    ->  get('status'),
+                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             ];
         }
 
