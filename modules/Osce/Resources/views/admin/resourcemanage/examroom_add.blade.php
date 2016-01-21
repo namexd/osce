@@ -75,23 +75,22 @@
                         <input type="hidden" name="type" value="{{$type}}">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name">
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">编号</label>
 
+                        <div class="form-group" style="display:none">
+                            <label class="col-sm-2 control-label">编号</label>
                             <div class="col-sm-10">
                                 <input type="text" ng-model="num" id="code" class="form-control" name="code">
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label">关联摄像机</label>
+                        <div class="hr-line-dashed" style="display:none"></div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">关联摄像机</label>
                             <div class="col-sm-10">
                                 <select name="vcr_id" id="" class="form-control">
                                     @foreach($vcr as $key=>$item)
@@ -100,22 +99,21 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="hr-line-dashed"></div>
 
-                        <div class="hr-line-dashed"></div><div class="form-group">
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">功能描述</label>
-
                             <div class="col-sm-10">
                                 <input type="text" ng-model="description" id="description" class="form-control" name="description">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">地址</label>
-
                             <div class="col-sm-10">
                                 <input type="text" ng-model="location" id="location" class="form-control" name="address">
                             </div>
-
                         </div>
                         <div class="hr-line-dashed"></div>
 
@@ -124,13 +122,10 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-                                {{--<button class="btn btn-white" type="submit">取消</button>--}}
                             </div>
                         </div>
                     </form>
-
                 </div>
-
             </div>
         </div>
     </div>
