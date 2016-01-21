@@ -54,7 +54,7 @@ class StudentWatchController extends  CommonController
         $nowTime    =   time();
         $watchId=$request->input('watch_id');
 
-        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
+        $watchStudent= WatchLog::where('watch_id','=',$watchId)->where('action','绑定')->select('student_id')->orderBy('id','desc')->first();
         if(!$watchStudent){
             return response()->json(
                 $this->fail(new \Exception('没有找到学生的腕表信息'))
@@ -101,13 +101,28 @@ class StudentWatchController extends  CommonController
                 if(strtotime($nowQueue['end_dt']) - $nowTime >=0 ){
                     $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
                     $surplus = floor($surplus/60) . ':' . $surplus%60;
-                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>2]);
+                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>2]);
                     dump('当前考试剩余时间'.$surplus);
                 }else{
-                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>3]);
-                    return response()->json(
-                        $this->success_data('考试完成')
-                    );
+                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
+                    //考试完成后成绩推送
+                    $TestResultModel= new TestResult();
+                    $studentId= $nowQueue['student_id'];
+
+                    $TestResult =$TestResultModel->AcquireExam($studentId);
+
+                    if($TestResult){
+                        $studentExamScore  =$TestResult->score;
+                        return response()->json(
+                            $this->success_data( $studentExamScore, '考试完成')
+                        );
+                    }else{
+                        return response()->json(
+                            $this->success_data(0,'考试完成')
+                        );
+                    }
+
+
                 }
             }
             else
@@ -117,12 +132,12 @@ class StudentWatchController extends  CommonController
 
                     $surplus = strtotime($nowQueue['end_dt']) - $nowTime;
                     $surplus = floor($surplus/60) . ':' . $surplus%60;
-                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>2]);
+                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>2]);
                     dump('当前考试剩余时间'.$surplus);
 
                 }else{
                     dump($nextQueue['room_name'].'下一场考试');
-                    $changeStatus= ExamQueue::where('id','=',$nowTime['id'])->update(['status'=>3]);
+                    $changeStatus= ExamQueue::where('id','=',$nowQueue['id'])->update(['status'=>3]);
                 }
             }
         }

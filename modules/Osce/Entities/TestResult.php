@@ -20,17 +20,17 @@ class TestResult extends CommonModel
     protected $hidden = [];
     protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'begin_dt', 'end_dt','time','score','score_dt','teacher_id','create_user_id'];
 
-   //¹ØÁªµ½Ñ§Éú±í
+   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½
     public function student(){
         return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
     }
 
-    //¹ØÁªµ½¿¼Õ¾±í
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½
     public  function  station(){
         return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
 
     }
-    //¹ØÁªµ½¿¼ÊÔ³¡´Î±í
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½ï¿½Î±ï¿½
     public  function  examScreening(){
          return $this->hasOne('Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
     }
@@ -49,10 +49,10 @@ class TestResult extends CommonModel
                     'type' => 1,
                 ];
             } else {
-                throw new \Exception('ÐÂÔö¿¼ÊÔÊ§°Ü');
+                throw new \Exception('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½');
             }
             if (empty($TestResultData)) {
-                throw new \Exception('Ã»ÓÐÕÒµ½¿¼ÊÔÐÂÔöÊý¾Ý');
+                throw new \Exception('Ã»ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½');
             }
             $connection->commit();
             return $testResult;
@@ -62,6 +62,27 @@ class TestResult extends CommonModel
         }
 
     }
+
+
+    /**
+     *èŽ·å–å­¦ç”Ÿè€ƒè¯•æœ€ç»ˆæˆç»©
+     * @param $studentId
+     * @return
+     * @throws \Exception
+     * @author zhouqiang
+     */
+     public function AcquireExam($studentId){
+        if(empty($studentId)){
+              return false;
+        }else{
+
+          $studentExamScore = TestResult::where('student_id','=',$studentId)->select('score')->get();
+            return   $studentExamScore;
+        }
+
+     }
+
+
 
 
 }

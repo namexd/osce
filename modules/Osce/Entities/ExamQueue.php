@@ -104,6 +104,7 @@ class ExamQueue extends CommonModel
         })->where($this->table . '.student_id', '=', $watchStudent)
             ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
          AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+            ->whereBetween('exam_queue.status',[1,2])
             ->select([
                 'room.name as room_name',
                 'student.name as name',
