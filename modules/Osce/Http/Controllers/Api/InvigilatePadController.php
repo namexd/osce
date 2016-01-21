@@ -6,7 +6,7 @@
  * Time: 11:42
  */
 
-namespace Modules\Osce\Http\Controllers\Admin;
+namespace Modules\Osce\Http\Controllers\Api;
 
 
 use Illuminate\Http\Request;
@@ -96,7 +96,7 @@ class InvigilatePadController extends CommonController
     /**
      * 身份验证
      * @method GET
-     * @url /osce/admin/invigilatepad/authentication
+     * @url /osce/api/invigilatepad/authentication
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -112,7 +112,6 @@ class InvigilatePadController extends CommonController
 
     public function  getAuthentication(Request $request)
     {
-//        dd(222222222);
         $this->validate($request, [
             'id' => 'required|integer'
         ], [
@@ -148,7 +147,7 @@ class InvigilatePadController extends CommonController
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
      * @method GET
-     * @url /osce/admin/invigilatepad/exam-grade
+     * @url /osce/api/invigilatepad/exam-grade
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -203,7 +202,7 @@ class InvigilatePadController extends CommonController
     /**
      *   * 提交评价
      * @method GET
-     * @url /osce/admin/invigilatepad/save-exam-evaluate
+     * @url /osce/api/invigilatepad/save-exam-evaluate
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -254,7 +253,7 @@ class InvigilatePadController extends CommonController
     /**
      * 提交成绩评分详情，考试结果
      * @method GET
-     * @url /osce/admin/invigilatepad/save-exam-result
+     * @url /osce/api/invigilatepad/save-exam-result
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -326,7 +325,7 @@ class InvigilatePadController extends CommonController
     /**
      * 照片附件的上传
      * @method POST
-     * @url /osce/admin/invigilatepad/save-exam-result
+     * @url /osce/api/invigilatepad/save-exam-result
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -396,7 +395,7 @@ class InvigilatePadController extends CommonController
     /**
      *  查看现场视屏
      * @method GET
-     * @url /osce/admin/invigilatepad/see-exam-evaluate
+     * @url /osce/api/invigilatepad/see-exam-evaluate
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -436,160 +435,5 @@ class InvigilatePadController extends CommonController
               );
           }
 
-
       }
-
-
-
-
-
-
-
-//    url   /osce/admin/invigilatepad/wait_exam
-
-    protected $timeDiff = 120;
-    const EXAM_TAKING = 1; // 考试中
-    const EXAM_BEFORE = 2;// 待考
-    const EXAM_JUST_AFTER = 3;// 刚考完,下一场提示 考试完成后两分钟内提醒
-    const EXAM_WILL_BEGIN = 4; //将要开始 考试开始两分钟内提醒
-
-    public  function getWaitExam(Request $request){
-        $this->validate($request,[
-            'watch_id'=>'required|integer'
-        ]);
-        $watchId=$request->input('watch_id');
-
-        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
-        if(!$watchStudent){
-            return response()->json(
-                $this->fail(new \Exception('没有找到学生的腕表信息'))
-            );
-        }
-        //查到该学生的所有考试
-//        dd($watchStudent);
-
-        $ExamQueueModel= new ExamQueue();
-        $result =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
-        dump($result);
-
-        //获取到当前时间;
-        $time = time();
-        $status = self::EXAM_BEFORE;
-        $curExam = $nextExam =  null;
-        $list=[];
-
-        foreach($result as $item){
-            $itemStart = $item['begin_time'] = strtotime($item['begin_dt']);
-            $itemEnd   = $item['end_time'] = strtotime($item['end_dt']);
-            $diff = $itemEnd - $itemStart;
-            $key = $itemStart - $time;
-            $endDiff = $time - $itemEnd;
-            //待考信息
-             if($key<3000 && $key>200){
-                 $status = self::EXAM_BEFORE;
-                 $curExam = $item;
-                 break;
-             }
-            //开考前通知
-            if ($key>0 && ($this->timeDiff-$key) >0 ) {
-                $status = self::EXAM_WILL_BEGIN;
-                $curExam = $item;
-                break;
-            }
-
-          // 考试中提醒时间
-            if ( $itemStart <= $time &&  $itemEnd >= $time) {
-                $status = self::EXAM_TAKING;
-                $curExam = $item;
-                break;
-            }
-             //考试完成通知下一场
-            // self::EXAM_JUST_AFTER
-            if ( $endDiff > 0 && $endDiff < $this->timeDiff) {
-                $status = self::EXAM_JUST_AFTER;
-                $curKey = $key;
-            }
-            $list[$key] = $item;
-        }
-        //对考试时间排序
-        ksort($list);
-        switch ($status) {
-            case self::EXAM_BEFORE:
-                $willStudents = ExamQueue::where('room_id','=',$curExam['room_id'])
-                    ->whereBetween('status',[1,2])
-                    ->count();
-                dump('前面还有'.($willStudents-1). ' 考生'.  ' 预计考试时间'.$diff. '即将进入考场'.$curExam['room_name'] );
-                break;
-
-            case self::EXAM_WILL_BEGIN:
-                //dump('你即将开始考试'.$curExam['room_name']);
-
-
-                return response()->json(
-                    $this->success_data($curExam['room_name'],'你即将开始考试')
-                );
-                // todo ..
-                break;
-            case self::EXAM_TAKING:
-
-                $surplus = $curExam['end_time'] - $time;
-                $surplus = floor($surplus/60) . ':' . $surplus%60;
-                $changeStatus= ExamQueue::where('id','=',$curExam['id'])->update(['status'=>2]);
-
-                dump('当前考试剩余时间'.$surplus);
-                return response()->json(
-                    $this->success_data($surplus,'当前考试剩余时间')
-                );
-                break;
-            case self::EXAM_JUST_AFTER:
-                //dump('考试已完成');
-                dd($list);
-                $studentStatus= ExamQueue::where('student_id','=',$watchStudent->student_id)
-                    ->whereBetween('status',[1,2])
-                    ->count();
-                if($studentStatus==0){
-                     dump('考试已完成');
-                }else{
-                    foreach ($list as $key => $item) {
-                        if ($curKey == $key) {
-                            $nextExam = current($list);
-                        }
-                    }
-                }
-                // todo ..
-                break;
-        }
-    dd($nextExam ,$curExam);
-        //dump($list);die;
-
-    }
-
-    public function nowQueue(){
-        //exam_queue
-
-
-
-    }
-    public function nextQueue(){
-        //exam_queue
-
-
-
-    }
-    public function getWaitExamList(Request $request){
-        $this->validate($request,[
-            'watch_id'=>'required|integer'
-        ]);
-        $watchId=$request->input('watch_id');
-
-        $watchStudent= WatchLog::where('watch_id','=',$watchId)->select('student_id')->first();
-        if(!$watchStudent){
-            return response()->json(
-                $this->fail(new \Exception('没有找到学生的腕表信息'))
-            );
-        }
-        $ExamQueueModel= new ExamQueue();
-        $result =  $ExamQueueModel->StudentExamInfo($watchStudent->student_id);
-        dump($result);
-    }
 }

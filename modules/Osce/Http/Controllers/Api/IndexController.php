@@ -6,6 +6,8 @@ namespace Modules\Osce\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 
+use Modules\Osce\Entities\ExamPlan;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
 
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -38,7 +40,6 @@ class IndexController extends CommonController
      */
     public function getWatchStatus(Request $request){
         $this->validate($request,[
-
             'code' =>'required'
         ]);
            $code=$request->get('code');
@@ -48,7 +49,7 @@ class IndexController extends CommonController
            } else {
                $id=$id->id;
                $status = Watch::where('id', $id)->select()->first()->status;
-               $student_id = ExamScreeningStudent::where('watch_id', $id)->select()->first();
+               $student_id = ExamScreeningStudent::where('watch_id', $id)->select()->orderBy('id','DESC')->first();
                if ($status == 1) {
                    if(!$student_id){
                       $data=array('student_id'=>'','status'=>$status);
@@ -133,15 +134,13 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 3));
         }
         $student_id=$student_id->id;
-        $screen_id=ExamScreening::where('exam_id',$exam_id)->select('id')->get();
-        $exam_screen_id=ExamScreeningStudent::whereIn('exam_screening_id',$screen_id)->where('student_id',$student_id)->select()->first();
-        if(!$exam_screen_id){
+        $planId=ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();
+        if(!$planId ){
             return \Response::json(array('code' =>4));
         }
-        $exam_screen_id=$exam_screen_id->id;
-        if($exam_screen_id) {
-            $result = ExamScreeningStudent::where('id', $exam_screen_id)->where('student_id', $student_id)->update(['watch_id' => $id]);
-
+        $screen_id=ExamPlan::where('exam_id',$exam_id)->where('student_id',$student_id)->select('id')->get();
+        $exam_screen_id=$screen_id->exam_screening_id;
+        $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
             if (!$result) {
                 return \Response::json(array('code' => 2));
             }
@@ -156,12 +155,11 @@ class IndexController extends CommonController
                     'student_id' => $student_id
         );
                 $watchModel = new WatchLog();
-                $watchModel->historyRecord($data);
+                $watchModel->historyRecord($data,$student_id,$exam_id);
                 return \Response::json(array('code' => 1));
             } else {
                 return \Response::json(array('code' => 0));
             }
-        }
     }
 
     /**
@@ -187,7 +185,7 @@ class IndexController extends CommonController
         ]);
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->first();
+        $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->orderBy('id','DESC')->first();
         if(!$student_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
