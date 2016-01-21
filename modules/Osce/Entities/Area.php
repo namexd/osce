@@ -51,6 +51,10 @@ class Area extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try{
+            $area = $this->where('id',$id)->first();
+            if($area->cate ==1 && Room::first()){
+                throw new \Exception('该考试区域已关联，无法删除！');
+            }
             if($result = AreaVcr::where('area_id',$id)->first()){
                 throw new \Exception('该考试区域已与摄像机关联，无法删除！');
             }
