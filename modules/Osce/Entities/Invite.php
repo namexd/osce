@@ -30,27 +30,35 @@ class Invite extends CommonModel
 //        $connection     =   DB::connection($this->connection);
 //        $connection     ->  beginTransaction();
         try {
-            foreach ($data as $k => $v) {
-            }
-            $inviteData = [
-                'id' => $data[$k]['teacher_id'],
-                'name' => $data[$k]['exam_name'],
-                'begin_dt' => $data[$k]['begin_dt'],
-                'end_dt' => $data[$k]['end_dt'],
-                'exam_screening_id' => $data[$k]['exam_id'],
-            ];
-            if ($notice = $this->firstOrCreate($inviteData)) {
-                $invitelist = $this->where('id', '=', $data[$k]['teacher_id'])->first()->toArray();
-                $list = [
-//                    'id'=>$data[$k]['teacher_id'],
-                    'invite_id' => $invitelist['id'],
-                    'exam_screening_id' => $data[$k]['exam_id'],
-                    'case_id' => $data[$k]['case_id'],
-                    'teacher_id' => $data[$k]['teacher_id'],
+
+            foreach ($data as  $list) {
+                $inviteDat = [
+                    'id'  =>$list['teacher_id'],
+                    'name'  => $list['exam_name'],
+                    'begin_dt' => $list['begin_dt'],
+                    'end_dt' => $list['end_dt'],
+                    'exam_screening_id' => $list['exam_screening_id'],
                 ];
+            }
+            if ($notice = $this->firstOrCreate($inviteDat)) {
+                dd(11111);
+
+//                $invitelist = $this->where('id', '=', $data[$k]['teacher_id'])->first()->toArray();
+
+
+               foreach($data as  $list){
+                    $ExamSpList = [
+//                           'id'=>$data[$k]['teacher_id'],
+//                             'invite_id' => $invitelist['id'],
+                             'exam_screening_id' => $list['exam_id'],
+                             'case_id' => $list['case_id'],
+                             'teacher_id' => $list['teacher_id'],
+                         ];
+                     }
+
                 //关联到考试邀请sp老师表
                 $examspModel = new ExamSpTeacher();
-                $result = $examspModel->addExamSp($list);
+                $result = $examspModel->addExamSp($ExamSpList);
                 //邀请用户
                 $this->sendMsg($notice, $data);
 //                $connection ->commit();

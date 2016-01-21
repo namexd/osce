@@ -80,8 +80,7 @@ class Teacher extends CommonModel
                 $this->excludeId = $teacher_id;
             }
             $excludeId = $this->excludeId;
-            $excludeIds[] = $excludeId;
-
+            $excludeIds = (explode(",",$teacher_id));
             if (count($excludeId) !== 0) {
                 $builder = $builder->leftJoin('cases',function($join){
                     $join    ->  on('cases.id','=', 'teacher.case_id');
