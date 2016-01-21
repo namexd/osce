@@ -108,7 +108,7 @@ function exam_add(){
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
-            '</tr>'+
+            '</tr>';
         //记录计数
         $('#exam_add').find('tbody').attr('index',index);
         $('#exam_add').find('tbody').append(html);
