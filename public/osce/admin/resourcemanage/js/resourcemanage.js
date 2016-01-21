@@ -648,7 +648,7 @@ function categories(){
                 option += '<option value="'+k+'">'+k+'</option>';
             }
             change.html(option);
-            change.val(total-1);
+            change.val(total);
 
             $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
             change.after('<span>'+parseInt(total)+'</span>')
