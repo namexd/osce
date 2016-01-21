@@ -406,7 +406,7 @@ class InvigilatePadController extends CommonController
           $examScreenId = $result->exam_screening_id;
           $timeAnchors=[1,2,3];
 
-          
+
           //调用照片上传方法，传入数据。
            $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
 
@@ -491,7 +491,7 @@ class InvigilatePadController extends CommonController
 
             //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
 
-            $this->storeAnchor($timeAnchors);
+            $this->storeAnchor( $stationId, $studentId, $examScreenId,$timeAnchors);
 
             return true;
 
