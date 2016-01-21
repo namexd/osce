@@ -29,6 +29,6 @@ class WatchLog extends CommonModel{
          if($data['context']){
              $data['context']=serialize($data['context']);
          }
-          WatchLog::insert($data);
+          WatchLog::create($data);
    }
 }

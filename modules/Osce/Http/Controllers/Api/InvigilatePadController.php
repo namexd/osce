@@ -6,7 +6,7 @@
  * Time: 11:42
  */
 
-namespace Modules\Osce\Http\Controllers\Admin;
+namespace Modules\Osce\Http\Controllers\Api;
 
 
 use Illuminate\Http\Request;
@@ -96,7 +96,7 @@ class InvigilatePadController extends CommonController
     /**
      * 身份验证
      * @method GET
-     * @url /osce/admin/invigilatepad/authentication
+     * @url /osce/api/invigilatepad/authentication
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -112,7 +112,6 @@ class InvigilatePadController extends CommonController
 
     public function  getAuthentication(Request $request)
     {
-//        dd(222222222);
         $this->validate($request, [
             'id' => 'required|integer'
         ], [
@@ -148,7 +147,7 @@ class InvigilatePadController extends CommonController
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
      * @method GET
-     * @url /osce/admin/invigilatepad/exam-grade
+     * @url /osce/api/invigilatepad/exam-grade
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -203,7 +202,7 @@ class InvigilatePadController extends CommonController
     /**
      *   * 提交评价
      * @method GET
-     * @url /osce/admin/invigilatepad/save-exam-evaluate
+     * @url /osce/api/invigilatepad/save-exam-evaluate
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -254,7 +253,7 @@ class InvigilatePadController extends CommonController
     /**
      * 提交成绩评分详情，考试结果
      * @method GET
-     * @url /osce/admin/invigilatepad/save-exam-result
+     * @url /osce/api/invigilatepad/save-exam-result
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -326,7 +325,7 @@ class InvigilatePadController extends CommonController
     /**
      * 照片附件的上传
      * @method POST
-     * @url /osce/admin/invigilatepad/save-exam-result
+     * @url /osce/api/invigilatepad/save-exam-result
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -396,7 +395,7 @@ class InvigilatePadController extends CommonController
     /**
      *  查看现场视屏
      * @method GET
-     * @url /osce/admin/invigilatepad/see-exam-evaluate
+     * @url /osce/api/invigilatepad/see-exam-evaluate
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -435,6 +434,6 @@ class InvigilatePadController extends CommonController
                   $this->success_data($vcrdata,1,'摄像头可用')
               );
           }
-          
+
       }
 }

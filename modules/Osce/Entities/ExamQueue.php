@@ -22,9 +22,10 @@ class ExamQueue extends CommonModel
     public $search = [];
 
     protected $statuValues = [
-        1 => '姝ｅ湪鑰冭瘯',
-        2 => '鏈繘琛岃?冭瘯',
-        3 => '鑰冭瘯瀹屾瘯',
+        1 => '候考',
+        2 => '正在考试',
+        3 => '结束考试',
+        4 => '缺考',
     ];
 
     public function student()
@@ -103,6 +104,7 @@ class ExamQueue extends CommonModel
         })->where($this->table . '.student_id', '=', $watchStudent)
             ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
          AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+            ->whereBetween('exam_queue.status',[1,2])
             ->select([
                 'room.name as room_name',
                 'student.name as name',
