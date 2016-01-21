@@ -41,7 +41,7 @@ class ExamQueue extends  CommonModel{
     }
 
 
-    //鑾峰彇鍊欒?冩暀瀹?
+    //获取候考教室
     protected function getWaitRoom($exam){
         $examFlowRoomList   =   ExamFlowRoom::where('exam_id','=',$exam->id)->  paginate(config('osce.page_size'));
         $data=[];
@@ -60,7 +60,7 @@ class ExamQueue extends  CommonModel{
         return $data;
     }
 
-    //鑾峰彇鍊欒?冭?冪珯
+    //获取候考考站
     protected function getWaitStation($exam){
        $examFlowStationList  =ExamFlowStation::where('exam_id','=',$exam->id)  ->paginate(config('osce.page_size'));
         $data=[];
