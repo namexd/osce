@@ -3,12 +3,12 @@
  * Created by PhpStorm.
  * User: zhouchong
  * Date: 2016/1/22 0022
- * Time: 13:05
+ * Time: 15:41
  */
 namespace Modules\Osce\Entities;
-class ExamOrder extends  CommonModel{
+class ExamAbsent extends  CommonModel{
     protected $connection = 'osce_mis';
-    protected $table = 'exam_order';
+    protected $table = 'exam_absent';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
@@ -16,10 +16,5 @@ class ExamOrder extends  CommonModel{
     protected $hidden = [];
     protected $fillable = ['exam_id', 'exam_screening_id', 'student_id',  'begin_dt',  'status', 'created_user_id'];
     public $search = [];
-    protected $statuValues = [
-        0 => '未绑定',
-        1 => '绑定腕表',
-        2 => '已解绑',
-        3 => '缺考',
-    ];
+
 }
