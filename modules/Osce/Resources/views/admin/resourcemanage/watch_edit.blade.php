@@ -82,7 +82,7 @@
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.machine.postEditMachine')}}">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">名称</label>
+                                <label class="col-sm-2 control-label">设备名称</label>
 
                                 <div class="col-sm-10">
                                     <input type="text" required class="form-control" id="name" name="name" value="{{$item['name']}}">
@@ -93,67 +93,69 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">编号</label>
-
+                                <label class="col-sm-2 control-label">设备ID</label>
                                 <div class="col-sm-10">
                                     <input type="text" required class="form-control" id="code" name="code" value="{{$item['code']}}">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">生产厂家</label>
-
+                                <label class="col-sm-2 control-label">厂家</label>
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="factory" value="{{$item['factory']}}">
+                                    <input type="text" required class="form-control" id="factory" name="factory" value="{{$item['factory']}}">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">型号</label>
-
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="sp" value="{{$item['sp']}}">
+                                    <input type="text" required class="form-control" id="sp" name="sp" value="{{$item['sp']}}">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">设备状态</label>
+                                <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="status">
-                                        <option value="0" {{($item['status']==0)?'selected="selected"':''}}>未使用</option>
-                                        <option value="1" {{($item['status']==1)?'selected="selected"':''}}>使用中</option>
-                                        <option value="2" {{($item['status']==2)?'selected="selected"':''}}>维修</option>
-                                        <option value="3" {{($item['status']==3)?'selected="selected"':''}}>报废</option>
+                                    <input type="text" required class="form-control" id="purchase_dt" name="purchase_dt" value="{{$item['purchase_dt']}}">
+
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">状态</label>
+                                <div class="col-sm-10">
+                                    <select id="status" required  class="form-control m-b" name="status">
+                                        @foreach($status as $key => $value)
+                                            <option value="{{$key}}" {{($item['status']==$key)?'selected="selected"':''}}>{{$value}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">描述</label>
-
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="description" value="{{$item['description']}}">
+                                    <input type="text" required class="form-control" id="description" name="description" value="{{$item['description']}}">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-{{--                                    <a class="btn btn-white" href="{{route('osce.admin.machine.getMachineList', ['cate_id'=>3])}}">取消</a>--}}
-
                                 </div>
                             </div>
-
-
                         </form>
-
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
 
 @stop{{-- 内容主体区域 --}}

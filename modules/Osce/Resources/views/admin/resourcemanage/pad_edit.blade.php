@@ -119,7 +119,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control laydate-icon" id="end" name="purchase_dt" value="{{$item['purchase_dt']}}">
+                                    <input type="text" class="form-control laydate-icon" id="purchase_dt" name="purchase_dt" value="{{$item['purchase_dt']}}">
 
                                     {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
                                 </div>
@@ -129,10 +129,9 @@
                                 <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="status">
-                                        <option value="0" {{($item['status']==0)?'selected="selected"':''}}>未使用</option>
-                                        <option value="1" {{($item['status']==1)?'selected="selected"':''}}>使用中</option>
-                                        <option value="2" {{($item['status']==2)?'selected="selected"':''}}>维修</option>
-                                        <option value="3" {{($item['status']==3)?'selected="selected"':''}}>报废</option>
+                                        @foreach($status as $key => $value)
+                                            <option value="{{$key}}" {{($item['status']==$key)?'selected="selected"':''}}>{{$value}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
