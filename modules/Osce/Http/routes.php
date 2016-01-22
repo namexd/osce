@@ -373,8 +373,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function() {
-	$config = config('osce.name');
-	dd($config);
+
 
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
