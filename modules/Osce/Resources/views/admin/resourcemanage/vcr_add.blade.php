@@ -30,6 +30,10 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '编号不能为空'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9]+$/,
+                                message: '请输入正确的设备ID'
                             }
                         }
                     },

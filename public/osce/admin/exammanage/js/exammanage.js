@@ -955,65 +955,60 @@ function examroom_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+        layer.alert('确认为删除？',function(its){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#examroom').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
-        });
-
-        //计数器标志
-        var index = $('#examroom').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#examroom').find('tbody').attr('index',index);
-        //更新序号
-        $('#examroom tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+            $('#examroom').find('tbody').attr('index',index);
+            //更新序号
+            $('#examroom tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
 
 
-        //删除监考数据
-        var now_data = thisElement.find('td').eq(1).find('select').val();
-        var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
-        var current = [];
-        for(var j in now_data){
-            for(var i in delStore){
+            //删除监考数据
+            var now_data = thisElement.find('td').eq(1).find('select').val();
+            var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
+            var current = [];
+            for(var j in now_data){
+                for(var i in delStore){
 
-                if(delStore[i].id==now_data[j]){
-                    if(delStore[i].count>1){
-                        delStore[i].count -= 1;
-                        current.push({id:delStore[i].id,count:delStore[i].count});
+                    if(delStore[i].id==now_data[j]){
+                        if(delStore[i].count>1){
+                            delStore[i].count -= 1;
+                            current.push({id:delStore[i].id,count:delStore[i].count});
+                        }else{
+                            //删除dom
+                            var str = delStore[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                var html = '';
+                                station_count = key + 1;
+                                html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                                $(elem).find('td').eq(0).html(html);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
                     }else{
-                        //删除dom
-                        var str = delStore[i].id;
-                        $('.parent-id-'+str).remove();
-                        //重置序号
-                        var station_count = 1;
-                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                            var html = '';
-                            station_count = key + 1;
-                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
-                            $(elem).find('td').eq(0).html(html);
-                        });
-                        $('#exam-place').find('tbody').attr('index',station_count);
-                        continue;
+                        current.push({id:delStore[i].id,count:delStore[i].count});
                     }
-                }else{
-                    current.push({id:delStore[i].id,count:delStore[i].count});
                 }
             }
-        }
 
-        $('#examroom').find('tbody').attr('data',JSON.stringify(current));
+            $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
-
-
+            //关闭弹出
+            layer.close(its);
+        });
 
     });
 
@@ -1425,10 +1420,13 @@ function exam_notice_edit(){
 function smart_assignment(){
     //var testData={"code":1,"message":"success","data":{"1":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[]},"2":{"begin":"1452557715","end":1452558615,"items":[]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}}},"2":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}}},"4":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}}},"5":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}}}}}
     var times=[];
+    var liwidth=0;//表格的列宽
     var plan    =   $('#plan').html();
     var testData=eval('('+plan+')');
-    maketotal(testData);
-    var liwidth=0;//表格的列宽
+    $('.classroom-box').html('');//清空排考
+    maketotal(testData);//页面加载执行排考
+    $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+
     function makeItem(data){
 
         var dl  =   $('<dl class="clearfloat">');
@@ -1542,7 +1540,7 @@ function smart_assignment(){
         liwidth=1400/liNums;
         return ul;
     }
-
+    //生成列表
     function maketotal(data){
         for (var i in data){
             var groupData=data[i];
@@ -1552,7 +1550,7 @@ function smart_assignment(){
         }
     }
 
-
+    //智能排考
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
             $('.classroom-box').html('');
@@ -2241,58 +2239,61 @@ function station_assignment(){
             }
         });
 
-        //var thisElement = $(this).parent().parent().parent().parent();
-        //thisElement.remove();
-        //计数器标志
-        var index = $('#examroom').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#examroom').find('tbody').attr('index',index);
-        //更新序号
-        $('#examroom tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        layer.alert('确认为删除？',function(its){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#examroom').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
+            }
+            $('#examroom').find('tbody').attr('index',index);
+            //更新序号
+            $('#examroom tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
 
 
-        //删除监考数据
-        var now_data = thisElement.find('td').eq(1).find('select').val();
-        var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
-        var current = [];
-        for(var j in now_data){
-            for(var i in delStore){
+            //删除监考数据
+            var now_data = thisElement.find('td').eq(1).find('select').val();
+            var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
+            var current = [];
+            for(var j in now_data){
+                for(var i in delStore){
 
-                if(delStore[i].id==now_data[j]){
-                    if(delStore[i].count>1){
-                        delStore[i].count -= 1;
-                        current.push({id:delStore[i].id,count:delStore[i].count});
+                    if(delStore[i].id==now_data[j]){
+                        if(delStore[i].count>1){
+                            delStore[i].count -= 1;
+                            current.push({id:delStore[i].id,count:delStore[i].count});
+                        }else{
+                            //删除dom
+                            var str = delStore[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                var html = '';
+                                station_count = key + 1;
+                                html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                                $(elem).find('td').eq(0).html(html);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
                     }else{
-                        //删除dom
-                        var str = delStore[i].id;
-                        $('.parent-id-'+str).remove();
-                        //重置序号
-                        var station_count = 1;
-                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                            var html = '';
-                            station_count = key + 1;
-                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
-                            $(elem).find('td').eq(0).html(html);
-                        });
-                        $('#exam-place').find('tbody').attr('index',station_count);
-                        continue;
+                        current.push({id:delStore[i].id,count:delStore[i].count});
                     }
-                }else{
-                    current.push({id:delStore[i].id,count:delStore[i].count});
                 }
             }
-        }
 
-        $('#examroom').find('tbody').attr('data',JSON.stringify(current));
-
+            $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
 
+            layer.close(its);
+
+        });
 
     });
 

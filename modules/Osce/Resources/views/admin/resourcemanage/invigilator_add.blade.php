@@ -32,6 +32,16 @@
                             }
                         }
                     },
+                    code: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            regexp: {
+                                regexp: /^\w+$/,
+                                message: '教师编号应该由数字，英文或下划线组成'
+                            }
+                        }
+                    },
                     mobile: {
                         validators: {
                             notEmpty: {/*非空提示*/

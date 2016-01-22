@@ -13,11 +13,17 @@
     .perfect{
         color: #f8ac59!important;
     }
+    .video{
+        display: inline-block;
+        height: 15px;
+        width: 18px;
+        background-size:18px 15px;
+        background-image: url('{{asset("osce/images/iconfont-shipinliebiao.svg")}}');}
 </style>
 @stop
 
 @section('only_js')
-<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
     <script>
         $(function(){
             $('#sourceForm').bootstrapValidator({
@@ -210,7 +216,7 @@
                 </div>
             </div>
             <div>
-                <div id="score" style="height:300px;"></div>
+                <div id="score" style="height:340px;"></div>
                 <!-- 统计图 -->
             </div>
             <table class="table table-striped" id="table-striped">
@@ -231,7 +237,7 @@
                         <td>7</td>
                         <td value="1">
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-video-camera fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  video"></span></a>
                         </td>
                     </tr>
                     <tr>
@@ -241,7 +247,7 @@
                         <td>7</td>
                         <td value="1">
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-video-camera fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  video"></span></a>
                         </td>
                     </tr>
                     <tr>
@@ -251,7 +257,7 @@
                         <td>7</td>
                         <td value="1">
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-video-camera fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  video"></span></a>
                         </td>
                     </tr>
                     <tr>
@@ -261,7 +267,7 @@
                         <td>7</td>
                         <td value="1">
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-video-camera fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  video"></span></a>
                         </td>
                     </tr>
                 </tbody>
