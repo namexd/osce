@@ -98,6 +98,7 @@
 
 
                         <div class="form-group">
+                        <a href="javascript:void(0)" id="test">test</a>
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
