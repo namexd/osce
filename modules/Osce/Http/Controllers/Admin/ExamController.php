@@ -17,6 +17,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
+use Modules\Osce\Entities\ExamPlanForRoom;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
@@ -1169,18 +1170,29 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-        $ExamPlanModel   =   new ExamPlan();
-        $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+
+
         $user   =   Auth::user();
         Cache::pull('plan_'.$exam->id.'_'.$user->id);
         Cache::pull('plan_time_'.$exam->id.'_'.$user->id);
-        Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
-        $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-            return $ExamPlanModel->getTimeList();
-        });
-        $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-            return $ExamPlanModel->getStationStudent();
-        });
+
+        if($exam->sequence_mode==1)
+        {
+            $ExamPlanModel =   new ExamPlanForRoom();
+            $plan   =   $ExamPlanModel    ->  IntelligenceEaxmPlan($exam);
+        }
+        else
+        {
+            $ExamPlanModel   =   new ExamPlan();
+            Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
+            $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+            $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                return $ExamPlanModel->getStationStudent();
+            });
+            $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                return $ExamPlanModel->getTimeList();
+            });
+        }
 
         $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
             return $plan;
@@ -1433,17 +1445,17 @@ class ExamController extends CommonController
         $plan   =   Cache::get('plan_'.$exam->id.'_'.$user->id);
 //        dd($plan);
         $ExamPlanModel  =   new ExamPlan();
-
-        try{
+//
+//        try{
             if($ExamPlanModel  ->savePlan($exam_id,$plan))
             {
                 return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$exam->id]);
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**

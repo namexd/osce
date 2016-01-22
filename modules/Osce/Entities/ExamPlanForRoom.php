@@ -49,11 +49,14 @@ class ExamPlanForRoom extends CommonModel
 
     protected $studentExamedTime    =   [];
 
+    protected $studentList          =   [];
     //以下属性为结果记录用途
     //场次学生分组
     protected $screeningStudent     =   [];
     //当前考试已有学生
     protected $thisTimeRoomExamingStudent   =   [];
+
+    protected $studentRecord        =   [];
 
     public function student(){
         return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
@@ -86,8 +89,13 @@ class ExamPlanForRoom extends CommonModel
     public function IntelligenceEaxmPlan($exam){
         //初始化 场外等待学生
         $this   ->  initExamStudent($exam);
+        $this   ->  initRoomStudent($exam);
+        $flows  =   $this   ->  getExamFlow($exam);
+        $this   ->  flowIndex   =   $this   ->  groupFlowByRoom($flows);
 
         $screeningList   =$exam   ->  examScreening;
+
+        $screeningStudentData   =   [];
 
         foreach($screeningList as $screening)
         {
@@ -97,12 +105,78 @@ class ExamPlanForRoom extends CommonModel
             $this       ->  nowTime   =   0;
             //初始化 考场外等待学生
             $this   ->  initFlowWaiteStudent($exam);
-
+            //考试
             $this   ->  examing($exam,$startTime,$endTime);
-            //开考考生进场
-
+            $thisScreeningData                      =   $this   ->  groupScreeningData($this   ->  getStudentRecord());
+            $screeningStudentData[$screening->id]   =   $this   ->  getDataRoomName($thisScreeningData);
+            $this   ->  studentRecord   =   [];
         }
+        return  $screeningStudentData;
     }
+
+    //获取分组数据房间名称
+    public function getDataRoomName($thisScreeningData){
+        $data= [];
+        foreach($thisScreeningData as $roomId=>$times)
+        {
+            $room   =   $this->getRoomInfoById($roomId);
+            $roomInfo   =   [
+                'name'  =>  $room   ->  name,
+                'child' =>  []
+            ];
+            $timeData   =   [];
+            foreach($times as $time =>  $studentsInfo)
+            {
+                $item   =   [];
+                foreach($studentsInfo as $studentInfo)
+                {
+                    $item[$time]['students'][]  =   $studentInfo['student'];
+                    $item[$time]['start']       =   $studentInfo['start'];
+                    $item[$time]['end']         =   $studentInfo['end'];
+                }
+                $timeData['items']    =  $item[$time]['students'];
+                $timeData['start']  =   $item[$time]['start'];
+                $timeData['end']    =   $item[$time]['end'];
+                $roomInfo['child'][]      =   $timeData;
+            }
+            $data[$roomId]          =   $roomInfo;
+        }
+        return $data;
+    }
+    public function groupScreeningData($studentRecord){
+        $data   =  [];
+        $studentList    =   $this   ->  studentList;
+        foreach($studentRecord as $studentId=>$studentData)
+        {
+            foreach($studentData as $roomId=>$timeInfo)
+            {
+                foreach($timeInfo as $time)
+                {
+                    if($studentId==0)
+                    {
+                        $student    =   new \stdClass();
+                        $student    ->  id  =   0;
+                        $student    ->  name=   '空缺';
+                        $data[$roomId][$time['start']][]=[
+                            'start'     =>  $time['start'],
+                            'end'       =>  $time['end'],
+                            'student'   =>  $student
+                        ];
+                    }
+                    else
+                    {
+                        $data[$roomId][$time['start']][]=[
+                            'start'     =>  $time['start'],
+                            'end'       =>  $time['end'],
+                            'student'   =>  $studentList[$studentId]
+                        ];
+                    }
+                }
+            }
+        }
+        return $data;
+    }
+
 
     //考试中
     public function examing($exam,$startTime,$endTime){
@@ -123,23 +197,74 @@ class ExamPlanForRoom extends CommonModel
                 $this       ->  roomTimeChange($checkFrequency);
             }
         }
+        $this   ->  clearRoomWhenExamOver();
+        return  $this;
     }
 
+    protected function clearRoomWhenExamOver(){
+        $thisTimeRoomExamingStudent =   $this->thisTimeRoomExamingStudent;
+        $StudentRecord              =   $this   ->  getStudentRecord();
+        foreach($thisTimeRoomExamingStudent as $roomdId=>$students)
+        {
+            foreach($students as $student)
+            {
+                foreach($StudentRecord[$student->id][$roomdId] as $key=>$item)
+                {
+                    $StudentRecord[$student->id][$roomdId][$key]['end'] =   $this->nowTime;
+                }
+            }
+        }
+        $this->studentRecord    =   $StudentRecord;
+        return $this;
+    }
+
+    /**
+     * 获取考试所有流程节点
+     */
+    public function getExamFlow($exam){
+        return $exam    ->  flows;
+    }
+
+    /*
+    *  为考场方式，根据考场分组流程
+    */
+    public function groupFlowByRoom($flows){
+        $group  =   [];
+        foreach($flows as $examFlow)
+        {
+            $examFlowRoomRelation       =   $examFlow   ->  examFlowRoomRelation;
+            if(is_null($examFlowRoomRelation->  serialnumber))
+            {
+                throw new \Exception('序号数据错误');
+            }
+            $group[$examFlowRoomRelation->  serialnumber][]=$examFlowRoomRelation;
+        }
+
+        ksort($group);
+        return $group;
+    }
 
     protected function roomTimeChange($checkFrequency){
         $roomTimeList   =   $this   ->  roomTime;
-        $roomTimeUpdate =   [];
+        $roomTimeUpdate =   $roomTimeList;
         foreach($roomTimeList as $roomId=>$roomTime)
         {
             $room       =   $this   ->  getRoomInfoById($roomId);
             $stations   =   $room   ->  stations;
             //获取当前考场单次所需时间
             $roomNeedTime   =   $this   ->  getRoomStaionMaxTime($room);
+
             if($roomNeedTime<=$roomTime)
             {
+                //如果当前考场考试时间到
                 $roomTimeUpdate[$roomId]    =   0;
                 //如果考试时间到 获取当前考场中学生列表//将列表中学生请出考场
                 $students   =   $this   ->  getStudentOutRoom($roomId);
+                foreach($students as $student)
+                {
+                    $this       ->  outRecord($student,$roomId);
+                }
+
                 //将学生分别放入各自的下一个考场
                 $this       ->  putStudentsToNextFlow($students);
                 //获取当前考场下一批考生
@@ -150,9 +275,18 @@ class ExamPlanForRoom extends CommonModel
             }
             else
             {
-                $roomTimeUpdate[$roomId]    +=  $checkFrequency;
+                //如果当前考场考试时间没到
+                if(array_key_exists($roomId,$roomTimeUpdate))
+                {
+                    $roomTimeUpdate[$roomId]    +=  $checkFrequency;
+                }
+                else
+                {
+                    $roomTimeUpdate[$roomId]    =   0;
+                }
             }
         }
+
         $this   ->  roomTime    =   $roomTimeUpdate;
     }
 
@@ -165,10 +299,12 @@ class ExamPlanForRoom extends CommonModel
 
         foreach($students as $student)
         {
-            $studentExamed[$students->id]   =   [];
+            $studentExamed[$student->id]   =   [];
+            $studentList[$student->id]     =    $student;
         }
 
         $this   ->  studentExamed   =   $studentExamed;
+        $this   ->  studentList     =   $studentList;
         return $this;
     }
 
@@ -176,7 +312,7 @@ class ExamPlanForRoom extends CommonModel
     protected function initRoomStudent($exam){
         //$thisTimeRoomStudents   =   $this   ->  thisTimeRoomStudents;
         $flowList   =   $this   ->  getExamFlowRoom($exam);
-        $thisTimeRoomExamingStudent =   [];;
+        $thisTimeRoomExamingStudent =   [];
         foreach($flowList as $flow)
         {
             $thisTimeRoomExamingStudent[$flow->room_id]   =   [];
@@ -216,7 +352,8 @@ class ExamPlanForRoom extends CommonModel
     //从场外获取一个学生 进入场内
     public function getOneStudentFormOutSideWaiteStudent(){
         $outSideWaiteStudent    =   $this   ->  outSideWaiteStudent;
-        $student                =   array_shift($outSideWaiteStudent);
+        //$student                =   array_shift($outSideWaiteStudent);
+        $student    =   $outSideWaiteStudent->shift();
         $this   ->  outSideWaiteStudent =   $outSideWaiteStudent;
         if(empty($student))
         {
@@ -271,6 +408,7 @@ class ExamPlanForRoom extends CommonModel
 
     //获取一个学生进入考场
     protected function getStudentIntoToRoom($room){
+        $thisTimeRoomStudents   =   $this->thisTimeRoomStudents;
         //获取房间所属流程编号
         $flowSerialnumber   =   $this   ->  getRoomRoomSerialnumber($room);
         //从流程候考池获取一个学生
@@ -289,19 +427,32 @@ class ExamPlanForRoom extends CommonModel
         $this                               ->  setStudentStartTime($student,$room);
 
         $thisTimeRoomExamingStudent[]       =   $student;
+        $thisTimeRoomStudents[$room->id][$student->id]  =   $student;
+        $this   ->thisTimeRoomStudents      =   $thisTimeRoomStudents;
         $thisTimeRoomExamingStudentArray[$room->id] =   $thisTimeRoomExamingStudent;
+        $this   ->  startRecord($student,$room->id);
         $this   ->  thisTimeRoomExamingStudent      =   $thisTimeRoomExamingStudentArray;
     }
     //让一个考场的学生 出考场
     protected function getStudentOutRoom($roomid){
+        $thisTimeRoomExamingStudentArray    =   $this   ->  thisTimeRoomExamingStudent;
         $thisTimeRoomStudentsArray  =   $this->thisTimeRoomStudents;
+        if(!array_key_exists($roomid,$thisTimeRoomStudentsArray))
+        {
+            return [];
+        }
         $thisTimeRoomStudents       =   $thisTimeRoomStudentsArray[$roomid];
+        $thisTimeRoomExamingStudent =   $thisTimeRoomExamingStudentArray[$roomid];
         $room                       =   $this->getRoomInfoById($roomid);
         foreach($thisTimeRoomStudents as $student)
         {
             //学生出考场时间
             $this   ->  setStudentEndTime($student,$room);
+            unset($thisTimeRoomExamingStudent[$student->id]);
+
         }
+        $thisTimeRoomExamingStudentArray[$roomid]   =   $thisTimeRoomExamingStudent;
+        $this   ->  thisTimeRoomExamingStudent      =   $thisTimeRoomExamingStudentArray;
         //清空当前考场学生
         $thisTimeRoomStudentsArray[$roomid] =   [];
         return $thisTimeRoomStudents;
@@ -385,7 +536,7 @@ class ExamPlanForRoom extends CommonModel
         $maxMins    =   0;
         foreach($stations as $station)
         {
-            $mins   =   $stations->station->mins * 60;
+            $mins   =   $station->station->mins * 60;
             $maxMins    =   $maxMins>$mins? $maxMins:$mins;
         }
         return $maxMins;
@@ -400,9 +551,13 @@ class ExamPlanForRoom extends CommonModel
 
     protected function putStudentToNextFlow($student){
         $studentExamedTime      =   $this->studentExamedTime;
-        $studentFlowInfo    =   $studentExamedTime[$student->id];
+        if(!array_key_exists($student->id,$studentExamedTime))
+        {
+            return [];
+        }
+        $studentFlowInfo        =   $studentExamedTime[$student->id];
 
-        $flowIndex          =   $this->flowIndex;
+        $flowIndex              =   $this   ->  flowIndex;
 
         $serialnumberArray      =   array_keys($studentFlowInfo);
         $nextSerialnumberNum    =   array_pop($serialnumberArray)+1;
@@ -422,6 +577,10 @@ class ExamPlanForRoom extends CommonModel
 
     protected function setStudentStartTime($student,$room){
         $studentExameTimedArray =   $this   ->  studentExamedTime;
+        if(!array_key_exists($student->id,$studentExameTimedArray))
+        {
+            $studentExameTimedArray[$student->id]   =   '';
+        }
         $thisStudentExamedTime  =   $studentExameTimedArray[$student->id];
 
         $thisSerialnumber   =   $this   ->  getRoomRoomSerialnumber($room);
@@ -434,6 +593,10 @@ class ExamPlanForRoom extends CommonModel
 
     protected function setStudentEndTime($student,$room){
         $studentExameTimedArray =   $this   ->  studentExamedTime;
+        if(!array_key_exists($student->id,$studentExameTimedArray))
+        {
+            $studentExameTimedArray[$student->id]   =   '';
+        }
         $thisStudentExamedTime  =   $studentExameTimedArray[$student->id];
 
         $thisSerialnumber   =   $this   ->  getRoomRoomSerialnumber($room);
@@ -443,4 +606,62 @@ class ExamPlanForRoom extends CommonModel
         $this   ->  studentExamedTime               =   $studentExamedArray;
         return $this;
     }
+
+    public function getStudentRecord(){
+        return $this->studentRecord;
+    }
+
+    protected function outRecord($student,$roomId){
+        $studentRecord  =   $this   ->  studentRecord;
+
+        if(!array_key_exists($student->id,$studentRecord))
+        {
+            $studentRecord[$student->id]    =   [];
+        }
+
+        if(!array_key_exists($roomId,$studentRecord[$student->id]))
+        {
+            $studentRecord[$student->id][$roomId]   =   [];
+        }
+
+        if(empty($studentRecord[$student->id][$roomId]))
+        {
+            throw new \Exception('没有找到开始时间');
+        }
+        $key    =   0;
+        foreach($studentRecord[$student->id][$roomId] as $key=>$times){
+            if(!array_key_exists('end',$times))
+            {
+                $times['end']   =   $this->nowTime;
+                break;
+            }
+        }
+        $studentRecord[$student->id][$roomId][$key] =   $times;
+        $this   ->  studentRecord   =   $studentRecord;
+        return $this;
+    }
+
+    public function startRecord($student,$roomId){
+        $studentRecord  =   $this   ->  studentRecord;
+
+        if(!array_key_exists($student->id,$studentRecord))
+        {
+            $studentRecord[$student->id]    =   [];
+        }
+
+        if(!array_key_exists($roomId,$studentRecord[$student->id]))
+        {
+            $studentRecord[$student->id][$roomId]   =   [];
+        }
+        $studentRecord[$student->id][$roomId][]=[
+            'start' =>  $this->nowTime
+        ];
+        $this   ->  studentRecord   =   $studentRecord;
+        return $this;
+    }
+
+    public function getTimeList(){
+
+    }
+
 }
