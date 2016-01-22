@@ -177,8 +177,9 @@
 <input type="hidden" id="parameter" value="{'pagename':'exam_notice_add'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
-        <div class="ibox-title">
+        <div class="ibox-title"  style="position: relative;">
             <h5>新增考前培训</h5>
+            <a href="javascript:history.back(-1)" class="btn btn-default" style="position: absolute;right:10px;top:4px;">&nbsp;返回&nbsp;</a>
         </div>
         <div class="ibox-content">
             <form method="post" id="form1" class="form-horizontal" action="#">
