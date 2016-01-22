@@ -31,13 +31,12 @@ class StudentExamQuery extends  CommonController
      */
 
     public  function getResultsQueryIndex(Request $request){
-        try{
 
+        try{
             $user= Auth::user();
             if(empty($user)){
                 throw new \Exception('当前用户未登陆');
             }
-
             //根据用户获得考试id
             $ExamId= Student::where('user_id','=',$user->id)->select('exam_id')->get();
               $list=[];
@@ -48,14 +47,11 @@ class StudentExamQuery extends  CommonController
                 $ExamModel = new Exam();
                 $ExamList= $ExamModel->where('id','=',$data['exam_id'])->select()->get();
             }
-
             //根据考试id获取所有考试
-            return view('osce::wechat.exammanage.exam_notice');
+            return view('osce::wechat.resultquery.examination_list');
         }catch (\Exception $ex) {
             throw $ex;
         }
-
-
     }
 
 //      ajax

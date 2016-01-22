@@ -142,6 +142,7 @@ class ExamResultController extends CommonController{
              'operation' =>$item->operation,
              'skilled'   =>$item->skilled,
              'patient'   =>$item->patient,
+             'station_id'   =>$item->station_id,
              'affinity'  =>$item->affinity,
              'subject_title' =>$item->subject_title,
              'subject_id' =>$item->subject_id,
@@ -159,8 +160,26 @@ class ExamResultController extends CommonController{
                 'score'=>$itm->score,
             ];
         }
-      
-        return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores]);
+
+        $standard=[];
+        foreach($scores as $standards){
+            if($standards['standard']->pid==0){
+                $standard[]=$standards['standard']->score;
+            }
+        }
+        $examResult=new ExamResult();
+        $student=$examResult->getStudent($result['station_id'],$result['subject_id']);
+        $totalStudent=count($student);
+
+        $standardModel=new Standard();
+        $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
+        $sort=$totalScore[0]->sort;
+        for($i=0;$i<$sort;$i++){
+           
+
+        }
+        dd($totalScore);
+        return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard]);
     }
 
 

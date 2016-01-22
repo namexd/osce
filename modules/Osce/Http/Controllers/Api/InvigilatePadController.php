@@ -35,48 +35,44 @@ use Auth;
 class InvigilatePadController extends CommonController
 {
     /**
-     * @param $files
-     * @param $params
+     * @param $file
      * @param $date
-     * @param $testResultId
+     * @param array $params
      * @return static
      * @throws \Exception
+     * @internal param $files
+     * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($files, $date, array $params, $testResultId)
+    protected static function uploadFileBuilder($file, $date, array $params)
     {
         try {
             //将上传的文件遍历
-            foreach ($files as $key => $file) {
+
                 //拼凑文件名字
                 $fileName = '';
                 //获取文件的MIME类型
-
                 $fileMime = $file->getMimeType();
                 foreach ($params as $param) {
-                    $fileName .= $param;
+                    $fileName .= $param . '_';
                 }
-                $fileName .= $file->getClientOriginalExtension(); //获取文件名的正式版
-
+                $fileName .= mt_rand() .'.'. $file->getClientOriginalExtension(); //获取文件名的正式版
                 //取得保存路径
-                $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . $params['student_code'] . '/';
+                $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
                 $savePath = public_path($savePath) ;
-
+                $savePath = iconv("UTF-8","gb2312",$savePath);
                 //如果没有这个文件夹，就新建一个文件夹
                 if (!file_exists($savePath)) {
                     mkdir($savePath, 0755, true);
                 }
 
                 //将文件放到自己的定义的目录下
-                if (!$file->move($savePath, $fileName)) {
-                    throw new \Exception('文件保存失败！请重试！');
-                }
+                $file->move($savePath, iconv("UTF-8","gb2312",$fileName));
 
                 //生成附件url地址
                 $attachUrl = $savePath . $fileName;
-
                 //将要插入数据库的数据拼装成数组
                 $data = [
-                    'test_result_id' => $testResultId,
+                    'test_result_id' => NULL,
                     'url' => $attachUrl,
                     'type' => $fileMime,
                     'name' => $fileName,
@@ -91,7 +87,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('附件数据保存失败');
                 }
                 return $result;
-            }
+
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -347,23 +343,99 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * @param array $array
+     * @param $stationId
+     * @param $studentId
+     * @param $examScreenId
+     * @param $testResultId
      * @return view
      * @throws \Exception
+     * @internal param $timeAnchors
+     * @internal param array $array
      * @version 1.0
      * @author jiangzhiheng <jiangzhiheng@misrobot.com>
      * @date   2016-01-16  14:33
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTestAttach(Request $request,$stationId,$studentId,$examScreenId,$testResultId,$timeAnchors)
+    public function postTestAttachImage(Request $request)
     {
         try {
+            //获取数据
+            $studentId = $request->input('student_id');
+            $stationId = $request->input('station_id');
+            $exam = Exam::where('status',1)->first();
+
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
             $studentName = $student->name;
             $studentCode = $student->code;
             $stationName = Station::findOrFail($stationId)->first()->name;
-            $examName = ExamScreening::findOrFail($examScreenId)->ExamInfo->name;
+            $examName = $exam->name;
+
+
+            //将参数拼装成一个数组
+            $params = [
+                'exam_name' => $examName,
+                'student_name' => $studentName,
+                'student_code' => $studentCode,
+                'station_name' => $stationName,
+            ];
+            //获取当前日期
+            $date = date('Y-m-d');
+
+            //获取上传的文件,验证文件是否成功上传
+            if (!$request->hasFile('photo')) {
+                throw new \Exception('上传的照片不存在');
+            } else {
+                $photos = $request->file('photo');
+                //判断照片上传中是否有出错
+                if (!$photos->isValid()) {
+                    throw new \Exception('上传的照片出错');
+                }
+
+                //拼装文件名,并插入数据库
+                $result = self::uploadFileBuilder($photos, $date, $params);
+            }
+            return response()->json($this->success_data([$result->id]));
+
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+    }
+
+    /**
+     * 音频附件的上传
+     * @method POST
+     * @url /osce/api/invigilatepad/save-exam-result
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return view
+     * @internal param $stationId
+     * @internal param $studentId
+     * @internal param $examScreenId
+     * @internal param $testResultId
+     * @internal param $timeAnchors
+     * @internal param array $array
+     * @version 1.0
+     * @author jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @date   2016-01-16  14:33
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postTestAttachRadio(
+        Request $request
+    ) {
+        try {
+            //获取数据
+            $studentId = $request->input('student_id');
+            $stationId = $request->input('station_id');
+            $exam = Exam::where('status',1)->first();
+
+            //根据ID找到对应的名字
+            $student = Student::findOrFail($studentId)->first();
+            $studentName = $student->name;
+            $studentCode = $student->code;
+            $stationName = Station::findOrFail($stationId)->first()->name;
+            $examName = $exam->name;
 
 
             //将参数拼装成一个数组
@@ -377,40 +449,40 @@ class InvigilatePadController extends CommonController
             //获取当前日期
             $date = date('Y-m-d');
 
-            //获取上传的文件,验证文件是否成功上传
-            if (!$request->hasFile('photo')) {
-                throw new \Exception('上传的照片不存在');
-            }
-
-            if ($request->hasFile('radio')) {
+            if (!$request->hasFile('radio')) {
                 throw new \Exception('上传的音频不存在');
+            } else {
+                $radios = $request->file('radio');
+
+                if (!$radios->isValid()) {
+                    throw new \Exception('上传的音频出错');
+                }
+
+                $result = self::uploadFileBuilder($radios, $date, $params);
             }
 
-            $photos = $request->file('photo');
-            $radios = $request->file('radio');
-
-            //判断照片上传中是否有出错
-            if (!$photos->isValid()) {
-                throw new \Exception('上传的照片出错');
-            }
-
-            if (!$radios->isValid()) {
-                throw new \Exception('上传的音频出错');
-            }
-
-            //拼装文件名
-            self::uploadFileBuilder($photos, $date, $params, $testResultId);
-            self::uploadFileBuilder($radios, $date, $params, $testResultId);
-
-            //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
-
-            $this->storeAnchor( $stationId, $studentId, $examScreenId,$timeAnchors);
-
-            return true;
-
+            return response()->json($this->success_data([$result->id]));
         } catch (\Exception $ex) {
-            throw $ex;
+            return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 将视频锚点插进数据库
+     * @param Request $request
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
+    public function postStoreAnchor(Request $request)
+    {
+
+        //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
+        $stationId = $request->input('station_id');
+        $studentId = $request->input('student_id');
+        $examScreenId = $request->input('exam_screen_id');
+        $timeAnchors = $request->input('time_anchors');
+
+        $this->storeAnchor( $stationId, $studentId, $examScreenId,$timeAnchors);
     }
 
     /**
