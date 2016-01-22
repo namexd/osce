@@ -31,7 +31,7 @@
 
                 <form action="{{route('osce.admin.Station.getStationList')}}" method="get">
                     <div class="input-group" style="width: 290px;margin-bottom: 20px;">
-                        <input type="text" placeholder="请输入考站名" class="form-control" name="name">
+                        <input type="text" placeholder="请输入考站名" class="form-control" name="name" value="{{(empty($name)?'':$name)}}">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                     </span>
@@ -50,20 +50,20 @@
                     <tbody>
                         @foreach($data as $key => $item)
                             <tr>
-                            <td>{{$key+1}}</td>
-                            <td>{{$item->name}}</td>
-                            <td>
-                                @foreach($placeCate as $type => $value)
-                                    @if($type == $item->type)
-                                    {{$value}}
-                                    @endif
-                                @endforeach
-                            </td>
-                            <td>{{$item->title}}</td>
-                            <td>
-                                <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                                <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                            </td>
+                                <td>{{$key+1}}</td>
+                                <td>{{$item->name}}</td>
+                                <td>
+                                    @foreach($placeCate as $type => $value)
+                                        @if($type == $item->type)
+                                        {{$value}}
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td>{{$item->title}}</td>
+                                <td>
+                                    <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                                    <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
