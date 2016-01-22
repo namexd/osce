@@ -175,132 +175,34 @@ class InvigilatePadController extends CommonController
 
 
     public function getExamGrade(Request $request,Collection $collection){
-//      $this->validate($request,[
-//            'station_id' =>'required|integer',
-////            'exam_id'  => 'required|integer'
-//      ],[
-//         'station_id.required'=>'没有获取到当前考站',
-//         'exam_id.required'=>'没有获取到当前考试'
-//      ]);
-//
-//        $stationId =$request->get('station_id');
-//        $examId = $request->get('exam_id');
-//        //根据考站id查询出下面所有的考试项目
-//        $station    =   Station::find($stationId);
-//        //考试标准时间
-//        $mins = $station->mins;
-//        $exam =Exam::find($examId);
-//        $StandardModel  =   new Standard();
-//        $standardList   =   $StandardModel->ItmeList($station->subject_id);
-////        dd($standardList);
-//        if(count($standardList)!=0){
-//            return response()->json(
-//        $this->success_data($standardList,1,'数据传送成功')
-//            );
-//        }else{
-//            return response()->json(
-//                $this->fail(new \Exception('数据查询失败'))
-//            );
-//
-//        }
-        $data=array([
-            "test_point1"=>[
-                0=>[
-                    "id"=> 142,
-                    "subject_id"=> 39,
-                    "content"=> "考核点1",
-                    "sort"=> 1,
-                    "score"=> 2,
-                    "pid"=> 0,
-                    "level"=> 1,
-                    "created_user_id"=> 45,
-                    "created_at"=> "2016-01-24 12:07:52",
-                    "updated_at"=> "2016-01-24 12:07:52",
-                    "answer"=> null
-                ],
+      $this->validate($request,[
+            'station_id' =>'required|integer',
+//            'exam_id'  => 'required|integer'
+      ],[
+         'station_id.required'=>'没有获取到当前考站',
+         'exam_id.required'=>'没有获取到当前考试'
+      ]);
 
-                "test_term"=>[
-                    0=>[
-                        "id"=> 143,
-                        "subject_id"=> 39,
-                        "content"=> "考核点1考核项1",
-                        "sort"=> 1,
-                        "score"=> 1,
-                        "pid"=> 142,
-                        "level"=> 2,
-                        "created_user_id"=> 45,
-                        "created_at"=> "2016-01-24 12:07:52",
-                        "updated_at"=> "2016-01-24 12:07:52",
-                        "answer"=> "考核点1考核项1评分标准1"
-                    ]  ,
-                    1=>[
-                        "id"=> 144,
-                        "subject_id"=> 39,
-                        "content"=> "考核点1考核项2",
-                        "sort"=> 2,
-                        "score"=> 1,
-                        "pid"=> 142,
-                        "level"=> 2,
-                        "created_user_id"=> 45,
-                        "created_at"=> "2016-01-24 12:07:52",
-                        "updated_at"=> "2016-01-24 12:07:52",
-                        "answer"=> "考核点1考核项2评分标准2"
-                    ],
-            ],
-
-       ],
-       'test_point2'=>[
-           1=>[
-               "id"=> 145,
-               "subject_id"=> 39,
-               "content"=> "考核点2",
-               "sort"=> 2,
-               "score"=> 2,
-               "pid"=> 0,
-               "level"=> 1,
-               "created_user_id"=>45,
-               "created_at"=> "2016-01-24 12:07:52",
-               "updated_at"=> "2016-01-24 12:07:52",
-               "answer"=> null
-           ],
-            "test_term"=>[
-
-            2=>[
-                "id"=> 146,
-                "subject_id"=> 39,
-                "content"=> "考核点2考核项1",
-                "sort"=> 1,
-                "score"=> 1,
-                "pid"=> 145,
-                "level"=> 2,
-                "created_user_id"=> 45,
-                "created_at"=> "2016-01-24 12:07:52",
-                "updated_at"=> "2016-01-24 12:07:52",
-                "answer"=> "考核点2考核项1评分标准1"
-            ],
-
-            3=>[
-                "id"=> 147,
-                "subject_id"=> 39,
-                "content"=> "考核点2考核项2",
-                "sort"=> 2,
-                "score"=> 1,
-                "pid"=> 145,
-                "level"=> 2,
-                "created_user_id"=> 45,
-                "created_at"=> "2016-01-24 12:07:52",
-                "updated_at"=> "2016-01-24 12:07:52",
-                "answer"=> "考核点2考核项2评分标准2"
-            ],
-        ],
-       ]
-        ]);
-
-//        echo json_encode($data);
-         return response()->json(
-        $this->success_data($data,1,'数据传送成功')
+        $stationId =$request->get('station_id');
+        $examId = $request->get('exam_id');
+        //根据考站id查询出下面所有的考试项目
+        $station    =   Station::find($stationId);
+        //考试标准时间
+        $mins = $station->mins;
+        $exam =Exam::find($examId);
+        $StandardModel  =   new Standard();
+        $standardList   =   $StandardModel->ItmeList($station->subject_id);
+//        dd($standardList);
+        if(count($standardList)!=0){
+            return response()->json(
+        $this->success_data($standardList,1,'数据传送成功')
+            );
+        }else{
+            return response()->json(
+                $this->fail(new \Exception('数据查询失败'))
             );
 
+        }
     }
     /**
      *   * 提交评价
@@ -414,37 +316,31 @@ class InvigilatePadController extends CommonController
               $result= $TestResultModel->addTestResult($data);
               //todo 调用zhoufuxiang接口......
           }
-          //得到考试结果id
-          $testResultId =$result->id;
-          //考站id
-          $stationId =$result->station_id;
-          //学生id
-          $studentId =$result->student_id;
-          //考试场次id
-          $examScreenId = $result->exam_screening_id;
-          $timeAnchors=[1,2,3];
+           try{
+               if($result){
+                   //得到考试结果id
+                   $testResultId =$result->id;
+                   //考站id
+                   $stationId =$result->station_id;
+                   //学生id
+                   $studentId =$result->student_id;
+                   //考试场次id
+                   $examScreenId = $result->exam_screening_id;
+                   $timeAnchors=[1,2,3];
+                   //调用照片上传方法，传入数据。
+                   $pictureUpload = $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
+                   //存入考试评分详情表
 
+                   $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
+               }else{
+                   return response()->json(
+                       $this->fail(new \Exception('成绩推送失败'))
+                   );
 
-          //调用照片上传方法，传入数据。
-          $pictureUpload = $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
-          if($pictureUpload){
-              
-          }
-          //存入考试评分详情表
-
-          $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
-//           dd($result);
-          if($result){
-
-              return response()->json(
-                  $this->success_data('',1,'详情保存成功')
-              );
-          }else{
-              return response()->json(
-                  $this->success_data('',0,'详情保存失败')
-              );
-          }
-
+               }
+           } catch (\Exception $ex) {
+               throw $ex;
+           }
       }
 
     /**
