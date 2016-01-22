@@ -29,6 +29,10 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '编号不能为空'
+                            },
+                            regexp: {
+                                regexp:  /^[\u4E00-\u9FA5a-zA-Z0-9_]*$/,
+                                message: '不能输入中文和特殊字符'
                             }
                         }
                     }
@@ -52,23 +56,48 @@
                     <form method="post" class="form-horizontal" id="sourceForm">
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">场所名称</label>
-
+                            <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
                                 <input type="text"  class="form-control" id="name" value="{{$data->name}}" name="name">
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="num" id="code" name="code" value="{{$data->code}}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">关联摄像机</label>
+                            <div class="col-sm-10">
+                                <select name="vcr_id" id="vcr_id" class="form-control">
+                                    @foreach($vcr as $key=>$item)
+                                        <option value="{{$item->id}}" {{($data->vcr_id==$item->id)?'selected=selected':''}}>{{$item->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
-
                             <div class="col-sm-10">
                                 <input type="text" ng-model="description" id="description" class="form-control" name="description" value="{{$data->description}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地址</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="address" id="address" class="form-control" name="address" value="{{$data->address}}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">

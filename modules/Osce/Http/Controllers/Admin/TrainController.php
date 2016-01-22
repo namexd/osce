@@ -272,6 +272,12 @@ class TrainController extends  CommonController{
         if($data['attachments']){
             $data['attachments']=unserialize($data['attachments']);
         }
+
+//        if(!$train->isEmpty()){
+//            $data = $train->first();
+////            $data -> attachments = serialize($data -> attachments);
+//            $data -> attachments = unserialize($data -> attachments);
+//        }
         return view('osce::admin.train.train_detail')->with('data',$data);
     }
 

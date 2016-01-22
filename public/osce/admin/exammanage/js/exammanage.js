@@ -406,8 +406,10 @@ function timePicker(background){
         if(!thisElement.prev().prev().length){
 
             option.max = thisElement.next().find('input').val();
+            option.min = '1900-01-01 00:00:00';
         }else{
-            option.min = thisElement.prev().find('input').val();
+            option.min = thisElement.prev().find('input[type="text"]').val();
+            option.max = '2099-12-31 23:59:59';
         }
 
         //每一次点击都进行一次随机

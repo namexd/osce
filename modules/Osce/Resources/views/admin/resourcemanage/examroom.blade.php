@@ -34,7 +34,6 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-
                         @foreach($area as $item)
                             <li
                             @if($item->cate == 1)
