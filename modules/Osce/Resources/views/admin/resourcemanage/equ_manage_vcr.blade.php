@@ -63,9 +63,9 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>3])}}">全部</a></li>
+                                <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}">全部</a></li>
                                 @forelse($machineStatuValues as $status=>$machineStatuValue)
-                                    <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>3,'status'=>$status])}}">{{$machineStatuValue}}</a></li>
+                                    <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>1,'status'=>$status])}}">{{$machineStatuValue}}</a></li>
                                 @empty
                                 @endforelse
                             </ul>
