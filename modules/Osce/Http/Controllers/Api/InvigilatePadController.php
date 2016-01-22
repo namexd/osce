@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Standard;
@@ -306,10 +307,16 @@ class InvigilatePadController extends CommonController
           //查询出学生当前已完成的考试
           $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $ExamId)->count();
 
-           try{
-               if($ExamFinishStatus == $studentExamSum){
-                   //todo 调用zhoufuxiang接口......
-               }
+        try{
+            if($ExamFinishStatus == $studentExamSum){
+                //todo 调用zhoufuxiang接口......
+                try{
+                $examResultModel= new ExamResult();
+                $examResultModel->examResultPush($data['student_id']);
+                }catch (\Exception $mssge) {
+                    \Log::alert($mssge->getMessage().';'.$data['student_id'].'成绩推送失败');
+                }
+            }
                $TestResultModel  =new TestResult();
                $result= $TestResultModel->addTestResult($data);
                if($result){
