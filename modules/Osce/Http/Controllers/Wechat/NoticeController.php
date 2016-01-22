@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Config;
 use Modules\Osce\Entities\InformInfo;
 use Modules\Osce\Entities\Notice;
+use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class NoticeController extends CommonController
@@ -36,10 +38,33 @@ class NoticeController extends CommonController
      *
      */
     public function getSystemList(Request $request){
+        //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
+        $user = \Auth::user();
+        if(!$user){
+            throw new \Exception('没有找到当前操作人的信息！');
+        }
+        $student = Student::where('user_id', $user->id)->first();
+        $spTeacher = Teacher::where('id',$user->id)->where('type',2)->first();
+        if(!empty($student)){
+            $accept = 1;       //接收着为学生
+        }elseif(!empty($spTeacher)){
+            $accept = 3;       //接收着为sp老师
+        }else{
+            $accept = 2;
+        }
+        // TODO zhoufuxiang 16-1-22
         $notice =   new InformInfo();
         $config = Config::first();
         if(empty($config) || in_array(4,json_decode($config->value))){
             $list   =   $notice ->  getList();
+            //根据操作人去除不给他接收的数据
+            if(!empty($list)){
+                foreach ($list as $index => $item) {
+                    if(!in_array($accept, explode(',', $item->accept))){
+                        unset($list[$index]);
+                    }
+                }
+            }
         }else{
             $list   =   [];
         }
