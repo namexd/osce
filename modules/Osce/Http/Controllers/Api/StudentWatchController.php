@@ -17,6 +17,7 @@ use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
@@ -66,35 +67,32 @@ class StudentWatchController extends CommonController
             ];
            $code =0;
         $watchId = $request->input('watch_id');
-
-        $watchStudent = WatchLog::where('watch_id', '=', $watchId)->where('action', '绑定')->select('student_id')->orderBy('id', 'desc')->first();
-
+//         根据腕表id找到对应的考试场次和学生
+        $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId)->select('student_id','exam_screening_id')->first();
         if (!$watchStudent) {
             $data['title'] = '没有找到学生的腕表信息';
-
             return response()->json(
                 $this->success_data($data, $code)
             );
         }
-
+        //得到场次id
+        $examScreeningId= $watchStudent->exam_screening_id;
+        //得到学生id
         $studentId = $watchStudent->student_id;
-
-
+       // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-
         $examId = $examInfo->exam_id;
-
+        //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
-
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
         dump($examQueueCollect);
-
+         //判断考试的状态
         $nowNextQueue = $ExamQueueModel->nowQueue($examQueueCollect);
         $nowQueue = $nowNextQueue[0];
         $nextQueue = $nowNextQueue[1];
         $nowTime = time();
         if (empty($nowQueue)) {
-            //查询出学生所有应该的考试
+            //查询出学生对应的考试的所有流程
             $ExamFlowModel = new  ExamFlow();
             $studentExamSum = $ExamFlowModel->studentExamSum($examId);
 
