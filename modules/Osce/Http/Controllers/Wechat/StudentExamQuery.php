@@ -31,6 +31,10 @@ class StudentExamQuery extends  CommonController
      */
 
     public  function getResultsQueryIndex(Request $request){
+        $ExamModel = new Exam();
+        $ExamList= $ExamModel->select()->get();
+        //dd($ExamList);
+        return view('osce::wechat.resultquery.examination_detail');
 
         try{
             $user= Auth::user();

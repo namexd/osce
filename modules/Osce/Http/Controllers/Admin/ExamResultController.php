@@ -132,6 +132,7 @@ class ExamResultController extends CommonController{
         $result=[];
         foreach($examResult as $item){
          $result=[
+             'id' =>$item->id,
              'exam_name' =>$item->exam_name,
              'student'   =>$item->student,
              'teacher'   =>$item->teacher,
@@ -152,7 +153,7 @@ class ExamResultController extends CommonController{
         $result['time'].=':';
         $result['time'].=$result['time']%60;
 
-        $score=ExamScore::where('exam_result_id',$id)->select()->get();
+        $score=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->select()->get();
         $scores=[];
         foreach($score as $itm){
             $scores[]=[
@@ -164,21 +165,20 @@ class ExamResultController extends CommonController{
         $standard=[];
         foreach($scores as $standards){
             if($standards['standard']->pid==0){
-                $standard[]=$standards['standard']->score;
+                $standard[]=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->where('standard_id',$standards['standard']->id)->select()->first()->score;
             }
         }
-        $examResult=new ExamResult();
-        $student=$examResult->getStudent($result['station_id'],$result['subject_id']);
-        $totalStudent=count($student);
 
         $standardModel=new Standard();
         $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
         $sort=$totalScore[0]->sort;
-        for($i=0;$i<$sort;$i++){
-           
-
+        $avg=[];
+        for($i=1;$i<=$sort;$i++){
+             $avg[]=$standardModel->getAvgScore($i,$result['station_id'],$result['subject_id']);
         }
-        return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard]);
+
+        return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
+
     }
 
 
