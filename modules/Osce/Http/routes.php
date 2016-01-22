@@ -361,16 +361,9 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 
 //TODO:测试用
 Route::get('test/test', function() {
-	$config = config('message');
+	$config = config('osce.name');
 	dd($config);
-//	$config = include MESSAGE_CONFIG;
-//	$formData['default'] = 'pm';
-//	$config['default'] = 'env(\'MESSAGE_DRIVER\'， \'' . $formData['default'] . '\'' ."),\n";
-//	echo $config['default'];
-//	$num = strpos('sms_jia_pos','_');
-//	dd(substr('sms_jia_pos',$num+1));
-//	return view('osce::admin.test');
-//	dd(filter_var('http://mb345.com/ws/BatchSend.aspx?' ));
+
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$test = $request->only('test');

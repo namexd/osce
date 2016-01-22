@@ -706,15 +706,4 @@ class ExamPlan extends CommonModel
         return $examPlanData;
     }
 
-    /**
-     * 将exam_plan按begin_dt这个列分组,并返回分组后的一维对象
-     * @author Jiangzhiheng
-     */
-    public function getBegindtList()
-    {
-        return $this->select('begin_dt')
-            ->groupBy('begin_dt')
-            ->get()
-            ->pluck('begin_dt');
-    }
 }

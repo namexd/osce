@@ -196,5 +196,46 @@ class ExamQueue extends CommonModel
         return array_shift($queueLeave);
     }
 
+    /**
+     * 将数据写入exam_queue
+     * @param $examId
+     * @param $studentId
+     * @param $time  当前时间戳
+     * @param $examScreeningId
+     * @throws \Exception
+     * @internal param $date
+     * @author Jiangzhiheng
+     */
+    public function createExamQueue($examId, $studentId, $time, $examScreeningId)
+    {
+        try {
+            //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
+            $obj = ExamPlan::where('exam_id',$examId)
+                ->where('student_id',$studentId)
+                ->where('exam_screening_id', $examScreeningId)
+                ->orderBy('begin_dt','asc')
+                ->first();
+            if (!$obj) {
+                throw new \Exception('该学生的考试场次有误，请核实！');
+            }
 
+            //将当前的时间与计划表的时间减去缓冲时间做对比，如果是比计划的时间小，就直接用计划的时间。
+            //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
+            //config('osce.begin_dt_buffer')为缓冲时间
+            if ($time < strtotime($obj->begin_dt)-config('osce.begin_dt_buffer')) {
+
+            }
+
+
+
+            if (!ExamQueue::create($obj->all())) {
+                throw new \Exception('该名学生的与腕表的录入失败！');
+            };
+
+            //将这条数据插入exam_queue表
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
