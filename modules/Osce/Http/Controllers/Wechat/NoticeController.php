@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Config;
 use Modules\Osce\Entities\InformInfo;
 use Modules\Osce\Entities\Notice;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -36,7 +37,13 @@ class NoticeController extends CommonController
      */
     public function getSystemList(Request $request){
         $notice =   new InformInfo();
-        $list   =   $notice ->  getList();
+        $config = Config::first();
+        if(empty($config) || in_array(4,json_decode($config->value))){
+            $list   =   $notice ->  getList();
+        }else{
+            $list   =   [];
+        }
+
         return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
     }
 
