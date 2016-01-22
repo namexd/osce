@@ -40,4 +40,32 @@ class ExamFlow extends CommonModel
     public function flow(){
         return $this->hasOne('\Modules\Osce\Entities\Flows','id','flow_id');
     }
+
+    /**
+     * 学生考试流程数量
+     * @access public
+     * @version 1.0
+     * @author zhouqiang<zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function studentExamSum($examId)
+    {
+        //查到学生考试排序模式
+        $SequenceMode = Exam::where('id', '=', $examId)->select('sequence_mode')->first();
+
+        if ($SequenceMode->sequence_mode == 1) {
+            //根据考场排序
+            $studentExamSum = ExamFlowRoom::where('exam_id','=',$examId)->count();
+
+        } else {
+            //根据考站排序
+            $studentExamSum = ExamFlowStation::where('exam_id','=',$examId)->count();
+
+        }
+
+        return $studentExamSum;
+
+    }
 }

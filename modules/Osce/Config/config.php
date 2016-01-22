@@ -7,6 +7,8 @@ return [
 	'order_type' => 'created_at',
 	'order_by' => 'desc',
     'num'    =>10,
+    'student_num'    =>20,
+	'begin_dt_buffer' => 10,
 
 	'importForCnToEn'=>[
 		// 中英文 字段名对照

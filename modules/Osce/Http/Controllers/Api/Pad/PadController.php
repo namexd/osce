@@ -231,7 +231,7 @@ class PadController extends  CommonController{
        }
 
     /**
-     *根据考试id获取候考场所列表(接口)
+     * 根据考试id获取候考场所列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/wait-room
      * @access public
@@ -265,4 +265,44 @@ class PadController extends  CommonController{
                };
        }
 
+    /**
+     * 根据考试id获取候考场所列表(接口)
+     * @method GET
+     * @url api/1.0/private/osce/pad/status
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        exam_id        考试id(必须的)
+     * @return \Illuminate\Http\JsonResponse ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStatus(Request $request)
+    {
+        $this->validate($request, [
+            'uid' => 'required|integer',
+        ]);
+
+        try {
+            //通过考生的腕表id来找到对应的队列id
+            $uid = $request->input('uid');
+
+            //找到对应的方法找到queue实例
+            $queue = ExamQueue::findQueueIdByUid($uid);
+
+            //修改状态
+            $queue->status = 3;
+            if (!$queue->save()) {
+                throw new \Exception('状态修改失败！请重试');
+            }
+            return response()->json($this->success_data(['修改成功！']));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+
+    }
 }
