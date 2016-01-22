@@ -110,9 +110,9 @@ class StudentWatchController extends CommonController
             } else {
 
                 $TestResultModel = new TestResult();
-                $TestResult = $TestResultModel->AcquireExam($studentId);
-                if ($TestResult) {
-                    $studentExamScore = $TestResult->score;
+                $ExamResult = $TestResultModel->AcquireExam($studentId);
+                if (!empty($ExamResult)) {
+                    $studentExamScore = $ExamResult;
                     $data['score'] = $studentExamScore;
                     $data['title'] = '考试完成 最终成绩';
                     $code=6;

@@ -34,6 +34,11 @@ class InvigilatePadTest extends TestCase
         $Nowtime =date('Y-m-d H:i:s',time());
 
         $data    =   [
+            'evaluate'=>   '评价内容',//评价内容
+            'operation'=>   rand(1,5),//操作的连贯性
+            'skilled'=>     rand(1,5),//工作的娴熟度
+            'patient'=>     rand(1,5),//病人关怀情况
+            'affinity'=>    rand(1,5),//沟通亲和能力
             'student_id'=>$student_id,
             'station_id'=>$station_id,
             'exam_screening_id'=>$exam_screening_id,

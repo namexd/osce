@@ -325,12 +325,10 @@ class InvigilatePadController extends CommonController
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
             'score' =>'required',
-            'evaluate'=>'required'
         ],[
             'subject_id.required'=>'请检查考试项目',
             'standard_id.required'=>'请检查评分标准',
             'score.required'=>'请检查评分标准分值',
-            'evaluate.required'=>'评价内容',
         ]);
         $data =[
             'subject_id'=>Input::get('subject_id'),
@@ -378,6 +376,7 @@ class InvigilatePadController extends CommonController
               'score'=>'required|integer',
               'score_dt'=>'required',
               'teacher_id'=>'required|integer',
+              'evaluate'=>'required'
           ]);
 
         $data   =   [
@@ -390,7 +389,17 @@ class InvigilatePadController extends CommonController
           'score'=>Input::get('score'),//最终成绩
           'score_dt'=>Input::get('score_dt'),//评分时间
           'teacher_id'=>Input::get('teacher_id'),
+          'evaluate'=>Input::get('evaluate'),//评价内容
+          'operation'=>Input::get('operation'),//操作的连贯性
+          'skilled'=>Input::get('skilled'),//工作的娴熟度
+          'patient'=>Input::get('patient'),//病人关怀情况
+          'affinity'=>Input::get('affinity'),//沟通亲和能力
+
         ];
+
+
+
+
 
         $TestResultModel  =new TestResult();
         $result= $TestResultModel->addTestResult($data);
@@ -584,7 +593,7 @@ class InvigilatePadController extends CommonController
           ];
           if($list->status==0){
               return response()->json(
-                  $this->success_data(0,'摄像头损坏')
+                  $this->success_data('',0,'摄像头损坏')
               );
           }else{
               return response()->json(
