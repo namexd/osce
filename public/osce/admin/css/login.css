@@ -19,5 +19,5 @@ h3.tt{color:#999;margin:20px 0 10px;padding-left:2px;font-size:14px}
 .check_icon.check{background-position:-32px 0}
 .check_label:hover .check_icon.check{background-position:-32px 0}
 .check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
-.btn-primary{background:#16beb0;border:1px solid #16beb0;}
-.btn-primary:hover{background-color:#42b2b1!important;}
+.btn-primary{background:#1dc5a3;border:1px solid #1dc5a3;}
+.btn-primary:hover{background-color:#19AB8E!important;}
