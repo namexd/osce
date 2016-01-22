@@ -15,6 +15,9 @@
         .exam-list{
             width: 70%;
         }
+        .examinee-list{
+            width: 80%;
+        }
     </style>
 @stop
 
@@ -36,17 +39,20 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <label class="pull-left exam-name">考试名称:</label>
                             <div class="pull-left exam-list">
-                                <input type="text" placeholder="请输入考试名称" name="exam_name" class="input-md form-control">
+                                <input type="text" placeholder="请输入考试名称" name="exam_name" class="input-md form-control" style="width: 300px;">
                             </div>
                         </div>
                         <div class="input-group col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control">
-                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-md btn-primary" id="search">搜索</button>
-                            </span>
+                            <label class="pull-left exam-name">考生姓名:</label>
+                            <div  class="pull-left examinee-list">
+                                <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control" style="width: 300px;">
+                                 <span class="input-group-btn pull-left">
+                                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </form>
+
                 <table class="table table-striped" id="table-striped" style="background:#fff">
                     <thead>
                     <tr>
@@ -73,6 +79,7 @@
                 </table>
                 <div class="btn-group pull-right">
                 </div>
+                </form>
             </div>
     </div>
 @stop{{-- 内容主体区域 --}}

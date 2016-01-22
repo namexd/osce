@@ -43,6 +43,32 @@
                                 message: '请输入正确的手机号码'
                             }
                         }
+                    },
+                    idcard: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '身份证号不能为空'
+                            },
+                            regexp: {
+                                regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                                message: '请输入正确的身份证号'
+                            }
+                        }
+                    },
+                    email: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '邮箱不能为空'
+                            },
+                            regexp: {
+                                regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
+                                message: '请输入正确的邮箱'
+                            }
+                        }
                     }
                 }
             });
@@ -57,7 +83,7 @@
                     data:{moblie:thisMobile},
                     success:function(data){
                         if(data==1){
-                            layer.alert("手机号码已存在");
+                            layer.msg("手机号码已存在");
                         }
                     }
                 })
@@ -90,11 +116,41 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">手机号</label>
+                            <label class="col-sm-2 control-label">性别</label>
+                            <div class="col-sm-10">
+                                <select name="gender" id="" class="form-control">
+                                    <option value="1">男</option>
+                                    <option value="2">女</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">教师编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="code" id="">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">身份证号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="idcard" id="">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系电话</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="mobile" id="mobile">
                             </div>
-
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">电子邮箱</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="email" id="">
+                            </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
@@ -111,6 +167,12 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="note" id="">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit" id="save">保存</button>

@@ -32,15 +32,13 @@
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             @foreach($area as $item)
-                                <li
-                                        @if($item->cate == 4)
-                                        class="active"
-                                        @endif><a href="{{route('osce.admin.room.getRoomList')}}?type={{$item->cate}}">{{$item->name}}</a></li>
+                                <li class="{{($item->cate == 4)?'active':''}}">
+                                    <a href="{{route('osce.admin.room.getRoomList')}}?type={{$item->cate}}">{{$item->name}}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
-
 
                 <table class="table table-striped" id="table-striped">
                     <thead>
@@ -49,7 +47,6 @@
                         <th>场所名称</th>
                         <th>描述</th>
                         <th>操作</th>
-
                     </tr>
                     </thead>
                     <tbody>

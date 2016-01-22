@@ -71,7 +71,7 @@
                                 message: '请输入11位手机号码'
                             },
                             regexp: {
-                                regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                                regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
                                 message: '请输入正确的手机号码'
                             }
                         }
@@ -108,13 +108,7 @@
                     },
                     error: function (data, status, e)
                     {
-                        $.alert({
-                            title: '提示：',
-                            content: '通讯失败!',
-                            confirmButton: '确定',
-                            confirm: function(){
-                            }
-                        });
+                        layer.msg("通讯失败");
                     }
                 });
             }) ;
