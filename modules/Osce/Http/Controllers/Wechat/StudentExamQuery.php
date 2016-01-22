@@ -9,8 +9,10 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Http\Controllers\CommonController;
+use Auth;
 
 class StudentExamQuery extends  CommonController
 {
@@ -29,12 +31,30 @@ class StudentExamQuery extends  CommonController
      */
 
     public  function getResultsQueryIndex(Request $request){
+        try{
 
+            $user= Auth::user();
+            if(empty($user)){
+                throw new \Exception('当前用户未登陆');
+            }
 
-          $ExamModel = new Exam();
-           $ExamList= $ExamModel->select()->get();
-          dd($ExamList);
-        return view('osce::wechat.exammanage.exam_notice');
+            //根据用户获得考试id
+            $ExamId= Student::where('user_id','=',$user->id)->select('exam_id')->get();
+              $list=[];
+            foreach($ExamId as $data){
+                $list[]=[
+                      'exam_id'=>$data->exam_id,
+                ];
+                $ExamModel = new Exam();
+                $ExamList= $ExamModel->where('id','=',$data['exam_id'])->select()->get();
+            }
+
+            //根据考试id获取所有考试
+            return view('osce::wechat.exammanage.exam_notice');
+        }catch (\Exception $ex) {
+            throw $ex;
+        }
+
 
     }
 
@@ -47,6 +67,10 @@ class StudentExamQuery extends  CommonController
         $examId =Input::get('exam_id');
         $ExamModel = new Exam();
         $ExamStationList= $ExamModel->ExamStations($examId);
+
+
+
+
         if($ExamStationList){
             return response()->json(
                 $this->success_data('',0,'查询失败')
@@ -55,6 +79,10 @@ class StudentExamQuery extends  CommonController
         }
 
     }
+
+
+
+    //考生成绩查询详情页
 
 
 }
