@@ -146,25 +146,11 @@
 	    	var start=$("#start").val();
 	    	var end=$("#end").val();
 	    	if(start==""){
-	    		$.alert({
-                  	title: '提示：',
-                  	content: '你还没有选择开始时间!',
-                  	confirmButton: '确定',
-                  	confirm: function(){
-                  		$(".fabu_btn").removeAttr("disabled");
-            		}
-              	});
+	    		layer.alert('你还没有选择开始时间!',function(its){layer.close(its)});
               	return false;
 	    	}
 	    	if(end==""){
-	    		$.alert({
-                  	title: '提示：',
-                  	content: '你还没有选择结束时间!',
-                  	confirmButton: '确定',
-                  	confirm: function(){
-                  		$(".fabu_btn").removeAttr("disabled");
-            		}
-              	});
+	    		layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
               	return false;
 	    	}
     		$("#form1").submit();
