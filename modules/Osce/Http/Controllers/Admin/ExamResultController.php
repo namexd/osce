@@ -32,14 +32,14 @@ class ExamResultController extends CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getResultExam(Request $request){
-
-         $exams=Exam::select()->get();
-         return response()->json(
-           $this->success_data($exams,1,'success')
-         );
-
-    }
+//    public function getResultExam(Request $request){
+//
+//         $exams=Exam::select()->get();
+//         return response()->json(
+//           $this->success_data($exams,1,'success')
+//         );
+//
+//    }
 
     /**
      *
@@ -58,12 +58,12 @@ class ExamResultController extends CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getResultStation(Request $request){
-         $stations=Station::select()->get();
-         return response()->json(
-            $this->success_data($stations,1,'success')
-        );
-    }
+//    public function getResultStation(Request $request){
+//         $stations=Station::select()->get();
+//         return response()->json(
+//            $this->success_data($stations,1,'success')
+//        );
+//    }
 
     /**
      *
@@ -95,8 +95,58 @@ class ExamResultController extends CommonController{
          $stationId=$request->get('station_id');
          $name=$request->get('name');
 
+         $stations=Station::select()->get();
+         $exams=Exam::select()->get();
          $examResult=new ExamResult();
          $examResults=$examResult->getResultList($examId,$stationId,$name);
-         return view()->with('examResults',$examResults);
+         return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams]);
+    }
+
+    /**
+     *获取考试成绩详情页
+     * @method GET
+     * @url /exam/exam-result-detail
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        成绩id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamResultDetail(Request $request){
+       $this->validate($request,[
+           'id'   => 'required|integer'
+       ]);
+
+        $id=$request->get('id');
+        $examResult=new ExamResult();
+        $examResult=$examResult->getResultDetail($id);
+        $result=[];
+        foreach($examResult as $item){
+         $result=[
+             'student' =>$item->student,
+             'teacher' =>$item->teacher,
+             'begin_dt' =>$item->begin_dt,
+             'time' =>$item->time,
+             'score' =>$item->score,
+             'evaluate' =>$item->evaluate,
+             'operation' =>$item->operation,
+             'skilled' =>$item->skilled,
+             'patient' =>$item->patient,
+             'affinity' =>$item->affinity,
+             'subject_title' =>$item->subject_title,
+         ];
+        }
+        $result['time']=floor($result['time']/60);
+        $result['time'].=':';
+        $result['time'].=$result['time']%60;
+
+        return view('osce::admin.exammanage.score_query_detail')->with('result',$result);
     }
 }
