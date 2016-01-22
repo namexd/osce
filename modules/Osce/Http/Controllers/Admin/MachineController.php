@@ -427,8 +427,8 @@ class MachineController extends CommonController
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
-            'factory'       =>  e($request  ->  get('factory')),
             'sp'            =>  $request    ->  get('sp'),
+            'factory'       =>  e($request  ->  get('factory')),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
         $cate_id    =   $request    ->  get('cate_id');

@@ -152,50 +152,53 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-                <div class="col-md-3 col-sm-3">
-                    <ul class="img_box">
-                        <span class="images_upload">
-                            <input type="file" name="images" id="file0"/>
-                            图片大小为280X180
-                        </span>
-                    </ul>
-                </div>
-                <div class="col-md-9 col-sm-9">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
+                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
 
-
+                    <div class="col-md-3 col-sm-3">
+                        <ul class="img_box">
+                            <span class="images_upload">
+                                <input type="file" name="images" id="file0"/>
+                                图片大小为280X180
+                            </span>
+                        </ul>
+                    </div>
+                    <div class="col-md-9 col-sm-9">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">名称</label>
+                            <label class="col-sm-2 control-label">姓名</label>
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name">
-                                <input type="hidden" required class="form-control" id="is_sp" name="type" value="2">
+                                <input type="hidden" required class="form-control" id="type" name="type" value="2">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">性别</label>
                             <div class="col-sm-10">
-                                <select name="gender" id="" class="form-control">
+                                <select name="gender" id="gender" class="form-control">
                                     <option value="1">男</option>
                                     <option value="2">女</option>
                                 </select>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">教师编号</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="code" id="">
+                                <input type="text" class="form-control" name="code" id="code">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">身份证号</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="idcard" id="">
+                                <input type="text" class="form-control" name="idcard" id="idcard">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">联系电话</label>
                             <div class="col-sm-10">
@@ -203,13 +206,15 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">电子邮箱</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="email" id="">
+                                <input type="text" class="form-control" name="email" id="email">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <div class="select-floor">
                                 <label class="col-sm-2 control-label">病例</label>
@@ -224,12 +229,15 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="note" id="">
+                                <input type="text" class="form-control" name="note" id="note">
                             </div>
                         </div>
+                        <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit" id="save">保存</button>
@@ -237,10 +245,9 @@
 {{--								<a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>--}}
                             </div>
                         </div>
-                    </form>
+                    </div>
 
-                </div>
-
+                </form>
             </div>
         </div>
     </div>
