@@ -45,27 +45,31 @@ class InvitationController extends CommonController
     public function getInvitationList(Request $request)
     {
         $this->validate($request, [
-            'teacher_id' => 'required|integer',
-            'exam_id' => 'required|integer',
+            'teacher_id' => 'required',
+//            'exam_id' => 'required|integer',
 //            'station_id' => 'required|integer',
         ], [
             'teacher_id.required' => '邀请编号必须',
-            'teacher_id.integer' => '邀请编号必须是数字',
+            'exam_id.required'=>'考试编号必须'
         ]);
         $teacher_id = $request->get('teacher_id');
-        $exam_id = $request->get('exam_id');
+//        $exam_id = $request->get('exam_id');
+        $exam_id = 56;
+
 //        $station_id =   $request    -> get('station_id');
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);
 //        dd($data);
         $ExamModel = new Exam();
         $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
+        $examscreening = ExamScreening::where('exam_id','=',$exam_id)->select('id')->first();
 //        dd($ExamList);
-            foreach($data as $k=>$v){
-                $data[$k]['exam_name'] = $ExamList['name'];
-                $data[$k]['begin_dt'] = $ExamList['begin_dt'];
-                $data[$k]['end_dt'] = $ExamList['end_dt'];
-                $data[$k]['exam_id'] = $exam_id;
+            foreach($data as $key=>$v){
+                $data[$key]['exam_name'] = $ExamList['name'];
+                $data[$key]['begin_dt'] = $ExamList['begin_dt'];
+                $data[$key]['end_dt'] = $ExamList['end_dt'];
+                $data[$key]['exam_id'] = $exam_id;
+                $data[$key]['exam_screening_id']= $examscreening->id;
             }
 
 //        dd($data);
