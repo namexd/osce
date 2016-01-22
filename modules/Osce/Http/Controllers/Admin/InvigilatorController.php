@@ -609,17 +609,22 @@ class InvigilatorController extends CommonController
      */
     public function postSelectTeacher(Request $request){
         $this->validate($request,[
-            'moblie'    =>  'required'
+            'mobile'    =>  'required'
         ]);
-        $moblie = $request  ->get('moblie');
-        $user = User::where('username', $moblie)->first();
+        $mobile = $request  ->get('mobile');
+
+        $user = User::where('username', $mobile)->first();
         if($user){
             $result = Teacher::where('id', $user->id)->first();
             if($result){
-                return json_encode(1);
+                return json_encode(array(
+                    'valid' =>false,
+                ));
             }
         }
-        return json_encode(0);
+        return json_encode(array(
+            'valid' =>true,
+        ));
     }
 
 }

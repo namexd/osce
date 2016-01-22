@@ -4,19 +4,38 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('osce/plugins/js/plugins/validate/jquery.validate.min.js')}}"></script>
-    <script src="{{asset('osce/plugins/js/plugins/messages_zh.min.js')}}"></script>
     <script>
         $(function(){
-            $('#type').change(function(){
-                var choose  =   $(this).find(':selected').val();
-                if(choose=='3')
-                {
-                    $('.noTheory').hide();
-                }
-                else
-                {
-                    $('.noTheory').show();
+            $('#sourceForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    name: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '名称不能为空'
+                            }
+                        }
+                    },
+                    mins: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '时间限制不能为空'
+                            },
+                            regexp: {
+                                regexp: /^[1-9]+$/,
+                                message: '请输入正确的时间'
+                            }
+                        }
+                    }
                 }
             });
         })
