@@ -125,9 +125,27 @@ class RoomController extends CommonController
     {
         //获取摄像头数据
         $data = Vcr::where('status','<>',0)->get();
-
         return view('osce::admin.resourcemanage.central_control_add',['data'=>$data]);
     }
+
+
+    //新增中控室
+
+     public function postAddCentral(Request $request){
+         $this->validate($request, [
+             'id' => 'required|integer',
+             'name' => 'required',
+             'description' => 'required',
+             'vcr_id ' => 'vcr_id '
+         ]);
+
+         $id         = $request->input('id');
+         $vcr_id     = $request->get('vcr_id');
+         $formData   = $request->only('name', 'description', 'address', 'code');
+
+     }
+
+
 
 
     /**
