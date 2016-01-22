@@ -23,7 +23,7 @@
                             }
                         }
                     },
-                    description: {
+                    code: {
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
@@ -33,6 +33,24 @@
                             regexp: {
                                 regexp:  /^[\u4E00-\u9FA5a-zA-Z0-9_]*$/,
                                 message: '不能输入中文和特殊字符'
+                            }
+                        }
+                    },
+                    description: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '功能描述不能为空'
+                            }
+                        }
+                    },
+                    address: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '地址不能为空'
                             }
                         }
                     }
