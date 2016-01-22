@@ -32,7 +32,7 @@
                                 message: '设备ID不能为空'
                             },
                             regexp: {
-                                regexp: /^\d+$/,
+                                regexp: /^[a-zA-Z0-9]+$/,
                                 message: '请输入正确的设备ID'
                             }
                         }

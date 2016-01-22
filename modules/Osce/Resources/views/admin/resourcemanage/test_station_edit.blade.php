@@ -43,8 +43,8 @@
                                     <input type="text" required class="form-control" id="name" name="name" value="{{$rollmsg['name']}}">
                                 </div>
                             </div>
-
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
@@ -59,70 +59,35 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">考站描述</label>
 
-                                <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="description" name="description" value="{{$rollmsg['description']}}">
-                                </div>
-                            </div>
-
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">考站编号</label>
-
-                                <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="code" name="code" value="{{$rollmsg['code']}}">
-                                </div>
-                            </div>
-
-
-                            <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">时间限制</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  required  ng-model="num" id="code" class="form-control" name="mins" value="{{$rollmsg['mins']}}">
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
-                                <label class="col-sm-2 control-label">关联摄像机</label>
+                            <div class="hr-line-dashed"></div>
 
+                            <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
+                                <label class="col-sm-2 control-label">科目</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="vcr_id">
+                                    <select id="" required  class="form-control m-b" name="subject_id">
                                         <option value="0">请选择</option>
-                                        @foreach($vcr as $key=>$item)
+                                        @foreach($subject as $key=>$item)
                                             <option value="{{$item['id']}}"
-                                                    @if($rollmsg['vcr_id'] == $item['id'])
-                                                        selected="selected"
-                                                    @endif
-                                            >{{$item['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
-                                <label class="col-sm-2 control-label" required>所属考场</label>
-
-                                <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="room_id">
-                                        <option value="0">请选择</option>
-                                        @foreach($room as $key=>$item)
-                                            <option value="{{$item['id']}}"
-                                                @if($rollmsg['room_id'] == $item['id'])
+                                                    @if($rollmsg['subject_id'] == $item['id'])
                                                     selected="selected"
-                                                @endif
-                                            >{{$item['name']}}</option>
+                                                    @endif
+                                            >{{$item['title']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}></div>
+                            <div class="hr-line-dashed"></div>
+
                             <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
                                 <label class="col-sm-2 control-label">病例</label>
-
                                 <div class="col-sm-10">
                                     <select id="" required  class="form-control m-b" name="case_id">
                                         <option value="0">请选择</option>
@@ -137,25 +102,55 @@
                                 </div>
                             </div>
                             <div class="hr-line-dashed noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}></div>
-                            <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
-                                <label class="col-sm-2 control-label">评分标准</label>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" required>所属考场</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="subject_id">
+                                    <select id="" required  class="form-control m-b" name="room_id">
                                         <option value="0">请选择</option>
-                                        @foreach($subject as $key=>$item)
+                                        @foreach($room as $key=>$item)
                                             <option value="{{$item['id']}}"
-                                                @if($rollmsg['subject_id'] == $item['id'])
+                                                    @if($rollmsg['room_id'] == $item['id'])
                                                     selected="selected"
-                                                @endif
-                                            >{{$item['title']}}</option>
+                                                    @endif
+                                            >{{$item['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
+                            </div>
+                            <div class="hr-line-dashed noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}></div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">关联摄像机</label>
+                                <div class="col-sm-10">
+                                    <select id="" required  class="form-control m-b" name="vcr_id">
+                                        <option value="0">请选择</option>
+                                        @foreach($vcr as $key=>$item)
+                                            <option value="{{$item['id']}}"
+                                                    @if($rollmsg['vcr_id'] == $item['id'])
+                                                    selected="selected"
+                                                    @endif
+                                            >{{$item['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="hr-line-dashed"></div>
 
+                            {{--<div class="form-group">--}}
+                                {{--<label class="col-sm-2 control-label">考站编号</label>--}}
+                                {{--<div class="col-sm-10">--}}
+                                    {{--<input type="text" required class="form-control" id="code" name="code" value="{{$rollmsg['code']}}">--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<div class="hr-line-dashed"></div>--}}
+                            {{--<div class="form-group">--}}
+                                {{--<label class="col-sm-2 control-label">考站描述</label>--}}
+                                {{--<div class="col-sm-10">--}}
+                                    {{--<input type="text" required class="form-control" id="description" name="description" value="{{$rollmsg['description']}}">--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<div class="hr-line-dashed"></div>--}}
 
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">

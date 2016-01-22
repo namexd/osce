@@ -42,7 +42,7 @@
                         <th>#</th>
                         <th>考站名称</th>
                         <th>类型</th>
-                        <th>描述</th>
+                        <th>科目</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -58,10 +58,10 @@
                                     @endif
                                 @endforeach
                             </td>
-                            <td>{{$item->description}}</td>
-                            <td value="{{$item->id}}">
+                            <td>{{$item->title}}</td>
+                            <td>
                                 <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                                <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                             </td>
                             </tr>
                         @endforeach
