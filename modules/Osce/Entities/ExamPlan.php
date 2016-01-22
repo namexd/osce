@@ -62,16 +62,6 @@ class ExamPlan extends CommonModel
      *
      */
     public function IntelligenceEaxmPlan($exam){
-
-
-
-
-        $ExamPlanForRoom =   new ExamPlanForRoom();
-
-        $ExamPlanForRoom    ->  IntelligenceEaxmPlan($exam);
-
-        dd(123);
-
         $this   ->  stations   =   $this   ->  getAllStation($exam);
         $this   ->  allStudent =   $this   ->  getExamStudent($exam);
         $mins   =   $this   ->  getMaxStationTime();
@@ -572,17 +562,33 @@ class ExamPlan extends CommonModel
                     {
                         if($student->id)
                         {
-                            $data[]=[
-                                'exam_id'           =>  $exam_id,
-                                'exam_screening_id' =>  $examScreening,
-                                'student_id'        =>  $student->id,
-                                'station_id'        =>  intval($roomStationInfo[1]),
-                                'room_id'           =>  intval($roomStationInfo[0]),
-                                'begin_dt'          =>  date('Y-m-d H:i:s',$timeList['start']),
-                                'end_dt'            =>  date('Y-m-d H:i:s',$timeList['end']),
-                                'status'            =>  1,
-                                'created_user_id'   =>  $user->id,
-                            ];
+                            if(array_key_exists(1,$roomStationInfo))
+                            {
+                                $data[]=[
+                                    'exam_id'           =>  $exam_id,
+                                    'exam_screening_id' =>  $examScreening,
+                                    'student_id'        =>  $student->id,
+                                    'station_id'        =>  intval($roomStationInfo[1]),
+                                    'room_id'           =>  intval($roomStationInfo[0]),
+                                    'begin_dt'          =>  date('Y-m-d H:i:s',$timeList['start']),
+                                    'end_dt'            =>  date('Y-m-d H:i:s',$timeList['end']),
+                                    'status'            =>  1,
+                                    'created_user_id'   =>  $user->id,
+                                ];
+                            }
+                            else
+                            {
+                                $data[]=[
+                                    'exam_id'           =>  $exam_id,
+                                    'exam_screening_id' =>  $examScreening,
+                                    'student_id'        =>  $student->id,
+                                    'room_id'           =>  intval($roomStationInfo[0]),
+                                    'begin_dt'          =>  date('Y-m-d H:i:s',$timeList['start']),
+                                    'end_dt'            =>  date('Y-m-d H:i:s',$timeList['end']),
+                                    'status'            =>  1,
+                                    'created_user_id'   =>  $user->id,
+                                ];
+                            }
                         }
                     }
                 }
@@ -649,10 +655,21 @@ class ExamPlan extends CommonModel
         {
             foreach($examPlanList as $examPlan)
             {
-                $roomStationInfoData[$screeningId][$examPlan->room_id.'-'.$examPlan->station_id]=[
-                    'name'  =>  $examPlan->room->name.'-'.$examPlan->room->station,
-                    'child' =>  []
-                ];
+                if(is_null($examPlan->station_id))
+                {
+                    $roomStationInfoData[$screeningId][$examPlan->room_id]=[
+                        'name'  =>  $examPlan->room->name,
+                        'child' =>  []
+                    ];
+                }
+                else
+                {
+                    $roomStationInfoData[$screeningId][$examPlan->room_id.'-'.$examPlan->station_id]=[
+                        'name'  =>  $examPlan->room->name.'-'.$examPlan->room->station,
+                        'child' =>  []
+                    ];
+                }
+
             }
         }
 
@@ -669,7 +686,14 @@ class ExamPlan extends CommonModel
                         $items[]=$item;
                     }
                 }
-                $roomStationBatchData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child']=$items;
+                if(array_key_exists(1,$roomStaionInfo))
+                {
+                    $roomStationBatchData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child']=$items;
+                }
+                else
+                {
+                    $roomStationBatchData[$screeningId][$roomStaionInfo[0]]['child']=$items;
+                }
             }
         }
         foreach($roomStationBatchData as $screeningId=>$examPlanList)
@@ -679,7 +703,14 @@ class ExamPlan extends CommonModel
                 $roomStaionInfo =   explode('-',$roomStaionId);
                 foreach($examPlan['child'] as  $bacthIndex=>$examPlan)
                 {
-                    $roomStationItemData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child'][$bacthIndex]  = $examPlan;
+                    if(array_key_exists(1,$roomStaionInfo))
+                    {
+                        $roomStationItemData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child'][$bacthIndex]  = $examPlan;
+                    }
+                    else
+                    {
+                        $roomStationItemData[$screeningId][$roomStaionInfo[0]]['child'][$bacthIndex]  = $examPlan;
+                    }
                 }
             }
         }
@@ -691,40 +722,54 @@ class ExamPlan extends CommonModel
                 $roomStaionInfo =   explode('-',$roomStaionId);
                 foreach($examPlan['child'] as $bacthIndex=>$examPlan)
                 {
-                    $examPlanData
-                    [$screeningId]
-                    [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
-                    ['name']   =   $examPlan->room->name.'-'.$examPlan->station->name;
-                    $examPlanData
+                    if(array_key_exists(1,$roomStaionInfo))
+                    {
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
+                        ['name']   =   $examPlan->room->name.'-'.$examPlan->station->name;
+                        $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['start'] =  strtotime($examPlan->begin_dt);
-                    $examPlanData
+                        $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['end'] =  strtotime($examPlan->end_dt);
-                    $examPlanData
+                        $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['items'][] =   $examPlan->student;
+                    }
+                    else
+                    {
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['name']   =   $examPlan->room->name;
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['child'][$bacthIndex]
+                        ['start'] =  strtotime($examPlan->begin_dt);
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['child'][$bacthIndex]
+                        ['end'] =  strtotime($examPlan->end_dt);
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['child'][$bacthIndex]
+                        ['items'][] =   $examPlan->student;
+                    }
                 }
             }
         }
         return $examPlanData;
     }
 
-    /**
-     * 将exam_plan按begin_dt这个列分组,并返回分组后的一维对象
-     * @author Jiangzhiheng
-     */
-    public function getBegindtList()
-    {
-        return $this->select('begin_dt')
-            ->groupBy('begin_dt')
-            ->get()
-            ->pluck('begin_dt');
-    }
 }

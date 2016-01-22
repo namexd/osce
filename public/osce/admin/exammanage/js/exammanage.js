@@ -1468,11 +1468,22 @@ function smart_assignment(){
             p1.html(year+"/"+month+"/"+date1);
             p2.html(hour+":"+minutes);
             $(".time-list>ul").append(li);
+
+            //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
+            //var every=timeHeight/(times.length-1);//每段时间高度
+            if(i>=times.length-1)
+            {
+                continue;
+            }
+            else
+            {
+                var next    =   times[parseInt(i)+parseInt(1)];
+                var every   =   next-times[i];
+                li.css("height",every+"px");
+            }
         }
-        var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
-        var every=timeHeight/(times.length-1);//每段时间高度
-        $(".time-list>ul").css("height",timeHeight+"px");
-        $(".time-list>ul>li:not(.title)").css("height",every+"px");
+        //$(".time-list>ul").css("height",timeHeight+"px");
+        //$(".time-list>ul>li:not(.title)").css("height",every+"px");
     }
 //数组去重
     function unique (arr){
