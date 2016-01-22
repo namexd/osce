@@ -69,7 +69,9 @@
                 @endforeach
             </tbody>
         </table>
-
+<div style="float: left">
+    共{{$list->total()  }}条
+</div>
         <div style="float: right">
             {!! $list->render() !!}
         </div>
