@@ -265,4 +265,17 @@ class Student extends CommonModel
 //            ->get();
 //    }
 
+    public function getStudentQueue($exam_id){
+        $time=time();
+        return  $builder= $this->leftjoin('exam_order',function($join){
+            $join ->on('student.id','=','exam_order.student_id');
+        })->where('exam_order.exam_id',$exam_id)->where('UNIX_TIMESTAMP(exam_order.begin_dt)','>',$time)->orderBy('begin_dt')
+            ->select([
+                'student.name as name',
+                'student.idcard as idcard',
+                'student_queue.exam_screening_id.name as exam_screening_id',
+            ])->get();
+
+    }
+
 }
