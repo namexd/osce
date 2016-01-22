@@ -629,17 +629,14 @@ class IndexController extends CommonController
     }
 
     /**
-     *获取当前考试第一批学生
+     *获取当前考试学生
      * @method GET
      * @url /api/1.0/private/osce/watch/student-list
      * @access public
      *
-     * @param Request $request post请求<br><br>
+     * @param Request $request get请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        exam_id        考试id(必须的)
      *
      * @return ${response}
      *
@@ -653,9 +650,14 @@ class IndexController extends CommonController
                'exam_id'  => 'required|integer'
            ]);
            $exam_id=$request->get('exam_id');
+           $screen_id=ExamScreening::where('exam_id',$exam_id)->where('status',1)->orderBy('begin_dt')->first();
+           if(!$screen_id){
+               return \Response::json(array('code'=>2));
+           }
+           $screen_id=$screen_id->id;
            $studentModel=new Student();
           try{
-              $list=$studentModel->getStudentQueue($exam_id);
+              $list=$studentModel->getStudentQueue($exam_id,$screen_id);
               return response()->json(
                   $this->success_data($list,1,'success')
               );
