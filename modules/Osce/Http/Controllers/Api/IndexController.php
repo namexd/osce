@@ -659,6 +659,8 @@ class IndexController extends CommonController
            $studentModel=new Student();
           try{
               $list=$studentModel->getStudentQueue($exam_id,$screen_id);
+              $count=count($list);
+              $list['count']=$count;
               return response()->json(
                   $this->success_data($list,1,'success')
               );
