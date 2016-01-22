@@ -60,7 +60,12 @@ class Room extends CommonModel
             //如果传入的type是1，就说明是编辑考场
             if ($id !== "") {
                 //如果传入的type是其他值，就说明是编辑其他地点，展示对应的摄像头
-                return Room::findOrFail($id);
+                if ($type === '0') {
+                    return Room::findOrFail($id);
+                } else {
+                    return Area::findOrFail($id);
+                }
+
             } else {
                 //通过传入的$type来展示响应的数据
                 if ($type === "0") {

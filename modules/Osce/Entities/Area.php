@@ -21,7 +21,7 @@ class Area extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'code', 'cate', 'description'];
+    protected $fillable = ['name', 'code', 'cate', 'description','created_user_id'];
 
     /**
      * 摄像机和区域的关联
@@ -67,6 +67,77 @@ class Area extends CommonModel
 
         } catch(\Exception $ex){
             $connection->rollback();
+            throw $ex;
+        }
+    }
+
+    public function editAreaData($id, $vcr_id, $formData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            $user = Auth::user();
+            if(!$user){
+                throw new \Exception('操作人不存在，请先登录');
+            }
+            //更新考场数据
+            $result = $this->updateData($id, $formData);
+            if(!$result){
+                throw new \Exception('数据修改失败！请重试');
+            }
+            //更新考场绑定摄像机的数据
+            $roomVcr = RoomVcr::where('room_id',$id)->first();
+            if(!empty($roomVcr)){
+                if(!$roomVcr->update(['vcr_id'=>$vcr_id])){
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                }
+            }else{
+                if(!Area::create(['room_id'=>$id, 'vcr_id'=>$vcr_id, 'created_user_id'=>$user->id])){
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                }
+            }
+            //更改$vcr_id对应的摄像机状态为在线
+            if(!Vcr::where('id', $vcr_id)->update(['status'=>1])){
+                throw new \Exception('摄像机状态修改失败！请重试');
+            }
+            $connection->commit();
+            return true;
+
+        } catch(\Exception $ex){
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
+
+    public function createRoom($formData, $vcrId, $userId)
+    {
+        try {
+            $connection = DB::connection($this->connection);
+            $connection -> beginTransaction();
+
+            if (!$room = $this->create($formData)) {
+                throw new \Exception('新建房间失败');
+            }
+
+            $data=[
+                'area_id'=>$room->id,
+                'vcr_id'=>$vcrId,
+                'created_user_id' => $userId
+            ];
+
+            if (!AreaVcr::create($data)) {
+                throw new \Exception('新建房间失败');
+            }
+
+            $vcr = Vcr::findOrFail($vcrId);
+            $vcr->status = 1;
+            if (!$vcr->save()) {
+                throw new \Exception('新建房间失败');
+            }
+
+            $connection->commit();
+            return $room;
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }
