@@ -168,6 +168,7 @@
         </div>
         <div class="ibox-content">
             <form method="post" id="form1" class="form-horizontal" action="{{route('osce.admin.postEditTrain')}}">
+            		<input type="hidden" name="id" value="{{$data['id'] }}" />
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">

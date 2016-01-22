@@ -132,6 +132,7 @@ class TrainController extends  CommonController{
 
         foreach($list as $item){
             $data=[
+                'id'   =>$item->id,	
                 'name' =>$item->name,
                 'address' =>$item->address,
                 'begin_dt' =>$item->begin_dt,
