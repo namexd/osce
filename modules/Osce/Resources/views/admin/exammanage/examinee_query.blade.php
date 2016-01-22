@@ -39,13 +39,13 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <label class="pull-left exam-name">考试名称:</label>
                             <div class="pull-left exam-list">
-                                <input type="text" placeholder="请输入考试名称" name="exam_name" class="input-md form-control" style="width: 300px;">
+                                <input type="text" placeholder="请输入考试名称" name="exam_name" class="input-md form-control" style="width: 300px;" value="{{(empty($exam_name))?'':$exam_name}}">
                             </div>
                         </div>
                         <div class="input-group col-md-6 col-sm-6 col-xs-12">
                             <label class="pull-left exam-name">考生姓名:</label>
                             <div  class="pull-left examinee-list">
-                                <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control" style="width: 300px;">
+                                <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control" style="width: 300px;" value="{{(empty($student_name))?'':$student_name}}">
                                  <span class="input-group-btn pull-left">
                                     <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                                 </span>
@@ -53,32 +53,37 @@
                         </div>
                     </div>
 
-                <table class="table table-striped" id="table-striped" style="background:#fff">
-                    <thead>
-                    <tr>
-                        <th>考试名称</th>
-                        <th>考生姓名</th>
-                        <th>性别</th>
-                        <th>学号</th>
-                        <th>身份证号</th>
-                        <th>联系电话</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                  @foreach($data as $item)
-                      <tr>
-                         <td>{{ $item['exam_name']}}</td>
-                         <td>{{ $item['student_name'] }}</td>
-                         <td>{{is_null($item->userInfo)? '-':$item->userInfo->gender }}</td>
-                         <td>{{ $item['code'] }}</td>
-                        <td>{{ $item['idCard'] }}</td>
-                         <td>{{ $item['mobile'] }}</td>
-                     </tr>
-                   @endforeach
-                    </tbody>
-                </table>
-                <div class="btn-group pull-right">
-                </div>
+                    <table class="table table-striped" id="table-striped" style="background:#fff">
+                        <thead>
+                            <tr>
+                                <th>考试名称</th>
+                                <th>考生姓名</th>
+                                <th>性别</th>
+                                <th>学号</th>
+                                <th>身份证号</th>
+                                <th>联系电话</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $item)
+                            <tr>
+                                <td>{{ $item['exam_name']}}</td>
+                                <td>{{ $item['student_name'] }}</td>
+                                <td>{{is_null($item->userInfo)? '-':$item->userInfo->gender }}</td>
+                                <td>{{ $item['code'] }}</td>
+                                <td>{{ $item['idCard'] }}</td>
+                                <td>{{ $item['mobile'] }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    <div class="pull-left">
+                        共{{$data->total()}}条
+                    </div>
+                    <div class="btn-group pull-right">
+                        {!! $data->appends($_GET)->render() !!}
+                    </div>
                 </form>
             </div>
     </div>

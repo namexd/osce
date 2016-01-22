@@ -1717,6 +1717,7 @@ function smart_assignment(){
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
             $('.classroom-box').html('');
+            $('.time-list>ul').html('');
             maketotal(testData.data);
             $(".table>li").css("width",liwidth+"px");//给表格设置列宽
             $('#makePlan').one('click',makePlan);

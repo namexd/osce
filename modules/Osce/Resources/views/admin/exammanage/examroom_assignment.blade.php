@@ -60,7 +60,7 @@
     }
     .pull-right>select{width: 120px;}
     .teacher-box{
-        width: 80%;
+        width: 75%;
     }
     .sp-teacher .pull-right{width:20%;}
     .teacher-warn{
@@ -176,8 +176,8 @@
                                             <th>#</th>
                                             <th>考站</th>
                                             <th>类型</th>
-                                            <th width="300">老师</th>
-                                            <th>SP老师</th>
+                                            <th width="180">老师</th>
+                                            <th width="300">SP老师</th>
                                             <th>邀请SP老师</th>
                                         </tr>
                                         </thead>
