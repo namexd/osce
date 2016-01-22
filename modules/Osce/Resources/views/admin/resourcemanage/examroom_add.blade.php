@@ -31,8 +31,8 @@
                                 message: '编号不能为空'
                             },
                             regexp: {
-                                regexp: /^\d+$/,
-                                message: '请输入正确的编号'
+                                regexp:  /^[\u4E00-\u9FA5a-zA-Z0-9_]*$/,
+                                message: '不能输入中文和特殊字符'
                             }
                         }
                     },

@@ -955,65 +955,60 @@ function examroom_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+        layer.alert('确认为删除？',function(its){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#examroom').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
-        });
-
-        //计数器标志
-        var index = $('#examroom').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#examroom').find('tbody').attr('index',index);
-        //更新序号
-        $('#examroom tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+            $('#examroom').find('tbody').attr('index',index);
+            //更新序号
+            $('#examroom tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
 
 
-        //删除监考数据
-        var now_data = thisElement.find('td').eq(1).find('select').val();
-        var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
-        var current = [];
-        for(var j in now_data){
-            for(var i in delStore){
+            //删除监考数据
+            var now_data = thisElement.find('td').eq(1).find('select').val();
+            var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
+            var current = [];
+            for(var j in now_data){
+                for(var i in delStore){
 
-                if(delStore[i].id==now_data[j]){
-                    if(delStore[i].count>1){
-                        delStore[i].count -= 1;
-                        current.push({id:delStore[i].id,count:delStore[i].count});
+                    if(delStore[i].id==now_data[j]){
+                        if(delStore[i].count>1){
+                            delStore[i].count -= 1;
+                            current.push({id:delStore[i].id,count:delStore[i].count});
+                        }else{
+                            //删除dom
+                            var str = delStore[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                var html = '';
+                                station_count = key + 1;
+                                html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                                $(elem).find('td').eq(0).html(html);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
                     }else{
-                        //删除dom
-                        var str = delStore[i].id;
-                        $('.parent-id-'+str).remove();
-                        //重置序号
-                        var station_count = 1;
-                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                            var html = '';
-                            station_count = key + 1;
-                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
-                            $(elem).find('td').eq(0).html(html);
-                        });
-                        $('#exam-place').find('tbody').attr('index',station_count);
-                        continue;
+                        current.push({id:delStore[i].id,count:delStore[i].count});
                     }
-                }else{
-                    current.push({id:delStore[i].id,count:delStore[i].count});
                 }
             }
-        }
 
-        $('#examroom').find('tbody').attr('data',JSON.stringify(current));
+            $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
-
-
+            //关闭弹出
+            layer.close(its);
+        });
 
     });
 
@@ -2244,58 +2239,61 @@ function station_assignment(){
             }
         });
 
-        //var thisElement = $(this).parent().parent().parent().parent();
-        //thisElement.remove();
-        //计数器标志
-        var index = $('#examroom').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#examroom').find('tbody').attr('index',index);
-        //更新序号
-        $('#examroom tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        layer.alert('确认为删除？',function(its){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#examroom').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
+            }
+            $('#examroom').find('tbody').attr('index',index);
+            //更新序号
+            $('#examroom tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
 
 
-        //删除监考数据
-        var now_data = thisElement.find('td').eq(1).find('select').val();
-        var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
-        var current = [];
-        for(var j in now_data){
-            for(var i in delStore){
+            //删除监考数据
+            var now_data = thisElement.find('td').eq(1).find('select').val();
+            var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
+            var current = [];
+            for(var j in now_data){
+                for(var i in delStore){
 
-                if(delStore[i].id==now_data[j]){
-                    if(delStore[i].count>1){
-                        delStore[i].count -= 1;
-                        current.push({id:delStore[i].id,count:delStore[i].count});
+                    if(delStore[i].id==now_data[j]){
+                        if(delStore[i].count>1){
+                            delStore[i].count -= 1;
+                            current.push({id:delStore[i].id,count:delStore[i].count});
+                        }else{
+                            //删除dom
+                            var str = delStore[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                var html = '';
+                                station_count = key + 1;
+                                html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                                $(elem).find('td').eq(0).html(html);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
                     }else{
-                        //删除dom
-                        var str = delStore[i].id;
-                        $('.parent-id-'+str).remove();
-                        //重置序号
-                        var station_count = 1;
-                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                            var html = '';
-                            station_count = key + 1;
-                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
-                            $(elem).find('td').eq(0).html(html);
-                        });
-                        $('#exam-place').find('tbody').attr('index',station_count);
-                        continue;
+                        current.push({id:delStore[i].id,count:delStore[i].count});
                     }
-                }else{
-                    current.push({id:delStore[i].id,count:delStore[i].count});
                 }
             }
-        }
 
-        $('#examroom').find('tbody').attr('data',JSON.stringify(current));
-
+            $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
 
+            layer.close(its);
+
+        });
 
     });
 
