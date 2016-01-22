@@ -244,10 +244,10 @@ class StationController extends CommonController
             //将id传入删除的方法
             $result = $station->deleteData($id);
             if($result) {
-                return json_encode($this->success_data(['删除成功！']));
+                return $this->success_data(['删除成功！']);
             }
         } catch (\Exception $ex) {
-            return json_encode($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 
