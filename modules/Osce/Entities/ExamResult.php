@@ -9,6 +9,9 @@
 namespace Modules\Osce\Entities;
 
 
+use App\Entities\User;
+use App\Repositories\Common;
+
 class ExamResult extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -65,6 +68,54 @@ class ExamResult extends CommonModel
         $data=$builder;
         return $data;
     }
+
+    /**
+     * 考试成绩实时推送
+     */
+    public function examResultPush($student_id, $url = '')
+    {
+        try {
+            //考生信息
+            $student  = Student::where('id', $student_id)->select(['user_id', 'name'])->first();
+            if(!$student){
+                throw new \Exception(' 没有找到该考生信息！');
+            }
+            //对应考试信息
+            $exam = Exam::where('id', $student->exam_id)->select(['name'])->first();
+            if(!$exam){
+                throw new \Exception(' 没有找到对应考试信息！');
+            }
+            //用户信息
+            $userInfo = User::where('id', $student->user_id)->select(['name', 'openid'])->first();
+            if($userInfo){
+                if(!empty($userInfo->openid)){
+                    //查询总成绩
+                    $testResult = new TestResult();
+                    $examResult = $testResult->AcquireExam($student_id);
+                    //成绩详情url地址
+                    if($url == ''){
+                        $url = 'http://www.baidu.com';
+                    }
+                    $msgData = [
+                        [
+                            'title' => '考试成绩查看',
+                            'desc'  => $exam->name.'考试总成绩为：'.$examResult.'分',
+                            'url'   => $url,
+                        ],
+                    ];
+                    $message = Common::CreateWeiXinMessage($msgData);
+                    Common::sendWeiXin($userInfo->openid, $message);    //单发
+
+                }else{
+                    throw new \Exception($userInfo->name.' 没有关联微信号');
+                }
+            }
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
 
     public function getResultDetail($id){
 
