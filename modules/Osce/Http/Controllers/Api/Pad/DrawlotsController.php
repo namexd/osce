@@ -72,14 +72,19 @@ class DrawlotsController extends CommonController
     public function getExaminee()
     {
         try {
-            //获取当前老师的考场对象
-            $room = $this->getRoomId();
+//            //获取当前老师的考场对象
+//            $room = $this->getRoomId();
+//            //获得考场的id
+//            $room_id = $room->id;
+//
+//            //从队列表中通过考场ID得到对应的考生信息
+//            $examQueue =  ExamQueue::examineeByRoomId($room_id);
 
-            //获得考场的id
-            $room_id = $room->id;
+            $examQueue = [
+                'student_id' => 1,
+                'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png'
+            ];
 
-            //从队列表中通过考场ID得到对应的考生信息
-            $examQueue =  ExamQueue::examineeByRoomId($room_id);
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));

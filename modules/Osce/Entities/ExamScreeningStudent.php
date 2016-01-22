@@ -22,21 +22,26 @@ class ExamScreeningStudent extends CommonModel
     protected $hidden = [];
     protected $fillable = ['exam_screening_id', 'student_id', 'is_notity', 'is_signin', 'signin_dt', 'watch_id', 'create_user_id'];
 
+    public function student()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\student','id','student_id');
+    }
+
     /**
      * 根据场次id 查询 相应的student
      * @access public
      *
-     * @param Request $request post请求<br><br>
+     * @param $exam_screening_id
+     * @return object
+     * @throws \Exception
+     * @internal param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * int        exam_screening_id        考场id(必须的)
-     *
-     * @return object
      *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function selectExamScreeningStudent($exam_screening_id)
     {

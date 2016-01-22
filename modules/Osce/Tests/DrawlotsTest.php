@@ -16,21 +16,22 @@ class DrawlotsTest extends TestCase
 {
     private $user_id = 51;
 
-//    public function testOne()
-//    {
-//        $userOb =   \App\Entities\User::find(51);
-//        $response   =   $this->actingAs($userOb)
-//            ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getExaminee');
-//        $view = $response->getContent();
-//        $data = json_decode($view);
-//        $this->assertTrue($data->code==1);
-//    }
-
-    public function testTwo()
+    public function testOne()
     {
-        $response   =   $this
-            ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getStation','',['uid'=>'88','room_id'=>1]);
-        $view = $response -> getContent();
-        dd($view);
+        $userOb =   \App\Entities\User::find(51);
+        $response   =   $this->actingAs($userOb)
+            ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getExaminee');
+        $view = $response->getContent();
+        $data = json_decode($view);
+        dd($data);
+//        $this->assertTrue($data->code==1);
     }
+
+//    public function testTwo()
+//    {
+//        $response   =   $this
+//            ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getStation','',['uid'=>'88','room_id'=>1]);
+//        $view = $response -> getContent();
+//        dd($view);
+//    }
 }

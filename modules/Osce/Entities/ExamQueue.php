@@ -169,7 +169,7 @@ class ExamQueue extends CommonModel
         try {
             return ExamQueue::leftJoin('student', 'student.exam_id', '=', 'exam_queue.exam_id')
                 ->where('room_id', $room_id)
-                ->where('status', 2)
+                ->where('status', 1)
                 ->select([
                     'student.id as student_id',
                     'student.name as student_name',
@@ -242,32 +242,60 @@ class ExamQueue extends CommonModel
     {
         try {
             //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
-            $obj = ExamPlan::where('exam_id',$examId)
+            $objs = ExamPlan::where('exam_id',$examId)
                 ->where('student_id',$studentId)
                 ->where('exam_screening_id', $examScreeningId)
                 ->orderBy('begin_dt','asc')
-                ->first();
-            if (!$obj) {
+                ->get();
+            if ($objs->isEmpty()) {
                 throw new \Exception('该学生的考试场次有误，请核实！');
             }
 
             //将当前的时间与计划表的时间减去缓冲时间做对比，如果是比计划的时间小，就直接用计划的时间。
             //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
             //config('osce.begin_dt_buffer')为缓冲时间
-            if ($time < strtotime($obj->begin_dt)-config('osce.begin_dt_buffer')) {
+            foreach ($objs as &$item) {
+                if ($time > strtotime($item->begin_dt)-(config('osce.begin_dt_buffer') * 60)) {
+                    $item->begin_dt = date('Y-m-d H:i:s',$time + (config('osce.begin_dt_buffer') * 60));
+                }
 
+                //将数据插入数据库
+                if (!ExamQueue::create($objs->all())) {
+                    throw new \Exception('该名学生的与腕表的录入失败！');
+                };
             }
-
-
-
-            if (!ExamQueue::create($obj->all())) {
-                throw new \Exception('该名学生的与腕表的录入失败！');
-            };
-
-            //将这条数据插入exam_queue表
-
         } catch (\Exception $ex) {
             throw $ex;
         }
     }
+
+    /**
+     * 通过腕表id找到对应的
+     * @param $uid
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
+    static public function findQueueIdByUid($uid)
+    {
+        try{
+            //通过腕表id找到$examScreening和$student的实例
+            $examScreening = ExamScreeningStudent::where('watch_id',$uid)->first();
+            $student = $examScreening->student;
+
+            //拿到$examScreeningId和$studentId
+            $examScreeningId = $examScreening->id;
+            $studentId = $student->id;
+
+            //得到queue实例
+            $queue = ExamQueue::where('student_id',$studentId)
+                ->where('exam_screening_id',$examScreeningId)
+                ->where('status',2)
+                ->first();
+
+            return $queue;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
 }
