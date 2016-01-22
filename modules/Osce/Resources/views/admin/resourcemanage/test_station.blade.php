@@ -59,9 +59,9 @@
                                 @endforeach
                             </td>
                             <td>{{$item->title}}</td>
-                            <td value="{{$item->id}}">
+                            <td>
                                 <a href="{{route('osce.admin.Station.getEditStation')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                                <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                             </td>
                             </tr>
                         @endforeach

@@ -24,21 +24,13 @@ $(function(){
  */
 function test_station(){
 
-    $('table').on('click','.fa-trash-o',function(){
+   $(".delete").click(function(){
+       var thisElement = $(this);
+       deleteItems('post',pars.deletes,thisElement.attr("value"));
+   })
 
-        var thisElement = $(this);
-        layer.alert('确认删除？',function(){
-            $.ajax({
-                type:'post',
-                async:true,
-                url:pars.deletes,
-                data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(res){
-                    //location.reload();
-                }
-            })
-        });
-    })
+
+
 }
 
 /**
@@ -721,6 +713,7 @@ function deleteItems(type,url,id){
             url:url,
             data:{id:id},
             success:function(data){
+                console.log(data.code);
                 if(data.code == 1){
                     location.reload();
                 }else {
