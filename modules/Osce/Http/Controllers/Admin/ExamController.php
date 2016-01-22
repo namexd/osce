@@ -700,15 +700,15 @@ class ExamController extends CommonController
                 }
                 //姓名不能为空
                 if(empty($studentData['name'])){
-                    throw new \Exception('第'.($key+2).'项姓名不能为空，请修改！');
+                    throw new \Exception('第'.($key+2).'行姓名不能为空，请修改！');
                 }
                 //验证身份证号
                 if(!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/',$studentData['idcard'])){
-                    throw new \Exception('第'.($key+2).'身份证号不符规格，请修改！');
+                    throw new \Exception('第'.($key+2).'行身份证号不符规格，请修改！');
                 }
                 //验证手机号
                 if(!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/',$studentData['mobile'])){
-                    throw new \Exception('第'.($key+2).'手机号不符规格，请修改！');
+                    throw new \Exception('第'.($key+2).'行手机号不符规格，请修改！');
                 }
 
                 if(!$student->addExaminee($exam_id, $studentData, $key+2))
