@@ -4,6 +4,8 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
     <script>
         $(function(){
 
@@ -88,6 +90,44 @@
                     }
                 })
             })
+            $(".images_upload").change(function(){
+                $.ajaxFileUpload
+                ({
+
+                    url:'{{ url('commom/upload-image') }}',
+                    secureuri:false,//
+                    fileElementId:'file0',//必须要是 input file标签 ID
+                    dataType: 'json',//
+                    success: function (data, status)
+                    {
+                        if(data.code){
+                            var href=data.data.path;
+                            $('.img_box').find('li').remove();
+                            $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                        }
+                    },
+                    error: function (data, status, e)
+                    {
+                        layer.msg("通讯失败");
+                    }
+                });
+            }) ;
+
+            //建立一個可存取到該file的url
+            var url='';
+            function getObjectURL(file) {
+                if (window.createObjectURL!=undefined) { // basic
+                    url = window.createObjectURL(file) ;
+                } else if (window.URL!=undefined) { // mozilla(firefox)
+                    url = window.URL.createObjectURL(file) ;
+                } else if (window.webkitURL!=undefined) { // webkit or chrome
+                    url = window.webkitURL.createObjectURL(file) ;
+                }
+                return url;
+            }
+            $(".img_box").delegate(".del_img","click",function(){
+                $(this).parent("li").remove();
+            });
         })
 
     </script>
@@ -102,8 +142,15 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-
-                <div class="col-md-12 ">
+                <div class="col-md-3 col-sm-3">
+                    <ul class="img_box">
+                        <span class="images_upload">
+                            <input type="file" name="images" id="file0"/>
+                            图片大小为280X180
+                        </span>
+                    </ul>
+                </div>
+                <div class="col-md-9 col-sm-9">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
 
 
