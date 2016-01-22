@@ -315,8 +315,10 @@ class InvigilatorController extends CommonController
         ]);
         $id             =   intval($request    ->  get('id'));
 
+
         $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
+
         return view('osce::admin.resourcemanage.invigilator_edit',['item'=>$invigilator]);
     }
 
