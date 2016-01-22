@@ -727,15 +727,17 @@ class IndexController extends CommonController
     public function getSkipLast(Request $request){
         $this->validate($request,[
             'exam_id'  => 'required|integer',
-            'id_card'  => 'required|integer',
+            'id_card'  => 'required',
         ]);
         $exam_id=$request->get('exam_id');
-        $studentId=Student::where('idcard',$request->get('id_card'))->select('id')->first();
+        $idcard=$request->get('id_card');
+        $studentId=Student::where('idcard',$idcard)->select('id')->first();
         if(!$studentId){
           return \Response::json(array('code'=>2));//未找到该学生
         }
         $studentId=$studentId->id;
-        $result=$this->changeSkip($studentId,$exam_id);
+        $screen_id=ExamOrder::where('student_id',$studentId)->where('exam_id',$exam_id)->select('exam_screening_id')->first()->exam_screening_id;
+        $result=$this->changeSkip($studentId,$exam_id,$screen_id);
 //        $examScreening=new ExamScreening();
 //        $examScreening->closeExam($request->get('exam_id'));
         return $result;
@@ -761,7 +763,7 @@ class IndexController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function changeSkip($studentId,$exam_id){
+    public function changeSkip($studentId,$exam_id,$screen_id){
         $status=ExamOrder::where('student_id',$studentId)->where('exam_id',$exam_id)->select('status')->first()->status;
         if($status==4){
             return $this->getAbsentStudent($studentId,$exam_id);
@@ -770,9 +772,10 @@ class IndexController extends CommonController
         }elseif($status==1){
             return \Response::json(array('code'=>4));//该学生正在考试
         }
-        $beginDt=ExamOrder::where('exam_id',$exam_id)->where('student_id',$studentId)->select('begin_dt')->orderBy('begin_dt','DESC')->first()->begin_dt;
-        $lastDt=date('Y-m-d H:i:s',(strtotime($beginDt)+10));
-        $result=ExamOrder::where('exam_id',$exam_id)->where('student_id',$studentId)->update(['begin_dt'=>$lastDt]);
+        $beginDt=ExamOrder::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->select('begin_dt')->orderBy('begin_dt','DESC')->first()->begin_dt;
+        $lastDt=strtotime($beginDt)+10;
+        $time=date('Y-m-d H:i:s',$lastDt);
+        $result=ExamOrder::where('exam_id',$exam_id)->where('student_id',$studentId)->update(['begin_dt'=>$time,'status'=>4]);
         if($result){
             return \Response::json(array('code'=>1));
         }

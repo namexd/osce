@@ -280,8 +280,8 @@ class Student extends CommonModel
                 'student.code as code',
                 'student.mobile as mobile',
                 'exam_order.status as status',
-                'student_queue.exam_screening_id.name as exam_screening_id',
-            ])->paginate(config('osce.student_num'));
+                'exam_order.exam_screening_id as exam_screening_id',
+            ])->get();
     }
 
 }
