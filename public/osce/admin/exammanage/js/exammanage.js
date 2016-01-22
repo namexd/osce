@@ -675,9 +675,16 @@ function examroom_assignment(){
                                 '<div class="teacher-box pull-left">'+
                                 '</div>'+
                                 '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                '<select name="" class="teacher-list js-example-basic-multiple">'+
+                                /*'<select name="" class="teacher-list js-example-basic-multiple">'+
                                 '<option>==请选择==</option>'+
-                                '</select>'+
+                                '</select>'+*/
+                                '<div class="btn-group">'+
+                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<span class="caret"></span>'+
+                                  '</button>'+
+                                  '<ul class="dropdown-menu">'+
+                                  '</ul>'+
+                                '</div>'+
                                 '</div>'+
                                 '</td>'+
                                 '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
@@ -695,9 +702,16 @@ function examroom_assignment(){
                                 '<div class="teacher-box pull-left">'+
                                 '</div>'+
                                 '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                '<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
+                                /*'<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
                                 '<option>==请选择==</option>'+
-                                '</select>'+
+                                '</select>'+*/
+                                '<div class="btn-group">'+
+                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<span class="caret"></span>'+
+                                  '</button>'+
+                                  '<ul class="dropdown-menu">'+
+                                  '</ul>'+
+                                '</div>'+
                                 '</div>'+
                                 '</td>'+
                                 '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
@@ -773,9 +787,51 @@ function examroom_assignment(){
                      * sp老师选择
                      * @author mao
                      * @version 1.0
-                     * @date    2016-01-11
+                     * @date    2016-01-22
                      */
-                    var select2_Object;
+                    /*var All = $('.btn-group');
+                    $('#exam-place').on('click','.btn.btn-default',function(){
+
+                        var btn_group = $(this);
+                        var thisElem = $(this).siblings('.dropdown-menu');
+
+                        //老师id
+                        var ids = [];
+                        All.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+                            var id = $(elem).attr('value');
+                            if(id==null){
+                                return;
+                            }else{
+                                ids.push(id);
+                            }
+                        });
+
+                        $.ajax({
+                            type:'get',
+                            async:true,
+                            url:pars.spteacher_list,
+                            data:{spteacher_id:ids,station_id:btn_group.parent().parent().attr('value')},
+                            success:function(data){
+                              var html = '';
+                              res = data.data.rows;
+                              //提示数据
+                              if(res.length==0){
+                                layer.alert('没有可选数据！',function(its){
+                                    layer.close(its);
+                                });
+                            }
+                              for(var i in res){
+                                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+                              }
+                              thisElem.html(html);
+                            }
+                          });
+
+                    });*/
+
+
+
+                    /*var select2_Object;
                     select2_Object = $('.teacher-list').select2({
                         placeholder: "==请选择==",
                         minimumResultsForSearch: Infinity,
@@ -820,7 +876,7 @@ function examroom_assignment(){
                         }
 
 
-                    });
+                    });*/
 
 
 
@@ -1061,11 +1117,30 @@ function examroom_assignment(){
      * @version 1.0
      * @date    2016-01-14
      */
-    $('#exam-place').on('change',".teacher-list",function(){
+    /*$('#exam-place').on('change',".teacher-list",function(){
 
         var $teacher= $(this).find('option:selected').text().split('==')[0];
         var id = $(this).find('option:selected').val();
         var thisElement = $(this);
+
+        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
+            '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
+            '<div class="pull-left">'+$teacher+'</div>'+
+            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+        $(this).parents(".pull-right").prev().append(sql);
+    })*/
+    
+    /**
+     * 选择老师 界面效果修改
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-22
+     */
+    $('#exam-place').on('click',".dropdown-menu",function(e){
+
+        var $teacher= $(e.target).text();
+        var id = $(e.target).attr('value');
+        var thisElement = $(this).parent();
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
             '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
@@ -1086,7 +1161,47 @@ function examroom_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    $('.teacher-teach').select2({
+    $('#exam-place').on('click','.btn.btn-default',function(){
+
+        var btn_group = $(this);
+        var thisElem = $(this).siblings('.dropdown-menu');
+
+        //老师id
+        var ids = [];
+        $('#exam-place').find('tbody').find('tr').each(function(n,m){
+            $(m).find('td').eq(4).find('.teacher').each(function(key,elem){
+                var id = $(elem).attr('value');
+                if(id==null){
+                    return;
+                }else{
+                    ids.push(id);
+                }
+            });
+        });
+
+        $.ajax({
+            type:'get',
+            async:true,
+            url:pars.spteacher_list,
+            data:{spteacher_id:ids,station_id:btn_group.parent().parent().attr('value')},
+            success:function(data){
+              var html = '';
+              res = data.data.rows;
+              //提示数据
+              if(res.length==0){
+                layer.alert('没有可选数据！',function(its){
+                    layer.close(its);
+                });
+            }
+              for(var i in res){
+                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+              }
+              thisElem.html(html);
+            }
+          });
+
+    });
+    /*$('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -1124,7 +1239,7 @@ function examroom_assignment(){
             }
 
         }
-    });
+    });*/
 
 }
 
@@ -2012,9 +2127,48 @@ function station_assignment(){
                      * sp老师选择
                      * @author mao
                      * @version 1.0
-                     * @date    2016-01-11
+                     * @date    2016-01-22
                      */
-                    var select2_Object;
+                    /*var All = $('.btn-group');
+                    $('#exam-place').on('click','.btn.btn-default',function(){
+
+                        var btn_group = $(this);
+                        var thisElem = $(this).siblings('.dropdown-menu');
+
+                        //老师id
+                        var ids = [];
+                        All.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+                            var id = $(elem).attr('value');
+                            if(id==null){
+                                return;
+                            }else{
+                                ids.push(id);
+                            }
+                        });
+
+                        $.ajax({
+                            type:'get',
+                            async:true,
+                            url:pars.spteacher_list,
+                            data:{spteacher_id:ids,station_id:btn_group.parent().parent().attr('value')},
+                            success:function(data){
+                              var html = '';
+                              res = data.data.rows;
+                              //提示数据
+                              if(res.length==0){
+                                layer.alert('没有可选数据！',function(its){
+                                    layer.close(its);
+                                });
+                            }
+                              for(var i in res){
+                                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+                              }
+                              thisElem.html(html);
+                            }
+                          });
+
+                    });*/
+                    /*var select2_Object;
                     select2_Object = $('.teacher-list').select2({
                         placeholder: "==请选择==",
                         minimumResultsForSearch: Infinity,
@@ -2059,7 +2213,7 @@ function station_assignment(){
                         }
 
 
-                    });
+                    });*/
 
 
 
@@ -2194,31 +2348,7 @@ function station_assignment(){
 
 
         });
-
-
-
-        //ajax请求数据
-        /*$.ajax({
-         type:'get',
-         async:true,
-         url:pars.list,     //请求地址
-         data:{station_id:getStationID(arrStore)},
-         success:function(res){
-         //数据处理
-         var str = [];
-         if(res.code!=1){
-         layer.alert(res.message);
-         return;
-         }else{
-         var data = res.data;
-         for(var i in data){
-         str.push({id:data[i].id,text:data[i].name});
-         }
-         //动态加载进去数据
-         $(".js-example-basic-multiple").select2({data:str});
-         }
-         }
-         });*/
+        
 
     });
 
@@ -2365,13 +2495,54 @@ function station_assignment(){
     })
 
 
+    $('#exam-place').on('click','.btn.btn-default',function(){
+
+        var btn_group = $(this);
+        var thisElem = $(this).siblings('.dropdown-menu');
+
+        //老师id
+        var ids = [];
+        $('#exam-place').find('tbody').find('tr').each(function(n,m){
+            $(m).find('td').eq(4).find('.teacher').each(function(key,elem){
+                var id = $(elem).attr('value');
+                if(id==null){
+                    return;
+                }else{
+                    ids.push(id);
+                }
+            });
+        });
+
+        $.ajax({
+            type:'get',
+            async:true,
+            url:pars.spteacher_list,
+            data:{teacher:ids},
+            success:function(data){
+              var html = '';
+              res = data.data;
+              //提示数据
+              if(res.length==0){
+                layer.alert('没有可选数据！',function(its){
+                    layer.close(its);
+                });
+            }
+              for(var i in res){
+                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+              }
+              thisElem.html(html);
+            }
+          });
+
+    });
+
     /**
      * 老师类型选择 初始化
      * @author mao
      * @version 1.0
      * @date    2016-01-15
      */
-    $('.teacher-teach').select2({
+    /*$('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -2409,6 +2580,6 @@ function station_assignment(){
             }
 
         }
-    });
+    });*/
 
 }

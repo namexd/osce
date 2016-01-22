@@ -86,20 +86,6 @@
                         }
                     }
                 },
-                begin_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '开始时间不能为空'
-                        }
-                   }
-                },
-                end_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '结束时间不能为空'
-                        }
-                   }
-                },
                 teacher: {
                 	validators: {
 	                	notEmpty: {/*非空提示*/
@@ -156,6 +142,19 @@
 	    $(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
 	    });
+	    
+	    $(".fabu_btn").click(function(){
+	    	var start=$("#start").val();
+	    	var end=$("#end").val();
+	    	if(start==""){
+	    		layer.alert('你还没有选择开始时间!',function(its){layer.close(its)});
+              	return false;
+	    	}
+	    	if(end==""){
+	    		layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
+              	return false;
+	    	}
+	    })
  	})
  </script>
 @stop
@@ -168,7 +167,8 @@
             <h5>编辑考前培训</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" id="form1" class="form-horizontal" action="#">
+            <form method="post" id="form1" class="form-horizontal" action="{{route('osce.admin.postEditTrain')}}">
+            		<input type="hidden" name="id" value="{{$data['id'] }}" />
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
@@ -238,7 +238,7 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">发布</button>
+                            <input class="btn btn-primary fabu_btn" type="submit" value="发布">
                             <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>
