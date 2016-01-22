@@ -31,7 +31,7 @@
                                 message: '时间限制不能为空'
                             },
                             regexp: {
-                                regexp: /^\d+$/,
+                                regexp: /^[1-9]+$/,
                                 message: '请输入正确的时间'
                             }
                         }
