@@ -76,7 +76,7 @@ class TestResult extends CommonModel
               return false;
         }else{
 
-          $studentExamScore = TestResult::where('student_id','=',$studentId)->select('score')->get();
+          $studentExamScore = TestResult::where('student_id','=',$studentId)->select('score')->first();
             return   $studentExamScore;
         }
 

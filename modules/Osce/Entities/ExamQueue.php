@@ -114,6 +114,7 @@ class ExamQueue extends CommonModel
                 'exam_queue.station_id as station_id',
                 'exam_queue.status as status',
                 'exam_queue.id as id',
+                'exam queue.exam_id as exam_id'
             ])->get();
 
         return $data;
@@ -126,30 +127,36 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author zhouqiang
      */
-     public  function StudentExamQueue($studentId){
+    public function StudentExamQueue($studentId)
+    {
 
-         return ExamQueue::leftJoin('room', function ($join) {
-             $join->on('room.id', '=', 'exam_queue.room_id');
-         })->leftJoin('station', function ($join) {
-             $join->on('station.id', '=', 'exam_queue.station_id');
-         })->leftJoin('student', function ($join) {
-             $join->on('student.id', '=', 'exam_queue.student_id');
-              })
-            ->where($this->table . '.student_id', '=',$studentId)->orderBy('begin_dt','desc')
-             ->select([
-                 'room.name as room_name',
-                 'student.name as name',
-                 'exam_queue.begin_dt as begin_dt',
-                 'exam_queue.end_dt as end_dt',
-                 'exam_queue.room_id as room_id',
-                 'exam_queue.station_id as station_id',
-                 'exam_queue.status as status',
-                 'exam_queue.id as id',
-             ])->get();
-     }
+        return ExamQueue::leftJoin('room', function ($join) {
+            $join->on('room.id', '=', 'exam_queue.room_id');
 
+        })->leftJoin('station', function ($join) {
 
+            $join->on('station.id', '=', 'exam_queue.station_id');
 
+        })->leftJoin('student', function ($join) {
+
+            $join->on('student.id', '=', 'exam_queue.student_id');
+        })
+            ->where($this->table . '.student_id', '=', $studentId)
+            ->whereIn('exam_queue.status', [1, 2])
+            ->orderBy('begin_dt', 'asc')
+            ->select([
+                'room.name as room_name',
+                'student.name as name',
+                'exam_queue.begin_dt as begin_dt',
+                'exam_queue.end_dt as end_dt',
+                'exam_queue.room_id as room_id',
+                'exam_queue.station_id as station_id',
+                'exam_queue.status as status',
+                'exam_queue.id as id',
+                'station.mins as mins',
+                'exam_queue.exam_id as exam_id'
+            ])->get();
+    }
 
 
     public function getPagination()
@@ -193,16 +200,26 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author zhouqiang
      */
-    public function nowQueue($examQueueCollect, $nowTime)
+    public function nowQueue($examQueueCollect)
     {
         foreach ($examQueueCollect as $examQueue) {
-            if (strtotime($examQueue->begin_dt) > $nowTime) {
+            if ($examQueue->status == 1) {
                 return $examQueue;
             }
-            if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime) {
+            if ($examQueue->status == 2) {
                 return $examQueue;
             }
+
         }
+
+//        foreach ($examQueueCollect as $examQueue) {
+//            if (strtotime($examQueue->begin_dt) > $nowTime) {
+//                return $examQueue;
+//            }
+//            if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime) {
+//                return $examQueue;
+//            }
+//        }
         return [];
     }
 
