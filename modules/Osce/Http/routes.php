@@ -215,22 +215,22 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 	});
 
-	 //Pad端
-	Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
-		Route::get('room-vcr',['uses'=>'PadController@getRoomVcr','as'=>'osce.pad.getRoomVcr']);
-		Route::get('vcr',['uses'=>'PadController@getVcr']);
-
-		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
-		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
-
-		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
-
-		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
-		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
-
-		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
-		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
-	});
+//	 //Pad端
+//	Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
+//		Route::get('room-vcr',['uses'=>'PadController@getRoomVcr','as'=>'osce.pad.getRoomVcr']);
+//		Route::get('vcr',['uses'=>'PadController@getVcr']);
+//
+//		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+//		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+//
+//		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
+//
+//		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
+//		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
+//
+//		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
+//		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
+//	});
 
 
 });
@@ -310,6 +310,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.api.invigilatepad.getSaveExamEvaluate']);
 		Route::get('invigilatepad/wait_exam', 	['uses'=>'InvigilatePadController@getWaitExam','as'=>'osce.api.invigilatepad.getWaitExam']);
 		Route::get('invigilatepad/wait_exam_list', 	['uses'=>'InvigilatePadController@getWaitExamList','as'=>'osce.api.invigilatepad.getWaitExamList']);
+		Route::get('invigilatepad/start-exam', 	['uses'=>'InvigilatePadController@getStartExam','as'=>'osce.api.invigilatepad.getStartExam']);
+		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 
 	});
 });
@@ -326,6 +328,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('unwrap-watch',	['uses'=>'IndexController@getUnwrapWatch']); //解绑腕表
 		Route::get('student-details', 	['uses'=>'IndexController@getStudentDetails']);
 		Route::get('student-list', 	['uses'=>'IndexController@getStudentList']);
+		Route::get('skip-last', 	['uses'=>'IndexController@getSkipLast']);
 
 		Route::get('add',['uses'=>'IndexController@getAddWatch']);
 		Route::get('update',['uses'=>'IndexController@getUpdateWatch']);
@@ -341,19 +344,19 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 
 
 
-//		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
-//			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
-//			Route::get('vcr',['uses'=>'PadController@getVcr']);
-//
-//			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
-//			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
-//
-//			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
-//
-//			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
-//			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
-//
-//		});
+		Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
+			Route::get('room-vcr',['uses'=>'PadController@getRoomVcr']);
+			Route::get('vcr',['uses'=>'PadController@getVcr']);
+
+			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+
+			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
+
+			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
+			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
+
+		});
 	});
 
 

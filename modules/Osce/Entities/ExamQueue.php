@@ -83,28 +83,33 @@ class ExamQueue extends CommonModel
         return $data;
     }
 
-
     /**
      * 学生队列  腕表考试信息
-     * @param $room_id
+     * @param $studentId
      * @return
      * @throws \Exception
      * @author zhouqiang
      */
-    public function  StudentExamInfo($watchStudent)
+    public function StudentExamQueue($studentId)
     {
-//        $todayStart = date('Y-m-d 00:00:00');
-//        $todayEnd = date('Y-m-d 23:59:59');
-        $data = ExamQueue::leftJoin('room', function ($join) {
+        $todayStart = date('Y-m-d 00:00:00');
+        $todayEnd = date('Y-m-d 23:59:59');
+        return ExamQueue::leftJoin('room', function ($join) {
             $join->on('room.id', '=', 'exam_queue.room_id');
+
         })->leftJoin('station', function ($join) {
+
             $join->on('station.id', '=', 'exam_queue.station_id');
+
         })->leftJoin('student', function ($join) {
+
             $join->on('student.id', '=', 'exam_queue.student_id');
-        })->where($this->table . '.student_id', '=', $watchStudent)
-//                        ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
-//         AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
-//            ->whereBetween('exam_queue.status',[1,2])
+        })
+            ->where($this->table . '.student_id', '=', $studentId)
+            ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
+         AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+            ->whereIn('exam_queue.status', [1, 2])
+            ->orderBy('begin_dt', 'asc')
             ->select([
                 'room.name as room_name',
                 'student.name as name',
@@ -114,42 +119,10 @@ class ExamQueue extends CommonModel
                 'exam_queue.station_id as station_id',
                 'exam_queue.status as status',
                 'exam_queue.id as id',
+                'station.mins as mins',
+                'exam_queue.exam_id as exam_id'
             ])->get();
-
-        return $data;
     }
-
-    /**
-     * 学生队列  腕表考试信息
-     * @param $studentId
-     * @return
-     * @throws \Exception
-     * @author zhouqiang
-     */
-     public  function StudentExamQueue($studentId){
-
-         return ExamQueue::leftJoin('room', function ($join) {
-             $join->on('room.id', '=', 'exam_queue.room_id');
-         })->leftJoin('station', function ($join) {
-             $join->on('station.id', '=', 'exam_queue.station_id');
-         })->leftJoin('student', function ($join) {
-             $join->on('student.id', '=', 'exam_queue.student_id');
-              })
-            ->where($this->table . '.student_id', '=',$studentId)->orderBy('begin_dt','desc')
-             ->select([
-                 'room.name as room_name',
-                 'student.name as name',
-                 'exam_queue.begin_dt as begin_dt',
-                 'exam_queue.end_dt as end_dt',
-                 'exam_queue.room_id as room_id',
-                 'exam_queue.station_id as station_id',
-                 'exam_queue.status as status',
-                 'exam_queue.id as id',
-             ])->get();
-     }
-
-
-
 
 
     public function getPagination()
@@ -193,16 +166,26 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author zhouqiang
      */
-    public function nowQueue($examQueueCollect, $nowTime)
+    public function nowQueue($examQueueCollect)
     {
         foreach ($examQueueCollect as $examQueue) {
-            if (strtotime($examQueue->begin_dt) > $nowTime) {
+            if ($examQueue->status == 1) {
                 return $examQueue;
             }
-            if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime) {
+            if ($examQueue->status == 2) {
                 return $examQueue;
             }
+
         }
+
+//        foreach ($examQueueCollect as $examQueue) {
+//            if (strtotime($examQueue->begin_dt) > $nowTime) {
+//                return $examQueue;
+//            }
+//            if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime) {
+//                return $examQueue;
+//            }
+//        }
         return [];
     }
 
@@ -227,6 +210,34 @@ class ExamQueue extends CommonModel
         ksort($queueLeave);
         return array_shift($queueLeave);
     }
+    /**
+     * 开始考试时，改变时间和状态
+     * @param  $studentId $stationId
+     * @return
+     * @throws  \Exception
+     * @author  zhouqiang
+     */
+      public function AlterTimeStatus($studentId ,$stationId ,$StartTime){
+          $nowTime=   date('Y-m-d H:i:s',$StartTime);
+          return ExamQueue::where('student_id','=',$studentId)
+              ->whereRaw('station_id','=',$stationId)
+              ->update(['begin_dt'=>$nowTime,'status'=>2]);
+      }
+
+    /**
+     * 结束考试时，改变时间和状态
+     * @param  $studentId
+     * @return
+     * @throws  \Exception
+     * @author  zhouqiang
+     */
+     public function EndExamAlterStatus($studentId ,$stationId,$EndTime){
+         $nowTime=   date('Y-m-d H:i:s',$EndTime);
+         return ExamQueue::where('student_id','=',$studentId)
+             ->whereRaw('station_id','=',$stationId)
+             ->update(['end_dt'=>$nowTime,'status'=>3]);
+     }
+
 
     /**
      * 将数据写入exam_queue

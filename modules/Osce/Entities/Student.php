@@ -27,6 +27,11 @@ class Student extends CommonModel
     public function userInfo(){
         return $this->hasOne('\App\Entities\User','id','user_id');
     }
+
+    public function absentStudent(){
+        return $this->hasOne('\Modules\Osce\Entities\ExamAbsent','id','student_id');
+
+    }
     /**
      * 展示考生列表的方法
      * @return mixed
@@ -265,17 +270,18 @@ class Student extends CommonModel
 //            ->get();
 //    }
 
-    public function getStudentQueue($exam_id){
-        $time=time();
+    public function getStudentQueue($exam_id,$screen_id){
         return  $builder= $this->leftjoin('exam_order',function($join){
             $join ->on('student.id','=','exam_order.student_id');
-        })->where('exam_order.exam_id',$exam_id)->where('UNIX_TIMESTAMP(exam_order.begin_dt)','>',$time)->orderBy('begin_dt')
+        })->where('exam_order.exam_id',$exam_id)->where('exam_screening_id',$screen_id)->where('exam_order.status',0)->orWhere('exam_order.status',4)->orderBy('begin_dt')
             ->select([
                 'student.name as name',
                 'student.idcard as idcard',
+                'student.code as code',
+                'student.mobile as mobile',
+                'exam_order.status as status',
                 'student_queue.exam_screening_id.name as exam_screening_id',
-            ])->get();
-
+            ])->paginate(config('osce.student_num'));
     }
 
 }
