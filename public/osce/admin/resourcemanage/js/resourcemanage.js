@@ -385,13 +385,14 @@ function categories(){
         var className = thisElement.attr('class');
         var parent =  1;
         var value = [];
+        var valueTotal = null;
 
         //存储select的值
         $('.'+className).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
                 value.push($(elem).find('td').eq(2).find('select').val());
             }else{
-               return;
+               valueTotal = $(elem).find('td').eq(2).find('select').val();
             }
         });
         //存储dom结构
@@ -422,17 +423,25 @@ function categories(){
                 child += 1;
             }
         });
-        
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
-                $(elem).find('td').eq(2).find('select').val(value[key-1]);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(value[key-1]);
             }else{
-               return;
+                $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
             }
         });
 
+
+    });
+
+    $('#test').click(function(){
+
+        $('tbody tr').each(function(key,elem){
+            console.log($(elem).find('td').eq(2).find('select').val())
+        });
     });
 
     /**
@@ -447,6 +456,7 @@ function categories(){
         var className = thisElement.attr('class');
         var parent =  1;
         var value = [];
+        var valueTotal = null;
 
 
         //存储select的值
@@ -454,7 +464,7 @@ function categories(){
             if($(elem).attr('parent')==undefined){
                 value.push($(elem).find('td').eq(2).find('select').val());
             }else{
-               return;
+               valueTotal = $(elem).find('td').eq(2).find('select').val();
             }
         });
         //存储dom结构
@@ -468,7 +478,7 @@ function categories(){
 
         //上移
         $('.'+className).remove();
-        $('.pid-'+preIndex+'[parent="'+preIndex+'"]').after(thisDOM);
+        $('.pid-'+preIndex+':last').after(thisDOM);
 
         //更新序号
         $('tbody tr').each(function(key,elem){
@@ -492,7 +502,8 @@ function categories(){
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
                 $(elem).find('td').eq(2).find('select').val(value[key-1]);
             }else{
-               return;
+                $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
             }
         });
 
