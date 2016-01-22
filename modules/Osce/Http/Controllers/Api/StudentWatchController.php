@@ -73,7 +73,10 @@ class StudentWatchController extends  CommonController
 
         $examQueueCollect =  $ExamQueueModel->StudentExamQueue($studentId);
         dump($examQueueCollect);
-        $nowQueue   =   $ExamQueueModel->nowQueue($examQueueCollect);
+
+        $nowNextQueue   =   $ExamQueueModel->nowQueue($examQueueCollect);
+        $nowQueue =   $nowNextQueue[0] ;
+        $nextQueue =  $nowNextQueue[1];
         $nowTime =time();
 
         if(empty($nowQueue)){
@@ -136,8 +139,17 @@ class StudentWatchController extends  CommonController
                 dump('考试中');
                 $surplus =((strtotime($nowQueue['begin_dt']) + ($nowQueue->mins*60)) - $nowTime);
                 if($surplus <=0){
-
-                       dump('下一场');
+                    if(!empty($nextQueue)){
+                        dump('下一场');
+                        $nextExamName=  $nextQueue ['room_name'];
+                        return response()->json(
+                            $this->success_data($nextExamName,'下一场')
+                        );
+                    }else{
+                        return response()->json(
+                            $this->success_data(4,'目前没有下一场，请等待下一步通知')
+                        );
+                    }
 
                 }else{
                     $surplus = floor($surplus/60) . ':' . $surplus%60;

@@ -168,25 +168,14 @@ class ExamQueue extends CommonModel
      */
     public function nowQueue($examQueueCollect)
     {
-        foreach ($examQueueCollect as $examQueue) {
-            if ($examQueue->status == 1) {
-                return $examQueue;
+        foreach ($examQueueCollect as $key => $nowQueue) {
+            $nextKey = $key + 1;
+            $nextQueue = isset($examQueueCollect[$nextKey]) ? $examQueueCollect[$nextKey] : [];
+            if ($nowQueue->status == 1 || $nowQueue->status == 2) {
+                return [$nowQueue, $nextQueue];
             }
-            if ($examQueue->status == 2) {
-                return $examQueue;
-            }
-
+            return [];
         }
-
-//        foreach ($examQueueCollect as $examQueue) {
-//            if (strtotime($examQueue->begin_dt) > $nowTime) {
-//                return $examQueue;
-//            }
-//            if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime) {
-//                return $examQueue;
-//            }
-//        }
-        return [];
     }
 
     /**
