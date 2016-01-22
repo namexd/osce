@@ -21,5 +21,6 @@ class ExamOrder extends  CommonModel{
         1 => '绑定腕表',
         2 => '已解绑',
         3 => '缺考',
+        4 => '跳过',
     ];
 }
