@@ -301,6 +301,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//学生腕表
 		Route::get('student-watch/wait-exam-list',['uses'=>'StudentWatchController@getWaitExamList']);
+		Route::get('student-watch/student-exam-reminder',['uses'=>'StudentWatchController@getStudentExamReminder']);
+
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.api.invigilatepad.getAuthentication']);
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.api.invigilatepad.getExamGrade']);

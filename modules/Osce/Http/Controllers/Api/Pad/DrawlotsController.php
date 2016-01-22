@@ -118,6 +118,7 @@ class DrawlotsController extends CommonController
             $roomId = $request->get('room_id');
             //根据uid来查对应的考生
             $watchLog = WatchLog::where('watch_id',$uid)->first();
+
             if (!$watchLog) {
                 throw new \Exception('没有找到对应的腕表信息！');
             }
@@ -125,6 +126,10 @@ class DrawlotsController extends CommonController
                 throw new \Exception('没有找到对应的学生信息！');
             }
 
+            //如果考生走错了房间
+            if (ExamQueue::where('room_id',$roomId)->where('student_id',$uid)->select('id')->get()->isEmpty()) {
+                throw new \Exception('该名学生走错了考场！');
+            }
             //使用抽签的方法进行抽签操作
             $result = $this->drawlots($student, $roomId);
 

@@ -62,6 +62,16 @@ class ExamPlan extends CommonModel
      *
      */
     public function IntelligenceEaxmPlan($exam){
+
+
+
+
+        $ExamPlanForRoom =   new ExamPlanForRoom();
+
+        $ExamPlanForRoom    ->  IntelligenceEaxmPlan($exam);
+
+        dd(123);
+
         $this   ->  stations   =   $this   ->  getAllStation($exam);
         $this   ->  allStudent =   $this   ->  getExamStudent($exam);
         $mins   =   $this   ->  getMaxStationTime();
@@ -124,7 +134,7 @@ class ExamPlan extends CommonModel
         foreach($batchStudnet as $index=>$student)
         {
             $newIndex           =   $index+1;
-            if($newIndex>=$total)
+            if($newIndex        >=  $total)
             {
                 $newIndex       =   $newIndex-$total;
             }
@@ -199,7 +209,7 @@ class ExamPlan extends CommonModel
         $this   ->  batchTime   =   $batchTime;
         return $this;
     }
-    /*
+    /**
      * 获取报考学生
      */
     public function getExamStudent($exam){
@@ -248,7 +258,7 @@ class ExamPlan extends CommonModel
         $this   ->  flowsIndex  =   $flowsIndex;
         return $data;
     }
-    /*
+    /**
      * 获取考试所有流程节点
      */
     public function getExamFlow($exam){
@@ -704,5 +714,17 @@ class ExamPlan extends CommonModel
             }
         }
         return $examPlanData;
+    }
+
+    /**
+     * 将exam_plan按begin_dt这个列分组,并返回分组后的一维对象
+     * @author Jiangzhiheng
+     */
+    public function getBegindtList()
+    {
+        return $this->select('begin_dt')
+            ->groupBy('begin_dt')
+            ->get()
+            ->pluck('begin_dt');
     }
 }
