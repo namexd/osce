@@ -487,7 +487,11 @@ class Exam extends CommonModel
        }
     }
 
+    //获取当前学生的所有考试
 
+      public function  Examname($examIds){
+          return $this->whereIn('id',$examIds)->get();
+      }
 
 
 

@@ -38,17 +38,18 @@ class StudentExamQuery extends  CommonController
                 throw new \Exception('当前用户未登陆');
             }
             //根据用户获得考试id
-            $ExamId= Student::where('user_id','=',$user->id)->select('exam_id')->get();
-              $list=[];
-            foreach($ExamId as $data){
-                $list[]=[
+            $ExamIdList= Student::where('user_id','=',$user->id)->select('exam_id')->get();
+            $list=[];
+            foreach($ExamIdList as $key=>$data){
+                $list[$key]=[
                       'exam_id'=>$data->exam_id,
                 ];
-                $ExamModel = new Exam();
-                $ExamList= $ExamModel->where('id','=',$data['exam_id'])->select()->get();
             }
+            $examIds = array_column($list, 'exam_id');
+            $ExamModel = new Exam();
+            $ExamList= $ExamModel->Examname($examIds);
             //根据考试id获取所有考试
-            return view('osce::wechat.resultquery.examination_list');
+            return view('osce::wechat.resultquery.examination_list',['ExamList'=>$ExamList]);
         }catch (\Exception $ex) {
             throw $ex;
         }
@@ -61,10 +62,10 @@ class StudentExamQuery extends  CommonController
             'exam_id'=>'required|integer'
         ]);
         $examId =Input::get('exam_id');
+        //根据考试id查询出所有考站
         $ExamModel = new Exam();
         $ExamStationList= $ExamModel->ExamStations($examId);
-
-
+        
 
 
         if($ExamStationList){
@@ -78,7 +79,8 @@ class StudentExamQuery extends  CommonController
 
 
 
-    //考生成绩查询详情页
+    //考生成绩查询详情页根据考站id查询
+
 
 
 }
