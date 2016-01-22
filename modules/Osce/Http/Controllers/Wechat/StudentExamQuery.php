@@ -18,6 +18,7 @@ class StudentExamQuery extends  CommonController
     //url  /osce/wechat/student-exam-query/results-query-index
     public  function getResultsQueryIndex(Request $request){
 
+        
         return view('osce::wechat.exammanage.exam_notice');
 
     }
