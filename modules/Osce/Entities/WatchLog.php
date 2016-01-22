@@ -27,8 +27,9 @@ class WatchLog extends CommonModel{
 
 
    public function historyRecord($data,$student_id,$exam_id){
+       $time=time();
        $examQue=new ExamQueue();
-       $examQue->createExamQueue($exam_id, $student_id);
+       $examQue->createExamQueue($exam_id, $student_id,$time);
          if($data['context']){
              $data['context']=serialize($data['context']);
          }
