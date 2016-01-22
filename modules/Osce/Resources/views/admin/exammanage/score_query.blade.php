@@ -73,7 +73,24 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                        <tr>
+                            <td>OSCE考试2015年第3期</td>
+                            <td>肠胃炎考站</td>
+                            <td>张三</td>
+                            <td>2015-11-22 12:00:00</td>
+                            <td>8:12</td>
+                            <td>85</td>
+                            <td><a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span></a></td>
+                        </tr>
+                        <tr>
+                            <td>OSCE考试2015年第4期</td>
+                            <td>疼风考站</td>
+                            <td>李四</td>
+                            <td>2015-11-22 12:00:00</td>
+                            <td>12:34</td>
+                            <td>55</td>
+                            <td><a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span></a></td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="btn-group pull-right">
