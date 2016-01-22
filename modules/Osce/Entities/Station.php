@@ -70,20 +70,25 @@ class Station extends CommonModel
 
             //如果传入了stationArray，就排除里面的内容
             if ($stationIdArray != []) {
-                $builder = $builder->whereNotIn('id',$stationIdArray);
+                $builder = $builder->whereNotIn($this->table.'.id',$stationIdArray);
             }
 
 
             //开始查询
             $builder = $builder->select([
-                'id',
-                'name',
-                'code',
-                'type',
-                'description',
-                'subject_id',
-                'mins'
-            ])->orderBy('created_at', 'desc');
+                $this->table.'.id',
+                $this->table.'.name',
+                $this->table.'.code',
+                $this->table.'.type',
+                $this->table.'.description',
+                $this->table.'.subject_id',
+                $this->table.'.mins',
+                'subject.title'
+            ])
+                ->leftJoin ('subject', function ($join) {
+                    $join->on('subject.id' , '=' , $this->table.'.subject_id');
+                })
+                ->orderBy($this->table.'.created_at', 'desc');
 
             if ($ajax === true) {
                 return $builder->get();

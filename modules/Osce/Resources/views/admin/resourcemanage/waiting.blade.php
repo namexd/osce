@@ -33,7 +33,7 @@
                         <ul class="nav nav-tabs">
                             @foreach($area as $item)
                                 <li class="{{($item->cate == 4)?'active':''}}">
-                                    <a href="{{route('osce.admin.room.getRoomList')}}?type={{$item->cate}}">{{$item->name}}</a>
+                                    <a href="{{route('osce.admin.room.getRoomList',['type'=>$item->cate])}}">{{$item->name}}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -56,7 +56,9 @@
                             <td>{{$item->name}}</td>
                             <td>{{$item->description}}</td>
                             <td value="{{$item->id}}">
-                                <a href="{{route('osce.admin.room.getEditRoom')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                                <a href="{{route('osce.admin.room.getEditRoom',['id'=>$item->id,'type'=>$type])}}">
+                                    <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                                </a>
                                 <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                             </td>
                         </tr>
