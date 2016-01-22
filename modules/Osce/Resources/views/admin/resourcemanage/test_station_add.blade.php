@@ -56,13 +56,12 @@
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.Station.postAddStation')}}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站名称</label>
-
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="name" name="name">
                                 </div>
                             </div>
-
                             <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
@@ -73,24 +72,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            {{--<div class="form-group">--}}
-                                {{--<label class="col-sm-2 control-label">考站描述</label>--}}
-
-                                {{--<div class="col-sm-10">--}}
-                                    {{--<input type="text" required class="form-control" id="description" name="description">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-
-                            {{--<div class="hr-line-dashed"></div>--}}
-                            {{--<div class="form-group">--}}
-                                {{--<label class="col-sm-2 control-label">考站编号</label>--}}
-
-                                {{--<div class="col-sm-10">--}}
-                                    {{--<input type="text" required class="form-control" id="code" name="code">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
@@ -99,23 +80,22 @@
                                     <input type="text"   ng-model="num" id="code" class="form-control" name="mins" value="{{$time}}">
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
-                                <label class="col-sm-2 control-label">考试科目</label>
+                            <div class="hr-line-dashed"></div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">科目</label>
                                 <div class="col-sm-10">
-                                    <select id=""  class="form-control m-b" name="subject_id">
+                                    <select id="subject_id"  class="form-control m-b" name="subject_id">
                                         @foreach($subject as $key=>$item)
                                             <option value="{{$item->id}}">{{$item->title}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-
-
                             <div class="hr-line-dashed noTheory"></div>
+
                             <div class="form-group noTheory">
                                 <label class="col-sm-2 control-label">病例</label>
-
                                 <div class="col-sm-10">
                                     <select id=""  class="form-control m-b" name="case_id">
                                         @foreach($case as $item)
@@ -124,9 +104,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
-                                <label class="col-sm-2 control-label">所属考场</label>
+                            <div class="hr-line-dashed"></div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">所属考场</label>
                                 <div class="col-sm-10">
                                     <select id=""  class="form-control m-b" name="room_id">
                                         @foreach($room as $item)
@@ -135,9 +116,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div><div class="form-group">
-                                <label class="col-sm-2 control-label">关联摄像机</label>
+                            <div class="hr-line-dashed"></div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">关联摄像机</label>
                                 <div class="col-sm-10">
                                     <select id=""  class="form-control m-b" name="vcr_id">
                                         @foreach($vcr as $key=>$item)
@@ -146,21 +128,23 @@
                                     </select>
                                 </div>
                             </div>
-
-
                             <div class="hr-line-dashed noTheory"></div>
-                            {{--<div class="form-group noTheory">--}}
-                                {{--<label class="col-sm-2 control-label">评分标准</label>--}}
 
+                            {{--<div class="form-group">--}}
+                                {{--<label class="col-sm-2 control-label">考站编号</label>--}}
                                 {{--<div class="col-sm-10">--}}
-                                    {{--<select id="" required  class="form-control m-b" name="subject_id">--}}
-                                        {{--@foreach($subject as $item)--}}
-                                            {{--<option value="{{$item->id}}">{{$item->title}}</option>--}}
-                                        {{--@endforeach--}}
-                                    {{--</select>--}}
+                                    {{--<input type="text" required class="form-control" id="code" name="code">--}}
                                 {{--</div>--}}
-
                             {{--</div>--}}
+                            {{--<div class="hr-line-dashed"></div>--}}
+                            {{--<div class="form-group">--}}
+                                {{--<label class="col-sm-2 control-label">考站描述</label>--}}
+                                {{--<div class="col-sm-10">--}}
+                                    {{--<input type="text" required class="form-control" id="description" name="description">--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<div class="hr-line-dashed"></div>--}}
+
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>

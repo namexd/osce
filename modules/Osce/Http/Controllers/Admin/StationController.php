@@ -196,8 +196,8 @@ class StationController extends CommonController
             'type'          => 'required|integer',
             'mins'          => 'required|integer',
             'subject_id'    => 'required|integer',
-            'description'   => 'required',
-            'code'          => 'required',
+//            'description'   => 'required',
+//            'code'          => 'required',
             'vcr_id'        => 'required|integer',
             'case_id'       => 'required|integer',
             'room_id'       => 'required|integer',
@@ -205,7 +205,7 @@ class StationController extends CommonController
 
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'code', 'type', 'description', 'subject_id', 'mins');
+            $placeData = $request->only('name', 'type', 'subject_id', 'mins');
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
