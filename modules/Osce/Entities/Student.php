@@ -114,7 +114,7 @@ class Student extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function addExaminee($exam_id, $examineeData)
+    public function addExaminee($exam_id, $examineeData,$key = '')
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -147,7 +147,7 @@ class Student extends CommonModel
             //查询学号是否存在
             $code = $this->where('code', $examineeData['code'])->where('user_id','<>',$user->id)->first();
             if(!empty($code)){
-                throw new \Exception('该学号已经有别人使用！');
+                throw new \Exception((empty($key)?'':('第'.$key.'行')).'该学号已经有别人使用！');
             }
             //根据用户ID和考试号查找考生
             $student = $this->where('user_id', '=', $user->id)
@@ -155,7 +155,7 @@ class Student extends CommonModel
 
             //存在考生信息,则更新数据, 否则新增
             if($student){
-                throw new \Exception('该考生已经存在，不能再次添加！');
+                throw new \Exception((empty($key)?'':('第'.$key.'行')).'该考生已经存在，不能再次添加！');
 //                //跟新考生数据
 //                $student->name    = $examineeData['name'];
 //                $student->exam_id = $exam_id;
