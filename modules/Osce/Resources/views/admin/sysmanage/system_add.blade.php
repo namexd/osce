@@ -84,7 +84,7 @@
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.config.postAreaStore')}}">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">场所类别</label>
+                            <label class="col-sm-2 control-label">场所类别名称</label>
 
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name" value="">

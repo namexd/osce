@@ -106,7 +106,7 @@ class StationController extends CommonController
             DB::connection('osce_mis')->beginTransaction();
             //验证略
             $this->validate($request, [
-                'name'          => 'required',
+                'name'          => 'required|unique:osce_mis.station,name',
                 'type'          => 'required|integer',
 //                'description'   => 'required',
 //                'code'          => 'required',

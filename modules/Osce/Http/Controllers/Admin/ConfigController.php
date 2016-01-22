@@ -176,10 +176,13 @@ class ConfigController extends CommonController
     {
         //验证
         $this->validate($request, [
-            'name' => 'required',
+            'name'  => 'required|unique:osce_mis.area,name',
             'description' => 'required',
-            'cate' => 'required|integer',
-            'code' => 'required'
+            'cate'  => 'required|integer|unique:osce_mis.area,cate',
+            'code'  => 'required'
+        ],[
+            'name.unique'   =>  '名称必须唯一',
+            'cate.unique'   =>  '类别必须唯一',
         ]);
 
         //接受数据

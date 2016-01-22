@@ -223,11 +223,13 @@ class RoomController extends CommonController
         //验证
         $this->validate($request, [
             'vcr_id'        => 'required',
-            'name' => 'required',
+            'name'  => 'required|unique:osce_mis.room,name',
 //            'nfc' => 'required',
             'address' => 'required',
             'code' => 'required',
             'description' => 'required'
+        ],[
+            'name.unique'   =>  '名称必须唯一',
         ]);
 //        $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
         //todo   表单内容变化没有提交nfc字段

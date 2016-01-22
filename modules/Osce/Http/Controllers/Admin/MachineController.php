@@ -317,7 +317,7 @@ class MachineController extends CommonController
      */
     private function addCameras(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.vcr,name',
             'code'          =>  'required',
             'ip'            =>  'required',
             'username'      =>  'required',
@@ -331,6 +331,7 @@ class MachineController extends CommonController
             'purchase_dt'   =>  'required',
         ],[
             'name.required'         =>'设备名称必填',
+            'name.unique'           =>'设备名称必须唯一',
             'code.required'         =>'设备编码必填',
             'ip.required'           =>'设备IP地址必填',
             'username.required'     =>'设备登录用户名必填',
@@ -512,7 +513,7 @@ class MachineController extends CommonController
      */
     private function addPad(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.pad,name',
             'code'          =>  'required',
             'factory'       =>  'required',
             'sp'            =>  'required',
@@ -520,6 +521,7 @@ class MachineController extends CommonController
             'status'        =>  'required',
         ],[
             'name.required'         =>  '设备名称必填',
+            'name.unique'           =>  '设备名称必须唯一',
             'code.required'         =>  '设备ID必填',
             'factory.required'      =>  '厂家必填',
             'sp.required'           =>  '型号必填',
@@ -665,7 +667,7 @@ class MachineController extends CommonController
      */
     private function addWatch(Request  $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.watch,name',
             'code'          =>  'required|unique:osce_mis.watch',
             'factory'       =>  'required',
             'sp'            =>  'required',
@@ -673,6 +675,7 @@ class MachineController extends CommonController
             'purchase_dt'   =>  'required',
         ],[
             'name.required'         =>  '腕表名称必填',
+            'name.unique'           =>  '腕表名称必须唯一',
             'code.required'         =>  '腕表ID必填',
             'code.unique'           =>  '腕表ID已存在',
             'factory.required'      =>  '厂家必填',

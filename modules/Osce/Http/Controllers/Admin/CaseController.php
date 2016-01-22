@@ -78,9 +78,10 @@ class CaseController extends CommonController
     {
         //验证略过
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required|unique:osce_mis.cases,name'
         ],[
-            'name.required'     =>  '病例名称不能为空'
+            'name.required'     =>  '病例名称不能为空',
+            'name.unique'       =>  '病例名称必须唯一'
         ]);
 
         //获得提交的字段
