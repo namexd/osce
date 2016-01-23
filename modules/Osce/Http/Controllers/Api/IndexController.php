@@ -131,7 +131,7 @@ class IndexController extends CommonController
         $idcards=[];
         $students=json_decode($students->content());
         foreach($students->data as $item){
-         $idcards[]=$item->id_card;
+         $idcards[]=$item->idcard;
         }
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
