@@ -359,10 +359,10 @@ class IndexController extends CommonController
             'create_user_id'          =>  'required|integer'
         ]);
         $code=$request->get('code');
-        $id=Watch::where('code',$code)->select()->first();
+        $id=Watch::where('code',$code)->select()->first()->id;
         $Log_id=WatchLog::where('watch_id',$id)->select()->get();
         $screen_watch=ExamScreeningStudent::where('watch_id',$id)->select()->get();
-        if(count($Log_id)>0 || count($screen_watch>0)){
+        if(count($Log_id)>0 || count($screen_watch)>0 ){
             return \Response::json(array('code'=>10));
         }
         $result=Watch::where('id',$id)->delete();
