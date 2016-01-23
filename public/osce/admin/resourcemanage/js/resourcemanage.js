@@ -220,7 +220,43 @@ function categories(){
         thisElement.attr('current',child);
 
         //分数自动加减
+        //var thisElement = $(this).parent().parent();
+        var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
+        thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html);
+        //父亲节点
+        var className = thisElement.attr('class'),
+            parent =  className.split('-')[1];
+
+        //自动加减节点
+        var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
+
+
+        //改变value值,消除连续变换值的变化
+        var total = 0;//= parseInt(change.val())+parseInt($(this).val());
+        $('.'+className).each(function(key,elem){
+            if($(elem).attr('parent')==parent){
+                return;
+            }else{
+                total += parseInt($(elem).find('td').eq(2).find('select').val());
+            }
+        });
+
+        //当没有子类的时候
+        if(total==0){
+            return;
+        }
+
         var option = '';
+        for(var k =1;k<=total;k++){
+            option += '<option value="'+k+'">'+k+'</option>';
+        }
+        change.html(option);
+        change.val(total);
+
+        $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+        change.after('<span>'+parseInt(total)+'</span>');
+
+        /*var option = '';
         for(var k =0;k<=child;k++){
             option += '<option value="'+k+'">'+k+'</option>';
         }
@@ -230,9 +266,7 @@ function categories(){
         //thisElement.find('td').eq(2).find('select').hide();
         thisElement.find('td').eq(2).find('span').remove();
         thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
-
-        var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
-        thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html)
+*/
 
         //更新计数
         increment(thisElement);
