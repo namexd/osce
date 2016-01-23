@@ -114,7 +114,6 @@ class Subject extends CommonModel
         $subject    =   $this->find($id);
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
-
         try{
             foreach($data as $field=>$value)
             {
