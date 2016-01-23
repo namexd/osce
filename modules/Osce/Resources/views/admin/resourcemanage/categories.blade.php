@@ -46,13 +46,12 @@
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="title">
+                                <input type="text" required class="form-control" id="title" name="title">
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
@@ -93,11 +92,9 @@
                                     </div>
                                 </div>
 
-
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">

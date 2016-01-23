@@ -903,22 +903,27 @@ class MachineController extends CommonController
     {
         $this->validate($request, [
             'title'     => 'required',
-            'name'      => 'required',
+//            'name'      => 'required',
         ]);
 
         $id     = $request  -> get('id');
         $title  = $request  -> get('title');
         $name   = $request  -> get('name');
+        $code   = $request  -> get('code');
 
         //实例化模型
         $title   =  '\Modules\Osce\Entities\\'.$title;
         $model =  new $title;
-        //查询 该名字 是否存在
-        if(empty($id)){
-            $result = $model->where('name', $name)->first();
+        //存在设备ID
+        if(!empty($code)){
+            $model = $model->where('code', $code);
         }else{
-            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+            $model = $model->where('name', $name);
         }
+        if(!empty($id)){
+            $model = $model->where('id', '<>', $id);
+        }
+        $result = $model->first();
         if($result){
             return json_encode(['valid' =>false]);
         }else{

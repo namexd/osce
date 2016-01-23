@@ -20,6 +20,20 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '病例名称不能为空'
+                            },
+                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                                url: '{{route('osce.admin.case.postNameUnique')}}',//验证地址
+                                message: '病例名称已经存在',//提示消息
+                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                type: 'POST',//请求方式
+                                /*自定义提交数据，默认值提交当前input value*/
+                                data: function(validator) {
+                                    return {
+                                        title: 'caseModel',
+                                        name: $('[name="whateverNameAttributeInYourForm"]').val()
+                                    }
+                                }
                             }
                         }
                     }
@@ -43,26 +57,19 @@
                     <form method="post" class="form-horizontal" id="sourceForm">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例名称</label>
-
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name" value="">
                             </div>
                         </div>
-
-
-
-
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
-
                             <div class="col-sm-10">
                                 <input type="text" ng-model="location" id="location" class="form-control" name="description">
                             </div>
-
                         </div>
                         <div class="hr-line-dashed"></div>
-
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
@@ -71,8 +78,6 @@
                                 {{--<a href="{{route('osce.admin.case.getCaseList')}}" class="btn btn-white">取消</a>--}}
                             </div>
                         </div>
-
-
                     </form>
 
                 </div>

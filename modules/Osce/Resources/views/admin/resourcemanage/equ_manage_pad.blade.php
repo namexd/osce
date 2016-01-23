@@ -88,7 +88,7 @@
                     @forelse($list as $key => $item)
                         <tr>
                             <td>{{$key+1}}</td>
-                            <td>{{$item->id}}</td>
+                            <td>{{$item->code}}</td>
                             <td>{{$item->name}}</td>
                             <td style="color:
                                     @if($item->status==1)#16beb0
