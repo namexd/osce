@@ -14,5 +14,5 @@ interface  MachineInterface
     public function getMachineStatuValues();
     public function addMachine($data);
     public function editMachine($data);
-    public function getList($name,$status);
+    public function getList($name,$status,$nfc_code);
 }

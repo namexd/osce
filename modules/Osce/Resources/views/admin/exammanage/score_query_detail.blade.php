@@ -160,22 +160,38 @@
              * @date    2016-01-28
              */
             $('.fa-picture-o').click(function(){
+
+                //获取img数据
+                var img = [];
+                $(this).parent().siblings('.img').find('li').each(function(key,elem){
+
+                    img.push({src:$(elem).attr('value'),download:$(elem).attr('download')});
+                });
+
+                //下载的图片dom结构
+                var str = '';
+                for(var i in img){
+                    if(i==0){
+                        str += '<div class="item active">'+
+                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
+                              '<div class="carousel-caption">'+
+                                '<a href="'+img[i].download+'" target="_blank">下载</a>'+
+                              '</div>'+
+                            '</div>';
+                    }else{
+                        str += '<div class="item">'+
+                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
+                              '<div class="carousel-caption">'+
+                                '<a href="'+img[i].download+'" target="_blank">下载</a>'+
+                              '</div>'+
+                            '</div>';
+                    }
+                    
+                }
+
                 //轮播dom准备
                 var html = '<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:220px;">'+
-                              '<div class="carousel-inner" role="listbox">'+
-                                '<div class="item active">'+
-                                  '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
-                                  '<div class="carousel-caption">'+
-                                    '<a href="http://www.haosou.com" target="_blank">下载</a>'+
-                                  '</div>'+
-                                '</div>'+
-                                '<div class="item">'+
-                                  '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
-                                  '<div class="carousel-caption">'+
-                                    '<a href="#">下载</a>'+
-                                  '</div>'+
-                                '</div>'+
-                              '</div>'+
+                              '<div class="carousel-inner" role="listbox">'+str+'</div>'+
                               '<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">'+
                                 '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'+
                                 '<span class="sr-only">Previous</span>'+
@@ -185,6 +201,8 @@
                                 '<span class="sr-only">Next</span>'+
                               '</a>'+
                             '</div>';
+
+
 
                 //弹出容器
                 layer.open({
@@ -200,7 +218,7 @@
             });
             
             //视频弹出窗口
-            $('.video').click(function(){
+            /*$('.video').click(function(){
 
                 var url = $(this).attr('value');
 
@@ -214,7 +232,7 @@
                     content: url
                 });
 
-            });
+            });*/
 
 
         })
@@ -239,6 +257,7 @@
         <div class="ibox-title">
             <h5>考生成绩明细</h5>
             <a href="javascript:history.back(-1)" class="btn btn-outline btn-default" style="float:right;margin:-10px 10px 0 0;">返回</a>
+            <a href="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}" class="btn btn-outline btn-default" style="float:right;margin:-10px 10px 0 0;">查看视频</a>
         </div>
         <div class="ibox-content">
             <table class="table table-bordered">
@@ -336,8 +355,15 @@
                         <td>{{$item['standard']->score}}</td>
                         <td>{{$item['score']}}</td>
                         <td>
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video" value="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"></span></a>
+                            <a href="javascript:void(0)">
+                              <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
+                              <ul class="img" style="display:none;">
+                                  @foreach($item['image'] as $k=>$img)
+                                  <li value="{{$img->url}}" download="{{route('osce.admin.getDownloadImage',array('id'=>$img->id))}}"></li>
+                                  @endforeach
+                                 
+                              </ul>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
@@ -345,14 +371,6 @@
             </table>
         </div>
     </div>
-
-
-
-
-
-
-
-
 </div>
 
 @stop{{-- 内容主体区域 --}}

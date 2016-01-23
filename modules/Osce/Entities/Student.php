@@ -371,4 +371,39 @@ class Student extends CommonModel
             ->paginate(config('osce.page_size'));
     }
 
+    /**
+     * 学生成绩统计的着陆页
+     * @author Jiangzhiheng
+     * @param $examId
+     * @param $message
+     */
+    static public function getStudentScoreList($examId,$message) {
+        $builder = Student::leftJoin('exam_result','exam_result.student_id','=','student.id')
+            ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+            ->leftJoin('exam','exam.id','=','exam_screening.exam_id');
+        if ($examId != "") {
+            $builder = $builder->where('exam.id','=',$examId);
+
+            if ($message != "") {
+                $builder = $builder->where('student.name','like','%'. $message .'%')
+                    ->orWhere('student.idcard','like','%'. $message .'%');
+            }
+
+            $builder = $builder->select(DB::raw(implode(',',
+                [
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.code as student_code',
+                    'exam.name as exam_name',
+                    'sum(exam_result.score) as score_total',
+                    'count(*) as station_total'
+                ]))
+            );
+            $builder = $builder->groupBy('exam_result.student_id') ->orderBy('score_total','desc');
+
+            return $builder->paginate(config('osce.page_size'));
+//            return $builder->toSql();
+        }
+    }
+
 }

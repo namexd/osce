@@ -243,7 +243,7 @@ class InvigilatorController extends CommonController
             //老师数据
             $teacherData = $request -> only('name','code','type','description');      //姓名、编号、类型、备注
             $teacherData['case_id']         = intval($request->get('case_id'));
-            $teacherData['status']          = 1;
+            $teacherData['status']          = 0;
             $teacherData['create_user_id']  = $user->id;
             //
             $role_id = config('osce.spRoleId',4);

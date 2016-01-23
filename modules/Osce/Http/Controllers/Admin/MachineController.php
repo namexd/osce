@@ -121,13 +121,15 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'cate_id'   =>  'sometimes|integer',
             'name'      =>  'sometimes',
-            'status'    =>  'sometimes'
+            'status'    =>  'sometimes',
+            'nfc_code'    =>  'sometimes',
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
         $cate_id    =   $cate_id==0? 1:$cate_id;
         $name       =   e($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
+        $nfc_code     =   e($request   ->  get('nfc_code'));
         $cate       =   config('osce.machine_category');
         if(is_null($cate))
         {
@@ -138,7 +140,7 @@ class MachineController extends CommonController
             abort(404,'设备类别不存在，请检查数据或联系管理员');
         }
         $model  =   $this   ->  getMachineModel($cate_id);
-        $list   =   $model  ->  getList($name, $status);
+        $list   =   $model  ->  getList($name, $status,$nfc_code);
 
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)
@@ -674,6 +676,7 @@ class MachineController extends CommonController
             'code'          =>  'required|unique:osce_mis.watch',
             'factory'       =>  'required',
             'sp'            =>  'required',
+            'nfc_code'      =>  'sometimes|unique:osce_mis.watch,nfc_code',
             'status'        =>  'required',
             'purchase_dt'   =>  'required',
         ],[
@@ -685,6 +688,7 @@ class MachineController extends CommonController
             'sp.required'           =>  '型号必填',
             'status.required'       =>  '状态必选',
             'purchase_dt.required'  =>  '采购日期必填',
+            'nfc_code.unique'       =>  'nfc标签代码值必须唯一',
         ]);
 
         $user   =   Auth::user();
@@ -700,7 +704,8 @@ class MachineController extends CommonController
             'factory'       =>  $request    ->  get('factory'),
             'sp'            =>  $request    ->  get('sp'),
             'create_user_id'=>  $user       ->  id,
-            'purchase_dt'   =>  $request    ->  get('purchase_dt')
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+            'nfc_code'      =>  $request    ->  get('nfc_code')
         ];
 
         try{
@@ -727,6 +732,7 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
+            'nfc_code'      =>  'sometimes',
             'code'          =>  'required',
             'factory'       =>  'required',
             'sp'            =>  'required',
@@ -748,14 +754,22 @@ class MachineController extends CommonController
             $id=$id->id;
             if($id!=$request->get('id')){
                 return  redirect()->back()->withErrors('设备编号已存在');
-            }else{
-
+            }
+        }
+        $nfc=$request->get('nfc_code');
+        if($nfc){
+            $watch_id=Watch::where('nfc_code',$nfc)->select()->first();
+            if($watch_id){
+                if($id->id!=$watch_id->id){
+                    return  redirect()->back()->withErrors('nfc标签代码值已存在');
+                }
             }
         }
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
             'factory'       =>  $request    ->  get('factory'),
+            'nfc_code'       =>  $request    ->  get('nfc_code'),
             'sp'            =>  $request    ->  get('sp'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
