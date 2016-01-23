@@ -59,7 +59,6 @@
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
-
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>新增考站</h5>
