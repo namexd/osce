@@ -121,10 +121,11 @@ class SubjectItem extends CommonModel
      */
     static public function builderItemData($content,$score,$answer){
         $data   =   [];
+
         foreach($content as $prointIndex => $item){
 
-            if(empty($item['title'])){
-                continue;
+            if(empty($item['title']) || empty($item[$prointIndex])){
+                throw new \Exception('考核点内容不能为空！');
             }else{
                 $child  =   [];
                 $itemScore  =   $score[$prointIndex];
