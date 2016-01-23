@@ -972,9 +972,9 @@ function examroom_assignment(){
             '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
             '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
             '</td>'+
-            '</tr>'+
+            '</tr>';
                 //记录计数
-            $('#examroom').find('tbody').attr('index',index);
+        $('#examroom').find('tbody').attr('index',index);
         $('#examroom').find('tbody').append(html);
 
         //ajax请求数据
@@ -2100,9 +2100,16 @@ function station_assignment(){
                                 '<div class="teacher-box pull-left">'+
                                 '</div>'+
                                 '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                '<select name="" class="teacher-list js-example-basic-multiple">'+
+                                /*'<select name="" class="teacher-list js-example-basic-multiple">'+
                                 '<option>==请选择==</option>'+
-                                '</select>'+
+                                '</select>'+*/
+                                '<div class="btn-group">'+
+                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<span class="caret"></span>'+
+                                  '</button>'+
+                                  '<ul class="dropdown-menu">'+
+                                  '</ul>'+
+                                '</div>'+
                                 '</div>'+
                                 '</td>'+
                                 '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
@@ -2120,9 +2127,16 @@ function station_assignment(){
                                 '<div class="teacher-box pull-left">'+
                                 '</div>'+
                                 '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                '<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
+                                /*'<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
                                 '<option>==请选择==</option>'+
-                                '</select>'+
+                                '</select>'+*/
+                                '<div class="btn-group">'+
+                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<span class="caret"></span>'+
+                                  '</button>'+
+                                  '<ul class="dropdown-menu">'+
+                                  '</ul>'+
+                                '</div>'+
                                 '</div>'+
                                 '</td>'+
                                 '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
@@ -2420,14 +2434,6 @@ function station_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
-            }
-        });
 
         layer.alert('确认为删除？',function(its){
             thisElement.remove();
@@ -2536,7 +2542,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-14
      */
-    $('#exam-place').on('change',".teacher-list",function(){
+    /*$('#exam-place').on('change',".teacher-list",function(){
 
         var $teacher= $(this).find('option:selected').text().split('==')[0];
         var id = $(this).find('option:selected').val();
@@ -2544,6 +2550,24 @@ function station_assignment(){
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
             '<input type="hidden" name="form_data['+thisElement.parent().attr('value')+'][spteacher_id]" value="'+id+'">'+
+            '<div class="pull-left">'+$teacher+'</div>'+
+            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+        $(this).parents(".pull-right").prev().append(sql);
+    })*/
+    /**
+     * 选择老师 修改
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-23
+     */
+    $('#exam-place').on('click',".dropdown-menu",function(e){
+
+        var $teacher= $(e.target).text();
+        var id = $(e.target).attr('value');
+        var thisElement = $(this).parent();
+
+        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
+            '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
             '<div class="pull-left">'+$teacher+'</div>'+
             '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
@@ -2576,7 +2600,7 @@ function station_assignment(){
         $.ajax({
             type:'get',
             async:true,
-            url:pars.spteacher_list,
+            url:pars.teacher_list,
             data:{teacher:ids},
             success:function(data){
               var html = '';

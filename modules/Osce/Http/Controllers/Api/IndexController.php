@@ -9,12 +9,16 @@ use Modules\Osce\Entities\Exam;
 
 use Modules\Osce\Entities\ExamAbsent;
 
+use Modules\Osce\Entities\ExamFlowRoom;
+use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
 
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
@@ -123,7 +127,15 @@ class IndexController extends CommonController
         if(!$planId ){
             return \Response::json(array('code' =>4));
         }
-
+        $students=$this->getStudentList($request);
+        $idcards=[];
+        $students=json_decode($students->content());
+        foreach($students->data as $item){
+         $idcards[]=$item->idcard;
+        }
+        if(!in_array($id_card,$idcards)){
+            return \Response::json(array('code'=>5));
+        }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
         $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
@@ -352,34 +364,19 @@ class IndexController extends CommonController
 
         $this->validate($request,[
             'code'                    =>  'required',
-            'create_user_id'       =>  'required|integer'
+            'create_user_id'          =>  'required|integer'
         ]);
-
-        $id=Watch::where('code',$request->get('code'))->select()->first();
-        if($id){
-            $id=$id->id;
-            $Log_id=WatchLog::where('watch_id',$id)->select('id')->first();
-            if($Log_id){
-                $result=WatchLog::where('watch_id',$id)->delete();
-                if($result){
-                    $result=Watch::where('id',$id)->delete();
-                    if($result){
-                        return response()->json(
-                            $this->success_data()
-                        );
-                    }
-                }
-            }else{
-                $result=Watch::where('id',$id)->delete();
-                if($result){
-                    return response()->json(
-                        $this->success_data()
-                    );
-                }
-            }
-
+        $code=$request->get('code');
+        $id=Watch::where('code',$code)->select()->first()->id;
+        $Log_id=WatchLog::where('watch_id',$id)->select()->get();
+        $screen_watch=ExamScreeningStudent::where('watch_id',$id)->select()->get();
+        if(count($Log_id)>0 || count($screen_watch)>0 ){
+            return \Response::json(array('code'=>10));
         }
-
+        $result=Watch::where('id',$id)->delete();
+        if($result){
+            return \Response::json(array('code'=>1));
+        }
         return response()->json(
             $this->fail(new \Exception('删除腕表失败'))
         );
@@ -646,11 +643,53 @@ class IndexController extends CommonController
         $screen_id = $screen_id->id;
         $studentModel = new Student();
         try {
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id);
-            $count = count($list);
-            return response()->json(
-                $this->success_data($list, $count, 'success')
-            );
+            $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
+            if($mode==1){
+//             $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
+//             $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
+//             $countStation=[];
+//             foreach($stations as $item){
+//              $countStation[]=$item->station_id;
+//             }
+//                $countStation=array_unique($countStation);
+                $countStation=2;
+                $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
+                $data=[];
+                foreach($list as $itm){
+                    $data[]=[
+                        'name' => $itm->name,
+                        'idcard' => $itm->idcard,
+                        'code' => $itm->code,
+                        'exam_screening_id' => $itm->exam_screening_id,
+                    ];
+                }
+                $count = count($list);
+                return response()->json(
+                    $this->success_data($data, 1, 'count:'.$count)
+                );
+            }elseif($mode==2){
+                $stations=ExamFlowStation::where('exam_id',$exam_id)->select('station_id')->get();
+                $countStation=[];
+                foreach($stations as $item){
+                    $countStation[]=$item->station_id;
+                }
+                $countStation=array_unique($countStation);
+                $countStation=count($countStation)*2;
+                $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
+                $data=[];
+                foreach($list as $itm){
+                    $data[]=[
+                        'name' => $itm->name,
+                        'idcard' => $itm->idcard,
+                        'code' => $itm->code,
+                        'exam_screening_id' => $itm->exam_screening_id,
+                    ];
+                }
+                $count = count($list);
+                return response()->json(
+                    $this->success_data($data, 1, 'count:'.$count)
+                );
+            }
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)

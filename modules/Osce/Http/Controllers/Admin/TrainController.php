@@ -43,11 +43,10 @@ class TrainController extends  CommonController{
 //        return false;
 //      }
         $trainModel=new InformTrain();
-        $pagination=$trainModel->getPaginate();
-
-        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
-
-        return view('osce::admin.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
+//        $pagination=$trainModel->getPaginate();
+//        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
+        $list=$trainModel->getInformList();
+        return view('osce::admin.train.train_list',['list'=>$list]);
 
     }
 
@@ -418,6 +417,10 @@ class TrainController extends  CommonController{
         $this->downloadfile(array_pop($fileNameArray),public_path().$thisFile);
     }
     private function downloadfile($filename,$filepath){
+        $file=explode('.',$filename);
+        $tFile=array_pop($file);
+        $filename=md5($filename).'.'.$tFile;
+        $filepath   =   iconv('utf-8', 'gbk', $filepath);
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));
