@@ -101,21 +101,23 @@ class SubjectItem extends CommonModel
      *
      * @access public
      *
-     * * @param array $content
+     * *
+     * @param array $content
+     * @param array $content
      * * string        title        考核点名称
      * * string        *-*          考核项名称
-     * * @param array $score
+     * * * @param array $score
      * <b>get 请求字段：</b>
      * * string        total        考核项名称
      * * string        *-*          考核项分数
      *
+     * @param $answer
      * @return array
-     *
-     * @version 1.0
+
+    @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2016-01-03 17:57
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     static public function builderItemData($content,$score,$answer){
         $data   =   [];
