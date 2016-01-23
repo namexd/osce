@@ -42,11 +42,11 @@ return [
 		],
 		2 =>[
 			'id'=>2,
-			'name'=>'Pad',
+			'name'=>'PAD',
 		],
 		3 =>[
 			'id'=>3,
-			'name'=>'Watch',
+			'name'=>'腕表',
 		]
 	],
 	'manager'=>[

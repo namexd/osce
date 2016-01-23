@@ -47,19 +47,24 @@ class RoomController extends CommonController
         $type    = $request ->input('type', 1);
         $id      = $request ->input('id', '');
 
-        //获取当前场所的类
-        list($area,$data) = $room->showRoomList($keyword, $type, $id);
+        try{
+            //获取当前场所的类
+            list($area,$data) = $room->showRoomList($keyword, $type, $id);
 
-        //展示页面
-        if ($type == 1) {
-            return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-        } else if ($type == 2){
-            return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-        }else if ($type == 3){
-            return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-        }else{
-            return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            //展示页面
+            if ($type == 1) {
+                return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            } else if ($type == 2){
+                return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            }else if ($type == 3){
+                return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            }else{
+                return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            }
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
+
 
     }
 
@@ -87,12 +92,21 @@ class RoomController extends CommonController
         //取出id的值
         $id = $request->get('id');
         $type = $request->input('type');
+        //TODO:zhoufuxiang，查询属于离线状态的摄像机
+        $vcr = Vcr::where('status', 0)
+            ->select(['id', 'name'])
+            ->get();     //关联摄像机
 
         $data = $model->showRoomList("",$type,$id);
-
+        $roomVcr = RoomVcr::where('room_id', $id)->first();
+        if(!empty($roomVcr)){
+            $data->vcr_id = $roomVcr->vcr_id;
+        }else{
+            $data->vcr_id = 0;
+        }
 
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data]);
+        return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data, 'vcr'=>$vcr]);
     }
 
     /**
@@ -135,12 +149,14 @@ class RoomController extends CommonController
             'description' => 'required'
         ]);
 
-        $formData = $request->only('name', 'description');
-        $id = $request->input('id');
-        $Room = new Room();
-        $result = $Room->updateData($id, $formData);
+        $id         = $request->input('id');
+        $vcr_id     = $request->get('vcr_id');
+        $formData   = $request->only('name', 'description', 'address', 'code');
 
         try {
+            $Room = new Room();
+            $result = $Room->editRoomData($id, $vcr_id, $formData);
+//            $result = $Room->updateData($id, $formData);
             if (!$result) {
                 throw new \Exception('数据修改失败！请重试');
             } else {
@@ -167,14 +183,15 @@ class RoomController extends CommonController
     public function getAddRoom($id="")
     {
         if ($id == "") {
-            $vcr = Vcr::where('status', 1)
+            //TODO:zhoufuxiang，查询属于离线状态的摄像机
+            $vcr = Vcr::where('status', 0)
                 ->select(['id', 'name'])
                 ->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
             $vcrId = Room::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
-
-            $vcr  = Vcr::where('status', 1)
+            //TODO:zhoufuxiang，查询属于离线状态的摄像机
+            $vcr  = Vcr::where('status', 0)
                 ->orWhere(function($query) use($vcrId){
                     $query->where('id','=',$vcrId);
                 })
@@ -204,14 +221,15 @@ class RoomController extends CommonController
     public function postCreateRoom(Request $request, RoomVcr $roomVcr)
     {
         //验证
-//        dd($request);
         $this->validate($request, [
             'vcr_id'        => 'required',
-            'name' => 'required',
+            'name'  => 'required|unique:osce_mis.room,name',
 //            'nfc' => 'required',
             'address' => 'required',
             'code' => 'required',
             'description' => 'required'
+        ],[
+            'name.unique'   =>  '名称必须唯一',
         ]);
 //        $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
         //todo   表单内容变化没有提交nfc字段
@@ -228,10 +246,14 @@ class RoomController extends CommonController
             'vcr_id'=>$vcrId,
         ];
         $result = $roomVcr->insertData($data);
-
         if (!$result) {
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors('插入数据失败,请重试!');
+        }
+        $vcr = Vcr::where('id',$vcrId)->update(['status'=>1]);
+        if (!$vcr) {
+            DB::connection('osce_mis')->rollBack();
+            return redirect()->back()->withErrors('摄像机状态修改失败,请重试!');
         }
 
         DB::connection('osce_mis')->commit();

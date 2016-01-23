@@ -71,7 +71,7 @@ function exam_add(){
                     }
                 }
             },
-            code: {
+            address: {
                 validators: {
                     notEmpty: {
                         message: '考试地点不能为空'
@@ -91,6 +91,11 @@ function exam_add(){
         var index = $('#exam_add').find('tbody').attr('index');
         index = parseInt(index) + 1;
 
+        //时长默认值
+        var timeLength = (Time.getTime('YYYY-MM-DD hh:mm')).split(' ')[1];
+        var hours = timeLength.split(':')[0];
+        var minutes = timeLength.split(':')[1];
+
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
@@ -99,13 +104,13 @@ function exam_add(){
             '<td class="laydate">'+
             '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
-            '<td>3:00</td>'+
+            '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
-            '</tr>'+
-                //记录计数
-            $('#exam_add').find('tbody').attr('index',index);
+            '</tr>';
+        //记录计数
+        $('#exam_add').find('tbody').attr('index',index);
         $('#exam_add').find('tbody').append(html);
     });
 
@@ -118,24 +123,27 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        var index1=layer.alert('确认删除',{btn:['确认','取消']},function(){
+        layer.alert('确认为删除？',function(thisID){
             thisElement.remove();
-            layer.close(index1);
+
+            //计数器标志
+            var index = $('#exam_add').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
+            }
+            $('#exam_add').find('tbody').attr('index',index);
+            //更新序号
+            $('#exam_add tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
+
+            layer.close(thisID);
         });
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
-        //计数器标志
-        var index = $('#exam_add').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#exam_add').find('tbody').attr('index',index);
-        //更新序号
-        $('#exam_add tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        
 
     });
 }
@@ -169,7 +177,7 @@ function add_basic(){
                     }
                 }
             },
-            code: {
+            address: {
                 validators: {
                     notEmpty: {
                         message: '考试地点不能为空'
@@ -193,6 +201,22 @@ function add_basic(){
         }
     });
 
+
+    $('tbody').on('keyup','.end',function(e){
+        
+        var re = RegExp('/^\d{4}-(?:0\d|1[0-2])-(?:[0-2]\d|3[01])( (?:[01]\d|2[0-3])\:[0-5]\d)?$/');
+        var thisElement = $(this);
+        if(e.keyCode){
+            if(!re.test(thisElement.val())){
+                layer.alert('时间不能为空！');
+                thisElement.focus();
+                return;
+            }else{
+                return;
+            }
+        }
+    });
+
     /**
      * 新增一条
      * @author  mao
@@ -204,6 +228,11 @@ function add_basic(){
         var index = $('#add-basic').find('tbody').attr('index');
         index = parseInt(index) + 1;
 
+        //时长默认值
+        var timeLength = (Time.getTime('YYYY-MM-DD hh:mm')).split(' ')[1];
+        var hours = timeLength.split(':')[0];
+        var minutes = timeLength.split(':')[1];
+
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
@@ -212,7 +241,7 @@ function add_basic(){
             '<td class="laydate">'+
             '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
-            '<td>3:00</td>'+
+            '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
@@ -231,29 +260,29 @@ function add_basic(){
      */
     $('#add-basic').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+
+        layer.alert('确认为删除？',function(thisID){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#add-basic').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
+            $('#add-basic').find('tbody').attr('index',index);
+            //更新序号
+            $('#add-basic tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
+
+            layer.close(thisID);
         });
 
         //var thisElement = $(this).parent().parent().parent().parent();
         //thisElement.remove();
-        //计数器标志
-        var index = $('#add-basic').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#add-basic').find('tbody').attr('index',index);
-        //更新序号
-        $('#add-basic tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        
 
     });
 
@@ -347,14 +376,16 @@ function timePicker(background){
             var thisElement = $(this.elem).parent();
             if(thisElement.prev().prev().length){
                 var current = Date.parse(date.split('-').join('/')) - Date.parse((thisElement.prev().find('input[type=text]').val()).split('-').join('/'));
-                var hours = Math.floor(current/(1000*60*60)),
-                    minutes = Math.round((current/(1000*60*60)-hours)*60);
-                thisElement.next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
+                var days = Math.floor(current/(1000*60*60*24)),
+                    hours = Math.floor((current/(1000*60*60*24)-days)*24),
+                    minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
+                thisElement.next().text(days+'天'+hours+'小时'+minutes+'分');
             }else{
                 var current = Date.parse((thisElement.next().find('input[type=text]').val()).split('-').join('/')) - Date.parse(date.split('-').join('/'));
-                var hours = Math.floor(current/(1000*60*60)),
-                    minutes = Math.round((current/(1000*60*60)-hours)*60);
-                thisElement.next().next().text(hours+':'+(minutes>9?minutes:('0'+minutes)));
+                var days = Math.floor(current/(1000*60*60*24)),
+                    hours = Math.floor((current/(1000*60*60*24)-days)*24),
+                    minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
+                thisElement.next().next().text(days+'天'+hours+'小时'+minutes+'分');
             }
         }
     };
@@ -367,6 +398,18 @@ function timePicker(background){
      * @date    2016-01-04
      */
     $('table').on('click','.end',function(){
+
+        //限制时间选择
+        var thisElement = $(this).parent();
+        if(!thisElement.prev().prev().length){
+
+            option.max = thisElement.next().find('input').val();
+            option.min = '1900-01-01 00:00:00';
+        }else{
+            option.min = thisElement.prev().find('input[type="text"]').val();
+            option.max = '2099-12-31 23:59:59';
+        }
+
         //每一次点击都进行一次随机
         var id = Math.floor(Math.random()*9999);
         id = id.toString();
@@ -630,9 +673,16 @@ function examroom_assignment(){
                                 '<div class="teacher-box pull-left">'+
                                 '</div>'+
                                 '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                '<select name="" class="teacher-list js-example-basic-multiple">'+
+                                /*'<select name="" class="teacher-list js-example-basic-multiple">'+
                                 '<option>==请选择==</option>'+
-                                '</select>'+
+                                '</select>'+*/
+                                '<div class="btn-group">'+
+                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<span class="caret"></span>'+
+                                  '</button>'+
+                                  '<ul class="dropdown-menu">'+
+                                  '</ul>'+
+                                '</div>'+
                                 '</div>'+
                                 '</td>'+
                                 '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
@@ -650,9 +700,16 @@ function examroom_assignment(){
                                 '<div class="teacher-box pull-left">'+
                                 '</div>'+
                                 '<div class="pull-right" value="'+(station_index+parseInt(i)+1)+'">'+
-                                '<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
+                                /*'<select name="" class="teacher-list js-example-basic-multiple" disabled="disabled">'+
                                 '<option>==请选择==</option>'+
-                                '</select>'+
+                                '</select>'+*/
+                                '<div class="btn-group">'+
+                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<span class="caret"></span>'+
+                                  '</button>'+
+                                  '<ul class="dropdown-menu">'+
+                                  '</ul>'+
+                                '</div>'+
                                 '</div>'+
                                 '</td>'+
                                 '<td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>'+
@@ -728,9 +785,51 @@ function examroom_assignment(){
                      * sp老师选择
                      * @author mao
                      * @version 1.0
-                     * @date    2016-01-11
+                     * @date    2016-01-22
                      */
-                    var select2_Object;
+                    /*var All = $('.btn-group');
+                    $('#exam-place').on('click','.btn.btn-default',function(){
+
+                        var btn_group = $(this);
+                        var thisElem = $(this).siblings('.dropdown-menu');
+
+                        //老师id
+                        var ids = [];
+                        All.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+                            var id = $(elem).attr('value');
+                            if(id==null){
+                                return;
+                            }else{
+                                ids.push(id);
+                            }
+                        });
+
+                        $.ajax({
+                            type:'get',
+                            async:true,
+                            url:pars.spteacher_list,
+                            data:{spteacher_id:ids,station_id:btn_group.parent().parent().attr('value')},
+                            success:function(data){
+                              var html = '';
+                              res = data.data.rows;
+                              //提示数据
+                              if(res.length==0){
+                                layer.alert('没有可选数据！',function(its){
+                                    layer.close(its);
+                                });
+                            }
+                              for(var i in res){
+                                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+                              }
+                              thisElem.html(html);
+                            }
+                          });
+
+                    });*/
+
+
+
+                    /*var select2_Object;
                     select2_Object = $('.teacher-list').select2({
                         placeholder: "==请选择==",
                         minimumResultsForSearch: Infinity,
@@ -775,7 +874,7 @@ function examroom_assignment(){
                         }
 
 
-                    });
+                    });*/
 
 
 
@@ -910,65 +1009,60 @@ function examroom_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
+        layer.alert('确认为删除？',function(its){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#examroom').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
             }
-        });
-
-        //计数器标志
-        var index = $('#examroom').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#examroom').find('tbody').attr('index',index);
-        //更新序号
-        $('#examroom tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+            $('#examroom').find('tbody').attr('index',index);
+            //更新序号
+            $('#examroom tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
 
 
-        //删除监考数据
-        var now_data = thisElement.find('td').eq(1).find('select').val();
-        var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
-        var current = [];
-        for(var j in now_data){
-            for(var i in delStore){
+            //删除监考数据
+            var now_data = thisElement.find('td').eq(1).find('select').val();
+            var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
+            var current = [];
+            for(var j in now_data){
+                for(var i in delStore){
 
-                if(delStore[i].id==now_data[j]){
-                    if(delStore[i].count>1){
-                        delStore[i].count -= 1;
-                        current.push({id:delStore[i].id,count:delStore[i].count});
+                    if(delStore[i].id==now_data[j]){
+                        if(delStore[i].count>1){
+                            delStore[i].count -= 1;
+                            current.push({id:delStore[i].id,count:delStore[i].count});
+                        }else{
+                            //删除dom
+                            var str = delStore[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                var html = '';
+                                station_count = key + 1;
+                                html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                                $(elem).find('td').eq(0).html(html);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
                     }else{
-                        //删除dom
-                        var str = delStore[i].id;
-                        $('.parent-id-'+str).remove();
-                        //重置序号
-                        var station_count = 1;
-                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                            var html = '';
-                            station_count = key + 1;
-                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
-                            $(elem).find('td').eq(0).html(html);
-                        });
-                        $('#exam-place').find('tbody').attr('index',station_count);
-                        continue;
+                        current.push({id:delStore[i].id,count:delStore[i].count});
                     }
-                }else{
-                    current.push({id:delStore[i].id,count:delStore[i].count});
                 }
             }
-        }
 
-        $('#examroom').find('tbody').attr('data',JSON.stringify(current));
+            $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
-
-
+            //关闭弹出
+            layer.close(its);
+        });
 
     });
 
@@ -1021,11 +1115,30 @@ function examroom_assignment(){
      * @version 1.0
      * @date    2016-01-14
      */
-    $('#exam-place').on('change',".teacher-list",function(){
+    /*$('#exam-place').on('change',".teacher-list",function(){
 
         var $teacher= $(this).find('option:selected').text().split('==')[0];
         var id = $(this).find('option:selected').val();
         var thisElement = $(this);
+
+        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
+            '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
+            '<div class="pull-left">'+$teacher+'</div>'+
+            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
+        $(this).parents(".pull-right").prev().append(sql);
+    })*/
+    
+    /**
+     * 选择老师 界面效果修改
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-22
+     */
+    $('#exam-place').on('click',".dropdown-menu",function(e){
+
+        var $teacher= $(e.target).text();
+        var id = $(e.target).attr('value');
+        var thisElement = $(this).parent();
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
             '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
@@ -1046,7 +1159,47 @@ function examroom_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    $('.teacher-teach').select2({
+    $('#exam-place').on('click','.btn.btn-default',function(){
+
+        var btn_group = $(this);
+        var thisElem = $(this).siblings('.dropdown-menu');
+
+        //老师id
+        var ids = [];
+        $('#exam-place').find('tbody').find('tr').each(function(n,m){
+            $(m).find('td').eq(4).find('.teacher').each(function(key,elem){
+                var id = $(elem).attr('value');
+                if(id==null){
+                    return;
+                }else{
+                    ids.push(id);
+                }
+            });
+        });
+
+        $.ajax({
+            type:'get',
+            async:true,
+            url:pars.spteacher_list,
+            data:{spteacher_id:ids,station_id:btn_group.parent().parent().attr('value')},
+            success:function(data){
+              var html = '';
+              res = data.data.rows;
+              //提示数据
+              if(res.length==0){
+                layer.alert('没有可选数据！',function(its){
+                    layer.close(its);
+                });
+            }
+              for(var i in res){
+                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+              }
+              thisElem.html(html);
+            }
+          });
+
+    });
+    /*$('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -1084,7 +1237,7 @@ function examroom_assignment(){
             }
 
         }
-    });
+    });*/
 
 }
 
@@ -1096,6 +1249,43 @@ function examroom_assignment(){
  * @date    2016-01-07
  */
 function exam_notice_add(){
+
+
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            'groups[]': {
+                validators: {
+                    notEmpty: {
+                        message: '请勾选'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '标题不能为空'
+                    }
+                }
+            },
+            content: {
+                validators: {
+                    notEmpty: {
+                        message: '内容不能为空'
+                    }
+                }
+            }
+        }
+    });
 
     var ue = UE.getEditor('editor');
 
@@ -1186,8 +1376,45 @@ function exam_notice_add(){
  */
 function exam_notice_edit(){
 
+    /**
+     * 表单验证信息
+     * @type {String}
+     */
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            'groups[]': {
+                validators: {
+                    notEmpty: {
+                        message: '请勾选'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '标题不能为空'
+                    }
+                }
+            },
+            content: {
+                validators: {
+                    notEmpty: {
+                        message: '内容不能为空'
+                    }
+                }
+            }
+        }
+    });
+
+
     var content =   $('#content').val();
-    console.log(content)
+
     //初始化
     var ue = UE.getEditor('editor',{
         serverUrl:'/osce/api/communal-api/editor-upload'
@@ -1235,6 +1462,20 @@ function exam_notice_edit(){
             setContent(content)
             clearInterval(thisID);
         },1000);
+
+    /**
+     * checkbox
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-20
+     */
+    $(".checkbox_input").click(function(){
+        if($(this).find("input").is(':checked')){
+            $(this).find(".check_icon ").addClass("check");
+        }else{
+            $(this).find(".check_icon").removeClass("check");
+        }
+    });
 
 
     /**
@@ -1307,10 +1548,13 @@ function exam_notice_edit(){
 function smart_assignment(){
     //var testData={"code":1,"message":"success","data":{"1":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[]},"2":{"begin":"1452557715","end":1452558615,"items":[]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}}},"2":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}}},"4":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}}},"5":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}}}}}
     var times=[];
+    var liwidth=0;//表格的列宽
     var plan    =   $('#plan').html();
     var testData=eval('('+plan+')');
-    maketotal(testData);
-    var liwidth=0;//表格的列宽
+    $('.classroom-box').html('');//清空排考
+    maketotal(testData);//页面加载执行排考
+    $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+
     function makeItem(data){
 
         var dl  =   $('<dl class="clearfloat">');
@@ -1424,7 +1668,7 @@ function smart_assignment(){
         liwidth=1400/liNums;
         return ul;
     }
-
+    //生成列表
     function maketotal(data){
         for (var i in data){
             var groupData=data[i];
@@ -1434,7 +1678,7 @@ function smart_assignment(){
         }
     }
 
-
+    //智能排考
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
             $('.classroom-box').html('');
@@ -1907,9 +2151,48 @@ function station_assignment(){
                      * sp老师选择
                      * @author mao
                      * @version 1.0
-                     * @date    2016-01-11
+                     * @date    2016-01-22
                      */
-                    var select2_Object;
+                    /*var All = $('.btn-group');
+                    $('#exam-place').on('click','.btn.btn-default',function(){
+
+                        var btn_group = $(this);
+                        var thisElem = $(this).siblings('.dropdown-menu');
+
+                        //老师id
+                        var ids = [];
+                        All.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
+                            var id = $(elem).attr('value');
+                            if(id==null){
+                                return;
+                            }else{
+                                ids.push(id);
+                            }
+                        });
+
+                        $.ajax({
+                            type:'get',
+                            async:true,
+                            url:pars.spteacher_list,
+                            data:{spteacher_id:ids,station_id:btn_group.parent().parent().attr('value')},
+                            success:function(data){
+                              var html = '';
+                              res = data.data.rows;
+                              //提示数据
+                              if(res.length==0){
+                                layer.alert('没有可选数据！',function(its){
+                                    layer.close(its);
+                                });
+                            }
+                              for(var i in res){
+                                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+                              }
+                              thisElem.html(html);
+                            }
+                          });
+
+                    });*/
+                    /*var select2_Object;
                     select2_Object = $('.teacher-list').select2({
                         placeholder: "==请选择==",
                         minimumResultsForSearch: Infinity,
@@ -1954,7 +2237,7 @@ function station_assignment(){
                         }
 
 
-                    });
+                    });*/
 
 
 
@@ -2089,31 +2372,7 @@ function station_assignment(){
 
 
         });
-
-
-
-        //ajax请求数据
-        /*$.ajax({
-         type:'get',
-         async:true,
-         url:pars.list,     //请求地址
-         data:{station_id:getStationID(arrStore)},
-         success:function(res){
-         //数据处理
-         var str = [];
-         if(res.code!=1){
-         layer.alert(res.message);
-         return;
-         }else{
-         var data = res.data;
-         for(var i in data){
-         str.push({id:data[i].id,text:data[i].name});
-         }
-         //动态加载进去数据
-         $(".js-example-basic-multiple").select2({data:str});
-         }
-         }
-         });*/
+        
 
     });
 
@@ -2134,58 +2393,61 @@ function station_assignment(){
             }
         });
 
-        //var thisElement = $(this).parent().parent().parent().parent();
-        //thisElement.remove();
-        //计数器标志
-        var index = $('#examroom').find('tbody').attr('index');
-        if(index<1){
-            index = 0;
-        }else{
-            index = parseInt(index) - 1;
-        }
-        $('#examroom').find('tbody').attr('index',index);
-        //更新序号
-        $('#examroom tbody').find('tr').each(function(key,elem){
-            $(elem).find('td').eq(0).text(parseInt(key)+1);
-        });
+        layer.alert('确认为删除？',function(its){
+            thisElement.remove();
+
+            //计数器标志
+            var index = $('#examroom').find('tbody').attr('index');
+            if(index<1){
+                index = 0;
+            }else{
+                index = parseInt(index) - 1;
+            }
+            $('#examroom').find('tbody').attr('index',index);
+            //更新序号
+            $('#examroom tbody').find('tr').each(function(key,elem){
+                $(elem).find('td').eq(0).text(parseInt(key)+1);
+            });
 
 
-        //删除监考数据
-        var now_data = thisElement.find('td').eq(1).find('select').val();
-        var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
-        var current = [];
-        for(var j in now_data){
-            for(var i in delStore){
+            //删除监考数据
+            var now_data = thisElement.find('td').eq(1).find('select').val();
+            var delStore = JSON.parse($('#examroom').find('tbody').attr('data'));  //存储数据
+            var current = [];
+            for(var j in now_data){
+                for(var i in delStore){
 
-                if(delStore[i].id==now_data[j]){
-                    if(delStore[i].count>1){
-                        delStore[i].count -= 1;
-                        current.push({id:delStore[i].id,count:delStore[i].count});
+                    if(delStore[i].id==now_data[j]){
+                        if(delStore[i].count>1){
+                            delStore[i].count -= 1;
+                            current.push({id:delStore[i].id,count:delStore[i].count});
+                        }else{
+                            //删除dom
+                            var str = delStore[i].id;
+                            $('.parent-id-'+str).remove();
+                            //重置序号
+                            var station_count = 1;
+                            $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                                var html = '';
+                                station_count = key + 1;
+                                html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                                $(elem).find('td').eq(0).html(html);
+                            });
+                            $('#exam-place').find('tbody').attr('index',station_count);
+                            continue;
+                        }
                     }else{
-                        //删除dom
-                        var str = delStore[i].id;
-                        $('.parent-id-'+str).remove();
-                        //重置序号
-                        var station_count = 1;
-                        $('#exam-place').find('tbody').find('tr').each(function(key,elem){
-                            var html = '';
-                            station_count = key + 1;
-                            html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
-                            $(elem).find('td').eq(0).html(html);
-                        });
-                        $('#exam-place').find('tbody').attr('index',station_count);
-                        continue;
+                        current.push({id:delStore[i].id,count:delStore[i].count});
                     }
-                }else{
-                    current.push({id:delStore[i].id,count:delStore[i].count});
                 }
             }
-        }
 
-        $('#examroom').find('tbody').attr('data',JSON.stringify(current));
-
+            $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
 
+            layer.close(its);
+
+        });
 
     });
 
@@ -2257,13 +2519,54 @@ function station_assignment(){
     })
 
 
+    $('#exam-place').on('click','.btn.btn-default',function(){
+
+        var btn_group = $(this);
+        var thisElem = $(this).siblings('.dropdown-menu');
+
+        //老师id
+        var ids = [];
+        $('#exam-place').find('tbody').find('tr').each(function(n,m){
+            $(m).find('td').eq(4).find('.teacher').each(function(key,elem){
+                var id = $(elem).attr('value');
+                if(id==null){
+                    return;
+                }else{
+                    ids.push(id);
+                }
+            });
+        });
+
+        $.ajax({
+            type:'get',
+            async:true,
+            url:pars.spteacher_list,
+            data:{teacher:ids},
+            success:function(data){
+              var html = '';
+              res = data.data;
+              //提示数据
+              if(res.length==0){
+                layer.alert('没有可选数据！',function(its){
+                    layer.close(its);
+                });
+            }
+              for(var i in res){
+                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+              }
+              thisElem.html(html);
+            }
+          });
+
+    });
+
     /**
      * 老师类型选择 初始化
      * @author mao
      * @version 1.0
      * @date    2016-01-15
      */
-    $('.teacher-teach').select2({
+    /*$('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -2301,6 +2604,6 @@ function station_assignment(){
             }
 
         }
-    });
+    });*/
 
 }

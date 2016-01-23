@@ -29,7 +29,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.exammanage.exam_notice_add');
+        return view('osce::admin.exammanage.score_query_detail');
     }
 
     /**
@@ -106,7 +106,7 @@ class StationController extends CommonController
             DB::connection('osce_mis')->beginTransaction();
             //验证略
             $this->validate($request, [
-                'name'          => 'required',
+                'name'          => 'required|unique:osce_mis.station,name',
                 'type'          => 'required|integer',
 //                'description'   => 'required',
 //                'code'          => 'required',
@@ -196,8 +196,8 @@ class StationController extends CommonController
             'type'          => 'required|integer',
             'mins'          => 'required|integer',
             'subject_id'    => 'required|integer',
-            'description'   => 'required',
-            'code'          => 'required',
+//            'description'   => 'required',
+//            'code'          => 'required',
             'vcr_id'        => 'required|integer',
             'case_id'       => 'required|integer',
             'room_id'       => 'required|integer',
@@ -205,7 +205,7 @@ class StationController extends CommonController
 
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'code', 'type', 'description', 'subject_id', 'mins');
+            $placeData = $request->only('name', 'type', 'subject_id', 'mins');
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
@@ -244,10 +244,10 @@ class StationController extends CommonController
             //将id传入删除的方法
             $result = $station->deleteData($id);
             if($result) {
-                return json_encode($this->success_data(['删除成功！']));
+                return $this->success_data(['删除成功！']);
             }
         } catch (\Exception $ex) {
-            return json_encode($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 

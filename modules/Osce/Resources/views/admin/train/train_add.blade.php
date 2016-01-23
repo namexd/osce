@@ -159,6 +159,7 @@
 	    	var start=$("#start").val();
 	    	var end=$("#end").val();
 	    	if(start==""){
+<<<<<<< HEAD
 	    		$.alert({
                   	title: '提示：',
                   	content: '你还没有选择开始时间!',
@@ -181,6 +182,15 @@
               	return false;
 	    	}
     		$("#form1").submit();
+=======
+	    		layer.alert('你还没有选择开始时间!',function(its){layer.close(its)});
+              	return false;
+	    	}
+	    	if(end==""){
+	    		layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
+              	return false;
+	    	}
+>>>>>>> osce.0.2.1.20160120b
 	    })
  	})
  </script>
@@ -190,12 +200,21 @@
 <input type="hidden" id="parameter" value="{'pagename':'exam_notice_add'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
+<<<<<<< HEAD
         <div class="ibox-title" style="position: relative;">
             <h5>新增考前培训</h5>
             <a href="javascript:history.back(-1)" class="btn btn-default" style="position: absolute;right:10px;top:4px;">&nbsp;返回&nbsp;</a>
         </div>
         <div class="ibox-content">
             <form method="post"  id="form1" class="form-horizontal" action="#">
+=======
+        <div class="ibox-title"  style="position: relative;">
+            <h5>新增考前培训</h5>
+            <a href="javascript:history.back(-1)" class="btn btn-default" style="position:absolute;right:10px;top:4px;">&nbsp;1返回&nbsp;</a>
+        </div>
+        <div class="ibox-content">
+            <form method="post" id="form1" class="form-horizontal" action="{{route('osce.admin.postAddTrain')}}">
+>>>>>>> osce.0.2.1.20160120b
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
@@ -255,7 +274,11 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
+<<<<<<< HEAD
                             <input class="btn btn-primary fabu_btn" type="button" value="发布">
+=======
+                            <input class="btn btn-primary fabu_btn" type="submit" value="发布">
+>>>>>>> osce.0.2.1.20160120b
                             <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>

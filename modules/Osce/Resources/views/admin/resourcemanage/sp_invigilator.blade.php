@@ -30,6 +30,7 @@
                 <tr>
                     <th>#</th>
                     <th>姓名</th>
+                    <th>病例</th>
                     <th>联系电话</th>
                     <th>最后登录时间</th>
                     <th>操作</th>
@@ -40,6 +41,7 @@
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$item->name}}</td>
+                        <td>{{$item->case_name}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
                         <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
                         <td value="{{$item->id}}">

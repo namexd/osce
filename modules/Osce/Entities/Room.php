@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Auth;
 
 class Room extends CommonModel
 {
@@ -62,19 +63,14 @@ class Room extends CommonModel
                     return Vcr::findOrFail($id);
                 }
                 $builder = $this->where('id', '=', $id);
-                $result = $builder->select('id', 'name', 'description')->first();
+                $result = $builder->select('id', 'name', 'description', 'address', 'code')->first();
                 if (!$result){
                     throw new \Exception('查无此考场！');
                 }
                 return $result;
-                
-
             }
 
-
             //判断传入的type是否合法
-
-
             $area = Area::where('area.cate', '=', $type)->first();
 
 			//0.1 测试分支 合并到0.2时 因冲突注释
@@ -162,5 +158,43 @@ class Room extends CommonModel
             throw $ex;
         }
 
+    }
+
+    public function editRoomData($id, $vcr_id, $formData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            $user = Auth::user();
+            if(!$user){
+                throw new \Exception('操作人不存在，请先登录');
+            }
+            //更新考场数据
+            $result = $this->updateData($id, $formData);
+            if(!$result){
+                throw new \Exception('数据修改失败！请重试');
+            }
+            //更新考场绑定摄像机的数据
+            $roomVcr = RoomVcr::where('room_id',$id)->first();
+            if(!empty($roomVcr)){
+                if(!$roomVcr->update(['vcr_id'=>$vcr_id])){
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                }
+            }else{
+                if(!RoomVcr::create(['room_id'=>$id, 'vcr_id'=>$vcr_id, 'created_user_id'=>$user->id])){
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                }
+            }
+            //更改$vcr_id对应的摄像机状态为在线
+            if(!Vcr::where('id', $vcr_id)->update(['status'=>1])){
+                throw new \Exception('摄像机状态修改失败！请重试');
+            }
+            $connection->commit();
+            return true;
+
+        } catch(\Exception $ex){
+            $connection->rollBack();
+            throw $ex;
+        }
     }
 }

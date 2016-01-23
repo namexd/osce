@@ -71,7 +71,7 @@
                                 message: '请输入11位手机号码'
                             },
                             regexp: {
-                                regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                                regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
                                 message: '请输入正确的手机号码'
                             }
                         }
@@ -108,13 +108,7 @@
                     },
                     error: function (data, status, e)
                     {
-                        $.alert({
-                            title: '提示：',
-                            content: '通讯失败!',
-                            confirmButton: '确定',
-                            confirm: function(){
-                            }
-                        });
+                        layer.msg("通讯失败");
                     }
                 });
             }) ;
@@ -150,11 +144,11 @@
                             <ul class="img_box">
 	                    		<span class="images_upload">
 	                        		<input type="file" name="images" id="file0"/>
+                                    图片大小为280X180
 	                        	</span>
                             </ul>
                         </div>
                         <div class="col-md-9 col-sm-9">
-                            <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">姓名:</label>
                                 <div class="col-sm-10">
@@ -166,7 +160,7 @@
                                 <input type="hidden" name="" id="cate_id" value="-1" />
                                 <label class="col-sm-2 control-label">性别:</label>
                                 <div class="col-sm-10 select_code">
-                                    <select id="select_Category"   class="form-control m-b" name="sex">
+                                    <select id="gender"   class="form-control m-b" name="gender">
                                         <option value="1">男</option>
                                         <option value="2">女</option>
                                     </select>
@@ -176,14 +170,14 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">学号:</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  id="examinee_id" name="examinee_id" class="form-control">
+                                    <input type="text"  id="code" name="code" class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" >身份证号:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="id_number" name="idcard"  class="form-control">
+                                    <input type="text" id="idcard" name="idcard"  class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -191,7 +185,7 @@
                                 <label class="col-sm-2 control-label">联系电话:</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text"  id="tell" name="tell" class="form-control">
+                                    <input type="text"  id="mobile" name="mobile" class="form-control">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

@@ -62,7 +62,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('config/store',  ['uses'=>'ConfigController@postStore','as'=>'osce.admin.config.postStore']);
 		Route::get('config/area',  ['uses'=>'ConfigController@getArea','as'=>'osce.admin.config.getArea']);
 		Route::get('config/area-store',  ['uses'=>'ConfigController@getAreaStore','as'=>'osce.admin.config.getAreaStore']);
-		Route::post('config/area-store',  ['uses'=>'ConfigController@postAreaStore','as'=>'osce.admin.config.postAreaStore']);
+		Route::post('config/area-store', ['uses'=>'ConfigController@postAreaStore','as'=>'osce.admin.config.postAreaStore']);
+		Route::post('config/del-area',	 ['uses'=>'ConfigController@postDelArea','as'=>'osce.admin.config.postDelArea']);
 
 		Route::post('invigilator/select-teacher',	['uses'=>'InvigilatorController@postSelectTeacher', 'as'=>'osce.admin.invigilator.postSelectTeacher']);
 

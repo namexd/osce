@@ -67,12 +67,13 @@ class TopicController extends CommonController
      */
     public function postAddTopic(Request $request){
         $this   ->  validate($request,[
-            'title'         =>  'required',
+            'title'         =>  'required|unique:osce_mis.subject,title',
             'content'       =>  'required',
             'score'         =>  'required',
             'desc'          =>  'sometimes',
         ],[
             'title.required'    =>  '评分标准名称必须',
+            'title.unique'      =>  '评分标准名称必须唯一',
             'content.required'  =>  '评分标准必须',
             'score.required'    =>  '评分必须',
         ]);

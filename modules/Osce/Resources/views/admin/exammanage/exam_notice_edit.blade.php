@@ -36,6 +36,8 @@
     #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
     .fa-remove{cursor:pointer;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-ok {top: -2px;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-remove {top: -2px;}
     </style>
 @stop
 
@@ -55,7 +57,7 @@
             <h5>编辑通知</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal" action="">
+            <form id="sourceForm" method="post" class="form-horizontal" action="">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">
@@ -100,7 +102,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <input id="content" style="display: none;" value="{!! $item->content !!}" />
+                            <input id="content" type="hidden" value="{!! $item->content !!}" />
                             <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content" ></script>
                         </div>
                     </div>

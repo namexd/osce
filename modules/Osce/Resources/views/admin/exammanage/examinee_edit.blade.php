@@ -183,7 +183,7 @@
                                 <input type="hidden" name="" id="cate_id" value="-1"/>
                                 <label class="col-sm-2 control-label">性别:</label>
                                 <div class="col-sm-10 select_code">
-                                    <select id="select_Category" class="form-control m-b" name="gender">
+                                    <select id="gender" class="form-control m-b" name="gender">
                                         <option value="1" {{$item->userInfo->gender=='男'? 'selected="selected"':''}}>男
                                         </option>
                                         <option value="2" {{$item->userInfo->gender=='女'? 'selected="selected"':''}}>女
@@ -195,7 +195,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">学号:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="examinee_id" name="examinee_id" class="form-control"
+                                    <input type="text" id="code" name="code" class="form-control"
                                            value="{{$item->code}}">
                                 </div>
                             </div>
@@ -203,7 +203,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">身份证号:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="id_number" name="idcard" class="form-control"
+                                    <input type="text" id="idcard" name="idcard" class="form-control"
                                            value="{{$item->idcard}}">
                                 </div>
                             </div>
@@ -211,7 +211,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">联系电话:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="tell" name="mobile" class="form-control"
+                                    <input type="text" id="mobile" name="mobile" class="form-control"
                                            value="{{$item->mobile}}">
                                 </div>
                             </div>

@@ -119,7 +119,7 @@ class Student extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function addExaminee($exam_id, $examineeData)
+    public function addExaminee($exam_id, $examineeData,$key = '')
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -137,7 +137,6 @@ class Student extends CommonModel
                 $user -> gender = $examineeData['gender'];  //性别
                 $user -> mobile = $examineeData['mobile'];  //手机号
                 $user -> avatar = $examineeData['avator'];  //头像
-
                 $user -> idcard = $examineeData['idcard'];  //身份证号
                 $user -> email  = $examineeData['email'];   //邮箱
                 if(!($user->save())){      //跟新用户
@@ -150,13 +149,18 @@ class Student extends CommonModel
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);
             }
 
+            //查询学号是否存在
+            $code = $this->where('code', $examineeData['code'])->where('user_id','<>',$user->id)->first();
+            if(!empty($code)){
+                throw new \Exception((empty($key)?'':('第'.$key.'行')).'该学号已经有别人使用！');
+            }
             //根据用户ID和考试号查找考生
             $student = $this->where('user_id', '=', $user->id)
                 ->where('exam_id', '=', $exam_id)->first();
 
             //存在考生信息,则更新数据, 否则新增
             if($student){
-                throw new \Exception('该考生已经存在，不能再次添加！');
+                throw new \Exception((empty($key)?'':('第'.$key.'行')).'该考生已经存在，不能再次添加！');
 //                //跟新考生数据
 //                $student->name    = $examineeData['name'];
 //                $student->exam_id = $exam_id;
