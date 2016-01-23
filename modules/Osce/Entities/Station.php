@@ -62,17 +62,18 @@ class Station extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showList(array $stationIdArray = [], $ajax = false)
+    public function showList(array $stationIdArray = [],  $ajax = false, $name ='')
     {
         try {
-
             $builder = $this;
 
             //如果传入了stationArray，就排除里面的内容
             if ($stationIdArray != []) {
                 $builder = $builder->whereNotIn($this->table.'.id',$stationIdArray);
             }
-
+            if(!empty($name)){
+                $builder = $builder->where($this->table.'.name', 'like', '%'.$name.'%');
+            }
 
             //开始查询
             $builder = $builder->select([

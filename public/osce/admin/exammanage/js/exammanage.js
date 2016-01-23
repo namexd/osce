@@ -403,10 +403,10 @@ function timePicker(background){
         var thisElement = $(this).parent();
         if(!thisElement.prev().prev().length){
 
-            option.max = thisElement.next().find('input').val();
+            option.max = (thisElement.next().find('input').val()).split(' ')[0];
             option.min = '1900-01-01 00:00:00';
         }else{
-            option.min = thisElement.prev().find('input[type="text"]').val();
+            option.min = (thisElement.prev().find('input[type="text"]').val()).split(' ')[0];
             option.max = '2099-12-31 23:59:59';
         }
 
@@ -1310,6 +1310,16 @@ function exam_notice_add(){
         }
     }
 
+    //验证content
+    $('.btn-primary').click(function(){
+        if(getContent()==''){
+            layer.alert('内容不能为空！');
+            return false;
+        }else{
+            return true;
+        }
+    })
+
     /**
      * checkbox
      * @author mao
@@ -1412,6 +1422,31 @@ function exam_notice_edit(){
         }
     });
 
+
+    /**
+     * 获取文本编辑内容
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     * @return  {[type]}   [为本内容]
+     */
+    function getContent(){
+
+        var arr = [];
+        arr.push(UE.getEditor('editor').getContent());
+        return arr.join("\n");
+    }
+
+
+    //验证content
+    $('.btn-primary').click(function(){
+        if(getContent()==''){
+            layer.alert('内容不能为空！');
+            return false;
+        }else{
+            return true;
+        }
+    })
 
     var content =   $('#content').val();
 

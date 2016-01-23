@@ -51,16 +51,19 @@ class StationController extends CommonController
         $orderType = empty(config('order_type')) ? 'created_at' : config('order_type');
         $orderBy = empty(config('order_by')) ? 'desc' : config('order_by');
 
+        //搜索名字
+        $name = e($request->get('name'));
+
         //拼凑一个order数组
         $order = [$orderType, $orderBy];
         //考站类型
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试'];
 
         //获得展示数据
-        $data = $model->showList($order);
+        $data = $model->showList($order,  $ajax = false, $name);
 
         //将展示数据放在页面上
-        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate]);
+        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate, 'name'=>$name]);
 
     }
 
