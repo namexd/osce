@@ -89,7 +89,16 @@ class TrainController extends  CommonController{
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
         $data['attachments']=serialize($request->input('file'));
         $data['create_user_id']=$userId;
-        $result=InformTrain::create($data);
+        $result=InformTrain::insert([
+            'name'               => $request->get('name'),
+            'address'            => $request->get('address'),
+            'begin_dt'           => $request->get('begin_dt'),
+            'end_dt'             => $request->get('end_dt'),
+            'teacher'            => $request->get('teacher'),
+            'content'            => $request->get('content'),
+            'attachments'        => $data['attachments'],
+            'create_user_id'     => $userId,
+        ]);
         if($result){
          return redirect('/osce/admin/train/train-list')->with('success','新增成功');
         }

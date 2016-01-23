@@ -26,7 +26,7 @@ class ExamSpTeacher extends CommonModel
     protected $fillable = ['invite_id', 'exam_screening_id', 'case_id', 'teacher_id', 'create_user_id'];
 
     public function addExamSp(array $list){
-            return  $this   ->insert($list);
+            return  $this   ->firstOrCreate($list);
     }
 
 
