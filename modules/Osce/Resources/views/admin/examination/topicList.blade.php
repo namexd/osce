@@ -44,7 +44,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>课题名称</th>
+                    <th>科目名称</th>
                     <th>描述</th>
                     <th>操作</th>
                 </tr>

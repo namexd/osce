@@ -96,9 +96,9 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">时间限制</label>
+                                <label class="col-sm-2 control-label">时间限制(分钟)</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  required  ng-model="num" id="code" class="form-control" name="mins" value="{{$rollmsg['mins']}}">
+                                    <input type="text"  required  ng-model="num" id="code" class="form-control" name="mins" value="{{$rollmsg['mins']}}" placeholder="请输入分钟数">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

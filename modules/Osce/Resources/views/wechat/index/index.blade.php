@@ -76,12 +76,12 @@
                     </a>
                 </div>
                 <div class="col-xs-6 column">
-                  <a href="{{route('osce.wechat.invitation.getList')}}">
-                    <div class="normal_background">
-                        <span class="manageindex_icon icon3"></span>
-                        <p>预约申请</p>
-                    </div>
-                  </a>
+                    <a href="{{route('osce.wechat.invitation.getList')}}">
+                        <div class="normal_background">
+                            <span class="manageindex_icon icon3"></span>
+                            <p>预约申请</p>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-xs-6 column">
                     <a href="{{route('osce.wechat.getDiscussionLists')}}">

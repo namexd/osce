@@ -36,17 +36,7 @@
                                 }
                             }
                         }
-                    },
-                    description: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '病例描述不能为空'
-                            }
-                        }
                     }
-
                 }
             });
         })

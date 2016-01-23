@@ -212,8 +212,12 @@ class ExamFlowStation extends CommonModel
         $teacherIDs = [];
         if (!empty($value['teacher_id'])) {
             $teacherIDs[] = $value['teacher_id'];
+        }   else {
+            $teacherIDs[] = NULL;
         }
-        if (isset($value['spteacher_id'])) {
+
+
+        if (!empty($value['spteacher_id'])) {
             if (is_array($value['spteacher_id'])) {
                 foreach ($value['spteacher_id'] as $spTeacherId) {
                     $teacherIDs[] = $spTeacherId;
@@ -221,8 +225,10 @@ class ExamFlowStation extends CommonModel
             } else {
                 $teacherIDs[] = $value['spteacher_id'];
             }
+        } else {
+            $teacherIDs[] = NULL;
         }
-        //循环，将老师ID放入station_teacher表的数据
+
         foreach ($teacherIDs as $teacherID) {
             $stationTeacherData = [
                 'station_id' => $value['station_id'],

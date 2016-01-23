@@ -232,6 +232,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
+		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
+
+
 	});
 
 	 //Pad端
