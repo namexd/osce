@@ -595,7 +595,7 @@ function categories(){
                                        '<option value="3">3</option>'+
                                        '<option value="4">4</option>'+
                                        '</select>'+
-                                       '<span>'+res[i].score+'</span>'
+                                       '<span>'+res[i].score+'</span>'+
                                        '</td>'+
                                        '<td>'+
                                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
