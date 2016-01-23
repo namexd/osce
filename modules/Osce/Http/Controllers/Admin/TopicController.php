@@ -78,6 +78,7 @@ class TopicController extends CommonController
             'score.required'    =>  '评分必须',
         ]);
 
+//        dd($request->all());
         $content        = $request  ->get('content');
         $score          = $request  ->get('score');
         $answer          = $request ->get('description');
@@ -150,9 +151,10 @@ class TopicController extends CommonController
         $id     =   intval($request ->get('id'));
 
         $subjectModel   =   new Subject();
-        try
-        {
+//        try
+//        {
             $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'),$request->get('description'));
+
             if($subjectModel   ->  editTopic($id,$data,$formData))
             {
                 return redirect()->route('osce.admin.topic.getList');
@@ -161,11 +163,11 @@ class TopicController extends CommonController
             {
                 throw new \Exception('编辑失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**

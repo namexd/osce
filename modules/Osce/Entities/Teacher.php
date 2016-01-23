@@ -89,18 +89,16 @@ class Teacher extends CommonModel
             }
             $data=$builder->select('teacher.name','teacher.id','cases.name as cname','cases.id as caseId')->get()->toArray();
             $list=[];
-            foreach($data as $k=>$v){
-                $list[$k]['teacher_id']=$v['id'];
-                $list[$k]['teacher_name']=$v['name'];
-                $list[$k]['case_name']=$v['cname'];
-                $list[$k]['case_id']=$v['caseId'];
+            foreach($data as $k=>$Teacher){
+                $list[]=[
+                    'teacher_id'=>$Teacher['id'],
+                    'teacher_name'=>$Teacher['name'],
+                    'case_name'=>$Teacher['cname'],
+                    'case_id'=>$Teacher['caseId'],
+                ];
+                $openId= Teacher::find($Teacher['id'])->userInfo;
+                $list[$k]['openid']=$openId['openid'];
             }
-//            dd($list);
-//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
-            $openId= Teacher::find($list[$k]['teacher_id'])->userInfo->toArray();
-
-            $list[$k]['openid']=$openId['openid'];
-//            dd($list);
             return $list;
 
         }catch (\Exception $ex) {

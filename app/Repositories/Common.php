@@ -94,22 +94,27 @@ class Common{
      */
     public static function saveImage(Request $request,$name){
         if($request->hasFile($name) && $request->file($name)->isValid()){
-
             $image=$request->file($name);
-            $content=file_get_contents($image->getRealPath());
-            $destinationPath='/'.date('YmdHis',time()).'_'.str_random(6).'.'.$image->getClientOriginalExtension();
+            $fileMime = $image->getMimeType();
+            $allowType = ['image/png', 'image/gif', 'image/jpeg'];
+            if (in_array($fileMime, $allowType)) {
+                $content=file_get_contents($image->getRealPath());
+                $destinationPath='/'.date('YmdHis',time()).'_'.str_random(6).'.'.$image->getClientOriginalExtension();
 
-            $result=Storage::disk('images')->put($destinationPath,$content);
+                $result=Storage::disk('images')->put($destinationPath,$content);
 
-            if($result)
-            {
-                $path='/images'.$destinationPath;
+                if($result)
+                {
+                    $path='/images'.$destinationPath;
+                }
+                else
+                {
+                    $path=false;
+                }
+                return $path;
+            } else {
+                throw new \Exception('上传的图片格式错误！');
             }
-            else
-            {
-                $path=false;
-            }
-            return $path;
         }
         else
         {

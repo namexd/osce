@@ -37,6 +37,8 @@
 			elem: '#start',
 		   	event: 'click',
 			format: 'YYYY/MM/DD hh:mm:ss',
+			min: laydate.now(),
+		    max: '2099-06-16 23:59:59',
 		    istime: true,
 		    choose: function(datas){
 		        end.min = datas;
@@ -47,6 +49,8 @@
 			elem: '#end',
 		   	event: 'click',
 			format: 'YYYY/MM/DD hh:mm:ss',
+			min: laydate.now(),
+		    max: '2099-06-16 23:59:59',
 		    istime: true,
 		    choose: function(datas){
 		        start.max = datas;
@@ -55,6 +59,7 @@
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);
+		
  		$('#form1').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -86,20 +91,6 @@
                         }
                     }
                 },
-//              begin_dt: {
-//              	validators: {
-//	                	notEmpty: {/*非空提示*/
-//                          message: '开始时间不能为空'
-//                      }
-//                 }
-//              },
-//              end_dt: {
-//              	validators: {
-//	                	notEmpty: {/*非空提示*/
-//                          message: '结束时间不能为空'
-//                      }
-//                 }
-//              },
                 teacher: {
                 	validators: {
 	                	notEmpty: {/*非空提示*/
@@ -126,17 +117,8 @@
 	            success: function (data, status)
 	            {
 	                if(data.state=='SUCCESS'){
-	                	var type="";//doc或xlsx
-	                	var str="";
-	                	var name="";
-//	                	if (data.original=="docx") {
-	                		str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
-	                		$(".upload_list_doc").append(str);
-//	                	}
-//	                	if (data.original=="xlsx") {
-//	                		str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
-//	                		$(".upload_list_xlsx").append(str);
-//	                	}
+                		var str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                		$(".upload_list_doc").append(str);
 	                }
 	            },
 	            error: function (data, status, e)
@@ -154,35 +136,10 @@
 	    $(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
 	    });
-	    
 	    $(".fabu_btn").click(function(){
 	    	var start=$("#start").val();
 	    	var end=$("#end").val();
 	    	if(start==""){
-<<<<<<< HEAD
-	    		$.alert({
-                  	title: '提示：',
-                  	content: '你还没有选择开始时间!',
-                  	confirmButton: '确定',
-                  	confirm: function(){
-                  		$(".fabu_btn").removeAttr("disabled");
-            		}
-              	});
-              	return false;
-	    	}
-	    	if(end==""){
-	    		$.alert({
-                  	title: '提示：',
-                  	content: '你还没有选择结束时间!',
-                  	confirmButton: '确定',
-                  	confirm: function(){
-                  		$(".fabu_btn").removeAttr("disabled");
-            		}
-              	});
-              	return false;
-	    	}
-    		$("#form1").submit();
-=======
 	    		layer.alert('你还没有选择开始时间!',function(its){layer.close(its)});
               	return false;
 	    	}
@@ -190,7 +147,6 @@
 	    		layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
               	return false;
 	    	}
->>>>>>> osce.0.2.1.20160120b
 	    })
  	})
  </script>
@@ -200,21 +156,12 @@
 <input type="hidden" id="parameter" value="{'pagename':'exam_notice_add'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
-<<<<<<< HEAD
         <div class="ibox-title" style="position: relative;">
             <h5>新增考前培训</h5>
             <a href="javascript:history.back(-1)" class="btn btn-default" style="position: absolute;right:10px;top:4px;">&nbsp;返回&nbsp;</a>
         </div>
         <div class="ibox-content">
-            <form method="post"  id="form1" class="form-horizontal" action="#">
-=======
-        <div class="ibox-title"  style="position: relative;">
-            <h5>新增考前培训</h5>
-            <a href="javascript:history.back(-1)" class="btn btn-default" style="position:absolute;right:10px;top:4px;">&nbsp;1返回&nbsp;</a>
-        </div>
-        <div class="ibox-content">
-            <form method="post" id="form1" class="form-horizontal" action="{{route('osce.admin.postAddTrain')}}">
->>>>>>> osce.0.2.1.20160120b
+            <form method="post"  id="form1" class="form-horizontal" action="{{route('osce.admin.postAddTrain')}}">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
@@ -274,11 +221,7 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-<<<<<<< HEAD
-                            <input class="btn btn-primary fabu_btn" type="button" value="发布">
-=======
                             <input class="btn btn-primary fabu_btn" type="submit" value="发布">
->>>>>>> osce.0.2.1.20160120b
                             <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>

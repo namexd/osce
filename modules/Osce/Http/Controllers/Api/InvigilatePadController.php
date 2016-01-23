@@ -219,7 +219,7 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function  getSaveExamEvaluate(Request $request,$ExamResultId){
+    public function  postSaveExamEvaluate(Request $request,$ExamResultId){
         $this->validate($request,[
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
@@ -309,7 +309,7 @@ class InvigilatePadController extends CommonController
            $this->postTestAttach($request, $array);
 
           //存入考试评分详情表
-          $SaveEvaluate = $this->getSaveExamEvaluate($request,$ExamResultId);
+          $SaveEvaluate = $this->postSaveExamEvaluate($request,$ExamResultId);
 
           if($result){
               return response()->json(

@@ -43,11 +43,10 @@ class TrainController extends  CommonController{
 //        return false;
 //      }
         $trainModel=new InformTrain();
-        $pagination=$trainModel->getPaginate();
-
-        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
-
-        return view('osce::admin.train.train_list')->with(['list'=>$list,'pagination'=>$pagination]);
+//        $pagination=$trainModel->getPaginate();
+//        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
+        $list=$trainModel->getInformList();
+        return view('osce::admin.train.train_list',['list'=>$list]);
 
     }
 
@@ -89,7 +88,16 @@ class TrainController extends  CommonController{
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
         $data['attachments']=serialize($request->input('file'));
         $data['create_user_id']=$userId;
-        $result=InformTrain::create($data);
+        $result=InformTrain::insert([
+            'name'               => $request->get('name'),
+            'address'            => $request->get('address'),
+            'begin_dt'           => $request->get('begin_dt'),
+            'end_dt'             => $request->get('end_dt'),
+            'teacher'            => $request->get('teacher'),
+            'content'            => $request->get('content'),
+            'attachments'        => $data['attachments'],
+            'create_user_id'     => $userId,
+        ]);
         if($result){
          return redirect('/osce/admin/train/train-list')->with('success','新增成功');
         }
@@ -409,6 +417,10 @@ class TrainController extends  CommonController{
         $this->downloadfile(array_pop($fileNameArray),public_path().$thisFile);
     }
     private function downloadfile($filename,$filepath){
+        $file=explode('.',$filename);
+        $tFile=array_pop($file);
+        $filename=md5($filename).'.'.$tFile;
+        $filepath   =   iconv('utf-8', 'gbk', $filepath);
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));
