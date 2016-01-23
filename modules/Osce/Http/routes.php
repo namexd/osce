@@ -364,7 +364,11 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 
 });
 
-
+Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function(){
+	Route::group(['prefix'=>'wechat','namespace'=>'Api'],function(){
+		Route::any('token',['uses'=>'WechatController@service']);
+	});
+});
 
 //TODO:测试用
 Route::get('test/test', function() {
