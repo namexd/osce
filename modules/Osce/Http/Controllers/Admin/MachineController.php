@@ -877,7 +877,11 @@ class MachineController extends CommonController
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
             }
-
+            if($cate_id ==3){
+                if($result = WatchLog::where('watch_id',$id)->first()){
+                    throw new \Exception('该设备使用过,无法删除!');
+                }
+            }
             $model   = $this    ->getMachineModel($cate_id);
             //通过id删除相应的设备
             if($result = $model->where('id', $id)->delete()) {
@@ -890,5 +894,36 @@ class MachineController extends CommonController
         }
     }
 
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'title'     => 'required',
+            'name'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $title  = $request  -> get('title');
+        $name   = $request  -> get('name');
+
+        //实例化模型
+        $title   =  '\Modules\Osce\Entities\\'.$title;
+        $model =  new $title;
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('name', $name)->first();
+        }else{
+            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
 
 }

@@ -110,6 +110,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('station/add-station', ['uses'=>'StationController@postAddStation','as'=>'osce.admin.Station.postAddStation']);
 		Route::post('station/delete-station', ['uses'=>'StationController@postDelete','as'=>'osce.admin.Station.postDelete']);
 		Route::post('station/edit-station', 	['uses'=>'StationController@postEditStation','as'=>'osce.admin.Station.postEditStation']);
+		Route::post('station/name-unique', 	['uses'=>'StationController@postNameUnique','as'=>'osce.admin.Station.postNameUnique']);
 
 
 		//场所分类
@@ -232,9 +233,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 //		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
 //		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
 //	});
-	Route::group(['prefix'=>'watch','namespace'=>'Api'],function(){
 
-	});
 
 });
 
