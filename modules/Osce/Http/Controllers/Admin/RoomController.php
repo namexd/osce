@@ -125,8 +125,10 @@ class RoomController extends CommonController
     {
         //获取摄像头数据
         $data = Vcr::where('status','<>',0)->get();
+
         return view('osce::admin.resourcemanage.central_control_add',['data'=>$data]);
     }
+
 
     /**
      * 修改房间页面 业务处理

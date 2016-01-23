@@ -29,12 +29,10 @@
                                 type: 'POST',//请求方式
                                 /*自定义提交数据，默认值提交当前input value*/
                                 data: function(validator) {
-                                       return {
-                                           id: '1',
-                                           title: 'station',
-                                           name: $('[name="whateverNameAttributeInYourForm"]').val()
-                                       }
-
+                                    return {
+                                        title: 'station',
+                                        name: $('[name="whateverNameAttributeInYourForm"]').val()
+                                    }
                                 }
                             }
                         }

@@ -37,6 +37,8 @@
 			elem: '#start',
 		   	event: 'click',
 			format: 'YYYY/MM/DD hh:mm:ss',
+			min: laydate.now(),
+		    max: '2099-06-16 23:59:59',
 		    istime: true,
 		    choose: function(datas){
 		        end.min = datas;
@@ -47,6 +49,8 @@
 			elem: '#end',
 		   	event: 'click',
 			format: 'YYYY/MM/DD hh:mm:ss',
+			min: laydate.now(),
+		    max: '2099-06-16 23:59:59',
 		    istime: true,
 		    choose: function(datas){
 		        start.max = datas;
@@ -55,6 +59,7 @@
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);
+		
  		$('#form1').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/
