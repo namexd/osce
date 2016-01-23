@@ -130,12 +130,6 @@ class IndexController extends CommonController
             if (!$result) {
                 return \Response::json(array('code' => 2));
             }
-//        $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
-//        $exam_screen_id=$screen_id->exam_screening_id;
-//        $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
-//        if (!$result) {
-//            return \Response::json(array('code' => 2));
-//        }
         $result = Watch::where('id', $id)->update(['status' => 1]);
         if ($result) {
             $action = '绑定';
@@ -147,9 +141,9 @@ class IndexController extends CommonController
                 'student_id' => $student_id
             );
             $watchModel = new WatchLog();
-            $watchModel->historyRecord($data);
+            $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
 //            $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
-//            ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
+            ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
             return \Response::json(array('code' => 1));
         } else {
             return \Response::json(array('code' => 0));
@@ -210,7 +204,6 @@ class IndexController extends CommonController
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
             }
-                $watchModel->historyRecord($data);
 //            }
             return \Response::json(array('code'=>1));
         }else{
