@@ -21,15 +21,15 @@
             <option value="3">OSCE考试2016年第3期</option>
         </select>
     </div>
-  	
+	@forelse($examresultList as $examResult)
   	<div class="examination_msg">
 		<div class="form-group">
             <label for="">评价老师</label>
-            <div class="txt">张老师</div>
+            <div class="txt">{{$examResult->teacher->name}}</div>
         </div>
         <div class="form-group">
             <label for="">成绩</label>
-            <div class="txt">82分</div>
+            <div class="txt">{{$examResult->score}}</div>
         </div>
         <div class="form-group">
             <label for="">提交时间</label>
@@ -37,9 +37,11 @@
         </div>
         <div class="form-group">
             <label for="">评价</label>
-            <div class="txt">操作很规范，但是细节注重不足，有待提高</div>
+            <div class="txt">{{$examResult->evaluate}}</div>
         </div>
   	</div>
+	@empty
+		@endforelse
   	<div class="detail_box">
 	  	<table id="detail_tb">
 	  		<tr>
@@ -48,42 +50,17 @@
 	  			<th>满分</th>
 	  			<th>得分</th>
 	  		</tr>
+			@forelse($examScoreList as $examScore)
 	  		<tr class="active">
-	  			<td>1</td>
-	  			<td>正确连接呼吸机管道</td>
-	  			<td>10</td>
-	  			<td>9</td>
+	  			<td>{{$examScore->standard->pid==0? $examScore->standard->sort:$examScore->standard->parent->sort.'-'.$examScore->standard->sort}}</td>
+	  			<td>{{$examScore->standard->content}}</td>
+	  			<td>{{$examScore->standard->score}}</td>
+	  			<td>{{$examScore->score}}</td>
 	  		</tr>
-	  		<tr>
-	  			<td>1-1</td>
-	  			<td>(1)连接湿化器正确</td>
-	  			<td>4</td>
-	  			<td>3</td>
-	  		</tr>
-	  		<tr>
-	  			<td>1-2</td>
-	  			<td>(2)连接吸气管路正确</td>
-	  			<td>3</td>
-	  			<td>3</td>
-	  		</tr>
-	  		<tr>
-	  			<td>1-3</td>
-	  			<td>(3)连接呼气管路正确</td>
-	  			<td>3</td>
-	  			<td>3</td>
-	  		</tr>
-	  		<tr class="active">
-	  			<td>2</td>
-	  			<td>正确连接呼吸机管道</td>
-	  			<td>4</td>
-	  			<td>4</td>
-	  		</tr>
-	  		<tr>
-	  			<td>2-1</td>
-	  			<td>(1)连接湿化器正确</td>
-	  			<td>4</td>
-	  			<td>3</td>
-	  		</tr>
+				@empty
+
+			@endforelse
+
 	  	</table>
 	</div>
 @stop

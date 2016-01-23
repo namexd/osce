@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\Student;
@@ -102,7 +103,6 @@ class StudentExamQuery extends  CommonController
                 'end_dt'=>$examTime->end_dt,
             ];
         }
-
         return response()->json(
             $this->success_data($stationData,1,'数据传送成功')
         );
@@ -110,10 +110,50 @@ class StudentExamQuery extends  CommonController
 
 
 
-      //考生成绩查询详情页根据考站id查询
+    //考生成绩查询详情页根据考站id查询
+    ///osce/wechat/student-exam-query/exam-details
+    public function  getExamDetails(Request $request)
+    {
 
-      public  function  getExamDetails(){
+        $this->validate($request, [
+            'exam_result_id' => 'required|integer'
+        ]);
 
-      }
+        $examresultId= Input::get('exam_result_id');
+
+         //根据考试结果id查询出该结果详情
+        $examresultList=ExamResult::where('id','=',$examresultId)->get();
+
+
+         //查询出详情列表
+        $examscoreModel= new ExamScore();
+        $examScoreList=$examscoreModel->getExamScoreList($examresultId);
+//        dd($examScoreList);
+        $groupData  =   [];
+        foreach($examScoreList as $examScore){
+            $groupData[$examScore->standard->pid][] =   $examScore;
+        }
+        $indexData  =   [];
+        foreach($groupData[0] as $group)
+        {
+            $groupData  = $group;
+            $groupData['child'] =  $groupData[$group->id]  ;//排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
+            $indexData[]    =   $groupData;
+        }
+        $list   =   [];
+        foreach($indexData as $goupData)
+        {
+            $childrens  =   is_null($goupData['child'])? []:$goupData['child'];
+            unset($goupData['child']);
+            $list[] =   $goupData;
+
+            foreach($childrens as $children)
+            {
+                $list[] =   $children;
+            }
+        }
+
+        return view('osce::wechat.resultquery.examination_detail',['examScoreList'=>$list],['examresultList'=>$examresultList]);
+    }
 
 }
