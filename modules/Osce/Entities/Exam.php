@@ -203,9 +203,20 @@ class Exam extends CommonModel
         $connection->beginTransaction();
         try {
             //更新考试信息
-            if (!$result = $this->updateData($exam_id, $examData)) {
+            $exam   =   $this->find($exam_id);
+            if($exam->sequence_mode!=$examData['sequence_mode'])
+            {
+                StationTeacher::where('exam_id','=',$exam_id)->delete();
+            }
+            foreach($examData as $field=>$item)
+            {
+                $exam->$field   =   $item;
+            }
+            if(!$exam->save())
+            {
                 throw new \Exception('修改考试信息失败!');
             }
+
             $examScreening_ids = [];
             //判断输入的时间是否有误
             foreach ($examScreeningData as $value) {
