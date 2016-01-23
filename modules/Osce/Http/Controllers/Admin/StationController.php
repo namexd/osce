@@ -29,7 +29,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.exammanage.score_query_detail');
+        return view('osce::admin.resourcemanage.central_control_edit');
     }
 
     /**
