@@ -640,6 +640,7 @@ class IndexController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
+
     public function getStudentList(Request $request)
     {
         $this->validate($request, [
@@ -656,7 +657,7 @@ class IndexController extends CommonController
             $list = $studentModel->getStudentQueue($exam_id, $screen_id);
             $count = count($list);
             return response()->json(
-                $this->success_data($list, $count, 'success')
+                $this->success_data($list, 1, 'count:' . $count)
             );
         } catch (\Exception $ex) {
             return response()->json(
@@ -664,6 +665,7 @@ class IndexController extends CommonController
             );
         }
     }
+
 
     /**
      *插入缺考的学生
