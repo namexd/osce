@@ -25,20 +25,20 @@ class InformTrain extends CommonModel{
     public function getExam(){
         return $this->belongsTo('App\Osce\Entities\Exam','exam_id','id');
     }
-    // »ñµÃ·ÖÒ³ÁÐ±í
+    // ï¿½ï¿½Ã·ï¿½Ò³ï¿½Ð±ï¿½
     public function  getInformList(){
 
-            $builder=$this;
-            return $builder->select([
-                $builder.'.id as id',
-                $builder.'.name as name',
-                $builder.'.address as address',
-                $builder.'.begin_dt as begin_dt',
-                $builder.'.end_dt as end_dt',
-                $builder.'.content as content',
-                $builder.'.attachments as attachments',
-                $builder.'.status as status',
-            ])->get()->orderBy($builder.'.id')->paginate(config('msc.page_size',10));
+             $builder=$this->select([
+                $this->table.'.id as id',
+                $this->table.'.name as name',
+                $this->table.'.address as address',
+                $this->table.'.begin_dt as begin_dt',
+                $this->table.'.end_dt as end_dt',
+                $this->table.'.content as content',
+                $this->table.'.attachments as attachments',
+                $this->table.'.status as status',
+            ])->orderBy($this->table.'.id')->paginate(config('osce.page_size'));
+            return $builder;
         }
 
 }
