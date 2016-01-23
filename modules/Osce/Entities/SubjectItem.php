@@ -152,7 +152,7 @@ class SubjectItem extends CommonModel
                 $data[]=$item;
             }
         }
-        
+
         return $data;
     }
 
