@@ -77,11 +77,13 @@ class Vcr extends CommonModel implements MachineInterface
 
             if($vcr =   $this   ->  create($data))
             {
+
                 $machineData=   [
                     'item_id'    =>  $vcr    ->  id,
                     'type'      =>  1,
                 ];
             }
+
             else
             {
                 throw new \Exception('新增摄像机失败');

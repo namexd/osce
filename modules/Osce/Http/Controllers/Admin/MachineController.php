@@ -317,7 +317,7 @@ class MachineController extends CommonController
      */
     private function addCameras(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required|unique:osce_mis.vcr,name',
+            'name'          =>  'required',
             'code'          =>  'required',
             'ip'            =>  'required',
             'username'      =>  'required',
@@ -357,10 +357,13 @@ class MachineController extends CommonController
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
+
         $cate_id    =   $request    ->  get('cate_id');
         try{
 
             $model      =   $this   ->  getMachineModel($cate_id);
+
+
             if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
             } else{
