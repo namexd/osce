@@ -153,6 +153,7 @@ class TopicController extends CommonController
         try
         {
             $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'),$request->get('description'));
+//            dd($subjectModel   ->  editTopic($id,$data,$formData));
             if($subjectModel   ->  editTopic($id,$data,$formData))
             {
                 return redirect()->route('osce.admin.topic.getList');
