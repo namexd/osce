@@ -202,7 +202,6 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('数据查询失败'))
             );
-
         }
     }
     /**
