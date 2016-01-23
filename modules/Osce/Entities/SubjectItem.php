@@ -122,29 +122,34 @@ class SubjectItem extends CommonModel
     static public function builderItemData($content,$score,$answer){
         $data   =   [];
         foreach($content as $prointIndex => $item){
-            $child  =   [];
-            $itemScore  =   $score[$prointIndex];
-            $itemAnswer =   array_key_exists($prointIndex,$answer)? $answer[$prointIndex]:[];
-            $itemScore  =   array_key_exists($prointIndex,$score)?   $score[$prointIndex]:[];
-            foreach($item as $contentIndex  =>  $content){
-                if($contentIndex=='title'){
-                    continue;
+
+            if(empty($item['title'])){
+                continue;
+            }else{
+                $child  =   [];
+                $itemScore  =   $score[$prointIndex];
+                $itemAnswer =   array_key_exists($prointIndex,$answer)? $answer[$prointIndex]:[];
+                $itemScore  =   array_key_exists($prointIndex,$score)?   $score[$prointIndex]:[];
+                foreach($item as $contentIndex  =>  $content){
+                    if($contentIndex=='title'){
+                        continue;
+                    }
+                    $contentData    =   [
+                        'content'   =>  $content,
+                        'score'     =>  array_key_exists($contentIndex,$itemScore)? $itemScore[$contentIndex]:0,
+                        'sort'      =>  $contentIndex,
+                        'answer'    =>  array_key_exists($contentIndex,$itemAnswer)? $itemAnswer[$contentIndex]:''
+                    ];
+                    $child[]=$contentData;
                 }
-                $contentData    =   [
-                    'content'   =>  $content,
-                    'score'     =>  array_key_exists($contentIndex,$itemScore)? $itemScore[$contentIndex]:0,
-                    'sort'      =>  $contentIndex,
-                    'answer'    =>  array_key_exists($contentIndex,$itemAnswer)? $itemAnswer[$contentIndex]:''
+                $item   =   [
+                    'content'   =>  $item['title'],
+                    'score'     =>  $itemScore['total'],
+                    'sort'      =>  $prointIndex,
+                    'child'     =>  $child
                 ];
-                $child[]=$contentData;
+                $data[]=$item;
             }
-            $item   =   [
-                'content'   =>  $item['title'],
-                'score'     =>  $itemScore['total'],
-                'sort'      =>  $prointIndex,
-                'child'     =>  $child
-            ];
-            $data[]=$item;
         }
 
         return $data;
