@@ -27,15 +27,16 @@
                 <a  href="{{route('osce.admin.Station.getAddStation')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form">
-            <div class="">
-                <div class="input-group" style="width: 290px;margin-bottom: 20px;">
-                    <input type="text" placeholder="请输入关键字" class="form-control">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-sm btn-primary" id="search">搜索</button>
-                    </span>
-                </div>
+        <div class="container-fluid ibox-content" id="list_form">
 
+                <form action="{{route('osce.admin.Station.getStationList')}}" method="get">
+                    <div class="input-group" style="width: 290px;margin-bottom: 20px;">
+                        <input type="text" placeholder="请输入考站名" class="form-control" name="name">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                    </span>
+                    </div>
+                </form>
                 <table class="table table-striped" id="table-striped">
                     <thead>
                     <tr>
@@ -75,9 +76,9 @@
                         {!! $data->render() !!}
                     </div>
                 </div>
-            </div>
 
-        </form>
+
+        </div>
 
     </div>
 
