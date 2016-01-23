@@ -79,9 +79,9 @@ class TopicController extends CommonController
             'score.required'    =>  '评分必须',
         ]);
 
-        $content        = $request  ->get('content');
-        $score          = $request  ->get('score');
-        $answer          = $request ->get('description');
+        $content    = $request  ->get('content');
+        $score      = $request  ->get('score');
+        $answer     = $request  ->get('description');
 
         try{
             $formData = SubjectItem::builderItemData($content, $score,$answer);
@@ -139,32 +139,32 @@ class TopicController extends CommonController
      */
     public function postEditTopic(Request $request){
         $this   ->  validate($request,[
-            'id'    =>  'required',
-            'title' =>  'required',
-            'desc' =>  'sometimes',
+            'id'        =>  'required',
+            'title'     =>  'required',
+            'desc'      =>  'sometimes',
+            'content'   =>  'required',
+            'score'     =>  'required',
         ],[
             'id.required'       =>  '课题ID必须',
             'title.required'    =>  '课题名称必须',
+            'content.required'  =>  '评分标准必须',
+            'score.required'    =>  '评分必须',
         ]);
 
         $data   =   [
-//            'id'            =>  intval($request     ->  get('id')),
-            'title'         =>  e($request          ->  get('title')),
-            'description'   =>  $request          ->  get('description'),
+            'title'         =>  e($request  ->  get('title')),
+            'description'   =>  $request    ->  get('description'),
         ];
         $id     =   intval($request ->get('id'));
 
         $subjectModel   =   new Subject();
-        try
-        {
+        try{
             $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'),$request->get('description'));
 
             if($subjectModel   ->  editTopic($id,$data,$formData))
             {
                 return redirect()->route('osce.admin.topic.getList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('编辑失败');
             }
         }

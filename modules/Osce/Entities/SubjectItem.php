@@ -124,7 +124,7 @@ class SubjectItem extends CommonModel
 
         foreach($content as $prointIndex => $item){
 
-            if(empty($item['title']) || empty($item[$prointIndex])){
+            if(empty($item['title'])){
                 throw new \Exception('考核点内容不能为空！');
             }else{
                 $child  =   [];
