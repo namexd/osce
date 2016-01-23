@@ -877,7 +877,11 @@ class MachineController extends CommonController
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
             }
-
+            if($cate_id ==3){
+                if($result = WatchLog::where('watch_id',$id)->first()){
+                    throw new \Exception('该设备使用过,无法删除!');
+                }
+            }
             $model   = $this    ->getMachineModel($cate_id);
             //通过id删除相应的设备
             if($result = $model->where('id', $id)->delete()) {
