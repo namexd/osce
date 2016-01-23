@@ -91,6 +91,46 @@ function deleteItem(url){
 
 
 function categories(){
+
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            title: {/*键名username和input name值对应*/
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            },
+            desc: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '描述不能为空'
+                    }
+                }
+            }
+        }
+    });
+
+    $('#submit-btn').click(function(){
+        var flag = true;
+        $('tbody').find('.col-sm-10').each(function(key,elem){
+            if($(elem).find('input').val()==''){
+                flag = false;
+            }
+        });
+        if(flag==false){
+            layer.alert('考核点或考核项不能为空！');
+            return false;
+        }
+    });
+
+
     /**
      * 新增一条父考核点
      * @author  mao
@@ -555,7 +595,7 @@ function categories(){
                                        '<option value="3">3</option>'+
                                        '<option value="4">4</option>'+
                                        '</select>'+
-                                       '<span>'+res[i].score+'</span>'
+                                       '<span>'+res[i].score+'</span>'+
                                        '</td>'+
                                        '<td>'+
                                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
