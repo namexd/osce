@@ -30,14 +30,20 @@ function exam_assignment(){
     $('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
-        layer.alert('确认删除？',function(){
+        layer.confirm('确认删除？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
             $.ajax({
                 type:'post',
                 async:true,
                 url:pars.deletes,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
                 success:function(res){
-                    location.reload();
+                    if(res.code==1){
+                        location.href = (location.href).split('?')[0];
+                    }else{
+                        layer.alert(res.message)
+                    }
                 }
             })
         });
