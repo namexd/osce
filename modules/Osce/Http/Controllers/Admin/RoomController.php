@@ -16,6 +16,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Room as Room;
 use DB;
+use Auth;
 
 class RoomController extends CommonController
 {
@@ -43,20 +44,22 @@ class RoomController extends CommonController
         ]);
 
         //获取各字段
-        $keyword = e($request->input('keyword', ''));
-        $type    = $request ->input('type', 1);
+        $keyword = e($request->input('keyword', ""));
+        $type    = $request ->input('type', '0');
         $id      = $request ->input('id', '');
 
         try{
             //获取当前场所的类
-            list($area,$data) = $room->showRoomList($keyword, $type, $id);
-
+            $data = $room->showRoomList($keyword, $type, $id);
+            //获取当前的标签
+            $area = config('osce.room_cate');
             //展示页面
-            if ($type == 1) {
+
+            if ($type === "0") {
                 return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            } else if ($type == 2){
+            } else if ($type == 1){
                 return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            }else if ($type == 3){
+            }else if ($type == 2){
                 return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
             }else{
                 return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
@@ -90,14 +93,13 @@ class RoomController extends CommonController
         ]);
 
         //取出id的值
-        $id = $request->get('id');
+        $id = $request->input('id');
         $type = $request->input('type');
         //TODO:zhoufuxiang，查询属于离线状态的摄像机
         $vcr = Vcr::where('status', 0)
             ->select(['id', 'name'])
             ->get();     //关联摄像机
-
-        $data = $model->showRoomList("",$type,$id);
+        $data = $model->showRoomList("", $type, $id);
         $roomVcr = RoomVcr::where('room_id', $id)->first();
         if(!empty($roomVcr)){
             $data->vcr_id = $roomVcr->vcr_id;
@@ -176,7 +178,6 @@ class RoomController extends CommonController
         try {
             $Room = new Room();
             $result = $Room->editRoomData($id, $vcr_id, $formData);
-//            $result = $Room->updateData($id, $formData);
             if (!$result) {
                 throw new \Exception('数据修改失败！请重试');
             } else {
@@ -238,46 +239,34 @@ class RoomController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postCreateRoom(Request $request, RoomVcr $roomVcr)
+    public function postCreateRoom(Request $request, Room $room)
     {
-        //验证
-        $this->validate($request, [
-            'vcr_id'        => 'required',
-            'name'  => 'required|unique:osce_mis.room,name',
-//            'nfc' => 'required',
-            'address' => 'required',
-            'code' => 'required',
-            'description' => 'required'
-        ],[
-            'name.unique'   =>  '名称必须唯一',
-        ]);
-//        $formData = $request->only('name', 'nfc', 'address', 'code', 'description');
-        //todo   表单内容变化没有提交nfc字段
-        $formData = $request->only('name', 'address', 'code', 'description');
-        $vcrId =$request->get('vcr_id');
+        try {
+            //验证
+            $this->validate($request, [
+                'vcr_id'        => 'required',
+                'name'  => 'required|unique:osce_mis.room,name',
+    //            'nfc' => 'required',
+                'address' => 'required',
+                'code' => 'required',
+                'description' => 'required'
+            ],[
+                'name.unique'   =>  '名称必须唯一',
+            ]);
+            //todo   表单内容变化没有提交nfc字段
+            $formData = $request->only('name', 'address', 'code', 'description');
+            $vcrId =$request->get('vcr_id');
+            if (!$user = Auth::user()) {
+                throw new \Exception('当前操作者没有登陆');
+            }
+            $userId = $user->id;
+            $formData['created_user_id'] = $userId;
+            $result = $room->createRoom($formData,$vcrId,$userId);
 
-        DB::connection('osce_mis')->beginTransaction();
-        $roomSave =DB::connection('osce_mis')->table('room')->insertGetId($formData);
-
-        //  todo   摄像机是可以多选的  待完善。。。。。。。。。
-//        $vcrId= serialize($vcrId);
-        $data=[
-            'room_id'=>$roomSave,
-            'vcr_id'=>$vcrId,
-        ];
-        $result = $roomVcr->insertData($data);
-        if (!$result) {
-            DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withErrors('插入数据失败,请重试!');
+            return redirect()->route('osce.admin.room.getRoomList',['data'=>$result]);
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
         }
-        $vcr = Vcr::where('id',$vcrId)->update(['status'=>1]);
-        if (!$vcr) {
-            DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withErrors('摄像机状态修改失败,请重试!');
-        }
-
-        DB::connection('osce_mis')->commit();
-        return redirect()->route('osce.admin.room.getRoomList');
     }
 
     /**

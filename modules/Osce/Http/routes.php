@@ -369,7 +369,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 
 //TODO:测试用
 Route::get('test/test', function() {
-	$config = config('osce.name');
+	$config = config('osce.room_cate');
 	dd($config);
 
 });

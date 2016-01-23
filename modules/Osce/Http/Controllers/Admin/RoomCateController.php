@@ -17,8 +17,6 @@ use Illuminate\Http\Request;
 class RoomCateController extends CommonController
 {
 
-
-
     /**
      * 插入一条数据
      * @api       POST /osce/admin/room-cate/create-room-cate

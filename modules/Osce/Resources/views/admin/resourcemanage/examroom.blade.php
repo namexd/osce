@@ -29,14 +29,14 @@
                 <a  href="{{route('osce.admin.room.getAddRoom')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-    <form class="container-fluid ibox-content" id="list_form" method="get" action="{{route('osce.admin.room.getRoomList',['type'=>1])}}">
+    <form class="container-fluid ibox-content" id="list_form" method="get" action="{{route('osce.admin.room.getRoomList',['type'=>'1'])}}">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        @foreach($area as $item)
-                            <li class="{{($item->cate == 1)?'active':''}}">
-                                <a href="{{route('osce.admin.room.getRoomList',['type'=>$item->cate])}}">{{$item->name}}</a>
+                        @foreach($area as $key => $item)
+                            <li class="{{($key === 0)?'active':''}}">
+                                <a href="{{route('osce.admin.room.getRoomList',['type'=>$key])}}">{{$item}}</a>
                             </li>
                         @endforeach
                     </ul>
@@ -44,6 +44,7 @@
             </div>
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword" value="{{(isset($keyword)?$keyword:'')}}">
+                <input type="hidden" name="type" value="0">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                 </span>
