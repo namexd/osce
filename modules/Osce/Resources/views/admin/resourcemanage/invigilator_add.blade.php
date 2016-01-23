@@ -10,7 +10,6 @@
     <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
     <script>
         $(function(){
-
             $('#sourceForm').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {/*输入框不同状态，显示图片的样式*/
