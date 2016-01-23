@@ -100,8 +100,8 @@
             var start = {
                 elem: "#purchase_dt",
                 format: "YYYY-MM-DD",
-                min: "1970-00-00",
-                max: "2099-06-16",
+                min: laydate.now(),
+		    	max: '2099-06-16 23:59:59',
                 istime: true,
                 istoday: false,
                 choose: function (a) {

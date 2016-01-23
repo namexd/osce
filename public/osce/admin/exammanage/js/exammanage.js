@@ -30,14 +30,20 @@ function exam_assignment(){
     $('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
-        layer.alert('确认删除？',function(){
+        layer.confirm('确认删除？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
             $.ajax({
                 type:'post',
                 async:true,
                 url:pars.deletes,
                 data:{id:thisElement.parent().parent().parent().attr('value')},
                 success:function(res){
-                    location.reload();
+                    if(res.code==1){
+                        location.href = (location.href).split('?')[0];
+                    }else{
+                        layer.alert(res.message)
+                    }
                 }
             })
         });
@@ -2596,15 +2602,14 @@ function station_assignment(){
                 }
             });
         });
-
         $.ajax({
             type:'get',
             async:true,
-            url:pars.teacher_list,
-            data:{teacher:ids},
+            url:pars.spteacher_list,
+            data:{teacher:ids,station_id:btn_group.parent().parent().attr('value')},
             success:function(data){
               var html = '';
-              res = data.data;
+              res = data.data.rows;
               //提示数据
               if(res.length==0){
                 layer.alert('没有可选数据！',function(its){
