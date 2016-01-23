@@ -11,6 +11,10 @@ input.laydate-icon{
     width: 151px;
     line-height: 30px;
 }
+.time-modify{
+    margin-top: 25px!important;
+    margin-bottom: 30px!important;
+}
 </style>
 @stop
 
@@ -90,7 +94,7 @@ input.laydate-icon{
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
+                            <div class="col-sm-4 col-sm-offset-2 time-modify">
                                 <button class="btn btn-primary" type="submit">创建考试</button>
                                 <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 

@@ -1,7 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/demo/webuploader-demo.css')}}">
     <style type="text/css">
         .has-error .form-control{border-color: #ed5565!important;}
         .code_add,.code_del{position:absolute;right:15px;top:0;}
@@ -10,8 +10,8 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
     <script>
         $(function() {

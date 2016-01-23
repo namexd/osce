@@ -51,16 +51,19 @@ class StationController extends CommonController
         $orderType = empty(config('order_type')) ? 'created_at' : config('order_type');
         $orderBy = empty(config('order_by')) ? 'desc' : config('order_by');
 
+        //搜索名字
+        $name = e($request->get('name'));
+
         //拼凑一个order数组
         $order = [$orderType, $orderBy];
         //考站类型
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试'];
 
         //获得展示数据
-        $data = $model->showList($order);
+        $data = $model->showList($order,  $ajax = false, $name);
 
         //将展示数据放在页面上
-        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate]);
+        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate, 'name'=>$name]);
 
     }
 
@@ -102,20 +105,23 @@ class StationController extends CommonController
      */
     public function postAddStation(Request $request, Station $model)
     {
+        //验证略
+        $this->validate($request, [
+            'name'          => 'required|unique:osce_mis.station,name',
+            'type'          => 'required|integer',
+//            'description'   => 'required',
+//            'code'          => 'required',
+            'mins'          => 'required',
+            'vcr_id'        => 'required|integer',
+            'room_id'       => 'required|integer',
+            'case_id'       => 'required|integer',
+            'subject_id'    => 'required|integer'
+        ],[
+            'name.unique'   =>  '考站名称必须唯一'
+        ]);
+
+        DB::connection('osce_mis')->beginTransaction();
         try {
-            DB::connection('osce_mis')->beginTransaction();
-            //验证略
-            $this->validate($request, [
-                'name'          => 'required|unique:osce_mis.station,name',
-                'type'          => 'required|integer',
-//                'description'   => 'required',
-//                'code'          => 'required',
-                'mins'          => 'required',
-                'vcr_id'        => 'required|integer',
-                'room_id'       => 'required|integer',
-                'case_id'       => 'required|integer',
-                'subject_id'    => 'required|integer'
-            ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $stationData = $request->only('name', 'type', 'mins', 'subject_id');
             $vcrId  = $request->input('vcr_id');
@@ -129,12 +135,10 @@ class StationController extends CommonController
             $time = $request->input('mins');
             $request->session()->flash('time', $time);
             if (!($request->session()->has('time'))) {
-                DB::connection('osce_mis')->rollBack();
                 throw new \Exception('未能将时间保存！');
             }
 
             if (!($model->addStation($formData))) {
-                DB::connection('osce_mis')->rollBack();
                 throw new \Exception('未能将考站保存！');
             };
 
@@ -142,6 +146,7 @@ class StationController extends CommonController
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
 
         } catch (\Exception $ex) {
+            DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors($ex->getMessage());
         }
 
