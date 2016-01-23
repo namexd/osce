@@ -179,19 +179,19 @@ class NoticeController extends CommonController
      */
     public function postEditNotice(Request $request){
         $this   ->  validate($request,[
-            'name'     =>  'required',
+            'name'      =>  'required',
             'content'   =>  'required',
             'attach'    =>  'sometimes',
             'id'        =>  'required',
         ]);
 
-        $id         =   $request   ->  get('id');
-
+        $id         =   $request    ->  get('id');
         $name       =   $request    ->  get('name');
         $content    =   $request    ->  get('content');
         $exam_id    =   $request    ->  get('exam_id');
         $groups     =   $request    ->  get('accept');
         $attach     =   $request    ->  get('attach');
+
         if(!empty($attach)){
             $attach     =   e(implode(',',$attach));
         } else {
@@ -199,19 +199,14 @@ class NoticeController extends CommonController
         }
 
         $NoticeModel    =   new Notice();
-        try
-        {
+        try{
             if($NoticeModel    ->editNotice($id,$name,$content,$attach,$groups))
             {
                 return redirect()->route('osce.admin.notice.getList');
-            }
-            else
-            {
+            } else {
                 throw new \Exception('更新通知失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
