@@ -78,6 +78,7 @@ class TopicController extends CommonController
             'score.required'    =>  '评分必须',
         ]);
 
+//        dd($request->all());
         $content        = $request  ->get('content');
         $score          = $request  ->get('score');
         $answer          = $request ->get('description');
