@@ -73,5 +73,15 @@
            
         </div>
     </form>
+    <div class="pull-left">
+        共{{$pagination->total()}}条
+    </div>
+    <div class="pull-right">
+        <nav>
+            <ul class="pagination">
+                {!! $pagination->render() !!}
+            </ul>
+        </nav>
+    </div>
 </div>
 @stop{{-- 内容主体区域 --}}
