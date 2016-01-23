@@ -105,20 +105,23 @@ class StationController extends CommonController
      */
     public function postAddStation(Request $request, Station $model)
     {
+        //验证略
+        $this->validate($request, [
+            'name'          => 'required|unique:osce_mis.station,name',
+            'type'          => 'required|integer',
+//            'description'   => 'required',
+//            'code'          => 'required',
+            'mins'          => 'required',
+            'vcr_id'        => 'required|integer',
+            'room_id'       => 'required|integer',
+            'case_id'       => 'required|integer',
+            'subject_id'    => 'required|integer'
+        ],[
+            'name.unique'   =>  '考站名称必须唯一'
+        ]);
+
+        DB::connection('osce_mis')->beginTransaction();
         try {
-            DB::connection('osce_mis')->beginTransaction();
-            //验证略
-            $this->validate($request, [
-                'name'          => 'required|unique:osce_mis.station,name',
-                'type'          => 'required|integer',
-//                'description'   => 'required',
-//                'code'          => 'required',
-                'mins'          => 'required',
-                'vcr_id'        => 'required|integer',
-                'room_id'       => 'required|integer',
-                'case_id'       => 'required|integer',
-                'subject_id'    => 'required|integer'
-            ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $stationData = $request->only('name', 'type', 'mins', 'subject_id');
             $vcrId  = $request->input('vcr_id');
@@ -132,12 +135,10 @@ class StationController extends CommonController
             $time = $request->input('mins');
             $request->session()->flash('time', $time);
             if (!($request->session()->has('time'))) {
-                DB::connection('osce_mis')->rollBack();
                 throw new \Exception('未能将时间保存！');
             }
 
             if (!($model->addStation($formData))) {
-                DB::connection('osce_mis')->rollBack();
                 throw new \Exception('未能将考站保存！');
             };
 
@@ -145,6 +146,7 @@ class StationController extends CommonController
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
 
         } catch (\Exception $ex) {
+            DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors($ex->getMessage());
         }
 
