@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <style>
     table tr td .form-group {
         margin-bottom: 0;
@@ -18,45 +19,7 @@
 @section('only_js')
 <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
-
-<script>
-    $(function(){
-        $('#sourceForm').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                title: {
-                    /*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '名称不能为空'
-                        },
-                        threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                        remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                            url: '{{route('osce.admin.topic.postNameUnique')}}',//验证地址
-                            message: '科目名称已经存在',//提示消息
-                            delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                            type: 'POST',//请求方式
-                            /*自定义提交数据，默认值提交当前input value*/
-                            data: function(validator) {
-                                return {
-                                    id: '{{$_GET['id']}}',
-                                    model: 'subject',
-                                    title: $('[name="whateverNameAttributeInYourForm"]').val()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    })
-</script>
+<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 @stop
 
 @section('content')
