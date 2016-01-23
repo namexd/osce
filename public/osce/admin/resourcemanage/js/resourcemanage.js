@@ -548,13 +548,14 @@ function categories(){
                                        '</div>'+
                                        '</td>'+
                                        '<td>'+
-                                       '<select class="form-control" name="score['+index+'][total]">'+
+                                       '<select class="form-control" style="display:none;" name="score['+index+'][total]">'+
                                        '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
                                        '<option value="1">1</option>'+
                                        '<option value="2">2</option>'+
                                        '<option value="3">3</option>'+
                                        '<option value="4">4</option>'+
                                        '</select>'+
+                                       '<span>'+res[i].score+'</span>'
                                        '</td>'+
                                        '<td>'+
                                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+

@@ -284,9 +284,39 @@ class StationController extends CommonController
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间
         $subject= Subject::all(['id', 'title']);
-//        dd($subject);
-
 
         return array($placeCate, $vcr, $case, $room, $subject);  //评分标准
+    }
+
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'title'     => 'required',
+            'name'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $title  = $request  -> get('title');
+        $name   = $request  -> get('name');
+
+        //实例化模型
+        $title   =  '\Modules\Osce\Entities\\'.$title;
+        $model =  new $title;
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('name', $name)->first();
+        }else{
+            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
     }
 }
