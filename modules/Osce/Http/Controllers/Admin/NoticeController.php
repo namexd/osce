@@ -191,7 +191,12 @@ class NoticeController extends CommonController
         $content    =   $request    ->  get('content');
         $exam_id    =   $request    ->  get('exam_id');
         $groups     =   $request    ->  get('accept');
-        $attach     =   e(implode(',',$request     ->  get('attach')));
+        $attach     =   $request    ->  get('attach');
+        if(!empty($attach)){
+            $attach     =   e(implode(',',$attach));
+        } else {
+            $attach =   '';
+        }
 
         $NoticeModel    =   new Notice();
         try
