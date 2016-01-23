@@ -86,7 +86,7 @@
 
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.room.postCreateRoom')}}">
-
+                        <input type="hidden" name="type" value="{{$type}}">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
 

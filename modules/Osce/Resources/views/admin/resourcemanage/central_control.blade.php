@@ -25,7 +25,7 @@
                 <h5 class="title-label">中控室</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.room.getAddRoom')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.room.getAddRoom',['type'=>$type])}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -58,8 +58,7 @@
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
                         <td value="{{$item->id}}">
-                            {{--<a href="{{route('osce.admin.room.getEditRoom',['id'=>$item->id,'type'=>$type])}}">--}}
-                                <a href="">
+                            <a href="{{route('osce.admin.room.getEditRoom',['id'=>$item->id,'type'=>$type])}}">
                                 <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                             </a>
                             <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
