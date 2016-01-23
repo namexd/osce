@@ -13,6 +13,7 @@ use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class ExamResultController extends CommonController{
@@ -158,12 +159,23 @@ class ExamResultController extends CommonController{
         $result['time'].=$result['time']%60;
 
         $score=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->select()->get();
-        $scores=[];
+        $image=[];
         foreach($score as $itm){
-            $scores[]=[
+            $image[]=[
                 'standard'=>$itm->standard,
                 'score'=>$itm->score,
+                'image'=>'',
             ];
+        }
+
+        $scores=[];
+        foreach($image as $img){
+            $scores[]=[
+                'standard'=>$img['standard'],
+                'score'=>$img['score'],
+                'image'=>TestAttach::where('test_result_id',$result['id'])->where('standard_id',$img['standard']->id)->select()->get(),
+            ];
+
         }
 
         $standard=[];
@@ -185,6 +197,48 @@ class ExamResultController extends CommonController{
 
     }
 
+    /**
+     *下载图片
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        考试结果附件id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDownloadImage(Request $request){
+        $this->validate($request,[
+            'id'            =>'required|integer',
+        ]);
+        $id     =   $request->get('id');
+        $info  =   TestAttach::find($id);
+        $attchments =  $info->url;
 
+        $fileNameArray   =   explode('/',$attchments);
+        $this->downloadfile(array_pop($fileNameArray),public_path().$attchments);
+    }
+    private function downloadfile($filename,$filepath){
+        $file=explode('.',$filename);
+        $tFile=array_pop($file);
+        $filename=md5($filename).'.'.$tFile;
+        $filepath   =   iconv('utf-8', 'gbk', $filepath);
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
 
 }
