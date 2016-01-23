@@ -109,39 +109,39 @@ class Notice extends CommonModel
             $url    =   route('osce.admin.notice.getMsg',['id'=>$notice->id]);
             $sendType   =   Config::where('name','=','type')    ->  first();
 
-            $value      =   json_decode($sendType->value);
+            $values      =   json_decode($sendType->value);
 
-            if(is_null($value))
+            if(is_null($values))
             {
-                $value  =   1;
+                $values  =   [1];
             }
-            if(is_array($value))
+            if(is_array($values))
             {
-                $value  =   1;
-            }
-
-            try
-            {
-                switch($value)
+                foreach($values as $value)
                 {
-                    case 1:
-                        $this->sendWechat($notice,$to,$url);
-                        break;
-                    case 2:
-                        $this->sendEmail($notice,$to,$url);
-                        break;
-                    case 3:
-                        $this->sendSms($notice,$to,$url);
-                        break;
-                    default:
-                        $this->sendWechat($notice,$to,$url);
+                    try
+                    {
+                        switch($value)
+                        {
+                            case 1:
+                                $this->sendWechat($notice,$to,$url);
+                                break;
+                            case 2:
+                                $this->sendEmail($notice,$to,$url);
+                                break;
+                            case 3:
+                                $this->sendSms($notice,$to,$url);
+                                break;
+                            default:
+                                $this->sendWechat($notice,$to,$url);
+                        }
+                    }
+                    catch(\Exception $ex)
+                    {
+                        \Log::alert('通知发送失败');
+                    }
                 }
             }
-            catch(\Exception $ex)
-            {
-                \Log::alert('通知发送失败');
-            }
-
         }
         catch(\Exception $ex)
         {
