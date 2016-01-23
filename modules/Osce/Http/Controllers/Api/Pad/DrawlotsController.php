@@ -81,14 +81,65 @@ class DrawlotsController extends CommonController
 //            $examQueue =  ExamQueue::examineeByRoomId($room_id);
 
             $examQueue = [
-                'student_id' => 1,
-                'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png'
+                1 => ['student_id' => 1,
+                    'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
+                    'student_code' => '1234',
+                    'student_name' => '测试名字1',
+                    'station_name' => '当前考站1'],
+                2 => ['student_id' => 2,
+                    'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
+                    'student_code' => '12345',
+                    'student_name' => '测试名字2',
+                    'station_name' => '当前考站2'],
+                3 => ['student_id' => 3,
+                    'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
+                    'student_code' => '123456',
+                    'student_name' => '测试名字3',
+                    'station_name' => '当前考站3'],
             ];
 
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 根据考场ID获取当前时间段的考生列表(接口)
+     * @method GET
+     * @url api/1.0  /osce/drawlots/next-examinee
+     * @access public
+     * @return \Illuminate\Http\JsonResponse ${response}
+     *
+     * @internal param Request $request
+     * @internal param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     *
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-23 12:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getNextExaminee()
+    {
+        $examQueue = [
+            1 => ['student_id' => 1,
+                'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
+                'student_code' => '1234',
+                'student_name' => '测试名字1',
+                'station_name' => '当前考站1'],
+            2 => ['student_id' => 2,
+                'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
+                'student_code' => '12345',
+                'student_name' => '测试名字2',
+                'station_name' => '当前考站2'],
+            3 => ['student_id' => 3,
+                'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
+                'student_code' => '123456',
+                'student_name' => '测试名字3',
+                'station_name' => '当前考站3'],
+        ];
+        return response()->json($this->success_data($examQueue));
     }
 
     /**

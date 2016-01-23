@@ -216,22 +216,23 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 	});
 
-//	 //Pad端
-//	Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
-//		Route::get('room-vcr',['uses'=>'PadController@getRoomVcr','as'=>'osce.pad.getRoomVcr']);
-//		Route::get('vcr',['uses'=>'PadController@getVcr']);
-//
-//		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
-//		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
-//
-//		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
-//
-//		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
-//		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
-//
-//		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
-//		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
-//	});
+	 //Pad端
+	Route::group(['prefix'=>'pad','namespace'=>'Api\Pad'],function(){
+		Route::get('room-vcr',['uses'=>'PadController@getRoomVcr','as'=>'osce.pad.getRoomVcr']);
+		Route::get('vcr',['uses'=>'PadController@getVcr']);
+
+		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+
+		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
+
+		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
+		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
+
+		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
+		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
+		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);
+	});
 
 
 });
