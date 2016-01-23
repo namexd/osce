@@ -85,7 +85,6 @@ class TopicController extends CommonController
 
         $formData = SubjectItem::builderItemData($content, $score,$answer);
         $totalData   =  0;
-
         foreach($score as $index=>$socrdata)
         {
             foreach($socrdata as $key=>$socre)
