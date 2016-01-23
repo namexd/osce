@@ -79,9 +79,9 @@ class TopicController extends CommonController
             'score.required'    =>  '评分必须',
         ]);
 
-        $content        = $request  ->get('content');
-        $score          = $request  ->get('score');
-        $answer          = $request ->get('description');
+        $content    = $request  ->get('content');
+        $score      = $request  ->get('score');
+        $answer     = $request  ->get('description');
 
         try{
             $formData = SubjectItem::builderItemData($content, $score,$answer);
