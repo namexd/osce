@@ -32,7 +32,7 @@
                                 data: function(validator) {
                                     return {
                                         id:'{{$_GET['id']}}',
-                                        title: 'watch',
+                                        title: 'Watch',
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
@@ -60,7 +60,7 @@
                                 data: function(validator) {
                                     return {
                                         id: '{{$_GET['id']}}',
-                                        title: 'watch',
+                                        title: 'Watch',
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
 

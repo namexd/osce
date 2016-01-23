@@ -31,7 +31,7 @@
                                 /*自定义提交数据，默认值提交当前input value*/
                                 data: function(validator) {
                                     return {
-                                        title: 'vcr',
+                                        title: 'Vcr',
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
@@ -58,7 +58,7 @@
                                 /*自定义提交数据，默认值提交当前input value*/
                                 data: function(validator) {
                                     return {
-                                        title: 'vcr',
+                                        title: 'Vcr',
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
