@@ -55,12 +55,13 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($list as $list)
+            @foreach($list as $key => $list)
                 <tr>
-                    <td>1</td>
+                    <td>{{$key+1}}</td>
                     <td><a href="{{route('osce.admin.getTrainDetail',array('id'=>$list->id))}}">{{ $list->name }}</a></td>
                     <td>{{ $list->begin_dt }}~{{ $list->end_dt }}</td>
                     <td value="{{$list->id}}">
+                    <!--<td value="1">-->
                         <a href="{{ route('osce.admin.getEditTrain',array('id'=>$list->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>

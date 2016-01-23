@@ -4,6 +4,7 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script>
         $(function(){
             $('#sourceForm').bootstrapValidator({
@@ -31,13 +32,55 @@
                                 message: '编号不能为空'
                             },
                             regexp: {
-                                regexp: /^\d+$/,
+                                regexp:  /^[a-zA-Z0-9]+$/,
                                 message: '请输入正确的编号'
                             }
                         }
+                    },
+                    factory: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '厂家不能为空'
+                            }
+                        }
+                    },
+                    sp: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '型号不能为空'
+                            }
+                        }
+                    },
+                    purchase_dt: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '采购日期不能为空'
+                            }
+                        }
                     }
+
                 }
             });
+            /*时间选择*/
+            var start = {
+                elem: "#purchase_dt",
+                format: "YYYY-MM-DD",
+                min: "1970-00-00",
+                max: "2099-06-16",
+                istime: true,
+                istoday: false,
+                choose: function (a) {
+                    end.min = a;
+                    end.start = a
+                }
+            };
+            laydate(start);
         })
     </script>
 @stop
@@ -56,8 +99,7 @@
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.machine.postAddMachine')}}">
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">名称</label>
-
+                                <label class="col-sm-2 control-label">设备名称</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="name" name="name">
                                     <input type="hidden"  class="form-control" id="cate_id" name="cate_id" value="2" />
@@ -66,21 +108,48 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">编号</label>
-
+                                <label class="col-sm-2 control-label">设备ID</label>
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="code" name="code">
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">设备状态</label>
+                                <label class="col-sm-2 control-label">厂家</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="factory" name="factory">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">型号</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="sp" name="sp">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">采购日期</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="purchase_dt" name="purchase_dt" value="">
+
+                                    {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">状态</label>
                                 <div class="col-sm-10">
                                     <select id=""   class="form-control m-b" name="status">
-                                        <option value="0">未使用</option>
-                                        <option value="1">使用中</option>
-                                        <option value="2">维修</option>
-                                        <option value="3">报废</option>
+                                        <option value="0">正常</option>
+                                        @foreach($status as $key => $value)
+                                            @if($key >1)
+                                                <option value="{{$key}}">{{$value}}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -88,16 +157,10 @@
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-{{--                                    <a class="btn btn-white" href="{{route('osce.admin.machine.getMachineList', ['cate_id'=>2])}}">取消</a>--}}
-
                                 </div>
                             </div>
-
-
                         </form>
-
                     </div>
-
                 </div>
             </div>
         </div>

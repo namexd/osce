@@ -52,8 +52,8 @@ class InvigilatorController extends CommonController
     public function getSpInvigilatorList(Request $request){
        $Invigilator    =   new Teacher();
 
-        $list       =   $Invigilator    ->getSpInvigilatorList();
-        $isSpValues =   $Invigilator    ->  getIsSpValues();
+        $list       =   $Invigilator    ->getSpInvigilatorInfo();
+        $isSpValues =   $Invigilator    ->getIsSpValues();
         return view('osce::admin.resourcemanage.sp_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
 
@@ -146,36 +146,55 @@ class InvigilatorController extends CommonController
      */
     public function postAddInvigilator(Request $request){
         $this   ->  validate($request,[
-            'name'      =>  'required',
-            'type'      =>  'required|in:1,3',
-            'moblie'    =>  'required',
-            'code'      =>  'sometimes',
-            'case_id'   =>  'sometimes',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'mobile'        =>  'required',
+            'email'         =>  'required',
+            'type'          =>  'required|in:1,3',
+            'code'          =>  'sometimes',
+            'images_path'   =>  'required',
         ],[
-            'name.required'     =>  '监考教师姓名必填',
-            'type.required'     =>  '监考教师类型必填',
-            'type.in'           =>  '监考教师类型不对',
-            'moblie.required'   =>  '监考教师手机必填'
+            'name.required'         =>  '监考教师姓名必填',
+            'idcard.required'       =>  '身份证号必填',
+            'mobile.required'       =>  '手机号必填',
+            'email.required'        =>  '邮箱必填',
+            'type.required'         =>  '监考教师类型必填',
+            'type.in'               =>  '监考教师类型不对',
+            'images_path.required'  =>  '请上传照片',
         ]);
         $user   =   Auth::user();
         if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
-        $data   =   [
-            'name'              =>  e($request->get('name')),
-            'type'              =>  intval($request->get('type')),
-            'mobile'            =>  e($request->get('moblie')),
-            'code'              =>  e($request->get('code')),
-            'case_id'           =>  intval($request->get('case_id')),
-            'status'            =>  1,
-            'create_user_id'    =>  $user->id,
-            'role_id'           =>  config('osce.invigilatorRoleId',1)
-        ];
-//        'spRoleId'		=>	4,
-//	'invigilatorRoleId'	=>	1,
+        //用户数据
+        $userData = $request -> only('name', 'gender','idcard','mobile','email');
+        $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
+        //老师数据
+        $teacherData = $request -> only('name','code','type');  //姓名、编号、类型
+        $teacherData['case_id']         = 0;
+        $teacherData['status']          = 1;
+        $teacherData['create_user_id']  = $user->id;
+        //
+        $role_id = config('osce.invigilatorRoleId',1);
+
+//        $data   =   [
+//            'name'              =>  e($request->get('name')),
+//            'type'              =>  intval($request->get('type')),
+//            'mobile'            =>  e($request->get('moblie')),
+//            'code'              =>  e($request->get('code')),
+//            'case_id'           =>  intval($request->get('case_id')),
+//            'status'            =>  1,
+//            'create_user_id'    =>  $user->id,
+//            'role_id'           =>  config('osce.invigilatorRoleId',1),
+//            'gender'         => $request  ->  get('gender'),        //性别
+//            'idcard'         => $request  ->  get('idcard'),        //身份证号
+//            'email'          => $request  ->  get('email'),         //邮箱
+//            'avator'         => $request  ->  get('images_path')[0],//照片
+//        ];
+
         $Invigilator    =   new Teacher();
         try{
-            if($Invigilator    ->  addInvigilator($data)){
+            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData)){
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             } else{
                 throw new \Exception('新增失败');
@@ -210,36 +229,53 @@ class InvigilatorController extends CommonController
      */
     public function postAddSpInvigilator(Request $request){
         $this   ->  validate($request,[
-            'name'      =>  'required',
-            'type'      =>  'required|in:2',
-            'mobile'    =>  'required',
-            'code'      =>  'sometimes',
-            'case_id'   =>  'sometimes',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'mobile'        =>  'required',
+            'email'         =>  'required',
+            'type'          =>  'required|in:2',
+            'code'          =>  'sometimes',
+            'images_path'   =>  'required',
+            'case_id'       =>  'sometimes',
         ],[
-            'name.required'     =>  '监考教师姓名必填',
-            'type.required'     =>  '监考教师类型必填',
-            'type.in'           =>  '监考教师类型不对',
-            'mobile.required'   =>  '监考教师手机必填',
-            'case_id.required'  =>  '监考教师病例必填'
+            'name.required'         =>  '监考教师姓名必填',
+            'idcard.required'       =>  '身份证号必填',
+            'mobile.required'       =>  '手机号必填',
+            'email.required'        =>  '邮箱必填',
+            'type.required'         =>  '监考教师类型必填',
+            'type.in'               =>  '监考教师类型不对',
+            'images_path.required'  =>  '请上传照片',
+            'case_id.required'      =>  '监考教师病例必填'
         ]);
         try{
             $user   =   Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
             }
-            $data   =   [
-                'name'              =>  e($request->get('name')),
-                'type'              =>  intval($request->get('type')),
-                'mobile'            =>  e($request->get('mobile')),
-                'code'              =>  e($request->get('code')),
-                'case_id'           =>  intval($request->get('case_id')),
-                'status'            =>  1,
-                'create_user_id'    =>  $user->id,
-                'role_id'           =>  config('osce.spRoleId',4)
-            ];
+            //用户数据
+            $userData = $request -> only('name', 'gender', 'idcard', 'mobile', 'email');
+            $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
+            //老师数据
+            $teacherData = $request -> only('name','code','type');      //姓名、编号、类型
+            $teacherData['case_id']         = intval($request->get('case_id'));
+            $teacherData['status']          = 1;
+            $teacherData['create_user_id']  = $user->id;
+            //
+            $role_id = config('osce.spRoleId',4);
+
+//            $data   =   [
+//                'name'              =>  e($request->get('name')),
+//                'type'              =>  intval($request->get('type')),
+//                'mobile'            =>  e($request->get('mobile')),
+//                'code'              =>  e($request->get('code')),
+//                'case_id'           =>  intval($request->get('case_id')),
+//                'status'            =>  1,
+//                'create_user_id'    =>  $user->id,
+//                'role_id'           =>  config('osce.spRoleId',4)
+//            ];
 
             $Invigilator    =   new Teacher();
-            if($Invigilator ->  addInvigilator($data)){
+            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData)){
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
             } else{
                 throw new \Exception('新增失败');
@@ -342,30 +378,33 @@ class InvigilatorController extends CommonController
      */
     public function postEditInvigilator(Request $request){
         $this   ->  validate($request,[
-            'id'    =>  'required',
-            'name'  =>  'required',
-            'mobile' =>  'required',
+            'id'            =>  'required',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'mobile'        =>  'required',
+            'email'         =>  'required',
+            'type'          =>  'required|in:1,3',
+            'code'          =>  'sometimes',
+            'images_path'   =>  'required',
         ]);
         $id             =   (int)$request    ->  get('id');
-        try
-        {
-            $teacherModel   =   new Teacher();
-            $name           =   e($request->get('name'));
-            $mobile         =   e($request->get('mobile'));
-            $type           =   e($request->get('type'));
-//            $type = Teacher::where('id',$id)->select('type')->first()->type;
+        //用户数据
+        $userData = $request -> only('name', 'gender','idcard','mobile','email');
+        $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
+        //老师数据
+        $teacherData = $request -> only('name','code','type');  //姓名、编号、类型
 
-            if($result = $teacherModel ->  editInvigilator($id,$name,$mobile,$type))
+        try{
+            $teacherModel   =   new Teacher();
+
+            if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('编辑失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+
+        } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -393,32 +432,35 @@ class InvigilatorController extends CommonController
      */
     public function postEditSpInvigilator(Request $request){
         $this   ->  validate($request,[
-            'id'        =>  'required',
-            'name'      =>  'required',
-            'type'      =>  'required',
-            'mobile'    =>  'required',
-            'case_id'   =>  'required',
+            'id'            =>  'required',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'mobile'        =>  'required',
+            'email'         =>  'required',
+            'type'          =>  'required|in:2',
+            'code'          =>  'sometimes',
+            'images_path'   =>  'required',
+            'case_id'       =>  'required',
         ]);
 
         $id                 =   (int)$request    ->  get('id');
-        try
-        {
-            $TeahcerModel   =   new Teacher();
-            $name           =   e($request->get('name'));
-            $mobile         =   e($request->get('mobile'));
-            $caseId         =   intval($request->get('case_id'));
+        //用户数据
+        $userData = $request -> only('name', 'gender','idcard','mobile','email');
+        $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
+        //老师数据
+        $teacherData = $request -> only('name','code','type','case_id');  //姓名、编号、类型、病例
 
-            if($TeahcerModel    ->  editSpInvigilator($id,$name,$mobile,$caseId))
+        try{
+            $TeahcerModel   =   new Teacher();
+
+            if($TeahcerModel    ->  editSpInvigilator($id,$userData,$teacherData))
             {
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('编辑失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+
+        } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -610,17 +652,22 @@ class InvigilatorController extends CommonController
      */
     public function postSelectTeacher(Request $request){
         $this->validate($request,[
-            'moblie'    =>  'required'
+            'mobile'    =>  'required'
         ]);
-        $moblie = $request  ->get('moblie');
-        $user = User::where('username', $moblie)->first();
+        $mobile = $request  ->get('mobile');
+
+        $user = User::where('username', $mobile)->first();
         if($user){
             $result = Teacher::where('id', $user->id)->first();
             if($result){
-                return json_encode(1);
+                return json_encode(array(
+                    'valid' =>false,
+                ));
             }
         }
-        return json_encode(0);
+        return json_encode(array(
+            'valid' =>true,
+        ));
     }
 
 }

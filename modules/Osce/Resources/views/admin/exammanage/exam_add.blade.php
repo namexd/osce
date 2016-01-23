@@ -28,7 +28,6 @@ input.laydate-icon{
 
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postAddExam')}}">
-                        <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试名称</label>
                             <div class="col-sm-10">
@@ -40,7 +39,7 @@ input.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试地点</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="code" name="code">
+                                <input type="text" required class="form-control" id="address" name="address">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

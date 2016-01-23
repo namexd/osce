@@ -24,21 +24,13 @@ $(function(){
  */
 function test_station(){
 
-    $('table').on('click','.fa-trash-o',function(){
+   $(".delete").click(function(){
+       var thisElement = $(this);
+       deleteItems('post',pars.deletes,thisElement.attr("value"));
+   })
 
-        var thisElement = $(this);
-        layer.alert('确认删除？',function(){
-            $.ajax({
-                type:'post',
-                async:true,
-                url:pars.deletes,
-                data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(res){
-                    //location.reload();
-                }
-            })
-        });
-    })
+
+
 }
 
 /**
@@ -73,7 +65,7 @@ function deleteItem(url){
 	$('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
-        layer.alert('确认删除？',function(){
+        layer.alert('确认删除？',{btn:['确认','取消']},function(){
             $.ajax({
                 type:'post',
                 async:true,
@@ -84,7 +76,7 @@ function deleteItem(url){
                     if(data.code==1){
                         location.reload();
                     }else{
-                        layer.alert(data.message);
+                        layer.msg(data.message);
                     }
 
                 },
@@ -121,7 +113,7 @@ function categories(){
                 '</div>'+
                 '</td>'+
                 '<td>'+
-                '<select class="form-control" name="score['+index+'][total]">'+
+                '<select style="display:none;" class="form-control" name="score['+index+'][total]">'+
                 '<option value="1">1</option>'+
                 '<option value="2">2</option>'+
                 '<option value="3">3</option>'+
@@ -195,7 +187,7 @@ function categories(){
         thisElement.find('td').eq(2).find('select').html(option);
         thisElement.find('td').eq(2).find('select').val(child);
         //禁用下拉
-        thisElement.find('td').eq(2).find('select').hide();
+        //thisElement.find('td').eq(2).find('select').hide();
         thisElement.find('td').eq(2).find('span').remove();
         thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
 
@@ -290,8 +282,8 @@ function categories(){
             if(total==0){
                 total = 1;
                 cu = 0;
-                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
-                change.show();
+                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').text('');
+                //change.show();
                 //dom
                 var option = '';
                 for(var k =1;k<=4;k++){
@@ -385,13 +377,14 @@ function categories(){
         var className = thisElement.attr('class');
         var parent =  1;
         var value = [];
+        var valueTotal = null;
 
         //存储select的值
         $('.'+className).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
                 value.push($(elem).find('td').eq(2).find('select').val());
             }else{
-               return;
+               valueTotal = $(elem).find('td').eq(2).find('select').val();
             }
         });
         //存储dom结构
@@ -422,17 +415,25 @@ function categories(){
                 child += 1;
             }
         });
-        
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
-                $(elem).find('td').eq(2).find('select').val(value[key-1]);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(value[key-1]);
             }else{
-               return;
+                $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
             }
         });
 
+
+    });
+
+    $('#test').click(function(){
+
+        $('tbody tr').each(function(key,elem){
+            console.log($(elem).find('td').eq(2).find('select').val())
+        });
     });
 
     /**
@@ -447,6 +448,7 @@ function categories(){
         var className = thisElement.attr('class');
         var parent =  1;
         var value = [];
+        var valueTotal = null;
 
 
         //存储select的值
@@ -454,7 +456,7 @@ function categories(){
             if($(elem).attr('parent')==undefined){
                 value.push($(elem).find('td').eq(2).find('select').val());
             }else{
-               return;
+               valueTotal = $(elem).find('td').eq(2).find('select').val();
             }
         });
         //存储dom结构
@@ -468,7 +470,7 @@ function categories(){
 
         //上移
         $('.'+className).remove();
-        $('.pid-'+preIndex+'[parent="'+preIndex+'"]').after(thisDOM);
+        $('.pid-'+preIndex+':last').after(thisDOM);
 
         //更新序号
         $('tbody tr').each(function(key,elem){
@@ -492,7 +494,8 @@ function categories(){
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
                 $(elem).find('td').eq(2).find('select').val(value[key-1]);
             }else{
-               return;
+                $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
             }
         });
 
@@ -555,6 +558,8 @@ function categories(){
                                        '</td>'+
                                        '<td>'+
                                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>'+
+                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>'+
                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                        '</td>'+
                                        '</tr>';
@@ -590,8 +595,8 @@ function categories(){
                                                '</td>'+
                                                '<td>'+
                                                '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>'+
                                                '</td>'+
                                                '</tr>';
                                    }
@@ -612,15 +617,20 @@ function categories(){
         }) ;
 
 
-
+        /**
+         * 考核分数自动加减
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-20
+         */
         $('tbody').on('change','select',function(){
             var thisElement = $(this).parent().parent();
             //父亲节点
-            var className = thisElement.attr('class');
+            var className = thisElement.attr('class'),
                 parent =  className.split('-')[1];
+
             //自动加减节点
             var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
-
 
 
             //改变value值,消除连续变换值的变化
@@ -643,7 +653,7 @@ function categories(){
                 option += '<option value="'+k+'">'+k+'</option>';
             }
             change.html(option);
-            change.val(total-1);
+            change.val(total);
 
             $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
             change.after('<span>'+parseInt(total)+'</span>')
@@ -703,6 +713,7 @@ function deleteItems(type,url,id){
             url:url,
             data:{id:id},
             success:function(data){
+                console.log(data.code);
                 if(data.code == 1){
                     location.reload();
                 }else {

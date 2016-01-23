@@ -4,6 +4,7 @@
     table tr td .form-group {
         margin-bottom: 0;
     }
+    td input{margin: 5px 0;}
     .btn-outline:hover{color: #fff!important;}
     .ibox-content{padding-top: 20px;}
     .ibox-title{border-top: 0;}
@@ -74,7 +75,7 @@
                                             </thead>
                                             <tbody index="{{$prointNum}}">
                                             @forelse($list as $data)
-                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}" current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child="'.$data->sort.'"'}}>
+                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}" current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child='.$data->sort.''}}>
                                                     <td>{{$data->pid==0? $data->sort:$data->parent->sort.'-'.$data->sort}}</td>
                                                     <td>
                                                         <div class="form-group">
@@ -93,7 +94,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <select class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
+                                                        <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
                                                             <option value="1" {{$data->score==1? 'selected="selected"':''}}>1</option>
                                                             <option value="2" {{$data->score==2? 'selected="selected"':''}}>2</option>
                                                             <option value="3" {{$data->score==3? 'selected="selected"':''}}>3</option>
@@ -102,17 +103,20 @@
                                                             <option value="6" {{$data->score==6? 'selected="selected"':''}}>6</option>
                                                             <option value="7" {{$data->score==7? 'selected="selected"':''}}>7</option>
                                                         </select>
+                                                        <span {!! $data->pid!=0? 'style="display:none;"':''!!}>{{$data->score}}</span>
                                                     </td>
                                                     @if($data->pid==0)
                                                     <td>
-                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>
                                                         <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
                                                     </td>
                                                     @else
                                                     <td>
-                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state11 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>
                                                     </td>
                                                     @endif
                                                 </tr>

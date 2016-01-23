@@ -18,7 +18,7 @@ class RoomVcr extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','room_id', 'vcr_id', 'create_user_id'];
+    protected $fillable = ['id','room_id', 'vcr_id', 'created_user_id'];
 
     public function getVcr(){
         return $this->hasOne('\Modules\Osce\Entities\Vcr','id','vcr_id');

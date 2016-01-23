@@ -317,7 +317,7 @@ class MachineController extends CommonController
      */
     private function addCameras(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.vcr,name',
             'code'          =>  'required',
             'ip'            =>  'required',
             'username'      =>  'required',
@@ -326,15 +326,22 @@ class MachineController extends CommonController
             'channel'       =>  'required',
             'description'   =>  'sometimes',
             'status'        =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'设备编码必填',
-            'ip.required'       =>'设备IP地址必填',
-            'username.required' =>'设备登录用户名必填',
-            'password.required' =>'设备登录密码必填',
-            'port.required'     =>'设备端口必填',
-            'channel.required'  =>'设备网口必填',
-            'status.required'   =>'设备状态必选',
+            'name.required'         =>'设备名称必填',
+            'name.unique'           =>'设备名称必须唯一',
+            'code.required'         =>'设备编码必填',
+            'ip.required'           =>'设备IP地址必填',
+            'username.required'     =>'设备登录用户名必填',
+            'password.required'     =>'设备登录密码必填',
+            'port.required'         =>'设备端口必填',
+            'channel.required'      =>'设备网口必填',
+            'status.required'       =>'设备状态必选',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
         $data   =   [
             'name'          =>  $request    ->  get('name'),
@@ -346,6 +353,9 @@ class MachineController extends CommonController
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
         try{
@@ -391,6 +401,9 @@ class MachineController extends CommonController
             'port'          =>  'required',
             'channel'       =>  'required',
             'description'   =>  'sometimes',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
             'id.required'       =>'设备ID必填',
             'name.required'     =>'设备名称必填',
@@ -400,6 +413,9 @@ class MachineController extends CommonController
             'password.required' =>'设备登录密码必填',
             'port.required'     =>'设备端口必填',
             'channel.required'  =>'设备网口必填',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
@@ -412,6 +428,9 @@ class MachineController extends CommonController
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
+            'sp'            =>  $request    ->  get('sp'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
         try{
@@ -439,7 +458,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddCameras(){
-        return view('osce::admin.resourcemanage.vcr_add');
+        $model = new Vcr();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.vcr_add', ['status'=>$status]);
     }
 
     /**
@@ -465,9 +486,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Vcr();
+        $status   =   $model  ->  getMachineStatuValues();
         $vcr    =   Vcr::find($id);
 
-        return view('osce::admin.resourcemanage.vcr_edit',['item'=>$vcr]);
+        return view('osce::admin.resourcemanage.vcr_edit',['item'=>$vcr, 'status'=>$status]);
     }
 
     /**
@@ -490,13 +513,20 @@ class MachineController extends CommonController
      */
     private function addPad(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.pad,name',
             'code'          =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
             'status'        =>  'required',
         ],[
-            'name.required'     =>  '设备名称必填',
-            'code.required'     =>  '设备编号必填',
-            'status.required'   =>  '设备状态必填',
+            'name.required'         =>  '设备名称必填',
+            'name.unique'           =>  '设备名称必须唯一',
+            'code.required'         =>  '设备ID必填',
+            'factory.required'      =>  '厂家必填',
+            'sp.required'           =>  '型号必填',
+            'purchase_dt.required'  =>  '采购日期必填',
+            'status.required'       =>  '设备状态必填',
         ]);
 
         $user   =   Auth::user();
@@ -504,8 +534,11 @@ class MachineController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
-            'name'          =>  $request    ->  get('name'),
+            'name'          =>  e($request    ->  get('name')),
             'code'          =>  $request    ->  get('code'),
+            'factory'       =>  e($request    ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             'status'        =>  $request    ->  get('status'),
             'create_user_id'=>  $user       ->  id
         ];
@@ -530,17 +563,26 @@ class MachineController extends CommonController
             'name'          =>  'required',
             'code'          =>  'required',
             'status'        =>  'sometimes',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'id.required'       =>'设备ID必填',
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'设备编码必填',
-            'status.required'   =>'设备状态必填',
+            'id.required'           =>'ID必填',
+            'name.required'         =>'设备名称必填',
+            'code.required'         =>'设备ID必填',
+            'status.required'       =>'状态必填',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
             'status'        =>  $request    ->  get('status'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
         $cate_id    =   $request    ->  get('cate_id');
 
@@ -570,7 +612,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddPad(){
-        return view('osce::admin.resourcemanage.pad_add');
+        $model = new Pad();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.pad_add',['status'=>$status]);
     }
 
     /**
@@ -596,9 +640,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Pad();
+        $status   =   $model  ->  getMachineStatuValues();
         $pad    =   Pad::find($id);
 
-        return view('osce::admin.resourcemanage.pad_edit',['item'=>$pad]);
+        return view('osce::admin.resourcemanage.pad_edit',['item'=>$pad, 'status'=>$status]);
     }
 
     /**
@@ -621,18 +667,21 @@ class MachineController extends CommonController
      */
     private function addWatch(Request  $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.watch,name',
             'code'          =>  'required|unique:osce_mis.watch',
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'name.required'     =>  '腕表名称必填',
-            'code.required'     =>  '腕表编号必填',
-            'factory.required'  =>  '生产厂家必填',
-            'sp.required'       =>  '型号规格必填',
-            'status.required'   =>  '腕表状态必选',
-            'code.unique'       =>  '腕表编码已存在',
+            'name.required'         =>  '腕表名称必填',
+            'name.unique'           =>  '腕表名称必须唯一',
+            'code.required'         =>  '腕表ID必填',
+            'code.unique'           =>  '腕表ID已存在',
+            'factory.required'      =>  '厂家必填',
+            'sp.required'           =>  '型号必填',
+            'status.required'       =>  '状态必选',
+            'purchase_dt.required'  =>  '采购日期必填',
         ]);
 
         $user   =   Auth::user();
@@ -641,13 +690,14 @@ class MachineController extends CommonController
         }
 
         $data   =   [
-            'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
-            'factory'       =>  $request    ->  get('factory'),
-            'sp'            =>  $request    ->  get('sp'),
+            'name'          =>  $request    ->  get('name'),
             'status'        =>  $request    ->  get('status'),
             'description'   =>  $request    ->  get('description'),
-            'create_user_id'=>  $user       ->  id
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'create_user_id'=>  $user       ->  id,
+            'purchase_dt'   =>  $request    ->  get('purchase_dt')
         ];
 
         $cate_id    =   $request    ->  get('cate_id');
@@ -679,13 +729,15 @@ class MachineController extends CommonController
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'sometimes',
+            'purchase_dt'   =>  'required',
         ],[
-            'id.required'       =>'设备ID必填',
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'腕表编码必填',
-            'factory.required'  =>'生产厂家必填',
-            'sp.required'       =>'型号规格必填',
-            'status.required'   =>'设备状态必填',
+            'id.required'           =>'设备ID必填',
+            'name.required'         =>'设备名称必填',
+            'code.required'         =>'腕表编码必填',
+            'factory.required'      =>'生产厂家必填',
+            'sp.required'           =>'型号规格必填',
+            'status.required'       =>'设备状态必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
 
         $code=$request->get('code');
@@ -708,6 +760,7 @@ class MachineController extends CommonController
                 'sp'            =>  $request    ->  get('sp'),
                 'description'   =>  $request    ->  get('description'),
                 'status'        =>  $request    ->  get('status'),
+                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             ];
         }else{
             $data   =   [
@@ -718,6 +771,7 @@ class MachineController extends CommonController
                 'sp'            =>  $request    ->  get('sp'),
                 'description'   =>  $request    ->  get('description'),
                 'status'        =>  $request    ->  get('status'),
+                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             ];
         }
 
@@ -758,7 +812,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddWatch(){
-        return view('osce::admin.resourcemanage.watch_add');
+        $model = new Watch();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.watch_add',['status'=>$status]);
     }
 
     /**
@@ -784,9 +840,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Watch();
+        $status   =   $model  ->  getMachineStatuValues();
         $watch  =   Watch::find($id);
 
-        return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
+        return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch, 'status'=>$status]);
     }
 
     /**

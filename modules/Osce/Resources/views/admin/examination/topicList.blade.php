@@ -31,7 +31,7 @@
         </div>
     <div class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
-          <form method="post" action="{{route('osce.admin.topic.getList')}}">
+          <form method="get" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control">
                 <span class="input-group-btn">

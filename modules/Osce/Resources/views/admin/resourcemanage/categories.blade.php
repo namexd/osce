@@ -15,8 +15,8 @@
     }
     .ibox-content{padding-top: 20px;}
     .btn-outline:hover{color: #fff!important;}
-    .ibox-title{border-top: 0;}
-    .ibox-content{
+    .form-group .ibox-title{border-top: 0;}
+    .form-group .ibox-content{
         border-top: 0;
         padding-left: 0;
     }
@@ -66,11 +66,11 @@
                                     <div class="ibox-title">
                                         <h5></h5>
                                         <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                             <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
                                                 导入<input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
                                             <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
-                                            <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
                                     <div class="ibox-content">

@@ -81,8 +81,7 @@ class Teacher extends CommonModel
                 $this->excludeId = $teacher_id;
             }
             $excludeId = $this->excludeId;
-            $excludeIds[] = $excludeId;
-
+            $excludeIds = (explode(",",$teacher_id));
             if (count($excludeId) !== 0) {
                 $builder = $builder->leftJoin('cases',function($join){
                     $join    ->  on('cases.id','=', 'teacher.case_id');
@@ -183,6 +182,15 @@ class Teacher extends CommonModel
             ->  paginate(config('osce.page_size'));
     }
 
+    public function getSpInvigilatorInfo(){
+        return  $this   ->  where('type','=',2)
+            ->leftjoin('cases',function($join){
+                $join ->on('cases.id','=',$this->table.'.case_id');
+            })
+            ->select([$this->table.'.*', 'cases.name as case_name'])
+            ->  paginate(config('osce.page_size'));
+    }
+
     /**
      * 获取非SP监考老师列表
      * @access public
@@ -227,26 +235,35 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addInvigilator($data)
+    public function addInvigilator($role_id, $userData , $teacherData)
     {
         try{
-            $mobile =   $data['mobile'];
-            $user   =   User::where('username', '=', $mobile)->first();
+            $mobile = $userData['mobile'];
+            $user   = User::where('username', '=', $mobile)->first();
 
             if(!$user){
                 $password   =   Common::getRandStr(6);
-                $user       =   $this   ->  registerUser($data,$password);
+                $user       =   $this   ->  registerUser($userData, $password);
                 DB::table('sys_user_role')->insert(
                     [
-                        'role_id'=>$data['role_id'],
-                        'user_id'=>$user->id,
+                        'role_id'   =>$role_id,
+                        'user_id'   =>$user->id,
                         'created_at'=>time(),
                         'updated_at'=>time(),
                     ]
                 );
-                $this       ->  sendRegisterEms($mobile,$password);
+                $this -> sendRegisterEms($mobile, $password);
+            }else{
+                foreach($userData as $feild=> $value) {
+                    $user    ->  $feild  =   $value;
+                }
+                if(!$result = $user -> save()) {
+                    throw new \Exception('用户修改失败，请重试！');
+                }
             }
-            $teacher    =   $this   ->  find($user  ->  id);
+
+            //查询老师是否存在
+            $teacher = $this->where('id', $user->id)->first();
             if($teacher){
                 throw new \Exception('该教职员工已经存在');
 //                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
@@ -258,8 +275,8 @@ class Teacher extends CommonModel
 //                    return $teacher;
 //                }
             } else{
-                $data['id'] =   $user   ->  id;
-                if($teacher =   $this   ->  create($data)){
+                $teacherData['id'] =   $user   ->  id;
+                if($teacher =   $this   ->  create($teacherData)){
                     return $teacher;
                 } else{
                     throw new \Exception('教职员工创建失败');
@@ -306,55 +323,73 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editInvigilator($id,$name,$mobile,$type){
-        //教务人员信息变更
-        $teacher    =   $this   ->  find($id);
+    public function editInvigilator($id, $userData, $teacherData){
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //教务人员信息变更
+            $teacher    =   $this   ->  find($id);
 
-        if(!$teacher)
-        {
-            throw new   \Exception('没有找到该教务人员');
-        }
-        $teacher    ->  name    =   $name;
-        $teacher    ->  type    =   $type;
+            if(!$teacher){
+                throw new   \Exception('没有找到该教务人员');
+            }
 
-        if(!$teacher->save())
-        {
-            throw new   \Exception('教务人员名称变更失败');
-        }
-        //教务人员用户信息变更
-        $userInfo   =   $teacher->userInfo;
-        $userInfo   ->  name    =$name;
-        $userInfo   ->  mobile  =$mobile;
+            foreach($teacherData as $feild => $value) {
+                $teacher    ->  $feild  =   $value;
+            }
+            if(!$teacher->save()){
+                throw new   \Exception('教务人员信息变更失败');
+            }
 
-        if(!$userInfo->save())
-        {
-            throw new   \Exception('教务人员用户信息变更失败');
+            //教务人员用户信息变更
+            $userInfo   =   $teacher->userInfo;
+            foreach($userData as $feild => $value) {
+                $userInfo    ->  $feild  =   $value;
+            }
+            if(!$userInfo->save()){
+                throw new   \Exception('教务人员用户信息变更失败');
+            }
+            $connection->commit();
+            return $teacher;
+
+        } catch(\Exception $ex){
+            $connection->rollBack();
+            throw $ex;
         }
-        return $teacher;
+
     }
 
-    public function editSpInvigilator($id,$name,$mobile,$caseId){
-        //教务人员信息变更
-        $teacher    =   $this   ->  find($id);
-        if(!$teacher)
-        {
-            throw new   \Exception('没有找到该教务人员');
+    public function editSpInvigilator($id, $userData, $teacherData){
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //教务人员信息变更
+            $teacher    =   $this   ->  find($id);
+            if(!$teacher){
+                throw new   \Exception('没有找到该教务人员');
+            }
+            foreach($teacherData as $feild => $value) {
+                $teacher    ->  $feild  =   $value;
+            }
+            if(!$teacher->save()){
+                throw new   \Exception('教务人员信息变更失败');
+            }
+
+            //教务人员用户信息变更
+            $userInfo   =   $teacher->userInfo;
+            foreach($userData as $feild => $value) {
+                $userInfo    ->  $feild  =   $value;
+            }
+            if(!$userInfo->save()){
+                throw new   \Exception('教务人员用户信息变更失败');
+            }
+            $connection->commit();
+            return $teacher;
+
+        } catch(\Exception $ex){
+            $connection->rollBack();
+            throw $ex;
         }
-        $teacher    ->  name    =   $name;
-        $teacher    ->  case_id =   $caseId;
-        if(!$teacher->save())
-        {
-            throw new   \Exception('教务人员名称变更失败');
-        }
-        //教务人员用户信息变更
-        $userInfo   =   $teacher->userInfo;
-        $userInfo   ->  name    =   $name;
-        $userInfo   ->  mobile  =   $mobile;
-        if(!$userInfo->save())
-        {
-            throw new   \Exception('教务人员用户信息变更失败');
-        }
-        return $teacher;
     }
 
     /**

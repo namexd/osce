@@ -37,7 +37,7 @@
 
     /*sp老师选择*/
     .teacher{
-        padding: 5px;
+        padding: 1px;
         border: 1px solid #ccc;
         border-radius: 5px;
         cursor: pointer;
@@ -48,7 +48,7 @@
         width: 120px!important;
     }
     .teacher>div{
-        margin-right: 5px;
+        margin-right: 1px;
 
     }
     .ibox-content{
@@ -60,15 +60,24 @@
     }
     .pull-right>select{width: 120px;}
     .teacher-box{
-        width: 254px;
+        width: 80%;
     }
+    .sp-teacher .pull-right{width:20%;}
     .teacher-warn{
-        background-color: #ed5565;
+        background-color: #ebccd1;
         color: #fff;
     }
     .teacher-primary{
-        background-color: #1ab394;
+        background-color: #dff0d8;
         color: #fff;
+    }
+    .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
+    button.btn.btn-default.dropdown-toggle {
+        height: 34px;
+        width: 48px;
+        display: inline-block;
+        padding: 0;
+        margin: 0;
     }
     </style>
 @stop
@@ -141,7 +150,7 @@
                                                 </td>
                                                 <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
                                                 <td>
-                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
                                                 </td>
@@ -195,9 +204,13 @@
                                                         @endif
                                                     </div>
                                                     <div class="pull-right" value="{{$key+1}}">
-                                                        <select name="" class="teacher-list js-example-basic-multiple">
-                                                            <option>==请选择==</option>
-                                                        </select>
+                                                        <div class="btn-group">
+                                                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                          <span class="caret"></span>
+                                                          </button>
+                                                          <ul class="dropdown-menu">
+                                                          </ul>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>

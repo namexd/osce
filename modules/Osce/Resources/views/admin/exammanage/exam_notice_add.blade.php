@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
     <style>
     .col-sm-1{margin-top: 6px;}
     .check_label{top: 8px;}
@@ -28,6 +29,8 @@
     #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
     .fa-remove{cursor:pointer;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-ok {top: -2px;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-remove {top: -2px;}
     </style>
 @stop
 
@@ -36,6 +39,7 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+ <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
  <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 @stop
 
@@ -47,7 +51,7 @@
             <h5>新增通知</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal" action="{{route('osce.admin.notice.postAddNotice')}}">
+            <form id="sourceForm" method="post" class="form-horizontal" action="{{route('osce.admin.notice.postAddNotice')}}">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">

@@ -15,18 +15,18 @@ use DB;
 
 class Vcr extends CommonModel implements MachineInterface
 {
-    protected $connection	=	'osce_mis';
+    protected $connection   =	'osce_mis';
     protected $table 		= 	'vcr';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status'];
-    public      $search    =   [];
+    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status','created_user_id','sp','factory','purchase_dt'];
+    public      $search     =   [];
 
     protected $statuValues  =   [
-        0   =>  '离线',
         1   =>  '在线',
-        2   =>  '维修',
-        3   =>  '报废',
+        0   =>  '离线',
+        2   =>  '报废',
+        3   =>  '维修',
     ];
 
     /**
@@ -136,56 +136,27 @@ class Vcr extends CommonModel implements MachineInterface
     public function editMachine($data){
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
-        try
-        {
-            $vcr            =   $this   ->  find($data['id']);
-            if($vcr)
-            {
-                foreach($data as $feild=> $value)
-                {
-                    if($feild=='id')
-                    {
+        try{
+            $vcr = $this    -> find($data['id']);
+            if($vcr) {
+                foreach($data as $feild=> $value) {
+                    if($feild=='id') {
                         continue;
                     }
                     $vcr    ->  $feild  =   $value;
                 }
-                if($vcr     ->  save())
-                {
-//                    $machine    =   Machine ::where('item_id','=',$vcr    ->  id)
-//                                            ->where('type','=',1)
-//                                            ->first();
+
+                if(!$result = $vcr -> save()) {
+                    throw new \Exception('修改失败，请重试！');
                 }
-                else
-                {
-                    $machine    =   false;
-                }
-            }
-            else
-            {
+
+            } else {
                 throw new \Exception('没有找到该摄像机');
             }
+            $connection -> commit();
+            return $vcr;
 
-//            if($machine)
-//            {
-//                $machine    ->  name    =   $data['name'];
-//                if($machine->save())
-//                {
-                    $connection -> commit();
-//                }
-//                else
-//                {
-//                    throw new \Exception('保存摄像机资源信息失败');
-//                }
-
-                return $vcr;
-//            }
-//            else
-//            {
-//                throw new   \Exception('没有找到摄像机资源信息');
-//            }
-        }
-        catch(\Exception $ex)
-        {
+        } catch(\Exception $ex){
             $connection->rollBack();
             throw $ex;
         }

@@ -176,16 +176,22 @@ class ConfigController extends CommonController
     {
         //验证
         $this->validate($request, [
-            'name' => 'required',
+            'name'  => 'required|unique:osce_mis.area,name',
             'description' => 'required',
-            'cate' => 'required|integer',
-            'code' => 'required'
+            'cate'  => 'required|integer|unique:osce_mis.area,cate',
+            'code'  => 'required'
+        ],[
+            'name.unique'   =>  '名称必须唯一',
+            'cate.unique'   =>  '类别必须唯一',
         ]);
 
         //接受数据
         $formData = $request->all();
         $formData['created_user_id'] = \Auth::user()->id;
         try {
+            if(Area::where('cate', $formData['cate'])->first()){
+                throw new \Exception('该数字 类别已存在，请重新填写！');
+            }
             if (!Area::create($formData)) {
                 throw new \Exception('数据保存失败！请重试');
             }
@@ -193,6 +199,39 @@ class ConfigController extends CommonController
             return redirect()->route('osce.admin.config.getArea');
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    /**
+     * 删除考试区域
+     * @url GET /osce/admin/config/postDelArea
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        考试区域id(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postDelArea(Request $request, Area $area){
+        //验证
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+        $id = intval($request->get('id'));
+        try{
+            $result = $area->deleteArea($id);
+            if($result ==true){
+                return $this->success_data('删除成功！');
+            }
+
+        } catch(\Exception $ex){
+            return $this->fail($ex);
         }
     }
 
