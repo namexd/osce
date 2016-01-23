@@ -46,17 +46,15 @@ class InvitationController extends CommonController
     {
         $this->validate($request, [
             'teacher_id' => 'required',
-//            'exam_id' => 'required|integer',
+            'exam_id' => 'required|integer',
 //            'station_id' => 'required|integer',
         ], [
             'teacher_id.required' => '邀请编号必须',
             'exam_id.required'=>'考试编号必须'
         ]);
         $teacher_id = $request->get('teacher_id');
-//        $exam_id = $request->get('exam_id');
-        $exam_id = 56;
-
-//        $station_id =   $request    -> get('station_id');
+        $exam_id = $request->get('exam_id');
+//        $exam_id = 56;
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);
 //        dd($data);
@@ -75,6 +73,7 @@ class InvitationController extends CommonController
 //        dd($data);
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
+
             return view('osce::admin.exammanage.examroom_assignment');
         } else {
             throw new \Exception('邀请创建失败');

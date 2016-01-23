@@ -31,6 +31,7 @@ class CommonController extends  ApiBaseController
      *
      */
     public function postUploadImage(Request $request){
+//        return 1111;
         try{
             $path=Common::saveImage($request,'images');
         }

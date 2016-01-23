@@ -50,16 +50,16 @@ class Invite extends CommonModel
                             'teacher_id' => $SpTeacher['teacher_id'],
                         ];
                         //关联到考试邀请sp老师表
-                        $examspModel = new ExamSpTeacher();
-                        $result = $examspModel->addExamSp($ExamSpList);
+                          $examspModel = new ExamSpTeacher();
+                          $examspModel->addExamSp($ExamSpList);
                     }
                     //邀请用户
-                    $this->sendMsg($notice, $data);
-//                $connection ->commit();
+                    $this->sendMsg($data);
+//                    $connection ->commit();
+                    return $notice;
                 } else {
                     throw new \Exception('邀请保存失败');
                 }
-               return $notice;
 
         } catch (\Exception $ex) {
 //            $connection ->rollBack();
@@ -68,27 +68,24 @@ class Invite extends CommonModel
     }
         // 发送邀请
 
-    public function sendMsg($notice, $data)
+    public function sendMsg($data)
     {
-
-          dd($notice);
         try {
             foreach ($data as $key => $openIdList) {
-            }
-            $url = route('osce.wechat.invitation.getMsg', ['id' => $notice->id]);
-            $msgData = [
-                [
-                    'title' => '邀请通知',
-                    'desc' => $data[$key]['exam_name'] . '邀请',
-                    'url' => $url,
-                ],
-            ];
-            $message = Common::CreateWeiXinMessage($msgData);
-            Common::sendWeiXin($data[$key]['openid'], $message);//单发
+                $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['teacher_id']]);
+                $msgData = [
+                    [
+                        'title' => '邀请通知',
+                        'desc' => $openIdList['exam_name'] . '邀请',
+                        'url' => $url,
+                    ],
+                ];
+                $message = Common::CreateWeiXinMessage($msgData);
+                Common::sendWeiXin($openIdList['openid'], $message);//单发
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
 //            oI7UquLMNUjVyUNaeMP0sRcF4VyU
-
+            }
         } catch (\Exception $ex) {
             throw $ex;
         }
