@@ -167,4 +167,37 @@ class ExamResult extends CommonModel
 //
 //        return $builder;
 //    }
+
+
+
+
+
+
+   //微信端学生成绩查询
+ public function stationInfo($stationIds){
+
+
+
+     $builder=$this->leftJoin('station', function($join){
+         $join -> on('station.id', '=', 'exam_result.station_id');
+     })-> leftJoin('station_case', function($join){
+         $join -> on('station_case.case_id', '=', 'exam_result.station_id');
+     })-> leftJoin('teacher', function($join){
+         $join -> on('teacher.id', '=', 'station_case.case_id');
+     });
+     $builder=$builder->whereIn('exam_result.id',$stationIds);
+     $builder=$builder->select([
+         'exam_result.station_id as id',
+         'exam_result.score as score',
+         'exam_result.time as time',
+         'exam_result.teacher_id as teacher_id',
+         'station.type as type',
+
+
+     ])->get();
+
+     return $builder;
+
+
+ }
 }
