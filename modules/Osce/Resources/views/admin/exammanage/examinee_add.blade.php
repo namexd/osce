@@ -38,7 +38,7 @@
                             }
                         }
                     },
-                    examinee_id: {
+                    code: {
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '学号不能为空'
@@ -60,7 +60,7 @@
                             }
                         }
                     },
-                    tell: {
+                    mobile: {
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '手机号码不能为空'
