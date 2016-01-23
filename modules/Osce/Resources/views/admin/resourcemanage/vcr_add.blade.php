@@ -2,7 +2,7 @@
 @section('only_css')
 
 @stop
-
+             
 @section('only_js')
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script>
