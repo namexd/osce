@@ -128,6 +128,26 @@ class RoomController extends CommonController
         return view('osce::admin.resourcemanage.central_control_add',['data'=>$data]);
     }
 
+
+    //新增中控室
+
+     public function postAddCentral(Request $request){
+         $this->validate($request, [
+             'id' => 'required|integer',
+             'name' => 'required',
+             'description' => 'required',
+             'vcr_id ' => 'vcr_id '
+         ]);
+
+         $id         = $request->input('id');
+         $vcr_id     = $request->get('vcr_id');
+         $formData   = $request->only('name', 'description', 'address', 'code');
+
+     }
+
+
+
+
     /**
      * 修改房间页面 业务处理
      * @api       POST /osce/admin/room/edit-room

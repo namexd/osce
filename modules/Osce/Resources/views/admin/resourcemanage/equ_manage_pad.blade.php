@@ -133,7 +133,7 @@
                         data:{id:eid, cate_id:2},
                         success:function(data){
                             if(data.code == 1){
-                                location.reload();
+                                location.href='{{route("osce.admin.machine.getMachineList",["cate_id"=>2])}}'
                             }else {
                                 layer.msg(data.message);
                             }

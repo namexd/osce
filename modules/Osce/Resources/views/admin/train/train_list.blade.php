@@ -23,7 +23,7 @@
 		                async:false,
 		                url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
 		                success:function(data){
-		                    location.reload();
+		                    location.href='{{route('osce.admin.getTrainList')}}?page=1';
 		                }
 		            })
 		        });
@@ -69,7 +69,9 @@
                 @endforeach
             </tbody>
         </table>
-        
+<div style="float: left">
+    共{{$list->total()  }}条
+</div>
         <div style="float: right">
             {!! $list->render() !!}
         </div>
