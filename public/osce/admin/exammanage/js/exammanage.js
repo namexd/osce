@@ -972,9 +972,9 @@ function examroom_assignment(){
             '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
             '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
             '</td>'+
-            '</tr>'+
+            '</tr>';
                 //记录计数
-            $('#examroom').find('tbody').attr('index',index);
+        $('#examroom').find('tbody').attr('index',index);
         $('#examroom').find('tbody').append(html);
 
         //ajax请求数据
