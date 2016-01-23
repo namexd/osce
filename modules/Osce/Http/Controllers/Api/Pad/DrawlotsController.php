@@ -56,7 +56,7 @@ class DrawlotsController extends CommonController
     /**
      * 根据考场ID获取当前时间段的考生列表(接口)
      * @method GET
-     * @url api/1.0  /osce/drawlots/examinee
+     * @url api/1.0/osce/drawlots/examinee
      * @access public
      * @return \Illuminate\Http\JsonResponse ${response}
      *
