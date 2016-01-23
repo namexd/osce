@@ -76,17 +76,17 @@
                         <div class="col-sm-10 select_code" id="checkbox_div">
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(1,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <span class="check_name">考生</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(2,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <span class="check_name">老师</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(3,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <span class="check_name">sp老师</span>
                             </label>
                         </div>
