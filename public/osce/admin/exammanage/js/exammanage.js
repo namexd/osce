@@ -2420,14 +2420,6 @@ function station_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
-            }
-        });
 
         layer.alert('确认为删除？',function(its){
             thisElement.remove();
