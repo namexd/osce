@@ -133,6 +133,7 @@ class Subject extends CommonModel
                 throw new \Exception('更新考核点信息失败');
             }
             $connection ->commit();
+            return $subject;
         }
         catch(\Exception $ex)
         {

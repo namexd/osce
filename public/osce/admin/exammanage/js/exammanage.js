@@ -2596,15 +2596,14 @@ function station_assignment(){
                 }
             });
         });
-
         $.ajax({
             type:'get',
             async:true,
-            url:pars.teacher_list,
-            data:{teacher:ids},
+            url:pars.spteacher_list,
+            data:{teacher:ids,station_id:btn_group.parent().parent().attr('value')},
             success:function(data){
               var html = '';
-              res = data.data;
+              res = data.data.rows;
               //提示数据
               if(res.length==0){
                 layer.alert('没有可选数据！',function(its){
