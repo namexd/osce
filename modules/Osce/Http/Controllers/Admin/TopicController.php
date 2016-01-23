@@ -344,4 +344,39 @@ class TopicController extends CommonController
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
     }
+
+
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'model'     => 'required',
+            'title'     => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $model  = $request  -> get('model');
+        $name   = $request  -> get('title');
+
+        //实例化模型
+        $model   =  '\Modules\Osce\Entities\\'.$model;
+        $model =  new $model;
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('title', $name)->first();
+        }else{
+            $result = $model->where('title', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
+
+
 }
