@@ -972,9 +972,9 @@ function examroom_assignment(){
             '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
             '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
             '</td>'+
-            '</tr>'+
+            '</tr>';
                 //记录计数
-            $('#examroom').find('tbody').attr('index',index);
+        $('#examroom').find('tbody').attr('index',index);
         $('#examroom').find('tbody').append(html);
 
         //ajax请求数据
@@ -1717,6 +1717,7 @@ function smart_assignment(){
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
             $('.classroom-box').html('');
+            $('.time-list>ul').html('');
             maketotal(testData.data);
             $(".table>li").css("width",liwidth+"px");//给表格设置列宽
             $('#makePlan').one('click',makePlan);
@@ -2419,14 +2420,6 @@ function station_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        $.alert({
-            title: '提示：',
-            content: '确认为删除？',
-            confirmButton: '确定',
-            confirm: function(){
-                thisElement.remove();
-            }
-        });
 
         layer.alert('确认为删除？',function(its){
             thisElement.remove();

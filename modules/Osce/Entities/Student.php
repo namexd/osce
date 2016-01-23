@@ -258,6 +258,7 @@ class Student extends CommonModel
         ]);
 
         $builder->orderBy('exam.begin_dt');
+
         return $builder->paginate(config('msc.page_size'));
     }
 
