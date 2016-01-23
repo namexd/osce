@@ -274,8 +274,14 @@ class Student extends CommonModel
 //            ->get();
 //    }
 
-    public function getStudentQueue($exam_id,$screen_id){
-        return  $builder= $this->leftjoin('exam_order',function($join){
+    public function getStudentQueue($exam_id,$screen_id,$countStation){
+        $buondNum=ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)->where('status',1)->select()->get();
+        $buondNum=count($buondNum);
+        $num=$countStation-$buondNum;
+        if($num===0 || $num<0){
+          return array();
+        }
+        $builder= $this->leftjoin('exam_order',function($join){
             $join ->on('student.id','=','exam_order.student_id');
         })->where('exam_order.exam_id',$exam_id)->where('exam_screening_id',$screen_id)->where('exam_order.status',0)->orWhere('exam_order.status',4)->orderBy('begin_dt')
             ->select([
@@ -285,7 +291,8 @@ class Student extends CommonModel
                 'student.mobile as mobile',
                 'exam_order.status as status',
                 'exam_order.exam_screening_id as exam_screening_id',
-            ])->get();
+            ])->paginate($num);
+        return $builder;
     }
 
 }

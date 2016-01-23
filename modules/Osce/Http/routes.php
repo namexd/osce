@@ -233,7 +233,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 //		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
 //	});
 
-
+	Route::group(['prefix'=>'watch','namespace'=>'Api'],function(){
+		Route::get('student-list', 	['uses'=>'IndexController@getStudentList']);
+	});
 });
 
 
@@ -328,7 +330,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('bound-watch',	['uses'=>'IndexController@getBoundWatch']);   //绑定腕表
 		Route::get('unwrap-watch',	['uses'=>'IndexController@getUnwrapWatch']); //解绑腕表
 		Route::get('student-details', 	['uses'=>'IndexController@getStudentDetails']);
-		Route::get('student-list', 	['uses'=>'IndexController@getStudentList']);
+//		Route::get('student-list', 	['uses'=>'IndexController@getStudentList']);
 		Route::get('skip-last', 	['uses'=>'IndexController@getSkipLast']);
 
 		Route::get('add',['uses'=>'IndexController@getAddWatch']);
