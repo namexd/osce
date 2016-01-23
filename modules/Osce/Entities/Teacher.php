@@ -131,8 +131,13 @@ class Teacher extends CommonModel
             }
 
             //通过传入的$station_id得到病例id
-            $case_id = StationCase::where('station_case.station_id', '=', $stationId)
-                ->select('case_id')->first()->case_id;
+            $case = StationCase::where('station_case.station_id', '=', $stationId)
+                ->select('case_id');
+            if ($case->get()->isEmpty()) {
+                throw new \Exception('未找到对应的病例');
+            } else {
+                $case_id = $case->first()->case_id;
+            }
 
             $builder = $this->where('type' , '=' , 2); //查询教师类型为指定类型的教师
             $builder = $builder->where('case_id' , '=' , $case_id); //查询符合病例的教师
