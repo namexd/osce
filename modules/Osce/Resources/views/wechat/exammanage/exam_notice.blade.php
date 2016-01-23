@@ -52,10 +52,8 @@
         <ul class="history-list">
             @foreach($list as $item)
             <li>
-                <a href="{{route('osce.wechat.notice.getView',['id'=>$item->id])}}">
                 <p class="title">{{ $item->name  }}</p>
-                <p class="time"><span class="year">{{  $item->created_at }}</span></p>
-                </a>
+                <p class="time"><span class="year">{{  $item->created_at }}</span><a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice.getView',['id'=>$item->id])}}">查看详情&nbsp;&gt;</a></p>
             </li>
             @endforeach
         </ul>

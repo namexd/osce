@@ -191,7 +191,7 @@ class Pad extends CommonModel implements MachineInterface
         {
             $bulder =   $bulder    ->  where('status', '=', $status);
         }
-        $bulder = $bulder -> select(['id', 'name', 'status']);
+        $bulder = $bulder -> select(['id', 'code', 'name', 'status']);
 
         return  $bulder ->  paginate(config('osce.page_size'));
     }

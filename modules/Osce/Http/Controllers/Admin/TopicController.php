@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Repositories\Common;
 use DB;
 use Illuminate\Http\Request;
+use League\Flysystem\Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\SubjectItem;
@@ -78,38 +79,41 @@ class TopicController extends CommonController
             'score.required'    =>  '评分必须',
         ]);
 
-//        dd($request->all());
         $content        = $request  ->get('content');
         $score          = $request  ->get('score');
         $answer          = $request ->get('description');
 
-        $formData = SubjectItem::builderItemData($content, $score,$answer);
-        $totalData   =  0;
-
-        foreach($score as $index=>$socrdata)
-        {
-            foreach($socrdata as $key=>$socre)
+        try{
+            $formData = SubjectItem::builderItemData($content, $score,$answer);
+            $totalData   =  0;
+            foreach($score as $index=>$socrdata)
             {
-                if($key=='total')
+                foreach($socrdata as $key=>$socre)
                 {
-                    continue;
+                    if($key=='total')
+                    {
+                        continue;
+                    }
+                    $totalData  +=  $socre;
                 }
-                $totalData  +=  $socre;
             }
+
+            $data   =   [
+                'title'         =>  e($request  ->  get('title')),
+                'description'   =>  e($request  ->  get('desc')),
+                'score'         =>  $totalData,
+            ];
+
+            $subjectModel   =   new Subject();
+            if($subjectModel->  addSubject($data,$formData)){
+                return redirect()->route('osce.admin.topic.getList');
+            } else{
+                throw new \Exception('新增失败！');
+            }
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
 
-        $data   =   [
-            'title'         =>  e($request  ->  get('title')),
-            'description'   =>  e($request  ->  get('desc')),
-            'score'         =>  $totalData,
-        ];
-
-        $subjectModel   =   new Subject();
-        if($subjectModel->  addSubject($data,$formData)){
-            return redirect()->route('osce.admin.topic.getList');
-        } else{
-            return  redirect()->back()->withErrors(new \Exception('新增失败'));
-        }
     }
 
     /**
@@ -344,4 +348,39 @@ class TopicController extends CommonController
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
     }
+
+
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'model'     => 'required',
+            'title'     => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $model  = $request  -> get('model');
+        $name   = $request  -> get('title');
+
+        //实例化模型
+        $model   =  '\Modules\Osce\Entities\\'.$model;
+        $model =  new $model;
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('title', $name)->first();
+        }else{
+            $result = $model->where('title', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
+
+
 }
