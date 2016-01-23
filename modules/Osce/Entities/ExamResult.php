@@ -176,26 +176,23 @@ class ExamResult extends CommonModel
 
 
    //微信端学生成绩查询
- public function stationInfo($stationIds){
-
-
+ public function stationInfo($examScreeningIds){
 
      $builder=$this->leftJoin('station', function($join){
          $join -> on('station.id', '=', 'exam_result.station_id');
-     })-> leftJoin('station_case', function($join){
-         $join -> on('station_case.case_id', '=', 'exam_result.station_id');
+     })-> leftJoin('station_teacher', function($join){
+         $join -> on('station_teacher.station_id', '=', 'exam_result.station_id');
      })-> leftJoin('teacher', function($join){
-         $join -> on('teacher.id', '=', 'station_case.case_id');
+         $join -> on('teacher.id', '=', 'exam_result.teacher_id');
      });
-     $builder=$builder->whereIn('exam_result.id',$stationIds);
+     $builder=$builder->whereIn('exam_result.exam_screening_id',$examScreeningIds);
      $builder=$builder->select([
          'exam_result.station_id as id',
          'exam_result.score as score',
          'exam_result.time as time',
-         'exam_result.teacher_id as teacher_id',
+         'teacher.name as grade_teacher',
          'station.type as type',
-
-
+         'station.name as station_name',
      ])->get();
 
      return $builder;
