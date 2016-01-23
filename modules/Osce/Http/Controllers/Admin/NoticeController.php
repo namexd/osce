@@ -155,6 +155,7 @@ class NoticeController extends CommonController
         $list   =   Exam::get();
         $id     =   $request    ->  get('id');
         $item   =   Notice::find($id);
+
         return view('osce::admin.exammanage.exam_notice_edit',['item'=>$item,'list'=>$list]);
     }
 
