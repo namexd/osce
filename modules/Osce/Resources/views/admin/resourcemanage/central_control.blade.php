@@ -25,7 +25,7 @@
                 <h5 class="title-label">中控室</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.room.getAddVcr')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.room.getAddRoom')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
@@ -33,9 +33,9 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        @foreach($area as $item)
-                            <li class="{{($item->cate == 2)?'active':''}}">
-                                <a href="{{route('osce.admin.room.getRoomList',['type'=>$item->cate])}}">{{$item->name}}</a>
+                        @foreach($area as $key => $item)
+                            <li class="{{($key === 1)?'active':''}}">
+                                <a href="{{route('osce.admin.room.getRoomList',['type'=>$key])}}">{{$item}}</a>
                             </li>
                         @endforeach
                     </ul>
@@ -46,7 +46,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>摄像机</th>
+                    <th>场所名称</th>
                     <th>描述</th>
                     <th>操作</th>
                 </tr>

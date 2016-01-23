@@ -57,4 +57,12 @@ return [
 	'invigilatorRoleId'	=>	1,
 	'studentRoleId'		=>	2,
 	'adminRoleId'	=>	3,
+
+	//场所类型的管理
+	'room_cate' => [
+		0	=>	'考场',
+		1	=>	'中控室',
+		2	=>	'走廊',
+		3	=>	'侯考区'
+	]
 ];
