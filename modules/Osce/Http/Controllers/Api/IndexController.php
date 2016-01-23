@@ -127,7 +127,15 @@ class IndexController extends CommonController
         if(!$planId ){
             return \Response::json(array('code' =>4));
         }
-
+        $students=$this->getStudentList($request);
+        $idcards=[];
+        $students=json_decode($students->content());
+        foreach($students->data as $item){
+         $idcards[]=$item->idcard;
+        }
+        if(!in_array($id_card,$idcards)){
+            return \Response::json(array('code'=>5));
+        }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
         $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
@@ -637,14 +645,14 @@ class IndexController extends CommonController
         try {
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             if($mode==1){
-             $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
-             $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
-             $countStation=[];
-             foreach($stations as $item){
-              $countStation[]=$item->station_id;
-             }
-                $countStation=array_unique($countStation);
-                $countStation=count($countStation)*2;
+//             $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
+//             $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
+//             $countStation=[];
+//             foreach($stations as $item){
+//              $countStation[]=$item->station_id;
+//             }
+//                $countStation=array_unique($countStation);
+                $countStation=2;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
