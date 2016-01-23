@@ -1187,7 +1187,7 @@ function examroom_assignment(){
             type:'get',
             async:true,
             url:pars.spteacher_list,
-            data:{spteacher_id:ids,station_id:btn_group.parent().parent().attr('value')},
+            data:{spteacher_id:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
             success:function(data){
               var html = '';
               res = data.data.rows;
@@ -2606,7 +2606,7 @@ function station_assignment(){
             type:'get',
             async:true,
             url:pars.spteacher_list,
-            data:{teacher:ids,station_id:btn_group.parent().parent().attr('value')},
+            data:{teacher:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
             success:function(data){
               var html = '';
               res = data.data.rows;
