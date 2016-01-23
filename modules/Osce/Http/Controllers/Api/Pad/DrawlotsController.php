@@ -34,14 +34,10 @@ class DrawlotsController extends CommonController
      * @date 2016-01-20 12:01
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    private function getRoomId()
+    private function getRoomId($teacher_id)
     {
         try {
-            //首先得到登陆者信息
-            $user = Auth::user();
 
-            //获取登陆者id，也就是教师id
-            $teacher_id = $user->id;
             //通过教师id去寻找对应的考场,返回考场对象
             $room = StationTeacher::where('user_id', $teacher_id)->first()->station->room;
             if ($room->isEmpty()) {
@@ -72,26 +68,36 @@ class DrawlotsController extends CommonController
     public function getExaminee()
     {
         try {
+//            //首先得到登陆者信息
+//            $user = Auth::user();
+//
+//            //获取登陆者id，也就是教师id
+//            $teacher_id = $user->id;
 //            //获取当前老师的考场对象
-//            $room = $this->getRoomId();
+//            $room = $this->getRoomId($teacher_id);
 //            //获得考场的id
 //            $room_id = $room->id;
+//            //获得当前老师所在的考站
+//            $station = Teacher::findOrFail($teacher_id)->teacherStation;
 //
 //            //从队列表中通过考场ID得到对应的考生信息
 //            $examQueue =  ExamQueue::examineeByRoomId($room_id);
+//
+//            //将老师对应的考站写进对象
+//            $examQueue->station_name = $station->name;
 
             $examQueue = [
-                1 => ['student_id' => 1,
+                0 => ['student_id' => 1,
                     'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
                     'student_code' => '1234',
                     'student_name' => '测试名字1',
                     'station_name' => '当前考站1'],
-                2 => ['student_id' => 2,
+                1 => ['student_id' => 2,
                     'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
                     'student_code' => '12345',
                     'student_name' => '测试名字2',
                     'station_name' => '当前考站2'],
-                3 => ['student_id' => 3,
+                2 => ['student_id' => 3,
                     'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
                     'student_code' => '123456',
                     'student_name' => '测试名字3',
@@ -123,17 +129,17 @@ class DrawlotsController extends CommonController
     public function getNextExaminee()
     {
         $examQueue = [
-            1 => ['student_id' => 1,
+            0 => ['student_id' => 1,
                 'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
                 'student_code' => '1234',
                 'student_name' => '测试名字1',
                 'station_name' => '当前考站1'],
-            2 => ['student_id' => 2,
+            1 => ['student_id' => 2,
                 'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
                 'student_code' => '12345',
                 'student_name' => '测试名字2',
                 'station_name' => '当前考站2'],
-            3 => ['student_id' => 3,
+            2 => ['student_id' => 3,
                 'student_avator' => 'http://i1.hoopchina.com.cn/blogfile/201601/22/BbsImg145344076856076_763x519.png',
                 'student_code' => '123456',
                 'student_name' => '测试名字3',
