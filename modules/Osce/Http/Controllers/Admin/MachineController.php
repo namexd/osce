@@ -513,7 +513,7 @@ class MachineController extends CommonController
      */
     private function addPad(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required|unique:osce_mis.pad,name',
+            'name'          =>  'required|unique:osce_mis.pad',
             'code'          =>  'required',
             'factory'       =>  'required',
             'sp'            =>  'required',
