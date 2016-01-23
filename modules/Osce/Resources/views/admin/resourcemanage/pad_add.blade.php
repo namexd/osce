@@ -44,7 +44,7 @@
 //                              /*自定义提交数据，默认值提交当前input value*/
 //                              data: function(validator) {
 //                                  return {
-//                                      title: 'pad',
+//                                      title: 'Pad',
 //                                      name: $('[name="whateverNameAttributeInYourForm"]').val()
 //                                  }
 //

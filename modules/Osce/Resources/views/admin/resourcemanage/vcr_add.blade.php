@@ -2,7 +2,7 @@
 @section('only_css')
 
 @stop
-             
+
 @section('only_js')
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
     <script>
@@ -31,7 +31,7 @@
                                 /*自定义提交数据，默认值提交当前input value*/
                                 data: function(validator) {
                                     return {
-                                        title: 'vcr',
+                                        title: 'Vcr',
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
@@ -58,7 +58,7 @@
                                 /*自定义提交数据，默认值提交当前input value*/
                                 data: function(validator) {
                                     return {
-                                        title: 'vcr',
+                                        title: 'Vcr',
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }

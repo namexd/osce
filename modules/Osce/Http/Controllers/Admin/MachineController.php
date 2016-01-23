@@ -317,7 +317,7 @@ class MachineController extends CommonController
      */
     private function addCameras(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required|unique:osce_mis.vcr,name',
+            'name'          =>  'required',
             'code'          =>  'required',
             'ip'            =>  'required',
             'username'      =>  'required',
@@ -357,10 +357,13 @@ class MachineController extends CommonController
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
+
         $cate_id    =   $request    ->  get('cate_id');
         try{
 
             $model      =   $this   ->  getMachineModel($cate_id);
+
+
             if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
             } else{
@@ -417,6 +420,7 @@ class MachineController extends CommonController
             'sp.required'           =>'型号必填',
             'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
@@ -441,7 +445,8 @@ class MachineController extends CommonController
                 throw new \Exception('编辑摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
