@@ -746,18 +746,20 @@ class ExamController extends CommonController
     public function getStudentQuery(Request $request)
     {
         //验证规则，暂时留空
-        $this   ->    validate($request,[
+        $this -> validate($request,[
               'exam_name'      => 'sometimes',
               'student_name'   => 'sometimes',
         ]);
         //获取各字段
-        $formData = $request->only('exam_name', 'student_name');
+        $exam_name      = $request->get('exam_name');
+        $student_name   = $request->get('student_name');
+        $formData = ['exam_name'=>$exam_name, 'student_name'=>$student_name];
         //获取当前场所的类
-         $examModel= new Student();
+        $examModel= new Student();
         //从模型得到数据
-           $data=$examModel->getList($formData);
+        $data=$examModel->getList($formData);
         //展示页面
-        return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
+        return view('osce::admin.exammanage.examinee_query', ['data'=>$data, 'exam_name'=>$exam_name, 'student_name'=>$student_name]);
     }
 
     /**

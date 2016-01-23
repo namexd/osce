@@ -55,33 +55,25 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($list as $key => $list)
+            @foreach($list as $key => $data)
                 <tr>
                     <td>{{$key+1}}</td>
-                    <td><a href="{{route('osce.admin.getTrainDetail',array('id'=>$list->id))}}">{{ $list->name }}</a></td>
-                    <td>{{ $list->begin_dt }}~{{ $list->end_dt }}</td>
-                    <td value="{{$list->id}}">
+                    <td><a href="{{route('osce.admin.getTrainDetail',array('id'=>$data->id))}}">{{ $data->name }}</a></td>
+                    <td>{{ $data->begin_dt }}~{{ $data->end_dt }}</td>
+                    <td value="{{$data->id}}">
                     <!--<td value="1">-->
-                        <a href="{{ route('osce.admin.getEditTrain',array('id'=>$list->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                        <a href="{{ route('osce.admin.getEditTrain',array('id'=>$data->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
-        <div class="btn-group pull-right">
-           
+        
+        <div style="float: right">
+            {!! $list->render() !!}
         </div>
     </form>
-    <div class="pull-left">
-        共{{$pagination->total()}}条
-    </div>
-    <div class="pull-right">
-        <nav>
-            <ul class="pagination">
-                {!! $pagination->render() !!}
-            </ul>
-        </nav>
-    </div>
+
 </div>
 @stop{{-- 内容主体区域 --}}
