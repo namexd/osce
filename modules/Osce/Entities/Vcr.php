@@ -138,6 +138,7 @@ class Vcr extends CommonModel implements MachineInterface
         $connection ->beginTransaction();
         try{
             $vcr = $this    -> find($data['id']);
+
             if($vcr) {
                 foreach($data as $feild=> $value) {
                     if($feild=='id') {
@@ -145,11 +146,12 @@ class Vcr extends CommonModel implements MachineInterface
                     }
                     $vcr    ->  $feild  =   $value;
                 }
-
+                $connection->enableQueryLog();
+                $result = $vcr -> save();
+                $a  =   $connection->getQueryLog();
                 if(!$result = $vcr -> save()) {
                     throw new \Exception('修改失败，请重试！');
                 }
-
             } else {
                 throw new \Exception('没有找到该摄像机');
             }

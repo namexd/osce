@@ -417,6 +417,7 @@ class MachineController extends CommonController
             'sp.required'           =>'型号必填',
             'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
@@ -441,7 +442,8 @@ class MachineController extends CommonController
                 throw new \Exception('编辑摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
