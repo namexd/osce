@@ -131,7 +131,7 @@ class IndexController extends CommonController
         $idcards=[];
         $students=json_decode($students->content());
         foreach($students->data as $item){
-         $idcards[]=$item->idcard;
+         $idcards[]=$item->id_card;
         }
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
@@ -645,14 +645,14 @@ class IndexController extends CommonController
         try {
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             if($mode==1){
-//             $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
-//             $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
-//             $countStation=[];
-//             foreach($stations as $item){
-//              $countStation[]=$item->station_id;
-//             }
-//                $countStation=array_unique($countStation);
-                $countStation=2;
+             $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
+             $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
+             $countStation=[];
+             foreach($stations as $item){
+              $countStation[]=$item->station_id;
+             }
+                $countStation=array_unique($countStation);
+                $countStation=count($countStation)*2;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
