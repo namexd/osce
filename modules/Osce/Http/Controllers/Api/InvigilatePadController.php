@@ -112,6 +112,7 @@ class InvigilatePadController extends CommonController
 
     public function  getAuthentication(Request $request)
     {
+        dd(111111111111);
         $this->validate($request, [
             'id' => 'required|integer'
         ], [
