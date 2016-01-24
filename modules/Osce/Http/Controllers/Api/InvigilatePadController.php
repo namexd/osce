@@ -139,7 +139,7 @@ class InvigilatePadController extends CommonController
 
         }
 
-        dd($list);
+//        dd($list);
         return response()->json(
             $this->success_data($list,1,'验证完成')
         );
@@ -167,7 +167,7 @@ class InvigilatePadController extends CommonController
 
       $this->validate($request,[
             'station_id' =>'required|integer',
-            //'exam_id'  => 'required|integer'
+//            'exam_id'  => 'required|integer'
       ],[
          'station_id.required'=>'没有获取到当前考站',
          'exam_id.required'=>'没有获取到当前考试'
@@ -457,7 +457,7 @@ class InvigilatePadController extends CommonController
     public function getStartExam(Request $request){
         $this->validate($request,[
             'student_id'=>'required|integer',
-            'start_time'=>'required|integer',
+            'start_time'=>'required',
             'station_id'=>'required|integer'
 
         ],[
@@ -501,7 +501,7 @@ class InvigilatePadController extends CommonController
     public function getEndExam(Request $request){
         $this->validate($request,[
             'student_id'=>'required|integer',
-            'end_time'=>'required|integer',
+            'end_time'=>'required',
             'station_id'=>'required|integer'
 
         ],[

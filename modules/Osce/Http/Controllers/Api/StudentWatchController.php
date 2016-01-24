@@ -150,7 +150,6 @@ class StudentWatchController extends  CommonController
                             $this->success_data(4,'目前没有下一场，请等待下一步通知')
                         );
                     }
-
                 }else{
                     $surplus = floor($surplus/60) . ':' . $surplus%60;
                     dump('当前考站剩余时间'.$surplus);
