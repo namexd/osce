@@ -117,14 +117,12 @@ class IndexController extends CommonController
         $id_card=$request->get('id_card');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=Student::where('idcard',$id_card)->select()->first();
+        $student_id=Student::where('idcard',$id_card)->where('exam_id',$exam_id)->select()->first();
         if(!$student_id){
             return \Response::json(array('code' => 3));
         }
         $student_id=$student_id->id;
         $planId=ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();
-        \Log::error($planId);
-        \Log::info($planId);
         if(!$planId ){
             return \Response::json(array('code' =>4));
         }
