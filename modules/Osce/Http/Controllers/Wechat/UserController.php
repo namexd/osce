@@ -446,4 +446,11 @@ class UserController  extends CommonController
 
         return view('osce::wechat.user.login');
     }
+      //验证电话号码   /osce/wechat/user/Proof-number
+
+    public function getProofNumber(Request $request){
+
+    }
+
+
 }
