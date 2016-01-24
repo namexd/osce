@@ -22,7 +22,7 @@ class Teacher extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','name', 'code', 'type', 'case_id', 'create_user_id','status'];
+    protected $fillable = ['id','name', 'code', 'type', 'case_id', 'create_user_id','status','description'];
     private $excludeId = [];
 
     protected $type_values  =   [

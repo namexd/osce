@@ -102,11 +102,11 @@
                     @else
                         @forelse($list as $item)
                         <li>
-                            <a href="#"><i class="fa fa-gear"></i> <span class="nav-label">{{$item['name']}}</span><span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa {{$item->ico}}"></i> <span class="nav-label">{{$item['name']}}</span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                             @forelse($item['child'] as $value)
                                 <li>
-                                    <a class="J_menuItem" href="{{empty($value['url'])? 'javascript:;':route($value['url'])}}">{{$value['name']}}</a>
+                                    <a class="{{$value->ico}}" href="{{empty($value['url'])? 'javascript:;':route($value['url'])}}">{{$value['name']}}</a>
                                 </li>
                             @empty
                             @endforelse

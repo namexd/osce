@@ -54,6 +54,7 @@ class NoticeController extends CommonController
             $accept = 2;
         }
         // TODO zhoufuxiang 16-1-22
+
         $notice = new InformInfo();
         $config = Config::where('name', '=', 'type')->first();
         if (empty($config) || in_array(4, json_decode($config->value))) {
@@ -64,17 +65,34 @@ class NoticeController extends CommonController
                     if (!in_array($accept, explode(',', $item->accept))) {
                         unset($list[$index]);
                     }
-                }
-            }
-        } else {
-            $list = [];
-        }
-        dd($list);
+
+                    $notice = new InformInfo();
+                    //$config = Config::where('name','=','type')->first();
+
+                    $list = $notice->getList();
+                    //根据操作人去除不给他接收的数据
+                    if (!empty($list)) {
+                        foreach ($list as $index => $item) {
+                            if (!in_array($accept, explode(',', $item->accept))) {
+                                unset($list[$index]);
+                            }
+                        }
+                    } else {
+                        $list = [];
+
+
+                    }
+
 //        return response()->json(
 //            $this->success_rows(1,'success',config('osce.page_size'),$list)
 //        );
-        return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
+                    return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
+                }
+            }
+        }
     }
+
+
 
 
     public function   getSystemView(Request $request)

@@ -73,35 +73,14 @@ class Vcr extends CommonModel implements MachineInterface
         $connection ->beginTransaction();
         try
         {
-            $machineData    =   [];
-
             if($vcr =   $this   ->  create($data))
-            {
-
-                $machineData=   [
-                    'item_id'    =>  $vcr    ->  id,
-                    'type'      =>  1,
-                ];
-            }
-
-            else
-            {
-                throw new \Exception('新增摄像机失败');
-            }
-            if(empty($machineData))
-            {
-                throw new \Exception('没有找到摄像机新增数据');
-            }
-            //$machine    =   Machine::create($machineData);
-            $machine    =   true;
-            if($machine)
             {
                 $connection -> commit();
                 return $vcr;
             }
             else
             {
-                throw new   \Exception('新增摄像机资源失败');
+                throw new \Exception('新增摄像机失败');
             }
         }
         catch(\Exception $ex)
@@ -221,12 +200,8 @@ class Vcr extends CommonModel implements MachineInterface
             $modelVcr = AreaVcr::where('area_id', $id)->first();
         }
 
-        $roomVcr = RoomVcr::where('room_id', '<>', $id)->select(['vcr_id'])->groupBy('vcr_id')->get();
-        $vcrIds = [];
-        foreach ($roomVcr as $value) {
-            array_push($vcrIds, $value->vcr_id);
-        }
-        $vcr = Vcr::where('status', '<', 2)->whereNotIn('id', $vcrIds)
+        $vcr = Vcr::where('status', '<', 2)
+            ->where('used',0)
             ->orWhere('id', $modelVcr->vcr_id)
             ->select(['id', 'name'])->get();
 

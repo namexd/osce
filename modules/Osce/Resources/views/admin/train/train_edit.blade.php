@@ -190,14 +190,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" value="{{ $data['begin_dt']  }}" type="text" name="begin_dt" id="start" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" value="{{ $data['begin_dt']  }}" type="text" name="begin_dt" id="start" readonly="readonly" placeholder="YYYY/MM/DD hh:mm:ss">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">结束时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" value="{{ $data['end_dt']  }}" type="text" name="end_dt" id="end" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" value="{{ $data['end_dt']  }}" type="text" name="end_dt" id="end" readonly="readonly" placeholder="YYYY/MM/DD hh:mm:ss">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

@@ -10,6 +10,8 @@ return [
     'student_num'    =>20,
 	'begin_dt_buffer' => 10,
 
+	'topticOptionMaxNumer'	=>	10,
+
 	'importForCnToEn'=>[
 		// 中英文 字段名对照
 		'standard'=>[

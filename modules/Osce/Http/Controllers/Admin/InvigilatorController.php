@@ -171,7 +171,7 @@ class InvigilatorController extends CommonController
         $userData = $request -> only('name', 'gender','idcard','mobile','email','description');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type');  //姓名、编号、类型
+        $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型
         $teacherData['case_id']         = 0;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
@@ -223,7 +223,7 @@ class InvigilatorController extends CommonController
             'code'          =>  'sometimes',
             'images_path'   =>  'required',
             'case_id'       =>  'sometimes',
-//            'description'       =>  'sometimes',
+            'description'       =>  'sometimes',
         ],[
             'name.required'         =>  '监考教师姓名必填',
             'idcard.required'       =>  '身份证号必填',
@@ -240,10 +240,10 @@ class InvigilatorController extends CommonController
                 throw new \Exception('未找到当前操作人信息');
             }
             //用户数据
-            $userData = $request -> only('name', 'gender', 'idcard', 'mobile', 'email');
+            $userData = $request -> only('name', 'gender', 'idcard', 'mobile', 'email','description');
             $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
             //老师数据
-            $teacherData = $request -> only('name','code','type');      //姓名、编号、类型
+            $teacherData = $request -> only('name','code','type','description');      //姓名、编号、类型
             $teacherData['case_id']         = intval($request->get('case_id'));
             $teacherData['status']          = 1;
             $teacherData['create_user_id']  = $user->id;
@@ -364,14 +364,14 @@ class InvigilatorController extends CommonController
             'type'          =>  'required|in:1,3',
             'code'          =>  'sometimes',
             'images_path'   =>  'required',
-//            'description'   =>  'sometimes',
+            'description'   =>  'sometimes',
         ]);
         $id             =   (int)$request    ->  get('id');
         //用户数据
-        $userData = $request -> only('name', 'gender','idcard','mobile','email');
+        $userData = $request -> only('name', 'gender','idcard','mobile','email','description');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type');  //姓名、编号、类型
+        $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型
 
         try{
             $teacherModel   =   new Teacher();
@@ -428,7 +428,7 @@ class InvigilatorController extends CommonController
         $userData = $request -> only('name', 'gender','idcard','mobile','email','description');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type','case_id');  //姓名、编号、类型、病例
+        $teacherData = $request -> only('name','code','type','case_id','description');  //姓名、编号、类型、病例
 
         try{
             $TeahcerModel   =   new Teacher();
