@@ -168,7 +168,7 @@ class InvigilatorController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         //用户数据
-        $userData = $request -> only('name', 'gender','idcard','mobile','email','description');
+        $userData = $request -> only('name', 'gender','idcard','mobile','email');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型
@@ -240,7 +240,7 @@ class InvigilatorController extends CommonController
                 throw new \Exception('未找到当前操作人信息');
             }
             //用户数据
-            $userData = $request -> only('name', 'gender', 'idcard', 'mobile', 'email','description');
+            $userData = $request -> only('name', 'gender', 'idcard', 'mobile', 'email');
             $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
             //老师数据
             $teacherData = $request -> only('name','code','type','description');      //姓名、编号、类型
@@ -368,7 +368,7 @@ class InvigilatorController extends CommonController
         ]);
         $id             =   (int)$request    ->  get('id');
         //用户数据
-        $userData = $request -> only('name', 'gender','idcard','mobile','email','description');
+        $userData = $request -> only('name', 'gender','idcard','mobile','email');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型
@@ -425,7 +425,7 @@ class InvigilatorController extends CommonController
 
         $id                 =   (int)$request    ->  get('id');
         //用户数据
-        $userData = $request -> only('name', 'gender','idcard','mobile','email','description');
+        $userData = $request -> only('name', 'gender','idcard','mobile','email');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','type','case_id','description');  //姓名、编号、类型、病例
