@@ -19,7 +19,10 @@ class UserController  extends CommonController
 {
 
     public function getRegister(){
-        return view('osce::wechat.user.register');
+
+        //获取当前URl地址
+        $current_url =$_SERVER['HTTP_REFERER'];
+         return view('osce::wechat.user.register',['url'=>$current_url]);
 
     }
 
@@ -49,6 +52,7 @@ class UserController  extends CommonController
      */
     public function postRegister(Request $request)
     {
+
         $this   ->validate($request,[
             'mobile'    =>  'required',
             'password'  =>  'required|confirmed',
@@ -68,6 +72,9 @@ class UserController  extends CommonController
             'type.required'         =>  '注册类型必选',
             'code.required'         =>  '验证码必填',
         ]);
+        $urls= $request    ->  get('url');
+        $fileNameArray   =   explode('/',$urls);
+        $url             =   array_pop($fileNameArray);
         $mobile     =   $request    ->  get('mobile');
         $password   =   $request    ->  get('password');
         $type       =   $request    ->  get('type');
@@ -111,6 +118,13 @@ class UserController  extends CommonController
                 if($user->save())
                 {
                     \DB::commit();
+
+
+
+
+//                    if(){
+//
+//                    }
                     return redirect()->route('osce.wechat.user.getLogin');
                 }
                 else
@@ -400,6 +414,7 @@ class UserController  extends CommonController
     }
 
     public function getWebLogin(){
+
         return view('osce::wechat.user.login');
     }
 }
