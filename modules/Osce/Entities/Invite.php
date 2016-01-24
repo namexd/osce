@@ -40,7 +40,7 @@ class Invite extends CommonModel
                 {
                     throw new \Exception('同一个老师不能同时收到两个不同邀请');
                 }
-                $notice = $this->firstOrCreate($inviteDat);
+                  $notice = $this->firstOrCreate($inviteDat);
             }
                 if ($notice) {
                     foreach($data as  $SpTeacher){

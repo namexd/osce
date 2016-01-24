@@ -135,13 +135,16 @@ class StudentExamQuery extends  CommonController
             $groupData[$examScore->standard->pid][] =   $examScore;
         }
         $indexData  =   [];
+
+        //dd($groupData);
         foreach($groupData[0] as $group)
         {
-            $groupData  = $group;
-            $groupData['child'] =  $groupData[$group->id]  ;//排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
-            $indexData[]    =   $groupData;
+            $groupInfo  =   $group;
+            $groupInfo['child'] =  $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
+            $indexData[]    =   $groupInfo;
         }
         $list   =   [];
+        
         foreach($indexData as $goupData)
         {
             $childrens  =   is_null($goupData['child'])? []:$goupData['child'];
@@ -153,6 +156,7 @@ class StudentExamQuery extends  CommonController
                 $list[] =   $children;
             }
         }
+//        dd($list);
 
         return view('osce::wechat.resultquery.examination_detail',['examScoreList'=>$list],['examresultList'=>$examresultList]);
     }
