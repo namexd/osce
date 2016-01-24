@@ -38,47 +38,42 @@ class NoticeListController   extends CommonController
      *
      */
     public function getSystemList(Request $request){
-        //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
-        $user = \Auth::user();
-        if(!$user){
-            throw new \Exception('没有找到当前操作人的信息！');
-        }
-        $student = Student::where('user_id', $user->id)->first();
-        $spTeacher = Teacher::where('id',$user->id)->where('type',2)->first();
-
-        // TODO zhoufuxiang 16-1-22
-        $notice = new UsersPm();
-
-        $noticeList =$notice->getList($user->id);
-//       dd($noticeList['data']);
-         if($noticeList['total']!==0){
-              foreach($noticeList['data'] as  $index => $item){
-                  $list=[
-                      'name'=>$item->title,
-                      'content' =>$item->content,
-                      'accept_user_id'=>$item->accept_user_id,
-                      'send_user_id'=>$item->send_user_id,
-                      'created_at'=>$item->created_at,
-                      'updated_at'=>$item->updated_at,
-                  ];
-              }
-        }else{
-             $list   =   [];
-         }
-        return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
+        return view('osce::wechat.system_info.system_notice');
     }
 
 
 
-//    public function   getSystemView(Request $request)
-//    {
-//        $trainModel = new  InformInfo ();
-//        $pagination = $trainModel->getList();
-//        $list = InformInfo::select()->orderBy('created_at')->get()->toArray();
-//        return response()->json(
-//            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
-//        );
-//    }
+//url /osce/wechat/notice-list/system-ajax
+    public function   getSystemAjax(Request $request)
+    {
+        $user = \Auth::user();
+        if(!$user){
+            throw new \Exception('没有找到当前操作人的信息！');
+        }
+        $notice = new UsersPm();
+
+        $noticeList =$notice->getList($user->id);
+//       dd($noticeList['data']);
+        if($noticeList['total']!==0){
+            foreach($noticeList['data'] as  $index => $item){
+                $list=[
+                    'name'=>$item->title,
+                    'content' =>$item->content,
+                    'accept_user_id'=>$item->accept_user_id,
+                    'send_user_id'=>$item->send_user_id,
+                    'created_at'=>$item->created_at,
+                    'updated_at'=>$item->updated_at,
+                ];
+            }
+        }else{
+            $list   =   [];
+        }
+
+        $list = UsersPm::select()->orderBy('created_at')->get()->toArray();
+        return response()->json(
+            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
+        );
+    }
     /**
      * 查看通知详情
      * @url /osce/wechat/notice-list/view
@@ -111,6 +106,6 @@ class NoticeListController   extends CommonController
             abort(404,'你要查看的通知不存在');
         }
 
-        return view('osce::wechat.exammanage.exam_notice_detail',['notice'=>$notice]);
+        return view('osce::wechat.system_info.system_notice_detail',['notice'=>$notice]);
     }
 }
