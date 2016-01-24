@@ -112,32 +112,39 @@ class InvigilatePadController extends CommonController
 
     public function  getAuthentication(Request $request)
     {
-        $this->validate($request, [
-            'id' => 'required|integer'
-        ], [
-            'id.required' => '请检查PAD是否登陆成功'
-        ]);
-        $teacher_id = (int)$request->input('id');
-        $teacherType =Teacher::where('id','=',$teacher_id)->select('type')->first()->type;
-        if($teacherType!==1){
-            return response()->json(
-                $this->fail(new \Exception('你目前不是监考老师'))
-            );
-        }else{
-            $studentModel = new  Student();
-            $studentData = $studentModel->studentList($teacher_id);
-//            dd($studentData);
-            $list = [];
-            foreach ($studentData as $itme) {
-                $list[]= [
-                    'name' => $itme->name,
-                    'code' => $itme->code,
-                    'idcard' => $itme->idcard,
-                    'mobile' => $itme->mobile
-                ];
-            }
+        $list=[
+            'name' => '张三',
+            'code' => '22222',
+            'idcard' => '11112335',
+            'mobile' => '11767268'
 
-        }
+        ];
+//        $this->validate($request, [
+//            'id' => 'required|integer'
+//        ], [
+//            'id.required' => '请检查PAD是否登陆成功'
+//        ]);
+//        $teacher_id = (int)$request->input('id');
+//        $teacherType =Teacher::where('id','=',$teacher_id)->select('type')->first()->type;
+//        if($teacherType!==1){
+//            return response()->json(
+//                $this->fail(new \Exception('你目前不是监考老师'))
+//            );
+//        }else{
+//            $studentModel = new  Student();
+//            $studentData = $studentModel->studentList($teacher_id);
+////            dd($studentData);
+//            $list = [];
+//            foreach ($studentData as $itme) {
+//                $list[]= [
+//                    'name' => $itme->name,
+//                    'code' => $itme->code,
+//                    'idcard' => $itme->idcard,
+//                    'mobile' => $itme->mobile
+//                ];
+//            }
+//
+//        }
 
 //        dd($list);
         return response()->json(
