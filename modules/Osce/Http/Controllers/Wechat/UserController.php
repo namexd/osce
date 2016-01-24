@@ -450,6 +450,9 @@ class UserController  extends CommonController
 
     public function getProofNumber(Request $request){
 
+
+        
+
     }
 
 
