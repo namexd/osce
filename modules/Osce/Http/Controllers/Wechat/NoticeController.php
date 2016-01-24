@@ -39,6 +39,7 @@ class NoticeController extends CommonController
      */
     public function getSystemList(Request $request)
     {
+
         //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
         $user = \Auth::user();
         if (!$user) {
@@ -71,16 +72,9 @@ class NoticeController extends CommonController
         }else{
             $list   =   [];
         }
-
                     return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
 
             }
-
-
-
-
-
-
 
 
   ///osce/wechat/notice/system-view
