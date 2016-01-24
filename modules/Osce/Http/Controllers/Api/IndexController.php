@@ -198,6 +198,8 @@ class IndexController extends CommonController
             }
         }
         $student_id=$student_id->student_id;
+        $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
+        $exam_screen_id=$screen_id->exam_screening_id;
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
@@ -212,7 +214,7 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
-               ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_id',$exam_id)->update(['is_end'=>1]);
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screen_id',$exam_screen_id)->update(['is_end'=>1]);
             }
             return \Response::json(array('code'=>1));
         }else{
@@ -505,12 +507,7 @@ class IndexController extends CommonController
      */
     public function getExamList(){
         $exam=new Exam();
-        $time=time();
-        $start=date('Y-m-d 00:00:00',$time);
-        $time=strtotime($start);
-        $end=date('Y-m-d 23:59:59' ,$time );
-        $endtime=strtotime($end);
-        $examList=$exam->getTodayList($time,$endtime);
+        $examList=$exam->getTodayList();
         if(count($examList)){
             return response()->json(
                 $this->success_rows(1,'success',count($examList),$pagesize=1,count($examList),$examList)

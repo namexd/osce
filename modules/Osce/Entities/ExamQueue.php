@@ -291,8 +291,10 @@ class ExamQueue extends CommonModel
                     $item->begin_dt = date('Y-m-d H:i:s',$time + (config('osce.begin_dt_buffer') * 60));
                 }
 
+                $item->status = 0;
+
                 //将数据插入数据库
-                if (!ExamQueue::create($objs->first()->toArray())) {
+                if (!ExamQueue::create($item->toArray())) {
                     throw new \Exception('该名学生的与腕表的录入失败！');
                 };
             }
