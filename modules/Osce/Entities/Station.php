@@ -252,7 +252,7 @@ class Station extends CommonModel
             //修改station表
             $result = $this->where($this->table . '.id', '=', $id)->update($stationData);
             //获得修改后的id
-            $station_id = $result;
+//            $station_id = $result;
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改考站信息失败');
@@ -279,7 +279,7 @@ class Station extends CommonModel
             $stationCaseData = [
                 'case_id'=>$caseId,
             ];
-            $result = StationCase::where('station_id','=',$station_id)->update($stationCaseData);
+            $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改病例关联失败');
@@ -289,7 +289,7 @@ class Station extends CommonModel
             $stationRoomData = [
                 'room_id' => $roomId,
             ];
-            $result = RoomStation::where('station_id','=',$station_id)->update($stationRoomData);
+            $result = RoomStation::where('station_id','=',$id)->update($stationRoomData);
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改房间关联失败');

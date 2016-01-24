@@ -140,8 +140,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
 		Route::get('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/choose-exam-arrange', 	['uses'=>'ExamController@getChooseExamArrange','as'=>'osce.admin.exam.getChooseExamArrange']);  //判定应该载入哪个安排页面
-		Route::post('exam/station-assignment', 	['uses'=>'ExamController@postStationAssignment','as'=>'osce.admin.exam.postStationAssignment']);
-
+		Route::post('exam/station-assignment', 	['uses'=>'ExamController@postStationAssignment','as'=>'osce.admin.exam.postStationAssignment']);  //获取考站为中心的安排
+		Route::get('exam/station-assignment', 	['uses'=>'ExamController@getStationAssignment','as'=>'osce.admin.exam.getStationAssignment']);  //获取考站为中心的安排
 		Route::get('exam/download-student-improt-tpl', 	['uses'=>'ExamController@getdownloadStudentImprotTpl','as'=>'osce.admin.exam.getdownloadStudentImprotTpl']);
 
 		Route::get('exam/ajax-station-row', ['uses'=>'ExamController@getAjaxStationRow','as'=>'osce.admin.exam.getAjaxStationRow']);  //以json返回考站信息
