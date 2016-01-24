@@ -813,6 +813,10 @@ class ExamPlan extends CommonModel
         $planList   =   $this->where('exam_id','=',$exam_id)->orderBy('begin_dt','asc')->get();
         $studentOrderData   =   [];
         $user   =   \Auth::user();
+        if(ExamOrder::where('exam_id','=',$exam_id)->delete()===false)
+        {
+            throw new \Exception('弃用旧安排失败');
+        }
         try
         {
             foreach($planList as $plan)
@@ -824,7 +828,7 @@ class ExamPlan extends CommonModel
                         'exam_screening_id' =>  $plan->exam_screening_id,
                         'student_id'        =>  $plan->student_id,
                         'begin_dt'          =>  $plan->begin_dt,
-                        'status'            =>  $plan->status,
+                        'status'            =>  0,
                         'created_user_id'   =>  $user->id,
                     ];
                 }
