@@ -85,6 +85,10 @@ class UserController  extends CommonController
         $nickname   =   $request    ->  get('nickname');
         $idcard     =   $request    ->  get('idcard');
         $code       =   $request    ->  get('code');        //验证码
+        //判断是否选择角色类型
+        if(empty($type)){
+            return view('osce::wechat.user.register');
+          }
         \DB::beginTransaction();
         try{
             if($type==1)
@@ -447,14 +451,25 @@ class UserController  extends CommonController
 
         return view('osce::wechat.user.login');
     }
-      //验证电话号码   /osce/wechat/user/Proof-number
-
+    /**
+     * 提交成绩评分详情，考试结果
+     * @method get
+     * @url /osce/wechat/user/Proof-number
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     mobile    电话号码  (必须的)
+     * @return view
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getProofNumber(Request $request){
         $this->validate($request,[
             'mobile'    =>  'required',
         ]);
         $mobile= $request->get('mobile');
-
         if(!empty($mobile)){
             $result = User::where('mobile', $mobile)->first();
             if($result){
