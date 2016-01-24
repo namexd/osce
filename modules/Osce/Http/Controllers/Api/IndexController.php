@@ -188,7 +188,7 @@ class IndexController extends CommonController
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=Student::where('exam_id',$exam_id)->select('id')->first();
+        $student_id=ExamScreeningStudent::where('watch_id',$id)->where('is_end',0)->select('student_id')->first();
         if(!$student_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
@@ -198,7 +198,9 @@ class IndexController extends CommonController
             }
         }
         $student_id=$student_id->student_id;
-        $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
+        \Log::info($student_id);
+        $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->first();
+        \Log::info($screen_id);
         $exam_screen_id=$screen_id->exam_screening_id;
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
