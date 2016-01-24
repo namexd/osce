@@ -119,7 +119,10 @@ class RoomController extends CommonController
         }
         //将数据展示到页面
         return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data, 'vcr'=>$vcr, 'type'=>$type]);
+
+
     }
+
     /**
      * 修改房间页面 业务处理
      * @api       POST /osce/admin/room/edit-room
@@ -128,6 +131,7 @@ class RoomController extends CommonController
      *                         <b>get请求字段：</b>
      *                         array           id            主键ID
      * @return view
+     * @throws \Exception
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved

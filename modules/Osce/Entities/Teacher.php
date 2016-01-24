@@ -122,7 +122,7 @@ class Teacher extends CommonModel
     {
         try {
             //将传入的$spteacherId插进数组中
-            if ($spteacherId !== null) {
+            if (count($spteacherId) != 0) {
                 $this->excludeId = $spteacherId;
             }
 
