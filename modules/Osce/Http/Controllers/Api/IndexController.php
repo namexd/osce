@@ -113,7 +113,6 @@ class IndexController extends CommonController
             'id_card' =>'required',
             'exam_id' =>'required'
         ]);
-        \Log::info('test');
         $code=$request->get('code');
         $id_card=$request->get('id_card');
         $exam_id=$request->get('exam_id');
@@ -216,7 +215,7 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
-                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screen_id',$exam_screen_id)->update(['is_end'=>1]);
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);
             }
             return \Response::json(array('code'=>1));
         }else{
