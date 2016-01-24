@@ -172,39 +172,130 @@ class InvigilatePadController extends CommonController
 
     public function getExamGrade(Request $request,Collection $collection){
 
-      $this->validate($request,[
-            'station_id' =>'required|integer',
-//            'exam_id'  => 'required|integer'
-      ],[
-         'station_id.required'=>'没有获取到当前考站',
-         'exam_id.required'=>'没有获取到当前考试'
-      ]);
-
-        $stationId =$request->get('station_id');
-        $examId = $request->get('exam_id');
-        //根据考站id查询出下面所有的考试项目
-        $station    =   Station::find($stationId);
-        //考试标准时间
-        $mins = $station->mins;
-        $exam =Exam::find($examId);
-        $StandardModel  =   new Standard();
-        $standardList   =   $StandardModel->ItmeList($station->subject_id);
-//        dd($standardList);
-        if(count($standardList)!=0){
-            return response()->json(
-        $this->success_data($standardList,1,'数据传送成功')
-            );
-        }else{
-            return response()->json(
-                $this->fail(new \Exception('数据查询失败'))
-            );
-
-        }
-
-//        echo json_encode($standardList);
-//         return response()->json(
-//        $this->success_data($data,1,'数据传送成功')
+//      $this->validate($request,[
+//            'station_id' =>'required|integer',
+////            'exam_id'  => 'required|integer'
+//      ],[
+//         'station_id.required'=>'没有获取到当前考站',
+//         'exam_id.required'=>'没有获取到当前考试'
+//      ]);
+//
+//        $stationId =$request->get('station_id');
+//        $examId = $request->get('exam_id');
+//        //根据考站id查询出下面所有的考试项目
+//        $station    =   Station::find($stationId);
+//        //考试标准时间
+//        $mins = $station->mins;
+//        $exam =Exam::find($examId);
+//        $StandardModel  =   new Standard();
+//        $standardList   =   $StandardModel->ItmeList($station->subject_id);
+////        dd($standardList);
+//        if(count($standardList)!=0){
+//            return response()->json(
+//        $this->success_data($standardList,1,'数据传送成功')
 //            );
+//        }else{
+//            return response()->json(
+//                $this->fail(new \Exception('数据查询失败'))
+//            );
+//
+//        }
+        $data=[
+            "test_point1"=>[
+                0=>[
+                    "id"=> 142,
+                    "subject_id"=> 39,
+                    "content"=> "考核点1",
+                    "sort"=> 1,
+                    "score"=> 2,
+                    "pid"=> 0,
+                    "level"=> 1,
+                    "created_user_id"=> 45,
+                    "created_at"=> "2016-01-24 12:07:52",
+                    "updated_at"=> "2016-01-24 12:07:52",
+                    "answer"=> null
+                ],
+
+                "test_term"=>[
+                    0=>[
+                        "id"=> 143,
+                        "subject_id"=> 39,
+                        "content"=> "考核点1考核项1",
+                        "sort"=> 1,
+                        "score"=> 1,
+                        "pid"=> 142,
+                        "level"=> 2,
+                        "created_user_id"=> 45,
+                        "created_at"=> "2016-01-24 12:07:52",
+                        "updated_at"=> "2016-01-24 12:07:52",
+                        "answer"=> "考核点1考核项1评分标准1"
+                    ]  ,
+                    1=>[
+                        "id"=> 144,
+                        "subject_id"=> 39,
+                        "content"=> "考核点1考核项2",
+                        "sort"=> 2,
+                        "score"=> 1,
+                        "pid"=> 142,
+                        "level"=> 2,
+                        "created_user_id"=> 45,
+                        "created_at"=> "2016-01-24 12:07:52",
+                        "updated_at"=> "2016-01-24 12:07:52",
+                        "answer"=> "考核点1考核项2评分标准2"
+                    ],
+            ],
+
+       ],
+       'test_point2'=>[
+           1=>[
+               "id"=> 145,
+               "subject_id"=> 39,
+               "content"=> "考核点2",
+               "sort"=> 2,
+               "score"=> 2,
+               "pid"=> 0,
+               "level"=> 1,
+               "created_user_id"=>45,
+               "created_at"=> "2016-01-24 12:07:52",
+               "updated_at"=> "2016-01-24 12:07:52",
+               "answer"=> null
+           ],
+            "test_term"=>[
+
+            2=>[
+                "id"=> 146,
+                "subject_id"=> 39,
+                "content"=> "考核点2考核项1",
+                "sort"=> 1,
+                "score"=> 1,
+                "pid"=> 145,
+                "level"=> 2,
+                "created_user_id"=> 45,
+                "created_at"=> "2016-01-24 12:07:52",
+                "updated_at"=> "2016-01-24 12:07:52",
+                "answer"=> "考核点2考核项1评分标准1"
+            ],
+
+            3=>[
+                "id"=> 147,
+                "subject_id"=> 39,
+                "content"=> "考核点2考核项2",
+                "sort"=> 2,
+                "score"=> 1,
+                "pid"=> 145,
+                "level"=> 2,
+                "created_user_id"=> 45,
+                "created_at"=> "2016-01-24 12:07:52",
+                "updated_at"=> "2016-01-24 12:07:52",
+                "answer"=> "考核点2考核项2评分标准2"
+            ],
+        ],
+       ]
+        ];
+//        echo json_encode($data);
+         return response()->json(
+        $this->success_data($data,1,'数据传送成功')
+            );
 
     }
     /**
