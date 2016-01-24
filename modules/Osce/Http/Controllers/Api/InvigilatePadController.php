@@ -653,7 +653,7 @@ class InvigilatePadController extends CommonController
 //        $StartTime= Input::get('start_time');
         $ExamQueueModel= new ExamQueue();
         $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId);
-        dd($AlterResult);
+
         if($AlterResult){
             return response()->json(
                 $this->success_data('',1,'开始考试成功')
