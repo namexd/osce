@@ -257,12 +257,7 @@ class InvigilatePadController extends CommonController
 
         $data['exam_result_id'] =$ExamResultId;
         $Save =ExamScore::create($data);
-        if($Save){
-            return  flash;
-        }else{
-            return  true;
-        }
-
+         return $Save;
     }
 
     /**
@@ -362,7 +357,7 @@ class InvigilatePadController extends CommonController
                        );
                    }else{
                        return response()->json(
-                           $this->success_data('',1,'数据传保存成功')
+                           $this->success_data('',1,'成绩保存成功')
                        );
 
                    }
