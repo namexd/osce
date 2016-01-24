@@ -635,6 +635,7 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStartExam(Request $request){
+        dd(111111);
         $this->validate($request,[
             'student_id'=>'required|integer',
 //            'start_time'=>'required|integer',
