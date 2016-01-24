@@ -218,31 +218,57 @@ class DrawlotsController extends CommonController
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('status' , '=' , 0)
                 ->get();
-            //获得已经被选择的考站id对象
-            $stationIds = $station->pluck('station_id');
-            //将其变成一个一维数组
-            $stationIds = $stationIds->all();
-            //为该名考生分配一个还没有选择的station_id
-            $stationIds = RoomStation::where('room_id',$roomId)
-                ->whereNotIn('station_id', $stationIds)
-                ->select([
-                    'station_id'
-                ])
-                ->get();
+            //获得该场考试的exam_id
+            $examId = $station->exam_id;
 
-            //随机获取一个考站
-            $stationIds = $stationIds->pluck('station_id');
-            $ranStationId = $stationIds->random();
-            //将这个值保存在队列表中
-            if (!$examQueue = ExamQueue::where('student_id',$student->id)->first()) {
-                throw new \Exception('在队列中没有找到考生信息');
-            };
-            $examQueue -> status = 1;
-            $examQueue -> station_id = $ranStationId;
-            if (!$result = $examQueue -> save()) {
-                throw new \Exception('抽签失败！请重试');
-            };
-            return [$result,$station];
+            //判断如果是以考场分组，就抽签
+            if (Exam::findOrFail($examId)->sequence_mode == 1) {
+                //获得已经被选择的考站id对象
+                $stationIds = $station->pluck('station_id');
+                //将其变成一个一维数组
+                $stationIds = $stationIds->all();
+                //为该名考生分配一个还没有选择的station_id
+                $stationIds = RoomStation::where('room_id',$roomId)
+                    ->whereNotIn('station_id', $stationIds)
+                    ->select([
+                        'station_id'
+                    ])
+                    ->get();
+
+                //随机获取一个考站
+                $stationIds = $stationIds->pluck('station_id');
+                $ranStationId = $stationIds->random();
+                //将这个值保存在队列表中
+                if (!$examQueue = ExamQueue::where('student_id',$student->id)->first()) {
+                    throw new \Exception('在队列中没有找到考生信息');
+                };
+                $examQueue -> status = 1;
+                $examQueue -> station_id = $ranStationId;
+                if (!$examQueue -> save()) {
+                    throw new \Exception('抽签失败！请重试');
+                };
+
+                //将考站的信息返回
+                return Station::findOrFail($ranStationId);
+            } else {
+                //如果是以考站分组，直接按计划好的顺序给出
+                //查询该学生当前应该在哪个考站考试
+                $examQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('status',0)
+                    ->orderBy('begin_dt','asc')
+                    ->get();
+                if ($examQueue->isEmpty()) {
+                    throw new \Exception('在队列中没有找到考生信息');
+                }
+
+                //获得他应该要去的考站id
+                $stationId = $examQueue->first()->station_id;
+
+                //查出考站的信息
+                return Station::findOrFail($stationId);
+
+            }
+
         } catch (\Exception $ex) {
             throw $ex;
         }
