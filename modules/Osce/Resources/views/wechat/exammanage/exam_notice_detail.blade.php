@@ -63,6 +63,9 @@
                     <div class="notice-box">
                       {!! $notice->content !!}
                     </div>
+                    <div>
+
+                    </div>
                 </div>
             </li>
         </ul>
