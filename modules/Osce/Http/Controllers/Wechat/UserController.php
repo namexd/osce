@@ -135,8 +135,8 @@ class UserController  extends CommonController
                         $urlArray[]='response_type=code';
                         $urlArray[]='scope=snsapi_base';
                         $urlArray[]='state=123#wechat_redirect';
-
-                        return  redirect()->intended(implode("&",$urlArray));
+                         dd(implode("&",$urlArray));
+//                        return  redirect()->intended(implode("&",$urlArray));
 
                     }
                     else
