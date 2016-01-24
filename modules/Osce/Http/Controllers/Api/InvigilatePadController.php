@@ -635,7 +635,7 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStartExam(Request $request){
-        dd(111111);
+
         $this->validate($request,[
             'student_id'=>'required|integer',
 //            'start_time'=>'required|integer',
@@ -653,6 +653,7 @@ class InvigilatePadController extends CommonController
 //        $StartTime= Input::get('start_time');
         $ExamQueueModel= new ExamQueue();
         $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId);
+        dd($AlterResult);
         if($AlterResult){
             return response()->json(
                 $this->success_data('',1,'开始考试成功')
