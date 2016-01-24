@@ -144,9 +144,9 @@ class ExamQueue extends CommonModel
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
-                ->where('exam_queue.status', 1)
-                ->where('student.exam_id',56)
-                ->select([
+                ->where('exam_queue.status', 0)
+                ->where('student.exam_id',$examId)
+                ->select(
                     'student.id as student_id',
                     'student.name as student_name',
                     'student.user_id as student_user_id',
@@ -154,8 +154,8 @@ class ExamQueue extends CommonModel
                     'student.mobile as student_mobile',
                     'student.code as student_code',
                     'student.avator as student_avator',
-                    'student.description as student_description',
-                ])
+                    'student.description as student_description'
+                )
                 ->take($stationNum)
                 ->orderBy('exam_queue.begin_dt','asc')
                 ->get();
@@ -177,8 +177,8 @@ class ExamQueue extends CommonModel
         try {
         return ExamQueue::leftJoin('student','student.id', '=', 'exam_queue.student_id')
             ->where('exam_queue.room_id', $room_id)
-            ->where('exam_queue.status',1)
-            ->where('exam_queue.exam_id',56)
+            ->where('exam_queue.status',0)
+            ->where('exam_queue.exam_id',$examId)
             ->skip($stationNum)
             ->take($stationNum)
             ->orderBy('exam_queue.begin_dt','asc')
