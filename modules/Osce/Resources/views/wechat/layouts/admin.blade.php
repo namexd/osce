@@ -1,5 +1,4 @@
 @extends('osce::wechat.layouts.base')
-@extends('osce::wechat.layouts.admin_errors_notice')
 @section('meta')
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 @stop
