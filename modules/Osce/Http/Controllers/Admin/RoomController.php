@@ -281,14 +281,20 @@ class RoomController extends CommonController
         try {
             //验证略
             $this->validate($request, [
-                'id' => 'required|integer'
+                'id' => 'required|integer',
+                'type' => 'required|integer'
             ]);
             DB::connection('osce_mis')->beginTransaction();
             $id = $request->input('id');
+            $type = $request->input('type');
             if (!$id) {
                 throw new \Exception('没有该房间！');
             }
 
+            if (!$type) {
+                throw new \Exception('没有类型！');
+            }
+            return $type;
             $result = $room->deleteData($id);
             if (!$result) {
                 throw new \Exception('系统错误，请重试！');

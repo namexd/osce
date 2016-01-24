@@ -12,6 +12,31 @@
 @stop
 
 @section('only_js')
+    <script>
+        $(function(){
+            $('.fa-trash-o').click(function(){
+                //console.log($('.active').attr('href'))
+                var thisElement = $(this);
+                layer.confirm('确认删除？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        url:"{{route('osce.admin.room.postDelete')}}",
+                        data:{id:thisElement.parent().parent().parent().attr('value'),type:($('.active').find('a').attr('href')).split('=')[1]},
+                        success:function(res){
+                            if(res.code==1){
+                                location.href = (location.href).split('?')[0];
+                            }else{
+                                layer.alert(res.message)
+                            }
+                        }
+                    })
+                });
+            });
+        })
+    </script>
 
 @stop
 

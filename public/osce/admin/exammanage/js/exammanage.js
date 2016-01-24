@@ -662,7 +662,7 @@ function examroom_assignment(){
                     var station_index = parseInt(thisElement.attr('index'));
                     for(var i in data){
 
-                        var teacher = '<option>==请选择==</option>';
+                        var teacher = '<option value="">==请选择==</option>';
                         var typeValue = [0,'技能操作站','SP站','理论操作站'];
 
                         //写入dom 筛选操作，sp、理论、技能
@@ -1205,7 +1205,7 @@ function examroom_assignment(){
           });
 
     });
-    /*$('.teacher-teach').select2({
+    $('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -1243,7 +1243,7 @@ function examroom_assignment(){
             }
 
         }
-    });*/
+    });
 
 }
 
@@ -2573,7 +2573,7 @@ function station_assignment(){
         var thisElement = $(this).parent();
 
         var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
-            '<input type="hidden" name="station['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
+            '<input type="hidden" name="form_data['+thisElement.parent().attr('value')+'][spteacher_id][]" value="'+id+'">'+
             '<div class="pull-left">'+$teacher+'</div>'+
             '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
         $(this).parents(".pull-right").prev().append(sql);
@@ -2631,7 +2631,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    /*$('.teacher-teach').select2({
+    $('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -2669,6 +2669,6 @@ function station_assignment(){
             }
 
         }
-    });*/
+    });
 
 }

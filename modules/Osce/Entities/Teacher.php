@@ -431,7 +431,8 @@ class Teacher extends CommonModel
      */
     public function stationTeacher($exam_id)
     {
-        return $this->leftJoin('station_teacher',
+        return $this
+            ->leftJoin('station_teacher',
             function ($join) {
                 $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
             })
@@ -439,6 +440,9 @@ class Teacher extends CommonModel
                 function ($join) {
                     $join->on('station.id','=','station_teacher.station_id');
                 })
+            -> leftJoin(
+                'exam_flow_station', 'exam_flow_station.station_id', '=', 'station_teacher.station_id'
+            )
             -> where('station_teacher.exam_id' , $exam_id)
             -> select([
                 $this->table . '.id as teacher_id',
@@ -449,6 +453,7 @@ class Teacher extends CommonModel
                 'station.name as station_name',
                 'station.type as station_type',
                 'station.code as station_code',
+                'exam_flow_station.serialnumber as serialnumber'
             ])
             -> get();
     }
