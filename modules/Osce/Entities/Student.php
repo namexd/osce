@@ -329,6 +329,7 @@ class Student extends CommonModel
         $buondNum=ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)->where('status',1)->select()->get();
         $buondNum=count($buondNum);
         $num=$countStation-$buondNum;
+        \Log::info($num);
         if($num===0 || $num<0){
           return array();
         }
@@ -343,6 +344,7 @@ class Student extends CommonModel
                 'exam_order.status as status',
                 'exam_order.exam_screening_id as exam_screening_id',
             ])->paginate($num);
+        \Log::info($builder);
         return $builder;
     }
 

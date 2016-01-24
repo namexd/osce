@@ -132,6 +132,8 @@ class IndexController extends CommonController
         foreach($students->data as $item){
          $idcards[]=$item->idcard;
         }
+        \Log::info($idcards);
+        \Log::info($id_card);
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
         }
@@ -691,6 +693,7 @@ class IndexController extends CommonController
                 }
                 $countStation=array_unique($countStation);
                 $countStation=count($countStation)*2;
+                \Log::info($countStation);
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
@@ -776,7 +779,7 @@ class IndexController extends CommonController
         ]);
         $exam_id=$request->get('exam_id');
         $idcard=$request->get('id_card');
-        $studentId=Student::where('idcard',$idcard)->select('id')->first();
+        $studentId=Student::where('idcard',$idcard)->where('exam_id',$exam_id)->select('id')->first();
         if(!$studentId){
           return \Response::json(array('code'=>2));//未找到该学生
         }
