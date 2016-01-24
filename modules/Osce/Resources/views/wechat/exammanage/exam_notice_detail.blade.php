@@ -64,9 +64,9 @@
                       {!! $notice->content !!}
                     </div>
                     <div>
-                        @if($data['attachments'])
-                            @foreach($data['attachments'] as $key=>$list)
-                                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$data['id'],'attch_index'=>$key])}}"><?php $pathInfo=explode('/',$list)?>{{array_pop($pathInfo)}}</a><br />
+                        @if($notice->attachments)
+                            @foreach($notice->attachments as $key=>$list)
+                                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}"><?php $pathInfo=explode('/',$list)?>{{array_pop($pathInfo)}}</a><br />
                             @endforeach
                         @endif
                     </div>
