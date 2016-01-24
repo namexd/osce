@@ -113,6 +113,7 @@ class IndexController extends CommonController
             'id_card' =>'required',
             'exam_id' =>'required'
         ]);
+        \Log::info('test');
         $code=$request->get('code');
         $id_card=$request->get('id_card');
         $exam_id=$request->get('exam_id');
@@ -129,15 +130,12 @@ class IndexController extends CommonController
         $students=$this->getStudentList($request);
         $idcards=[];
         $students=json_decode($students->content());
-        \Log::info($students);
         foreach($students->data as $item){
          $idcards[]=$item->idcard;
         }
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
         }
-        \Log::info($idcards);
-        \Log::info($id_card);
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
         $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
@@ -190,7 +188,7 @@ class IndexController extends CommonController
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->orderBy('id','DESC')->first();
+        $student_id=Student::where('exam_id',$exam_id)->select('id')->first();
         if(!$student_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
@@ -214,6 +212,7 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
+               ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_id',$exam_id)->update(['is_end'=>1]);
             }
             return \Response::json(array('code'=>1));
         }else{
@@ -673,7 +672,6 @@ class IndexController extends CommonController
              }
                 $countStation=array_unique($countStation);
                 $countStation=count($countStation)*3;
-                \Log::info($countStation.'考场');
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
@@ -696,7 +694,6 @@ class IndexController extends CommonController
                 }
                 $countStation=array_unique($countStation);
                 $countStation=count($countStation)*3;
-                \Log::info($countStation.'考站');
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){

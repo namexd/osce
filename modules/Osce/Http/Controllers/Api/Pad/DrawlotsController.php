@@ -196,7 +196,7 @@ class DrawlotsController extends CommonController
             $uid = $request->input('uid');
             $roomId = $request->get('room_id');
             //根据uid来查对应的考生
-            $watchLog = ExamScreeningStudent::where('watch_id',$uid)->first();
+            $watchLog = ExamScreeningStudent::where('watch_id',$uid)->where('is_end',0)->first();
 
             if (!$watchLog) {
                 throw new \Exception('没有找到对应的腕表信息！');
