@@ -123,10 +123,11 @@ class IndexController extends CommonController
         }
         $student_id=$student_id->id;
         $planId=ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();
+        \Log::error($planId);
+        \Log::info($planId);
         if(!$planId ){
             return \Response::json(array('code' =>4));
         }
-        \Log::error($planId);
         $students=$this->getStudentList($request);
         $idcards=[];
         $students=json_decode($students->content());
