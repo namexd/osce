@@ -129,14 +129,15 @@ class IndexController extends CommonController
         $students=$this->getStudentList($request);
         $idcards=[];
         $students=json_decode($students->content());
+        \Log::info($students);
         foreach($students->data as $item){
          $idcards[]=$item->idcard;
         }
-        \Log::info($idcards);
-        \Log::info($id_card);
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
         }
+        \Log::info($idcards);
+        \Log::info($id_card);
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
         $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
@@ -156,6 +157,7 @@ class IndexController extends CommonController
             $watchModel = new WatchLog();
             $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
             ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
+            Exam::where('id',$exam_id)->update(['status'=>1]);
             return \Response::json(array('code' => 1));
         } else {
             return \Response::json(array('code' => 0));
@@ -670,7 +672,8 @@ class IndexController extends CommonController
               $countStation[]=$item->station_id;
              }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*2;
+                $countStation=count($countStation)*3;
+                \Log::info($countStation.'考场');
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
@@ -692,8 +695,8 @@ class IndexController extends CommonController
                     $countStation[]=$item->station_id;
                 }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*2;
-                \Log::info($countStation);
+                $countStation=count($countStation)*3;
+                \Log::info($countStation.'考站');
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){

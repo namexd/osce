@@ -344,7 +344,6 @@ class Student extends CommonModel
                 'exam_order.status as status',
                 'exam_order.exam_screening_id as exam_screening_id',
             ])->paginate($num);
-        \Log::info($builder);
         return $builder;
     }
 
