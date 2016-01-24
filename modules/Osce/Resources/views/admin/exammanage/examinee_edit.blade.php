@@ -96,6 +96,13 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
+                    },
+                    images: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请上传图片'
+                            }
+                        }
                     }
                 }
             });
@@ -125,6 +132,8 @@
                     }
                 });
             });
+            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
+
         });
         //建立一個可存取到該file的url
         var url = '';
@@ -156,7 +165,7 @@
                         <input type="hidden" name="id" value="{{$item->id}}"/>
                         <input type="hidden" name="resources_type" id="resources_type" value="TOOLS"/>
 
-                        <div class="col-md-3 col-sm-3">
+                        <div class="col-md-3 col-sm-3 image-box">
                             <ul class="img_box">
                                 <li>
                                     <img src="{{$item->avator}}"/>
