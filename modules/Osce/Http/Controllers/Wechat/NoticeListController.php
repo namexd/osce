@@ -65,28 +65,20 @@ class NoticeListController   extends CommonController
         }else{
              $list   =   [];
          }
-
-
-//        $notice =   new InformInfo();
-//        $config = Config::where('name','=','type')->first();
-//
-//        if(empty($config) || in_array(4,json_decode($config->value))){
-//            $list   =   $notice ->  getList();
-//            //根据操作人去除不给他接收的数据
-//            if(!empty($list)){
-//                foreach ($list as $index => $item) {
-//                    if(!in_array($accept, explode(',', $item->accept))){
-//                        unset($list[$index]);
-//                    }
-//                }
-//            }
-//        }else{
-//            $list   =   [];
-//        }
-
         return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
     }
 
+
+
+//    public function   getSystemView(Request $request)
+//    {
+//        $trainModel = new  InformInfo ();
+//        $pagination = $trainModel->getList();
+//        $list = InformInfo::select()->orderBy('created_at')->get()->toArray();
+//        return response()->json(
+//            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
+//        );
+//    }
     /**
      * 查看通知详情
      * @url /osce/wechat/notice-list/view

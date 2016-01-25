@@ -92,7 +92,6 @@ class NoticeController extends CommonController
         $trainModel = new  InformInfo ();
         $pagination = $trainModel->getList();
         $list = InformInfo::select()->orderBy('created_at')->get()->toArray();
-
         return response()->json(
             $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
         );
@@ -118,12 +117,16 @@ class NoticeController extends CommonController
      */
     public function getView(Request $request)
     {
+
         $this->validate($request, [
             'id' => 'required',
         ]);
 
         $id = $request->get('id');
         $notice = InformInfo::find($id);
+        if($notice->attachments){
+            $notice->attachments=unserialize($notice->attachments);
+        }
 //        foreach(){
 //
 //           }

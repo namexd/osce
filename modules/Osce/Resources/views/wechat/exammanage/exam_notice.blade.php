@@ -43,18 +43,21 @@
             });
             //初始化
             var now_page = 1;
-            var url = "{{route('osce.wechat.notice-list.getView')}}";
+            var url = "{{route('osce.wechat.notice.getSystemView')}}";
             //内容初始化
             $('.history-list').empty();
             getItem(now_page,url);
 
             function getItem(current,url){
+
                 $.ajax({
+
                     type:'get',
                     url:url,
                     aysnc:true,
                     data:{id:current,pagesize:current},
                     success:function(res){
+
                         console.log(res);
                         totalpages = res.total;
                         var html = '';
@@ -65,16 +68,12 @@
                             //准备dom
                             //计数
                             var key = (index+1+parseInt(i))
-                            var author  =   data[i].author;
-                            if(author==null)
-                            {
-                                continue;
-                            }
+
                             html +='<li>'+
-                                        '<p class="title">'+123+'</p>'+
-                                        '<p class="time"><span class="year">'+123123+'</span>'+
-                                            '<a style="color:#1ab394;" class="right" href="'+url+'">查看详情&nbsp;&gt;</a>'+
-                                        '</p>'
+                                        '<p class="title">'+data[i].name+'</p>'+
+                                        '<p class="time"><span class="year">'+data[i].created_at+'</span>'+
+                                            '<a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice.getView')}}?id='+data[i].id+'">查看详情&nbsp;&gt;</a>'+
+                                        '</p>'+
                                     '</li>';
                         }
                         //插入
@@ -102,12 +101,7 @@
     </div>
     <div class="history-box">
         <ul id="discussion_ul" class="history-list">
-            @foreach($list as $item)
-            <li>
-                <p class="title">{{ $item->name  }}</p>
-                <p class="time"><span class="year">{{  $item->created_at }}</span><a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice.getView',['id'=>$item->id])}}">查看详情&nbsp;&gt;</a></p>
-            </li>
-            @endforeach
+
         </ul>
     </div>
 

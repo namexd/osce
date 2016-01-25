@@ -551,12 +551,13 @@ class ExamPlan extends CommonModel
 
     public function savePlan($exam_id,$plan){
         $user=\Auth::user();
-
+        $hasList    =   [];
         foreach($plan as $examScreening => $roomList)
         {
             foreach($roomList as $roomStationId=>$room)
             {
                 $roomStationInfo    =   explode('-',$roomStationId);
+                //dd($room['child']);
                 foreach($room['child'] as $timeList)
                 {
                     foreach($timeList['items'] as $student)
@@ -565,6 +566,13 @@ class ExamPlan extends CommonModel
                         {
                             if(array_key_exists(1,$roomStationInfo))
                             {
+                                if(array_key_exists($student->id,$hasList))
+                                {
+                                    if(in_array(intval($roomStationInfo[1]),$hasList[$student->id]))
+                                    {
+                                        continue;
+                                    }
+                                }
                                 $data[]=[
                                     'exam_id'           =>  $exam_id,
                                     'exam_screening_id' =>  $examScreening,
@@ -576,6 +584,7 @@ class ExamPlan extends CommonModel
                                     'status'            =>  1,
                                     'created_user_id'   =>  $user->id,
                                 ];
+                                $hasList[$student->id][]=$roomStationInfo[1];
                             }
                             else
                             {
@@ -685,7 +694,17 @@ class ExamPlan extends CommonModel
                 foreach($roomTime as $timeInfo){
                     foreach($timeInfo as $item)
                     {
-                        $items[]=$item;
+                        if(array_key_exists(1,$roomStaionInfo))
+                        {
+                            if($item['station_id']==$roomStaionInfo[1])
+                            {
+                                $items[]=$item;
+                            }
+                        }
+                        else
+                        {
+                            $items[]=$item;
+                        }
                     }
                 }
                 if(array_key_exists(1,$roomStaionInfo))
@@ -698,6 +717,7 @@ class ExamPlan extends CommonModel
                 }
             }
         }
+
         foreach($roomStationBatchData as $screeningId=>$examPlanList)
         {
             foreach($examPlanList as $roomStaionId=>$examPlan)

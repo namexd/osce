@@ -49,7 +49,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="description" value="{{$item->description}}"/>
+                                <input id="select_Category" required  class="form-control m-b" name="note" value="{{$item->description}}"/>
                             </div>
                         </div>
 
