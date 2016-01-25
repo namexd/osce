@@ -64,7 +64,7 @@
                                 data: function(validator) {
                                     return {
                                         id: '{{$item->id}}',
-                                        name: $('[name="whateverNameAttributeInYourForm"]').val()
+                                        mobile: $('#mobile').val()
                                     }
                                 }
                             }
