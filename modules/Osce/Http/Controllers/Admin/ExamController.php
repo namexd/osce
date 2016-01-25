@@ -761,7 +761,7 @@ class ExamController extends CommonController
             $serialnumberGroup[$item->serialnumber][] = $item;
         }
         //获取考试对应的考站数据
-        $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('serialnumber');
+        $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
     }
 
