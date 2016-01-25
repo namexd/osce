@@ -53,8 +53,8 @@ class NoticeListController   extends CommonController
 //       dd($noticeList['data']);
          if($noticeList['total']!==0){
               foreach($noticeList['data'] as  $index => $item){
-                  $list[]=[
-                      'title'=>$item->title,
+                  $list=[
+                      'name'=>$item->title,
                       'content' =>$item->content,
                       'accept_user_id'=>$item->accept_user_id,
                       'send_user_id'=>$item->send_user_id,
@@ -65,7 +65,7 @@ class NoticeListController   extends CommonController
         }else{
              $list   =   [];
          }
-//        dd($list);
+
 
 //        $notice =   new InformInfo();
 //        $config = Config::where('name','=','type')->first();
