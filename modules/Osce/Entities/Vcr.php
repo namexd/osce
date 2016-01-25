@@ -200,12 +200,8 @@ class Vcr extends CommonModel implements MachineInterface
             $modelVcr = AreaVcr::where('area_id', $id)->first();
         }
 
-        $roomVcr = RoomVcr::where('room_id', '<>', $id)->select(['vcr_id'])->groupBy('vcr_id')->get();
-        $vcrIds = [];
-        foreach ($roomVcr as $value) {
-            array_push($vcrIds, $value->vcr_id);
-        }
-        $vcr = Vcr::where('status', '<', 2)->whereNotIn('id', $vcrIds)
+        $vcr = Vcr::where('status', '<', 2)
+            ->where('used',0)
             ->orWhere('id', $modelVcr->vcr_id)
             ->select(['id', 'name'])->get();
 
