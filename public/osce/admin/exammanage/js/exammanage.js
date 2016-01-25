@@ -710,7 +710,7 @@ function examroom_assignment(){
                                 '<option>==请选择==</option>'+
                                 '</select>'+*/
                                 '<div class="btn-group">'+
-                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                   '<span class="caret"></span>'+
                                   '</button>'+
                                   '<ul class="dropdown-menu">'+
@@ -2137,7 +2137,7 @@ function station_assignment(){
                                 '<option>==请选择==</option>'+
                                 '</select>'+*/
                                 '<div class="btn-group">'+
-                                  '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                  '<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                   '<span class="caret"></span>'+
                                   '</button>'+
                                   '<ul class="dropdown-menu">'+
