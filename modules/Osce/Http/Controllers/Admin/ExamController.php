@@ -169,11 +169,14 @@ class ExamController extends CommonController
                     $begin_dt   = $bd;
                     $end_dt     = $ed;
                 }
-                //获取最早开始时间，最晚结束时间
-                if($key>1 && (strtotime($begin_dt) > strtotime($bd))){
-                    $begin_dt = $bd;
+                if($key>1 && $examScreeningData[$key-1]['end_dt']> $bd){
+                    throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
                 }
-                if($key>1 && (strtotime($end_dt) < strtotime($ed))){
+                //获取最早开始时间，最晚结束时间
+                if($key == 1){
+                    $begin_dt   = $bd;
+                }
+                if($key == count($examScreeningData)){
                     $end_dt = $ed;
                 }
                 $examScreeningData[$key]['create_user_id'] = $user -> id;
@@ -296,20 +299,19 @@ class ExamController extends CommonController
                 if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
                     throw new \Exception('时间输入有误！');
                 }
-                //获取第一组时间数据
-                if($key == 0){
-                    $begin_dt   = $bd;
-                    $end_dt     = $ed;
+                if($key>1 && $examScreeningData[$key-1]['end_dt']> $bd){
+                    throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
                 }
                 //获取最早开始时间，最晚结束时间
-                if($key>0 && strtotime($begin_dt) > strtotime($bd)){
-                    $begin_dt = $bd;
+                if($key == 1){
+                    $begin_dt   = $bd;
                 }
-                if($key>0 && strtotime($end_dt) < strtotime($ed)){
+                if($key == count($examScreeningData)){
                     $end_dt = $ed;
                 }
                 $examScreeningData[$key]['create_user_id'] = $user -> id;
             }
+
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'name'          => e($request  ->  get('name')),
