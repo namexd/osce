@@ -208,6 +208,8 @@ class Room extends CommonModel
                 if (!RoomVcr::create($data)) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 };
+            } else {
+                throw new \Exception('该场所并未绑定设备，请删除此场所');
             }
 
 
