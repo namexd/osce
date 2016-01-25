@@ -294,8 +294,13 @@ class RoomController extends CommonController
             if (!$type) {
                 throw new \Exception('没有类型！');
             }
-            return $type;
-            $result = $room->deleteData($id);
+            if ($type === '0') {
+                $result = $room->deleteData($id);
+            } else {
+                $area = new Area();
+                $result = $area->deleteArea($id);
+            }
+
             if (!$result) {
                 throw new \Exception('系统错误，请重试！');
             }
@@ -307,6 +312,7 @@ class RoomController extends CommonController
             return $this->fail($ex);
         }
     }
+
 
     /**
      * 判断名称是否已经存在

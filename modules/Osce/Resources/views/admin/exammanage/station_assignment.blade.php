@@ -191,20 +191,24 @@
                                                 <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
                                                     <select class="form-control teacher-teach js-example-basic-multiple" name="form_data[{{$k2++}}][teacher_id]">
-                                                        @if($item[0]->teacher_type == 1)
-                                                            <option value="{{$item[0]->teacher_id}}" selected="selected">{{$item[0]->teacher_name}}</option>
-                                                        @endif
+                                                        @foreach($item as $value)
+                                                            @if($value->teacher_type == 1)
+                                                                <option value="{{$value->teacher_id}}" selected="selected">{{$value->teacher_name}}</option>
+                                                            @endif
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
-                                                        @if($item[1]->teacher_type == 2)
-                                                        <div class="input-group teacher pull-left" value="{{$item[1]->teacher_id}}">
-                                                            <input type="hidden" name="form_data[{{$k3++}}][spteacher_id]" value="{{$item[1]->teacher_id}}">
-                                                            <div class="pull-left">{{$item[1]->teacher_name}}</div>
-                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                        </div>
-                                                        @endif
+                                                        @foreach($item as $value)
+                                                            @if($value->teacher_type == 2)
+                                                            <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
+                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id]" value="{{$value->teacher_id}}">
+                                                                <div class="pull-left">{{$value->teacher_name}}</div>
+                                                                <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                            </div>
+                                                            @endif
+                                                        @endforeach
                                                     </div>
                                                     <div class="pull-right" value="{{$k4++}}">
                                                         <div class="btn-group">
