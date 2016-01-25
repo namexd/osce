@@ -37,7 +37,6 @@ class StudentExamQueryController extends  CommonController
 
     public  function getResultsQueryIndex(Request $request){
         try{
-             dd(11111);
             $user= Auth::user();
             if(empty($user)){
                 throw new \Exception('当前用户未登陆');
