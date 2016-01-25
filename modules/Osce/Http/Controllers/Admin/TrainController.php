@@ -130,12 +130,11 @@ class TrainController extends  CommonController{
 
 //        $user=Auth::user();
 //        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//        $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
 //        $manager=config('osce.manager');
-//        if($userId!==$id || $creteId!==$manager[0]){
-//              return response()->json(
-//                  $this->success_rows(3,'false')
-//              );
+//        if($userId!==$id || $createId!==$manager[0]){
+//            return redirect()->back()->withInput()->withErrors('权限不足');
+//
 //        }
         $list=InformTrain::where('id',$id)->select()->get();
 
@@ -190,12 +189,10 @@ class TrainController extends  CommonController{
 
 //        $user=Auth::user();
 //        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
+//        $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
 //        $manager=config('osce.manager');
-//        if($userId!==$creteId || $creteId!==$manager[0]){
-//            return response()->json(
-//                $this->success_rows(3,'false')
-//            );
+//        if($userId!==$createId || $createId!==$manager[0]){
+//            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
         $data['attachments']=serialize($request->input('file'));
         $result=InformTrain::where('id',$data['id'])->update($data);
@@ -230,12 +227,10 @@ class TrainController extends  CommonController{
         $id=intval($request->get('id'));
 //        $user=Auth::user();
 //        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//        $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
 //        $manager=config('osce.manager');
-//        if($userId!==$creteId || $creteId!==$manager[0]){
-//            return response()->json(
-//                $this->success_rows(3,'false')
-//            );
+//        if($userId!==$createId || $createId!==$manager[0]){
+//            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
 
         $result=InformTrain::where('id',$id)->delete();
