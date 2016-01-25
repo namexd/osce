@@ -87,7 +87,7 @@
                             <ul class="nav nav-second-level">
                                 <li><a class="active J_menuItem" href="{{route('osce.admin.course.getIndex')}}">科目成绩统计</a>
                                 </li>
-                                <li><a class="active J_menuItem" href="{{route('osce.admin.course.getStudent')}}">考生成绩统计</a>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.course.getStudentScore')}}">考生成绩统计</a>
                                 </li>
 
                             </ul>
