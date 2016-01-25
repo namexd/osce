@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\AreaVcr;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\StationVcr;
@@ -859,10 +860,13 @@ class MachineController extends CommonController
             $id      = $request ->input('id');
             $cate_id = $request ->input('cate_id');
             if($cate_id ==1){
-                if($result = StationVcr::where('vcr_id',$id)->first()){
+                if(!StationVcr::where('vcr_id',$id)->get()->isEmpty()){
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
-                if($result = RoomVcr::where('vcr_id',$id)->first()){
+                if(!RoomVcr::where('vcr_id',$id)->get()->isEmpty()){
+                    throw new \Exception('该设备已于其他设备关联,无法删除!');
+                }
+                if (!AreaVcr::where('vcr_id',$id)->get()->isEmpty()) {
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
             }

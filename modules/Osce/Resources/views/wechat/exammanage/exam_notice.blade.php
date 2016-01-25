@@ -43,7 +43,7 @@
             });
             //初始化
             var now_page = 1;
-            var url = "{{route('osce.wechat.notice.getSystemList')}}";
+            var url = "{{route('osce.wechat.notice-list.getView')}}";
             //内容初始化
             $('.history-list').empty();
             getItem(now_page,url);
@@ -55,10 +55,12 @@
                     aysnc:true,
                     data:{id:current,pagesize:current},
                     success:function(res){
+                        console.log(res);
                         totalpages = res.total;
                         var html = '';
                         var index = (current - 1)*10;
                         data = res.data.rows;
+
                         for(var i in data){
                             //准备dom
                             //计数
@@ -72,10 +74,8 @@
                                         '<p class="title">'+123+'</p>'+
                                         '<p class="time"><span class="year">'+123123+'</span>'+
                                             '<a style="color:#1ab394;" class="right" href="'+url+'">查看详情&nbsp;&gt;</a>'+
-                                        '</p>
+                                        '</p>'
                                     '</li>';
-
-
                         }
                         //插入
                         $('#discussion_ul').append(html);
