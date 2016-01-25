@@ -174,9 +174,14 @@ class ExamResult extends CommonModel
 
 
 
+    /**
+     *  微信端学生成绩查询
+     * @param Request $request
+     * @author zhouqiang
+     * @return \Illuminate\View\View
+     */
 
 
-   //微信端学生成绩查询
     public function stationInfo($examScreeningIds){
 
      $builder=$this->leftJoin('station', function($join){
@@ -197,5 +202,36 @@ class ExamResult extends CommonModel
 
      return $builder;
     }
+
+    /**
+     *  pc端学生成绩查询
+     * @param Request $request
+     * @author zhouqiang
+     * @return \Illuminate\View\View
+     */
+
+    public function getstudentData($studentId){
+
+        $builder=$this->leftJoin('student', function($join){
+            $join -> on('student.id', '=', 'exam_result.student_id');
+        })-> leftJoin('teacher', function($join){
+            $join -> on('teacher.id', '=', 'exam_result.teacher_id');
+        });
+        $builder=$builder->where('exam_result.student_id',$studentId);
+        $builder=$builder->select([
+            'exam_result.station_id as id',
+            'exam_result.score as score',
+            'exam_result.time as time',
+            'teacher.name as grade_teacher',
+            'student.name as student_name',
+            'student.code as student_code',
+        ])
+            ->get();
+
+        return $builder;
+
+    }
+
+
 
 }

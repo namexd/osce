@@ -48,7 +48,7 @@ class Standard extends CommonModel
             $prointData['test_point'] =   $proint;
             if(array_key_exists($proint->id,$data))
             {
-                $prointData['test_term']    =   $data[$proint->id];
+                $prointData['test_point']['test_term']    =   $data[$proint->id];
             }
             else
             {
@@ -58,6 +58,10 @@ class Standard extends CommonModel
         }
         return $return;
     }
+
+
+
+
 
    public function getScore($stationId,$subjectId){
 
