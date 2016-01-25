@@ -309,6 +309,10 @@ class TrainController extends  CommonController{
            if ($request->hasFile('file'))
            {
                $file   =   $request->file('file');
+               $file_ex=$file->getClientOriginalExtension();
+               if (!in_array($file_ex, array('docx', 'xlsx'))){
+                   return back()->withErrors('上传文件类型失败');
+               }
                $path   =   'osce/file/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                $destinationPath    =   public_path($path);
                $fileName           =   $file->getClientOriginalName();

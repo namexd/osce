@@ -79,6 +79,7 @@
         padding: 0;
         margin: 0;
     }
+    #exam-place tbody tr td:last-child>a{color: #1ab394;}
     </style>
 @stop
 
