@@ -358,12 +358,8 @@ class MachineController extends CommonController
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-
-            $model      =   $this   ->  getMachineModel($cate_id);
-
-
+            $model      =   new Vcr();
             if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
             } else{
@@ -436,9 +432,9 @@ class MachineController extends CommonController
             'factory'       =>  e($request  ->  get('factory')),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
+
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Vcr();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else{
@@ -539,18 +535,17 @@ class MachineController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
-            'name'          =>  e($request    ->  get('name')),
+            'name'          =>  e($request  ->  get('name')),
             'code'          =>  $request    ->  get('code'),
-            'factory'       =>  e($request    ->  get('factory')),
+            'factory'       =>  e($request  ->  get('factory')),
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             'status'        =>  $request    ->  get('status'),
             'create_user_id'=>  $user       ->  id
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model  =   new Pad();
             if($pad =   $model  ->  addMachine($data)){
                 return $pad;
             } else{
@@ -589,10 +584,9 @@ class MachineController extends CommonController
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Pad();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else {
@@ -705,9 +699,8 @@ class MachineController extends CommonController
             'purchase_dt'   =>  $request    ->  get('purchase_dt')
         ];
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model    =   new Watch();
             if($watch =   $model  ->  addMachine($data)){
 //                $action='新增';
 //                $data=array(
@@ -755,34 +748,22 @@ class MachineController extends CommonController
 
             }
         }
+        $data   =   [
+            'id'            =>  $request    ->  get('id'),
+            'name'          =>  $request    ->  get('name'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'description'   =>  $request    ->  get('description'),
+            'status'        =>  $request    ->  get('status'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+        ];
         $code=Watch::where('id',$request->get('id'))->select('code')->first()->code;
-        if($code==$request->get('code')){
-
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-            ];
-        }else{
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'code'          =>  $request    ->  get('code'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-            ];
+        if($code!=$request->get('code')){
+            $data['code']   =   $request    ->  get('code');
         }
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Watch();
             if($cameras =   $model  ->  editMachine($data))
             {
 //                $action='编辑';
