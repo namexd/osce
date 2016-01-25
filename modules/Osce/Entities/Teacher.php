@@ -82,7 +82,6 @@ class Teacher extends CommonModel
             }
             $excludeId = $this->excludeId;
             $excludeIds = (explode(",",$teacher_id));
-            dd($excludeIds);
             if (count($excludeId) !== 0) {
                 $builder = $builder->leftJoin('cases',function($join){
                     $join    ->  on('cases.id','=', 'teacher.case_id');
