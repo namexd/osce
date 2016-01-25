@@ -1139,6 +1139,7 @@ class ExamController extends CommonController
         $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
             return $plan;
         });
+
         return response()->json(
             $this->success_data($plan)
         );

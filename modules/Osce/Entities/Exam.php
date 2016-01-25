@@ -282,8 +282,26 @@ class Exam extends CommonModel
             if($exam->sequence_mode!=$examData['sequence_mode'])
             {
                 //如果排考模式变化 删除 已有 教师关联 和 排考计划
-                StationTeacher::where('exam_id','=',$exam_id)->delete();
-                ExamPlan::where('exam_id','=',$exam_id)->delete();
+                if(StationTeacher::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamPlan::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamFlowRoom::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamFlowStation::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamFlow::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
             }
             foreach($examData as $field=>$item)
             {
