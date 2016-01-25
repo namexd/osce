@@ -73,10 +73,13 @@ class InvitationController extends CommonController
 //        dd($data);
         $InviteModel = new Invite();
         if ($InviteModel->addInvite($data)) {
-
-            return view('osce::admin.exammanage.examroom_assignment');
+            return response()->json(
+                $this->success_data()
+            );
         } else {
-            throw new \Exception('邀请创建失败');
+            return response()->json(
+                $this->fail(new \Exception('邀请失败'))
+            );
         }
 
 
