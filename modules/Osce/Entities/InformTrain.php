@@ -11,7 +11,7 @@ class InformTrain extends CommonModel{
     protected $table 		= 	'inform_training';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	[ 'name', 'address','begin_dt','end_dt','end_dt','content','attachments','status','create_user_id'];
+    protected   $fillable 	=	[ 'name', 'address','begin_dt','end_dt','teacher','content','attachments','status','create_user_id'];
     public      $search     =   [];
 
     public function getPaginate(){
@@ -37,7 +37,7 @@ class InformTrain extends CommonModel{
                 $this->table.'.content as content',
                 $this->table.'.attachments as attachments',
                 $this->table.'.status as status',
-            ])->orderBy($this->table.'.id')->paginate(config('osce.page_size'));
+            ])->orderBy($this->table.'.begin_dt','DESC')->paginate(config('osce.page_size'));
             return $builder;
         }
 

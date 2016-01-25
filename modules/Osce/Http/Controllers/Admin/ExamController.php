@@ -94,98 +94,10 @@ class ExamController extends CommonController
             //获取id
             $id = $request->input('id');  //id为考试id
 
-            //开启事务
-            DB::beginTransaction();
-            //进入模型逻辑
-            //删除与考场相关的流程
-            $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get(); //获得流程的id
-            $examScreening = ExamScreening::where('exam_id',$id);
-
-            //删除考试考场学生表
-            foreach ($examScreening->select('id')->get() as $item) {
-                if (count(ExamScreeningStudent::where('exam_screening_id',$item->id)->get()) != 0) {
-                    if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->delete()) {
-                        throw new \Exception('删除考试考场学生关系表失败，请重试！');
-                    }
-                }
-            }
-
-            //删除考试考场关联表
-            if (count($examScreening-> get()) != 0) {
-                if (!$examScreening-> first() ->delete()) {
-                    throw new \Exception('删除考试考场关系表失败，请重试！');
-                }
-            }
-
-            //删除考试考场关联
-            if (count(ExamRoom::where('exam_id',$id)->first()) != 0) {
-                if (!ExamRoom::where('exam_id',$id)->delete()) {
-                    throw new \Exception('删除考试考场关联失败，请重试！');
-                }
-            }
-
-            //删除考试流程关联
-            if (count(ExamFlow::where('exam_id',$id)->first()) != 0) {
-                if (!ExamFlow::where('exam_id',$id)->delete()) {
-                    throw new \Exception('删除考试流程关联失败，请重试！');
-                }
-            }
-
-            //删除考试考场流程关联
-            if (count(ExamFlowRoom::where('exam_id',$id)->first()) != 0) {
-                if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
-                    throw new \Exception('删除考试考场流程关联失败，请重试！');
-                }
-            }
-
-            //通过考试流程-考站关系表得到考站信息
-            $station = ExamFlowStation::whereIn('flow_id',$flowIds);
-            $stationIds = $station->select('station_id')->get();
-            if (count($stationIds) != 0) {
-                //删除考试流程-考站关系表信息
-                if (!$station->delete()) {
-                    throw new \Exception('删除考试考站流程关联失败，请重试！');
-                }
-
-                //通过考站id找到对应的考站-老师关系表
-                foreach ($stationIds as $stationId) {
-                    if (!StationTeacher::where('station_id',$stationId)->delete()) {
-
-                        throw new \Exception('删除考站老师关联失败，请重试！');
-                    }
-                }
-            }
-
-            //删除考试对应的资讯通知
-            $informInfo = InformInfo::where('exam_id', $id)->get();
-            if(count($informInfo) !=0){
-                foreach ($informInfo as $item) {
-                    if(!$item->delete()){
-                        throw new \Exception('删除考试对应的资讯通知失败，请重试！');
-                    }
-                }
-            }
-            //删除考试本体
-            if (!$result = $exam->where('id',$id)->delete()) {
-                throw new \Exception('删除考试失败，请重试！');
-            }
-
-            //如果有flow的话，就删除
-            if (count($flowIds) != 0) {
-                foreach ($flowIds as $flowId) {
-                    if (!Flows::where('id',$flowId)->delete()) {
-                        throw new \Exception('删除流程失败，请重试！');
-                    }
-                }
-            }
-
-            DB::commit();
+            $exam->deleteData($id);
             return $this->success_data(['删除成功！']);
-//            return response()->json($this->success_data(['删除成功！']));
         } catch (\Exception $ex) {
-            DB::rollback();
             return $this->fail($ex);
-//            return response()->json($this->fail($ex));
         }
     }
 
@@ -446,7 +358,7 @@ class ExamController extends CommonController
 
         try {
             $exam_id = intval($request->input('id'));            //获取id
-            $keyword = e($request->input('keyword'));            //获取搜索关键字
+            $keyword = trim(e($request->input('keyword')));            //获取搜索关键字
 
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
@@ -849,7 +761,7 @@ class ExamController extends CommonController
             $serialnumberGroup[$item->serialnumber][] = $item;
         }
         //获取考试对应的考站数据
-        $examStationData = $examRoom -> getExamStation($exam_id);
+        $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
     }
 
@@ -876,6 +788,7 @@ class ExamController extends CommonController
             $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
+//            dd($stationData);
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -1398,8 +1311,7 @@ class ExamController extends CommonController
 
         //展示已经关联的考站和老师列表
         $teacher = new Teacher();
-        $stationData = $teacher->stationTeacher($exam_id);
-
+        $stationData = $teacher->stationTeacher($exam_id)->groupBy('serialnumber');
         return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'stationData' => $stationData]);
     }
 
@@ -1434,6 +1346,7 @@ class ExamController extends CommonController
             //获取数据
             $examId = $request->get('id');
             $formData = $request->get('form_data'); //所有的考站数据
+//            dd($formData);
             //查看是新建还是编辑
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $formData);

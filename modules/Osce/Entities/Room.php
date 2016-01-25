@@ -60,7 +60,12 @@ class Room extends CommonModel
             //如果传入的type是1，就说明是编辑考场
             if ($id !== "") {
                 //如果传入的type是其他值，就说明是编辑其他地点，展示对应的摄像头
-                return Room::findOrFail($id);
+                if ($type === '0') {
+                    return Room::findOrFail($id);
+                } else {
+                    return Area::findOrFail($id);
+                }
+
             } else {
                 //通过传入的$type来展示响应的数据
                 if ($type === "0") {
@@ -115,27 +120,44 @@ class Room extends CommonModel
         try {
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
-            //根据id在关联表中寻找，如果有的话，就报错，不允许删除
-            if (RoomStation::where('room_id',$id)->first()) {
-                $connection->rollBack();
-                throw new \Exception('该房间已经与考站相关联，无法删除！');
+            //根据id在关联表中寻找，如果有的话，就删除，否则就报错
+            $roomStations = RoomStation::where('room_id','=',$id)->get();
+            if (!$roomStations->isEmpty()) {
+                if  (!RoomStation::where('room_id',$id)->delete()) {
+                    throw new \Exception('房间考站关联删除失败');
+                }
             };
 
-            if (RoomVcr::where('room_id',$id)->first()) {
-                $connection->rollBack();
-                throw new \Exception('该房间已经与摄像头相关联，无法删除');
+            $roomVcrs = RoomVcr::where('room_id','=',$id)->get();
+            if (!$roomVcrs->isEmpty()) {
+                if (!RoomVcr::where('room_id',$id)->delete()) {
+                    throw new \Exception('房间摄像头关联删除失败');
+                }
+                foreach ($roomVcrs as $roomVcr) {
+                    $vcr = Vcr::findOrFail($roomVcr->vcr_id);
+                    $vcr->status = 0;
+                    if (!$vcr->save()) {
+                        throw new \Exception('更新摄像机状态失败！');
+                    }
+                }
+
             }
 
-            if ($result = $this->where('id',$id)->delete()) {
-                $connection->commit();
-                return $result;
-            }
 
+            $room = $this->where('id','=',$id)->first();
+            if (!$result = $room->delete()) {
+                throw new \Exception('房间删除失败');
+            }
+            $connection->commit();
+            return $result;
         } catch (\Exception $ex) {
+
+            $connection->rollBack();
             throw $ex;
         }
 
     }
+
 
     public function editRoomData($id, $vcr_id, $formData)
     {
@@ -151,21 +173,40 @@ class Room extends CommonModel
             if(!$result){
                 throw new \Exception('数据修改失败！请重试');
             }
-            //更新考场绑定摄像机的数据
-            $roomVcr = RoomVcr::where('room_id',$id)->first();
-            if(!empty($roomVcr)){
-                if(!$roomVcr->update(['vcr_id'=>$vcr_id])){
+
+            $roomVcrs = RoomVcr::where('room_id',$id)->get();
+            if(!$roomVcrs->isEmpty()){
+                $roomVcr = $roomVcrs->first();
+                if(!$roomVcr->delete()){
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
-            }else{
-                if(!RoomVcr::create(['room_id'=>$id, 'vcr_id'=>$vcr_id, 'created_user_id'=>$user->id])){
+
+                //修改当前摄像机状态
+                $vcr = Vcr::FindOrFail($vcr_id);
+                $vcr->status = 1;
+                if (!$vcr->save()) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
+
+                //将原来的摄像机的状态恢复
+                $vcr = Vcr::findOrFail($roomVcr->vcr_id);
+                $vcr->status = 0;
+                if (!$vcr->save()) {
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                }
+
+                $data = [
+                    'room_id' => $id,
+                    'vcr_id' => $vcr_id,
+                    'created_user_id' => $user->id
+                ];
+
+                if (!RoomVcr::create($data)) {
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                };
             }
-            //更改$vcr_id对应的摄像机状态为在线
-            if(!Vcr::where('id', $vcr_id)->update(['status'=>1])){
-                throw new \Exception('摄像机状态修改失败！请重试');
-            }
+
+
             $connection->commit();
             return true;
 

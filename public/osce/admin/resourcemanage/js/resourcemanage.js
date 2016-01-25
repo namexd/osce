@@ -220,7 +220,43 @@ function categories(){
         thisElement.attr('current',child);
 
         //分数自动加减
+        //var thisElement = $(this).parent().parent();
+        var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
+        thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html);
+        //父亲节点
+        var className = thisElement.attr('class'),
+            parent =  className.split('-')[1];
+
+        //自动加减节点
+        var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
+
+
+        //改变value值,消除连续变换值的变化
+        var total = 0;//= parseInt(change.val())+parseInt($(this).val());
+        $('.'+className).each(function(key,elem){
+            if($(elem).attr('parent')==parent){
+                return;
+            }else{
+                total += parseInt($(elem).find('td').eq(2).find('select').val());
+            }
+        });
+
+        //当没有子类的时候
+        if(total==0){
+            return;
+        }
+
         var option = '';
+        for(var k =1;k<=total;k++){
+            option += '<option value="'+k+'">'+k+'</option>';
+        }
+        change.html(option);
+        change.val(total);
+
+        $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+        change.after('<span>'+parseInt(total)+'</span>');
+
+        /*var option = '';
         for(var k =0;k<=child;k++){
             option += '<option value="'+k+'">'+k+'</option>';
         }
@@ -230,9 +266,7 @@ function categories(){
         //thisElement.find('td').eq(2).find('select').hide();
         thisElement.find('td').eq(2).find('span').remove();
         thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
-
-        var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
-        thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html)
+*/
 
         //更新计数
         increment(thisElement);
@@ -446,19 +480,31 @@ function categories(){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
                 $(elem).attr('class','pid-'+parent);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+
                 parent += 1;
             }else{
                 var child = $(elem).attr('child'),
                         parent_p = parent - 1;
                 $(elem).find('td').eq(0).text(parent_p+'-'+child);
                 $(elem).attr('class','pid-'+parent_p);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+
                 child += 1;
             }
         });
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
-                $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+
+                $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
                 $(elem).find('td').eq(2).find('select').find("option:selected").val(value[key-1]);
             }else{
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
@@ -467,13 +513,6 @@ function categories(){
         });
 
 
-    });
-
-    $('#test').click(function(){
-
-        $('tbody tr').each(function(key,elem){
-            console.log($(elem).find('td').eq(2).find('select').val())
-        });
     });
 
     /**
@@ -518,12 +557,23 @@ function categories(){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
                 $(elem).attr('class','pid-'+parent);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+
                 parent += 1;
             }else{
                 var child = $(elem).attr('child'),
                         parent_p = parent - 1;
                 $(elem).find('td').eq(0).text(parent_p+'-'+child);
                 $(elem).attr('class','pid-'+parent_p);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+
                 child += 1;
             }
         });
@@ -531,7 +581,8 @@ function categories(){
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
-                $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+                //$(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+                $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
                 $(elem).find('td').eq(2).find('select').val(value[key-1]);
             }else{
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);

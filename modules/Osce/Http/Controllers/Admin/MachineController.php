@@ -317,7 +317,7 @@ class MachineController extends CommonController
      */
     private function addCameras(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required|unique:osce_mis.vcr,name',
+            'name'          =>  'required',
             'code'          =>  'required',
             'ip'            =>  'required',
             'username'      =>  'required',
@@ -357,10 +357,9 @@ class MachineController extends CommonController
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
-        try{
 
-            $model      =   $this   ->  getMachineModel($cate_id);
+        try{
+            $model      =   new Vcr();
             if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
             } else{
@@ -417,6 +416,7 @@ class MachineController extends CommonController
             'sp.required'           =>'型号必填',
             'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
@@ -432,16 +432,17 @@ class MachineController extends CommonController
             'factory'       =>  e($request  ->  get('factory')),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
+
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Vcr();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else{
                 throw new \Exception('编辑摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
@@ -534,18 +535,17 @@ class MachineController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
-            'name'          =>  e($request    ->  get('name')),
+            'name'          =>  e($request  ->  get('name')),
             'code'          =>  $request    ->  get('code'),
-            'factory'       =>  e($request    ->  get('factory')),
+            'factory'       =>  e($request  ->  get('factory')),
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             'status'        =>  $request    ->  get('status'),
             'create_user_id'=>  $user       ->  id
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model  =   new Pad();
             if($pad =   $model  ->  addMachine($data)){
                 return $pad;
             } else{
@@ -584,10 +584,9 @@ class MachineController extends CommonController
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Pad();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else {
@@ -700,9 +699,8 @@ class MachineController extends CommonController
             'purchase_dt'   =>  $request    ->  get('purchase_dt')
         ];
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model    =   new Watch();
             if($watch =   $model  ->  addMachine($data)){
 //                $action='新增';
 //                $data=array(
@@ -750,34 +748,22 @@ class MachineController extends CommonController
 
             }
         }
+        $data   =   [
+            'id'            =>  $request    ->  get('id'),
+            'name'          =>  $request    ->  get('name'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'description'   =>  $request    ->  get('description'),
+            'status'        =>  $request    ->  get('status'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+        ];
         $code=Watch::where('id',$request->get('id'))->select('code')->first()->code;
-        if($code==$request->get('code')){
-
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-            ];
-        }else{
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'code'          =>  $request    ->  get('code'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-            ];
+        if($code!=$request->get('code')){
+            $data['code']   =   $request    ->  get('code');
         }
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Watch();
             if($cameras =   $model  ->  editMachine($data))
             {
 //                $action='编辑';
@@ -902,24 +888,22 @@ class MachineController extends CommonController
     public function postNameUnique(Request $request)
     {
         $this->validate($request, [
-            'title'     => 'required',
-//            'name'      => 'required',
+            'cate'      => 'required',
         ]);
 
         $id     = $request  -> get('id');
-        $title  = $request  -> get('title');
+        $cate   = $request  -> get('cate');
         $name   = $request  -> get('name');
         $code   = $request  -> get('code');
-
         //实例化模型
-        $title   =  '\Modules\Osce\Entities\\'.$title;
-        $model =  new $title;
+        $model  =   $this   ->  getMachineModel($cate);
         //存在设备ID
         if(!empty($code)){
             $model = $model->where('code', $code);
         }else{
             $model = $model->where('name', $name);
         }
+        //存在ID，为编辑
         if(!empty($id)){
             $model = $model->where('id', '<>', $id);
         }

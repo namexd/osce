@@ -132,7 +132,7 @@ class ExamRoom extends CommonModel
                 $join->on('station.id', '=', 'station_teacher.station_id');
             })  ->Join('room_station',function($join) use($exam_id){
                 $join->on('room_station.station_id','=','station_teacher.station_id');
-            })
+            })  ->leftJoin('exam_flow_room','exam_flow_room.room_id','=','room_station.room_id')
                 ->where('station_teacher.exam_id' , '=' , $exam_id)
                 ->select([
                     'teacher.id as id',
@@ -143,7 +143,9 @@ class ExamRoom extends CommonModel
                     'teacher.status as status',
                     'station.name as station_name',
                     'station.id as station_id',
-                    'room_station.room_id as room_id'
+                    'station.type as station_type',
+                    'room_station.room_id as room_id',
+                    'exam_flow_room.serialnumber as serialnumber'
                 ])
                 ->distinct()->get();
         } catch(\Exception $ex){
