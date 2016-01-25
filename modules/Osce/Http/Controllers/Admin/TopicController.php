@@ -153,7 +153,7 @@ class TopicController extends CommonController
 
         $data   =   [
             'title'         =>  e($request  ->  get('title')),
-            'description'   =>  $request    ->  get('description'),
+            'description'   =>  $request    ->  get('note'),
         ];
         $id     =   intval($request ->get('id'));
 
