@@ -46,19 +46,17 @@ class NoticeListController   extends CommonController
 //url /osce/wechat/notice-list/system-ajax
     public function   getSystemAjax(Request $request)
     {
-
         $page   =   $request->get('page',1);
         $user = \Auth::user();
         if(!$user){
             throw new \Exception('没有找到当前操作人的信息！');
         }
         $notice = new UsersPm();
-
         $noticeList =$notice->getList($user->id,null,null,1,config('osce.page_size'),$page);
-//       dd($noticeList['data']);
         if($noticeList['total']!==0){
             foreach($noticeList['data'] as  $index => $item){
-                $list=[
+                $list[]=[
+                    'id'=>$item->id,
                     'name'=>$item->title,
                     'content' =>$item->content,
                     'accept_user_id'=>$item->accept_user_id,
@@ -70,14 +68,13 @@ class NoticeListController   extends CommonController
         }else{
             $list   =   [];
         }
-   dd($list);
         return response()->json(
             $this->success_rows(1, 'success', $noticeList['total'], config('osce.page_size'), $page, $list)
         );
     }
     /**
      * 查看通知详情
-     * @url /osce/wechat/notice-list/view
+     * @url /osce/wechat/notice-list/system-view
      * @access public
      *
      * * @param Request $request
@@ -92,15 +89,12 @@ class NoticeListController   extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getView(Request $request){
+    public function getSystemView(Request $request){
         $this   ->  validate($request,[
-            'accept_user_id'    =>  'required',
+            'id'    =>  'required',
         ]);
-
-        $id     =   $request    ->  get('accept_user_id');
+        $id     =   $request    ->  get('id');
         $notice =   UsersPm::find($id);
-        dd($notice);
-
         if(is_null($notice))
         {
             //消息不存在
