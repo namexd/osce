@@ -2656,7 +2656,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    /*$('.teacher-teach').select2({
+    $('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -2694,6 +2694,6 @@ function station_assignment(){
             }
 
         }
-    });*/
+    });
 
 }
