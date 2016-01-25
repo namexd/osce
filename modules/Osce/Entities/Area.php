@@ -115,14 +115,14 @@ class Area extends CommonModel
 
                 //修改当前摄像机状态
                 $vcr = Vcr::FindOrFail($vcr_id);
-                $vcr->status = 1;
+                $vcr->used = 1;
                 if (!$vcr->save()) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
 
                 //将原来的摄像机的状态恢复
                 $vcr = Vcr::findOrFail($areaVcr->vcr_id);
-                $vcr->status = 0;
+                $vcr->used = 0;
                 if (!$vcr->save()) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
@@ -158,7 +158,7 @@ class Area extends CommonModel
             }
 
             $vcr = Vcr::findOrFail($vcrId);
-            $vcr->status = 1;
+            $vcr->used = 1;
             if (!$vcr->save()) {
                 throw new \Exception('新建房间失败');
             }
