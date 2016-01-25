@@ -74,11 +74,10 @@ class NoticeController extends CommonController
                     if(!in_array($accept, explode(',', $item->accept))){
                         unset($list[$index]);
                     }
-                }
             }
-//        }else{
-//            $list   =   [];
-//        }
+        }else{
+            $list   =   [];
+        }
         return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
 
     }
