@@ -219,6 +219,7 @@
                                                           <ul class="dropdown-menu">
                                                           </ul>
                                                         </div>
+                                                        @endif
                                                     </div>
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
