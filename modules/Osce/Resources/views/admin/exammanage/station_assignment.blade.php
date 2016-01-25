@@ -219,15 +219,6 @@
                                                           <ul class="dropdown-menu">
                                                           </ul>
                                                         </div>
-                                                        @else
-                                                        <div class="btn-group">
-                                                          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                          <span class="caret"></span>
-                                                          </button>
-                                                          <ul class="dropdown-menu">
-                                                          </ul>
-                                                        </div>
-                                                        @endif
                                                     </div>
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>

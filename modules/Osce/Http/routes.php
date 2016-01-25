@@ -359,7 +359,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 			Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
 			Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
 
-			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
+			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);//大屏幕候考接口
 
 			Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
 			Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
