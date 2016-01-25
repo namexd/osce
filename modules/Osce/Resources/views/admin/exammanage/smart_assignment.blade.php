@@ -97,7 +97,7 @@
             background-color: #0a6aa1;
         }
         p{
-            margin: 0 10px;
+            margin: 0;
         }
     </style>
 @stop
