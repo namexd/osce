@@ -812,7 +812,8 @@ function examroom_assignment(){
                                     //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
                                 });
 
-                                var data    =   new Array;
+                                //谁添的无用代码
+                                /*var data    =   new Array;
                                 $('.teacher-teach').each(function(){
                                     id  =   $(this).val();
                                     if(id==null){
@@ -823,9 +824,9 @@ function examroom_assignment(){
                                             data.push(id[i]);
                                         }
                                     }
-                                });
+                                });*/
                                 return {
-                                    teacher:data
+                                    teacher:ids
                                 };
                             },
                             dataType: 'json',
