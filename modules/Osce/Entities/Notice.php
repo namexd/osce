@@ -110,7 +110,10 @@ class Notice extends CommonModel
             $sendType   =   Config::where('name','=','type')    ->  first();
 
             $values      =   json_decode($sendType->value);
-
+            if(empty($values))
+            {
+                throw new \Exception('请到系统设置中设置发送消息的方式');
+            }
             if(is_null($values))
             {
                 $values  =   [1];
@@ -310,7 +313,7 @@ class Notice extends CommonModel
             {
                 throw new \Exception('没有找到指定的考生用户信息');
             }
-            if($student->userInfo)
+            if(!is_null($student->userInfo))
             {
                 $data[] =   [
                     'id'    =>  $student->userInfo->id,
@@ -336,6 +339,8 @@ class Notice extends CommonModel
                 $data[] =   [
                     'id'    =>  $teacher->userInfo->id,
                     'openid'=>  $teacher->userInfo->openid,
+                    'email' =>  $teacher->userInfo->email,
+                    'mobile'=>  $teacher->userInfo->mobile,
                 ];
             }
         }
