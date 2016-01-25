@@ -480,19 +480,31 @@ function categories(){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
                 $(elem).attr('class','pid-'+parent);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+
                 parent += 1;
             }else{
                 var child = $(elem).attr('child'),
                         parent_p = parent - 1;
                 $(elem).find('td').eq(0).text(parent_p+'-'+child);
                 $(elem).attr('class','pid-'+parent_p);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+
                 child += 1;
             }
         });
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
-                $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+
+                $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
                 $(elem).find('td').eq(2).find('select').find("option:selected").val(value[key-1]);
             }else{
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
@@ -501,13 +513,6 @@ function categories(){
         });
 
 
-    });
-
-    $('#test').click(function(){
-
-        $('tbody tr').each(function(key,elem){
-            console.log($(elem).find('td').eq(2).find('select').val())
-        });
     });
 
     /**
@@ -552,12 +557,23 @@ function categories(){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
                 $(elem).attr('class','pid-'+parent);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+
                 parent += 1;
             }else{
                 var child = $(elem).attr('child'),
                         parent_p = parent - 1;
                 $(elem).find('td').eq(0).text(parent_p+'-'+child);
                 $(elem).attr('class','pid-'+parent_p);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+
                 child += 1;
             }
         });
@@ -565,7 +581,8 @@ function categories(){
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
-                $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+                //$(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+                $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
                 $(elem).find('td').eq(2).find('select').val(value[key-1]);
             }else{
                 $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
