@@ -907,24 +907,22 @@ class MachineController extends CommonController
     public function postNameUnique(Request $request)
     {
         $this->validate($request, [
-            'title'     => 'required',
-//            'name'      => 'required',
+            'cate'      => 'required',
         ]);
 
         $id     = $request  -> get('id');
-        $title  = $request  -> get('title');
+        $cate   = $request  -> get('cate');
         $name   = $request  -> get('name');
         $code   = $request  -> get('code');
-
         //实例化模型
-        $title   =  '\Modules\Osce\Entities\\'.$title;
-        $model =  new $title;
+        $model  =   $this   ->  getMachineModel($cate);
         //存在设备ID
         if(!empty($code)){
             $model = $model->where('code', $code);
         }else{
             $model = $model->where('name', $name);
         }
+        //存在ID，为编辑
         if(!empty($id)){
             $model = $model->where('id', '<>', $id);
         }

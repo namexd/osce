@@ -358,17 +358,14 @@ class TopicController extends CommonController
     public function postNameUnique(Request $request)
     {
         $this->validate($request, [
-            'model'     => 'required',
             'title'     => 'required',
         ]);
 
         $id     = $request  -> get('id');
-        $model  = $request  -> get('model');
         $name   = $request  -> get('title');
 
         //实例化模型
-        $model   =  '\Modules\Osce\Entities\\'.$model;
-        $model =  new $model;
+        $model =  new Subject();
         //查询 该名字 是否存在
         if(empty($id)){
             $result = $model->where('title', $name)->first();
