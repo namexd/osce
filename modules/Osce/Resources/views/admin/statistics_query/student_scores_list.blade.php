@@ -83,7 +83,7 @@
                             <td>{{$item->score_total}}</td>
                             <td>{{$item->ranking}}</td>
                             <td>
-                                <a href="">
+                                <a href="{{route('osce.admin.course.getStudentDetails',['student_id'=>$item->student_id])}}">
                                     <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                                 </a>
                             </td>
