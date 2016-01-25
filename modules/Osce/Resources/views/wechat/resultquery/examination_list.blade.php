@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-	<input type="hidden" id="parameter" value="{'pagename':'examination_list','ajaxurl':'{{route('osce.wechat.student-exam-query.getEveryExamList')}}'}" />
+	<input type="hidden" id="parameter" value="{'pagename':'examination_list','ajaxurl':'{{route('osce.wechat.student-exam-query.getEveryExamList')}}','detailUrl:'{{route('osce.wechat.student-exam-query.getExamDetails')}}'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>

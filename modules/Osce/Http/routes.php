@@ -235,6 +235,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
+		//视频的着陆页
+		Route::get('exam-result/result-video',['uses'=>'ExamResultController@getResultVideo','as'=>'osce.admin.course.getResultVideo']);
 
 		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
 		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.course.getStudent']);
@@ -262,7 +264,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);  //抽签的方法
 		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);  //下一组考生
 
-
+		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
 	});
 
 
