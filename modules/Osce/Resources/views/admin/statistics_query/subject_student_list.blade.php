@@ -44,11 +44,15 @@
                 <tbody>
                 @foreach($data as $item)
                     <tr>
-                        <th>{{$item->student_name}}</th>
-                        <th>{{$item->ranking}}</th>
-                        <th>{{$item->exam_result_score}}</th>
-                        <th>{{$item->exam_result_time}}</th>
-                        <th>操作</th>
+                        <td>{{$item->student_name}}</td>
+                        <td>{{$item->ranking}}</td>
+                        <td>{{$item->exam_result_score}}</td>
+                        <td>{{$item->exam_result_time}}</td>
+                        <td>
+                            <a href="">
+                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

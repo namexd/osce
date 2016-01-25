@@ -37,7 +37,10 @@ class CourseController extends CommonController
             $subjectId = $request->input('subject_id');
 
             //考试的下拉菜单
-            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->where('exam.status','<>',0)->get();
+            $examDownlist = Exam::select('id', 'name')->orderBy('begin_dt', 'desc')->get();
+
+            //科目的下拉菜单
+            $subjectDownlist = Subject::select('id', 'name')->get();
 
             //科目列表数据
             $subject = new Subject();
@@ -61,7 +64,11 @@ class CourseController extends CommonController
                     }
                 }
             }
-            return view('osce::admin.statistics_query.subject_scores_list',['data'=>$subjectData,'list'=>$downlist]);
+            return view('osce::admin.statistics_query.subject_scores_list',
+                ['data'=>$subjectData,
+                    'examDownlist'=>$examDownlist,
+                    'subjectDownlist'=>$subjectDownlist
+                ]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -129,7 +136,6 @@ class CourseController extends CommonController
                 $item->ranking = $key+1;
             }
         }
-
 
         return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
     }
