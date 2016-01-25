@@ -25,9 +25,6 @@
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}"></script>
     <script>
         $(function () {
-            $(".img_box").delegate(".del_img", "click", function () {
-                $(this).parent("li").remove();
-            });
             /*{}{
              * 下面是进行插件初始化
              * 你只需传入相应的键值对
@@ -96,13 +93,6 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
-                    },
-                    images: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '请上传图片'
-                            }
-                        }
                     }
                 }
             });
@@ -118,7 +108,7 @@
                         if (data.code) {
                             var href = data.data.path;
                             $('.img_box').find('li').remove();
-                            $('.images_upload').before('<li><img src="' + href + '"/><input type="hidden" name="images_path[]" value="' + href + '"/><i class="fa fa-remove font16 del_img"></i></li>');
+                            $('.images_upload').before('<li><img src="' + href + '"/><input type="hidden" name="images_path[]" value="' + href + '"/></li>');
                         }
                     },
                     error: function (data, status, e) {
@@ -132,8 +122,6 @@
                     }
                 });
             });
-            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
-
         });
         //建立一個可存取到該file的url
         var url = '';
@@ -165,12 +153,11 @@
                         <input type="hidden" name="id" value="{{$item->id}}"/>
                         <input type="hidden" name="resources_type" id="resources_type" value="TOOLS"/>
 
-                        <div class="col-md-3 col-sm-3 image-box">
+                        <div class="col-md-3 col-sm-3">
                             <ul class="img_box">
                                 <li>
                                     <img src="{{$item->avator}}"/>
                                     <input type="hidden" value="{{$item->avator}}" name="images_path[]">
-                                    <i class="fa fa-remove font16 del_img"></i>
                                 </li>
                                <span class="images_upload"><input type="file" name="images" id="file0"/></span>
                             </ul>
