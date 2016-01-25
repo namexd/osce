@@ -1388,16 +1388,16 @@ class ExamController extends CommonController
 //        dd($plan);
         $ExamPlanModel  =   new ExamPlan();
 //
-//        try{
+        try{
             if($ExamPlanModel  ->savePlan($exam_id,$plan))
             {
                 return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$exam->id]);
             }
-//        }
-//        catch(\Exception $ex)
-//        {
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**

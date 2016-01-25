@@ -231,6 +231,7 @@ class MachineController extends CommonController
                 default :
                         $machine    =     $this   ->  addCameras($request);
             }
+
             if($machine){
                 return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
             } else{
@@ -343,6 +344,7 @@ class MachineController extends CommonController
             'sp.required'           =>'型号必填',
             'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
@@ -366,7 +368,8 @@ class MachineController extends CommonController
                 throw new \Exception('新增摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
