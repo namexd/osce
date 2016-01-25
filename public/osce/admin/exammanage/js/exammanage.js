@@ -545,13 +545,34 @@ function examroom_assignment(){
     });
     $('#examroom').find('tbody').attr('data',JSON.stringify(arrStore));
 
+
+    /**
+     * 遍历已选的id
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-18
+     * @return  {array}   id数组
+     */
+    function getStations(){
+        var arrStore = [];
+        $('#examroom').find('tbody').find('tr').each(function(key,elem){
+
+            var selected = $(elem).find('td').eq(1).find('select').val();
+            for(var i in selected){
+                arrStore.push(selected[i]);
+            }
+
+        });
+        return arrStore;
+    }
+
     /**
      * select2初始化
      * @author mao
      * @version 1.0
      * @date    2016-01-15
      */
-    $.ajax({
+    /*$.ajax({
         type:'get',
         async:true,
         url:pars.list,     //请求地址
@@ -570,7 +591,46 @@ function examroom_assignment(){
                 $(".room-station").select2({data:str});
             }
         }
+    });*/
+
+
+    $('.room-station').select2({
+        placeholder: "==请选择==",
+        minimumResultsForSearch: Infinity,
+        ajax:{
+            url: pars.list,
+            delay:0,
+            data: function (elem) {
+
+                //请求参数
+                return {
+                    station_id:getStations()
+                };
+            },
+            dataType: 'json',
+            processResults: function (res) {
+
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].id,text:data[i].name});
+                }
+
+                //加载入数据
+                return {
+                    results: str
+                };
+            }
+
+        }
+
+
     });
+
+
+
+
 
     /**
      * 选择必考项
@@ -1992,7 +2052,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    $.ajax({
+    /*$.ajax({
         type:'get',
         async:true,
         url:pars.list,     //请求地址
@@ -2012,6 +2072,39 @@ function station_assignment(){
                 $(".room-station").select2({data:str});
             }
         }
+    });*/
+    $('.room-station').select2({
+        placeholder: "==请选择==",
+        minimumResultsForSearch: Infinity,
+        ajax:{
+            url: pars.list,
+            delay:0,
+            data: function (elem) {
+                
+                //请求参数
+                return {
+                    station_id:getStations()
+                };
+            },
+            dataType: 'json',
+            processResults: function (res) {
+
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].id,text:data[i].name});
+                }
+
+                //加载入数据
+                return {
+                    results: str
+                };
+            }
+
+        }
+
+
     });
 
     /**

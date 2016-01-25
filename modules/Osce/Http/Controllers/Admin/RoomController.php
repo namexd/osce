@@ -79,7 +79,9 @@ class RoomController extends CommonController
      * @param Request $request post请求<br><br>
      *                         <b>get请求字段：</b>
      *                         array           id            主键ID
+     * @param Room $model
      * @return view
+     * @throws \Exception
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -210,6 +212,7 @@ class RoomController extends CommonController
      *                         <b>get请求字段：</b>
      *                         array           id            主键ID
      *                         array          status         状态
+     * @param Room $room
      * @return view
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
@@ -229,7 +232,7 @@ class RoomController extends CommonController
             ],[
                 'name.unique'   =>  '名称必须唯一',
             ]);
-            //todo   表单内容变化没有提交nfc字段
+            //TODO   表单内容变化没有提交nfc字段
             $formData = $request->only('name', 'address', 'code', 'description');
             $vcrId =$request->get('vcr_id');
             if (!$user = Auth::user()) {
@@ -241,10 +244,10 @@ class RoomController extends CommonController
 
             $formData['cate'] = $request->input('type');
             if ($type === '0') {
-                $result = $room->createRoom($formData,$vcrId,$userId);
+                $room->createRoom($formData,$vcrId,$userId);
             } else {
                 $area = new Area();
-                $result = $area->createRoom($formData,$vcrId,$userId);
+                $area->createRoom($formData,$vcrId,$userId);
             }
 
 
