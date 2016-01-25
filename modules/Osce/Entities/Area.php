@@ -10,7 +10,7 @@ namespace Modules\Osce\Entities;
 
 
 use Illuminate\Support\Facades\DB;
-
+use Auth;
 class Area extends CommonModel
 {
 
@@ -56,7 +56,7 @@ class Area extends CommonModel
             //根据id在关联表中寻找，如果有的话，就报错，不允许删除
             if (AreaVcr::where('area_id',$id)->first()) {
                 $connection->rollBack();
-                throw new \Exception('该区域已经与绑定相关联，无法删除！');
+                throw new \Exception('该区域已经与摄像头相关联，无法删除！');
             };
 
             if ($result = $this->where('id',$id)->delete()) {
