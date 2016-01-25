@@ -42,7 +42,7 @@
      <li><a href="{{route('osce.wechat.invitation.getList')}}">预约邀请</a><li>
      <li><a href="{{route('osce.wechat.getDiscussionLists')}}">讨论区</a><li>
      <li><a href="{{route('osce.wechat.getTrainlists')}}">考前培训</a><li>
-     <li><a href="{{route('osce.wechat.notice.getSystemList')}}">系统消息</a><li>
+     <li><a href="{{route('osce.wechat.notice.getSystemList',['way'=>4])}}">系统消息</a><li>
   </ul>
 </div>
 @stop

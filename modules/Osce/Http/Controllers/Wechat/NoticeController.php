@@ -53,9 +53,17 @@ class NoticeController extends CommonController
             $accept = 2;
         }
         // TODO zhoufuxiang 16-1-22
-        $notice =   new InformInfo();
-        //$config = Config::where('name','=','type')->first();
+        $way    = $request -> get('way');       //通知方式
+        $config = Config::where('name', '=', 'type')->first();
+        if(!empty($way) && !empty($config)){
+            //查看 系统设置中，是否有此 通知方式
+            if(!in_array($way, json_decode($config->value))){
+                $list = [];
+                return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
+            }
+        }
 
+        $notice = new InformInfo();
         $list   =   $notice ->  getList();
         //根据操作人去除不给他接收的数据
         if(!empty($list)){
@@ -65,7 +73,6 @@ class NoticeController extends CommonController
                 }
             }
         }
-
 
         return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
     }
