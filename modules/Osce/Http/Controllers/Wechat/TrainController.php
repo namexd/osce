@@ -9,6 +9,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\InformTrain;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -91,6 +92,7 @@ class TrainController extends  CommonController{
                 'end_dt' =>$item->end_dt,
                 'author'   =>$item->getAuthor,
                 'time' =>$time,
+                'clicks' =>$item->clicks,
             ];
 
         }
@@ -122,7 +124,11 @@ class TrainController extends  CommonController{
      */
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
+//        \DB::connection('osce_mis')->table('inform_training')->increment('clicks');
         $train=InformTrain::where('id',$id)->select()->get();
+        $clicks=InformTrain::where('id',$id)->first()->clicks;
+        $clicks=$clicks+1;
+        InformTrain::where('id',$id)->update(['clicks'=>$clicks]);
         foreach($train as $item){
             $data=[
                 'id'    =>$item->id,

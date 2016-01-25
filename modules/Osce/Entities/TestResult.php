@@ -27,6 +27,7 @@ class TestResult extends CommonModel
 
     //��������վ��
     public  function  station(){
+
         return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
 
     }

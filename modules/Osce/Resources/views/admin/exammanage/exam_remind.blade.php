@@ -23,7 +23,7 @@
 @stop
 @section('content')
     <div class="pin_box">
-        <p class="clearfix pin_title">{{ $exams->name }}<span class="red time"><?php echo date('Y-m-d H:i:s',time())?></span></p>
+        <p class="clearfix pin_title">{{ $exams->name }}<span class="red time"><?php echo date('Y-m-d H:i',time())?></span></p>
         <div id="name_list">
             <input class="name_count" type="hidden" value="{{count($list)}}">
             @foreach($list as $key=>$lists)
