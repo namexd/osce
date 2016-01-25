@@ -139,7 +139,7 @@
                                         <tbody index="{{count($stationData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
 
-                                        @forelse($stationData as $item)
+                                        @forelse($stationData as $k => $item)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
@@ -148,7 +148,7 @@
                                                             <option value="{{$item[0]->station_id}}" selected="selected">{{$item[0]->station_name}}</option>
                                                     </select>
                                                 </td>
-                                                <td class="necessary">{{(count($stationData)==1)?'必考':'二选一'}}</td>
+                                                <td class="necessary">{{(count($k)==1)?'必考':'二选一'}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
