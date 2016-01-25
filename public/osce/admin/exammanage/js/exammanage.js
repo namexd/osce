@@ -954,7 +954,7 @@ function examroom_assignment(){
         });
         $.ajax({
             type:'get',
-            url:pars.spteacher_invitition+'?exam_id='+$('.active').find('a').attr('href').split('=')[1]+'&teacher_id='+ids,
+            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
             success:function(res){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');
@@ -2380,7 +2380,7 @@ function station_assignment(){
         });
         $.ajax({
             type:'get',
-            url:pars.spteacher_invitition+'?exam_id='+$('.active').find('a').attr('href').split('=')[1]+'&teacher_id='+ids,
+            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
             success:function(res){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');
@@ -2656,7 +2656,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    /*$('.teacher-teach').select2({
+    $('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -2694,6 +2694,6 @@ function station_assignment(){
             }
 
         }
-    });*/
+    });
 
 }
