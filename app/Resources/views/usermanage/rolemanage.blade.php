@@ -9,6 +9,7 @@
         border-color: #16beb0!important;
     }
     .modal-title{color: #676a6c!important;}
+    tbody td .state1{color: #1ab394!important;}
     </style>
 @stop
 

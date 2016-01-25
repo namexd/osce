@@ -35,7 +35,7 @@ class ExamFlowStation extends CommonModel
         try {
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
-//            dd($formData);
+            dd($formData);
             $user = Auth::user();
             if (empty($user)) {
                 throw new Exception('未找到当前操作人信息！');
@@ -89,7 +89,6 @@ class ExamFlowStation extends CommonModel
             //使用事务
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
-
             //查询操作者id
             $user = Auth::user();
             if (empty($user)) {
@@ -189,7 +188,7 @@ class ExamFlowStation extends CommonModel
         try {
         //先拼装teacher的数据
         $teacherIDs = [];
-        if (isset($value['teacher_id'])) {
+        if (!empty($value['teacher_id'])) {
             $teacherIDs[] = $value['teacher_id'];
         }
         if (isset($value['spteacher_id'])) {
@@ -201,7 +200,6 @@ class ExamFlowStation extends CommonModel
                 $teacherIDs[] = $value['spteacher_id'];
             }
         }
-
         //循环，将老师ID放入station_teacher表的数据
         foreach ($teacherIDs as $teacherID) {
             $stationTeacherData = [
