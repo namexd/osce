@@ -20,20 +20,20 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '考场名称不能为空'
-                            },
-                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                                url: '',//验证地址
-                                message: '考站已经存在',//提示消息
-                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST',//请求方式
+                            }//,
+                           // threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                            //remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                                //url: '',//验证地址
+                                //message: '考站已经存在',//提示消息
+                                //delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                //type: 'POST',//请求方式
                                 /*自定义提交数据，默认值提交当前input value*/
-                                data: function(validator) {
-                                    return {
-                                        id: '{{$_GET['id']}}',
-                                        name: $('[name="whateverNameAttributeInYourForm"]').val()
-                                    }
-                                }
+                                //data: function(validator) {
+                                    //return {
+                                        //id: '{{$_GET['id']}}',
+                                       // name: $('[name="whateverNameAttributeInYourForm"]').val()
+                                    //}
+                                //}
                             }
                         }
                     },
@@ -85,8 +85,9 @@
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm">
-
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.room.postEditRoom')}}">
+                        <input type="hidden" name="id" value="{{$data->id}}">
+                        <input type="hidden" name="type" value="{{$type}}">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">

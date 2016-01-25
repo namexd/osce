@@ -173,21 +173,40 @@ class Room extends CommonModel
             if(!$result){
                 throw new \Exception('数据修改失败！请重试');
             }
-            //更新考场绑定摄像机的数据
-            $roomVcr = RoomVcr::where('room_id',$id)->first();
-            if(!empty($roomVcr)){
-                if(!$roomVcr->update(['vcr_id'=>$vcr_id])){
+
+            $roomVcrs = RoomVcr::where('room_id',$id)->get();
+            if(!$roomVcrs->isEmpty()){
+                $roomVcr = $roomVcrs->first();
+                if(!$roomVcr->delete()){
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
-            }else{
-                if(!RoomVcr::create(['room_id'=>$id, 'vcr_id'=>$vcr_id, 'created_user_id'=>$user->id])){
+
+                //修改当前摄像机状态
+                $vcr = Vcr::FindOrFail($vcr_id);
+                $vcr->status = 1;
+                if (!$vcr->save()) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
+
+                //将原来的摄像机的状态恢复
+                $vcr = Vcr::findOrFail($roomVcr->vcr_id);
+                $vcr->status = 0;
+                if (!$vcr->save()) {
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                }
+
+                $data = [
+                    'room_id' => $id,
+                    'vcr_id' => $vcr_id,
+                    'created_user_id' => $user->id
+                ];
+
+                if (!RoomVcr::create($data)) {
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                };
             }
-            //更改$vcr_id对应的摄像机状态为在线
-            if(!Vcr::where('id', $vcr_id)->update(['status'=>1])){
-                throw new \Exception('摄像机状态修改失败！请重试');
-            }
+
+
             $connection->commit();
             return true;
 

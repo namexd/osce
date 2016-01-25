@@ -138,6 +138,7 @@ class RoomController extends CommonController
      */
     public function postEditRoom(Request $request)
     {
+//        dd($request->all());
         //验证数据，暂时省略
         $this->validate($request, [
             'id' => 'required|integer',
