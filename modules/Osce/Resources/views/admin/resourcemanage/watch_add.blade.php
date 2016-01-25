@@ -82,17 +82,7 @@
                                 message: '型号不能为空'
                             }
                         }
-                    },
-                    purchase_dt: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '采购日期不能为空'
-                            }
-                        }
                     }
-
                 }
             });
             /*时间选择*/
@@ -100,13 +90,7 @@
                 elem: "#purchase_dt",
                 format: "YYYY-MM-DD",
                 min: "1970-00-00",
-                max: "2099-06-16",
-                istime: true,
-                istoday: false,
-                choose: function (a) {
-                    end.min = a;
-                    end.start = a
-                }
+                max: "2099-06-16"
             };
             laydate(start);
         })
