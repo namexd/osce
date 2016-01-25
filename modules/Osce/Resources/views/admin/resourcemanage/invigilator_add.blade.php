@@ -220,7 +220,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="note" id="note">
+                                <input type="text" class="form-control" name="description" id="note">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
