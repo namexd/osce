@@ -358,7 +358,7 @@ class ExamController extends CommonController
 
         try {
             $exam_id = intval($request->input('id'));            //获取id
-            $keyword = e($request->input('keyword'));            //获取搜索关键字
+            $keyword = trim(e($request->input('keyword')));            //获取搜索关键字
 
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
@@ -761,7 +761,7 @@ class ExamController extends CommonController
             $serialnumberGroup[$item->serialnumber][] = $item;
         }
         //获取考试对应的考站数据
-        $examStationData = $examRoom -> getExamStation($exam_id);
+        $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('serialnumber');
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
     }
 
@@ -1312,7 +1312,6 @@ class ExamController extends CommonController
         //展示已经关联的考站和老师列表
         $teacher = new Teacher();
         $stationData = $teacher->stationTeacher($exam_id)->groupBy('serialnumber');
-//        dd($stationData);
         return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'stationData' => $stationData]);
     }
 

@@ -952,7 +952,19 @@ function examroom_assignment(){
                 ids.push(id);
             }
         });
-        location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
+        $.ajax({
+            type:'get',
+            url:pars.spteacher_invitition+'?exam_id='+$('.active').find('a').attr('href').split('=')[1]+'&teacher_id='+ids,
+            success:function(res){
+                if(res.code==1){
+                    layer.alert('发起邀请成功！');
+                }else{
+                    layer.alert(res.message);
+                }
+
+            }
+        });
+        //location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
     })
 
     /**
@@ -2607,7 +2619,7 @@ function station_assignment(){
             type:'get',
             async:true,
             url:pars.spteacher_list,
-            data:{teacher:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
+            data:{spteacher_id:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
             success:function(data){
               var html = '';
               res = data.data.rows;
@@ -2632,7 +2644,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    $('.teacher-teach').select2({
+    /*$('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -2670,6 +2682,6 @@ function station_assignment(){
             }
 
         }
-    });
+    });*/
 
 }

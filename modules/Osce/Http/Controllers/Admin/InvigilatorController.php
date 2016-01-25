@@ -178,21 +178,6 @@ class InvigilatorController extends CommonController
         //
         $role_id = config('osce.invigilatorRoleId',1);
 
-//        $data   =   [
-//            'name'              =>  e($request->get('name')),
-//            'type'              =>  intval($request->get('type')),
-//            'mobile'            =>  e($request->get('moblie')),
-//            'code'              =>  e($request->get('code')),
-//            'case_id'           =>  intval($request->get('case_id')),
-//            'status'            =>  1,
-//            'create_user_id'    =>  $user->id,
-//            'role_id'           =>  config('osce.invigilatorRoleId',1),
-//            'gender'         => $request  ->  get('gender'),        //性别
-//            'idcard'         => $request  ->  get('idcard'),        //身份证号
-//            'email'          => $request  ->  get('email'),         //邮箱
-//            'avator'         => $request  ->  get('images_path')[0],//照片
-//        ];
-
         $Invigilator    =   new Teacher();
         try{
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData)){
@@ -264,17 +249,6 @@ class InvigilatorController extends CommonController
             $teacherData['create_user_id']  = $user->id;
             //
             $role_id = config('osce.spRoleId',4);
-
-//            $data   =   [
-//                'name'              =>  e($request->get('name')),
-//                'type'              =>  intval($request->get('type')),
-//                'mobile'            =>  e($request->get('mobile')),
-//                'code'              =>  e($request->get('code')),
-//                'case_id'           =>  intval($request->get('case_id')),
-//                'status'            =>  1,
-//                'create_user_id'    =>  $user->id,
-//                'role_id'           =>  config('osce.spRoleId',4)
-//            ];
 
             $Invigilator    =   new Teacher();
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData)){

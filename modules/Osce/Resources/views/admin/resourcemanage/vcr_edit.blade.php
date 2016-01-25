@@ -85,15 +85,6 @@
                             }
                         }
                     },
-                    purchase_dt: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '采购日期不能为空'
-                            }
-                        }
-                    },
                     ip: {
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
@@ -170,13 +161,7 @@
                 elem: "#purchase_dt",
                 format: "YYYY-MM-DD",
                 min: "1970-00-00",
-                max: "2099-06-16",
-                istime: true,
-                istoday: false,
-                choose: function (a) {
-                    end.min = a;
-                    end.start = a
-                }
+                max: "2099-06-16"
             };
             laydate(start);
         })
@@ -307,7 +292,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-primary save" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                                 </div>
                             </div>

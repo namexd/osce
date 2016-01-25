@@ -183,31 +183,36 @@
                                         </thead>
                                         <tbody index="{{count($examStationData)}}">
                                         @forelse($examStationData as $key => $item)
-                                            <tr class="parent-id-{{$item->room_id}}">
-                                                <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->station_id}}"/></td>
-                                                <td>{{$item->station_name}}</td>
-                                                <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
+                                            <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
+                                            <tr class="parent-id-{{$item[0]->room_id}}">
+                                                <td>{{$key++}}<input type="hidden" name="station[{{$k1++}}][id]" value="{{$item[0]->station_id}}"/></td>
+                                                <td>{{$item[0]->station_name}}</td>
+                                                <td>{{($item[0]->type==1)?'技能操作站':(($item[0]->type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$key+1}}][teacher_id]">
-                                                        @if($item->type == 1)
-                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
-                                                        @elseif($item->type != 1)
-                                                            <option value = "">==请选择==</option>
-                                                        @endif
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$k2++}}][teacher_id]">
+                                                        @foreach($item as $value)
+                                                            @if($value->type == 1)
+                                                                <option value="{{$value->id}}" selected="selected">{{$value->name}}</option>
+                                                            @elseif($value->type != 1)
+                                                                <option value = "">==请选择==</option>
+                                                            @endif
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
-                                                        @if($item->type == 2)
-                                                        <div class="input-group teacher pull-left" value="{{$item->id}}">
-                                                            <input type="hidden" name="station[{{$key+1}}][spteacher_id][]" value="{{$item->id}}">
-                                                            <div class="pull-left">{{$item->name}}</div>
-                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                        </div>
-                                                        @endif
+                                                        @foreach($item as $value)
+                                                            @if($value->type == 2)
+                                                            <div class="input-group teacher pull-left" value="{{$value->id}}">
+                                                                <input type="hidden" name="station[{{$k3++}}][spteacher_id][]" value="{{$value->id}}">
+                                                                <div class="pull-left">{{$value->name}}</div>
+                                                                <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                            </div>
+                                                            @endif
+                                                        @endforeach
                                                     </div>
-                                                    <div class="pull-right" value="{{$key+1}}">
-                                                        @if($item->station_type == 2)
+                                                    <div class="pull-right" value="{{$k4++}}">
+                                                        @if($item[0]->station_type == 2)
                                                         <div class="btn-group">
                                                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                           <span class="caret"></span>
