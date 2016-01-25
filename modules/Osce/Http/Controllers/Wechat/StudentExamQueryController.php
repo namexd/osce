@@ -99,11 +99,13 @@ class StudentExamQueryController extends  CommonController
         //根据场次id查询出考站的相关信息
         $ExamResultModel= new ExamResult();
         $stationList =$ExamResultModel->stationInfo($examScreeningIds);
+
         $stationData=[];
         foreach($stationList as $stationType){
             if($stationType->type == 2){
+                 //获取到sp老师信息
                 $teacherModel= new Teacher();
-                $spteacher = $teacherModel->spteacher($stationType->id);
+                $spteacher = $teacherModel->getSpTeacher($stationType->id);
             }
             $stationData[]=[
                 'exam_result_id'=>$stationType->exam_result_id,
@@ -156,6 +158,7 @@ class StudentExamQueryController extends  CommonController
         $examscoreModel= new ExamScore();
         $examScoreList=$examscoreModel->getExamScoreList($examresultId);
 //        dd($examScoreList);
+
         $groupData  =   [];
         foreach($examScoreList as $examScore){
             $groupData[$examScore->standard->pid][] =   $examScore;
@@ -163,9 +166,9 @@ class StudentExamQueryController extends  CommonController
         $indexData  =   [];
         foreach($groupData[0] as $group)
         {
-            $groupData  = $group;
-            $groupData['child'] =  $groupData[$group->id]  ;//排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
-            $indexData[]    =   $groupData;
+            $groupInfo  =   $group;
+            $groupInfo['child'] =  $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
+            $indexData[]    =   $groupInfo;
         }
         $list   =   [];
         foreach($indexData as $goupData)

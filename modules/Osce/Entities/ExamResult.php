@@ -174,9 +174,15 @@ class ExamResult extends CommonModel
 
 
 
+    /**
+     *微信端学生成绩查询
+     * @param $room_id
+     * @return
+     * @throws \Exception
+     * @author zhouqiang
+     */
 
 
-   //微信端学生成绩查询
     public function stationInfo($examScreeningIds){
 
      $builder=$this->leftJoin('station', function($join){

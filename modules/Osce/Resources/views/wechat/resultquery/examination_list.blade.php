@@ -14,7 +14,7 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        	成绩查询
-       	<a class="right header_btn nou clof header_a" href="">
+       	<a class="right header_btn nou clof header_a" href="#">
        		<i class="icon_share"><img src="{{asset('osce/wechat/common/img/share.png')}}" width="18"/></i>
        	</a>
     </div>
