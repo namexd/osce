@@ -75,7 +75,7 @@
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="{{$prointNum}}">
+                                            <tbody index="{{$prointNum-1}}">
                                             @forelse($list as $data)
                                                 <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}" current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child='.$data->sort.''}}>
                                                     <td>{{$data->pid==0? $data->sort:$data->parent->sort.'-'.$data->sort}}</td>
@@ -97,13 +97,9 @@
                                                     </td>
                                                     <td>
                                                         <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
-                                                            <option value="1" {{$data->score==1? 'selected="selected"':''}}>1</option>
-                                                            <option value="2" {{$data->score==2? 'selected="selected"':''}}>2</option>
-                                                            <option value="3" {{$data->score==3? 'selected="selected"':''}}>3</option>
-                                                            <option value="4" {{$data->score==4? 'selected="selected"':''}}>4</option>
-                                                            <option value="5" {{$data->score==5? 'selected="selected"':''}}>5</option>
-                                                            <option value="6" {{$data->score==6? 'selected="selected"':''}}>6</option>
-                                                            <option value="7" {{$data->score==7? 'selected="selected"':''}}>7</option>
+                                                            @for($i=1;$i<=config('osce.topticOptionMaxNumer',10);$i++)
+                                                            <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
+                                                            @endfor
                                                         </select>
                                                         <span {!! $data->pid!=0? 'style="display:none;"':''!!}>{{$data->score}}</span>
                                                     </td>

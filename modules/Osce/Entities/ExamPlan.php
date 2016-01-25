@@ -551,6 +551,7 @@ class ExamPlan extends CommonModel
 
     public function savePlan($exam_id,$plan){
         $user=\Auth::user();
+
         foreach($plan as $examScreening => $roomList)
         {
             foreach($roomList as $roomStationId=>$room)
@@ -594,6 +595,7 @@ class ExamPlan extends CommonModel
                 }
             }
         }
+
         $connection =   \DB::connection($this->connection);
         $connection ->  beginTransaction();
         try{

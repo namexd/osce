@@ -59,12 +59,12 @@
                                 url: '{{route('osce.admin.invigilator.postSelectTeacher')}}',//验证地址
                                 delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                                 type: 'POST',//请求方式
-                                message: '号码已经存在'//提示消息
-                            },
-                            data: function(validator) {
-                                return {
-                                    id: '{{$item->id}}',
-                                    mobile: $('#mobile').val()
+                                message: '号码已经存在',//提示消息
+                                data: function(validator) {
+                                    return {
+                                        id: '{{$item->id}}',
+                                        mobile: $('#mobile').val()
+                                    }
                                 }
                             }
                         }
@@ -94,13 +94,6 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
-                    },
-                    images: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '请上传图片'
-                            }
-                        }
                     }
                 }
             });
@@ -117,7 +110,7 @@
                         if(data.code){
                             var href=data.data.path;
                             $('.img_box').find('li').remove();
-                            $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                            $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/></li>');
                         }
                     },
                     error: function (data, status, e)
@@ -139,11 +132,6 @@
                 }
                 return url;
             }
-            $(".img_box").delegate(".del_img","click",function(){
-                $(this).parent("li").remove();
-            });
-            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
-
         })
 
     </script>
@@ -159,12 +147,11 @@
             <div class="ibox-content">
                 <div class="row">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postEditInvigilator')}}">
-                        <div class="col-md-3 col-sm-3 image-box">
+                        <div class="col-md-3 col-sm-3">
                             <ul class="img_box">
                                 <li>
                                     <img src="{{$item->userInfo->avatar}}"/>
                                     <input type="hidden" value="{{$item->userInfo->avatar}}" name="images_path[]">
-                                    <i class="fa fa-remove font16 del_img"></i>
                                 </li>
                                 <span class="images_upload">
                                     <input type="file" name="images" id="file0"/>图片大小为280X180
