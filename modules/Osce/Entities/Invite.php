@@ -37,13 +37,17 @@ class Invite extends CommonModel
                     'station_id' =>$list['station_id'],
                     'status'=>0,
                 ];
-//                if($this->find($inviteDat['user_id']))
-//                {
-//                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
-//                }
+                //查询出数据库是否有该老师在这场考试邀请过
+                $examScreening= Invite::where('exam_screening_id','=',$inviteDat['exam_screening_id'])->first();
+                //查询出老师名字
+                $teacherName= Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
+                if($examScreening)
+                {
+                    throw new \Exception('该场考试该老师'.$teacherName->name.'已邀请过！！！');
+                }
                   $notice = $this->Create($inviteDat);
             }
-                if ($notice) {
+                if ($notice){
                     foreach($data as  $SpTeacher){
                         $ExamSpList = [
 //                           'id'=>$data[$k]['teacher_id'],
