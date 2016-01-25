@@ -31,7 +31,6 @@
                                 data: function(validator) {
                                     return {
                                         id: '{{$_GET['id']}}',
-                                        title: 'caseModel',
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
