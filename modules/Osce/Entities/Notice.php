@@ -59,7 +59,8 @@ class Notice extends CommonModel
                 $notice ->  content =   $content;
 
                 $notice ->  attachments  =   $attach;
-                $accept=  $notice ->  accept  =   implode(',',$groups);
+
+
 
                 if(!$notice  ->save())
                 {
@@ -71,6 +72,7 @@ class Notice extends CommonModel
 
                 $to     =   $this   ->  getGroupsOpendIds($groups,$notice->exam_id);
                 //通知用户
+                $accept=  $notice ->  accept  =   implode(',',$groups);
 
                       $this   ->  sendMsg($notice,$to,$accept);
 
