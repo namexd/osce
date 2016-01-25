@@ -88,7 +88,7 @@ class TrainController extends  CommonController{
         $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
         $data['attachments']=serialize($request->input('file'));
         $data['create_user_id']=$userId;
-        $result=InformTrain::insert([
+        $result=InformTrain::create([
             'name'               => $request->get('name'),
             'address'            => $request->get('address'),
             'begin_dt'           => $request->get('begin_dt'),

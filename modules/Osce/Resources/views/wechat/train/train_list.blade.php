@@ -43,7 +43,7 @@
                         }
                         html += '<li>'+
 						        	'<a class="nou" href="{{route('osce.wechat.getTrainDetail')}}?id='+data[i].id+'">'+
-						        		'<p class="font14 fontb clo3 p_title">'+author.name+'</p>'+
+						        		'<p class="font14 fontb clo3 p_title">'+data[i].name+'</p>'+
 						        		'<p class="font12 clo9 main_txt">'+data[i].address+'</p>'+
 						        		'<p class="font12 clo9 main_txt">'+data[i].begin_dt+'~'+data[i].end_dt+'</p>'+
 						        		'<p class="font12 p_bottom">'+

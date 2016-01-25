@@ -95,7 +95,7 @@ class ExamController extends CommonController
             $id = $request->input('id');  //id为考试id
 
             //开启事务
-            DB::beginTransaction();
+            DB::connection('soce_mis')->beginTransaction();
             //进入模型逻辑
             //删除与考场相关的流程
             $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get(); //获得流程的id
@@ -178,10 +178,10 @@ class ExamController extends CommonController
                 }
             }
 
-            DB::commit();
+            DB::connection('soce_mis')->commit();
             return $this->success_data(['删除成功！']);
         } catch (\Exception $ex) {
-            DB::rollback();
+            DB::connection('soce_mis')->rollback();
             return $this->fail($ex);
         }
     }

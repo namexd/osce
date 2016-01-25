@@ -143,6 +143,7 @@ class ExamRoom extends CommonModel
                     'teacher.status as status',
                     'station.name as station_name',
                     'station.id as station_id',
+                    'station.type as station_type',
                     'room_station.room_id as room_id'
                 ])
                 ->distinct()->get();
