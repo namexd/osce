@@ -33,7 +33,7 @@ class CommunalApiController extends CommonController
         if ($request->hasFile('upfile'))
         {
             $file   =   $request->file('upfile');
-            $path   =   'osce/images/'.date('Y-m-d').'/'.rand(1000,9999).'/';
+            $path   =   'osce/attach/'.date('Y-m-d').'/'.rand(1000,9999).'/';
             $destinationPath    =   public_path($path);
             $fileName           =   $file->getClientOriginalName();
             $file   ->  move($destinationPath,iconv("UTF-8","gb2312",$fileName));
