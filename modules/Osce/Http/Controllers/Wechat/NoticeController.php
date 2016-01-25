@@ -39,6 +39,7 @@ class NoticeController extends CommonController
      */
     public function getSystemList(Request $request)
     {
+
         //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
         $user = \Auth::user();
         if (!$user) {
@@ -55,57 +56,37 @@ class NoticeController extends CommonController
         }
         // TODO zhoufuxiang 16-1-22
 
-        $notice = new InformInfo();
-        $config = Config::where('name', '=', 'type')->first();
-        if (empty($config) || in_array(4, json_decode($config->value))) {
-            $list = $notice->getList();
+        $notice =   new InformInfo();
+        $config = Config::where('name','=','type')->first();
+
+        if(empty($config) || in_array(4,json_decode($config->value))){
+            $list   =   $notice ->  getList();
             //根据操作人去除不给他接收的数据
-            if (!empty($list)) {
+            if(!empty($list)){
                 foreach ($list as $index => $item) {
-                    if (!in_array($accept, explode(',', $item->accept))) {
+                    if(!in_array($accept, explode(',', $item->accept))){
                         unset($list[$index]);
                     }
-
-                    $notice = new InformInfo();
-                    //$config = Config::where('name','=','type')->first();
-
-                    $list = $notice->getList();
-                    //根据操作人去除不给他接收的数据
-                    if (!empty($list)) {
-                        foreach ($list as $index => $item) {
-                            if (!in_array($accept, explode(',', $item->accept))) {
-                                unset($list[$index]);
-                            }
-                        }
-                    } else {
-                        $list = [];
-
-
-                    }
-
-//        return response()->json(
-//            $this->success_rows(1,'success',config('osce.page_size'),$list)
-//        );
-                    return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
                 }
             }
+        }else{
+            $list   =   [];
         }
-    }
+                    return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
+
+            }
 
 
-
-
+  ///osce/wechat/notice/system-view
     public function   getSystemView(Request $request)
     {
-
         $trainModel = new  InformInfo ();
         $pagination = $trainModel->getList();
+        $list = InformInfo::select()->orderBy('created_at')->get()->toArray();
 
-        $list = InformInfo::select()->orderBy('begin_dt')->get()->toArray();
         return response()->json(
             $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
         );
-
     }
 
 
@@ -134,6 +115,9 @@ class NoticeController extends CommonController
 
         $id = $request->get('id');
         $notice = InformInfo::find($id);
+//        foreach(){
+//
+//           }
 
         if (is_null($notice)) {
             //消息不存在
