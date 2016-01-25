@@ -95,35 +95,26 @@ class NoticeController extends CommonController
         $exam_id    =   $request    ->  get('exam_id');
         $groups     =   $request     ->  get('groups');
         $attach     =   $request     ->  get('attach');
-        if(!empty($attach))
-        {
-            $attach     =   e(implode(',',$attach));
-        }
-        else
-        {
+        if(!empty($attach)){
+            $attach =   e(implode(',',$attach));
+        } else{
             $attach =   '';
         }
 
-
-        try
-        {
-            if(!is_array($groups))
-            {
+        try{
+            if(!is_array($groups)){
                 throw new \Exception('请选择接收人所属角色');
             }
             $noticeModel    =   new Notice();
-            if($noticeModel    ->  sendNotice($title,$content,$exam_id,$groups,$attach))
+            if($noticeModel ->  sendNotice($title,$content,$exam_id,$groups,$attach))
             {
                 return redirect()->route('osce.admin.notice.getList');
-            }
-            else
-            {
+            } else{
                 throw new \Exception('通知创建失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()   ->  back()  ->withErrors($ex->getMessage());
+
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

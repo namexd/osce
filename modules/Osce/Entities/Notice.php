@@ -200,13 +200,12 @@ class Notice extends CommonModel
     public function sendNotice($title,$content,$exam_id,array $groups,$attach){
         $user   =   Auth::user();
         $data   =   [
-            'name'      =>  $title,
-            'content'   =>  $content,
-            'exam_id'   =>  $exam_id,
-            'accept'    =>  implode(',',$groups),
-//            'accept'    =>  $groups,
-            'status'    =>  1,
-            'create_user_id'    =>  $user->id,
+            'name'           =>  $title,
+            'content'        =>  $content,
+            'exam_id'        =>  $exam_id,
+            'accept'         =>  implode(',',$groups),
+            'status'         =>  1,
+            'create_user_id' =>  $user->id,
             'attachments'    =>  $attach,
         ];
         try{

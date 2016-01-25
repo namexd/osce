@@ -1262,18 +1262,23 @@ function examroom_assignment(){
             url:pars.spteacher_list,
             data:{spteacher_id:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
             success:function(data){
-              var html = '';
-              res = data.data.rows;
-              //提示数据
-              if(res.length==0){
-                layer.alert('没有可选数据！',function(its){
-                    layer.close(its);
-                });
-            }
-              for(var i in res){
-                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
-              }
-              thisElem.html(html);
+                if(data.code!=1){
+                    layer.alert(data.message);
+                }else{
+                  var html = '';
+                  res = data.data.rows;
+                  //提示数据
+                  if(res.length==0){
+                    layer.alert('没有可选数据！',function(its){
+                        layer.close(its);
+                    });
+                }
+                  for(var i in res){
+                    html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+                  }
+                  thisElem.html(html);
+                }
+              
             }
           });
 
@@ -2731,18 +2736,23 @@ function station_assignment(){
             url:pars.spteacher_list,
             data:{spteacher_id:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
             success:function(data){
-              var html = '';
-              res = data.data.rows;
-              //提示数据
-              if(res.length==0){
-                layer.alert('没有可选数据！',function(its){
-                    layer.close(its);
-                });
-            }
-              for(var i in res){
-                html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+              if(data.code!=1){
+                  layer.alert(data.message);
+              }else{
+                  var html = '';
+                  res = data.data.rows;
+                  //提示数据
+                  if(res.length==0){
+                    layer.alert('没有可选数据！',function(its){
+                        layer.close(its);
+                    });
+                }
+                  for(var i in res){
+                    html += '<li><a href="javascript:void(0)" value="'+res[i].id+'">'+res[i].name+'</a></li>';
+                  }
+                  thisElem.html(html);
               }
-              thisElem.html(html);
+              
             }
           });
 
