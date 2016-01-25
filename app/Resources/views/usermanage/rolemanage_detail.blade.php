@@ -2,6 +2,7 @@
 
 @section('only_css')
 
+    <link href="{{asset('osce/admin/css/common.css')}}" rel="stylesheet">
     <style>
         .clear_padding{
             padding: 0;
@@ -29,6 +30,10 @@
         .btn:focus{
             background-color: #fff;
             color: #9c9c9c;
+        }
+        .btn.btn-primary.marl_10{
+            background-color: #1ab394;
+            border-color: #1ab394;
         }
     </style>
 @stop
