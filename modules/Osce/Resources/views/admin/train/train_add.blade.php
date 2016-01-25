@@ -40,6 +40,7 @@
 			min: laydate.now(),
 		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
 		        end.min = datas;
 		        end.start = datas
@@ -52,7 +53,9 @@
 			min: laydate.now(),
 		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
+		    	start.min=datas;
 		        start.max = datas;
 		    }
 		}
