@@ -283,7 +283,10 @@ class TopicController extends CommonController
         }
         catch(\Exception $ex)
         {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return response()->json(
+                $this->fail($ex)
+            );
+            //return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
