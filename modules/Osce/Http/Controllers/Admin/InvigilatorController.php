@@ -663,7 +663,7 @@ class InvigilatorController extends CommonController
         if(empty($id)){
             $user = User::where('username', $mobile)->first();
         }else{
-            $user = User::where('username', $mobile)->where('id', $id)->first();
+            $user = User::where('username', $mobile)->where('id', '<>', $id)->first();
         }
         if($user){
             $result = Teacher::where('id', $user->id)->first();
