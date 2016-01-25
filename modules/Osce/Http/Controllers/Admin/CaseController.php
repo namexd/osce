@@ -207,17 +207,14 @@ class CaseController extends CommonController
     public function postNameUnique(Request $request)
     {
         $this->validate($request, [
-            'title'     => 'required',
             'name'      => 'required',
         ]);
 
         $id     = $request  -> get('id');
-        $title  = $request  -> get('title');
         $name   = $request  -> get('name');
 
         //实例化模型
-        $title   =  '\Modules\Osce\Entities\\'.$title;
-        $model =  new $title;
+        $model =  new CaseModel();
         //查询 该名字 是否存在
         if(empty($id)){
             $result = $model->where('name', $name)->first();

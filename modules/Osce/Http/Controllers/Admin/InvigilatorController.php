@@ -661,8 +661,14 @@ class InvigilatorController extends CommonController
             'mobile'    =>  'required'
         ]);
         $mobile = $request  ->get('mobile');
+        $id     = $request  ->get('id');
 
-        $user = User::where('username', $mobile)->first();
+        //存在ID，为编辑时验证
+        if(empty($id)){
+            $user = User::where('username', $mobile)->first();
+        }else{
+            $user = User::where('username', $mobile)->where('id', '<>', $id)->first();
+        }
         if($user){
             $result = Teacher::where('id', $user->id)->first();
             if($result){

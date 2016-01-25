@@ -282,33 +282,25 @@ class RoomController extends CommonController
             //验证略
             $this->validate($request, [
                 'id' => 'required|integer',
-                'type' => 'required|integer'
+                'type' => 'sometimes|integer'
             ]);
-            DB::connection('osce_mis')->beginTransaction();
+
             $id = $request->input('id');
-            $type = $request->input('type');
+            $type = $request->input('type','0');
             if (!$id) {
                 throw new \Exception('没有该房间！');
             }
 
-            if (!$type) {
-                throw new \Exception('没有类型！');
-            }
             if ($type === '0') {
-                $result = $room->deleteData($id);
+                $room->deleteData($id);
             } else {
                 $area = new Area();
-                $result = $area->deleteArea($id);
+                $area->deleteArea($id);
             }
 
-            if (!$result) {
-                throw new \Exception('系统错误，请重试！');
-            }
 
-            DB::connection('osce_mis')->commit();
             return $this->success_data(['删除成功！']);
         } catch (\Exception $ex) {
-            DB::connection('osce_mis')->rollBack();
             return $this->fail($ex);
         }
     }
@@ -322,17 +314,14 @@ class RoomController extends CommonController
     public function postNameUnique(Request $request)
     {
         $this->validate($request, [
-            'title'     => 'required',
             'name'      => 'required',
         ]);
 
         $id     = $request  -> get('id');
-        $title  = $request  -> get('title');
         $name   = $request  -> get('name');
 
         //实例化模型
-        $title   =  '\Modules\Osce\Entities\\'.$title;
-        $model =  new $title;
+        $model =  new Room();
         //查询 该名字 是否存在
         if(empty($id)){
             $result = $model->where('name', $name)->first();

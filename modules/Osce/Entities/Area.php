@@ -54,17 +54,28 @@ class Area extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
             //根据id在关联表中寻找，如果有的话，就报错，不允许删除
-            if (AreaVcr::where('area_id',$id)->first()) {
-                $connection->rollBack();
-                throw new \Exception('该区域已经与摄像头相关联，无法删除！');
+            $areaVcrs = AreaVcr::where('area_id',$id)->get();
+            if (!$areaVcrs->isEmpty()) {
+                if (!AreaVcr::where('area_id',$id)->delete()) {
+                    throw new \Exception('该区域已经与摄像头相关联，无法删除！');
+                }
+                foreach ($areaVcrs as $areaVcr) {
+                    $vcr = Vcr::findOrFail($areaVcr->vcr_id);
+                    $vcr->status = 0;
+                    if (!$vcr->save()) {
+                        throw new \Exception('更新摄像机状态失败！');
+                    }
+                }
             };
 
-            if ($result = $this->where('id',$id)->delete()) {
-                $connection->commit();
-                return $result;
+            if (!$result = $this->where('id',$id)->delete()) {
+                throw new \Exception('删除区域失败！');
             }
 
+            $connection->commit();
+            return $result;
         } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
     }
