@@ -182,9 +182,8 @@
                                         </tr>
                                         </thead>
                                         <tbody index="{{count($stationData)}}">
+                                        <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
                                         @forelse($stationData as $item)
-                                            <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
-                                            {{--{{dd($item)}}--}}
                                             <tr class="parent-id-{{$item[0]->station_id}}">
                                                 <td>{{$key++}}<input type="hidden" name="form_data[{{$k1++}}][station_id]" value="{{$item[0]->station_id}}"/></td>
                                                 <td>{{$item[0]->station_name}}</td>
