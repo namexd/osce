@@ -25,6 +25,7 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
@@ -53,7 +54,7 @@ class StudentWatchController extends CommonController
     public function   getStudentExamReminder(Request $request)
     {
         $this->validate($request, [
-            'watch_id' => 'required|integer'
+            'code' => 'required|integer'
         ]);
         $data = [
             'title' => '',
@@ -66,9 +67,12 @@ class StudentWatchController extends CommonController
             'score' => '',
             ];
            $code =0;
-        $watchId = $request->input('watch_id');
+        $watchCode = $request->input('code');
+
+        //根据设备编号找到设备id
+        $watchId= Watch::where('code','=',$watchCode)->select('id')->first();
 //         根据腕表id找到对应的考试场次和学生
-        $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId)->select('student_id','exam_screening_id')->first();
+        $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->select('student_id','exam_screening_id')->first();
         if (!$watchStudent) {
             $data['title'] = '没有找到学生的腕表信息';
             return response()->json(
