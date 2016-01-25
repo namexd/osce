@@ -64,8 +64,6 @@ class StudentExamQueryController extends  CommonController
 
 //      ajax  /osce/wechat/student-exam-query/every-exam-list
     public function getEveryExamList(Request $request){
-
-
         $this->validate($request,[
             'exam_id'=>'required|integer'
         ]);
@@ -82,12 +80,11 @@ class StudentExamQueryController extends  CommonController
                 'id'=>$data->id,
             ];
         }
+
         $examScreeningIds = array_column($examScreening, 'id');
         //根据场次id查询出考站的相关信息
         $ExamResultModel= new ExamResult();
         $stationList =$ExamResultModel->stationInfo($examScreeningIds);
-
-
         $stationData=[];
         foreach($stationList as $stationType){
             if($stationType->type == 2){
@@ -104,6 +101,7 @@ class StudentExamQueryController extends  CommonController
                 'sp_name'=>$spteacher->name,
                 'begin_dt'=>$examTime->begin_dt,
                 'end_dt'=>$examTime->end_dt,
+                'exam_screening_id'=>$stationType->exam_screening_id
             ];
         }
         return response()->json(
