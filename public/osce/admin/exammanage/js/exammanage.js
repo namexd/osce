@@ -1676,7 +1676,7 @@ function smart_assignment(){
         var dl  =   $('<dl class="clearfloat">');
         var items   =   data.items;
         var everyHeight=data.end-data.start;
-
+        everyHeight=everyHeight/6;
         times.push(data.start);
         dl.css("height",everyHeight+"px");
         for(var i in items)
