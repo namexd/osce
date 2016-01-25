@@ -812,7 +812,8 @@ function examroom_assignment(){
                                     //ids.push($(elem).find('td').eq(3).find('select option:selected').val());
                                 });
 
-                                var data    =   new Array;
+                                //谁添的无用代码
+                                /*var data    =   new Array;
                                 $('.teacher-teach').each(function(){
                                     id  =   $(this).val();
                                     if(id==null){
@@ -823,9 +824,9 @@ function examroom_assignment(){
                                             data.push(id[i]);
                                         }
                                     }
-                                });
+                                });*/
                                 return {
-                                    teacher:data
+                                    teacher:ids
                                 };
                             },
                             dataType: 'json',
@@ -1676,7 +1677,7 @@ function smart_assignment(){
         var dl  =   $('<dl class="clearfloat">');
         var items   =   data.items;
         var everyHeight=data.end-data.start;
-
+        everyHeight=everyHeight/6;
         times.push(data.start);
         dl.css("height",everyHeight+"px");
         for(var i in items)
@@ -1840,6 +1841,7 @@ function smart_assignment(){
             {
                 var next    =   times[parseInt(i)+parseInt(1)];
                 var every   =   next-times[i];
+                every=every/6;
                 li.css("height",every+"px");
                 console.log(every);
             }
