@@ -68,9 +68,9 @@
                     </a>
                 </div>
                 <div class="col-xs-6 column">
-                    <a href="{{route('osce.wechat.student-exam-query.getResultsQueryIndex')}}">
+                    <a href="{{route('osce.wechat.notice.getSystemList')}}">
                         <div class="normal_background">
-                            <span class="manageindex_icon icon2"></span>
+                            <span class="manageindex_icon icon3"></span>
                             <p>成绩查询</p>
                         </div>
                     </a>
