@@ -96,9 +96,9 @@ class NoticeListController   extends CommonController
         $id     =   $request    ->  get('id');
         $notice =   UsersPm::find($id);
 
-        if($notice->attachments){
-            $notice->attachments = explode(',', $notice->attachments);
-        }
+//        if($notice->attachments){
+//            $notice->attachments = explode(',', $notice->attachments);
+//        }
         if(is_null($notice))
         {
             //消息不存在
