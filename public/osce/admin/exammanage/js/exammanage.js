@@ -1736,6 +1736,7 @@ function smart_assignment(){
     function makeTime(){
         times=unique(times);
         times=times.sort(function(a,b){return a>b?1:-1});
+        console.log(times);
         var timeTitle=$('<li class="title">时间</li>');
         $(".time-list>ul").append(timeTitle);
         for(var i in times){
@@ -1766,6 +1767,7 @@ function smart_assignment(){
                 var next    =   times[parseInt(i)+parseInt(1)];
                 var every   =   next-times[i];
                 li.css("height",every+"px");
+                console.log(every);
             }
         }
         //$(".time-list>ul").css("height",timeHeight+"px");
