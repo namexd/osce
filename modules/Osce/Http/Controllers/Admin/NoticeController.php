@@ -252,9 +252,9 @@ class NoticeController extends CommonController
 
 
 
-//    public  function   getMsg($id){
-//
-//    }
+    public  function   getMsg($id){
+
+}
 }
 
 
