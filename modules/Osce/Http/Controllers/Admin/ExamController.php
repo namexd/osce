@@ -784,7 +784,7 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
-        try{
+//        try{
             DB::beginTransaction();
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
@@ -811,9 +811,9 @@ class ExamController extends CommonController
             DB::commit();
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
-        } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch(\Exception $ex){
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
 
@@ -1314,8 +1314,11 @@ class ExamController extends CommonController
 
         //展示已经关联的考站和老师列表
         $teacher = new Teacher();
-        $stationData = $teacher->stationTeacher($exam_id)->groupBy('serialnumber');
-        return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'stationData' => $stationData]);
+        $station = new Station();
+        $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
+
+        $stationData = $teacher->stationTeacher($exam_id)->groupBy('station_id');
+        return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'roomData'=>$roomData, 'stationData' => $stationData]);
     }
 
     /**
@@ -1339,7 +1342,8 @@ class ExamController extends CommonController
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-        try {
+//        dd($request->all());
+//        try {
             //验证
             $this->validate($request, [
                 'form_data' => 'required|array',
@@ -1348,19 +1352,20 @@ class ExamController extends CommonController
 
             //获取数据
             $examId = $request->get('id');
+            $room = $request->get('room');
             $formData = $request->get('form_data'); //所有的考站数据
 //            dd($formData);
             //查看是新建还是编辑
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
-                $examFlowStation -> createExamAssignment($examId, $formData);
+                $examFlowStation -> createExamAssignment($examId, $room, $formData);
             } else { //否则就是编辑
-                $examFlowStation -> updateExamAssignment($examId, $formData);
+                $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
             return redirect()->route('osce.admin.exam.getStationAssignment',['id'=>$examId]);
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
