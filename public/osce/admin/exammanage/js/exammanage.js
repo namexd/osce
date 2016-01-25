@@ -2606,7 +2606,7 @@ function station_assignment(){
             type:'get',
             async:true,
             url:pars.spteacher_list,
-            data:{teacher:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
+            data:{spteacher_id:ids,station_id:btn_group.parent().parent().parent().parent().eq(0).find('input').attr('value')},
             success:function(data){
               var html = '';
               res = data.data.rows;
@@ -2631,7 +2631,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-15
      */
-    $('.teacher-teach').select2({
+    /*$('.teacher-teach').select2({
         placeholder: "==请选择==",
         ajax:{
             url: pars.teacher_list,
@@ -2669,6 +2669,6 @@ function station_assignment(){
             }
 
         }
-    });
+    });*/
 
 }
