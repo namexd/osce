@@ -1365,8 +1365,10 @@ function exam_notice_add(){
         }
     });
 
-    var ue = UE.getEditor('editor');
-
+    //var ue = UE.getEditor('editor');
+    var ue = UE.getEditor('editor',{
+        serverUrl:'/osce/api/communal-api/editor-upload'
+    });
     /**
      * 获取文本编辑内容
      * @author mao
@@ -1667,6 +1669,7 @@ function smart_assignment(){
     $('.classroom-box').html('');//清空排考
     maketotal(testData);//页面加载执行排考
     $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+    makeTime();
 
     function makeItem(data){
 
@@ -1815,18 +1818,16 @@ function smart_assignment(){
         for(var i in times){
             var li=$('<li>');
             var p1=$('<p>');
-            var p2=$('<p>');
-            li.append(p1).append(p2);
+            li.append(p1);
             var dat=new Date(times[i]*1000);
-            var year=dat.getFullYear();
+            //var year=dat.getFullYear();
             var month = dat.getMonth()+1;//取得月,js从0开始取,所以+1
             var date1 = dat.getDate(); //取得天
             var hour = dat.getHours();//取得小时
             hour<10?hour='0'+hour:hour=hour;
             var minutes = dat.getMinutes();//取得分钟
             minutes<10?minutes='0'+minutes:minutes=minutes;
-            p1.html(year+"/"+month+"/"+date1);
-            p2.html(hour+":"+minutes);
+            p1.html(month+"/"+date1+"  "+hour+":"+minutes);
             $(".time-list>ul").append(li);
 
             //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
