@@ -100,8 +100,18 @@ class PadController extends  CommonController{
                'id'  =>'required|integer'
            ]);
 
-           $id=$request->get('id');
-           $data=Vcr::find($id);
+//           $id=$request->get('id');
+//           $data=Vcr::find($id);
+           $data[0]=[
+               'name' =>'摄像机',
+               'ip' =>'192.168.2.202',
+               'username' =>'摄像机',
+               'password' =>'123456',
+               'port' =>'88',
+               'channel' =>'测试',
+               'description' =>'测试内容1',
+               'status' =>'1',
+           ];
            return response()->json(
                $this->success_data($data,1,'success')
            );
@@ -130,10 +140,20 @@ class PadController extends  CommonController{
                 'room_id' => 'required|integer',
                 'exam_id'    => 'required|integer'
              ]);
-             $room_id=$request->get('room_id');
-             $exam_id=$request->get('exam_id');
-             $examModel=new ExamRoom();
-             $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
+//             $room_id=$request->get('room_id');
+//             $exam_id=$request->get('exam_id');
+//             $examModel=new ExamRoom();
+//             $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
+           $stationVcrs[0]=[
+               'name' =>'摄像机',
+               'ip' =>'192.168.2.202',
+               'username' =>'摄像机',
+               'password' =>'123456',
+               'port' =>'88',
+               'channel' =>'测试',
+               'description' =>'测试内容1',
+               'status' =>'1',
+           ];
              return response()->json(
                  $this->success_data($stationVcrs,1,'success')
              );
@@ -239,11 +259,17 @@ class PadController extends  CommonController{
               $this->validate($request,[
                   'exam_id'  =>'required|integer'
               ]);
-              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
-              $rooms=[];
-              foreach($examList as $examRoom){
-                $rooms[]=$examRoom->room;
-              }
+//              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
+//              $rooms=[];
+//              foreach($examList as $examRoom){
+//                $rooms[]=$examRoom->room;
+//              }
+           $rooms=[
+               'name'=>'测试考场1',
+               'address'=>'测试地址1',
+               'code'=>'12131',
+               'description'=>'5546654',
+           ];
               return response()->json(
                $this->success_data($rooms,1,'success')
            );
