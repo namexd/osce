@@ -93,12 +93,13 @@ $(function(){
                 async:true,
                 url:"{{route('osce.admin.topic.getDelTopic')}}?id="+thisElement.parent().parent().parent().attr('value'),
                 success:function(res){
-                    /*if(res.code==1){
+
+                    if(res.code==1){
                         location.href = (location.href).split('?')[0];
                     }else{
                         layer.alert(res.message)
-                    }*/
-                    location.href = (location.href).split('?')[0];
+                    }
+                    //location.href = (location.href).split('?')[0];
                 }
             })
         });
