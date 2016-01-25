@@ -952,7 +952,19 @@ function examroom_assignment(){
                 ids.push(id);
             }
         });
-        location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
+        $.ajax({
+            type:'get',
+            url:pars.spteacher_invitition+'?exam_id='+$('.active').find('a').attr('href').split('=')[1]+'&teacher_id='+ids,
+            success:function(res){
+                if(res.code==1){
+                    layer.alert('发起邀请成功！');
+                }else{
+                    layer.alert(res.message);
+                }
+
+            }
+        });
+        //location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
     })
 
     /**

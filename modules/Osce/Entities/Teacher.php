@@ -443,6 +443,7 @@ class Teacher extends CommonModel
             -> leftJoin(
                 'exam_flow_station', 'exam_flow_station.station_id', '=', 'station_teacher.station_id'
             )
+            -> where('exam_flow_station.exam_id' , $exam_id)
             -> where('station_teacher.exam_id' , $exam_id)
             -> select([
                 $this->table . '.id as teacher_id',
