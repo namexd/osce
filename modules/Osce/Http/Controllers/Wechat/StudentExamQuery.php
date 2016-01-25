@@ -144,7 +144,7 @@ class StudentExamQuery extends  CommonController
             $indexData[]    =   $groupInfo;
         }
         $list   =   [];
-        
+
         foreach($indexData as $goupData)
         {
             $childrens  =   is_null($goupData['child'])? []:$goupData['child'];
