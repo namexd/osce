@@ -39,6 +39,7 @@ class NoticeController extends CommonController
      */
     public function getSystemList(Request $request)
     {
+
         //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
         $user = \Auth::user();
         if (!$user) {
@@ -66,16 +67,16 @@ class NoticeController extends CommonController
                         unset($list[$index]);
                     }
 
-                    $notice = new InformInfo();
-                    //$config = Config::where('name','=','type')->first();
-
-                    $list = $notice->getList();
-                    //根据操作人去除不给他接收的数据
-                    if (!empty($list)) {
-                        foreach ($list as $index => $item) {
-                            if (!in_array($accept, explode(',', $item->accept))) {
-                                unset($list[$index]);
-                            }
+//                    $notice = new InformInfo();
+////                    $config = Config::where('name','=','type')->first();
+//
+//                    $list = $notice->getList();
+//                    //根据操作人去除不给他接收的数据
+//                    if (!empty($list)) {
+//                        foreach ($list as $index => $item) {
+//                            if (!in_array($accept, explode(',', $item->accept))) {
+//                                unset($list[$index]);
+//                            }
                         }
                     } else {
                         $list = [];
@@ -89,8 +90,8 @@ class NoticeController extends CommonController
                     return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
                 }
             }
-        }
-    }
+//        }
+//    }
 
 
 
