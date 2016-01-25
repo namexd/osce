@@ -120,23 +120,39 @@ class Room extends CommonModel
         try {
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
-            //根据id在关联表中寻找，如果有的话，就报错，不允许删除
-            if (RoomStation::where('room_id',$id)->first()) {
-                $connection->rollBack();
-                throw new \Exception('该房间已经与考站相关联，无法删除！');
+            //根据id在关联表中寻找，如果有的话，就删除，否则就报错
+            $roomStations = RoomStation::where('room_id','=',$id)->get();
+            if (!$roomStations->isEmpty()) {
+                if  (!RoomStation::where('room_id',$id)->delete()) {
+                    throw new \Exception('房间考站关联删除失败');
+                }
             };
 
-            if (RoomVcr::where('room_id',$id)->first()) {
-                $connection->rollBack();
-                throw new \Exception('该房间已经与摄像头相关联，无法删除');
+            $roomVcrs = RoomVcr::where('room_id','=',$id)->get();
+            if (!$roomVcrs->isEmpty()) {
+                if (!RoomVcr::where('room_id',$id)->delete()) {
+                    throw new \Exception('房间摄像头关联删除失败');
+                }
+                foreach ($roomVcrs as $roomVcr) {
+                    $vcr = Vcr::findOrFail($roomVcr->vcr_id);
+                    $vcr->status = 0;
+                    if (!$vcr->save()) {
+                        throw new \Exception('更新摄像机状态失败！');
+                    }
+                }
+
             }
 
-            if ($result = $this->where('id',$id)->delete()) {
-                $connection->commit();
-                return $result;
-            }
 
+            $room = $this->where('id','=',$id)->first();
+            if (!$result = $room->delete()) {
+                throw new \Exception('房间删除失败');
+            }
+            $connection->commit();
+            return $result;
         } catch (\Exception $ex) {
+
+            $connection->rollBack();
             throw $ex;
         }
 
