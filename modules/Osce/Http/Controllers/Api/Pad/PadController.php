@@ -44,16 +44,35 @@ class PadController extends  CommonController{
                 'id'  =>'required|integer'
             ]);
 
-            $id=$request->get('id');
-            $data=RoomVcr::where('room_id',$id)->select()->get();
-
-            $list=[];
-            foreach($data as $item){
-               $list[]=[
-                   $item->getVcr
-               ];
-            }
-
+//            $id=$request->get('id');
+//            $data=RoomVcr::where('room_id',$id)->select()->get();
+//
+//            $list=[];
+//            foreach($data as $item){
+//               $list[]=[
+//                   $item->getVcr
+//               ];
+//            }
+           $list[0]=[
+               'name' =>'摄像机',
+               'ip' =>'192.168.2.202',
+               'username' =>'摄像机',
+               'password' =>'123456',
+               'port' =>'88',
+               'channel' =>'测试',
+               'description' =>'测试内容1',
+               'status' =>'1',
+           ];
+           $list[1]=[
+               'name' =>'摄像机1',
+               'ip' =>'192.168.2.203',
+               'username' =>'摄像机1',
+               'password' =>'1234567',
+               'port' =>'90',
+               'channel' =>'测试1',
+               'description' =>'测试内容21',
+               'status' =>'2',
+           ];
             return response()->json(
                 $this->success_data($list,1,'success')
             );
