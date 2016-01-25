@@ -64,6 +64,7 @@ class StudentExamQueryController extends  CommonController
 
 //      ajax  /osce/wechat/student-exam-query/every-exam-list
     public function getEveryExamList(Request $request){
+
         $this->validate($request,[
             'exam_id'=>'required|integer'
         ]);
@@ -117,26 +118,23 @@ class StudentExamQueryController extends  CommonController
     {
 
         $this->validate($request, [
-            'exam_result_id' => 'required|integer'
+            'exam_screening_id' => 'required|integer'
         ]);
 
-        $examresultId= Input::get('exam_result_id');
+        $examresultId=  intval(Input::get('exam_screening_id'));
 
          //根据考试结果id查询出该结果详情
-        $examresultList=ExamResult::where('id','=',$examresultId)->get();
+        $examresultList=ExamResult::where('exam_screening_id','=',$examresultId)->get();
 
 
          //查询出详情列表
         $examscoreModel= new ExamScore();
         $examScoreList=$examscoreModel->getExamScoreList($examresultId);
-//        dd($examScoreList);
         $groupData  =   [];
         foreach($examScoreList as $examScore){
             $groupData[$examScore->standard->pid][] =   $examScore;
         }
         $indexData  =   [];
-
-        //dd($groupData);
         foreach($groupData[0] as $group)
         {
             $groupInfo  =   $group;
