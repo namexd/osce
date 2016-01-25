@@ -162,14 +162,12 @@ class CourseController extends CommonController
         $studentId= $request->get('student_id');
         $examresultModel= new ExamResult();
         $studentList= $examresultModel->getstudentData($studentId);
-        dd($studentList);
-        if($studentList){
 
+        if(!$studentList){
+            throw new \Exception('数据查询失败');
         }
-
-
+            return view();
 
     }
-
 
 }
