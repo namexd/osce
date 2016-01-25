@@ -98,29 +98,18 @@ class RoomController extends CommonController
         $type = $request->input('type');
         $data = $model->showRoomList("", $type, $id);
 
-        if ($type === '0') {
-            $modelVcr = RoomVcr::where('room_id', $id)->first();
+        //TODO:zhoufuxiang，查询没被其他考场关联的摄像机
+        $model = new Vcr();
+        $result = $model->selectVcr($id, $type);
+        $vcr = $result[0];
 
-        } else {
-            $modelVcr = AreaVcr::where('area_id', $id)->first();
-        }
-
-
-        $vcr = Vcr::where('status', 0)
-            ->orWhere('id',$modelVcr->vcr_id)
-            ->select(['id', 'name'])
-            ->get();     //关联摄像机
-
-
-        if(!empty($modelVcr)){
-            $data->vcr_id = $modelVcr->vcr_id;
+        if(!empty($result[1])){
+            $data->vcr_id = $result[1]->vcr_id;
         }else{
             $data->vcr_id = 0;
         }
         //将数据展示到页面
         return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data, 'vcr'=>$vcr, 'type'=>$type]);
-
-
     }
 
     /**
@@ -188,28 +177,29 @@ class RoomController extends CommonController
     {
         $id = $request->input('id');
         $type = $request->input('type');
+
+        //TODO:zhoufuxiang，查询被其他考场关联的摄像机ID
+        $roomVcr = RoomVcr::select(['vcr_id'])->groupBy('vcr_id')->get();
+        $vcrIds = [];
+        foreach ($roomVcr as $value) {
+            array_push($vcrIds, $value->vcr_id);
+        }
         if ($id == "") {
-            //TODO:zhoufuxiang，查询属于离线状态的摄像机
-            $vcr = Vcr::where('status', 0)
-                ->select(['id', 'name'])
-                ->get();     //关联摄像机
+            //TODO:zhoufuxiang，查询没有被其他考场关联的摄像机
+            $vcr = Vcr::where('status', '<', 2)->whereNotIn('id', $vcrIds)
+                ->select(['id', 'name'])->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
             $vcrId = Room::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
-            //TODO:zhoufuxiang，查询属于离线状态的摄像机
-            $vcr  = Vcr::where('status', 0)
+            //TODO:zhoufuxiang，查询没有被其他考场关联的摄像机
+            $vcr  = Vcr::where('status', '<', 2)->whereNotIn('id', $vcrIds)
                 ->orWhere(function($query) use($vcrId){
                     $query->where('id','=',$vcrId);
                 })
-                ->select(['id', 'name'])
-                ->get();     //关联摄像机
+                ->select(['id', 'name'])->get();     //关联摄像机
         }
 
-
-        return view('osce::admin.resourcemanage.examroom_add',[
-            'vcr' =>$vcr,
-            'type' => $type
-        ]);
+        return view('osce::admin.resourcemanage.examroom_add',['vcr' =>$vcr, 'type' => $type]);
     }
 
     /**
@@ -335,5 +325,6 @@ class RoomController extends CommonController
             return json_encode(['valid' =>true]);
         }
     }
+
 
 }
