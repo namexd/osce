@@ -271,21 +271,23 @@ class Student extends CommonModel
      */
 
 
-    public  function studentList($teacher_id){
+    public  function studentList($stationId){
         return Student::leftjoin('exam_queue',function($join){
             $join ->on('student.id','=','exam_queue.student_id');
         })->leftjoin('station_teacher',function($join){
             $join ->on('exam_queue.station_id','=','station_teacher.station_id');
-        })->where('station_teacher.user_id','=',$teacher_id)
+        })->where('exam_queue.station_id','=',$stationId)
             ->where('exam_queue.status','=',1)
+            -> orderBy('exam_queue.begin_dt','asc')
             ->select([
                 'student.name as name',
                 'student.code as code',
                 'student.idcard as idcard',
                 'student.mobile as mobile',
-                'exam_queue.status as status'
+                'exam_queue.status as status',
+                'student.id as student_id'
             ])
-            ->get();
+            ->first();
     }
 
     //考生查询

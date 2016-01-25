@@ -128,46 +128,25 @@ class InvigilatePadController extends CommonController
 
     public function  getAuthentication(Request $request)
     {
-        $list=[
-            'name' => '张三',
-            'code' => '22222',
-            'idcard' => '11112335',
-            'mobile' => '11767268'
+        $this->validate($request, [
+            'station_id' => 'required|integer'
+        ], [
+            'station_id.required' => '考站id必须'
+        ]);
+           $stationId=  (int)$request->input('station_id');
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentList($stationId);
+             if($studentData){
+                 return response()->json(
+                     $this->success_data($studentData,1,'验证完成')
+                 );
+             }else{
+                 return response()->json(
+                     $this->fail(new \Exception('学生信息查询失败'))
+                 );
+             }
 
-        ];
-//        $this->validate($request, [
-//            'id' => 'required|integer'
-//        ], [
-//            'id.required' => '请检查PAD是否登陆成功'
-//        ]);
-//        $teacher_id = (int)$request->input('id');
-//        $teacherType =Teacher::where('id','=',$teacher_id)->select('type')->first()->type;
-//        if($teacherType!==1){
-//            return response()->json(
-//                $this->fail(new \Exception('你目前不是监考老师'))
-//            );
-//        }else{
-//            $studentModel = new  Student();
-//            $studentData = $studentModel->studentList($teacher_id);
-////            dd($studentData);
-//            $list = [];
-//            foreach ($studentData as $itme) {
-//                $list[]= [
-//                    'name' => $itme->name,
-//                    'code' => $itme->code,
-//                    'idcard' => $itme->idcard,
-//                    'mobile' => $itme->mobile,
-//                    'avator' => $itme->avator
 
-//                ];
-//            }
-//
-//        }
-
-        dd($list);
-        return response()->json(
-            $this->success_data($list,1,'验证完成')
-        );
     }
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
