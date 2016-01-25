@@ -178,8 +178,9 @@ class Notice extends CommonModel
             {
                 continue;
             }
-            $content[]  =   '<a href="'.$url.'">查看详情</a>';
-            $sender ->  send($accept,$content,$notice->name);
+
+
+            $sender ->  send($accept,$url,$notice->name);
         }
     }
     /**
@@ -272,6 +273,7 @@ class Notice extends CommonModel
         if(in_array(3,$groups))
         {
             $spTeahcers =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
+//            dd($spTeahcers);
             if(!empty($spTeahcers))
             {
                 $data   =   array_merge($data,$spTeahcers);
