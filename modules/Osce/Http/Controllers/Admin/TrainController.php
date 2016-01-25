@@ -85,19 +85,20 @@ class TrainController extends  CommonController{
 
         $user=Auth::user();
         $userId=$user->id;
-        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
-        $data['attachments']=serialize($request->input('file'));
-        $data['create_user_id']=$userId;
-        $result=InformTrain::create([
+//        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
+//        $data['attachments']=serialize($request->input('file'));
+//        $data['create_user_id']=$userId;
+        $data=[
             'name'               => $request->get('name'),
             'address'            => $request->get('address'),
             'begin_dt'           => $request->get('begin_dt'),
             'end_dt'             => $request->get('end_dt'),
             'teacher'            => $request->get('teacher'),
             'content'            => $request->get('content'),
-            'attachments'        => $data['attachments'],
+            'attachments'        => serialize($request->input('file')),
             'create_user_id'     => $userId,
-        ]);
+        ];
+        $result=InformTrain::create($data);
         if($result){
          return redirect('/osce/admin/train/train-list')->with('success','新增成功');
         }
@@ -129,12 +130,11 @@ class TrainController extends  CommonController{
 
 //        $user=Auth::user();
 //        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//        $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
 //        $manager=config('osce.manager');
-//        if($userId!==$id || $creteId!==$manager[0]){
-//              return response()->json(
-//                  $this->success_rows(3,'false')
-//              );
+//        if($userId!==$id || $createId!==$manager[0]){
+//            return redirect()->back()->withInput()->withErrors('权限不足');
+//
 //        }
         $list=InformTrain::where('id',$id)->select()->get();
 
@@ -189,12 +189,10 @@ class TrainController extends  CommonController{
 
 //        $user=Auth::user();
 //        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
+//        $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
 //        $manager=config('osce.manager');
-//        if($userId!==$creteId || $creteId!==$manager[0]){
-//            return response()->json(
-//                $this->success_rows(3,'false')
-//            );
+//        if($userId!==$createId || $createId!==$manager[0]){
+//            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
         $data['attachments']=serialize($request->input('file'));
         $result=InformTrain::where('id',$data['id'])->update($data);
@@ -229,12 +227,10 @@ class TrainController extends  CommonController{
         $id=intval($request->get('id'));
 //        $user=Auth::user();
 //        $userId=$user->id;
-//        $creteId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+//        $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
 //        $manager=config('osce.manager');
-//        if($userId!==$creteId || $creteId!==$manager[0]){
-//            return response()->json(
-//                $this->success_rows(3,'false')
-//            );
+//        if($userId!==$createId || $createId!==$manager[0]){
+//            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
 
         $result=InformTrain::where('id',$id)->delete();

@@ -202,7 +202,7 @@ class ExamPlanForRoom extends CommonModel
     }
 
     protected function clearRoomWhenExamOver(){
-        $thisTimeRoomExamingStudent =   $this->thisTimeRoomExamingStudent;
+        $thisTimeRoomExamingStudent =   $this   ->  thisTimeRoomExamingStudent;
         $StudentRecord              =   $this   ->  getStudentRecord();
         foreach($thisTimeRoomExamingStudent as $roomdId=>$students)
         {
@@ -451,10 +451,12 @@ class ExamPlanForRoom extends CommonModel
             unset($thisTimeRoomExamingStudent[$student->id]);
 
         }
-        $thisTimeRoomExamingStudentArray[$roomid]   =   $thisTimeRoomExamingStudent;
+//        $thisTimeRoomExamingStudentArray[$roomid]   =   $thisTimeRoomExamingStudent;
+        $thisTimeRoomExamingStudentArray[$roomid]   =   [];
         $this   ->  thisTimeRoomExamingStudent      =   $thisTimeRoomExamingStudentArray;
         //清空当前考场学生
         $thisTimeRoomStudentsArray[$roomid] =   [];
+        $this   ->  thisTimeRoomStudents =   $thisTimeRoomStudentsArray;
         return $thisTimeRoomStudents;
     }
 
@@ -613,7 +615,8 @@ class ExamPlanForRoom extends CommonModel
 
     protected function outRecord($student,$roomId){
         $studentRecord  =   $this   ->  studentRecord;
-
+        //出门顺序检查代码
+        //dump('out:'.$roomId.'-'.$student->id);
         if(!array_key_exists($student->id,$studentRecord))
         {
             $studentRecord[$student->id]    =   [];
@@ -628,6 +631,7 @@ class ExamPlanForRoom extends CommonModel
         {
             throw new \Exception('没有找到开始时间');
         }
+
         $key    =   0;
         foreach($studentRecord[$student->id][$roomId] as $key=>$times){
             if(!array_key_exists('end',$times))
@@ -643,7 +647,8 @@ class ExamPlanForRoom extends CommonModel
 
     public function startRecord($student,$roomId){
         $studentRecord  =   $this   ->  studentRecord;
-
+        //进门顺序检查代码
+        //dump('in:'.$roomId.'-'.$student->id);
         if(!array_key_exists($student->id,$studentRecord))
         {
             $studentRecord[$student->id]    =   [];
