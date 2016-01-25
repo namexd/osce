@@ -49,15 +49,17 @@ class InvitationController extends CommonController
         $this->validate($request, [
             'teacher_id' => 'required',
             'exam_id' => 'required|integer',
-//            'station_id' => 'required|integer',
+            'station_id' => 'required|integer',
         ], [
             'teacher_id.required' => '邀请编号必须',
             'exam_id.required'=>'考试编号必须',
-//            'station_id.required'=>'考站编号必须',
+            'station_id.required'=>'考站编号必须',
         ]);
+
         $teacher_id = $request->get('teacher_id');
         $exam_id = $request->get('exam_id');
-        $stationId= 6;
+        $stationId= $request->get('station_id');
+
         //根据老师id查询老师的信息和openid
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);

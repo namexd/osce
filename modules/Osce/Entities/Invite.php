@@ -38,10 +38,10 @@ class Invite extends CommonModel
                     'station_id' =>$list['station_id'],
                     'status'=>0,
                 ];
-                if($this->find($inviteDat['user_id']))
-                {
-                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
-                }
+//                if($this->find($inviteDat['user_id']))
+//                {
+//                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
+//                }
                   $notice = $this->Create($inviteDat);
             }
                 if ($notice) {
