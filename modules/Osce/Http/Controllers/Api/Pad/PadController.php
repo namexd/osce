@@ -296,10 +296,16 @@ class PadController extends  CommonController{
              $this->validate($request,[
                  'exam_id'   =>'required|integer'
              ]);
-             $examModel = new ExamRoom();
-             $exam_id=$request->get('exam_id');
+//             $examModel = new ExamRoom();
+//             $exam_id=$request->get('exam_id');
          try{
-             $examRoomList=$examModel->getWaitRoom($exam_id);
+//             $examRoomList=$examModel->getWaitRoom($exam_id);
+             $examRoomList=[
+                 'name'=>'测试考场1',
+                 'address'=>'测试地址1',
+                 'code'=>'12131',
+                 'description'=>'5546654',
+             ];
              return response()->json(
                  $this->success_data($examRoomList,1,'success')
              );
