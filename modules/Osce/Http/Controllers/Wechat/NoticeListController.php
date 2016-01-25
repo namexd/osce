@@ -41,18 +41,19 @@ class NoticeListController   extends CommonController
         return view('osce::wechat.system_info.system_notice');
     }
 
-
-
-//url /osce/wechat/notice-list/system-ajax
+    /**
+     * url /osce/wechat/notice-list/system-ajax
+     */
     public function   getSystemAjax(Request $request)
     {
-        $page   =   $request->get('page',1);
+        $page = $request->get('page',1);
         $user = \Auth::user();
         if(!$user){
             throw new \Exception('没有找到当前操作人的信息！');
         }
         $notice = new UsersPm();
-        $noticeList =$notice->getList($user->id,null,null,1,config('osce.page_size'),$page);
+        $noticeList =$notice->getList($user->id, null, null, 1, config('osce.page_size'), $page);
+
         if($noticeList['total']!==0){
             foreach($noticeList['data'] as  $index => $item){
                 $list[]=[
@@ -93,12 +94,8 @@ class NoticeListController   extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
         ]);
-        $id     =   $request    ->  get('id');
+        $id     =   $request->get('id');
         $notice =   UsersPm::find($id);
-
-//        if($notice->attachments){
-//            $notice->attachments = explode(',', $notice->attachments);
-//        }
         if(is_null($notice))
         {
             //消息不存在

@@ -104,6 +104,7 @@
                         <li class="active"><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
                     </ul>
                 </div>
             </div>
@@ -204,7 +205,7 @@
                                                         @foreach($item as $value)
                                                             @if($value->teacher_type == 2)
                                                             <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
-                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id]" value="{{$value->teacher_id}}">
+                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id][]" value="{{$value->teacher_id}}">
                                                                 <div class="pull-left">{{$value->teacher_name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
                                                             </div>

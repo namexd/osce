@@ -149,8 +149,18 @@ class InformInfo extends CommonModel{
 
 
 
-    public function getList(){
-        return $this    ->where('accept','like','1%')  ->  paginate(config('osce.page_size'));
+    public function getList($accept){
+        switch($accept){
+            case 1: $where = '1%';
+                break;
+            case 2: $where = '%2%';
+                break;
+            case 3: $where = '%3';
+                break;
+            default: $where = '1,2,3';
+        }
+
+        return $this->whereNotNUll('accept')->where('accept', 'like', "$where")->paginate(config('osce.page_size'));
     }
 
     /**

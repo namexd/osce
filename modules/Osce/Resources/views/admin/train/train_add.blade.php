@@ -120,6 +120,7 @@
 	                	var val=data.url;
 	                	var point = val.lastIndexOf("."); 
      					var type = val.substr(point);
+     					console.log(type);
 	                	if(type===".xlsx"|type===".doc"){
 	                		var str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
                 			$(".upload_list_doc").append(str);
@@ -130,13 +131,7 @@
 	            },
 	            error: function (data, status, e)
 	            {
-	                $.alert({
-	                  	title: '提示：',
-	                  	content: '通讯失败!',
-	                  	confirmButton: '确定',
-	                  	confirm: function(){
-                		}
-	              	});
+	                layer.alert('上传失败！',function(index2){layer.close(index2);});
 	            }
 	        });
 	    }) ;

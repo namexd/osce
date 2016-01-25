@@ -1316,7 +1316,6 @@ class ExamController extends CommonController
         $teacher = new Teacher();
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
-
         $stationData = $teacher->stationTeacher($exam_id)->groupBy('station_id');
         return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'roomData'=>$roomData, 'stationData' => $stationData]);
     }
@@ -1536,4 +1535,9 @@ class ExamController extends CommonController
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
     }
+	
+	
+	public function getExamRemind(){
+		return view('osce::admin.exammanage.waiting_area');
+	}
 }
