@@ -102,7 +102,9 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <input id="content" type="hidden" value="{!! $item->content !!}" />
+                            <div id="content" style="display: none;">
+                                {!! $item->content !!}
+                            </div>
                             <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content" ></script>
                         </div>
                     </div>
@@ -115,7 +117,9 @@
                             </span>
                             <div class="upload_list upload_list_doc">
                                 @forelse(explode(',',$item->attachments) as $attachment)
+                                    @if($attachment!='')
                                 <p><input type="hidden" name="attach[]" id="" value="{{$attachment}}" /><?php $pathInfo=explode('/',$attachment)?>{{array_pop($pathInfo)}}&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>
+                                    @endif
                                 @empty
                                 @endforelse
                             </div>

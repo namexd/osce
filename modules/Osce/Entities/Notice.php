@@ -36,7 +36,7 @@ class Notice extends CommonModel
                 //关联消息接收用户和消息
                 //$this   ->  makeNoticeUserRelative($notice,$to);
                 //通知用户
-                $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
+                $this   ->  sendMsg($notice,$to);
                 $connection ->commit();
                 return $notice;
             }
@@ -71,7 +71,7 @@ class Notice extends CommonModel
 
                 $to     =   $this   ->  getGroupsOpendIds($groups,$notice->exam_id);
                 //通知用户
-                $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
+                $this   ->  sendMsg($notice,$to);
                 return $notice;
             }
             else
@@ -124,13 +124,16 @@ class Notice extends CommonModel
                         switch($value)
                         {
                             case 1:
-                                $this->sendWechat($notice,$to,$url);
+                                $this->sendWechat($notice,array_pluck($to,'openid'),$url);
                                 break;
                             case 2:
-                                $this->sendEmail($notice,$to,$url);
+                                $this->sendEmail($notice,array_pluck($to,'email'),$url);
                                 break;
                             case 3:
-                                $this->sendSms($notice,$to,$url);
+                                $this->sendSms($notice,array_pluck($to,'mobile'),$url);
+                                break;
+                            case 4:
+                                $this->sendPm($notice,array_pluck($to,'id'));
                                 break;
                             default:
                                 $this->sendWechat($notice,$to,$url);
@@ -162,6 +165,18 @@ class Notice extends CommonModel
         $message    =   Common::CreateWeiXinMessage($msgData);
         Common::sendWeixinToMany($message,$to);
     }
+
+    public function sendPm($notice,$to){
+        $sender =   \App::make('messages.pm');
+        foreach($to as $accept)
+        {
+            if(empty($accept))
+            {
+                continue;
+            }
+            $sender ->  send($accept,$notice->content,$notice->name);
+        }
+    }
     /**
      * 发布通知
      * @access public
@@ -186,12 +201,10 @@ class Notice extends CommonModel
             'content'   =>  $content,
             'exam_id'   =>  $exam_id,
             'accept'    =>  implode(',',$groups),
+//            'accept'    =>  $groups,
             'status'    =>  1,
             'create_user_id'    =>  $user->id,
             'attachments'    =>  $attach,
-        ];
-        $groups=    [
-            1
         ];
         try{
             $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);

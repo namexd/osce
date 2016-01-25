@@ -1454,7 +1454,7 @@ function exam_notice_edit(){
         }
     })
 
-    var content =   $('#content').val();
+    var content =   $('#content').html();
 
     //初始化
     var ue = UE.getEditor('editor',{
@@ -1646,26 +1646,27 @@ function smart_assignment(){
                     students.push(studentLocation);
                 });
                 var exam_id=$('[name=exam_id]').val();
-                $.get('/osce/admin/exam/change-student',{'first':students[0],'second':students[1],'exam_id':exam_id},function(data){
-                    var redList =   data.data.redmanList;
-                    if(redList.length>0)
-                    {
-
-                    }
-                    var obs =   $('.clicked');
-                    var newObs  =   obs.clone().bind('click',changeStudent);
-                    obs.eq(0).after(newObs.eq(1));
-                    obs.eq(1).after(newObs.eq(0));
-                    obs.remove();
-                    $('.stu').removeClass('red');
-                    for (var i in redList)
-                    {
-
-
-                        $('.student_'+redList[i]).addClass('red');
-                    }
-                    $('.clicked').removeClass('clicked');
-                });
+                $('.clicked').removeClass('clicked');
+                //$.get('/osce/admin/exam/change-student',{'first':students[0],'second':students[1],'exam_id':exam_id},function(data){
+                //    var redList =   data.data.redmanList;
+                //    if(redList.length>0)
+                //    {
+                //
+                //    }
+                //    var obs =   $('.clicked');
+                //    var newObs  =   obs.clone().bind('click',changeStudent);
+                //    obs.eq(0).after(newObs.eq(1));
+                //    obs.eq(1).after(newObs.eq(0));
+                //    obs.remove();
+                //    $('.stu').removeClass('red');
+                //    for (var i in redList)
+                //    {
+                //
+                //
+                //        $('.student_'+redList[i]).addClass('red');
+                //    }
+                //    $('.clicked').removeClass('clicked');
+                //});
             }
         }
     }
