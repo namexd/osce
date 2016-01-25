@@ -253,6 +253,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//通知
 		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
 		Route::get('notice/view',['uses'=>'NoticeController@getView','as'=>'osce.wechat.notice.getView']);
+		Route::get('notice-list/system-list',['uses'=>'NoticeListController@getSystemList','as'=>'osce.wechat.notice-list.getSystemList']);
+		Route::get('notice-list/view',['uses'=>'NoticeListController@getView','as'=>'osce.wechat.notice-list.getView']);
+
+
 		//sp邀请
 		Route::get('invitation/invitation-list',['uses'=>'InvitationController@getInvitationList','as'=>'osce.wechat.invitation.getInvitationList']);
 		Route::get('invitation/invitation-respond',['uses'=>'InvitationController@getInvitationRespond','as'=>'osce.wechat.invitation.getInvitationRespond']);

@@ -1,13 +1,14 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
- * Date: 2016/1/9
- * Time: 11:06
+ * User: Administrator
+ * Date: 2016/1/24 0024
+ * Time: 17:26
  */
 
 namespace Modules\Osce\Http\Controllers\Wechat;
 
+use App\Entities\UsersPm;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Config;
 use Modules\Osce\Entities\InformInfo;
@@ -15,12 +16,11 @@ use Modules\Osce\Entities\Notice;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
-
-class NoticeController extends CommonController
+class NoticeListController   extends CommonController
 {
     /**
      * 通知列表
-     * @url GET /osce/wechat/notice/system-list
+     * @url GET /osce/wechat/notice-list/system-list
      * @access public
      *
      * <b>get请求字段：</b>
@@ -45,36 +45,51 @@ class NoticeController extends CommonController
         }
         $student = Student::where('user_id', $user->id)->first();
         $spTeacher = Teacher::where('id',$user->id)->where('type',2)->first();
-        if(!empty($student)){
-            $accept = 1;       //接收着为学生
-        }elseif(!empty($spTeacher)){
-            $accept = 3;       //接收着为sp老师
-        }else{
-            $accept = 2;
-        }
+
         // TODO zhoufuxiang 16-1-22
-        $notice =   new InformInfo();
-        $config = Config::where('name','=','type')->first();
-        if(empty($config) || in_array(4,json_decode($config->value))){
-            $list   =   $notice ->  getList();
-            //根据操作人去除不给他接收的数据
-            if(!empty($list)){
-                foreach ($list as $index => $item) {
-                    if(!in_array($accept, explode(',', $item->accept))){
-                        unset($list[$index]);
-                    }
-                }
-            }
+        $notice = new UsersPm();
+
+        $noticeList =$notice->getList($user->id);
+//       dd($noticeList['data']);
+         if($noticeList['total']!==0){
+              foreach($noticeList['data'] as  $index => $item){
+                  $list[]=[
+                      'title'=>$item->title,
+                      'content' =>$item->content,
+                      'accept_user_id'=>$item->accept_user_id,
+                      'send_user_id'=>$item->send_user_id,
+                      'created_at'=>$item->created_at,
+                      'updated_at'=>$item->updated_at,
+                  ];
+              }
         }else{
-            $list   =   [];
-        }
+             $list   =   [];
+         }
+//        dd($list);
+
+//        $notice =   new InformInfo();
+//        $config = Config::where('name','=','type')->first();
+//
+//        if(empty($config) || in_array(4,json_decode($config->value))){
+//            $list   =   $notice ->  getList();
+//            //根据操作人去除不给他接收的数据
+//            if(!empty($list)){
+//                foreach ($list as $index => $item) {
+//                    if(!in_array($accept, explode(',', $item->accept))){
+//                        unset($list[$index]);
+//                    }
+//                }
+//            }
+//        }else{
+//            $list   =   [];
+//        }
 
         return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
     }
 
     /**
      * 查看通知详情
-     * @url /osce/wechat/notice/view
+     * @url /osce/wechat/notice-list/view
      * @access public
      *
      * * @param Request $request
@@ -91,11 +106,12 @@ class NoticeController extends CommonController
      */
     public function getView(Request $request){
         $this   ->  validate($request,[
-            'id'    =>  'required',
+            'accept_user_id'    =>  'required',
         ]);
 
-        $id     =   $request    ->  get('id');
-        $notice =   InformInfo::find($id);
+        $id     =   $request    ->  get('accept_user_id');
+        $notice =   UsersPm::find($id);
+        dd($notice);
 
         if(is_null($notice))
         {

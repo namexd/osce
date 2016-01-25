@@ -96,6 +96,7 @@
                 max: "2099-06-16"
             };
             laydate(start);
+            //采购日期正则验证
         })
     </script>
 @stop
@@ -150,8 +151,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control laydate-icon" id="purchase_dt" name="purchase_dt" value="{{$item['purchase_dt']}}">
-
+                                    <input type="text" class="form-control laydate-icon" id="purchase_dt" name="purchase_dt" value="{{date('Y-m-d',strtotime($item['purchase_dt']))}}">
+                                    <br><span class="purchase_message"></span>
                                     {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
                                 </div>
                             </div>

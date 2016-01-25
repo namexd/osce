@@ -25,6 +25,9 @@
         .time{
             color: #999;
         }
+        .notice-box{
+            word-wrap:break-word;
+        }
     </style>
 
 
@@ -57,7 +60,7 @@
                     <div>
                         <img src="" alt="">
                     </div>
-                    <div>
+                    <div class="notice-box">
                       {!! $notice->content !!}
                     </div>
                 </div>
