@@ -73,35 +73,14 @@ class Vcr extends CommonModel implements MachineInterface
         $connection ->beginTransaction();
         try
         {
-            $machineData    =   [];
-
             if($vcr =   $this   ->  create($data))
-            {
-
-                $machineData=   [
-                    'item_id'    =>  $vcr    ->  id,
-                    'type'      =>  1,
-                ];
-            }
-
-            else
-            {
-                throw new \Exception('新增摄像机失败');
-            }
-            if(empty($machineData))
-            {
-                throw new \Exception('没有找到摄像机新增数据');
-            }
-            //$machine    =   Machine::create($machineData);
-            $machine    =   true;
-            if($machine)
             {
                 $connection -> commit();
                 return $vcr;
             }
             else
             {
-                throw new   \Exception('新增摄像机资源失败');
+                throw new \Exception('新增摄像机失败');
             }
         }
         catch(\Exception $ex)
