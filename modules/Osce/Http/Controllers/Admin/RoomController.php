@@ -119,7 +119,10 @@ class RoomController extends CommonController
         }
         //将数据展示到页面
         return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data, 'vcr'=>$vcr, 'type'=>$type]);
+
+
     }
+
     /**
      * 修改房间页面 业务处理
      * @api       POST /osce/admin/room/edit-room
@@ -128,6 +131,7 @@ class RoomController extends CommonController
      *                         <b>get请求字段：</b>
      *                         array           id            主键ID
      * @return view
+     * @throws \Exception
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -277,15 +281,26 @@ class RoomController extends CommonController
         try {
             //验证略
             $this->validate($request, [
-                'id' => 'required|integer'
+                'id' => 'required|integer',
+                'type' => 'required|integer'
             ]);
             DB::connection('osce_mis')->beginTransaction();
             $id = $request->input('id');
+            $type = $request->input('type');
             if (!$id) {
                 throw new \Exception('没有该房间！');
             }
 
-            $result = $room->deleteData($id);
+            if (!$type) {
+                throw new \Exception('没有类型！');
+            }
+            if ($type === '0') {
+                $result = $room->deleteData($id);
+            } else {
+                $area = new Area();
+                $result = $area->deleteArea($id);
+            }
+
             if (!$result) {
                 throw new \Exception('系统错误，请重试！');
             }
@@ -297,6 +312,7 @@ class RoomController extends CommonController
             return $this->fail($ex);
         }
     }
+
 
     /**
      * 判断名称是否已经存在

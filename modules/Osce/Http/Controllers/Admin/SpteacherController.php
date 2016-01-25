@@ -44,10 +44,9 @@ class SpteacherController extends CommonController
 
         //得到老师的列表
         $stationIds[] = $stationId;
-//        dd($spteacherId);
+
 //        $spteacherIds[] =$spteacherId;
         $spteacherIds=array_unique($spteacherId);
-
         $data = $model->showTeacherData($stationIds, $spteacherIds);
 //dd($data);
         return  response()->json($this->success_rows(1,'获取成功',count($data),count($data),1,$data->toArray()));

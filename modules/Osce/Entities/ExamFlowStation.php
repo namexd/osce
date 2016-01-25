@@ -45,7 +45,7 @@ class ExamFlowStation extends CommonModel
             $exam = Exam::findOrFail($examId)->first();
             foreach ($formData as $key => $value) {
                     //根据station_id查对应的名字
-//                dd($formData);
+//                dd($value);
                     $station = Station::findOrFail($value['station_id'])->first();
                     //为流程表准备数据
                     $flowsData = [

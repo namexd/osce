@@ -142,6 +142,7 @@ class Room extends CommonModel
 
     }
 
+
     public function editRoomData($id, $vcr_id, $formData)
     {
         $connection = DB::connection($this->connection);

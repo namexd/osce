@@ -109,7 +109,7 @@
 
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm">
-
+                        <input type="hidden" name="type" value="{{$type}}">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">场所名称</label>
 

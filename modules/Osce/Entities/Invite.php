@@ -80,7 +80,15 @@ class Invite extends CommonModel
                         'url' => $url,
                     ],
                 ];
-                $message = Common::CreateWeiXinMessage($msgData);
+
+//                $message = Common::CreateWeiXinMessage($msgData);
+                try
+                {
+                    $message = Common::CreateWeiXinMessage($msgData);
+                }catch (\Exception $ex_msg)
+                {
+                    throw   $ex_msg;
+                }
                 Common::sendWeiXin($openIdList['openid'], $message);//单发
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);

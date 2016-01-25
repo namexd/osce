@@ -191,19 +191,23 @@
                                                     <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$key+1}}][teacher_id]">
                                                         @if($item->type == 1)
                                                             <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
+                                                        @elseif($item->type != 1)
+                                                            <option value = "">==请选择==</option>
                                                         @endif
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
                                                         @if($item->type == 2)
-                                                        <div class="input-group teacher pull-left" value="{{$item->status}}">
+                                                        <div class="input-group teacher pull-left" value="{{$item->id}}">
+                                                            <input type="hidden" name="station[{{$key+1}}][spteacher_id][]" value="{{$item->id}}">
                                                             <div class="pull-left">{{$item->name}}</div>
                                                             <div class="pull-left"><i class="fa fa-times"></i></div>
                                                         </div>
                                                         @endif
                                                     </div>
                                                     <div class="pull-right" value="{{$key+1}}">
+                                                        @if($item->station_type == 2)
                                                         <div class="btn-group">
                                                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                           <span class="caret"></span>
@@ -211,6 +215,15 @@
                                                           <ul class="dropdown-menu">
                                                           </ul>
                                                         </div>
+                                                        @else
+                                                        <div class="btn-group">
+                                                          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                          <span class="caret"></span>
+                                                          </button>
+                                                          <ul class="dropdown-menu">
+                                                          </ul>
+                                                        </div>
+                                                        @endif
                                                     </div>
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>

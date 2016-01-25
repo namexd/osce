@@ -10,7 +10,7 @@ namespace Modules\Osce\Entities;
 
 
 use Illuminate\Support\Facades\DB;
-
+use Auth;
 class Area extends CommonModel
 {
 
@@ -44,29 +44,27 @@ class Area extends CommonModel
 
     /**
      * 删除考试区域
+     * @param $id
      * @return mixed
+     * @throws \Exception
      */
     public function deleteArea($id)
     {
-        $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
-        try{
-            $area = $this->where('id',$id)->first();
-            if($area->cate ==1 && Room::first()){
-                throw new \Exception('该考试区域已关联，无法删除！');
-            }
-            if($result = AreaVcr::where('area_id',$id)->first()){
-                throw new \Exception('该考试区域已与摄像机关联，无法删除！');
-            }
-            //删除考试区域
-            if(!$result = $this->where('id',$id)->delete()){
-                throw new \Exception('删除失败，请重试！');
-            }
-            $connection->commit();
-            return true;
+        try {
+            $connection = DB::connection($this->connection);
+            $connection->beginTransaction();
+            //根据id在关联表中寻找，如果有的话，就报错，不允许删除
+            if (AreaVcr::where('area_id',$id)->first()) {
+                $connection->rollBack();
+                throw new \Exception('该区域已经与摄像头相关联，无法删除！');
+            };
 
-        } catch(\Exception $ex){
-            $connection->rollback();
+            if ($result = $this->where('id',$id)->delete()) {
+                $connection->commit();
+                return $result;
+            }
+
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }
@@ -141,5 +139,6 @@ class Area extends CommonModel
             throw $ex;
         }
     }
+
 
 }

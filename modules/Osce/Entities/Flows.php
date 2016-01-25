@@ -101,11 +101,12 @@ class Flows extends CommonModel
 
             //保存  考站监考老师、sp老师安排数据
             if ($stationData) {
+//                dd($stationData);
                 foreach ($stationData as $key => $item) {
 
                     $teacherIDs = [];
                     //拼装一下老师的数据
-                    if (isset($item['teacher_id'])) {
+                    if (($item['teacher_id']) !== "") {
                         $teacherIDs[] =  $item['teacher_id'];
                     }
                     if (isset($item['spteacher_id'])) {
