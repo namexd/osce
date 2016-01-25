@@ -89,6 +89,13 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
+                    },
+                    images: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请上传图片'
+                            }
+                        }
                     }
                 }
             });
@@ -130,6 +137,8 @@
             $(".img_box").delegate(".del_img","click",function(){
                 $(this).parent("li").remove();
             });
+            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
+
         })
 
     </script>
@@ -146,7 +155,7 @@
             <div class="row">
                 <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddInvigilator')}}">
 
-                    <div class="col-md-3 col-sm-3">
+                    <div class="col-md-3 col-sm-3 image-box">
                         <ul class="img_box">
                             <span class="images_upload">
                                 <input type="file" name="images" id="file0"/>
@@ -220,7 +229,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description" id="note">
+                                <input type="text" class="form-control" name="note" id="note">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

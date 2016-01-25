@@ -193,4 +193,44 @@ class Vcr extends CommonModel implements MachineInterface
 
         return  $bulder ->  paginate(config('osce.page_size'));
     }
+
+
+    /**
+     * 查询没被其他考场关联的摄像机
+     * @api GET /osce/wechat/resources-manager/selectVcr
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id        参数中文名(必须的)
+     * * string        type      参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function selectVcr($id, $type)
+    {
+        if ($type === '0') {
+            $modelVcr = RoomVcr::where('room_id', $id)->first();
+        } else {
+            $modelVcr = AreaVcr::where('area_id', $id)->first();
+        }
+
+        $roomVcr = RoomVcr::where('room_id', '<>', $id)->select(['vcr_id'])->groupBy('vcr_id')->get();
+        $vcrIds = [];
+        foreach ($roomVcr as $value) {
+            array_push($vcrIds, $value->vcr_id);
+        }
+        $vcr = Vcr::where('status', '<', 2)->whereNotIn('id', $vcrIds)
+            ->orWhere('id', $modelVcr->vcr_id)
+            ->select(['id', 'name'])->get();
+
+        $result = [$vcr, $modelVcr];
+        return $result;     //关联摄像机
+    }
 }

@@ -88,25 +88,16 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
+                    },
+                    images: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请上传图片'
+                            }
+                        }
                     }
                 }
             });
-            //键盘事件不停检测输入的手机号
-           /* $("#mobile").keyup(function(){
-                var thisMobile=$(this).val();
-                console.log(thisMobile);
-                $.ajax({
-                    type:'post',
-                    async:true,
-                    url:'{{route('osce.admin.invigilator.postSelectTeacher')}}',
-                    data:{moblie:thisMobile},
-                    success:function(data){
-                        if(data==1){
-                            layer.msg("手机号码已存在");
-                        }
-                    }
-                })
-            })*/
             $(".images_upload").change(function(){
                 $.ajaxFileUpload
                 ({
@@ -145,6 +136,7 @@
             $(".img_box").delegate(".del_img","click",function(){
                 $(this).parent("li").remove();
             });
+            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
         })
 
     </script>
@@ -152,7 +144,6 @@
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
-
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>新增SP老师</h5>
@@ -161,7 +152,7 @@
             <div class="row">
                 <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
 
-                    <div class="col-md-3 col-sm-3">
+                    <div class="col-md-3 col-sm-3 image-box">
                         <ul class="img_box">
                             <span class="images_upload">
                                 <input type="file" name="images" id="file0"/>
