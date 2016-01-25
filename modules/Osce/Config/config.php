@@ -34,7 +34,7 @@ return [
 			'联系电话'	=>	'mobile',
 			'电子邮箱'	=>	'email',
 			'头像'		=>	'avator',
-			'备注'		=>	'level'
+			'备注'		=>	'description'
 		],
 	],
 	'machine_category'=>[
