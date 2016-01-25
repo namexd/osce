@@ -79,7 +79,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>考场信息编辑</h5>
+            <h5>编辑</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
