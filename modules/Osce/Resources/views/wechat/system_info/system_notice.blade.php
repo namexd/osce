@@ -44,7 +44,7 @@
             });
             //初始化
             var now_page = 1;
-            var url = "{{route('osce.wechat.notice.getSystemView')}}";
+            var url = "{{route('osce.wechat.notice-list.getSystemAjax')}}";
             //内容初始化
             $('.history-list').empty();
             getItem(now_page,url);
