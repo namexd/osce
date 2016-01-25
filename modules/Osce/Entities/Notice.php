@@ -110,7 +110,10 @@ class Notice extends CommonModel
             $sendType   =   Config::where('name','=','type')    ->  first();
 
             $values      =   json_decode($sendType->value);
-
+            if(empty($values))
+            {
+                throw new \Exception('请到系统设置中设置发送消息的方式');
+            }
             if(is_null($values))
             {
                 $values  =   [1];
@@ -241,18 +244,27 @@ class Notice extends CommonModel
         $data   =   [];
         if(in_array(1,$groups))
         {
-            //$data   =   $this   ->  getStudentsOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getStudentsOpendIds($exam_id,$data));
+            $student    =   $this   ->  getStudentsOpendIds($exam_id,$data);
+            if(!empty($teachers))
+            {
+                $data   =   array_merge($data,$student);
+            }
         }
         if(in_array(2,$groups))
         {
-            //$data   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getExamTeachersOpendIds($exam_id,$data));
+            $teachers   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
+            if(!empty($teachers))
+            {
+                $data   =   array_merge($data,$teachers);
+            }
         }
         if(in_array(3,$groups))
         {
-            //$data   =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getExamSpTeachersOpendIds($exam_id,$data));
+            $spTeahcers =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
+            if(!empty($spTeahcers))
+            {
+                $data   =   array_merge($data,$spTeahcers);
+            }
         }
         return $data;
     }
@@ -301,11 +313,13 @@ class Notice extends CommonModel
             {
                 throw new \Exception('没有找到指定的考生用户信息');
             }
-            if($student->userInfo->openid)
+            if(!is_null($student->userInfo))
             {
                 $data[] =   [
                     'id'    =>  $student->userInfo->id,
                     'openid'=>  $student->userInfo->openid,
+                    'email' =>  $student->userInfo->email,
+                    'mobile' =>  $student->userInfo->mobile,
                 ];
             }
         }
@@ -325,6 +339,8 @@ class Notice extends CommonModel
                 $data[] =   [
                     'id'    =>  $teacher->userInfo->id,
                     'openid'=>  $teacher->userInfo->openid,
+                    'email' =>  $teacher->userInfo->email,
+                    'mobile'=>  $teacher->userInfo->mobile,
                 ];
             }
         }

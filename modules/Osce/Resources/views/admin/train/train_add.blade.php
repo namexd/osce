@@ -117,8 +117,15 @@
 	            success: function (data, status)
 	            {
 	                if(data.state=='SUCCESS'){
-                		var str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
-                		$(".upload_list_doc").append(str);
+	                	var val=data.url;
+	                	var point = val.lastIndexOf("."); 
+     					var type = val.substr(point);
+	                	if(type===".xlsx"|type===".doc"){
+	                		var str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                			$(".upload_list_doc").append(str);
+	                	}else{
+	                		layer.alert('只能上传后缀为".xlsx"或".doc"的文件！',function(index){layer.close(index);});
+	                	}
 	                }
 	            },
 	            error: function (data, status, e)
