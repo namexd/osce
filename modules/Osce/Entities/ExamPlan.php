@@ -169,6 +169,10 @@ class ExamPlan extends CommonModel
 //        }
 
         $batchStudents          =   [];
+        if($batchNum==0)
+        {
+            throw new \Exception('考试时间不足一个考站的时间');
+        }
         for($i=1;$i<=$batchNum;$i++)
         {
             $thisBatchStudents      =   $this   ->  getPerBatchStudent();
@@ -354,11 +358,25 @@ class ExamPlan extends CommonModel
                     'name'  =>  $room->name.'-'.$this->stations[array_shift($roomIdInfo)]->name,
                     'child' =>  []
                 ];
+                $end    =   0;
                 foreach($timePlan as $time=>$student)
                 {
+                    if($end!=0)
+                    {
+                        $perEnd =   $end;
+                        if($time<=$perEnd)
+                        {
+                            $roomdData['child'][]=[
+                                'start' =>  $perEnd,
+                                'end'   =>  $time,
+                                'items' =>  []
+                            ];
+                        }
+                    }
+                    $end    =   $time+$this->cellTime*60;
                     $item   =   [
                         'start' =>  $time,
-                        'end'   =>  $time+$this->cellTime*60,
+                        'end'   =>  $end,
                         'items' =>  $student
                     ];
                     $roomdData['child'][]=$item;
