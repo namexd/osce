@@ -106,7 +106,6 @@ class ExamFlowStation extends CommonModel
             $this->examStationDelete($id);
             foreach ($room as $key=> $item) {
                 foreach ($item as $value) {
-//                    dd($value);
                     //根据station_id查对应的名字
                     $station = Station::findOrFail($value)->first();
                     //为流程表准备数据
@@ -251,7 +250,7 @@ class ExamFlowStation extends CommonModel
     {
         try {
             //删除考试考场关联
-            if (count(ExamRoom::where('exam_id', $id)->first()) != 0) {
+            if (!ExamRoom::where('exam_id', $id)->get() -> isEmpty()) {
                 if (!ExamRoom::where('exam_id', $id)->delete()) {
                     throw new \Exception('删除考试考场关联失败，请重试！');
                 }

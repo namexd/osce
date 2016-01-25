@@ -223,7 +223,7 @@ class Notice extends CommonModel
 
     public function makeUrl($notice){
 
-     return   $url    =   route('osce.admin.notice.getMsg',['id'=>$notice->id]);
+     return   $url    =   route('osce.wechat.notice.getView',['id'=>$notice->id]);
 
     }
 
