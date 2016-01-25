@@ -21,7 +21,7 @@ class Invite extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id'];
+    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id','station_id','status','user_id'];
     private $excludeId = [];
 
     //保存并发送邀请
