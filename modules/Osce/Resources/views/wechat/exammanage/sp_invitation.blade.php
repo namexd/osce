@@ -60,7 +60,7 @@
                 <a class="title check" href="{{route('osce.wechat.invitation.getMsg',['id'=>$data->id])}}"> {{$data->name}}</a>
                 {{--<p class="title check">{{$data->name}}</p>--}}
                 <p class="clearfix time"><span class="year">{{date('Y-m-d',strtotime($data->created_at))}}</span><span>{{date('H-i-s',strtotime($data->created_at))}}</span>
-                    <span class="right clo6">@if($status->status == 0)还未处理 @elseif($status->status==1)已同意@elseif($status->status==2)已拒绝@endif</span></p>
+                    <span class="right clo6">@if($data->status == 0)还未处理 @elseif($data->status==1)已同意@elseif($data->status==2)已拒绝@endif</span></p>
             </li>
             @empty
             <li>

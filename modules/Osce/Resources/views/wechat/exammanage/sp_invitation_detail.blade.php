@@ -152,9 +152,12 @@
         </ul>
         <p>希望你能协助考核，如有疑问，请致电：028 - 87653489  张老师</p>
         <div class="operate">
-
+            @if($list['status']==0)
             <button class="btn1 pull-left agree" type="button" value="1"  data={{$id}}>同意</button>
             <button class="btn1 pull-right rejected" type="button" value="2" data={{$id}} >拒绝</button>
+                @elseif($list['status']==0)
+
+                @endif
 
         </div>
     </div>

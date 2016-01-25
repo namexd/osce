@@ -77,7 +77,7 @@ class Invite extends CommonModel
 
         try {
             foreach ($data as $key => $openIdList) {
-                $url = route('osce.wechat.invitation.getMsg', ['teacher_id' => $openIdList['teacher_id']],['id'=>$notice->id]);
+                $url = route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
                 $msgData = [
                     [
                         'title' => '邀请通知',
