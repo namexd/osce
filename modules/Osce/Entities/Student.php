@@ -174,6 +174,11 @@ class Student extends CommonModel
                 throw new \Exception('未找到当前操作人信息');
             }
 
+            //查询手机号码是否已经使用
+            $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
+            if(!empty($mobile)){
+                throw new \Exception('手机号已经存在，请输入新的手机号');
+            }
             //根据条件：查找用户是否有账号和密码
             $user = User::where(['username' => $examineeData['mobile']])->first();
             //如果查找到了，对用户信息 进行编辑处理
@@ -285,7 +290,7 @@ class Student extends CommonModel
 
     //考生查询
     public function getList($formData=''){
-        $builder=$this->Join('exam','student.exam_id','=','exam.id');
+        $builder=$this->leftJoin('exam','student.exam_id','=','exam.id');
         if($formData['exam_name']){
             $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'%');
         }

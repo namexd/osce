@@ -635,21 +635,24 @@ class InvigilatorController extends CommonController
 
         //存在ID，为编辑时验证
         if(empty($id)){
-            $user = User::where('username', $mobile)->first();
+            $user = User::where('username', $mobile)->orWhere('mobile', $mobile)->get();
         }else{
-            $user = User::where('username', $mobile)->where('id', '<>', $id)->first();
+            $user = User::where('id', '<>', $id)
+                ->where(function ($query) use ($mobile){
+                    $query  ->orWhere('username', $mobile)
+                            ->orWhere('mobile', $mobile);
+                })
+                ->get();
         }
         if($user){
-            $result = Teacher::where('id', $user->id)->first();
-            if($result){
-                return json_encode(array(
-                    'valid' =>false,
-                ));
+            foreach ($user as $item) {
+                $result = Teacher::where('id', $item->id)->first();
+                if($result){
+                    return json_encode(['valid' =>false]);
+                }
             }
         }
-        return json_encode(array(
-            'valid' =>true,
-        ));
+        return json_encode(['valid' =>true]);
     }
 
 }

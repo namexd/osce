@@ -544,6 +544,11 @@ class ExamController extends CommonController
                 if(!empty($code)){
                     throw new \Exception('该学号已经有别人使用！');
                 }
+                //查询手机号码是否已经使用
+                $mobile = User::where(['mobile' => $data['mobile']])->first();
+                if(!empty($mobile)){
+                    throw new \Exception('手机号已经存在，请输入新的手机号');
+                }
                 foreach($data as $feild => $value) {
                     if(!empty($value)){
                         $student->  $feild  =   $value;
@@ -742,6 +747,7 @@ class ExamController extends CommonController
         }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
+//        dd($examStationData->toArray());
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
     }
 
