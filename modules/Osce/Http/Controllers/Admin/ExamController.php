@@ -358,7 +358,7 @@ class ExamController extends CommonController
 
         try {
             $exam_id = intval($request->input('id'));            //获取id
-            $keyword = e($request->input('keyword'));            //获取搜索关键字
+            $keyword = trim(e($request->input('keyword')));            //获取搜索关键字
 
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
