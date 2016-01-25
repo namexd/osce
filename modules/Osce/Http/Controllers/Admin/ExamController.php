@@ -761,7 +761,7 @@ class ExamController extends CommonController
             $serialnumberGroup[$item->serialnumber][] = $item;
         }
         //获取考试对应的考站数据
-        $examStationData = $examRoom -> getExamStation($exam_id);
+        $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
         return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
     }
 
@@ -1312,7 +1312,6 @@ class ExamController extends CommonController
         //展示已经关联的考站和老师列表
         $teacher = new Teacher();
         $stationData = $teacher->stationTeacher($exam_id)->groupBy('serialnumber');
-//        dd($stationData);
         return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'stationData' => $stationData]);
     }
 
@@ -1355,7 +1354,7 @@ class ExamController extends CommonController
                 $examFlowStation -> updateExamAssignment($examId, $formData);
             }
 
-            return redirect()->route('osce.admin.exam.getExamList');
+            return redirect()->route('osce.admin.exam.getStationAssignment',['id'=>$examId]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

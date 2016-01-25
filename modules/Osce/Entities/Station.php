@@ -252,7 +252,7 @@ class Station extends CommonModel
             //修改station表
             $result = $this->where($this->table . '.id', '=', $id)->update($stationData);
             //获得修改后的id
-            $station_id = $result;
+//            $station_id = $result;
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改考站信息失败');
@@ -279,7 +279,7 @@ class Station extends CommonModel
             $stationCaseData = [
                 'case_id'=>$caseId,
             ];
-            $result = StationCase::where('station_id','=',$station_id)->update($stationCaseData);
+            $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改病例关联失败');
@@ -289,7 +289,7 @@ class Station extends CommonModel
             $stationRoomData = [
                 'room_id' => $roomId,
             ];
-            $result = RoomStation::where('station_id','=',$station_id)->update($stationRoomData);
+            $result = RoomStation::where('station_id','=',$id)->update($stationRoomData);
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改房间关联失败');
@@ -313,13 +313,28 @@ class Station extends CommonModel
     {
         try {
             //判断在关联表中是否有数据
-            $result1 = StationCase::where('station_case.station_id', '=', $id)->select('id')->first();
-            $result2 = StationVcr::where('station_vcr.station_id', '=', $id)->select('id')->first();
-            $result3 = RoomStation::where('station_id',$id)->select('id')->first();
-            if ($result1 || $result2 || $result3) {
+            $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
+            if(!empty($examFlowStation)){
                 throw new \Exception('不能删除此考站，因为与其他条目相关联');
             }
-            return $this->where($this->table.'.id', '=', $id)->delete();
+            $stationCase = StationCase::where('station_id', $id)->select('id')->first();
+            if(!empty($stationCase)){
+                StationCase::where('station_id', $id)->delete();
+            }
+            $stationVcr = StationVcr::where('station_id', $id)->select('id')->first();
+            if(!empty($stationVcr)){
+                StationVcr::where('station_id', $id)->delete();
+            }
+            $stationTeacher = StationTeacher::where('station_id', $id)->first();
+            if(!empty($stationTeacher)){
+                StationTeacher::where('station_id', $id)->delete();
+            }
+            $roomStation = RoomStation::where('station_id', $id)->select('id')->first();
+            if(!empty($roomStation)){
+                RoomStation::where('station_id', $id)->delete();
+            }
+            return $this->where($this->table.'.id', $id)->delete();
+
         } catch (\Exception $ex) {
             throw $ex;
         }

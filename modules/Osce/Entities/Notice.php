@@ -36,7 +36,7 @@ class Notice extends CommonModel
                 //关联消息接收用户和消息
                 //$this   ->  makeNoticeUserRelative($notice,$to);
                 //通知用户
-                $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
+                $this   ->  sendMsg($notice,$to);
                 $connection ->commit();
                 return $notice;
             }
@@ -71,7 +71,7 @@ class Notice extends CommonModel
 
                 $to     =   $this   ->  getGroupsOpendIds($groups,$notice->exam_id);
                 //通知用户
-                $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
+                $this   ->  sendMsg($notice,$to);
                 return $notice;
             }
             else
@@ -110,7 +110,10 @@ class Notice extends CommonModel
             $sendType   =   Config::where('name','=','type')    ->  first();
 
             $values      =   json_decode($sendType->value);
-
+            if(empty($values))
+            {
+                throw new \Exception('请到系统设置中设置发送消息的方式');
+            }
             if(is_null($values))
             {
                 $values  =   [1];
@@ -124,13 +127,16 @@ class Notice extends CommonModel
                         switch($value)
                         {
                             case 1:
-                                $this->sendWechat($notice,$to,$url);
+                                $this->sendWechat($notice,array_pluck($to,'openid'),$url);
                                 break;
                             case 2:
-                                $this->sendEmail($notice,$to,$url);
+                                $this->sendEmail($notice,array_pluck($to,'email'),$url);
                                 break;
                             case 3:
-                                $this->sendSms($notice,$to,$url);
+                                $this->sendSms($notice,array_pluck($to,'mobile'),$url);
+                                break;
+                            case 4:
+                                $this->sendPm($notice,array_pluck($to,'id'));
                                 break;
                             default:
                                 $this->sendWechat($notice,$to,$url);
@@ -162,6 +168,18 @@ class Notice extends CommonModel
         $message    =   Common::CreateWeiXinMessage($msgData);
         Common::sendWeixinToMany($message,$to);
     }
+
+    public function sendPm($notice,$to){
+        $sender =   \App::make('messages.pm');
+        foreach($to as $accept)
+        {
+            if(empty($accept))
+            {
+                continue;
+            }
+            $sender ->  send($accept,$notice->content,$notice->name);
+        }
+    }
     /**
      * 发布通知
      * @access public
@@ -186,12 +204,10 @@ class Notice extends CommonModel
             'content'   =>  $content,
             'exam_id'   =>  $exam_id,
             'accept'    =>  implode(',',$groups),
+//            'accept'    =>  $groups,
             'status'    =>  1,
             'create_user_id'    =>  $user->id,
             'attachments'    =>  $attach,
-        ];
-        $groups=    [
-            1
         ];
         try{
             $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
@@ -228,18 +244,27 @@ class Notice extends CommonModel
         $data   =   [];
         if(in_array(1,$groups))
         {
-            //$data   =   $this   ->  getStudentsOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getStudentsOpendIds($exam_id,$data));
+            $student    =   $this   ->  getStudentsOpendIds($exam_id,$data);
+            if(!empty($teachers))
+            {
+                $data   =   array_merge($data,$student);
+            }
         }
         if(in_array(2,$groups))
         {
-            //$data   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getExamTeachersOpendIds($exam_id,$data));
+            $teachers   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
+            if(!empty($teachers))
+            {
+                $data   =   array_merge($data,$teachers);
+            }
         }
         if(in_array(3,$groups))
         {
-            //$data   =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getExamSpTeachersOpendIds($exam_id,$data));
+            $spTeahcers =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
+            if(!empty($spTeahcers))
+            {
+                $data   =   array_merge($data,$spTeahcers);
+            }
         }
         return $data;
     }
@@ -288,11 +313,13 @@ class Notice extends CommonModel
             {
                 throw new \Exception('没有找到指定的考生用户信息');
             }
-            if($student->userInfo->openid)
+            if(!is_null($student->userInfo))
             {
                 $data[] =   [
                     'id'    =>  $student->userInfo->id,
                     'openid'=>  $student->userInfo->openid,
+                    'email' =>  $student->userInfo->email,
+                    'mobile' =>  $student->userInfo->mobile,
                 ];
             }
         }
@@ -312,6 +339,8 @@ class Notice extends CommonModel
                 $data[] =   [
                     'id'    =>  $teacher->userInfo->id,
                     'openid'=>  $teacher->userInfo->openid,
+                    'email' =>  $teacher->userInfo->email,
+                    'mobile'=>  $teacher->userInfo->mobile,
                 ];
             }
         }

@@ -281,7 +281,9 @@ class Exam extends CommonModel
             $exam   =   $this->find($exam_id);
             if($exam->sequence_mode!=$examData['sequence_mode'])
             {
+                //如果排考模式变化 删除 已有 教师关联 和 排考计划
                 StationTeacher::where('exam_id','=',$exam_id)->delete();
+                ExamPlan::where('exam_id','=',$exam_id)->delete();
             }
             foreach($examData as $field=>$item)
             {

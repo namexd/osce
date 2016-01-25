@@ -55,7 +55,6 @@ class NoticeController extends CommonController
         // TODO zhoufuxiang 16-1-22
         $notice =   new InformInfo();
         $config = Config::where('name','=','type')->first();
-
         if(empty($config) || in_array(4,json_decode($config->value))){
             $list   =   $notice ->  getList();
             //根据操作人去除不给他接收的数据

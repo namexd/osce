@@ -79,6 +79,7 @@
         padding: 0;
         margin: 0;
     }
+    #exam-place tbody tr td:last-child>a{color: #1ab394;}
     </style>
 @stop
 
@@ -182,9 +183,8 @@
                                         </tr>
                                         </thead>
                                         <tbody index="{{count($stationData)}}">
+                                        <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
                                         @forelse($stationData as $item)
-                                            <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
-                                            {{--{{dd($item)}}--}}
                                             <tr class="parent-id-{{$item[0]->station_id}}">
                                                 <td>{{$key++}}<input type="hidden" name="form_data[{{$k1++}}][station_id]" value="{{$item[0]->station_id}}"/></td>
                                                 <td>{{$item[0]->station_name}}</td>
@@ -211,6 +211,7 @@
                                                         @endforeach
                                                     </div>
                                                     <div class="pull-right" value="{{$k4++}}">
+                                                        @if($item[0]->station_type == 2)
                                                         <div class="btn-group">
                                                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                           <span class="caret"></span>
@@ -218,6 +219,7 @@
                                                           <ul class="dropdown-menu">
                                                           </ul>
                                                         </div>
+                                                        @endif
                                                     </div>
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
