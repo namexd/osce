@@ -50,17 +50,12 @@
     </div>
     <div class="history-box">
         <ul class="history-list">
-
-            @forelse($list as $item)
+            @foreach($list as $item)
             <li>
-                <p class="title">{{ $item['title'] }}</p>
-                <p class="time"><span class="year">{{  $item['created_at'] }}</span><a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice.getView',['id'=>$item['accept_user_id']])}}">查看详情&nbsp;&gt;</a></p>
+                <p class="title">{{ $item->name  }}</p>
+                <p class="time"><span class="year">{{  $item->created_at }}</span><a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice.getView',['id'=>$item->id])}}">查看详情&nbsp;&gt;</a></p>
             </li>
-            @empty
-                <li>
-                    <p class="title">暂时没有通知消息</p>
-                </li>
-            @endforelse
+            @endforeach
         </ul>
     </div>
 @stop
