@@ -140,18 +140,18 @@
                                         </thead>
                                         <tbody index="{{count($roomData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
-{{--                                        {{dd($roomData)}}--}}
-                                        @forelse($roomData as $k => $item)
+
+                                        @forelse($roomData as $item)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
                                                     <select class="form-control js-example-basic-multiple room-station" name="room[{{$k2++}}][]" multiple="multiple">
-                                                        @foreach($item as $value)
+                                                        @foreach($item as $k => $value)
                                                             <option value="{{$value->station_id}}" selected="selected">{{$value->station_name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td class="necessary">{{(count($k)==1)?'必考':'二选一'}}</td>
+                                                <td class="necessary">{{(($k+1)==1)?'必考':'二选一'}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>

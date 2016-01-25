@@ -211,14 +211,12 @@ class Notice extends CommonModel
             'attachments'    =>  $attach,
         ];
         try{
-
             $accept = implode(',',$groups);
             $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
             $notice =   $this   ->  addNotice($data,$to,$accept);
             return $notice;
-        }
-        catch (\Exception $ex)
-        {
+
+        } catch (\Exception $ex){
             throw $ex;
         }
     }
@@ -252,33 +250,25 @@ class Notice extends CommonModel
     public function getGroupsOpendIds($groups,$exam_id){
 
         $data   =   [];
-        if(in_array(1,$groups))
-        {
-            $student    =   $this   ->  getStudentsOpendIds($exam_id,$data);
-            if(!empty($teachers))
-            {
-                $data   =   array_merge($data,$student);
-            }
+        if(in_array(1,$groups)){
+            $student    =   $this   ->  getStudentsOpendIds($exam_id);
         }
-        if(in_array(2,$groups))
-        {
-            $teachers   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
-
-
-            if(!empty($teachers))
-            {
-                $data   =   array_merge($data,$teachers);
-            }
+        if(in_array(2,$groups)){
+            $teachers   =   $this   ->  getExamTeachersOpendIds($exam_id);
         }
-        if(in_array(3,$groups))
-        {
+        if(in_array(3,$groups)){
             $spTeahcers =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
-//            dd($spTeahcers);
-            if(!empty($spTeahcers))
-            {
-                $data   =   array_merge($data,$spTeahcers);
-            }
         }
+        if(!empty($student)){
+            $data   =   array_merge($data,$student);
+        }
+        if(!empty($teachers)){
+            $data   =   array_merge($data,$teachers);
+        }
+        if(!empty($spTeahcers)){
+            $data   =   array_merge($data,$spTeahcers);
+        }
+
         return $data;
     }
 

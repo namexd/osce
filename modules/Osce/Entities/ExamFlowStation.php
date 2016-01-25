@@ -158,31 +158,44 @@ class ExamFlowStation extends CommonModel
     protected function examStationAssociationSave($examId, $flowsId, $user, $key, $value)
     {
         try {
-        //配置数据准备插入exam_flows表
-        $examFlowsData = [
-            'exam_id' => $examId,
-            'flow_id' => $flowsId,
-            'created_user_id' => $user->id,
-        ];
-        //将数据插入exam_flows
-        if (!$examFlowsResult = ExamFlow::create($examFlowsData)) {
-            throw new Exception('考试流程关联添加失败');
-        }
-        //配置exam_flow_station的数据
-        $examFlowsStationData = [
-            'serialnumber' => $key,
-            'station_id' => $value,
-            'flow_id' => $flowsId,
-            'exam_id' => $examId,
-            'created_user_id' => $user->id,
-        ];
-        //插入exam_flow_station表
-        if (!$examFlowsStationResult = ExamFlowStation::create($examFlowsStationData)) {
-            throw new Exception('考试流程考站关联添加失败');
-        }
-    } catch (\Exception $ex) {
-            throw $ex;
-        }
+            //配置数据插入exam_station表
+            $examStationData = [
+                'exam_id' => $examId,
+                'station_id' => $value,
+                'create_user_id' => $user->id
+            ];
+            if (ExamStation::where('exam_id',$examId)->where('station_id',$value)->get()->isEmpty()) {
+                if (!ExamStation::create($examStationData)) {
+                    throw new \Exception('考试考站关联添加失败');
+                }
+            }
+
+
+            //配置数据准备插入exam_flows表
+            $examFlowsData = [
+                'exam_id' => $examId,
+                'flow_id' => $flowsId,
+                'created_user_id' => $user->id,
+            ];
+            //将数据插入exam_flows
+            if (!$examFlowsResult = ExamFlow::create($examFlowsData)) {
+                throw new Exception('考试流程关联添加失败');
+            }
+            //配置exam_flow_station的数据
+            $examFlowsStationData = [
+                'serialnumber' => $key,
+                'station_id' => $value,
+                'flow_id' => $flowsId,
+                'exam_id' => $examId,
+                'created_user_id' => $user->id,
+            ];
+            //插入exam_flow_station表
+            if (!$examFlowsStationResult = ExamFlowStation::create($examFlowsStationData)) {
+                throw new Exception('考试流程考站关联添加失败');
+            }
+        } catch (\Exception $ex) {
+                throw $ex;
+            }
     }
 
     /**

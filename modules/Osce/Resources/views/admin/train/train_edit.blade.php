@@ -43,7 +43,6 @@
 		    istoday:false,
 		    choose: function(datas){
 		        end.min = datas;
-		        end.start = datas
 	    	}
 		}
 		var end={
@@ -58,6 +57,10 @@
 		        start.max = datas;
 		    }
 		}
+		$("#end").click(function(){
+			end.min = $('#start').val();
+			laydate(end);
+		});
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);

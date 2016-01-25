@@ -26,7 +26,6 @@ use url;
 
 class InvitationController extends CommonController
 {
-
     /**
      *sp邀请
      * @api GET /osce/wechat/invitation/invitation-list
