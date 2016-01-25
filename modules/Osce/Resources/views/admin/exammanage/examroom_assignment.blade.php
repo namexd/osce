@@ -189,6 +189,7 @@
                                                 <td>{{$item[0]->station_name}}</td>
                                                 <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
+
                                                     <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$k2++}}][teacher_id]">
                                                         @foreach($item as $value)
                                                             @if($value->type == 1)
@@ -204,13 +205,13 @@
                                                         @foreach($item as $b => $value)
                                                             @if($value->type == 2)
                                                             <div class="input-group teacher pull-left" value="{{$value->id}}">
-                                                                <input type="hidden" name="station[{{$b+1}}][spteacher_id][]" value="{{$value->id}}">
+                                                                <input type="hidden" name="station[{{$k3}}][spteacher_id][]" value="{{$value->id}}">
                                                                 <div class="pull-left">{{$value->name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
                                                             </div>
-
                                                             @endif
                                                         @endforeach
+                                                            <input type="hidden" {{$k3++}}>
                                                     </div>
                                                     <div class="pull-right" value="{{$k4++}}">
                                                         @if($item[0]->station_type == 2)
