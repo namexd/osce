@@ -63,6 +63,13 @@
                     <div class="notice-box">
                       {!! $notice->content !!}
                     </div>
+                    <div>
+                        @if($data['attachments'])
+                            @foreach($data['attachments'] as $key=>$list)
+                                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$data['id'],'attch_index'=>$key])}}"><?php $pathInfo=explode('/',$list)?>{{array_pop($pathInfo)}}</a><br />
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
             </li>
         </ul>
