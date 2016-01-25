@@ -204,7 +204,7 @@
                                                         @foreach($item as $b => $value)
                                                             @if($value->type == 2)
                                                             <div class="input-group teacher pull-left" value="{{$value->id}}">
-                                                                <input type="hidden" name="station[{{$b+1}}][spteacher_id][]" value="{{$value->id}}">
+                                                                <input type="hidden" name="station[{{$k3++}}][spteacher_id][]" value="{{$value->id}}">
                                                                 <div class="pull-left">{{$value->name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
                                                             </div>
