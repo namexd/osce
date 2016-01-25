@@ -2101,7 +2101,7 @@ function station_assignment(){
                     var station_index = parseInt(thisElement.attr('index'));
                     for(var i in data){
 
-                        var teacher = '<option>==请选择==</option>';
+                        var teacher = '<option value="">==请选择==</option>';
                         var typeValue = [0,'技能操作站','SP站','理论操作站'];
 
                         //写入dom 筛选操作，sp、理论、技能
@@ -2377,7 +2377,19 @@ function station_assignment(){
                 ids.push(id);
             }
         });
-        location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
+        $.ajax({
+            type:'get',
+            url:pars.spteacher_invitition+'?exam_id='+$('.active').find('a').attr('href').split('=')[1]+'&teacher_id='+ids,
+            success:function(res){
+                if(res.code==1){
+                    layer.alert('发起邀请成功！');
+                }else{
+                    layer.alert(res.message);
+                }
+
+            }
+        });
+        //location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
     })
 
     /**
