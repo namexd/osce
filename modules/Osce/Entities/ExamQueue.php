@@ -53,13 +53,14 @@ class ExamQueue extends CommonModel
         $data = [];
         foreach ($examFlowRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
-            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->take(config('osce.wait_student_num'))->get();
+            $room_id=$examFlowRoom->room_id;
+//            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->get();
+            $ExamQueue=new ExamQueue();
+            $students=$ExamQueue->getWaitStudentRoom($room_id,$exam->id);
             foreach ($students as $examQueue) {
-                if($examQueue->status===0) {
                     foreach ($examQueue->student as $student) {
 //                  $student->roomName=$roomName;
                         $data[$roomName][] = $student;
-                    }
                 }
             }
         }
@@ -74,14 +75,15 @@ class ExamQueue extends CommonModel
         $data = [];
         foreach ($examFlowStationList as $examFlowStation) {
             $stationName = $examFlowStation->station->name;
-            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->take(config('osce.wait_student_num'))->get();
+            $station_id = $examFlowStation->station_id;
+            $ExamQueue=new ExamQueue();
+            $students=$ExamQueue->getWaitStudentStation($station_id,$exam->id);
+//            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->get();
             foreach ($students as $ExamQueue) {
-                if($ExamQueue->status===0){
                     foreach ($ExamQueue->student as $student) {
 //                   $student->stationName=$stationName;
                         $data[$stationName][] = $student;
                     }
-                }
             }
         }
         return $data;
@@ -337,6 +339,54 @@ class ExamQueue extends CommonModel
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * 通过考试考场id获取候考学生
+     * @param $station_id $exam_id
+     * @return
+     * @throws \Exception
+     * @author zhouchong
+     */
+    public function getWaitStudentStation($station_id='',$exam_id=''){
+
+        $builder=$this->leftJoin ('exam_flow_station',
+            function ($join) {
+                $join->on('exam_queue.station_id' , '=' , 'exam_flow_station.station_id');
+            })->leftJoin( 'student',
+            function ($join) {
+                $join->on('student.id' , '=' , 'exam_queue.student_id');
+            })->where('exam_queue.station_id', '=', $station_id)->where('exam_queue.exam_id','=',$exam_id)->where('exam_queue.status','=',0)
+            ->select([
+                'student.name as name',
+                'student.id as student_id',
+            ])->take(4)->get();
+
+       return $builder;
+    }
+
+
+    /**
+     * 通过考试考场id获取候考学生
+     * @param $room_id $exam_id
+     * @return
+     * @throws \Exception
+     * @author zhouchong
+     */
+    public function getWaitStudentRoom($room_id='',$exam_id=''){
+
+        $builder=$this->leftJoin ('exam_flow_room',
+            function ($join) {
+                $join->on('exam_queue.room_id' , '=' , 'exam_flow_room.room_id');
+            })->leftJoin( 'student',
+            function ($join) {
+                $join->on('student.id' , '=' , 'exam_queue.student_id');
+            })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id','=',$exam_id)->where('exam_queue.status','=',0)
+            ->select([
+                'student.name as name',
+                'student.id as student_id',
+            ])->take(4)->get();
+        return $builder;
     }
 
 }

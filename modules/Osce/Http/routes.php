@@ -236,11 +236,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
 
-//		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
-//		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.getStudent']);
-//		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.getStudentScore']);
+		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
+		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.course.getStudent']);
+		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.course.getStudentScore']);
 
-//		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);	//osce.admin.getIndex,此路由前面已经使用了，请修改 （TODO zhoufuxiang）
+		//Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);	//osce.admin.getIndex,此路由前面已经使用了，请修改 （TODO zhoufuxiang）
 
 	});
 
