@@ -34,28 +34,39 @@
             </div>
         </div>
         <div class="panel blank-panel">
-            <form class="container-fluid ibox-content" action="" method="get" id="list_form">
-                <div  class="row" style="margin:20px 0;">
-                    <div class="col-md-6 col-sm-6 col-xs-6">
-                        <label class="pull-left exam-name">考试:</label>
-                        <div class="pull-left exam-list">
-                            <select name="" id="" class="form-control" style="width: 250px;">
-                                <option value="">全部考试</option>
-                            </select>
+            <div class="container-fluid ibox-content">
+                <form action="">
+                    <div  class="row" style="margin:20px 0;">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <label class="pull-left exam-name">考试:</label>
+                            <div class="pull-left exam-list">
+                                <select name="exam_id" id="" class="form-control" style="width: 250px;">
+                                    <option value="">全部考试</option>
+                                    @forelse($examDownlist as $exam)
+                                        <option value="{{$exam->id}}">{{$exam->name}}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="input-group col-md-6 col-sm-6 col-xs-6">
-                        <label class="pull-left exam-name">科目:</label>
-                        <div  class="pull-left examinee-list">
-                            <select name="" id="" class="form-control" style="width: 250px;">
-                                <option value="">全部科目</option>
-                            </select>
+                        <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                            <label class="pull-left exam-name">科目:</label>
+                            <div  class="pull-left examinee-list">
+                                <select name="subject_id" id="" class="form-control" style="width: 250px;">
+                                    <option value="">全部科目</option>
+                                    @forelse($subjectDownlist as $subject)
+                                        <option value="{{$subject->id}}">{{$subject->title}}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
                             <span class="input-group-btn pull-left" style="margin-left: 10px;">
                                 <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                             </span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+
 
                 <table class="table table-striped" id="table-striped" style="background:#fff">
                     <thead>
@@ -94,7 +105,7 @@
                 <div class="btn-group pull-right">
 
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}

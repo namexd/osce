@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="panel blank-panel">
-            <form class="container-fluid ibox-content" action="" method="get" id="list_form">
+            <div class="container-fluid ibox-content">
                 <div  class="row" style="margin:20px 0;">
 
                     <div class="col-md-6 col-sm-6 col-xs-6">
@@ -42,15 +42,21 @@
                         <div class="pull-left exam-list">
                             <select name="" id="" class="form-control" style="width: 250px;">
                                 <option value="">全部考试</option>
+                                @forelse($examDownlist as $exam)
+                                    <option value="{{$exam->id}}">{{$exam->name}}</option>
+                                @empty
+                                @endforelse
                             </select>
                         </div>
                     </div>
                     <div class="input-group col-md-6 col-sm-6 col-xs-6">
                         <div  class="pull-left examinee-list">
-                            <input type="text" placeholder="请输入姓名、考号、身份证号" name="student_name" class="input-md form-control" style="width: 250px;" value="">
-                            <span class="input-group-btn pull-left">
-                                <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
-                            </span>
+                            <form action="">
+                                <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;" value="">
+                                <span class="input-group-btn pull-left">
+                                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                                </span>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -93,7 +99,7 @@
                 <div class="btn-group pull-right">
 
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}
