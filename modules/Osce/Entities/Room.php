@@ -121,6 +121,10 @@ class Room extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
             //根据id在关联表中寻找，如果有的话，就删除，否则就报错
+            if (!ExamFlowRoom::where('room_id',$id)->get()->isEmpty()) {
+                throw new \Exception('该房间已经关联考试，不予删除！');
+            }
+
             $roomStations = RoomStation::where('room_id','=',$id)->get();
             if (!$roomStations->isEmpty()) {
                 if  (!RoomStation::where('room_id',$id)->delete()) {
