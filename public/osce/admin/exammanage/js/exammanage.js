@@ -1840,6 +1840,7 @@ function smart_assignment(){
             {
                 var next    =   times[parseInt(i)+parseInt(1)];
                 var every   =   next-times[i];
+                every=every/6;
                 li.css("height",every+"px");
                 console.log(every);
             }
