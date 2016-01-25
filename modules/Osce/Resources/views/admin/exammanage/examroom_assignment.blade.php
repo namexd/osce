@@ -182,13 +182,12 @@
                                         </tr>
                                         </thead>
                                         <tbody index="{{count($examStationData)}}">
-                                        @forelse($examStationData as $key => $item)
-                                            {{--{{dd($item)}}--}}
-                                            <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
+                                        <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
+                                        @forelse($examStationData as $k => $item)
                                             <tr class="parent-id-{{$item[0]->room_id}}">
                                                 <td>{{$key++}}<input type="hidden" name="station[{{$k1++}}][id]" value="{{$item[0]->station_id}}"/></td>
                                                 <td>{{$item[0]->station_name}}</td>
-                                                <td>{{($item[0]->type==1)?'技能操作站':(($item[0]->type==2)?'sp站':'理论操作站')}}</td>
+                                                <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
                                                     <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$k2++}}][teacher_id]">
                                                         @foreach($item as $value)
@@ -202,13 +201,14 @@
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
-                                                        @foreach($item as $value)
+                                                        @foreach($item as $b => $value)
                                                             @if($value->type == 2)
                                                             <div class="input-group teacher pull-left" value="{{$value->id}}">
-                                                                <input type="hidden" name="station[{{$k3++}}][spteacher_id][]" value="{{$value->id}}">
+                                                                <input type="hidden" name="station[{{$b+1}}][spteacher_id][]" value="{{$value->id}}">
                                                                 <div class="pull-left">{{$value->name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
                                                             </div>
+
                                                             @endif
                                                         @endforeach
                                                     </div>
