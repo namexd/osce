@@ -67,7 +67,7 @@ class InvitationController extends CommonController
                 $data[$key]['exam_screening_id']= $examscreening->id;
             }
         $InviteModel = new Invite();
-//        dd($data);
+
         try{
             if ($InviteModel->addInvite($data)) {
                 return response()->json(
