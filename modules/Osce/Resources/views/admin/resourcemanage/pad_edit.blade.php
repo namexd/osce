@@ -151,8 +151,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control laydate-icon" id="purchase_dt" name="purchase_dt" value="{{$item['purchase_dt']}}">
-                                    <br><span class="purchase_message"></span>
+                                    <input type="text"  class="laydate-icon" id="purchase_dt" name="purchase_dt" readonly="readonly" value="{{date('Y-m-d',strtotime($item['purchase_dt']))}}">
                                     {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
                                 </div>
                             </div>

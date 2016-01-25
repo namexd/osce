@@ -35,7 +35,7 @@ class ExamFlowStation extends CommonModel
         try {
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
-            dd($formData);
+//            dd($formData);
             $user = Auth::user();
             if (empty($user)) {
                 throw new Exception('未找到当前操作人信息！');
