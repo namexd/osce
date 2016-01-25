@@ -21,7 +21,7 @@ class Area extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'code', 'cate', 'description','created_user_id'];
+    protected $fillable = ['name', 'code', 'cate', 'description','created_user_id','address'];
 
     /**
      * 摄像机和区域的关联
