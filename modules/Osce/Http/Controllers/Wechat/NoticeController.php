@@ -54,21 +54,19 @@ class NoticeController extends CommonController
         } else {
             $accept = 2;
         }
-        // TODO zhoufuxiang 16-1-22
-//        $way    = $request -> get('way');       //通知方式
-//        $config = Config::where('name', '=', 'type')->first();
-//        if(!empty($way) && !empty($config)){
-//            //查看 系统设置中，是否有此 通知方式
-//            if(!in_array($way, json_decode($config->value))){
-//                $list = [];
-//                return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
-//            }
-//        }
+        // TODO zhoufuxiang 16-1-25
+        $way    = $request -> get('way');       //通知方式
+        $config = Config::where('name', '=', 'type')->first();
+        if(!empty($way) && !empty($config)){
+            //查看 系统设置中，是否有此 通知方式
+            if(!in_array($way, json_decode($config->value))){
+                return view('osce::wechat.exammanage.exam_notice',['list'=>[]]);
+            }
+        }
 
         $notice =   new InformInfo();
-        $config = Config::where('name','=','type')->first();
-
-        if(empty($config) || in_array(4,json_decode($config->value))){
+//        $config = Config::where('name','=','type')->first();
+//        if(empty($config) || in_array(4,json_decode($config->value))){
             $list   =   $notice ->  getList();
             //根据操作人去除不给他接收的数据
             if(!empty($list)){
@@ -78,9 +76,9 @@ class NoticeController extends CommonController
                     }
                 }
             }
-        }else{
-            $list   =   [];
-        }
+//        }else{
+//            $list   =   [];
+//        }
         return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
 
     }
