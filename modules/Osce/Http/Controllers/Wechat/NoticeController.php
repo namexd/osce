@@ -84,11 +84,12 @@ class NoticeController extends CommonController
     }
 
 
-  ///osce/wechat/notice/system-view
+  //osce/wechat/notice/system-view
     public function   getSystemView(Request $request)
     {
         $trainModel = new  InformInfo ();
         $pagination = $trainModel->getList();
+//        dd($pagination);
         $notice =   new InformInfo();
         $list   =   $notice ->getList();
         //$list = InformInfo::select()->orderBy('created_at')->get()->toArray();
