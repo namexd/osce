@@ -239,11 +239,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//视频的着陆页
 		Route::get('exam-result/result-video',['uses'=>'ExamResultController@getResultVideo','as'=>'osce.admin.course.getResultVideo']);
 
+		//科目统计相关
 		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
 		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.course.getStudent']);
 		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.course.getStudentScore']);
 		Route::get('course/student-details',['uses'=>'CourseController@getStudentDetails','as'=>'osce.admin.course.getStudentDetails']);
-
+		Route::get('course/subject',['uses'=>'CourseController@getSubject','as'=>'osce.admin.course.getSubject']);
 		
 	});
 
@@ -259,11 +260,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		Route::get('exam-room',['uses'=>'PadController@getExamRoom']);
 		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
-//
+
 		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
 		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);  //抽签的方法
 		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);  //下一组考生
-
+		Route::get('station-list',['uses'=>'DrawlotsController@getStationList','as'=>'osce.pad.getStationList']);  //登陆之后给予考站信息
 		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
 	});
 
