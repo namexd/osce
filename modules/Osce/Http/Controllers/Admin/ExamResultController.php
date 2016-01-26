@@ -188,7 +188,7 @@ class ExamResultController extends CommonController{
 
         $standardModel=new Standard();
         $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
-        if(!$totalScore){
+        if($totalScore){
             $sort=$totalScore[0]->sort;
             $avg=[];
             for($i=1;$i<=$sort;$i++){
