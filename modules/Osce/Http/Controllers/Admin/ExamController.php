@@ -475,13 +475,14 @@ class ExamController extends CommonController
         $exam_id = $request->get('exam_id');
         //考生数据
         $examineeData = [
-            'name'           => $request  ->  get('name'),          //姓名
-            'gender'         => $request  ->  get('gender'),        //性别
-            'idcard'         => $request  ->  get('idcard'),        //身份证号
-            'mobile'         => $request  ->  get('mobile'),        //手机号
-            'code'           => $request  ->  get('code'),          //学号
-            'avator'         => $request  ->  get('images_path')[0],//照片
-            'email'          => $request  ->  get('email'),         //邮箱
+            'name'          => $request  ->  get('name'),          //姓名
+            'gender'        => $request  ->  get('gender'),        //性别
+            'idcard'        => $request  ->  get('idcard'),        //身份证号
+            'mobile'        => $request  ->  get('mobile'),        //手机号
+            'code'          => $request  ->  get('code'),          //学号
+            'avator'        => $request  ->  get('images_path')[0],//照片
+            'email'         => $request  ->  get('email'),         //邮箱
+            'description'   => $request  ->  get('description'),   //备注
         ];
 
         try{
@@ -603,34 +604,10 @@ class ExamController extends CommonController
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
 
-            //将数组导入到模型中的addInvigilator方法
-            foreach($examineeData as $key => $studentData)
-            {
-                if($studentData['gender'] == '男'){
-                    $studentData['gender'] = 1;
-                }elseif($studentData['gender'] == '女'){
-                    $studentData['gender'] = 2;
-                }else{
-                    $studentData['gender'] = 0;
-                }
-                //姓名不能为空
-                if(empty($studentData['name'])){
-                    throw new \Exception('第'.($key+2).'行姓名不能为空，请修改！');
-                }
-                //验证身份证号
-                if(!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/',$studentData['idcard'])){
-                    throw new \Exception('第'.($key+2).'行身份证号不符规格，请修改！');
-                }
-                //验证手机号
-                if(!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/',$studentData['mobile'])){
-                    throw new \Exception('第'.($key+2).'行手机号不符规格，请修改！');
-                }
-
-                if(!$student->addExaminee($exam_id, $studentData, $key+2))
-                {
-                    throw new \Exception('学生导入数据失败，请稍后重试');
-                }
+            if(!$student->importStudent($exam_id, $examineeData)){
+                throw new \Exception('学生导入数据失败，请修改重试');
             }
+
             echo json_encode($this->success_data(['code'=>1]));
 
         } catch (\Exception $ex) {

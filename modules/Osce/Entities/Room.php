@@ -21,7 +21,7 @@ class Room extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'code', 'address', 'nfc', 'description'];
+    protected $fillable = ['name', 'nfc', 'address', 'code', 'create_user_id', 'description'];
     public $search = [];
 
     /**

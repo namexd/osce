@@ -40,6 +40,7 @@
 			min: laydate.now(),
 		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
 		        end.min = datas;
 		        end.start = datas
@@ -52,7 +53,9 @@
 			min: laydate.now(),
 		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
+		    	start.min=datas;
 		        start.max = datas;
 		    }
 		}
@@ -120,6 +123,7 @@
 	                	var val=data.url;
 	                	var point = val.lastIndexOf("."); 
      					var type = val.substr(point);
+     					console.log(type);
 	                	if(type===".xlsx"|type===".doc"){
 	                		var str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
                 			$(".upload_list_doc").append(str);
@@ -130,7 +134,7 @@
 	            },
 	            error: function (data, status, e)
 	            {
-	                layer.alert('通讯失败！',function(index2){layer.close(index2);});
+	                layer.alert('上传失败！',function(index2){layer.close(index2);});
 	            }
 	        });
 	    }) ;

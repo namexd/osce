@@ -86,6 +86,42 @@ function exam_add(){
             }
         }
     });
+
+    $('tbody').on('keyup','.end',function(e){
+        
+        var re = RegExp('/^\d{4}-(?:0\d|1[0-2])-(?:[0-2]\d|3[01])( (?:[01]\d|2[0-3])\:[0-5]\d)?$/');
+        var thisElement = $(this);
+        if(e.keyCode){
+            if(!re.test(thisElement.val())){
+                layer.alert('时间不能为空！');
+                thisElement.focus();
+                return;
+            }else{
+                return;
+            }
+        }
+    });
+
+    $('.btn.btn-primary').click(function(){
+        var flag = null;
+        $('tbody').find('.col-sm-10').each(function(key,elem){
+            flag = true;
+            if($(elem).find('input').val()==''){
+                flag = false;
+            }
+        });
+        if(flag==false){
+            layer.alert('时间不能为空！');
+            return false;
+        }
+        if(flag==null){
+            layer.alert('未设置考试时间！');
+            return false;
+        }
+    });
+
+
+
     /**
      * 新增一条
      * @author  mao
@@ -105,10 +141,10 @@ function exam_add(){
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
             '</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
             '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
@@ -223,6 +259,24 @@ function add_basic(){
         }
     });
 
+    $('.btn.btn-primary').click(function(){
+        var flag = null;
+        $('tbody').find('.col-sm-10').each(function(key,elem){
+            flag = true;
+            if($(elem).find('input').val()==''){
+                flag = false;
+            }
+        });
+        if(flag==false){
+            layer.alert('时间不能为空！');
+            return false;
+        }
+        if(flag==null){
+            layer.alert('未设置考试时间！');
+            return false;
+        }
+    });
+
     /**
      * 新增一条
      * @author  mao
@@ -242,10 +296,10 @@ function add_basic(){
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
             '</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
             '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
@@ -370,7 +424,7 @@ function timePicker(background){
         format: 'YYYY-MM-DD hh:mm', //日期格式
         istime: true, //是否开启时间选择
         isclear: true, //是否显示清空
-        istoday: true, //是否显示今天
+        istoday: false, //是否显示今天
         issure: true, //是否显示确认
         festival: true, //是否显示节日
         min: '1900-01-01 00:00:00', //最小日期
@@ -624,7 +678,6 @@ function examroom_assignment(){
             }
 
         }
-
 
     });
 
@@ -1179,12 +1232,63 @@ function examroom_assignment(){
 
         if(thisElement.prev().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                prevSelect = thisElement.prev().find('select').val();
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.prev().before(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(prevSelect).trigger("change");
-            prevSelect = thisElement.prev().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
         }else{
             return;
         }
@@ -1200,12 +1304,65 @@ function examroom_assignment(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                nextSelect = thisElement.next().find('select').val(); 
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.next().after(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(nextSelect).trigger("change");
-            thisElement.next().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
+
+
 
         }else{
             return;
@@ -2687,12 +2844,63 @@ function station_assignment(){
 
         if(thisElement.prev().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                prevSelect = thisElement.prev().find('select').val();
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.prev().before(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(prevSelect).trigger("change");
-            prevSelect = thisElement.prev().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
         }else{
             return;
         }
@@ -2708,12 +2916,63 @@ function station_assignment(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                nextSelect = thisElement.next().find('select').val();
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.next().after(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(nextSelect).trigger("change");
-            nextSelect = thisElement.next().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
         }else{
             return;
         }
