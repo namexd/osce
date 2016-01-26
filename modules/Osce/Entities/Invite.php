@@ -41,7 +41,6 @@ class Invite extends CommonModel
                 ];
             }
             if ($notice = $this->firstOrCreate($inviteDat)) {
-                dd(11111);
 
 //                $invitelist = $this->where('id', '=', $data[$k]['teacher_id'])->first()->toArray();
 

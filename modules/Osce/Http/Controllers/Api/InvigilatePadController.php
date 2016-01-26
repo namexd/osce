@@ -291,7 +291,7 @@ class InvigilatePadController extends CommonController
             ],
         ],
        ]
-        ];
+    ];
 //        echo json_encode($data);
          return response()->json(
         $this->success_data($data,1,'数据传送成功')

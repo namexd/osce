@@ -290,6 +290,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//发送重找账号
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
+		//学生微信成绩查询
+
+		Route::get('student-exam-query/results-query-index',['uses'=>'StudentExamQuery@getResultsQueryIndex','as'=>'osce.wechat.student-exam-query.getResultsQueryIndex']);
 
 	});
 
