@@ -125,6 +125,10 @@ class Exam extends CommonModel
                 throw new \Exception('该考试已经考完，不能删除！');
             }
 
+            if (!Invite::whereIn('exam_screening_id',$examScreeningIds)->get()->isEmpty()) {
+                throw new \Exception('已经为sp老师发送邀请，不能删除！');
+            }
+
             //删除考试考场学生表
             foreach ($examScreeningObj as $item) {
                 if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->get()->isEmpty()) {
@@ -185,6 +189,7 @@ class Exam extends CommonModel
 
                 //通过考站id找到对应的考站-老师关系表
                 foreach ($stationIds as $stationId) {
+//                    dd($stationId);
                     if (!empty(StationTeacher::where('station_id',$stationId->station_id)->first())) {
                         if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
                             throw new \Exception('删除考站老师关联失败，请重试！');

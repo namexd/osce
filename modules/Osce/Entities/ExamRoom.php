@@ -131,6 +131,7 @@ class ExamRoom extends CommonModel
                 ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
                 ->leftJoin('teacher','teacher.id','=','station_teacher.user_id')
                 ->where('exam_room.exam_id' , '=' , $exam_id)
+                ->orWhere('station_teacher.exam_id','=',$exam_id)
                 ->select([
                     'teacher.id as id',
                     'teacher.name as name',

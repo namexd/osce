@@ -1855,7 +1855,7 @@ function smart_assignment(){
     var testData=eval('('+plan+')');
     $('.classroom-box').html('');//清空排考
     maketotal(testData);//页面加载执行排考
-    $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+    //$(".table>li").css("width",liwidth+"px");//给表格设置列宽
     makeTime();
 
     function makeItem(data){
@@ -1969,7 +1969,7 @@ function smart_assignment(){
             ul.append(li);
             liNums++;
         }
-        liwidth=1400/liNums;
+        liwidth=800/liNums;
         return ul;
     }
     //生成列表
@@ -1988,7 +1988,7 @@ function smart_assignment(){
             $('.classroom-box').html('');
             $('.time-list>ul').html('');
             maketotal(testData.data);
-            $(".table>li").css("width",liwidth+"px");//给表格设置列宽
+            //$(".table>li").css("width",liwidth+"px");//给表格设置列宽
             $('#makePlan').one('click',makePlan);
             makeTime();
         });

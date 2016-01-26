@@ -179,6 +179,9 @@ class NoticeController extends CommonController
             'content' => 'required',
             'attach' => 'sometimes',
             'id' => 'required',
+           'accept'=>'required'
+        ],[
+           'accept.required' =>'请选择通知人'
         ]);
 
         $id = $request->get('id');
