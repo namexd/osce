@@ -59,7 +59,8 @@ class Notice extends CommonModel
                 $notice ->  content =   $content;
 
                 $notice ->  attachments  =   $attach;
-                $notice ->  accept  =   implode(',',$groups);
+                $accept=  $notice ->  accept  =   implode(',',$groups);
+
                 if(!$notice  ->save())
                 {
                     throw new \Exception('修改通知失败');
@@ -70,7 +71,9 @@ class Notice extends CommonModel
 
                 $to     =   $this   ->  getGroupsOpendIds($groups,$notice->exam_id);
                 //通知用户
-                $this   ->  sendMsg($notice,$to);
+
+                      $this   ->  sendMsg($notice,$to,$accept);
+
                 return $notice;
             }
             else

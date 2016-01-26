@@ -189,6 +189,11 @@ class Student extends CommonModel
                 }
 
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
+                //手机号未注册，查询手机号码是否已经使用
+                $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
+                if(!empty($mobile)){
+                    throw new \Exception('手机号已经存在，请输入新的手机号');
+                }
                 $password   =   '123456';
                 $user       =   $this   ->  registerUser($examineeData,$password);
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);
