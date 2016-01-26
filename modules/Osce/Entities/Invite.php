@@ -49,7 +49,7 @@ class Invite extends CommonModel
                         ];
                         //关联到考试邀请sp老师表
                           $examspModel = new ExamSpTeacher();
-                          $examspModel->addExamSp($ExamSpList);
+                          $examspModel-> addExamSp($ExamSpList);
                     }
                     //邀请用户
                     $this->sendMsg($data);
