@@ -250,8 +250,8 @@ class ExamFlowStation extends CommonModel
     {
         try {
             //删除考试考场关联
-            if (!ExamRoom::where('exam_id', $id)->get() -> isEmpty()) {
-                if (!ExamRoom::where('exam_id', $id)->delete()) {
+            if (!ExamStation::where('exam_id', $id)->get() -> isEmpty()) {
+                if (!ExamStation::where('exam_id', $id)->delete()) {
                     throw new \Exception('删除考试考场关联失败，请重试！');
                 }
             }
