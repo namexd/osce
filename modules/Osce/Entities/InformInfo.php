@@ -150,7 +150,7 @@ class InformInfo extends CommonModel{
 
 
     public function getList(){
-        return $this    ->  paginate(config('osce.page_size'));
+        return $this    ->where('accept','like','1%')  ->  paginate(config('osce.page_size'));
     }
 
     /**

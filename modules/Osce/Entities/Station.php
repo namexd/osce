@@ -340,6 +340,23 @@ class Station extends CommonModel
         }
     }
 
+    /**
+     *
+     * @param $examId
+     * @author Jiangzhiheng
+     */
+    public function stationEcho($examId)
+    {
+        return $this->leftJoin('exam_flow_station','exam_flow_station.station_id','=',$this->table.'.id')
+            ->select([
+                'exam_flow_station.serialnumber as serialnumber',
+                'exam_flow_station.station_id as station_id',
+                $this->table . '.name as station_name',
+                $this->table . '.type as station_type'
+            ])
+            ->where('exam_flow_station.exam_id','=',$examId)
+            ->get();
+    }
 
 
 

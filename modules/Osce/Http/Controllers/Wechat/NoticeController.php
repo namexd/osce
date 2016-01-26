@@ -55,42 +55,47 @@ class NoticeController extends CommonController
             $accept = 2;
         }
         // TODO zhoufuxiang 16-1-25
-        $way    = $request -> get('way');       //通知方式
+//        $way    = $request -> get('way');       //通知方式
         $config = Config::where('name', '=', 'type')->first();
-        if(!empty($way) && !empty($config)){
-            //查看 系统设置中，是否有此 通知方式
-            if(!in_array($way, json_decode($config->value))){
-                return view('osce::wechat.exammanage.exam_notice',['list'=>[]]);
-            }
-        }
+//        if(!empty($way) && !empty($config)){
+//            //查看 系统设置中，是否有此 通知方式
+//            if(!in_array($way, json_decode($config->value))){
+//                return view('osce::wechat.exammanage.exam_notice',['list'=>[]]);
+//            }
+//        }
 
-        $notice =   new InformInfo();
+//        $notice =   new InformInfo();
 //        $config = Config::where('name','=','type')->first();
 //        if(empty($config) || in_array(4,json_decode($config->value))){
-            $list   =   $notice ->  getList();
-            //根据操作人去除不给他接收的数据
-            if(!empty($list)){
-                foreach ($list as $index => $item) {
-                    if(!in_array($accept, explode(',', $item->accept))){
-                        unset($list[$index]);
-                    }
-            }
-        }else{
-            $list   =   [];
-        }
-        return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
+//            $list   =   $notice ->  getList();
+//            //根据操作人去除不给他接收的数据
+//            if(!empty($list)){
+//                foreach ($list as $index => $item) {
+//                    if(!in_array($accept, explode(',', $item->accept))){
+//                        unset($list[$index]);
+//                    }
+//            }
+//        }else{
+//            $list   =   [];
+//        }
+
+        return view('osce::wechat.exammanage.exam_notice');
 
     }
 
 
-  ///osce/wechat/notice/system-view
+  //osce/wechat/notice/system-view
     public function   getSystemView(Request $request)
     {
         $trainModel = new  InformInfo ();
         $pagination = $trainModel->getList();
-        $list = InformInfo::select()->orderBy('created_at')->get()->toArray();
+//        dd($pagination);
+        $notice =   new InformInfo();
+        $list   =   $notice ->getList();
+        //$list = InformInfo::select()->orderBy('created_at')->get()->toArray();
+        $data   =   $list->toArray();
         return response()->json(
-            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
+            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $list->currentPage(), $data['data'])
         );
     }
 
@@ -114,19 +119,15 @@ class NoticeController extends CommonController
      */
     public function getView(Request $request)
     {
-
         $this->validate($request, [
             'id' => 'required',
         ]);
 
         $id = $request->get('id');
         $notice = InformInfo::find($id);
-        if($notice->attachments){
-            $notice->attachments=unserialize($notice->attachments);
-        }
-//        foreach(){
-//
-//           }
+//        if($notice->attachments){
+//            $notice->attachments = explode(',', $notice->attachments);
+//        }
 
         if (is_null($notice)) {
             //消息不存在
