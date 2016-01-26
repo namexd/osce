@@ -105,14 +105,11 @@ class StudentExamQueryController extends  CommonController
 
         $stationData=[];
         foreach($stationList as $stationType){
+
             if($stationType->type == 2){
-                //检查考站是否有对应的老师
-                $teacher= StationTeacher::where()->find();
                  //获取到sp老师信息
                 $teacherModel= new Teacher();
                 $spteacher = $teacherModel->getSpTeacher($stationType->station_id);
-
-
             }
 //
             $stationData[]=[
@@ -169,8 +166,11 @@ class StudentExamQueryController extends  CommonController
          //查询出详情列表
         $examscoreModel= new ExamScore();
         $examScoreList=$examscoreModel->getExamScoreList($examresultList->id);
-//        dd($examScoreList);
+        if(!$examScoreList){
+            dd(111111);
+            throw new \Exception('没有找到该考站成绩详情');
 
+        }
         $groupData  =   [];
         foreach($examScoreList as $examScore){
             $groupData[$examScore->standard->pid][] =   $examScore;
