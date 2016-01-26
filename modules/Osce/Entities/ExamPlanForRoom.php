@@ -50,8 +50,11 @@ class ExamPlanForRoom extends CommonModel
     protected $studentExamedTime    =   [];
 
     protected $studentList          =   [];
+
+    protected $startTime            =   0;
     //以下属性为结果记录用途
     //场次学生分组
+    protected $studentFlowPath      =   [];
     protected $screeningStudent     =   [];
     //当前考试已有学生
     protected $thisTimeRoomExamingStudent   =   [];
@@ -181,6 +184,7 @@ class ExamPlanForRoom extends CommonModel
     //考试中
     public function examing($exam,$startTime,$endTime){
         $nowTime    =   $this       ->  nowTime;
+        $this       ->  startTime   =   strtotime($startTime);
         $checkFrequency =   60;//时间检查频率
         for($nowTime;$nowTime<=$endTime;$nowTime+=$checkFrequency)
         {
@@ -260,13 +264,14 @@ class ExamPlanForRoom extends CommonModel
                 $roomTimeUpdate[$roomId]    =   0;
                 //如果考试时间到 获取当前考场中学生列表//将列表中学生请出考场
                 $students   =   $this   ->  getStudentOutRoom($roomId);
+
                 foreach($students as $student)
                 {
                     $this       ->  outRecord($student,$roomId);
                 }
 
                 //将学生分别放入各自的下一个考场
-                $this       ->  putStudentsToNextFlow($students);
+                $this       ->  putStudentsToNextFlow($students,$roomId);
                 //获取当前考场下一批考生
                 foreach($stations as $station)
                 {
@@ -352,7 +357,7 @@ class ExamPlanForRoom extends CommonModel
     //从场外获取一个学生 进入场内
     public function getOneStudentFormOutSideWaiteStudent(){
         $outSideWaiteStudent    =   $this   ->  outSideWaiteStudent;
-        //$student                =   array_shift($outSideWaiteStudent);
+//        $student                =   array_shift($outSideWaiteStudent);
         $student    =   $outSideWaiteStudent->shift();
         $this   ->  outSideWaiteStudent =   $outSideWaiteStudent;
         if(empty($student))
@@ -369,8 +374,8 @@ class ExamPlanForRoom extends CommonModel
         $stationList    =   $this   ->  getStationList();
         foreach($stationList as $station)
         {
-            $this   ->  getStudentIntoToRoom($station->room);
             $this   ->  initRoomTime($station->room);
+            $this   ->  getStudentIntoToRoom($station->room);
         }
     }
 
@@ -412,6 +417,7 @@ class ExamPlanForRoom extends CommonModel
         //获取房间所属流程编号
         $flowSerialnumber   =   $this   ->  getRoomRoomSerialnumber($room);
         //从流程候考池获取一个学生
+
         $student    =   $this   ->  getStudentFromFlowWaiteStudent($flowSerialnumber);
         //如果在学生已经在这个考场考过了 则取另外一个，然后放回原等待区
         $student    =   $this   ->  studentHaveEaxmedCheck($student,$room);
@@ -436,6 +442,7 @@ class ExamPlanForRoom extends CommonModel
     //让一个考场的学生 出考场
     protected function getStudentOutRoom($roomid){
         $thisTimeRoomExamingStudentArray    =   $this   ->  thisTimeRoomExamingStudent;
+//        dump($thisTimeRoomExamingStudentArray);
         $thisTimeRoomStudentsArray  =   $this->thisTimeRoomStudents;
         if(!array_key_exists($roomid,$thisTimeRoomStudentsArray))
         {
@@ -448,16 +455,18 @@ class ExamPlanForRoom extends CommonModel
         {
             //学生出考场时间
             $this   ->  setStudentEndTime($student,$room);
-            unset($thisTimeRoomExamingStudent[$student->id]);
+            //unset($thisTimeRoomExamingStudent[$student->id]);
 
         }
 //        $thisTimeRoomExamingStudentArray[$roomid]   =   $thisTimeRoomExamingStudent;
         $thisTimeRoomExamingStudentArray[$roomid]   =   [];
+//        dump($thisTimeRoomExamingStudentArray);
         $this   ->  thisTimeRoomExamingStudent      =   $thisTimeRoomExamingStudentArray;
         //清空当前考场学生
         $thisTimeRoomStudentsArray[$roomid] =   [];
         $this   ->  thisTimeRoomStudents =   $thisTimeRoomStudentsArray;
-        return $thisTimeRoomStudents;
+//        return $thisTimeRoomStudents;
+        return $thisTimeRoomExamingStudent;
     }
 
     //从流程候考池获取一个学生
@@ -544,28 +553,59 @@ class ExamPlanForRoom extends CommonModel
         return $maxMins;
     }
 
-    protected function putStudentsToNextFlow($students){
+    protected function putStudentsToNextFlow($students,$roomId=null){
+        $studentFlowPath    =   $this->studentFlowPath;
+        //dump($this->studentFlowPath);
         foreach($students as $student)
         {
-            $this   ->  putStudentToNextFlow($student);
+
+            if(array_key_exists($student->id,$studentFlowPath))
+            {
+                $thisStudenHaveExamed   =   $studentFlowPath[$student->id];
+            }
+            else
+            {
+                $thisStudenHaveExamed   =   [];
+            }
+
+            if(count($thisStudenHaveExamed)<count($this->flowIndex))
+            {
+                $this   ->  putStudentToNextFlow($student,$roomId);
+            }
         }
     }
 
-    protected function putStudentToNextFlow($student){
+    protected function putStudentToNextFlow($student,$roomId=null){
         $studentExamedTime      =   $this->studentExamedTime;
+        $flowWaiteStudent       =   $this->flowWaiteStudent;
+        $flowIndex              =   $this   ->  flowIndex;
+
+
         if(!array_key_exists($student->id,$studentExamedTime))
+        {
+
+            $nextSerialnumberNum    =   2;
+            $serialnumberArray      =   [];
+            $this   ->  setStudentStartTime($student,$this->getRoomInfoById($roomId));
+            $studentExamedTime      =   $this->studentExamedTime;
+        }
+        $studentFlowInfo        =   $studentExamedTime[$student->id];//dump($student->id);
+        $serialnumberArray      =   array_keys($studentFlowInfo);
+        $thisFolw               =   array_pop($serialnumberArray);
+        $nextSerialnumberNum    =   $thisFolw+1;
+
+        $studentFlowPath    =   $this   ->  studentFlowPath;
+        //dump($thisFolw);
+        $studentFlowPath[$student->id][]    =   $thisFolw;
+        $this   ->  studentFlowPath =   $studentFlowPath;
+        if(count($studentFlowPath[$student->id])>=count($flowIndex))
         {
             return [];
         }
-        $studentFlowInfo        =   $studentExamedTime[$student->id];
-
-        $flowIndex              =   $this   ->  flowIndex;
-
-        $serialnumberArray      =   array_keys($studentFlowInfo);
-        $nextSerialnumberNum    =   array_pop($serialnumberArray)+1;
-
         $nextSerialnumberNum    =   $nextSerialnumberNum>count($flowIndex)? $nextSerialnumberNum-count($flowIndex):$nextSerialnumberNum;
 
+        $flowWaiteStudent[$nextSerialnumberNum][]   =   $student;
+        $this->flowWaiteStudent =   $flowWaiteStudent;
         if(array_key_exists($nextSerialnumberNum,$serialnumberArray))
         {
             return [];
@@ -579,24 +619,33 @@ class ExamPlanForRoom extends CommonModel
 
     protected function setStudentStartTime($student,$room){
         $studentExameTimedArray =   $this   ->  studentExamedTime;
+        $thisSerialnumber   =   $this   ->  getRoomRoomSerialnumber($room);
         if(!array_key_exists($student->id,$studentExameTimedArray))
         {
             $studentExameTimedArray[$student->id]   =   '';
+            $thisStudentExamedTime  =   $studentExameTimedArray[$student->id];
+            $thisStudentExamedTime[$thisSerialnumber][$this   ->  startTime]   =   1;
         }
-        $thisStudentExamedTime  =   $studentExameTimedArray[$student->id];
+        else
+        {
+            $thisStudentExamedTime  =   $studentExameTimedArray[$student->id];
+            $thisStudentExamedTime[$thisSerialnumber][$this   ->  nowTime]   =   1;
+        }
 
-        $thisSerialnumber   =   $this   ->  getRoomRoomSerialnumber($room);
-
-        $thisStudentExamedTime[$thisSerialnumber][$this   ->  nowTime]   =   1;
         $studentExamedArray[$student->id]           =   $thisStudentExamedTime;
+//        dump($student->id);
+//        dump($thisStudentExamedTime);
         $this   ->  studentExamedTime               =   $studentExamedArray;
         return $this;
     }
 
     protected function setStudentEndTime($student,$room){
         $studentExameTimedArray =   $this   ->  studentExamedTime;
+        //dump($studentExameTimedArray);
         if(!array_key_exists($student->id,$studentExameTimedArray))
         {
+//            dump($student->id);
+//            dd($studentExameTimedArray);
             $studentExameTimedArray[$student->id]   =   '';
         }
         $thisStudentExamedTime  =   $studentExameTimedArray[$student->id];
@@ -605,6 +654,9 @@ class ExamPlanForRoom extends CommonModel
 
         $thisStudentExamedTime[$thisSerialnumber][$this   ->  nowTime]   =   0;
         $studentExamedArray[$student->id]           =   $thisStudentExamedTime;
+//        dump($student->id);
+//        dump($thisStudentExamedTime);
+//        dd(123);
         $this   ->  studentExamedTime               =   $studentExamedArray;
         return $this;
     }
