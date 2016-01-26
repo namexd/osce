@@ -40,9 +40,9 @@
 			min: laydate.now(),
 		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
 		        end.min = datas;
-		        end.start = datas
 	    	}
 		}
 		var end={
@@ -52,10 +52,15 @@
 			min: laydate.now(),
 		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
 		        start.max = datas;
 		    }
 		}
+		$("#end").click(function(){
+			end.min = $('#start').val();
+			laydate(end);
+		});
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);
@@ -121,25 +126,13 @@
                         if(ln<=1){
                             $(".upload_list").append(str);
                         }else{
-                            $.alert({
-                                title: '提示：',
-                                content: '最多上传2个文件!',
-                                confirmButton: '确定',
-                                confirm: function(){
-                                }
-                            });
+                        	layer.alert('最多上传2个文件！',function(index1){layer.close(index1);});
                         }
                     }
                 },
 	            error: function (data, status, e)
 	            {
-	                $.alert({
-	                  	title: '提示：',
-	                  	content: '通讯失败!',
-	                  	confirmButton: '确定',
-	                  	confirm: function(){
-                		}
-	              	});
+	                layer.alert('上传失败！',function(index2){layer.close(index2);});
 	            }
 	        });
 	    }) ;

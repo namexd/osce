@@ -22,12 +22,8 @@ use DB;
 
 class InvigilatorController extends CommonController
 {
-
-
-
-    public function getTest()
-    {
-//        return view('osce::admin.exammanage.smart_assignment');
+    public function getTest(){
+        return view('osce::admin.statistics_query.subject_scores_list');
     }
     /**
      * 获取SP考教师列表

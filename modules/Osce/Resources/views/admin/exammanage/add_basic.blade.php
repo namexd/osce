@@ -48,6 +48,7 @@
                         <li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
                     </ul>
                 </div>
             </div>
@@ -116,10 +117,10 @@
                                                 <td class="laydate">
                                                     <input type="hidden" name="time[{{$key+1}}][id]" value="{{$item->id}}">
                                                     <input type="hidden" name="time[{{$key+1}}][exam_id]" value="{{$id}}">
-                                                    <input type="text" class="laydate-icon end" name="time[{{$key+1}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
+                                                    <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
                                                 </td>
                                                 <td class="laydate">
-                                                    <input type="text" class="laydate-icon end" name="time[{{$key+1}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
+                                                    <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
                                                 </td>
                                                 <?php
                                                     $one = strtotime($item->begin_dt);  //开始时间 时间戳

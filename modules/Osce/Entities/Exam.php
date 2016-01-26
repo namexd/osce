@@ -112,13 +112,21 @@ class Exam extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
 
+
             //进入模型逻辑
             //删除与考场相关的流程
             $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get()->pluck('flow_id'); //获得流程的id
             $examScreening = ExamScreening::where('exam_id',$id);
+            $examScreeningObj = $examScreening->select('id')->get();
+            $examScreeningIds = $examScreeningObj->pluck('id');
+
+            //如果该考试已经完成，那么就不能让他们删除
+            if (!ExamResult::whereIn('exam_screening_id',$examScreeningIds)->get()->isEmpty()) {
+                throw new \Exception('该考试已经考完，不能删除！');
+            }
 
             //删除考试考场学生表
-            foreach ($examScreening->select('id')->get() as $item) {
+            foreach ($examScreeningObj as $item) {
                 if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->get()->isEmpty()) {
                     if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->delete()) {
                         throw new \Exception('删除考试考场学生关系表失败，请重试！');
@@ -143,6 +151,14 @@ class Exam extends CommonModel
                     throw new \Exception('删除考试考场关联失败，请重试！');
                 }
             }
+
+            //删除考试考站关联
+            if (!ExamStation::where('exam_id',$id)->get()->isEmpty()) {
+                if (!ExamStation::where('exam_id',$id)->delete()) {
+                    throw new \Exception('删除考试考站关联失败，请重试！');
+                }
+            }
+
 
             //删除考试流程关联
             if (!ExamFlow::where('exam_id',$id)->get()->isEmpty()) {
@@ -169,8 +185,10 @@ class Exam extends CommonModel
 
                 //通过考站id找到对应的考站-老师关系表
                 foreach ($stationIds as $stationId) {
-                    if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
-                        throw new \Exception('删除考站老师关联失败，请重试！');
+                    if (!empty(StationTeacher::where('station_id',$stationId->station_id)->first())) {
+                        if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
+                            throw new \Exception('删除考站老师关联失败，请重试！');
+                        }
                     }
                 }
             }

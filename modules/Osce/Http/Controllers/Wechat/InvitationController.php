@@ -26,7 +26,6 @@ use url;
 
 class InvitationController extends CommonController
 {
-
     /**
      *sp邀请
      * @api GET /osce/wechat/invitation/invitation-list
@@ -57,11 +56,9 @@ class InvitationController extends CommonController
 //        $exam_id = 56;
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);
-//        dd($data);
         $ExamModel = new Exam();
         $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
         $examscreening = ExamScreening::where('exam_id','=',$exam_id)->select('id')->first();
-//        dd($ExamList);
             foreach($data as $key=>$v){
                 $data[$key]['exam_name'] = $ExamList['name'];
                 $data[$key]['begin_dt'] = $ExamList['begin_dt'];
@@ -69,20 +66,23 @@ class InvitationController extends CommonController
                 $data[$key]['exam_id'] = $exam_id;
                 $data[$key]['exam_screening_id']= $examscreening->id;
             }
-
-//        dd($data);
         $InviteModel = new Invite();
-        if ($InviteModel->addInvite($data)) {
+//        dd($data);
+        try{
+            if ($InviteModel->addInvite($data)) {
+                return response()->json(
+                    $this->success_data()
+                );
+            } else {
+                throw new \Exception('邀请失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
             return response()->json(
-                $this->success_data()
-            );
-        } else {
-            return response()->json(
-                $this->fail(new \Exception('邀请失败'))
+                $this->fail($ex)
             );
         }
-
-
     }
 
     /**

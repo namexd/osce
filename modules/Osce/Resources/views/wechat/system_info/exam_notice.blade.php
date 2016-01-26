@@ -37,7 +37,6 @@
                 if(away_top >= (page_height - window_height)&&now_page<totalpages){
                     now_page++;
                     //qj.page=now_page;//设置页码
-
                     getItem(now_page,url)
                     /*加载显示*/
                 }
@@ -56,12 +55,11 @@
                     type:'get',
                     url:url,
                     aysnc:true,
-                    data:{id:current,page:current},
+                    data:{id:current,pagesize:current},
                     success:function(res){
 
                         console.log(res);
-                        totalpages = Math.ceil(res.data.total/res.data.pagesize);
-
+                        totalpages = res.total;
                         var html = '';
                         var index = (current - 1)*10;
                         data = res.data.rows;

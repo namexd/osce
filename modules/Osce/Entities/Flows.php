@@ -109,6 +109,7 @@ class Flows extends CommonModel
                     if (($item['teacher_id']) !== "") {
                         $teacherIDs[] =  $item['teacher_id'];
                     }
+
                     if (isset($item['spteacher_id'])) {
                         foreach ($item['spteacher_id'] as $value) {
                             $teacherIDs[] = $value;

@@ -27,8 +27,6 @@ class Invite extends CommonModel
     //保存并发送邀请
     public function addInvite(array $data)
     {
-//        $connection     =   DB::connection($this->connection);
-//        $connection     ->  beginTransaction();
         try {
             foreach ($data as  $list) {
                 $inviteDat = [
@@ -55,14 +53,13 @@ class Invite extends CommonModel
                     }
                     //邀请用户
                     $this->sendMsg($data);
-//                    $connection ->commit();
+//
                     return $notice;
                 } else {
                     throw new \Exception('邀请保存失败');
                 }
 
         } catch (\Exception $ex) {
-//            $connection ->rollBack();
             throw $ex;
         }
     }
@@ -70,6 +67,7 @@ class Invite extends CommonModel
 
     public function sendMsg($data)
     {
+
         try {
             foreach ($data as $key => $openIdList) {
                 $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['teacher_id']]);
@@ -89,7 +87,7 @@ class Invite extends CommonModel
                 }catch (\Exception $ex_msg)
                 {
 
-
+                    throw new \Exception($openIdList['teacher_name'].'没有关联微信号');
                 }
 
 //            $message    =   Common::CreateWeiXinMessage($msgData);

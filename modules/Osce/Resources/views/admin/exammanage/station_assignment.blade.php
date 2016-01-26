@@ -104,6 +104,7 @@
                         <li class="active"><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
                     </ul>
                 </div>
             </div>
@@ -137,19 +138,20 @@
                                             <th>操作</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="{{count($stationData)}}">
+                                        <tbody index="{{count($roomData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
 
-                                        @forelse($stationData as $k => $item)
+                                        @forelse($roomData as $item)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
-                                                    <select class="form-control js-example-basic-multiple room-station" multiple="multiple">
-
-                                                            <option value="{{$item[0]->station_id}}" selected="selected">{{$item[0]->station_name}}</option>
+                                                    <select class="form-control js-example-basic-multiple room-station" name="room[{{$k2++}}][]" multiple="multiple">
+                                                        @foreach($item as $k => $value)
+                                                            <option value="{{$value->station_id}}" selected="selected">{{$value->station_name}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </td>
-                                                <td class="necessary">{{(count($k)==1)?'必考':'二选一'}}</td>
+                                                <td class="necessary">{{(($k+1)==1)?'必考':'二选一'}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
@@ -203,7 +205,7 @@
                                                         @foreach($item as $value)
                                                             @if($value->teacher_type == 2)
                                                             <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
-                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id]" value="{{$value->teacher_id}}">
+                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id][]" value="{{$value->teacher_id}}">
                                                                 <div class="pull-left">{{$value->teacher_name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
                                                             </div>

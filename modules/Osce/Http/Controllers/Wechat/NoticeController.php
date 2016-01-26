@@ -54,46 +54,61 @@ class NoticeController extends CommonController
         } else {
             $accept = 2;
         }
-        // TODO zhoufuxiang 16-1-22
-//        $way    = $request -> get('way');       //通知方式
-//        $config = Config::where('name', '=', 'type')->first();
+        // TODO zhoufuxiang 16-1-25
+        $config = Config::where('name', '=', 'type')->first();
 //        if(!empty($way) && !empty($config)){
 //            //查看 系统设置中，是否有此 通知方式
 //            if(!in_array($way, json_decode($config->value))){
-//                $list = [];
-//                return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
+//                return view('osce::wechat.exammanage.exam_notice',['list'=>[]]);
 //            }
 //        }
 
-        $notice =   new InformInfo();
-        $config = Config::where('name','=','type')->first();
+//        $notice =   new InformInfo();
+//        $config = Config::where('name','=','type')->first();
+//        if(empty($config) || in_array(4,json_decode($config->value))){
+//            $list   =   $notice ->  getList();
+//            //根据操作人去除不给他接收的数据
+//            if(!empty($list)){
+//                foreach ($list as $index => $item) {
+//                    if(!in_array($accept, explode(',', $item->accept))){
+//                        unset($list[$index]);
+//                    }
+//            }
+//        }else{
+//            $list   =   [];
+//        }
 
-        if(empty($config) || in_array(4,json_decode($config->value))){
-            $list   =   $notice ->  getList();
-            //根据操作人去除不给他接收的数据
-            if(!empty($list)){
-                foreach ($list as $index => $item) {
-                    if(!in_array($accept, explode(',', $item->accept))){
-                        unset($list[$index]);
-                    }
-                }
-            }
-        }else{
-            $list   =   [];
-        }
-        return view('osce::wechat.exammanage.exam_notice', ['list' => $list]);
+        return view('osce::wechat.exammanage.exam_notice');
 
     }
 
 
-  ///osce/wechat/notice/system-view
-    public function   getSystemView(Request $request)
+  //osce/wechat/notice/system-view
+    public function  getSystemView(Request $request)
     {
-        $trainModel = new  InformInfo ();
-        $pagination = $trainModel->getList();
-        $list = InformInfo::select()->orderBy('created_at')->get()->toArray();
+        //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
+        $user = \Auth::user();
+        if (!$user) {
+            throw new \Exception('没有找到当前操作人的信息！');
+        }
+
+        $student = Student::where('user_id', $user->id)->first();
+        $spTeacher = Teacher::where('id', $user->id)->where('type', 2)->first();
+        if (!empty($student)) {
+            $accept = 1;       //接收着为学生
+        } elseif (!empty($spTeacher)) {
+            $accept = 3;       //接收着为sp老师
+        } else {
+            $accept = 2;
+        }
+
+        $informInfo = new  InformInfo ();
+        $pagination = $informInfo->getList($accept);
+        $list   =   $informInfo ->getList($accept);
+        //$list = InformInfo::select()->orderBy('created_at')->get()->toArray();
+        $data   =   $list->toArray();
         return response()->json(
-            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
+            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $list->currentPage(), $data['data'])
         );
     }
 
@@ -117,7 +132,6 @@ class NoticeController extends CommonController
      */
     public function getView(Request $request)
     {
-
         $this->validate($request, [
             'id' => 'required',
         ]);
@@ -125,11 +139,8 @@ class NoticeController extends CommonController
         $id = $request->get('id');
         $notice = InformInfo::find($id);
         if($notice->attachments){
-            $notice->attachments=unserialize($notice->attachments);
+            $notice->attachments = explode(',', $notice->attachments);
         }
-//        foreach(){
-//
-//           }
 
         if (is_null($notice)) {
             //消息不存在

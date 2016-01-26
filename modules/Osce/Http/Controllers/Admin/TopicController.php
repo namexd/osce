@@ -71,12 +71,13 @@ class TopicController extends CommonController
             'title'         =>  'required|unique:osce_mis.subject,title',
             'content'       =>  'required',
             'score'         =>  'required',
-            'desc'          =>  'sometimes',
+            'description'   =>  'required',
         ],[
-            'title.required'    =>  '评分标准名称必须',
-            'title.unique'      =>  '评分标准名称必须唯一',
-            'content.required'  =>  '评分标准必须',
-            'score.required'    =>  '评分必须',
+            'title.required'        =>  '名称必填',
+            'title.unique'          =>  '名称必须唯一',
+            'content.required'      =>  '必须新增评分点',
+            'score.required'        =>  '分数必填',
+            'description.required'  =>  '必须新增考核项',
         ]);
 
         $content    = $request  ->get('content');

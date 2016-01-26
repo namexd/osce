@@ -46,7 +46,7 @@
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-        资讯&通知
+        系统消息
         <a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
@@ -54,8 +54,8 @@
     <div class="history-box">
         <ul class="history-list">
             <li>
-                <p class="title">{{  $notice->name }}</p>
-                <p class="time"><span class="year"> {{ $notice->created_at }}</span></p>
+                <p class="title">{{$notice->title}}</p>
+                <p class="time"><span class="year"> {{$notice->created_at}}</span></p>
                 <div>
                     <div>
                         <img src="" alt="">
@@ -63,17 +63,8 @@
                     <div class="notice-box">
                       {!! $notice->content !!}
                     </div>
-
-                    <br />附件<br />
                     <div>
-                        @if($notice->attachments)
-                            @foreach($notice->attachments as $key=>$list)
-                                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}">
-                                    <?php $pathInfo = explode('/',$list) ?>
-                                        {{array_pop($pathInfo)}}
-                                </a><br />
-                            @endforeach
-                        @endif
+
                     </div>
                 </div>
             </li>

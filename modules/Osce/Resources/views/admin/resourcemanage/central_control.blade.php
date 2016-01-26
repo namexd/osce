@@ -31,7 +31,7 @@
                             if(res.code==1){
                                 location.href = (location.href).split('?')[0];
                             }else{
-                                layer.alert(res.message)
+                                layer.alert(res.message);
                             }
                         }
                     })
@@ -85,17 +85,19 @@
                             <a href="{{route('osce.admin.room.getEditRoom',['id'=>$item->id,'type'=>$type])}}">
                                 <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                             </a>
-                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                 @empty
                 @endforelse
                 </tbody>
-                </tbody>
             </table>
 
+            <div class="pull-left">
+                共{{$data->total()}}条
+            </div>
             <div class="btn-group pull-right">
-               
+               {!! $data->appends($_GET)->render() !!}
             </div>
         </div>
     </form>
