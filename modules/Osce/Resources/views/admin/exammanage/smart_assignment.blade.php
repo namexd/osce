@@ -45,8 +45,7 @@
             float: left;
         }
         .classroom-box{
-            width: 1402px;
-
+            width: 60%;
         }
         ul,dl{
             padding: 0;
