@@ -38,58 +38,43 @@ class NoticeListController   extends CommonController
      *
      */
     public function getSystemList(Request $request){
-        //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
+        return view('osce::wechat.system_info.system_notice');
+    }
+
+
+
+//url /osce/wechat/notice-list/system-ajax
+    public function   getSystemAjax(Request $request)
+    {
+        $page   =   $request->get('page',1);
         $user = \Auth::user();
         if(!$user){
             throw new \Exception('没有找到当前操作人的信息！');
         }
-        $student = Student::where('user_id', $user->id)->first();
-        $spTeacher = Teacher::where('id',$user->id)->where('type',2)->first();
-
-        // TODO zhoufuxiang 16-1-22
         $notice = new UsersPm();
-
-        $noticeList =$notice->getList($user->id);
-//       dd($noticeList['data']);
-         if($noticeList['total']!==0){
-              foreach($noticeList['data'] as  $index => $item){
-                  $list=[
-                      'name'=>$item->title,
-                      'content' =>$item->content,
-                      'accept_user_id'=>$item->accept_user_id,
-                      'send_user_id'=>$item->send_user_id,
-                      'created_at'=>$item->created_at,
-                      'updated_at'=>$item->updated_at,
-                  ];
-              }
+        $noticeList =$notice->getList($user->id,null,null,1,config('osce.page_size'),$page);
+        if($noticeList['total']!==0){
+            foreach($noticeList['data'] as  $index => $item){
+                $list[]=[
+                    'id'=>$item->id,
+                    'name'=>$item->title,
+                    'content' =>$item->content,
+                    'accept_user_id'=>$item->accept_user_id,
+                    'send_user_id'=>$item->send_user_id,
+                    'created_at'=>$item->created_at,
+                    'updated_at'=>$item->updated_at,
+                ];
+            }
         }else{
-             $list   =   [];
-         }
-
-
-//        $notice =   new InformInfo();
-//        $config = Config::where('name','=','type')->first();
-//
-//        if(empty($config) || in_array(4,json_decode($config->value))){
-//            $list   =   $notice ->  getList();
-//            //根据操作人去除不给他接收的数据
-//            if(!empty($list)){
-//                foreach ($list as $index => $item) {
-//                    if(!in_array($accept, explode(',', $item->accept))){
-//                        unset($list[$index]);
-//                    }
-//                }
-//            }
-//        }else{
-//            $list   =   [];
-//        }
-
-        return view('osce::wechat.exammanage.exam_notice',['list'=>$list]);
+            $list   =   [];
+        }
+        return response()->json(
+            $this->success_rows(1, 'success', $noticeList['total'], config('osce.page_size'), $page, $list)
+        );
     }
-
     /**
      * 查看通知详情
-     * @url /osce/wechat/notice-list/view
+     * @url /osce/wechat/notice-list/system-view
      * @access public
      *
      * * @param Request $request
@@ -104,21 +89,22 @@ class NoticeListController   extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getView(Request $request){
+    public function getSystemView(Request $request){
         $this   ->  validate($request,[
-            'accept_user_id'    =>  'required',
+            'id'    =>  'required',
         ]);
-
-        $id     =   $request    ->  get('accept_user_id');
+        $id     =   $request    ->  get('id');
         $notice =   UsersPm::find($id);
-        dd($notice);
 
+        if($notice->attachments){
+            $notice->attachments = explode(',', $notice->attachments);
+        }
         if(is_null($notice))
         {
             //消息不存在
             abort(404,'你要查看的通知不存在');
         }
 
-        return view('osce::wechat.exammanage.exam_notice_detail',['notice'=>$notice]);
+        return view('osce::wechat.system_info.system_notice_detail',['notice'=>$notice]);
     }
 }

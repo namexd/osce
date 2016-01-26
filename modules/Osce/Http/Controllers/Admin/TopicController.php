@@ -279,11 +279,14 @@ class TopicController extends CommonController
         $subject =  $SubjectModel->find($id);
         try{
             $SubjectModel   ->  delSubject($subject);
-            return redirect()->route('osce.admin.topic.getList');
+            return \Response::json(array('code'=>1));
         }
         catch(\Exception $ex)
         {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return response()->json(
+                $this->fail($ex)
+            );
+            //return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

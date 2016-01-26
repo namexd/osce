@@ -27,16 +27,16 @@ class InformInfo extends CommonModel{
         try{
             if($notice  =   $this   -> create($data))
             {
-                //¹ØÁªÏûÏ¢½ÓÊÕÓÃ»§ºÍÏûÏ¢
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
                 $this   ->  makeNoticeUserRelative($notice,$to);
-                //Í¨ÖªÓÃ»§
+                //Í¨Öªï¿½Ã»ï¿½
                 $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
                 $connection ->commit();
                 return $notice;
             }
             else
             {
-                throw new \Exception('´´½¨Í¨ÖªÊ§°Ü');
+                throw new \Exception('ï¿½ï¿½ï¿½ï¿½Í¨ÖªÊ§ï¿½ï¿½');
             }
         }
         catch(\Exception $ex)
@@ -54,17 +54,17 @@ class InformInfo extends CommonModel{
                 $notice ->  content =   $content;
                 if(!$notice  ->save())
                 {
-                    throw new \Exception('ÐÞ¸ÄÍ¨ÖªÊ§°Ü');
+                    throw new \Exception('ï¿½Þ¸ï¿½Í¨ÖªÊ§ï¿½ï¿½');
                 }
-                //¹ØÁªÏûÏ¢½ÓÊÕÓÃ»§ºÍÏûÏ¢
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
                 $to     =   $this   ->  getNoticeToOpendIds($notice);
-                //Í¨ÖªÓÃ»§
+                //Í¨Öªï¿½Ã»ï¿½
                 $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
                 return $notice;
             }
             else
             {
-                throw new \Exception('´´½¨Í¨ÖªÊ§°Ü');
+                throw new \Exception('ï¿½ï¿½ï¿½ï¿½Í¨ÖªÊ§ï¿½ï¿½');
             }
         }
         catch(\Exception $ex)
@@ -88,7 +88,7 @@ class InformInfo extends CommonModel{
         }
         else
         {
-            throw new \Exception('±£´æÊÕ¼þÈËÊ§°Ü');
+            throw new \Exception('ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½Ê§ï¿½ï¿½');
         }
     }
     public function sendMsg($notice,$to){
@@ -114,13 +114,13 @@ class InformInfo extends CommonModel{
     }
 
     /**
-     * ·¢²¼Í¨Öª
+     * ï¿½ï¿½ï¿½ï¿½Í¨Öª
      * @access public
      *
-     * @param $title        Í¨Öª±êÌâ
-     * @param $content      Í¨ÖªÄÚÈÝ
-     * @param $exam_id      Í¨ÖªËùÊô¿¼ÊÔID
-     * @param $groups       ±»Í¨ÖªµÄÈËÈº
+     * @param $title        Í¨Öªï¿½ï¿½ï¿½ï¿½
+     * @param $content      Í¨Öªï¿½ï¿½ï¿½ï¿½
+     * @param $exam_id      Í¨Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
+     * @param $groups       ï¿½ï¿½Í¨Öªï¿½ï¿½ï¿½ï¿½Èº
      *
      * @return
      *
@@ -150,14 +150,14 @@ class InformInfo extends CommonModel{
 
 
     public function getList(){
-        return $this    ->  paginate(config('osce.page_size'));
+        return $this    ->where('accept','like','1%')    ->  paginate(config('osce.page_size'));
     }
 
     /**
-     * ¸ù¾ÝÈº×éÁÐ±í»ñÈ¡opendidÁÐ±í
+     * ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½Ð±ï¿½ï¿½È¡opendidï¿½Ð±ï¿½
      * @access public
      *
-     * @param  array $groups ÓÃ»§Ñ¡ÔñµÄ½ÓÊÕÈº×é
+     * @param  array $groups ï¿½Ã»ï¿½Ñ¡ï¿½ï¿½Ä½ï¿½ï¿½ï¿½Èºï¿½ï¿½
      *
      * @return array
      *
@@ -186,11 +186,12 @@ class InformInfo extends CommonModel{
     private function getExamTeachersOpendIds($exam_id,array $data=[]){
         $ExamRoom   =   new ExamRoom();
         $list   =   $ExamRoom   ->  getRoomTeachersByExamId($exam_id);
+        dd(123);
         foreach($list as $teacher)
         {
             if(is_null($teacher->userInfo))
             {
-                throw new \Exception('Ã»ÓÐÕÒµ½Ö¸¶¨µÄ½ÌÎñÈËÔ±ÓÃ»§ÐÅÏ¢');
+                throw new \Exception('Ã»ï¿½ï¿½ï¿½Òµï¿½Ö¸ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½Ã»ï¿½ï¿½ï¿½Ï¢');
             }
             if($teacher->userInfo->openid)
             {
@@ -204,10 +205,10 @@ class InformInfo extends CommonModel{
     }
 
     /**
-     * ¸ù¾Ý¿¼ÊÔID»ñÈ¡Ñ§ÉúopenidÁÐ±í
+     * ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½IDï¿½ï¿½È¡Ñ§ï¿½ï¿½openidï¿½Ð±ï¿½
      * @access public
      *
-     * @param int $exam_id ¿¼ÊÔid
+     * @param int $exam_id ï¿½ï¿½ï¿½ï¿½id
      * @param array $data
      *
      * @return array
@@ -224,7 +225,7 @@ class InformInfo extends CommonModel{
         {
             if(is_null($teacher->userInfo))
             {
-                throw new \Exception('Ã»ÓÐÕÒµ½Ö¸¶¨µÄ½ÌÎñÈËÔ±ÓÃ»§ÐÅÏ¢');
+                throw new \Exception('Ã»ï¿½ï¿½ï¿½Òµï¿½Ö¸ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½Ã»ï¿½ï¿½ï¿½Ï¢');
             }
             if($teacher->userInfo->openid)
             {
@@ -243,7 +244,7 @@ class InformInfo extends CommonModel{
         {
             if(is_null($teacher->userInfo))
             {
-                throw new \Exception('Ã»ÓÐÕÒµ½Ö¸¶¨µÄ½ÌÎñÈËÔ±ÓÃ»§ÐÅÏ¢');
+                throw new \Exception('Ã»ï¿½ï¿½ï¿½Òµï¿½Ö¸ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½Ã»ï¿½ï¿½ï¿½Ï¢');
             }
             if($teacher->userInfo->openid)
             {

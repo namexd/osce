@@ -43,7 +43,7 @@
             });
             //初始化
             var now_page = 1;
-            var url = "{{route('osce.wechat.notice.getSystemView')}}";
+            var url = "{{route('osce.wechat.notice-list.getSystemAjax')}}";
             //内容初始化
             $('.history-list').empty();
             getItem(now_page,url);
@@ -68,11 +68,10 @@
                             //准备dom
                             //计数
                             var key = (index+1+parseInt(i))
-
                             html +='<li>'+
                                         '<p class="title">'+data[i].name+'</p>'+
                                         '<p class="time"><span class="year">'+data[i].created_at+'</span>'+
-                                            '<a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice.getView')}}?id='+data[i].id+'">查看详情&nbsp;&gt;</a>'+
+                                            '<a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice-list.getSystemView')}}?id='+data[i].id+'">查看详情&nbsp;&gt;</a>'+
                                         '</p>'+
                                     '</li>';
                         }
@@ -94,7 +93,7 @@
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-        资讯&通知
+        系统消息
         <a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
