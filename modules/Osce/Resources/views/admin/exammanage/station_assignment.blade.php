@@ -185,8 +185,8 @@
                                         </tr>
                                         </thead>
                                         <tbody index="{{count($stationData)}}">
-                                        <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
-                                        @forelse($stationData as $item)
+                                        <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1; $index=1?>
+                                        @forelse($stationData as $tempKey => $item)
                                             <tr class="parent-id-{{$item[0]->station_id}}">
                                                 <td>{{$key++}}<input type="hidden" name="form_data[{{$k1++}}][station_id]" value="{{$item[0]->station_id}}"/></td>
                                                 <td>{{$item[0]->station_name}}</td>
@@ -203,9 +203,10 @@
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
                                                         @foreach($item as $value)
+{{--                                                            {{dd($item)}}--}}
                                                             @if($value->teacher_type == 2)
                                                             <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
-                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id][]" value="{{$value->teacher_id}}">
+                                                                <input type="hidden" name="form_data[{{$index}}][spteacher_id][]" value="{{$value->teacher_id}}">
                                                                 <div class="pull-left">{{$value->teacher_name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
                                                             </div>
@@ -226,6 +227,7 @@
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
                                             </tr>
+                                            <?php $index++?>
                                         @empty
                                         @endforelse
                                         </tbody>

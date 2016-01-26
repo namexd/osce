@@ -213,7 +213,7 @@
                                                             </div>
                                                             @endif
                                                         @endforeach
-                                                            <input type="hidden" {{$k3++}}>
+
                                                     </div>
                                                     <div class="pull-right" value="{{$k4++}}">
                                                         @if($item[0]->station_type == 2)
@@ -237,6 +237,7 @@
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
                                             </tr>
+                                            <input type="hidden" {{$k3++}}>
                                         @empty
                                         @endforelse
                                         </tbody>
