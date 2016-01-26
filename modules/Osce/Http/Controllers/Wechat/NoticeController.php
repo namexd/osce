@@ -115,7 +115,6 @@ class NoticeController extends CommonController
      */
     public function getView(Request $request)
     {
-
         $this->validate($request, [
             'id' => 'required',
         ]);
@@ -123,11 +122,8 @@ class NoticeController extends CommonController
         $id = $request->get('id');
         $notice = InformInfo::find($id);
         if($notice->attachments){
-            $notice->attachments=unserialize($notice->attachments);
+            $notice->attachments = explode(',', $notice->attachments);
         }
-//        foreach(){
-//
-//           }
 
         if (is_null($notice)) {
             //消息不存在
