@@ -195,6 +195,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-result-detail',['uses'=>'ExamResultController@getExamResultDetail','as'=>'osce.admin.getExamResultDetail']);
 		Route::get('exam/exam-result-list',['uses'=>'ExamResultController@geExamResultList','as'=>'osce.admin.geExamResultList']);
 		Route::get('exam/download-image',['uses'=>'ExamResultController@getDownloadImage','as'=>'osce.admin.getDownloadImage']);
+		Route::get('exam/exam-station-list',['uses'=>'ExamResultController@getExamStationList','as'=>'osce.admin.getExamStationList']);
 
 		//sp
 		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getShow','as'=>'osce.admin.spteacher.getShow']);

@@ -16,4 +16,8 @@ class ExamStation extends CommonModel
     public $incrementing	=	true;
     public $timestamps	    =	true;
     protected $fillable 	=	['exam_id','station_id','create_user_id'];
+
+    public function station(){
+        return $this->hasMany('Modules\Osce\Entities\Station','id','station_id');
+    }
 }
