@@ -339,7 +339,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>考核点</th>
+                    <th width="200">考核点</th>
                     <th>总分</th>
                     <th>成绩</th>
                     <th>操作</th>
@@ -351,7 +351,7 @@
                         <td>
                             {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
                         </td>
-                        <td>{{$item['standard']->content}}</td>
+                        <td><div style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:600px;">{{$item['standard']->content}}</div></td>
                         <td>{{$item['standard']->score}}</td>
                         <td>{{$item['score']}}</td>
                         <td>

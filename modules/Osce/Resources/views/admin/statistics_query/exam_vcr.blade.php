@@ -39,7 +39,7 @@
                 <h5 class="title-label">考试视频</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;返回&nbsp;&nbsp;</a>
+                <a  href="javascript:history.back(-1)" class="btn btn-outline btn-default" style="float: right;">返回</a>
             </div>
         </div>
         <div class="container-fluid ibox-content">
