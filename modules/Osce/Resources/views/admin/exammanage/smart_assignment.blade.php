@@ -22,7 +22,10 @@
             line-height: 30px;
         }
         .assign-box{
+            width:1000px;
+            height: 600px;
             margin-top: 20px;
+            overflow: scroll;
         }
         .classroom-box>ul>li{
             float: left;
@@ -45,8 +48,7 @@
             float: left;
         }
         .classroom-box{
-            width: 1402px;
-
+            width: 802px;
         }
         ul,dl{
             padding: 0;
