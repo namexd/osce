@@ -85,13 +85,27 @@ class NoticeController extends CommonController
 
 
   //osce/wechat/notice/system-view
-    public function   getSystemView(Request $request)
+    public function  getSystemView(Request $request)
     {
-        $trainModel = new  InformInfo ();
-        $pagination = $trainModel->getList();
-//        dd($pagination);
-        $notice =   new InformInfo();
-        $list   =   $notice ->getList();
+        //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
+        $user = \Auth::user();
+        if (!$user) {
+            throw new \Exception('没有找到当前操作人的信息！');
+        }
+
+        $student = Student::where('user_id', $user->id)->first();
+        $spTeacher = Teacher::where('id', $user->id)->where('type', 2)->first();
+        if (!empty($student)) {
+            $accept = 1;       //接收着为学生
+        } elseif (!empty($spTeacher)) {
+            $accept = 3;       //接收着为sp老师
+        } else {
+            $accept = 2;
+        }
+
+        $informInfo = new  InformInfo ();
+        $pagination = $informInfo->getList($accept);
+        $list   =   $informInfo ->getList($accept);
         //$list = InformInfo::select()->orderBy('created_at')->get()->toArray();
         $data   =   $list->toArray();
         return response()->json(
@@ -125,9 +139,9 @@ class NoticeController extends CommonController
 
         $id = $request->get('id');
         $notice = InformInfo::find($id);
-//        if($notice->attachments){
-//            $notice->attachments = explode(',', $notice->attachments);
-//        }
+        if($notice->attachments){
+            $notice->attachments = explode(',', $notice->attachments);
+        }
 
         if (is_null($notice)) {
             //消息不存在

@@ -118,14 +118,19 @@ function categories(){
     });
 
     $('#submit-btn').click(function(){
-        var flag = true;
+        var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
+            flag = true;
             if($(elem).find('input').val()==''){
                 flag = false;
             }
         });
         if(flag==false){
             layer.alert('考核点或考核项不能为空！');
+            return false;
+        }
+        if(flag==null){
+            layer.alert('请新增考核点！');
             return false;
         }
     });
