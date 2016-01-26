@@ -28,16 +28,15 @@
             <a  href="{{route('osce.admin.case.getCreateCase')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
         </div>
     </div>
-    <form class="container-fluid ibox-content" id="list_form">
+    <div class="container-fluid ibox-content" id="list_form">
         <table class="table table-striped" id="table-striped">
             <thead>
-            <tr>
-                <th>#</th>
-                <th>病例</th>
-                <th>描述</th>
-                <th width="80px">操作</th>
-
-            </tr>
+                <tr>
+                    <th>#</th>
+                    <th>病例</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                </tr>
             </thead>
             <tbody>
             @foreach($data as $key => $item)
@@ -65,6 +64,6 @@
             </nav>
            
         </div>
-    </form>
+    </div>
 </div>
 @stop{{-- 内容主体区域 --}}
