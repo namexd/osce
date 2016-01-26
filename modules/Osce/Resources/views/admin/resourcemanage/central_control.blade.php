@@ -31,7 +31,7 @@
                             if(res.code==1){
                                 location.href = (location.href).split('?')[0];
                             }else{
-                                layer.alert(res.message)
+                                layer.alert(res.message);
                             }
                         }
                     })

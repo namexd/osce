@@ -19,7 +19,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom','deletes':'{{route('osce.admin.room.postDelete')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom','deletes':'{{route('osce.admin.room.postDelete')}}','firstpage':'{{route('osce.admin.room.getRoomList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -65,11 +65,11 @@
                         <td>{{$k+1}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
-                        <td value="{{$item->id}}">
+                        <td>
                             <a href="{{route('osce.admin.room.getEditRoom',['id'=>$item->id,'type'=>$type])}}">
                                 <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                             </a>
-                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state1"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                 @empty
