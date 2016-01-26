@@ -55,7 +55,6 @@ class NoticeController extends CommonController
             $accept = 2;
         }
         // TODO zhoufuxiang 16-1-25
-//        $way    = $request -> get('way');       //通知方式
         $config = Config::where('name', '=', 'type')->first();
 //        if(!empty($way) && !empty($config)){
 //            //查看 系统设置中，是否有此 通知方式
