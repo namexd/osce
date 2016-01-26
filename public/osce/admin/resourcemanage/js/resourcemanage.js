@@ -26,7 +26,7 @@ function test_station(){
 
    $(".delete").click(function(){
        var thisElement = $(this);
-       deleteItems('post',pars.deletes,thisElement.attr("value"));
+       deleteItems('post',pars.deletes,thisElement.attr("value"),pars.firstpage);
    })
 
 
@@ -40,7 +40,9 @@ function test_station(){
  * @date    2016-01-06
  */
 function clinicalcase(){
-	deleteItem(pars.deletes);
+   $(".delete").click(function(){
+       deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+   })
 }
 
 /**
@@ -50,7 +52,9 @@ function clinicalcase(){
  * @date    2016-01-06
  */
 function examroom(){
-	deleteItem(pars.deletes);
+    $(".delete").click(function(){
+        deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+    })
 }
 
 /**
@@ -118,14 +122,19 @@ function categories(){
     });
 
     $('#submit-btn').click(function(){
-        var flag = true;
+        var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
+            flag = true;
             if($(elem).find('input').val()==''){
                 flag = false;
             }
         });
         if(flag==false){
             layer.alert('考核点或考核项不能为空！');
+            return false;
+        }
+        if(flag==null){
+            layer.alert('请新增考核点！');
             return false;
         }
     });
@@ -759,7 +768,7 @@ function categories(){
 function invigilator(){
     //删除老师
     $(".delete").click(function(){
-        deleteItems("post",pars.deletes,$(this).attr("tid"));
+        deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
 }
 
@@ -792,12 +801,12 @@ function sp_invigilator(){
     //删除老师
     $(".delete").click(function(){
 
-        deleteItems("post",pars.deletes,$(this).attr("tid"));
+        deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
 }
 
 //删除方法封装,其中id为当前dom的value值
-function deleteItems(type,url,id){
+function deleteItems(type,url,id,firstpage){
     layer.alert('确认删除',{btn:['确认','取消']},function(){
         $.ajax({
             type:type,
@@ -807,7 +816,7 @@ function deleteItems(type,url,id){
             success:function(data){
                 console.log(data.code);
                 if(data.code == 1){
-                    location.reload();
+                    location.href=firstpage;
                 }else {
                     layer.msg(data.message);
                 }

@@ -31,7 +31,7 @@
                             if(res.code==1){
                                 location.href = (location.href).split('?')[0];
                             }else{
-                                layer.alert(res.message)
+                                layer.alert(res.message);
                             }
                         }
                     })
@@ -91,11 +91,13 @@
                 @empty
                 @endforelse
                 </tbody>
-                </tbody>
             </table>
 
+            <div class="pull-left">
+                共{{$data->total()}}条
+            </div>
             <div class="btn-group pull-right">
-               
+               {!! $data->appends($_GET)->render() !!}
             </div>
         </div>
     </form>

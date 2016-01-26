@@ -205,7 +205,7 @@
                                                         @foreach($item as $value)
                                                             @if($value->teacher_type == 2)
                                                             <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
-                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id]" value="{{$value->teacher_id}}">
+                                                                <input type="hidden" name="form_data[{{$k3++}}][spteacher_id][]" value="{{$value->teacher_id}}">
                                                                 <div class="pull-left">{{$value->teacher_name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
                                                             </div>
