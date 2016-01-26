@@ -101,9 +101,6 @@
         p{
             margin: 0;
         }
-        .table>li{
-            width: 100px;
-        }
     </style>
 @stop
 
