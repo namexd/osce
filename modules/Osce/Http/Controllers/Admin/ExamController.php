@@ -763,6 +763,7 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
+//        dd($request->all());
         try{
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
@@ -806,7 +807,10 @@ class ExamController extends CommonController
      */
     public function getRoomListData()
     {
-        $data = Room::select(['id', 'name'])->get();
+        //如果改考场下面没有关联考站，就不给展示在列表
+        //获得所有的在room_station考场列表id
+        $isExist = RoomStation::select(['room_id'])->groupBy('room_id')->get()->pluck('room_id');
+        $data = Room::whereIn('id',$isExist)->select(['id', 'name'])->get();
 
         return response()->json(
             $this->success_data($data, 1, 'success')

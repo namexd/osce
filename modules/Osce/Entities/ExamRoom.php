@@ -128,7 +128,7 @@ class ExamRoom extends CommonModel
         try{
             return  $this->leftJoin('room_station',$this->table . '.room_id','=','room_station.room_id')
                 ->leftJoin('station','station.id','=','room_station.station_id')
-                ->rightJoin('station_teacher','station_teacher.station_id','=','station.id')
+                ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
                 ->leftJoin('teacher','teacher.id','=','station_teacher.user_id')
                 ->where('exam_room.exam_id' , '=' , $exam_id)
                 ->orWhere('station_teacher.exam_id','=',$exam_id)
