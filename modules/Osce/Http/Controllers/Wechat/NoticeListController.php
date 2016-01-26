@@ -46,13 +46,15 @@ class NoticeListController   extends CommonController
 //url /osce/wechat/notice-list/system-ajax
     public function   getSystemAjax(Request $request)
     {
+
+        $page   =   $request->get('page',1);
         $user = \Auth::user();
         if(!$user){
             throw new \Exception('没有找到当前操作人的信息！');
         }
         $notice = new UsersPm();
 
-        $noticeList =$notice->getList($user->id);
+        $noticeList =$notice->getList($user->id,null,null,1,config('osce.page_size'),$page);
 //       dd($noticeList['data']);
         if($noticeList['total']!==0){
             foreach($noticeList['data'] as  $index => $item){
@@ -68,10 +70,9 @@ class NoticeListController   extends CommonController
         }else{
             $list   =   [];
         }
-
-        $list = UsersPm::select()->orderBy('created_at')->get()->toArray();
+   dd($list);
         return response()->json(
-            $this->success_rows(1, 'success', $pagination->total(), config('osce.page_size'), $pagination->currentPage(), $list)
+            $this->success_rows(1, 'success', $noticeList['total'], config('osce.page_size'), $page, $list)
         );
     }
     /**
