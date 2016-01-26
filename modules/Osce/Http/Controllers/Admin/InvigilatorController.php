@@ -23,12 +23,6 @@ use DB;
 class InvigilatorController extends CommonController
 {
 
-
-
-    public function getTest()
-    {
-//        return view('osce::admin.exammanage.smart_assignment');
-    }
     /**
      * 获取SP考教师列表
      * @url GET /osce/admin/invigilator/invigilator-list
@@ -355,6 +349,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function postEditInvigilator(Request $request){
+        dd($request->all());
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
