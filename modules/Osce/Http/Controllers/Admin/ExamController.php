@@ -136,6 +136,7 @@ class ExamController extends CommonController
      */
     public function postAddExam(Request $request, Exam $model)
     {
+
         $this   ->  validate($request,[
             'name'          =>  'required',
             'time'          =>  'required',
