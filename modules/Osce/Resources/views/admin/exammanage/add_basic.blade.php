@@ -90,7 +90,7 @@
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;" name="sequence_mode" v>
                                         <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
-                                        <option value="2" {{($examData['sequence_mode']==2)?'selected=selected':''}}>以考站分组</option>
+                                        <!--<option value="2" {{($examData['sequence_mode']==2)?'selected=selected':''}}>以考站分组</option>-->
                                     </select>
                                 </div>
                             </div>
