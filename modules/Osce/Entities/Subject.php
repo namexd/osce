@@ -117,10 +117,6 @@ class Subject extends CommonModel
         try{
             foreach($data as $field=>$value)
             {
-                if($field=='description')
-                {
-                    continue;
-                }
                 $subject    ->  $field  =$value;
             }
             if($subject    ->  save())
@@ -231,7 +227,14 @@ class Subject extends CommonModel
         catch(\Exception $ex)
         {
             $connection ->rollBack();
-            throw $ex;
+            if($ex->getCode()==23000)
+            {
+                throw new \Exception('该科目已经被使用了,不能删除');
+            }
+            else
+            {
+                throw $ex;
+            }
         }
     }
 }

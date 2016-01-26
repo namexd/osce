@@ -25,6 +25,9 @@
         .time{
             color: #999;
         }
+        .notice-box{
+            word-wrap:break-word;
+        }
     </style>
 
 
@@ -57,8 +60,20 @@
                     <div>
                         <img src="" alt="">
                     </div>
-                    <div>
+                    <div class="notice-box">
                       {!! $notice->content !!}
+                    </div>
+
+                    <br />附件<br />
+                    <div>
+                        @if($notice->attachments)
+                            @foreach($notice->attachments as $key=>$list)
+                                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}">
+                                    <?php $pathInfo = explode('/',$list) ?>
+                                        {{array_pop($pathInfo)}}
+                                </a><br />
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </li>

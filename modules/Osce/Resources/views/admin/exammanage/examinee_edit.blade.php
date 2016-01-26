@@ -1,7 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/demo/webuploader-demo.css')}}">
     <style type="text/css">
         .has-error .form-control {
             border-color: #ed5565 !important;
@@ -20,50 +20,45 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}"></script>
     <script>
         $(function () {
-            $(".img_box").delegate(".del_img", "click", function () {
-                $(this).parent("li").remove();
-            });
             /*{}{
              * 下面是进行插件初始化
              * 你只需传入相应的键值对
              * */
             $('#sourceForm').bootstrapValidator({
                 message: 'This value is not valid',
-                feedbackIcons: {
-                    /*输入框不同状态，显示图片的样式*/
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
-                fields: {
-                    /*验证*/
-                    name: {
-                        /*键名username和input name值对应*/
+                fields: {/*验证*/
+                    name: {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {
-                                /*非空提示*/
+                            notEmpty: {/*非空提示*/
                                 message: '用户名不能为空'
                             }
                         }
                     },
-                    examinee_id: {
+                    code: {
                         validators: {
-                            notEmpty: {
-                                /*非空提示*/
+                            notEmpty: {/*非空提示*/
                                 message: '学号不能为空'
+                            },
+                            regexp:{
+                                regexp: /^\d+$/,
+                                message: '请输入正确的学号'
                             }
                         }
                     },
                     idcard: {
                         validators: {
-                            notEmpty: {
-                                /*非空提示*/
+                            notEmpty: {/*非空提示*/
                                 message: '身份证号不能为空'
                             },
                             regexp: {
@@ -72,10 +67,9 @@
                             }
                         }
                     },
-                    tell: {
+                    mobile: {
                         validators: {
-                            notEmpty: {
-                                /*非空提示*/
+                            notEmpty: {/*非空提示*/
                                 message: '手机号码不能为空'
                             },
                             stringLength: {
@@ -84,15 +78,14 @@
                                 message: '请输入11位手机号码'
                             },
                             regexp: {
-                                regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                                regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
                                 message: '请输入正确的手机号码'
                             }
                         }
                     },
-                    email: {
+                    email:{
                         validators: {
-                            notEmpty: {
-                                /*非空提示*/
+                            notEmpty: {/*非空提示*/
                                 message: '邮箱不能为空'
                             },
                             regexp: {
@@ -115,7 +108,7 @@
                         if (data.code) {
                             var href = data.data.path;
                             $('.img_box').find('li').remove();
-                            $('.images_upload').before('<li><img src="' + href + '"/><input type="hidden" name="images_path[]" value="' + href + '"/><i class="fa fa-remove font16 del_img"></i></li>');
+                            $('.images_upload').before('<li><img src="' + href + '"/><input type="hidden" name="images_path[]" value="' + href + '"/></li>');
                         }
                     },
                     error: function (data, status, e) {
@@ -165,7 +158,6 @@
                                 <li>
                                     <img src="{{$item->avator}}"/>
                                     <input type="hidden" value="{{$item->avator}}" name="images_path[]">
-                                    <i class="fa fa-remove font16 del_img"></i>
                                 </li>
                                <span class="images_upload"><input type="file" name="images" id="file0"/></span>
                             </ul>

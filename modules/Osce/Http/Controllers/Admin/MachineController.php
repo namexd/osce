@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\AreaVcr;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\StationVcr;
@@ -231,6 +232,7 @@ class MachineController extends CommonController
                 default :
                         $machine    =     $this   ->  addCameras($request);
             }
+
             if($machine){
                 return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
             } else{
@@ -317,7 +319,7 @@ class MachineController extends CommonController
      */
     private function addCameras(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required|unique:osce_mis.vcr,name',
+            'name'          =>  'required',
             'code'          =>  'required',
             'ip'            =>  'required',
             'username'      =>  'required',
@@ -343,6 +345,7 @@ class MachineController extends CommonController
             'sp.required'           =>'型号必填',
             'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
@@ -357,17 +360,17 @@ class MachineController extends CommonController
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
-        try{
 
-            $model      =   $this   ->  getMachineModel($cate_id);
+        try{
+            $model      =   new Vcr();
             if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
             } else{
                 throw new \Exception('新增摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
@@ -417,6 +420,7 @@ class MachineController extends CommonController
             'sp.required'           =>'型号必填',
             'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
@@ -432,16 +436,17 @@ class MachineController extends CommonController
             'factory'       =>  e($request  ->  get('factory')),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
+
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Vcr();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else{
                 throw new \Exception('编辑摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
@@ -513,7 +518,7 @@ class MachineController extends CommonController
      */
     private function addPad(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required|unique:osce_mis.pad,name',
+            'name'          =>  'required|unique:osce_mis.pad',
             'code'          =>  'required',
             'factory'       =>  'required',
             'sp'            =>  'required',
@@ -534,18 +539,17 @@ class MachineController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
-            'name'          =>  e($request    ->  get('name')),
+            'name'          =>  e($request  ->  get('name')),
             'code'          =>  $request    ->  get('code'),
-            'factory'       =>  e($request    ->  get('factory')),
+            'factory'       =>  e($request  ->  get('factory')),
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             'status'        =>  $request    ->  get('status'),
             'create_user_id'=>  $user       ->  id
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model  =   new Pad();
             if($pad =   $model  ->  addMachine($data)){
                 return $pad;
             } else{
@@ -584,10 +588,9 @@ class MachineController extends CommonController
             'sp'            =>  $request    ->  get('sp'),
             'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Pad();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else {
@@ -700,9 +703,8 @@ class MachineController extends CommonController
             'purchase_dt'   =>  $request    ->  get('purchase_dt')
         ];
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model    =   new Watch();
             if($watch =   $model  ->  addMachine($data)){
 //                $action='新增';
 //                $data=array(
@@ -750,34 +752,22 @@ class MachineController extends CommonController
 
             }
         }
+        $data   =   [
+            'id'            =>  $request    ->  get('id'),
+            'name'          =>  $request    ->  get('name'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'description'   =>  $request    ->  get('description'),
+            'status'        =>  $request    ->  get('status'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+        ];
         $code=Watch::where('id',$request->get('id'))->select('code')->first()->code;
-        if($code==$request->get('code')){
-
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-            ];
-        }else{
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'code'          =>  $request    ->  get('code'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-                'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-            ];
+        if($code!=$request->get('code')){
+            $data['code']   =   $request    ->  get('code');
         }
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Watch();
             if($cameras =   $model  ->  editMachine($data))
             {
 //                $action='编辑';
@@ -870,14 +860,21 @@ class MachineController extends CommonController
             $id      = $request ->input('id');
             $cate_id = $request ->input('cate_id');
             if($cate_id ==1){
-                if($result = StationVcr::where('vcr_id',$id)->first()){
+                if(!StationVcr::where('vcr_id',$id)->get()->isEmpty()){
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
-                if($result = RoomVcr::where('vcr_id',$id)->first()){
+                if(!RoomVcr::where('vcr_id',$id)->get()->isEmpty()){
+                    throw new \Exception('该设备已于其他设备关联,无法删除!');
+                }
+                if (!AreaVcr::where('vcr_id',$id)->get()->isEmpty()) {
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
             }
-
+            if($cate_id ==3){
+                if($result = WatchLog::where('watch_id',$id)->first()){
+                    throw new \Exception('该设备使用过,无法删除!');
+                }
+            }
             $model   = $this    ->getMachineModel($cate_id);
             //通过id删除相应的设备
             if($result = $model->where('id', $id)->delete()) {
@@ -890,5 +887,39 @@ class MachineController extends CommonController
         }
     }
 
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'cate'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $cate   = $request  -> get('cate');
+        $name   = $request  -> get('name');
+        $code   = $request  -> get('code');
+        //实例化模型
+        $model  =   $this   ->  getMachineModel($cate);
+        //存在设备ID
+        if(!empty($code)){
+            $model = $model->where('code', $code);
+        }else{
+            $model = $model->where('name', $name);
+        }
+        //存在ID，为编辑
+        if(!empty($id)){
+            $model = $model->where('id', '<>', $id);
+        }
+        $result = $model->first();
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
 
 }

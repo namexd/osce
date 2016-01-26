@@ -26,7 +26,6 @@ use url;
 
 class InvitationController extends CommonController
 {
-
     /**
      *sp邀请
      * @api GET /osce/wechat/invitation/invitation-list
@@ -46,24 +45,20 @@ class InvitationController extends CommonController
     {
         $this->validate($request, [
             'teacher_id' => 'required',
-//            'exam_id' => 'required|integer',
+            'exam_id' => 'required|integer',
 //            'station_id' => 'required|integer',
         ], [
             'teacher_id.required' => '邀请编号必须',
             'exam_id.required'=>'考试编号必须'
         ]);
         $teacher_id = $request->get('teacher_id');
-//        $exam_id = $request->get('exam_id');
-        $exam_id = 56;
-
-//        $station_id =   $request    -> get('station_id');
+        $exam_id = $request->get('exam_id');
+//        $exam_id = 56;
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);
-//        dd($data);
         $ExamModel = new Exam();
         $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
         $examscreening = ExamScreening::where('exam_id','=',$exam_id)->select('id')->first();
-//        dd($ExamList);
             foreach($data as $key=>$v){
                 $data[$key]['exam_name'] = $ExamList['name'];
                 $data[$key]['begin_dt'] = $ExamList['begin_dt'];
@@ -71,17 +66,22 @@ class InvitationController extends CommonController
                 $data[$key]['exam_id'] = $exam_id;
                 $data[$key]['exam_screening_id']= $examscreening->id;
             }
-
-//        dd($data);
         $InviteModel = new Invite();
-        if ($InviteModel->addInvite($data)) {
-//            dd(11111);
-            return view('osce::admin.exammanage.examroom_assignment');
-        } else {
-            throw new \Exception('邀请创建失败');
+        try{
+            if ($InviteModel->addInvite($data)) {
+                return response()->json(
+                    $this->success_data()
+                );
+            } else {
+                throw new \Exception('邀请失败');
+            }
         }
-
-
+        catch(\Exception $ex)
+        {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
     }
 
     /**

@@ -4,8 +4,8 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script>
         $(function(){
 
@@ -53,6 +53,19 @@
                             regexp: {
                                 regexp: /^1[3|5|8]{1}[0-9]{9}$/,
                                 message: '请输入正确的手机号码'
+                            },
+                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                                url: '{{route('osce.admin.invigilator.postSelectTeacher')}}',//验证地址
+                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                type: 'POST',//请求方式
+                                message: '号码已经存在',//提示消息
+                                data: function(validator) {
+                                    return {
+                                        id: '{{$item->id}}',
+                                        mobile: $('#mobile').val()
+                                    }
+                                }
                             }
                         }
                     },
@@ -84,22 +97,6 @@
                     }
                 }
             });
-            //键盘事件不停检测输入的手机号
-            $("#mobile").keyup(function(){
-                var thisMobile=$(this).val();
-                console.log(thisMobile);
-                $.ajax({
-                    type:'post',
-                    async:true,
-                    url:'{{route('osce.admin.invigilator.postSelectTeacher')}}',
-                    data:{moblie:thisMobile},
-                    success:function(data){
-                        if(data==1){
-                            layer.msg("手机号码已存在");
-                        }
-                    }
-                })
-            })
             $(".images_upload").change(function(){
                 $.ajaxFileUpload
                 ({
@@ -113,7 +110,7 @@
                         if(data.code){
                             var href=data.data.path;
                             $('.img_box').find('li').remove();
-                            $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                            $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/></li>');
                         }
                     },
                     error: function (data, status, e)
@@ -135,9 +132,6 @@
                 }
                 return url;
             }
-            $(".img_box").delegate(".del_img","click",function(){
-                $(this).parent("li").remove();
-            });
         })
 
     </script>
@@ -158,7 +152,6 @@
                                 <li>
                                     <img src="{{$item->userInfo->avatar}}"/>
                                     <input type="hidden" value="{{$item->userInfo->avatar}}" name="images_path[]">
-                                    <i class="fa fa-remove font16 del_img"></i>
                                 </li>
                                 <span class="images_upload">
                                     <input type="file" name="images" id="file0"/>图片大小为280X180
@@ -231,7 +224,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">备注</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="note" id="note" value="{{$item->note}}">
+                                    <input type="text" class="form-control" name="description" id="note" value="{{$item->description}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

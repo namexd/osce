@@ -21,6 +21,10 @@
         margin: 15px;
         line-height: 30px;
     }
+    .time-modify{
+        margin-top: 25px!important;
+        margin-bottom: 30px!important;
+    }
     </style>
 @stop
 
@@ -44,6 +48,7 @@
                         <li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
                     </ul>
                 </div>
             </div>
@@ -84,7 +89,7 @@
                                 <label class="col-sm-2 control-label">排序方式</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;" name="sequence_mode" v>
-                                        <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
+                                        <!--<option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>-->
                                         <option value="2" {{($examData['sequence_mode']==2)?'selected=selected':''}}>以考站分组</option>
                                     </select>
                                 </div>
@@ -110,12 +115,12 @@
                                             <tr>
                                                 <td>{{$key+1}}</td>
                                                 <td class="laydate">
-                                                    <input type="hidden" name="time[{{$key}}][id]" value="{{$item->id}}">
-                                                    <input type="hidden" name="time[{{$key}}][exam_id]" value="{{$id}}">
-                                                    <input type="text" class="laydate-icon end" name="time[{{$key}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
+                                                    <input type="hidden" name="time[{{$key+1}}][id]" value="{{$item->id}}">
+                                                    <input type="hidden" name="time[{{$key+1}}][exam_id]" value="{{$id}}">
+                                                    <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
                                                 </td>
                                                 <td class="laydate">
-                                                    <input type="text" class="laydate-icon end" name="time[{{$key}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
+                                                    <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
                                                 </td>
                                                 <?php
                                                     $one = strtotime($item->begin_dt);  //开始时间 时间戳
@@ -141,7 +146,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-4 col-sm-offset-2">
+                                <div class="col-sm-4 col-sm-offset-2 time-modify">
                                     <button class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
                                 </div>

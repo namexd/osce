@@ -22,12 +22,8 @@ use DB;
 
 class InvigilatorController extends CommonController
 {
-
-
-
-    public function getTest()
-    {
-//        return view('osce::admin.exammanage.smart_assignment');
+    public function getTest(){
+        return view('osce::admin.statistics_query.subject_scores_list');
     }
     /**
      * 获取SP考教师列表
@@ -153,6 +149,7 @@ class InvigilatorController extends CommonController
             'type'          =>  'required|in:1,3',
             'code'          =>  'sometimes',
             'images_path'   =>  'required',
+            'description'   =>  'sometimes',
         ],[
             'name.required'         =>  '监考教师姓名必填',
             'idcard.required'       =>  '身份证号必填',
@@ -170,27 +167,12 @@ class InvigilatorController extends CommonController
         $userData = $request -> only('name', 'gender','idcard','mobile','email');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type');  //姓名、编号、类型
+        $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型
         $teacherData['case_id']         = 0;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
         //
         $role_id = config('osce.invigilatorRoleId',1);
-
-//        $data   =   [
-//            'name'              =>  e($request->get('name')),
-//            'type'              =>  intval($request->get('type')),
-//            'mobile'            =>  e($request->get('moblie')),
-//            'code'              =>  e($request->get('code')),
-//            'case_id'           =>  intval($request->get('case_id')),
-//            'status'            =>  1,
-//            'create_user_id'    =>  $user->id,
-//            'role_id'           =>  config('osce.invigilatorRoleId',1),
-//            'gender'         => $request  ->  get('gender'),        //性别
-//            'idcard'         => $request  ->  get('idcard'),        //身份证号
-//            'email'          => $request  ->  get('email'),         //邮箱
-//            'avator'         => $request  ->  get('images_path')[0],//照片
-//        ];
 
         $Invigilator    =   new Teacher();
         try{
@@ -237,6 +219,7 @@ class InvigilatorController extends CommonController
             'code'          =>  'sometimes',
             'images_path'   =>  'required',
             'case_id'       =>  'sometimes',
+            'description'       =>  'sometimes',
         ],[
             'name.required'         =>  '监考教师姓名必填',
             'idcard.required'       =>  '身份证号必填',
@@ -256,23 +239,12 @@ class InvigilatorController extends CommonController
             $userData = $request -> only('name', 'gender', 'idcard', 'mobile', 'email');
             $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
             //老师数据
-            $teacherData = $request -> only('name','code','type');      //姓名、编号、类型
+            $teacherData = $request -> only('name','code','type','description');      //姓名、编号、类型
             $teacherData['case_id']         = intval($request->get('case_id'));
             $teacherData['status']          = 1;
             $teacherData['create_user_id']  = $user->id;
             //
             $role_id = config('osce.spRoleId',4);
-
-//            $data   =   [
-//                'name'              =>  e($request->get('name')),
-//                'type'              =>  intval($request->get('type')),
-//                'mobile'            =>  e($request->get('mobile')),
-//                'code'              =>  e($request->get('code')),
-//                'case_id'           =>  intval($request->get('case_id')),
-//                'status'            =>  1,
-//                'create_user_id'    =>  $user->id,
-//                'role_id'           =>  config('osce.spRoleId',4)
-//            ];
 
             $Invigilator    =   new Teacher();
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData)){
@@ -315,8 +287,10 @@ class InvigilatorController extends CommonController
         ]);
         $id             =   intval($request    ->  get('id'));
 
+
         $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
+
         return view('osce::admin.resourcemanage.invigilator_edit',['item'=>$invigilator]);
     }
 
@@ -386,13 +360,14 @@ class InvigilatorController extends CommonController
             'type'          =>  'required|in:1,3',
             'code'          =>  'sometimes',
             'images_path'   =>  'required',
+            'description'   =>  'sometimes',
         ]);
         $id             =   (int)$request    ->  get('id');
         //用户数据
         $userData = $request -> only('name', 'gender','idcard','mobile','email');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type');  //姓名、编号、类型
+        $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型
 
         try{
             $teacherModel   =   new Teacher();
@@ -441,6 +416,7 @@ class InvigilatorController extends CommonController
             'code'          =>  'sometimes',
             'images_path'   =>  'required',
             'case_id'       =>  'required',
+            'description'   =>  'sometimes',
         ]);
 
         $id                 =   (int)$request    ->  get('id');
@@ -448,7 +424,7 @@ class InvigilatorController extends CommonController
         $userData = $request -> only('name', 'gender','idcard','mobile','email');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type','case_id');  //姓名、编号、类型、病例
+        $teacherData = $request -> only('name','code','type','case_id','description');  //姓名、编号、类型、病例
 
         try{
             $TeahcerModel   =   new Teacher();
@@ -655,19 +631,28 @@ class InvigilatorController extends CommonController
             'mobile'    =>  'required'
         ]);
         $mobile = $request  ->get('mobile');
+        $id     = $request  ->get('id');
 
-        $user = User::where('username', $mobile)->first();
+        //存在ID，为编辑时验证
+        if(empty($id)){
+            $user = User::where('username', $mobile)->orWhere('mobile', $mobile)->get();
+        }else{
+            $user = User::where('id', '<>', $id)
+                ->where(function ($query) use ($mobile){
+                    $query  ->orWhere('username', $mobile)
+                            ->orWhere('mobile', $mobile);
+                })
+                ->get();
+        }
         if($user){
-            $result = Teacher::where('id', $user->id)->first();
-            if($result){
-                return json_encode(array(
-                    'valid' =>false,
-                ));
+            foreach ($user as $item) {
+                $result = Teacher::where('id', $item->id)->first();
+                if($result){
+                    return json_encode(['valid' =>false]);
+                }
             }
         }
-        return json_encode(array(
-            'valid' =>true,
-        ));
+        return json_encode(['valid' =>true]);
     }
 
 }

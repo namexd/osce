@@ -88,9 +88,15 @@
                         @forelse($list as $key => $item)
                         <tr>
                             <td>{{$key+1}}</td>
-                            <td>{{$item->id}}</td>
+                            <td>{{$item->code}}</td>
                             <td>{{$item->name}}</td>
-                            <td>{{$machineStatuValues[$item->status]}}</td>
+                            <td style="color:
+                                @if($item->status==1)#16beb0
+                                @elseif($item->status==2)#ed5565
+                                @elseif($item->status==3)#f8ac59
+                                @endif
+                                    ">{{$machineStatuValues[$item->status]}}
+                            </td>
                             <td>
                                 <a href="{{route('osce.admin.machine.getEditCameras',['id'=>$item->id])}}">
                                     <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
@@ -128,7 +134,7 @@
                         data:{id:eid, cate_id:1},
                         success:function(data){
                             if(data.code == 1){
-                                location.reload();
+                                location.href='{{route("osce.admin.machine.getMachineList",["cate_id"=>1])}}'
                             }else {
                                 layer.msg(data.message);
                             }

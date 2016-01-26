@@ -6,4 +6,6 @@ return [
 	'ModuleSchedulesList'=>[
         'Osce'  =>  \Modules\Osce\Commands\DefaultCommand::class
     ],
+	//超级管理员角色ID
+	'superRoleId'	=>	5,
 ];

@@ -112,21 +112,119 @@ class Exam extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
 
-            $model = $this->findOrFail($id);
-            //更改名字
-            $model->name = $model->name . '_delete';
-            //更改状态
-            $model->status = 0;
-            if (!($model->save())) {
-                $connection->rollBack();
+
+            //进入模型逻辑
+            //删除与考场相关的流程
+            $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get()->pluck('flow_id'); //获得流程的id
+            $examScreening = ExamScreening::where('exam_id',$id);
+            $examScreeningObj = $examScreening->select('id')->get();
+            $examScreeningIds = $examScreeningObj->pluck('id');
+
+            //如果该考试已经完成，那么就不能让他们删除
+            if (!ExamResult::whereIn('exam_screening_id',$examScreeningIds)->get()->isEmpty()) {
+                throw new \Exception('该考试已经考完，不能删除！');
+            }
+
+            if (!Invite::whereIn('exam_screening_id',$examScreeningIds)->get()->isEmpty()) {
+                throw new \Exception('已经为sp老师发送邀请，不能删除！');
+            }
+
+            //删除考试考场学生表
+            foreach ($examScreeningObj as $item) {
+                if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->get()->isEmpty()) {
+                    if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->delete()) {
+                        throw new \Exception('删除考试考场学生关系表失败，请重试！');
+                    }
+                }
+            }
+
+            //删除考试考场关联表
+            $examScreenings = $examScreening-> get();
+            if (!$examScreenings->isEmpty()) {
+                foreach ($examScreenings as $v) {
+                    if (!$v->delete()) {
+                        throw new \Exception('删除考试考场关系表失败，请重试！');
+                    }
+                }
+
+            }
+
+            //删除考试考场关联
+            if (!ExamRoom::where('exam_id',$id)->get()->isEmpty()) {
+                if (!ExamRoom::where('exam_id',$id)->delete()) {
+                    throw new \Exception('删除考试考场关联失败，请重试！');
+                }
+            }
+
+            //删除考试考站关联
+            if (!ExamStation::where('exam_id',$id)->get()->isEmpty()) {
+                if (!ExamStation::where('exam_id',$id)->delete()) {
+                    throw new \Exception('删除考试考站关联失败，请重试！');
+                }
+            }
+
+
+            //删除考试流程关联
+            if (!ExamFlow::where('exam_id',$id)->get()->isEmpty()) {
+                if (!ExamFlow::where('exam_id',$id)->delete()) {
+                    throw new \Exception('删除考试流程关联失败，请重试！');
+                }
+            }
+
+            //删除考试考场流程关联
+            if (!ExamFlowRoom::where('exam_id',$id)->get()->isEmpty()) {
+                if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
+                    throw new \Exception('删除考试考场流程关联失败，请重试！');
+                }
+            }
+
+            //通过考试流程-考站关系表得到考站信息
+            $station = ExamFlowStation::whereIn('flow_id',$flowIds);
+            $stationIds = $station->select('station_id')->get();
+            if (!$stationIds->isEmpty()) {
+                //删除考试流程-考站关系表信息
+                if (!$station->delete()) {
+                    throw new \Exception('删除考试考站流程关联失败，请重试！');
+                }
+
+                //通过考站id找到对应的考站-老师关系表
+                foreach ($stationIds as $stationId) {
+//                    dd($stationId);
+                    if (!empty(StationTeacher::where('station_id',$stationId->station_id)->first())) {
+                        if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
+                            throw new \Exception('删除考站老师关联失败，请重试！');
+                        }
+                    }
+                }
+            }
+
+            //删除考试对应的资讯通知
+            $informInfo = InformInfo::where('exam_id', $id)->get();
+            if(count($informInfo) !=0){
+                foreach ($informInfo as $item) {
+                    if(!$item->delete()){
+                        throw new \Exception('删除考试对应的资讯通知失败，请重试！');
+                    }
+                }
+            }
+            //删除考试本体
+            if (!$result = $this->where('id',$id)->delete()) {
                 throw new \Exception('删除考试失败，请重试！');
             }
 
+            //如果有flow的话，就删除
+            if (count($flowIds) != 0) {
+                foreach ($flowIds as $flowId) {
+                    if (!Flows::where('id',$flowId)->delete()) {
+                        throw new \Exception('删除流程失败，请重试！');
+                    }
+                }
+            }
             $connection->commit();
             return true;
 
         } catch (\Exception $ex) {
-
+            throw $ex;
         }
     }
 
@@ -203,9 +301,40 @@ class Exam extends CommonModel
         $connection->beginTransaction();
         try {
             //更新考试信息
-            if (!$result = $this->updateData($exam_id, $examData)) {
+            $exam   =   $this->find($exam_id);
+            if($exam->sequence_mode!=$examData['sequence_mode'])
+            {
+                //如果排考模式变化 删除 已有 教师关联 和 排考计划
+                if(StationTeacher::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamPlan::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamFlowRoom::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamFlowStation::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamFlow::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+            }
+            foreach($examData as $field=>$item)
+            {
+                $exam->$field   =   $item;
+            }
+            if(!$exam->save())
+            {
                 throw new \Exception('修改考试信息失败!');
             }
+
             $examScreening_ids = [];
             //判断输入的时间是否有误
             foreach ($examScreeningData as $value) {

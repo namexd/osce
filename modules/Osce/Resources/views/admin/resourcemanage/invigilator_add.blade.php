@@ -6,11 +6,10 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script>
         $(function(){
-
             $('#sourceForm').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -90,6 +89,13 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
+                    },
+                    images: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请上传图片'
+                            }
+                        }
                     }
                 }
             });
@@ -131,6 +137,8 @@
             $(".img_box").delegate(".del_img","click",function(){
                 $(this).parent("li").remove();
             });
+            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
+
         })
 
     </script>
@@ -147,7 +155,7 @@
             <div class="row">
                 <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddInvigilator')}}">
 
-                    <div class="col-md-3 col-sm-3">
+                    <div class="col-md-3 col-sm-3 image-box">
                         <ul class="img_box">
                             <span class="images_upload">
                                 <input type="file" name="images" id="file0"/>
@@ -221,7 +229,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="note" id="note">
+                                <input type="text" class="form-control" name="description" id="note">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

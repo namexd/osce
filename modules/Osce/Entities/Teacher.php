@@ -22,7 +22,7 @@ class Teacher extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','name', 'code', 'type', 'case_id', 'create_user_id','status'];
+    protected $fillable = ['id','name', 'code', 'type', 'case_id', 'create_user_id','status','description'];
     private $excludeId = [];
 
     protected $type_values  =   [
@@ -89,18 +89,17 @@ class Teacher extends CommonModel
             }
             $data=$builder->select('teacher.name','teacher.id','cases.name as cname','cases.id as caseId')->get()->toArray();
             $list=[];
-            foreach($data as $k=>$v){
-                $list[$k]['teacher_id']=$v['id'];
-                $list[$k]['teacher_name']=$v['name'];
-                $list[$k]['case_name']=$v['cname'];
-                $list[$k]['case_id']=$v['caseId'];
+            foreach($data as $k=>$Teacher){
+                $list[]=[
+                    'teacher_id'=>$Teacher['id'],
+                    'teacher_name'=>$Teacher['name'],
+                    'case_name'=>$Teacher['cname'],
+                    'case_id'=>$Teacher['caseId'],
+                ];
+                $openId= Teacher::find($Teacher['id'])->userInfo;
+//                dd($openId);
+                $list[$k]['openid']=$openId['openid'];
             }
-//            dd($list);
-//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
-            $openId= Teacher::find($list[$k]['teacher_id'])->userInfo->toArray();
-
-            $list[$k]['openid']=$openId['openid'];
-//            dd($list);
             return $list;
 
         }catch (\Exception $ex) {
@@ -124,7 +123,7 @@ class Teacher extends CommonModel
     {
         try {
             //将传入的$spteacherId插进数组中
-            if ($spteacherId !== null) {
+            if (count($spteacherId) != 0) {
                 $this->excludeId = $spteacherId;
             }
 
@@ -133,8 +132,13 @@ class Teacher extends CommonModel
             }
 
             //通过传入的$station_id得到病例id
-            $case_id = StationCase::where('station_case.station_id', '=', $stationId)
-                ->select('case_id')->first()->case_id;
+            $case = StationCase::where('station_case.station_id', '=', $stationId)
+                ->select('case_id');
+            if ($case->get()->isEmpty()) {
+                throw new \Exception('未找到对应的病例');
+            } else {
+                $case_id = $case->first()->case_id;
+            }
 
             $builder = $this->where('type' , '=' , 2); //查询教师类型为指定类型的教师
             $builder = $builder->where('case_id' , '=' , $case_id); //查询符合病例的教师
@@ -400,7 +404,7 @@ class Teacher extends CommonModel
     public function getTeacherList($formData)
     {
         try{
-            $teacher = $this->whereIn('type', [1,3]);
+            $teacher = $this->where('type', 1);
                 if(!empty($formData)){
                     if(count($formData) == 1){
                         //$teacher->where('id', '<>', implode(',', $formData));
@@ -417,26 +421,26 @@ class Teacher extends CommonModel
         }
     }
 
-    public function registerTeacher(){
-        //$this   ->  registerUser();
-    }
-
     /**
      * 获得与考站想关联的老师
-     * @param array $stationIds
+     * @param $exam_id
      * @return mixed
+     * @internal param array $stationIds
      */
     public function stationTeacher($exam_id)
     {
-        return $this->leftJoin('station_teacher',
-            function ($join) {
-                $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
-            })
+        return $this
+            -> leftJoin('exam_station','exam_station.exam_id','=','station_teacher.exam_id')
+            -> leftJoin('station_teacher',
+                function ($join) {
+                    $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
+                })
             -> leftJoin('station',
                 function ($join) {
-                    $join->on('station.id','=','station_teacher.station_id');
+                    $join->on('station.id','=','exam_station.station_id');
                 })
-            -> where('station_teacher.exam_id' , $exam_id)
+
+            -> where('exam_station.exam_id' , $exam_id)
             -> select([
                 $this->table . '.id as teacher_id',
                 $this->table . '.name as teacher_name',

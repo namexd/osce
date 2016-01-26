@@ -22,7 +22,10 @@
             line-height: 30px;
         }
         .assign-box{
+            width:1000px;
+            height: 600px;
             margin-top: 20px;
+            overflow: scroll;
         }
         .classroom-box>ul>li{
             float: left;
@@ -45,8 +48,7 @@
             float: left;
         }
         .classroom-box{
-            width: 1402px;
-
+            width: 802px;
         }
         ul,dl{
             padding: 0;
@@ -97,7 +99,7 @@
             background-color: #0a6aa1;
         }
         p{
-            margin: 0 10px;
+            margin: 0;
         }
     </style>
 @stop
@@ -122,9 +124,10 @@
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$_GET['id']}}">基础信息</a></li>
-                            <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$_GET['id']])}}">考场安排</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$_GET['id']])}}">考场安排</a></li>
                             <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$_GET['id']])}}">考生管理</a></li>
                             <li class="active"><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$_GET['id']])}}">智能排考</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$_GET['id']])}}">待考区说明</a></li>
                         </ul>
                     </div>
                 </div>
