@@ -176,7 +176,6 @@ class StudentExamQueryController extends  CommonController
         if(empty($groupData[0])){
             throw new \Exception('请检查该考站是否有评分详情');
         }
-
         foreach($groupData[0] as $group)
         {
             $groupInfo  =   $group;
