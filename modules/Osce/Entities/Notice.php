@@ -178,10 +178,8 @@ class Notice extends CommonModel
             {
                 continue;
             }
-            $content=   [];
-            //$content[]  =   $notice->exam->name. ' ' .$notice->title.'<br/>';
             $content[]  =   '<a href="'.$url.'">查看详情</a>';
-            $sender ->  send(array_pluck($to,'email'),implode('',$content));
+            $sender ->  send($accept,$content,$notice->name);
         }
     }
     /**
@@ -214,7 +212,6 @@ class Notice extends CommonModel
         try{
 
             $accept = implode(',',$groups);
-
             $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
             $notice =   $this   ->  addNotice($data,$to,$accept);
             return $notice;
@@ -252,6 +249,7 @@ class Notice extends CommonModel
      *
      */
     public function getGroupsOpendIds($groups,$exam_id){
+
         $data   =   [];
         if(in_array(1,$groups))
         {
@@ -264,6 +262,8 @@ class Notice extends CommonModel
         if(in_array(2,$groups))
         {
             $teachers   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
+
+
             if(!empty($teachers))
             {
                 $data   =   array_merge($data,$teachers);

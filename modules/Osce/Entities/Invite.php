@@ -27,8 +27,6 @@ class Invite extends CommonModel
     //保存并发送邀请
     public function addInvite(array $data)
     {
-//        $connection     =   DB::connection($this->connection);
-//        $connection     ->  beginTransaction();
         try {
             foreach ($data as  $list) {
                 $inviteDat = [
@@ -55,14 +53,13 @@ class Invite extends CommonModel
                     }
                     //邀请用户
                     $this->sendMsg($data);
-//                    $connection ->commit();
+//
                     return $notice;
                 } else {
                     throw new \Exception('邀请保存失败');
                 }
 
         } catch (\Exception $ex) {
-//            $connection ->rollBack();
             throw $ex;
         }
     }
