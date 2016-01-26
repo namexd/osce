@@ -111,7 +111,7 @@ class Subject extends CommonModel
      *
      */
     public function editTopic($id,$data,$points){
-        $subject    =   $this->find($id);
+        $subject    =   $this->findOrFail($id);
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
