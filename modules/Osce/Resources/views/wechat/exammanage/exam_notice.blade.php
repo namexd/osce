@@ -52,14 +52,11 @@
             function getItem(current,url){
 
                 $.ajax({
-
                     type:'get',
                     url:url,
                     aysnc:true,
                     data:{id:current,page:current},
                     success:function(res){
-
-                        console.log(res);
                         totalpages = Math.ceil(res.data.total/res.data.pagesize);
 
                         var html = '';

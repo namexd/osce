@@ -37,13 +37,14 @@
                 if(away_top >= (page_height - window_height)&&now_page<totalpages){
                     now_page++;
                     //qj.page=now_page;//设置页码
+
                     getItem(now_page,url)
                     /*加载显示*/
                 }
             });
             //初始化
             var now_page = 1;
-            var url = "{{route('osce.wechat.notice-list.getSystemAjax')}}";
+            var url = "{{route('osce.wechat.notice.getSystemView')}}";
             //内容初始化
             $('.history-list').empty();
             getItem(now_page,url);
@@ -54,11 +55,10 @@
                     type:'get',
                     url:url,
                     aysnc:true,
-                    data:{id:current,pagesize:current},
+                    data:{id:current,page:current},
                     success:function(res){
+                        totalpages = Math.ceil(res.data.total/res.data.pagesize);
 
-                        console.log(res);
-                        totalpages = res.total;
                         var html = '';
                         var index = (current - 1)*10;
                         data = res.data.rows;
