@@ -181,13 +181,33 @@ class PadController extends  CommonController{
 
        public function getTimingList(Request $request){
             $this->validate($request,[
-                 'vcr_id' =>'required|integer',
-                 'time'   =>'required',
+                 'vcr_id'     =>'required|integer',
+                 'exam_id'       =>'required',
+                 'room'       =>'required',
+                 'begin_dt'   =>'required',
+                 'end_dt'     =>'required',
             ]);
-            $vcr_id=$request->get('vcr_id');
-            $time=$request->get('time');
+            $vcrId=$request->get('vcr_id');
+            $beginDt=$request->get('begin_dt');
+            $examId=$request->get('exam_id');
+            $room=$request->get('room');
+            $endDt=$request->get('end_dt');
            try{
-               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time','<',$time)->select()->get();
+//               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time','<',$beginDt)->select()->get();
+//               $stationVcrModel=new StationVcr();
+//               $vcrs=$stationVcrModel->getTiming($vcrId,$beginDt,$examId,$room,$endDt);
+               $vcrs[0]=[
+                    'begin_dt' => '2016-1-26 9:00:00',
+                    'end_dt'   => '2016-1-26 10:00:00',
+               ];
+               $vcrs[1]=[
+                   'begin_dt' => '2016-1-26 11:00:00',
+                   'end_dt'   => '2016-1-26 12:00:00',
+               ];
+               $vcrs[2]=[
+                   'begin_dt' => '2016-1-26 14:00:00',
+                   'end_dt'   => '2016-1-26 15:00:00',
+               ];
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );
