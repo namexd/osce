@@ -209,6 +209,7 @@ class Flows extends CommonModel
             //删除stationTeacher表
             if (!StationTeacher::where('exam_id',$id)->get()->isEmpty()) {
                 if (!StationTeacher::where('exam_id',$id)->delete()) {
+//                    dd(123);
                     throw new \Exception('删除教师考站关联失败，请重试！');
                 }
             }
