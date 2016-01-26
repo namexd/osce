@@ -1536,4 +1536,9 @@ class ExamController extends CommonController
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
     }
+	
+	
+	public function getExamRemind(){
+		return view('osce::admin.exammanage.waiting_area');
+	}
 }
