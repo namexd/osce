@@ -166,16 +166,17 @@ class StudentExamQueryController extends  CommonController
          //查询出详情列表
         $examscoreModel= new ExamScore();
         $examScoreList=$examscoreModel->getExamScoreList($examresultList->id);
-        if(!$examScoreList){
-            dd(111111);
-            throw new \Exception('没有找到该考站成绩详情');
 
-        }
         $groupData  =   [];
         foreach($examScoreList as $examScore){
             $groupData[$examScore->standard->pid][] =   $examScore;
         }
         $indexData  =   [];
+
+        if(empty($groupData[0])){
+            throw new \Exception('请检查该考站是否有评分详情');
+        }
+
         foreach($groupData[0] as $group)
         {
             $groupInfo  =   $group;
