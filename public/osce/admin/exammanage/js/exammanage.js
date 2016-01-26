@@ -975,12 +975,26 @@ function examroom_assignment(){
                     //删除dom
                     var str = rooms[i].id;
                     $('.parent-id-'+str).remove();
-                    //重置序号
                     var station_count = 1;
+                    $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                        var html = '';
+                        station_count = key + 1;
+                        html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                        $(elem).find('td').eq(0).html(html);
+
+                        //更新name序号
+                        $(elem).find('td').eq(3).find('select').attr('name','station['+station_count+'][teacher_id]');
+                        $(elem).find('td').eq(4).find('.pull-right').attr('value',station_count);
+                        $(elem).find('td').eq(4).find('.teacher-box').find('.teacher').each(function(m,n){
+
+                            $(n).find('input').attr('name','station['+station_count+'][spteacher_id][]');
+                        });
+                    });
+                    /*var station_count = 1;
                     $('#exam-place').find('tbody').find('tr').each(function(key,elem){
                         station_count = key + 1;
                         $(elem).find('td').eq(0).text(station_count);
-                    });
+                    });*/
                     $('#exam-place').find('tbody').attr('index',station_count);
                     continue;
                 }
@@ -1127,6 +1141,15 @@ function examroom_assignment(){
                                 station_count = key + 1;
                                 html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
                                 $(elem).find('td').eq(0).html(html);
+
+                                //更新name序号
+                                $(elem).find('td').eq(3).find('select').attr('name','station['+station_count+'][teacher_id]');
+                                $(elem).find('td').eq(4).find('.pull-right').attr('value',station_count);
+                                $(elem).find('td').eq(4).find('.teacher-box').find('.teacher').each(function(m,n){
+                                    
+                                    $(n).find('input').attr('name','station['+station_count+'][spteacher_id][]');
+                                });
+
                             });
                             $('#exam-place').find('tbody').attr('index',station_count);
                             continue;
@@ -1178,11 +1201,12 @@ function examroom_assignment(){
         if(thisElement.next().length){
 
             var thisSelect = thisElement.find('select').val(),
-                nextSelect = thisElement.next().find('select').val();
+                nextSelect = thisElement.next().find('select').val(); 
 
             //交换数据
             thisElement.find('select').val(nextSelect).trigger("change");
-            nextSelect = thisElement.next().find('select').val(thisSelect).trigger("change");
+            thisElement.next().find('select').val(thisSelect).trigger("change");
+
         }else{
             return;
         }
@@ -2446,9 +2470,24 @@ function station_assignment(){
                     //重置序号
                     var station_count = 1;
                     $('#exam-place').find('tbody').find('tr').each(function(key,elem){
+                        var html = '';
+                        station_count = key + 1;
+                        html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                        $(elem).find('td').eq(0).html(html);
+
+                        //更新name序号
+                        $(elem).find('td').eq(3).find('select').attr('name','station['+station_count+'][teacher_id]');
+                        $(elem).find('td').eq(4).find('.pull-right').attr('value',station_count);
+                        $(elem).find('td').eq(4).find('.teacher-box').find('.teacher').each(function(m,n){
+
+                            $(n).find('input').attr('name','station['+station_count+'][spteacher_id][]');
+                        });
+                    });
+                    /*var station_count = 1;
+                    $('#exam-place').find('tbody').find('tr').each(function(key,elem){
                         station_count = key + 1;
                         $(elem).find('td').eq(0).text(station_count);
-                    });
+                    });*/
                     $('#exam-place').find('tbody').attr('index',station_count);
                     continue;
                 }
@@ -2608,6 +2647,16 @@ function station_assignment(){
                                 station_count = key + 1;
                                 html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
                                 $(elem).find('td').eq(0).html(html);
+
+                                //更新name序号
+                                $(elem).find('td').eq(3).find('select').attr('name','station['+station_count+'][teacher_id]');
+                                $(elem).find('td').eq(4).find('.pull-right').attr('value',station_count);
+                                $(elem).find('td').eq(4).find('.teacher-box').find('.teacher').each(function(m,n){
+
+                                    $(n).find('input').attr('name','station['+station_count+'][spteacher_id][]');
+                                });
+
+
                             });
                             $('#exam-place').find('tbody').attr('index',station_count);
                             continue;
