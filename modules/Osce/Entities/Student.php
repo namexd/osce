@@ -174,11 +174,6 @@ class Student extends CommonModel
                 throw new \Exception('未找到当前操作人信息');
             }
 
-            //查询手机号码是否已经使用
-            $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
-            if(!empty($mobile)){
-                throw new \Exception('手机号已经存在，请输入新的手机号');
-            }
             //根据条件：查找用户是否有账号和密码
             $user = User::where(['username' => $examineeData['mobile']])->first();
             //如果查找到了，对用户信息 进行编辑处理
@@ -194,6 +189,11 @@ class Student extends CommonModel
                 }
 
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
+                //手机号未注册，查询手机号码是否已经使用
+                $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
+                if(!empty($mobile)){
+                    throw new \Exception('手机号已经存在，请输入新的手机号');
+                }
                 $password   =   '123456';
                 $user       =   $this   ->  registerUser($examineeData,$password);
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);

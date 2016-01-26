@@ -544,8 +544,8 @@ class ExamController extends CommonController
                 if(!empty($code)){
                     throw new \Exception('该学号已经有别人使用！');
                 }
-                //查询手机号码是否已经使用
-                $mobile = User::where(['mobile' => $data['mobile']])->first();
+                //查询手机号码是否已经被别人使用
+                $mobile = User::where(['mobile' => $data['mobile']])->where('id','<>',$student->user_id)->first();
                 if(!empty($mobile)){
                     throw new \Exception('手机号已经存在，请输入新的手机号');
                 }
