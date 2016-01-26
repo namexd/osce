@@ -35,23 +35,27 @@
         </div>
             <div class="panel blank-panel">
                 <div class="container-fluid ibox-content">
-                    <div  class="row" style="margin:20px 0;">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <label class="pull-left exam-name">考试名称:</label>
-                            <div class="pull-left exam-list">
-                                <input type="text" placeholder="请输入考试名称" name="exam_name" class="input-md form-control" style="width: 250px;" value="{{(empty($exam_name))?'':$exam_name}}">
+                    <form method="get">
+                        <div  class="row" style="margin:20px 0;">
+
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <label class="pull-left exam-name">考试名称:</label>
+                                <div class="pull-left exam-list">
+                                    <input type="text" placeholder="请输入考试名称" name="exam_name" class="input-md form-control" style="width: 250px;" value="{{(empty($exam_name))?'':$exam_name}}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="input-group col-md-6 col-sm-6 col-xs-12">
-                            <label class="pull-left exam-name">考生姓名:</label>
-                            <div  class="pull-left examinee-list">
-                                <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control" style="width: 250px;" value="{{(empty($student_name))?'':$student_name}}">
+                            <div class="input-group col-md-6 col-sm-6 col-xs-12">
+                                <label class="pull-left exam-name">考生姓名:</label>
+                                <div  class="pull-left examinee-list">
+                                    <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control" style="width: 250px;" value="{{(empty($student_name))?'':$student_name}}">
                                  <span class="input-group-btn pull-left">
                                     <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                                 </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
+
 
                     <table class="table table-striped" id="table-striped" style="background:#fff">
                         <thead>
