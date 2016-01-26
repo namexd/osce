@@ -17,7 +17,7 @@
     <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}','firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
