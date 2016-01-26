@@ -51,7 +51,6 @@
             function getItem(current,url){
 
                 $.ajax({
-
                     type:'get',
                     url:url,
                     aysnc:true,

@@ -54,8 +54,8 @@
     <div class="history-box">
         <ul class="history-list">
             <li>
-                <p class="title">{{  $notice->name }}</p>
-                <p class="time"><span class="year"> {{ $notice->created_at }}</span></p>
+                <p class="title">{{$notice->title}}</p>
+                <p class="time"><span class="year"> {{$notice->created_at}}</span></p>
                 <div>
                     <div>
                         <img src="" alt="">
@@ -64,11 +64,7 @@
                       {!! $notice->content !!}
                     </div>
                     <div>
-                        @if($notice->attachments)
-                            @foreach($notice->attachments as $key=>$list)
-                                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}"><?php $pathInfo=explode('/',$list)?>{{array_pop($pathInfo)}}</a><br />
-                            @endforeach
-                        @endif
+
                     </div>
                 </div>
             </li>
