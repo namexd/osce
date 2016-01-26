@@ -37,10 +37,11 @@ class NoticeController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList(){
-        $notice =   new Notice();
-        $list   =   $notice ->  getList();
-        return view('osce::admin.exammanage.exam_notice',['list'=>$list]);
+    public function getList()
+    {
+        $notice = new Notice();
+        $list = $notice->getList();
+        return view('osce::admin.exammanage.exam_notice', ['list' => $list]);
     }
 
     /**
@@ -57,9 +58,10 @@ class NoticeController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getAddNotice(Request $request){
-        $list   =   Exam::get();
-        return view('osce::admin.exammanage.exam_notice_add',['list'=>$list]);
+    public function getAddNotice(Request $request)
+    {
+        $list = Exam::get();
+        return view('osce::admin.exammanage.exam_notice_add', ['list' => $list]);
     }
 
     /**
@@ -82,38 +84,38 @@ class NoticeController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postAddNotice(Request $request){
-        $this   ->  validate($request,[
-            'title'     =>  'required',
-            'content'   =>  'required',
-            'exam_id'   =>  'required',
-            'attach'    =>  'sometimes',
+    public function postAddNotice(Request $request)
+    {
+        $this->validate($request, [
+            'title' => 'required',
+            'content' => 'required',
+            'exam_id' => 'required',
+            'attach' => 'sometimes',
         ]);
 
-        $title      =   $request    ->  get('title');
-        $content    =   $request    ->  get('content');
-        $exam_id    =   $request    ->  get('exam_id');
-        $groups     =   $request     ->  get('groups');
-        $attach     =   $request     ->  get('attach');
-        if(!empty($attach)){
-            $attach =   e(implode(',',$attach));
-        } else{
-            $attach =   '';
+        $title = $request->get('title');
+        $content = $request->get('content');
+        $exam_id = $request->get('exam_id');
+        $groups = $request->get('groups');
+        $attach = $request->get('attach');
+        if (!empty($attach)) {
+            $attach = e(implode(',', $attach));
+        } else {
+            $attach = '';
         }
 
-        try{
-            if(!is_array($groups)){
+        try {
+            if (!is_array($groups)) {
                 throw new \Exception('请选择接收人所属角色');
             }
-            $noticeModel    =   new Notice();
-            if($noticeModel ->  sendNotice($title,$content,$exam_id,$groups,$attach))
-            {
+            $noticeModel = new Notice();
+            if ($noticeModel->sendNotice($title, $content, $exam_id, $groups, $attach)) {
                 return redirect()->route('osce.admin.notice.getList');
-            } else{
+            } else {
                 throw new \Exception('通知创建失败');
             }
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -139,15 +141,16 @@ class NoticeController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getEditNotice(Request $request){
-        $this   ->  validate($request,[
-            'id'        =>  'required',
+    public function getEditNotice(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
         ]);
-        $list   =   Exam::get();
-        $id     =   $request    ->  get('id');
-        $item   =   Notice::find($id);
+        $list = Exam::get();
+        $id = $request->get('id');
+        $item = Notice::find($id);
 
-        return view('osce::admin.exammanage.exam_notice_edit',['item'=>$item,'list'=>$list]);
+        return view('osce::admin.exammanage.exam_notice_edit', ['item' => $item, 'list' => $list]);
     }
 
     /**
@@ -169,36 +172,36 @@ class NoticeController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditNotice(Request $request){
-        $this   ->  validate($request,[
-            'name'      =>  'required',
-            'content'   =>  'required',
-            'attach'    =>  'sometimes',
-            'id'        =>  'required',
+    public function postEditNotice(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'content' => 'required',
+            'attach' => 'sometimes',
+            'id' => 'required',
         ]);
 
-        $id         =   $request    ->  get('id');
-        $name       =   $request    ->  get('name');
-        $content    =   $request    ->  get('content');
-        $exam_id    =   $request    ->  get('exam_id');
-        $groups     =   $request    ->  get('accept');
-        $attach     =   $request    ->  get('attach');
+        $id = $request->get('id');
+        $name = $request->get('name');
+        $content = $request->get('content');
+        $exam_id = $request->get('exam_id');
+        $groups = $request->get('accept');
+        $attach = $request->get('attach');
 
-        if(!empty($attach)){
-            $attach     =   e(implode(',',$attach));
+        if (!empty($attach)) {
+            $attach = e(implode(',', $attach));
         } else {
-            $attach =   '';
+            $attach = '';
         }
 
-        $NoticeModel    =   new Notice();
-        try{
-            if($NoticeModel    ->editNotice($id,$name,$content,$attach,$groups))
-            {
+        $NoticeModel = new Notice();
+        try {
+            if ($NoticeModel->editNotice($id, $name, $content, $attach, $groups)) {
                 return redirect()->route('osce.admin.notice.getList');
             } else {
                 throw new \Exception('更新通知失败');
             }
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -220,36 +223,38 @@ class NoticeController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getDelNotice(Request $request){
-        $this   ->  validate($request,[
-            'id'    =>  'required'
+    public function getDelNotice(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
         ]);
 
-        $id     =   $request    ->  get('id');
+        $id = $request->get('id');
 
-        $notice =   Notice::find($id);
+        $notice = Notice::find($id);
 
-        try
-        {
-            if($notice)
-            {
-                if($notice->delete())
-                {
+        try {
+            if ($notice) {
+                if ($notice->delete()) {
                     return redirect()->route('osce.admin.notice.getList');
-                }
-                else
-                {
+                } else {
                     throw new \Exception('删除失败');
                 }
-            }
-            else
-            {
+            } else {
                 throw new \Exception('没有找到相应的通知');
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
+
+
+
+
+
+//    public  function   getMsg($id){
+//
+//    }
 }
+
+
