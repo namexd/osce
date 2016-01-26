@@ -67,6 +67,7 @@ class Invite extends CommonModel
 
     public function sendMsg($data)
     {
+
         try {
             foreach ($data as $key => $openIdList) {
                 $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['teacher_id']]);
@@ -86,7 +87,7 @@ class Invite extends CommonModel
                 }catch (\Exception $ex_msg)
                 {
 
-
+                    throw new \Exception($openIdList['teacher_name'].'没有关联微信号');
                 }
 
 //            $message    =   Common::CreateWeiXinMessage($msgData);
