@@ -156,9 +156,11 @@ class StudentExamQueryController extends  CommonController
         $examresultList=ExamResult::where('exam_screening_id','=',$examresultId)->get();
 
 
+
          //查询出详情列表
         $examscoreModel= new ExamScore();
         $examScoreList=$examscoreModel->getExamScoreList($examresultId);
+        dd($examScoreList);
 
         $groupData  =   [];
         foreach($examScoreList as $examScore){
