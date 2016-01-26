@@ -20,11 +20,11 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class=""><a href="1">基础信息</a></li>
-                        <li class=""><a href="2">考场安排</a></li>
-                        <li class=""><a href="3">考生管理</a></li>
-                        <li class=""><a href="4">智能排考</a></li>
-                        <li class="active"><a href="5">待考区说明</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getEditExam',['id'=>$id])}}">基础信息</a></li>
+						<li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
+						<li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
+						<li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
+                        <li class="active"><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
                     </ul>
                 </div>
             </div>

@@ -1517,9 +1517,18 @@ class ExamController extends CommonController
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
     }
-	
-	
-	public function getExamRemind(){
-		return view('osce::admin.exammanage.waiting_area');
+
+    /**
+     * 代考区说明
+     */
+	public function getExamRemind(Request $request){
+        //验证
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+        //获得exam_id
+        $id = $request->input('id');
+		return view('osce::admin.exammanage.waiting_area', ['id'=>$id]);
 	}
 }
