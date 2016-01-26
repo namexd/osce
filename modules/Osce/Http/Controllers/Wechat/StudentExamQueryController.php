@@ -86,7 +86,6 @@ class StudentExamQueryController extends  CommonController
          //获取到考试的时间
         try{
 
-
         $examTime =Exam::where('id',$examId)->select('begin_dt','end_dt','name')->first();
 
         //根据考试id找到对应的考试场次
@@ -102,16 +101,14 @@ class StudentExamQueryController extends  CommonController
         //根据场次id查询出考站的相关考试结果
         $ExamResultModel= new ExamResult();
         $stationList =$ExamResultModel->stationInfo($examScreeningIds);
-
         $stationData=[];
         foreach($stationList as $stationType){
-
-            if($stationType->type == 2){
+//            if($stationType->type == 2){
                  //获取到sp老师信息
                 $teacherModel= new Teacher();
                 $spteacher = $teacherModel->getSpTeacher($stationType->station_id);
-            }
-//
+
+//            }
             $stationData[]=[
                 'exam_result_id'=>$stationType->exam_result_id,
                 'station_id'=>$stationType->id,
