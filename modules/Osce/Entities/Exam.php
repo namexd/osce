@@ -144,6 +144,14 @@ class Exam extends CommonModel
                 }
             }
 
+            //删除考试考站关联
+            if (!ExamStation::where('exam_id',$id)->get()->isEmpty()) {
+                if (!ExamStation::where('exam_id',$id)->delete()) {
+                    throw new \Exception('删除考试考站关联失败，请重试！');
+                }
+            }
+
+
             //删除考试流程关联
             if (!ExamFlow::where('exam_id',$id)->get()->isEmpty()) {
                 if (!ExamFlow::where('exam_id',$id)->delete()) {
@@ -169,8 +177,10 @@ class Exam extends CommonModel
 
                 //通过考站id找到对应的考站-老师关系表
                 foreach ($stationIds as $stationId) {
-                    if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
-                        throw new \Exception('删除考站老师关联失败，请重试！');
+                    if (!empty(StationTeacher::where('station_id',$stationId->station_id)->first())) {
+                        if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
+                            throw new \Exception('删除考站老师关联失败，请重试！');
+                        }
                     }
                 }
             }
