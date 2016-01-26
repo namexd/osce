@@ -13,6 +13,7 @@ use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Teacher;
@@ -83,8 +84,10 @@ class StudentExamQueryController extends  CommonController
         ]);
         $examId =Input::get('exam_id');
          //获取到考试的时间
-        $examTime =Exam::where('id',$examId)->select('begin_dt','end_dt')->first();
+        try{
 
+
+        $examTime =Exam::where('id',$examId)->select('begin_dt','end_dt')->first();
 
         //根据考试id找到对应的考试场次
         $examScreeningId=  ExamScreening::where('exam_id','=',$examId)->select('id')->get();
@@ -96,17 +99,22 @@ class StudentExamQueryController extends  CommonController
         }
 
         $examScreeningIds = array_column($examScreening, 'id');
-        //根据场次id查询出考站的相关信息
+        //根据场次id查询出考站的相关考试结果
         $ExamResultModel= new ExamResult();
         $stationList =$ExamResultModel->stationInfo($examScreeningIds);
 
         $stationData=[];
         foreach($stationList as $stationType){
             if($stationType->type == 2){
+                //检查考站是否有对应的老师
+                $teacher= StationTeacher::where()->find();
                  //获取到sp老师信息
                 $teacherModel= new Teacher();
-                $spteacher = $teacherModel->getSpTeacher($stationType->id);
+                $spteacher = $teacherModel->getSpTeacher($stationType->station_id);
+
+
             }
+//
             $stationData[]=[
                 'exam_result_id'=>$stationType->exam_result_id,
                 'station_id'=>$stationType->id,
@@ -115,16 +123,18 @@ class StudentExamQueryController extends  CommonController
                 'grade_teacher'=>$stationType->grade_teacher,
                 'type'=>$stationType->type,
                 'station_name'=>$stationType-> station_name,
-                'sp_name'=>$spteacher->name,
+                'sp_name'=>is_null($spteacher->name)? '-':$spteacher->name,
                 'begin_dt'=>$examTime->begin_dt,
                 'end_dt'=>$examTime->end_dt,
                 'exam_screening_id'=>$stationType->exam_screening_id
             ];
         }
-
         return response()->json(
             $this->success_data($stationData,1,'数据传送成功')
         );
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -152,8 +162,9 @@ class StudentExamQueryController extends  CommonController
 
         $examresultId=  intval(Input::get('exam_screening_id'));
 
-         //根据考试结果id查询出该结果详情
+         //根据考试场次id查询出该结果详情
         $examresultList=ExamResult::where('exam_screening_id','=',$examresultId)->first();
+
 
          //查询出详情列表
         $examscoreModel= new ExamScore();

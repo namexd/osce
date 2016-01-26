@@ -202,9 +202,11 @@ class ExamResult extends CommonModel
          'teacher.name as grade_teacher',
          'station.type as type',
          'station.name as station_name',
-         'exam_result.exam_screening_id as exam_screening_id'
+         'exam_result.exam_screening_id as exam_screening_id',
+         'station.id as station_id'
+
      ])
-         ->paginate(config('osce.page_size'));
+         ->get();
 
      return $builder;
     }
