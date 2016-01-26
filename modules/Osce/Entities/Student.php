@@ -285,7 +285,7 @@ class Student extends CommonModel
 
     //考生查询
     public function getList($formData=''){
-        $builder=$this->Join('exam','student.exam_id','=','exam.id');
+        $builder=$this->leftJoin('exam','student.exam_id','=','exam.id');
         if($formData['exam_name']){
             $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'%');
         }
