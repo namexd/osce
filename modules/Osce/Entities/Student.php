@@ -22,7 +22,7 @@ class Student extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id','description'];
+    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id', 'description'];
 
     public function userInfo(){
         return $this->hasOne('\App\Entities\User','id','user_id');
@@ -109,6 +109,51 @@ class Student extends CommonModel
             return true;
 
         } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
+     * 导入考生
+     */
+    public function importStudent($exam_id, $examineeData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //将数组导入到模型中的addInvigilator方法
+            foreach($examineeData as $key => $studentData)
+            {
+                if($studentData['gender'] == '男'){
+                    $studentData['gender'] = 1;
+                }elseif($studentData['gender'] == '女'){
+                    $studentData['gender'] = 2;
+                }else{
+                    $studentData['gender'] = 0;
+                }
+                //姓名不能为空
+                if(empty($studentData['name'])){
+                    throw new \Exception('第'.($key+2).'行姓名不能为空，请修改后重试！');
+                }
+                //验证身份证号
+                if(!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/',$studentData['idcard'])){
+                    throw new \Exception('第'.($key+2).'行身份证号不符规格，请修改后重试！');
+                }
+                //验证手机号
+                if(!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/',$studentData['mobile'])){
+                    throw new \Exception('第'.($key+2).'行手机号不符规格，请修改后重试！');
+                }
+                //添加考生
+                if(!$this->addExaminee($exam_id, $studentData, $key+2))
+                {
+                    throw new \Exception('学生导入数据失败，请修改后重试');
+                }
+            }
+            $connection->commit();
+            return true;
+
+        } catch(\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
