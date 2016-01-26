@@ -81,12 +81,7 @@
                 共{{$data->total()}}条
             </div>
             <div class="btn-group pull-right">
-                <nav>
-                    <ul class="pagination">
-                        {!! $data->render() !!}
-                    </ul>
-                </nav>
-               
+                {!! $data->appends($_GET)->render() !!}
             </div>
 
         </div>

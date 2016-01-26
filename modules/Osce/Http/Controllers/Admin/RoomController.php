@@ -234,7 +234,6 @@ class RoomController extends CommonController
                 $area->createRoom($formData,$vcrId,$userId);
             }
 
-
             return redirect()->route('osce.admin.room.getRoomList',['type'=>$type]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
@@ -276,7 +275,6 @@ class RoomController extends CommonController
                 $area->deleteArea($id);
             }
 
-
             return $this->success_data(['删除成功！']);
         } catch (\Exception $ex) {
             return $this->fail($ex);
@@ -292,19 +290,24 @@ class RoomController extends CommonController
     public function postNameUnique(Request $request)
     {
         $this->validate($request, [
-            'name'      => 'required',
+//            'name'      => 'required',
         ]);
 
         $id     = $request  -> get('id');
-        $name   = $request  -> get('name');
-
+        $value   = $request  -> get('name');
+        $code   = $request  -> get('code');
+        $name = 'name';
+        if(!empty($code)){
+            $name = 'code';
+            $value= $code;
+        }
         //实例化模型
         $model =  new Room();
         //查询 该名字 是否存在
         if(empty($id)){
-            $result = $model->where('name', $name)->first();
+            $result = $model->where("$name", $value)->first();
         }else{
-            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+            $result = $model->where("$name", $value)->where('id', '<>', $id)->first();
         }
         if($result){
             return json_encode(['valid' =>false]);
