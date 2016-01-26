@@ -325,7 +325,7 @@ class InvigilatePadController extends CommonController
     /**
      * 照片附件的上传
      * @method POST
-     * @url /osce/api/invigilatepad/save-exam-result
+     * @url /osce/api/invigilatepad/test-attach
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>

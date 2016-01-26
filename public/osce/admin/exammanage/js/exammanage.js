@@ -2472,15 +2472,15 @@ function station_assignment(){
                     $('#exam-place').find('tbody').find('tr').each(function(key,elem){
                         var html = '';
                         station_count = key + 1;
-                        html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                        html = station_count+'<input type="hidden" name="form_data['+station_count+'][station_id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
                         $(elem).find('td').eq(0).html(html);
 
                         //更新name序号
-                        $(elem).find('td').eq(3).find('select').attr('name','station['+station_count+'][teacher_id]');
+                        $(elem).find('td').eq(3).find('select').attr('name','form_data['+station_count+'][teacher_id]');
                         $(elem).find('td').eq(4).find('.pull-right').attr('value',station_count);
                         $(elem).find('td').eq(4).find('.teacher-box').find('.teacher').each(function(m,n){
 
-                            $(n).find('input').attr('name','station['+station_count+'][spteacher_id][]');
+                            $(n).find('input').attr('name','form_data['+station_count+'][spteacher_id][]');
                         });
                     });
                     /*var station_count = 1;
@@ -2645,15 +2645,15 @@ function station_assignment(){
                             $('#exam-place').find('tbody').find('tr').each(function(key,elem){
                                 var html = '';
                                 station_count = key + 1;
-                                html = station_count+'<input type="hidden" name="station['+station_count+'][id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
+                                html = station_count+'<input type="hidden" name="form_data['+station_count+'][station_id]" value="'+$(elem).find('td').eq(0).find('input').val()+'">';
                                 $(elem).find('td').eq(0).html(html);
 
                                 //更新name序号
-                                $(elem).find('td').eq(3).find('select').attr('name','station['+station_count+'][teacher_id]');
+                                $(elem).find('td').eq(3).find('select').attr('name','form_data['+station_count+'][teacher_id]');
                                 $(elem).find('td').eq(4).find('.pull-right').attr('value',station_count);
                                 $(elem).find('td').eq(4).find('.teacher-box').find('.teacher').each(function(m,n){
 
-                                    $(n).find('input').attr('name','station['+station_count+'][spteacher_id][]');
+                                    $(n).find('input').attr('name','form_data['+station_count+'][spteacher_id][]');
                                 });
 
 

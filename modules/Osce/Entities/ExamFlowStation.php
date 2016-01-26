@@ -108,7 +108,7 @@ class ExamFlowStation extends CommonModel
                 foreach ($item as $value) {
 //                    dd($value);
                     //根据station_id查对应的名字
-                    $station = Station::findOrFail($item['station_id'])->first();
+                    $station = Station::findOrFail($value)->first();
                     //为流程表准备数据
                     $flowsData = [
                         'name' => $exam->name . '-' . $station->name,
@@ -125,10 +125,9 @@ class ExamFlowStation extends CommonModel
                     $this->examStationAssociationSave($examId, $flowsId, $user, $key, $value);
                 }
             }
-
             foreach ($formData as $key => $value) {
                 //删除stationTeacher表
-                if (count(StationTeacher::where('station_id',$value['station_id'])->get()) != 0) {
+                if (!StationTeacher::where('station_id',$value['station_id'])->get()->isEmpty()) {
                     if (!StationTeacher::where('station_id',$value['station_id'])->delete()) {
                         throw new \Exception('删除考站老师失败，请重试！');
                     }
