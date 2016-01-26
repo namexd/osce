@@ -71,11 +71,11 @@
                         <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">首页</a>
                     </div>
                 </nav>
-                <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                <button class="roll-nav roll-right J_tabRight" style="right:61px;"><i class="fa fa-forward"></i>
                 </button>
                 
 
-                <button class="roll-nav roll-right J_tabClose">
+                <button class="roll-nav roll-right J_tabClose" style="display:none;">
                     <i class="fa fa-envelope"></i>
                     <i class="fa fa-bell"></i>
                     <i class="fa fa-gear"></i>

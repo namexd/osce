@@ -22,7 +22,35 @@
 @stop
 
 @section('only_js')
+<script>
+$(function(){
+    $('#exam-id').change(function(){
 
+        var examId = $(this).val();
+        $.ajax({
+            type:'get',
+            url:'{{route("osce.admin.course.getSubject")}}',
+            data:{exam_id:examId},
+            success:function(res){
+                if(res.code!=1){
+                    layer.alert(res.message);
+                }else{
+                    var data = res.data.data;
+                    var html = '<option value="">全部科目</option>';
+                    for(var i in data){
+                        html += '<option value="'+data[i].exam_id+'">'+data[i].exam_name+'</option>';
+                    }
+
+                    $('#subject-id').html(html);
+                }
+            },
+            error:function(res){
+                layer.alert('通讯失败！')
+            }
+        });
+    });
+})
+</script>
 @stop
 
 
@@ -40,10 +68,10 @@
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <label class="pull-left exam-name">考试:</label>
                             <div class="pull-left exam-list">
-                                <select name="exam_id" id="" class="form-control" style="width: 250px;">
+                                <select name="exam_id" id="exam-id" class="form-control" style="width: 250px;">
                                     <option value="">全部考试</option>
                                     @forelse($examDownlist as $exam)
-                                        <option value="{{$exam->id}}">{{$exam->name}}</option>
+                                        <option value="{{$exam->id}}" {{$exam_id==$exam->id?'selected':''}}>{{$exam->name}}</option>
                                     @empty
                                     @endforelse
                                 </select>
@@ -52,11 +80,14 @@
                         <div class="input-group col-md-6 col-sm-6 col-xs-6">
                             <label class="pull-left exam-name">科目:</label>
                             <div  class="pull-left examinee-list">
-                                <select name="subject_id" id="" class="form-control" style="width: 250px;">
+                                <select name="subject_id" id="subject-id" class="form-control" style="width: 250px;">
                                     <option value="">全部科目</option>
+                                    @if($subject_id)
+                                    <option value="{{$subject_id}}" {{$subject_id!=null?'selected':''}}>{{$subject_id}}</option>
+                                    @endif
                                 </select>
                             <span class="input-group-btn pull-left" style="margin-left: 10px;">
-                                <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                                <button type="submit" class="btn btn-primary" id="search" style="border-radius: 3px;">搜索</button>
                             </span>
                             </div>
                         </div>
@@ -96,10 +127,10 @@
                     </tbody>
                 </table>
                 <div class="pull-left">
-
+                    共{{$data->total()}}条
                 </div>
                 <div class="btn-group pull-right">
-
+                   {!! $data->appends($_GET)->render() !!}
                 </div>
             </div>
         </div>

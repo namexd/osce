@@ -39,7 +39,7 @@
                         <div class="logo-element">
                         </div>
                     </li>
-                    <li class="person-info">
+                    <li class="person-info" style="display:none;">
                         <div class="profile-element">
                             <div class="dropdown profile-element">
                                 <span><img alt="image" class="img-circle" src="{{asset('osce/admin/images/profile_small.jpg')}}"></span>

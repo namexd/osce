@@ -52,7 +52,7 @@ class CourseController extends CommonController
                     $item->exam_id,
                     $item->subject_id
                 );
-                //如果不为空avg不为空
+                //如果avg不为空
                 if (!empty($avg)) {
                     if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
                         $item->avg_score = $avg->pluck('score')->sum()/$avg->pluck('score')->count();
@@ -131,7 +131,8 @@ class CourseController extends CommonController
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
         ]);
-
+        $examId =   '';
+        $message=   '';
         $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
         //获得最近的考试的id
         $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
@@ -202,7 +203,7 @@ class CourseController extends CommonController
             $exam = new Exam();
             $data = $exam->CourseControllerIndex($examId);
 
-            return response()->json($this->success_data($data));
+            return response()->json($this->success_data($data->toArray()));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
