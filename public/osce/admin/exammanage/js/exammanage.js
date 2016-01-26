@@ -625,7 +625,6 @@ function examroom_assignment(){
 
         }
 
-
     });
 
 
@@ -1179,12 +1178,63 @@ function examroom_assignment(){
 
         if(thisElement.prev().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                prevSelect = thisElement.prev().find('select').val();
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.prev().before(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(prevSelect).trigger("change");
-            prevSelect = thisElement.prev().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
         }else{
             return;
         }
@@ -1200,12 +1250,65 @@ function examroom_assignment(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                nextSelect = thisElement.next().find('select').val(); 
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.next().after(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(nextSelect).trigger("change");
-            thisElement.next().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
+
+
 
         }else{
             return;
@@ -2687,12 +2790,63 @@ function station_assignment(){
 
         if(thisElement.prev().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                prevSelect = thisElement.prev().find('select').val();
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.prev().before(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(prevSelect).trigger("change");
-            prevSelect = thisElement.prev().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
         }else{
             return;
         }
@@ -2708,12 +2862,63 @@ function station_assignment(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().length){
 
-            var thisSelect = thisElement.find('select').val(),
-                nextSelect = thisElement.next().find('select').val();
+            var thisDom = thisElement.clone();
+            var className = thisElement.attr('class');
+            thisElement.next().after(thisDom);
+            thisElement.remove();
 
-            //交换数据
-            thisElement.find('select').val(nextSelect).trigger("change");
-            nextSelect = thisElement.next().find('select').val(thisSelect).trigger("change");
+            //获得数据
+            var data = [];
+            thisElement.find('select').find('option:selected').each(function(key,elem){
+                data.push({name:$(elem).text(),id:$(elem).attr('value')});
+            });
+            //准备option dom
+            var html = '';
+            for(var i in data){
+                html += '<option selected="selected" value="'+data[i].id+'">'+data[i].name+'</option>';
+            }
+            //初始化
+            $('#examroom').find('.'+className).find('td').eq(1).empty().html('<select class="form-control js-example-basic-multiple room-station" multiple="multiple">'+html+'</select>');
+            var t = $('#examroom').find('.'+className).find('select').select2({
+                placeholder: "==请选择==",
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: pars.list,
+                    delay:0,
+                    data: function (elem) {
+                        console.log(getStations())
+                        //请求参数
+                        return {
+                            station_id:[]
+                        };
+                    },
+                    dataType: 'json',
+                    processResults: function (res) {
+
+                        //数据格式化
+                        var str = [];
+                        var data = res.data;
+                        for(var i in data){
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        //加载入数据
+                        return {
+                            results: str
+                        };
+                    }
+
+                }
+            });
+
+            //更新序号
+            var room_index = 1;
+            $('#examroom').find('tbody').find('tr').each(function(key,elem){
+                $(elem).attr('class','pid-'+room_index);
+                $(elem).find('td').eq(0).text(room_index);
+                $(elem).find('select').attr('name','room['+room_index+'][]');
+                room_index++;
+            })
         }else{
             return;
         }
