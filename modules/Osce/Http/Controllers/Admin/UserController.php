@@ -108,9 +108,15 @@ class UserController extends CommonController
         try{
             if(User::where('mobile','=',$mobile)->count())
             {
-                throw new \Exception('该手机已经被注册了');
+                //throw new \Exception('该手机已经被注册了');
+                $user   =   User::where('mobile','=',$mobile)->first();
+                $common ->  relativeAdminUser($user);
             }
-            $user   =   $common     ->  createAdminUser($data);
+            else
+            {
+                $user   =   $common     ->  createAdminUser($data);
+            }
+
             return redirect()->route('osce.admin.user.getStaffList');
 
         } catch(\Exception $ex){
