@@ -358,6 +358,25 @@ class Station extends CommonModel
             ->get();
     }
 
+    public function stationTeacherList($exam_id)
+    {
+        return $this
+            -> leftJoin('exam_station','exam_station.station_id','=',$this->table.'.id')
+            -> leftJoin('station_teacher', 'station_teacher.station_id','=','exam_station.station_id')
+            -> leftJoin('teacher','teacher.id','=','station_teacher.user_id')
+            -> where('exam_station.exam_id' , $exam_id)
+            -> select([
+                $this->table . '.id as station_id',
+                $this->table . '.name as station_name',
+                $this->table . '.type as station_type',
+                $this->table . '.code as station_code',
+                'teacher.id as teacher_id',
+                'teacher.name as teacher_name',
+                'teacher.type as teacher_type',
+                'teacher.status as teacher_status',
+            ])
+            -> get();
+    }
 
 
 

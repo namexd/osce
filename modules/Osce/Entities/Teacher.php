@@ -420,28 +420,26 @@ class Teacher extends CommonModel
         }
     }
 
-    public function registerTeacher(){
-        //$this   ->  registerUser();
-    }
-
     /**
      * 获得与考站想关联的老师
-     * @param array $stationIds
+     * @param $exam_id
      * @return mixed
+     * @internal param array $stationIds
      */
     public function stationTeacher($exam_id)
     {
         return $this
-            ->leftJoin('station_teacher',
-            function ($join) {
-                $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
-            })
+            -> leftJoin('exam_station','exam_station.exam_id','=','station_teacher.exam_id')
+            -> leftJoin('station_teacher',
+                function ($join) {
+                    $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
+                })
             -> leftJoin('station',
                 function ($join) {
-                    $join->on('station.id','=','station_teacher.station_id');
+                    $join->on('station.id','=','exam_station.station_id');
                 })
 
-            -> where('station_teacher.exam_id' , $exam_id)
+            -> where('exam_station.exam_id' , $exam_id)
             -> select([
                 $this->table . '.id as teacher_id',
                 $this->table . '.name as teacher_name',
