@@ -6,14 +6,13 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.config.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor1.config.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
 <script type="text/javascript" >
 	var ue = UE.getEditor('editor');
 </script>
 @stop
-
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -29,9 +28,10 @@
                     </ul>
                 </div>
             </div>
-        	<form class="container-fluid  "  id="list_form" method="post" action="#">
+            <div class="clearfix form-group"></div>
+        	<form class="container-fluid"  id="list_form" method="post" action="#">
 	             <div class="clearfix form-group">
-	                <label class="col-sm-1 control-label" >内容:</label>
+	                <label class="col-sm-1 control-label" >说明内容:</label>
 	                <div class="col-sm-11">
 	                    <script id="editor" type="text/plain" style="width:100%;height:500px;cursor: text;" name="content"></script>
 	                </div>
