@@ -349,7 +349,6 @@ class InvigilatorController extends CommonController
      *
      */
     public function postEditInvigilator(Request $request){
-        dd($request->all());
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
