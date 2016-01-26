@@ -270,14 +270,15 @@ class InvigilatePadController extends CommonController
             'begin_dt' => 'required',
             'end_dt' => 'required',
 //              'time'=>'required',
-            'scores' => 'required|integer',
-            'score_dt' => 'required',
+//            'scores' => 'required|integer',
+//            'score_dt' => 'required',
             'teacher_id' => 'required|integer',
             'evaluate' => 'required'
         ]);
         //得到用时
         $times = Input::get('end_dt') - Input::get('begin_dt');
         $time = $times / 60;
+
 
         $data = [
             'station_id' => Input::get('station_id'),
@@ -333,6 +334,8 @@ class InvigilatePadController extends CommonController
                 $examScreenId = $result->exam_screening_id;
                 //根据考试附件结果id修改表里的考试结果id
                 //  todo 待最后确定。。。。。。。。
+
+
 
                 //存入考试 评分详情表
 

@@ -93,7 +93,7 @@ class Invite extends CommonModel
                 ];
                 try {
                     $message = Common::CreateWeiXinMessage($msgData);
-                    Common::sendWeiXin('oI7UquLMNUjVyUNaeMP0sRcF4VyU', $message);//单发
+                    Common::sendWeiXin($openIdList['openid'], $message);//单发
                 } catch (\Exception $ex_msg) {
 
                     throw new \Exception($openIdList['teacher_name'] . '没有关联微信号');
