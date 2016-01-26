@@ -86,6 +86,42 @@ function exam_add(){
             }
         }
     });
+
+    $('tbody').on('keyup','.end',function(e){
+        
+        var re = RegExp('/^\d{4}-(?:0\d|1[0-2])-(?:[0-2]\d|3[01])( (?:[01]\d|2[0-3])\:[0-5]\d)?$/');
+        var thisElement = $(this);
+        if(e.keyCode){
+            if(!re.test(thisElement.val())){
+                layer.alert('时间不能为空！');
+                thisElement.focus();
+                return;
+            }else{
+                return;
+            }
+        }
+    });
+
+    $('.btn.btn-primary').click(function(){
+        var flag = null;
+        $('tbody').find('.col-sm-10').each(function(key,elem){
+            flag = true;
+            if($(elem).find('input').val()==''){
+                flag = false;
+            }
+        });
+        if(flag==false){
+            layer.alert('时间不能为空！');
+            return false;
+        }
+        if(flag==null){
+            layer.alert('未设置考试时间！');
+            return false;
+        }
+    });
+
+
+
     /**
      * 新增一条
      * @author  mao
@@ -105,10 +141,10 @@ function exam_add(){
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
             '</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
             '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
@@ -223,6 +259,24 @@ function add_basic(){
         }
     });
 
+    $('.btn.btn-primary').click(function(){
+        var flag = null;
+        $('tbody').find('.col-sm-10').each(function(key,elem){
+            flag = true;
+            if($(elem).find('input').val()==''){
+                flag = false;
+            }
+        });
+        if(flag==false){
+            layer.alert('时间不能为空！');
+            return false;
+        }
+        if(flag==null){
+            layer.alert('未设置考试时间！');
+            return false;
+        }
+    });
+
     /**
      * 新增一条
      * @author  mao
@@ -242,10 +296,10 @@ function add_basic(){
         var html = '<tr>'+
             '<td>'+parseInt(index)+'</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
             '</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
             '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
