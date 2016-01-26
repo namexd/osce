@@ -17,7 +17,8 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'clinicalcase','deletes':'{{route('osce.admin.case.postDelete')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'clinicalcase','deletes':'{{route('osce.admin.case.postDelete')}}',
+'firstpage':'{{route('osce.admin.case.getCaseList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
@@ -44,9 +45,9 @@
                     <td>{{$key+1}}</td>
                     <td><span class="description" title="{{$item->name}}">{{$item->name}}</span></td>
                     <td><span class="description" title="{{$item->description}}">{{$item->description}}</span></td>
-                    <td value="{{$item->id}}">
+                    <td>
                         <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                        <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
                 @endforeach

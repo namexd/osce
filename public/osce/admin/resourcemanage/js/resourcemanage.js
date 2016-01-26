@@ -40,7 +40,9 @@ function test_station(){
  * @date    2016-01-06
  */
 function clinicalcase(){
-    deleteItem(pars.deletes);
+   $(".delete").click(function(){
+       deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+   })
 }
 
 /**
@@ -50,7 +52,9 @@ function clinicalcase(){
  * @date    2016-01-06
  */
 function examroom(){
-	deleteItem(pars.deletes);
+    $(".delete").click(function(){
+        deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+    })
 }
 
 /**

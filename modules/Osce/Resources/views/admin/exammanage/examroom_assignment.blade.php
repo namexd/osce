@@ -149,7 +149,7 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
+                                                <td class="necessary">{{(count($items)==1)?'必考':'二选一'}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
