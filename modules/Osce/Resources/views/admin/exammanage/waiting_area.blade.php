@@ -6,14 +6,13 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.config.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor1.config.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
 <script type="text/javascript" >
 	var ue = UE.getEditor('editor');
 </script>
 @stop
-
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
