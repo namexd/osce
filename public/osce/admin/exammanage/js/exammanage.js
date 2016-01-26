@@ -1969,7 +1969,7 @@ function smart_assignment(){
             ul.append(li);
             liNums++;
         }
-        liwidth=1400/liNums;
+        liwidth=800/liNums;
         return ul;
     }
     //生成列表

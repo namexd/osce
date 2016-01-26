@@ -125,6 +125,10 @@ class Exam extends CommonModel
                 throw new \Exception('该考试已经考完，不能删除！');
             }
 
+            if (!Invite::whereIn('exam_screening_id',$examScreeningIds)->get()->isEmpty()) {
+                throw new \Exception('已经为sp老师发送邀请，不能删除！');
+            }
+
             //删除考试考场学生表
             foreach ($examScreeningObj as $item) {
                 if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->get()->isEmpty()) {
