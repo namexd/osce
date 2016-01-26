@@ -137,16 +137,17 @@
                                             <th>操作</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="{{count($stationData)}}">
+                                        <tbody index="{{count($roomData)}}">
                                         <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
-
-                                        @forelse($stationData as $k => $item)
+{{--                                        {{dd($roomData)}}--}}
+                                        @forelse($roomData as $k => $item)
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
-                                                    <select class="form-control js-example-basic-multiple room-station" multiple="multiple">
-
-                                                            <option value="{{$item[0]->station_id}}" selected="selected">{{$item[0]->station_name}}</option>
+                                                    <select class="form-control js-example-basic-multiple room-station" name="room[{{$k2++}}][]" multiple="multiple">
+                                                        @foreach($item as $value)
+                                                            <option value="{{$value->station_id}}" selected="selected">{{$value->station_name}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="necessary">{{(count($k)==1)?'必考':'二选一'}}</td>

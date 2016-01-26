@@ -37,7 +37,7 @@
 @section('content')
 <div>
   <ul>
-     <li><a href="{{route('osce.wechat.notice.getSystemList',['way'=>1])}}">资讯通知</a><li>
+     <li><a href="{{route('osce.wechat.notice.getSystemList')}}">资讯通知</a><li>
      <li><a href="#">成绩查询</a><li>
      <li><a href="{{route('osce.wechat.invitation.getList')}}">预约邀请</a><li>
      <li><a href="{{route('osce.wechat.getDiscussionLists')}}">讨论区</a><li>

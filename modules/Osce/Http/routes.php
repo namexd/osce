@@ -257,7 +257,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('notice/system-view',['uses'=>'NoticeController@getSystemView','as'=>'osce.wechat.notice.getSystemView']);
 
 		Route::get('notice-list/system-list',['uses'=>'NoticeListController@getSystemList','as'=>'osce.wechat.notice-list.getSystemList']);
-		Route::get('notice-list/view',['uses'=>'NoticeListController@getView','as'=>'osce.wechat.notice-list.getView']);
+		Route::get('notice-list/system-view',['uses'=>'NoticeListController@getSystemView','as'=>'osce.wechat.notice-list.getSystemView']);
 		Route::get('notice-list/system-ajax',['uses'=>'NoticeListController@getSystemAjax','as'=>'osce.wechat.notice-list.getSystemAjax']);
 
 
