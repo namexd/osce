@@ -84,7 +84,7 @@ input.laydate-icon{
                                             <th>操作</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="0">
+                                        <tbody index="0" id="add-exam">
                                         </tbody>
                                     </table>
 

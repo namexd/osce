@@ -261,7 +261,7 @@ function add_basic(){
 
     $('.btn.btn-primary').click(function(){
         var flag = null;
-        $('tbody').find('.col-sm-10').each(function(key,elem){
+        $('tbody').find('.laydate').each(function(key,elem){
             flag = true;
             if($(elem).find('input').val()==''){
                 flag = false;
