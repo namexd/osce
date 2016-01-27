@@ -304,10 +304,16 @@ class IndexController extends CommonController
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
             'purchase_dt'           =>  'sometimes',
+            'nfc'                   =>  'sometimes',
         ]);
 
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select()->first();
+        if($id){
+            return \Response::json(array('code'=>3));
+        }
+        $nfc=$request->get('nfc_code');
+        $id=Watch::where('nfc_code',$nfc)->select()->first();
         if($id){
             return \Response::json(array('code'=>3));
         }
@@ -321,6 +327,7 @@ class IndexController extends CommonController
                 'sp'            =>  $request->get('sp',''),
                 'create_user_id'=> $request->get('create_user_id'),
                 'purchase_dt'   => $request->get('purchase_dt'),
+                'nfc_code'      => $request->get('nfc',''),
             ]);
 
             if($watch->id>0){
@@ -413,9 +420,16 @@ class IndexController extends CommonController
             'factory'               =>  'sometimes',
             'sp'                    =>  'sometimes',
             'purchase_dt'           =>  'sometimes',
+            'nfc'                   =>  'sometimes',
         ]);
 
-
+        $code=$request->get('code');
+        $id=Watch::where('code',$code)->select()->first();
+        $nfc=$request->get('nfc_code');
+        $watch_id=Watch::where('nfc_code',$nfc)->select()->first();
+        if($id->id!=$watch_id->id){
+            return \Response::json(array('code'=>3));
+        }
         $count=Watch::where('code'   ,'=', $request->get('code'))
             ->update([
                 'name'          =>  $request    ->  get('name'),
@@ -425,6 +439,7 @@ class IndexController extends CommonController
                 'description'   =>  $request    ->  get('description'),
                 'status'        =>  $request    ->  get('status'),
                 'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+                'nfc_code'           =>  $request    ->  get('nfc',''),
             ]);
 
         if($count>0){
@@ -545,6 +560,7 @@ class IndexController extends CommonController
                     'status' => $item->status,
                     'name' => $item->name,
                     'code' => $item->code,
+                    'nfc' => $item->nfc_code,
                 ];
 
             }
@@ -557,7 +573,8 @@ class IndexController extends CommonController
                             'id' => $itm['id'],
                             'status' => $itm['status'],
                             'name' => $itm['name'],
-                            'code' => $itm['name'],
+                            'code' => $itm['code'],
+                            'nfc' => $itm['nfc'],
                             'studentId' => '',
                         ];
                     } else {
@@ -566,6 +583,7 @@ class IndexController extends CommonController
                             'status' => $itm['status'],
                             'name' => $itm['name'],
                             'code' => $itm['code'],
+                            'nfc' => $itm['nfc'],
                             'studentId' => $studentId->student_id,
                         ];
                     }
@@ -576,6 +594,7 @@ class IndexController extends CommonController
                         'status' => $itm['status'],
                         'name' => $itm['name'],
                         'code' => $itm['code'],
+                        'nfc' => $itm['nfc'],
                         'studentId' => '',
                     ];
                 }
@@ -590,6 +609,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
+                        'nfc' => $itm['nfc'],
                         'studentName' => $studentName,
                     ];
                 } else {
@@ -598,6 +618,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
+                        'nfc' => $itm['nfc'],
                         'studentName' => '-',
                     ];
                 }
