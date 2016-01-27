@@ -66,6 +66,7 @@ class ExamFlowStation extends CommonModel
                 }
             }
 
+            dd($formData);
             foreach ($formData as $key => $value) {
                 //准备数据，插入station_teacher表
                 $this->stationTeacherAssociation($examId, $value, $user);
