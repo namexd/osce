@@ -73,33 +73,14 @@ class Vcr extends CommonModel implements MachineInterface
         $connection ->beginTransaction();
         try
         {
-            $machineData    =   [];
-
             if($vcr =   $this   ->  create($data))
-            {
-                $machineData=   [
-                    'item_id'    =>  $vcr    ->  id,
-                    'type'      =>  1,
-                ];
-            }
-            else
-            {
-                throw new \Exception('新增摄像机失败');
-            }
-            if(empty($machineData))
-            {
-                throw new \Exception('没有找到摄像机新增数据');
-            }
-            //$machine    =   Machine::create($machineData);
-            $machine    =   true;
-            if($machine)
             {
                 $connection -> commit();
                 return $vcr;
             }
             else
             {
-                throw new   \Exception('新增摄像机资源失败');
+                throw new \Exception('新增摄像机失败');
             }
         }
         catch(\Exception $ex)
@@ -138,6 +119,7 @@ class Vcr extends CommonModel implements MachineInterface
         $connection ->beginTransaction();
         try{
             $vcr = $this    -> find($data['id']);
+
             if($vcr) {
                 foreach($data as $feild=> $value) {
                     if($feild=='id') {
@@ -145,11 +127,12 @@ class Vcr extends CommonModel implements MachineInterface
                     }
                     $vcr    ->  $feild  =   $value;
                 }
-
+                $connection->enableQueryLog();
+                $result = $vcr -> save();
+                $a  =   $connection->getQueryLog();
                 if(!$result = $vcr -> save()) {
                     throw new \Exception('修改失败，请重试！');
                 }
-
             } else {
                 throw new \Exception('没有找到该摄像机');
             }
@@ -185,8 +168,44 @@ class Vcr extends CommonModel implements MachineInterface
         {
             $bulder =   $bulder    ->  where('status', '=', $status);
         }
-        $bulder = $bulder -> select(['id', 'name', 'status']);
+        $bulder = $bulder -> select(['id', 'code', 'name', 'status']);
 
         return  $bulder ->  paginate(config('osce.page_size'));
+    }
+
+
+    /**
+     * 查询没被其他考场关联的摄像机
+     * @api GET /osce/wechat/resources-manager/selectVcr
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id        参数中文名(必须的)
+     * * string        type      参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function selectVcr($id, $type)
+    {
+        if ($type === '0') {
+            $modelVcr = RoomVcr::where('room_id', $id)->first();
+        } else {
+            $modelVcr = AreaVcr::where('area_id', $id)->first();
+        }
+
+        $vcr = Vcr::where('status', '<', 2)
+            ->where('used',0)
+            ->orWhere('id', $modelVcr->vcr_id)
+            ->select(['id', 'name'])->get();
+
+        $result = [$vcr, $modelVcr];
+        return $result;     //关联摄像机
     }
 }

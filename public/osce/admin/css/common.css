@@ -225,7 +225,10 @@ a.btn:hover {text-decoration: none;}
 /**
  * 弹出提示样式
  */
-body .layer-ext-moon .layui-layer-btn .layui-layer-btn0 {background: #1ab394;}
+body .layer-ext-moon .layui-layer-btn .layui-layer-btn0 {
+    background: #1ab394!important;
+    border: 1px solid #1ab394!important;
+}
 body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .fa-2x{font-size: 16px;}
 

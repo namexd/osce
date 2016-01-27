@@ -38,6 +38,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('case/case-list', ['uses'=>'CaseController@getCaseList','as'=>'osce.admin.case.getCaseList']);  //病例的着陆页
 		Route::get('case/edit-case', ['uses'=>'CaseController@getEditCase','as'=>'osce.admin.case.getEditCase']);  //病例的修改页
 		Route::get('case/create-case', ['uses'=>'CaseController@getCreateCase','as'=>'osce.admin.case.getCreateCase']);  //病例的添加页
+		Route::post('case/name-unique', 	['uses'=>'CaseController@postNameUnique','as'=>'osce.admin.case.postNameUnique']);	//判断名称是否存在
 	});
 
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
@@ -64,6 +65,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('config/area-store',  ['uses'=>'ConfigController@getAreaStore','as'=>'osce.admin.config.getAreaStore']);
 		Route::post('config/area-store', ['uses'=>'ConfigController@postAreaStore','as'=>'osce.admin.config.postAreaStore']);
 		Route::post('config/del-area',	 ['uses'=>'ConfigController@postDelArea','as'=>'osce.admin.config.postDelArea']);
+		Route::post('config/name-unique', 	['uses'=>'ConfigController@postNameUnique','as'=>'osce.admin.config.postNameUnique']);	//判断名称是否存在
+
 
 		Route::post('invigilator/select-teacher',	['uses'=>'InvigilatorController@postSelectTeacher', 'as'=>'osce.admin.invigilator.postSelectTeacher']);
 
@@ -86,6 +89,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('machine/add-watch', ['uses'=>'MachineController@getAddWatch','as'=>'osce.admin.machine.getAddWatch']);
 		Route::get('machine/edit-watch', 	['uses'=>'MachineController@getEditWatch','as'=>'osce.admin.machine.getEditWatch']);
 		Route::post('machine/machine-delete', 	['uses'=>'MachineController@postMachineDelete','as'=>'osce.admin.machine.postMachineDelete']);
+		Route::post('machine/name-unique',['uses'=>'MachineController@postNameUnique','as'=>'osce.admin.machine.postNameUnique']);	//判断名称是否存在
 
 
 		//考核点
@@ -97,6 +101,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('topic/import-excel', 	['uses'=>'TopicController@postImportExcel','as'=>'osce.admin.topic.postImportExcel']);
 		Route::get('topic/toppic-tpl', 	['uses'=>'TopicController@getToppicTpl','as'=>'osce.admin.topic.getToppicTpl']);
 		Route::get('topic/del-topic', 	['uses'=>'TopicController@getDelTopic','as'=>'osce.admin.topic.getDelTopic']);
+		Route::post('topic/name-unique',['uses'=>'TopicController@postNameUnique','as'=>'osce.admin.topic.postNameUnique']);	//判断名称是否存在
 
 		//病例
 		Route::post('case/delete', 	['uses'=>'CaseController@postDelete','as'=>'osce.admin.case.postDelete']);
@@ -110,6 +115,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('station/add-station', ['uses'=>'StationController@postAddStation','as'=>'osce.admin.Station.postAddStation']);
 		Route::post('station/delete-station', ['uses'=>'StationController@postDelete','as'=>'osce.admin.Station.postDelete']);
 		Route::post('station/edit-station', 	['uses'=>'StationController@postEditStation','as'=>'osce.admin.Station.postEditStation']);
+		Route::post('station/name-unique', 	['uses'=>'StationController@postNameUnique','as'=>'osce.admin.station.postNameUnique']);
 
 
 		//场所分类
@@ -120,6 +126,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//考场
 		Route::post('room/delete',['uses'=>'RoomController@postDelete','as'=>'osce.admin.room.postDelete']);
 		Route::get('room/room-list',['uses'=>'RoomController@getRoomList','as'=>'osce.admin.room.getRoomList']);
+		Route::post('room/name-unique',['uses'=>'RoomController@postNameUnique','as'=>'osce.admin.room.postNameUnique']);	//判断名称是否存在
 
 		//用户管理
 		Route::get('user/staff-list', 	['uses'=>'UserController@getStaffList','as'=>'osce.admin.user.getStaffList']);
@@ -133,8 +140,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
 		Route::get('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/choose-exam-arrange', 	['uses'=>'ExamController@getChooseExamArrange','as'=>'osce.admin.exam.getChooseExamArrange']);  //判定应该载入哪个安排页面
-		Route::post('exam/station-assignment', 	['uses'=>'ExamController@postStationAssignment','as'=>'osce.admin.exam.postStationAssignment']);
-
+		Route::post('exam/station-assignment', 	['uses'=>'ExamController@postStationAssignment','as'=>'osce.admin.exam.postStationAssignment']);  //获取考站为中心的安排
+		Route::get('exam/station-assignment', 	['uses'=>'ExamController@getStationAssignment','as'=>'osce.admin.exam.getStationAssignment']);  //获取考站为中心的安排
 		Route::get('exam/download-student-improt-tpl', 	['uses'=>'ExamController@getdownloadStudentImprotTpl','as'=>'osce.admin.exam.getdownloadStudentImprotTpl']);
 
 		Route::get('exam/ajax-station-row', ['uses'=>'ExamController@getAjaxStationRow','as'=>'osce.admin.exam.getAjaxStationRow']);  //以json返回考站信息
@@ -167,6 +174,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/station-list', ['uses'=>'ExamController@getStationList','as'=>'osce.admin.exam.getStationList']);
 		Route::get('exam/exam-list-data', ['uses'=>'ExamController@getExamListData','as'=>'osce.admin.exam.getExamListData']);
 		Route::get('exam/exam-teacher-list', ['uses'=>'ExamController@getTeacherListData','as'=>'osce.admin.exam.getTeacherListData']);
+		Route::get('exam/exam-waiting-area', ['uses'=>'ExamController@getExamRemind','as'=>'osce.admin.exam.getExamRemind']);//待考区提醒
 
 
 		//智能排考
@@ -247,6 +255,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//通知
 		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
 		Route::get('notice/view',['uses'=>'NoticeController@getView','as'=>'osce.wechat.notice.getView']);
+		Route::get('notice/system-view',['uses'=>'NoticeController@getSystemView','as'=>'osce.wechat.notice.getSystemView']);
+
+		Route::get('notice-list/system-list',['uses'=>'NoticeListController@getSystemList','as'=>'osce.wechat.notice-list.getSystemList']);
+		Route::get('notice-list/system-view',['uses'=>'NoticeListController@getSystemView','as'=>'osce.wechat.notice-list.getSystemView']);
+		Route::get('notice-list/system-ajax',['uses'=>'NoticeListController@getSystemAjax','as'=>'osce.wechat.notice-list.getSystemAjax']);
+
+
 		//sp邀请
 		Route::get('invitation/invitation-list',['uses'=>'InvitationController@getInvitationList','as'=>'osce.wechat.invitation.getInvitationList']);
 		Route::get('invitation/invitation-respond',['uses'=>'InvitationController@getInvitationRespond','as'=>'osce.wechat.invitation.getInvitationRespond']);
@@ -309,7 +324,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.api.invigilatepad.getAuthentication']);
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.api.invigilatepad.getExamGrade']);
 		Route::post('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.api.invigilatepad.postSaveExamResult']);
-		Route::get('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@getSaveExamEvaluate','as'=>'osce.api.invigilatepad.getSaveExamEvaluate']);
+		Route::post('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@postSaveExamEvaluate','as'=>'osce.api.invigilatepad.postSaveExamEvaluate']);
 		Route::get('invigilatepad/wait_exam', 	['uses'=>'InvigilatePadController@getWaitExam','as'=>'osce.api.invigilatepad.getWaitExam']);
 		Route::get('invigilatepad/wait_exam_list', 	['uses'=>'InvigilatePadController@getWaitExamList','as'=>'osce.api.invigilatepad.getWaitExamList']);
 		Route::get('invigilatepad/start-exam', 	['uses'=>'InvigilatePadController@getStartExam','as'=>'osce.api.invigilatepad.getStartExam']);
@@ -362,6 +377,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 	});
 
 
+			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']); //大屏幕候考接口
 
 });
 

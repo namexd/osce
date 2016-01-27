@@ -126,14 +126,12 @@ class ExamRoom extends CommonModel
     public function getExamStation($exam_id)
     {
         try{
-            return  Teacher::Join('station_teacher',function($join){
-                $join    ->  on('teacher.id','=','station_teacher.user_id');
-            })  ->Join('station',function($join) {
-                $join->on('station.id', '=', 'station_teacher.station_id');
-            })  ->Join('room_station',function($join) use($exam_id){
-                $join->on('room_station.station_id','=','station_teacher.station_id');
-            })
-                ->where('station_teacher.exam_id' , '=' , $exam_id)
+            return  $this->leftJoin('room_station',$this->table . '.room_id','=','room_station.room_id')
+                ->leftJoin('station','station.id','=','room_station.station_id')
+                ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
+                ->leftJoin('teacher','teacher.id','=','station_teacher.user_id')
+                ->where('exam_room.exam_id' , '=' , $exam_id)
+                ->orWhere('station_teacher.exam_id','=',$exam_id)
                 ->select([
                     'teacher.id as id',
                     'teacher.name as name',
@@ -143,7 +141,8 @@ class ExamRoom extends CommonModel
                     'teacher.status as status',
                     'station.name as station_name',
                     'station.id as station_id',
-                    'room_station.room_id as room_id'
+                    'station.type as station_type',
+                    'room_station.room_id as room_id',
                 ])
                 ->distinct()->get();
         } catch(\Exception $ex){

@@ -101,48 +101,56 @@ class SubjectItem extends CommonModel
      *
      * @access public
      *
-     * * @param array $content
+     * *
+     * @param array $content
+     * @param array $content
      * * string        title        考核点名称
      * * string        *-*          考核项名称
-     * * @param array $score
+     * * * @param array $score
      * <b>get 请求字段：</b>
      * * string        total        考核项名称
      * * string        *-*          考核项分数
      *
+     * @param $answer
      * @return array
-     *
-     * @version 1.0
+
+    @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2016-01-03 17:57
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     static public function builderItemData($content,$score,$answer){
         $data   =   [];
-        foreach($content as $prointIndex => $item){
-            $child  =   [];
-            $itemScore  =   $score[$prointIndex];
-            $itemAnswer =   array_key_exists($prointIndex,$answer)? $answer[$prointIndex]:[];
-            $itemScore  =   array_key_exists($prointIndex,$score)?   $score[$prointIndex]:[];
-            foreach($item as $contentIndex  =>  $content){
-                if($contentIndex=='title'){
-                    continue;
+
+        foreach($content as $prointIndex => $item)
+        {
+            if(empty($item['title'])){
+                throw new \Exception('考核点内容不能为空！');
+            }else{
+                $child  =   [];
+                $itemScore  =   $score[$prointIndex];
+                $itemAnswer =   array_key_exists($prointIndex,$answer)? $answer[$prointIndex]:[];
+                $itemScore  =   array_key_exists($prointIndex,$score)?   $score[$prointIndex]:[];
+                foreach($item as $contentIndex  =>  $content){
+                    if($contentIndex=='title'){
+                        continue;
+                    }
+                    $contentData    =   [
+                        'content'   =>  $content,
+                        'score'     =>  array_key_exists($contentIndex,$itemScore)? $itemScore[$contentIndex]:0,
+                        'sort'      =>  $contentIndex,
+                        'answer'    =>  array_key_exists($contentIndex,$itemAnswer)? $itemAnswer[$contentIndex]:''
+                    ];
+                    $child[]=$contentData;
                 }
-                $contentData    =   [
-                    'content'   =>  $content,
-                    'score'     =>  array_key_exists($contentIndex,$itemScore)? $itemScore[$contentIndex]:0,
-                    'sort'      =>  $contentIndex,
-                    'answer'    =>  array_key_exists($contentIndex,$itemAnswer)? $itemAnswer[$contentIndex]:''
+                $item   =   [
+                    'content'   =>  $item['title'],
+                    'score'     =>  $itemScore['total'],
+                    'sort'      =>  $prointIndex,
+                    'child'     =>  $child
                 ];
-                $child[]=$contentData;
+                $data[]=$item;
             }
-            $item   =   [
-                'content'   =>  $item['title'],
-                'score'     =>  $itemScore['total'],
-                'sort'      =>  $prointIndex,
-                'child'     =>  $child
-            ];
-            $data[]=$item;
         }
 
         return $data;

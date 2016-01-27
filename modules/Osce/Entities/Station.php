@@ -62,17 +62,18 @@ class Station extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function showList(array $stationIdArray = [], $ajax = false)
+    public function showList(array $stationIdArray = [],  $ajax = false, $name ='')
     {
         try {
-
             $builder = $this;
 
             //如果传入了stationArray，就排除里面的内容
             if ($stationIdArray != []) {
                 $builder = $builder->whereNotIn($this->table.'.id',$stationIdArray);
             }
-
+            if(!empty($name)){
+                $builder = $builder->where($this->table.'.name', 'like', '%'.$name.'%');
+            }
 
             //开始查询
             $builder = $builder->select([
@@ -251,7 +252,7 @@ class Station extends CommonModel
             //修改station表
             $result = $this->where($this->table . '.id', '=', $id)->update($stationData);
             //获得修改后的id
-            $station_id = $result;
+//            $station_id = $result;
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改考站信息失败');
@@ -278,7 +279,7 @@ class Station extends CommonModel
             $stationCaseData = [
                 'case_id'=>$caseId,
             ];
-            $result = StationCase::where('station_id','=',$station_id)->update($stationCaseData);
+            $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改病例关联失败');
@@ -288,7 +289,7 @@ class Station extends CommonModel
             $stationRoomData = [
                 'room_id' => $roomId,
             ];
-            $result = RoomStation::where('station_id','=',$station_id)->update($stationRoomData);
+            $result = RoomStation::where('station_id','=',$id)->update($stationRoomData);
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改房间关联失败');
@@ -312,19 +313,70 @@ class Station extends CommonModel
     {
         try {
             //判断在关联表中是否有数据
-            $result1 = StationCase::where('station_case.station_id', '=', $id)->select('id')->first();
-            $result2 = StationVcr::where('station_vcr.station_id', '=', $id)->select('id')->first();
-            $result3 = RoomStation::where('station_id',$id)->select('id')->first();
-            if ($result1 || $result2 || $result3) {
+            $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
+            if(!empty($examFlowStation)){
                 throw new \Exception('不能删除此考站，因为与其他条目相关联');
             }
-            return $this->where($this->table.'.id', '=', $id)->delete();
+            $stationCase = StationCase::where('station_id', $id)->select('id')->first();
+            if(!empty($stationCase)){
+                StationCase::where('station_id', $id)->delete();
+            }
+            $stationVcr = StationVcr::where('station_id', $id)->select('id')->first();
+            if(!empty($stationVcr)){
+                StationVcr::where('station_id', $id)->delete();
+            }
+            $stationTeacher = StationTeacher::where('station_id', $id)->first();
+            if(!empty($stationTeacher)){
+                StationTeacher::where('station_id', $id)->delete();
+            }
+            $roomStation = RoomStation::where('station_id', $id)->select('id')->first();
+            if(!empty($roomStation)){
+                RoomStation::where('station_id', $id)->delete();
+            }
+            return $this->where($this->table.'.id', $id)->delete();
+
         } catch (\Exception $ex) {
             throw $ex;
         }
     }
 
+    /**
+     *
+     * @param $examId
+     * @author Jiangzhiheng
+     */
+    public function stationEcho($examId)
+    {
+        return $this->leftJoin('exam_flow_station','exam_flow_station.station_id','=',$this->table.'.id')
+            ->select([
+                'exam_flow_station.serialnumber as serialnumber',
+                'exam_flow_station.station_id as station_id',
+                $this->table . '.name as station_name',
+                $this->table . '.type as station_type'
+            ])
+            ->where('exam_flow_station.exam_id','=',$examId)
+            ->get();
+    }
 
+    public function stationTeacherList($exam_id)
+    {
+        return $this
+            -> leftJoin('exam_station','exam_station.station_id','=',$this->table.'.id')
+            -> leftJoin('station_teacher', 'station_teacher.station_id','=','exam_station.station_id')
+            -> leftJoin('teacher','teacher.id','=','station_teacher.user_id')
+            -> where('exam_station.exam_id' , $exam_id)
+            -> select([
+                $this->table . '.id as station_id',
+                $this->table . '.name as station_name',
+                $this->table . '.type as station_type',
+                $this->table . '.code as station_code',
+                'teacher.id as teacher_id',
+                'teacher.name as teacher_name',
+                'teacher.type as teacher_type',
+                'teacher.status as teacher_status',
+            ])
+            -> get();
+    }
 
 
 

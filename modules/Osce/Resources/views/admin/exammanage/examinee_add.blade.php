@@ -1,7 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
-    <link rel="stylesheet" href="{{asset('msc/admin/plugins/css/demo/webuploader-demo.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/plugins/webuploader/webuploader.css')}}">
+    <link rel="stylesheet" href="{{asset('osce/admin/plugins/css/demo/webuploader-demo.css')}}">
     <style type="text/css">
         .has-error .form-control{border-color: #ed5565!important;}
         .code_add,.code_del{position:absolute;right:15px;top:0;}
@@ -10,8 +10,8 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
-    <script src="{{asset('msc/wechat/common/js/ajaxupload.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
     <script>
         $(function() {
@@ -38,7 +38,7 @@
                             }
                         }
                     },
-                    examinee_id: {
+                    code: {
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '学号不能为空'
@@ -60,7 +60,7 @@
                             }
                         }
                     },
-                    tell: {
+                    mobile: {
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '手机号码不能为空'
@@ -84,6 +84,13 @@
                             regexp: {
                                 regexp: /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/,
                                 message: '请输入正确的邮箱'
+                            }
+                        }
+                    },
+                    images: {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '请上传图片'
                             }
                         }
                     }
@@ -112,6 +119,8 @@
                     }
                 });
             }) ;
+            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
+
         });
         //建立一個可存取到該file的url
         var url='';
@@ -140,7 +149,7 @@
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postAddExaminee')}}">
                         <input type="hidden" name="exam_id" value="{{$id}}" />
                         <input type="hidden" name="resources_type" id="resources_type" value="TOOLS" />
-                        <div class="col-md-3 col-sm-3">
+                        <div class="col-md-3 col-sm-3 image-box">
                             <ul class="img_box">
 	                    		<span class="images_upload">
 	                        		<input type="file" name="images" id="file0"/>
@@ -199,7 +208,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">备注:</label>
                                 <div class="col-sm-10">
-                                    <textarea name="note" id="" cols="" rows="" class="form-control"></textarea>
+                                    <textarea name="description" id="description" cols="" rows="" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

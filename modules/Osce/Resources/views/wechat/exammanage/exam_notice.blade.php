@@ -32,8 +32,58 @@
 @section('only_head_js')
     <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
+        $(function(){
+            $(window).scroll(function(e){
+                if(away_top >= (page_height - window_height)&&now_page<totalpages){
+                    now_page++;
+                    //qj.page=now_page;//设置页码
 
+                    getItem(now_page,url)
+                    /*加载显示*/
+                }
+            });
+            //初始化
+            var now_page = 1;
+            var url = "{{route('osce.wechat.notice.getSystemView')}}";
+            //内容初始化
+            $('.history-list').empty();
+            getItem(now_page,url);
+
+            function getItem(current,url){
+
+                $.ajax({
+                    type:'get',
+                    url:url,
+                    aysnc:true,
+                    data:{id:current,page:current},
+                    success:function(res){
+                        totalpages = Math.ceil(res.data.total/res.data.pagesize);
+
+                        var html = '';
+                        var index = (current - 1)*10;
+                        data = res.data.rows;
+
+                        for(var i in data){
+                            //准备dom
+                            //计数
+                            var key = (index+1+parseInt(i))
+
+                            html +='<li>'+
+                                        '<p class="title">'+data[i].name+'</p>'+
+                                        '<p class="time"><span class="year">'+data[i].created_at+'</span>'+
+                                            '<a style="color:#1ab394;" class="right" href="{{route('osce.wechat.notice.getView')}}?id='+data[i].id+'">查看详情&nbsp;&gt;</a>'+
+                                        '</p>'+
+                                    '</li>';
+                        }
+                        //插入
+                        $('#discussion_ul').append(html);
+                    }
+                });
+
+            }
+        })
     </script>
+
 
 @stop
 
@@ -49,15 +99,9 @@
         </a>
     </div>
     <div class="history-box">
-        <ul class="history-list">
-            @foreach($list as $item)
-            <li>
-                <a href="{{route('osce.wechat.notice.getView',['id'=>$item->id])}}">
-                <p class="title">{{ $item->name  }}</p>
-                <p class="time"><span class="year">{{  $item->created_at }}</span></p>
-                </a>
-            </li>
-            @endforeach
+        <ul id="discussion_ul" class="history-list">
+
         </ul>
     </div>
+
 @stop

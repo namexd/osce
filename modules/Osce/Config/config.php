@@ -10,6 +10,8 @@ return [
     'student_num'    =>20,
 	'begin_dt_buffer' => 10,
 
+	'topticOptionMaxNumer'	=>	10,
+
 	'importForCnToEn'=>[
 		// 中英文 字段名对照
 		'standard'=>[
@@ -32,7 +34,7 @@ return [
 			'联系电话'	=>	'mobile',
 			'电子邮箱'	=>	'email',
 			'头像'		=>	'avator',
-			'备注'		=>	'level'
+			'备注'		=>	'description'
 		],
 	],
 	'machine_category'=>[
@@ -50,11 +52,19 @@ return [
 		]
 	],
 	'manager'=>[
-		1
+		5
 	],
 	'prepare'	=>	10,
 	'spRoleId'		=>	4,
 	'invigilatorRoleId'	=>	1,
 	'studentRoleId'		=>	2,
 	'adminRoleId'	=>	3,
+
+	//场所类型的管理
+	'room_cate' => [
+		0	=>	'考场',
+		1	=>	'中控室',
+		2	=>	'走廊',
+		3	=>	'侯考区'
+	]
 ];
