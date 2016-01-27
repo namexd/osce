@@ -215,21 +215,17 @@
                         		上传附件
 								<input type="file" name="file" id="file0"/>
 							</span>
-							@if($data['attachments'])
-                                <div class="upload_list">
+							<div class="upload_list">
+								@if($data['attachments'])
                                     @foreach($data['attachments'] as $data)
                                         <p>
                                             <input type="hidden" name="file[]" id="" value="{{ $data }}" />
                                                 <i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($data,27)  }}&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
                                         </p>
                                     @endforeach
-                                </div>
-                            @else
-                                <p>
-                                    <input type="hidden" name="file[]" id="" value="" />
-                                    <i class="fa fa-2x fa-delicious"></i>&nbsp;&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
-                                </p>
-                            @endif
+	                            @else
+	                            @endif
+                            </div>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

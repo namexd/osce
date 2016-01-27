@@ -1533,7 +1533,7 @@ function examroom_assignment(){
         $('#examroom tbody').find('select').each(function(key,elem){
             status = false;
             if($(elem).val()==null)status_select = true;
-        });alert(status);
+        });
         if(status||status_select){
             layer.alert('考场信息不能为空！');
             return false;
