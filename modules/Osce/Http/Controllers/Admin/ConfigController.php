@@ -41,7 +41,8 @@ class ConfigController extends CommonController
         if (count($tempDB) != 0) {
             $tempDB[0]['value'] = json_decode($tempDB[0]->value);
         } else {
-            $tempDB[0]['value'] = ['0' => '1'];
+            $tempDB = [];
+            $tempDB[0]['value'] = [];
         }
         return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
     }
@@ -234,5 +235,37 @@ class ConfigController extends CommonController
             return $this->fail($ex);
         }
     }
+
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'title'     => 'required',
+            'name'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $title  = $request  -> get('title');
+        $name   = $request  -> get('name');
+        
+        //实例化模型
+        $model =  new A;
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('name', $name)->first();
+        }else{
+            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
+
 
 }

@@ -12,6 +12,44 @@
 @stop
 
 @section('only_js')
+    <script>
+        $(function(){
+            $('.fa-trash-o').click(function(){
+                //console.log($('.active').attr('href'))
+                var thisElement = $(this);
+                layer.confirm('确认删除？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        url:"{{route('osce.admin.room.postDelete')}}",
+                        data:{id:thisElement.parent().parent().parent().attr('value'),type:($('.active').find('a').attr('href')).split('=')[1]},
+                        success:function(res){
+                            if(res.code==1){
+//                                location.reload();
+                                var UrlInfo     =   (location.href).split('?');
+                                var paramInfo   =   UrlInfo[1].split('&');
+                                var pageIndex   =   [];
+                                var paramData   =   new Array;
+                                for (var pageIndex in paramInfo)
+                                {
+                                    var keyArray    =   paramInfo[pageIndex].split('=');
+                                    if(keyArray[0]!='page')
+                                    {
+                                        paramData.push(paramInfo[pageIndex]);
+                                    }
+                                }
+                                location.href = UrlInfo[0]+'?'+paramData.join('&');
+                            }else{
+                                layer.alert(res.message)
+                            }
+                        }
+                    })
+                });
+            });
+        })
+    </script>
 
 @stop
 
@@ -23,7 +61,7 @@
                 <h5 class="title-label">场所管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.room.getAddRoom',['type'=>$type])}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form">
@@ -31,9 +69,9 @@
                 <div class="panel-heading">
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
-                            @foreach($area as $item)
-                                <li class="{{($item->cate == 4)?'active':''}}">
-                                    <a href="{{route('osce.admin.room.getRoomList',['type'=>$item->cate])}}">{{$item->name}}</a>
+                            @foreach($area as $key => $item)
+                                <li class="{{($key === 3)?'active':''}}">
+                                    <a href="{{route('osce.admin.room.getRoomList',['type'=>$key])}}">{{$item}}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -67,8 +105,11 @@
                     </tbody>
                 </table>
 
+                <div class="pull-left">
+                    共{{$data->total()}}条
+                </div>
                 <div class="btn-group pull-right">
-
+                    {!! $data->appends($_GET)->render() !!}
                 </div>
             </div>
         </form>

@@ -111,7 +111,7 @@ $(function(){
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        回复
-        <a class="right header_btn" href="javascript:void(0)">
+        <a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>

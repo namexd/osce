@@ -114,17 +114,11 @@ class Subject extends CommonModel
         $subject    =   $this->find($id);
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
-
         try{
             foreach($data as $field=>$value)
             {
-                if($field=='description')
-                {
-                    continue;
-                }
                 $subject    ->  $field  =$value;
             }
-
             if($subject    ->  save())
             {
                 $this   ->  editPoint($subject,$points);
@@ -134,6 +128,7 @@ class Subject extends CommonModel
                 throw new \Exception('更新考核点信息失败');
             }
             $connection ->commit();
+            return $subject;
         }
         catch(\Exception $ex)
         {
@@ -202,6 +197,8 @@ class Subject extends CommonModel
             foreach($points as $point)
             {
                 $SubjectItemModel   -> addItem($subject,$point);
+
+
             }
         }
         catch(\Exception $ex)
@@ -230,7 +227,14 @@ class Subject extends CommonModel
         catch(\Exception $ex)
         {
             $connection ->rollBack();
-            throw $ex;
+            if($ex->getCode()==23000)
+            {
+                throw new \Exception('该科目已经被使用了,不能删除');
+            }
+            else
+            {
+                throw $ex;
+            }
         }
     }
 }

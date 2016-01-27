@@ -67,7 +67,7 @@ class StationVcr extends CommonModel
 
     }
 
-    //获取vcr信息
+    //锟斤拷取vcr锟斤拷息
     public  function vcrlist($stationId){
            return Vcr::leftJoin('station_vcr',function($join){
                  $join->    on('vcr.id','=','station_vcr.vcr_id');
@@ -85,5 +85,39 @@ class StationVcr extends CommonModel
     }
 
 
+//    public function getTiming($vcrId,$beginDt,$examId,$room,$endDt){
+//        $beginDt=strtotime($beginDt);
+//        $endDt=strtotime($endDt);
+//        $builder=$this->leftJoin('vcr',function($join){
+//            $join->on('station_vcr.id','=','vcr.id');
+//        })->leftJoin('room_station',function($join){
+//            $join->on('station_vcr.station_id','=','room_station.station_id');
+//        });
+//        $builder=$builder->where('station_vcr.vcr_id',$vcrId)->where('room_station.room_id',$room)->where('station_vcr.exam_id',$examId);;
+//        $builder=$builder->whereRaw(
+//            'unix_timestamp('.'station_video.begin_dt'.') >= ?',
+//            [
+//                $beginDt
+//            ]
+//        );
+//        $builder=$builder->whereRaw(
+//            'unix_timestamp('.'station_video.end_dt'.') >= ?',
+//            [
+//                $endDt
+//            ]
+//        );
+//        $builder=$builder->select([
+//            'vcr.name as name',
+//            'vcr.code as code',
+//            'vcr.ip as ip',
+//            'vcr.username as username',
+//            'vcr.port as port',
+//            'vcr.channel as channel',
+//            'vcr.status as status',
+//        ]);
+//        $data=$builder->get();
+//
+//        return $data;
+//    }
 
 }

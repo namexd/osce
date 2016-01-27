@@ -186,7 +186,7 @@
                         html += '<li>'+
                                     '<div class="content-header">'+
                                         '<div class="content-l">'+
-                                            '<span>'+key+'F</span>.'+
+                                            '<span>'+key+'楼</span>.'+
                                             '<span class="student">'+data[i].name.name+'</span>.'+
                                             '<span class="time">'+data[i].time+'</span>'+
                                         '</div>'+
@@ -244,7 +244,7 @@
         <li>
             <div class="content-header">
                 <div class="content-l">
-                    <span>1F</span>.
+                    <span>1楼</span>.
                     <span class="student">{{  $data['name']->name }}</span>.
                     <span class="time">{{  $data['time'] }}</span>
                 </div>

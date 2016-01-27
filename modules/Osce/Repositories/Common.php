@@ -121,12 +121,22 @@ class Common
     }
 
     public function updateAdminUser($id,$data){
-        $user   =   User::find($id);
-        foreach($data as $feild =>  $value)
-        {
-            $user   ->  $feild  =   $value;
+        try{
+            //查询手机号是否已经存在
+            $result = User::where('mobile',$data['mobile'])->where('id', '<>', $id)->first();
+            if($result){
+                throw new \Exception('手机号已经存在');
+            }
+            $user   =   User::find($id);
+            foreach($data as $feild =>  $value)
+            {
+                $user   ->  $feild  =   $value;
+            }
+            return  $user->save();
+
+        } catch(\Exception $ex){
+            throw $ex;
         }
-        return  $user->save();
     }
     static public function sendRegisterEms($mobile,$password){
         $sender=\App::make('messages.sms');

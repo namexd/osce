@@ -27,16 +27,15 @@ class Notice extends CommonModel
     public function exam(){
         return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
     }
-    public function addNotice(array $data,array $to){
+    public function addNotice(array $data,array $to,$accept){
         $connection     =   DB::connection($this->connection);
         $connection     ->  beginTransaction();
         try{
             if($notice  =   $this   -> create($data))
             {
-                //关联消息接收用户和消息
-                //$this   ->  makeNoticeUserRelative($notice,$to);
                 //通知用户
-                $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
+                $this   ->  sendMsg($notice,$to,$accept);
+
                 $connection ->commit();
                 return $notice;
             }
@@ -60,7 +59,9 @@ class Notice extends CommonModel
                 $notice ->  content =   $content;
 
                 $notice ->  attachments  =   $attach;
-                $notice ->  accept  =   implode(',',$groups);
+
+
+
                 if(!$notice  ->save())
                 {
                     throw new \Exception('修改通知失败');
@@ -71,7 +72,10 @@ class Notice extends CommonModel
 
                 $to     =   $this   ->  getGroupsOpendIds($groups,$notice->exam_id);
                 //通知用户
-                $this   ->  sendMsg($notice,array_pluck($to,'opendid'));
+                $accept=  $notice ->  accept  =   implode(',',$groups);
+
+                      $this   ->  sendMsg($notice,$to,$accept);
+
                 return $notice;
             }
             else
@@ -103,45 +107,53 @@ class Notice extends CommonModel
             throw new \Exception('保存收件人失败');
         }
     }
-    public function sendMsg($notice,$to){
+    public function sendMsg($notice,$to,$accept){
         try
         {
-            $url    =   route('osce.admin.notice.getMsg',['id'=>$notice->id]);
+
+            $url    = $this->makeUrl($notice);
             $sendType   =   Config::where('name','=','type')    ->  first();
-
-            $value      =   json_decode($sendType->value);
-
-            if(is_null($value))
+            $values      =   json_decode($sendType->value);
+            if(empty($values))
             {
-                $value  =   1;
+                throw new \Exception('请到系统设置中设置发送消息的方式');
             }
-            if(is_array($value))
+            if(is_null($values))
             {
-                $value  =   1;
+                $values  =   [1];
             }
-
-            try
+            if(is_array($values))
             {
-                switch($value)
+                foreach($values as $value)
                 {
-                    case 1:
-                        $this->sendWechat($notice,$to,$url);
-                        break;
-                    case 2:
-                        $this->sendEmail($notice,$to,$url);
-                        break;
-                    case 3:
-                        $this->sendSms($notice,$to,$url);
-                        break;
-                    default:
-                        $this->sendWechat($notice,$to,$url);
+                    try
+                    {
+                        switch($value)
+                        {
+                            case 1:
+                                $notice->accept =   $accept;
+                                $notice->save();
+                                $this->sendWechat($notice,array_pluck($to,'openid'),$url);
+                                break;
+                            case 2:
+                                $this->sendEmail($notice,array_pluck($to,'email'),$url);
+                                break;
+                            case 3:
+                                $this->sendSms($notice,array_pluck($to,'mobile'),$url);
+                                break;
+                            case 4:
+                                $this->sendPm($notice,array_pluck($to,'id'),$url);
+                                break;
+                            default:
+                                $this->sendWechat($notice,$to,$url);
+                        }
+                    }
+                    catch(\Exception $ex)
+                    {
+                        \Log::alert('通知发送失败');
+                    }
                 }
             }
-            catch(\Exception $ex)
-            {
-                \Log::alert('通知发送失败');
-            }
-
         }
         catch(\Exception $ex)
         {
@@ -161,6 +173,20 @@ class Notice extends CommonModel
         ];
         $message    =   Common::CreateWeiXinMessage($msgData);
         Common::sendWeixinToMany($message,$to);
+    }
+
+    public function sendPm($notice,$to,$url){
+        $sender =   \App::make('messages.pm');
+        foreach($to as $accept)
+        {
+            if(empty($accept))
+            {
+                continue;
+            }
+
+
+            $sender ->  send($accept,$url,$notice->name);
+        }
     }
     /**
      * 发布通知
@@ -182,26 +208,28 @@ class Notice extends CommonModel
     public function sendNotice($title,$content,$exam_id,array $groups,$attach){
         $user   =   Auth::user();
         $data   =   [
-            'name'      =>  $title,
-            'content'   =>  $content,
-            'exam_id'   =>  $exam_id,
-            'accept'    =>  implode(',',$groups),
-            'status'    =>  1,
-            'create_user_id'    =>  $user->id,
+            'name'           =>  $title,
+            'content'        =>  $content,
+            'exam_id'        =>  $exam_id,
+            'status'         =>  1,
+            'create_user_id' =>  $user->id,
             'attachments'    =>  $attach,
         ];
-        $groups=    [
-            1
-        ];
         try{
+            $accept = implode(',',$groups);
             $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
-            $notice =   $this   ->  addNotice($data,$to);
+            $notice =   $this   ->  addNotice($data,$to,$accept);
             return $notice;
-        }
-        catch (\Exception $ex)
-        {
+
+        } catch (\Exception $ex){
             throw $ex;
         }
+    }
+
+    public function makeUrl($notice){
+
+     return   $url    =   route('osce.wechat.notice.getView',['id'=>$notice->id]);
+
     }
 
 
@@ -225,22 +253,27 @@ class Notice extends CommonModel
      *
      */
     public function getGroupsOpendIds($groups,$exam_id){
+
         $data   =   [];
-        if(in_array(1,$groups))
-        {
-            //$data   =   $this   ->  getStudentsOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getStudentsOpendIds($exam_id,$data));
+        if(in_array(1,$groups)){
+            $student    =   $this   ->  getStudentsOpendIds($exam_id);
         }
-        if(in_array(2,$groups))
-        {
-            //$data   =   $this   ->  getExamTeachersOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getExamTeachersOpendIds($exam_id,$data));
+        if(in_array(2,$groups)){
+            $teachers   =   $this   ->  getExamTeachersOpendIds($exam_id);
         }
-        if(in_array(3,$groups))
-        {
-            //$data   =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
-            $data   =   array_merge($data,$this   ->  getExamSpTeachersOpendIds($exam_id,$data));
+        if(in_array(3,$groups)){
+            $spTeahcers =   $this   ->  getExamSpTeachersOpendIds($exam_id,$data);
         }
+        if(!empty($student)){
+            $data   =   array_merge($data,$student);
+        }
+        if(!empty($teachers)){
+            $data   =   array_merge($data,$teachers);
+        }
+        if(!empty($spTeahcers)){
+            $data   =   array_merge($data,$spTeahcers);
+        }
+
         return $data;
     }
 
@@ -285,11 +318,13 @@ class Notice extends CommonModel
             {
                 throw new \Exception('没有找到指定的考生用户信息');
             }
-            if($student->userInfo->openid)
+            if(!is_null($student->userInfo))
             {
                 $data[] =   [
                     'id'    =>  $student->userInfo->id,
                     'openid'=>  $student->userInfo->openid,
+                    'email' =>  $student->userInfo->email,
+                    'mobile' =>  $student->userInfo->mobile,
                 ];
             }
         }
@@ -309,6 +344,8 @@ class Notice extends CommonModel
                 $data[] =   [
                     'id'    =>  $teacher->userInfo->id,
                     'openid'=>  $teacher->userInfo->openid,
+                    'email' =>  $teacher->userInfo->email,
+                    'mobile'=>  $teacher->userInfo->mobile,
                 ];
             }
         }
@@ -324,6 +361,8 @@ class Notice extends CommonModel
         $content[]  =   '<a href="'.$url.'">查看详情</a>\n';
         $sender ->  send(array_pluck($to,'email'),implode('',$content));
     }
+
+
 
     public function sendSms($notice,$to,$url){
         $sender =   \App::make('messages.sms');

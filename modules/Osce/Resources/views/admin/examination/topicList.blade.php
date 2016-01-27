@@ -85,13 +85,21 @@ $(function(){
     $(".fa-trash-o").click(function(){
         var thisElement=$(this);
 
-        layer.alert('确认删除？',function(){
+        layer.confirm('确认删除？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
             $.ajax({
                 type:'get',
-                async:false,
+                async:true,
                 url:"{{route('osce.admin.topic.getDelTopic')}}?id="+thisElement.parent().parent().parent().attr('value'),
-                success:function(data){
-                    location.reload();
+                success:function(res){
+
+                    if(res.code==1){
+                        location.href = (location.href).split('?')[0];
+                    }else{
+                        layer.alert(res.message)
+                    }
+                    //location.href = (location.href).split('?')[0];
                 }
             })
         });

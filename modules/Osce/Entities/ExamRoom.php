@@ -126,14 +126,12 @@ class ExamRoom extends CommonModel
     public function getExamStation($exam_id)
     {
         try{
-            return  Teacher::Join('station_teacher',function($join){
-                $join    ->  on('teacher.id','=','station_teacher.user_id');
-            })  ->Join('station',function($join) {
-                $join->on('station.id', '=', 'station_teacher.station_id');
-            })  ->Join('room_station',function($join) use($exam_id){
-                $join->on('room_station.station_id','=','station_teacher.station_id');
-            })
-                ->where('station_teacher.exam_id' , '=' , $exam_id)
+            return  $this->leftJoin('room_station',$this->table . '.room_id','=','room_station.room_id')
+                ->leftJoin('station','station.id','=','room_station.station_id')
+                ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
+                ->leftJoin('teacher','teacher.id','=','station_teacher.user_id')
+                ->where('exam_room.exam_id' , '=' , $exam_id)
+                ->orWhere('station_teacher.exam_id','=',$exam_id)
                 ->select([
                     'teacher.id as id',
                     'teacher.name as name',
@@ -143,7 +141,8 @@ class ExamRoom extends CommonModel
                     'teacher.status as status',
                     'station.name as station_name',
                     'station.id as station_id',
-                    'room_station.room_id as room_id'
+                    'station.type as station_type',
+                    'room_station.room_id as room_id',
                 ])
                 ->distinct()->get();
         } catch(\Exception $ex){
@@ -207,7 +206,7 @@ class ExamRoom extends CommonModel
 
                 $result=$result ->where($this->table.'.exam_id', '=', $exam_id);
 
-                $result= $result->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port'])
+                $result= $result->select(['station_vcr.id','vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
             -> get();
 
             return $result;
@@ -220,11 +219,11 @@ class ExamRoom extends CommonModel
     public function getWaitRoom($exam_id){
         $time=time();
         try{
-            $builder=$this->Join('exam','exam.id','=','exam_room.exam_id');
+            $builder=$this->Join('exam_plan','exam_plan.exam_id','=','exam_room.exam_id');
             $builder=$builder->Join('room','room.id','=','exam_room.room_id');
-            $builder=$builder->where('exam.id',$exam_id);
+            $builder=$builder->where('exam_plan.exam_id',$exam_id);
             $builder=$builder->whereRaw(
-                'unix_timestamp('.'exam.begin_dt'.') > ?',
+                'unix_timestamp('.'exam_plan.begin_dt'.') > ?',
                 [
                     $time
                 ]
@@ -233,7 +232,8 @@ class ExamRoom extends CommonModel
             $data= $builder->select([
                 'room.id as room_id',
                 'room.name as room_name',
-                'exam.name as exam_name',
+                'room.address as room_address',
+                'room.code as room_code',
             ])->get();
             return $data;
         }catch (\Exception $ex){

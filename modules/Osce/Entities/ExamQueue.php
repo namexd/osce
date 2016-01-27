@@ -137,12 +137,12 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    static public function examineeByRoomId($room_id)
+    static public function examineeByRoomId($room_id, $stationNum)
     {
         try {
             return ExamQueue::leftJoin('student', 'student.exam_id', '=', 'exam_queue.exam_id')
                 ->where('room_id', $room_id)
-                ->where('status', 1)
+                ->where('status', 2)
                 ->select([
                     'student.id as student_id',
                     'student.name as student_name',
@@ -153,7 +153,35 @@ class ExamQueue extends CommonModel
                     'student.avator as student_avator',
                     'student.description as student_description',
                 ])
+                ->take($stationNum)
                 ->get();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 从队列里取出下一组考生的接口
+     * @param $room_id
+     * @param $stationNum
+     * @return
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
+    static public function nextExamineeByRoomId($room_id, $stationNum)
+    {
+        try {
+        return ExamQueue::leftJoin('student','student.exam_id', '=', 'exam_queue.exam_id')
+            ->where('room_id', $room_id)
+            ->where('status',1)
+            ->skip($stationNum)
+            ->take($stationNum)
+            ->select([
+                'id',
+                'name',
+                'code'
+            ])
+            ->get();
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -168,25 +196,14 @@ class ExamQueue extends CommonModel
      */
     public function nowQueue($examQueueCollect)
     {
-        foreach ($examQueueCollect as $examQueue) {
-            if ($examQueue->status == 1) {
-                return $examQueue;
+        foreach ($examQueueCollect as $key => $nowQueue) {
+            $nextKey = $key + 1;
+            $nextQueue = isset($examQueueCollect[$nextKey]) ? $examQueueCollect[$nextKey] : [];
+            if ($nowQueue->status == 1 || $nowQueue->status == 2) {
+                return [$nowQueue, $nextQueue];
             }
-            if ($examQueue->status == 2) {
-                return $examQueue;
-            }
-
+            return [];
         }
-
-//        foreach ($examQueueCollect as $examQueue) {
-//            if (strtotime($examQueue->begin_dt) > $nowTime) {
-//                return $examQueue;
-//            }
-//            if (strtotime($examQueue->begin_dt) < $nowTime && strtotime($examQueue->end_dt) > $nowTime) {
-//                return $examQueue;
-//            }
-//        }
-        return [];
     }
 
     /**
@@ -217,8 +234,8 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
-      public function AlterTimeStatus($studentId ,$stationId ,$StartTime){
-          $nowTime=   date('Y-m-d H:i:s',$StartTime);
+      public function AlterTimeStatus($studentId ,$stationId ){
+          $nowTime=   date('Y-m-d H:i:s',time());
           return ExamQueue::where('student_id','=',$studentId)
               ->whereRaw('station_id','=',$stationId)
               ->update(['begin_dt'=>$nowTime,'status'=>2]);
@@ -231,8 +248,8 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
-     public function EndExamAlterStatus($studentId ,$stationId,$EndTime){
-         $nowTime=   date('Y-m-d H:i:s',$EndTime);
+     public function EndExamAlterStatus($studentId ,$stationId){
+         $nowTime=   date('Y-m-d H:i:s',time());
          return ExamQueue::where('student_id','=',$studentId)
              ->whereRaw('station_id','=',$stationId)
              ->update(['end_dt'=>$nowTime,'status'=>3]);
@@ -282,20 +299,19 @@ class ExamQueue extends CommonModel
 
     /**
      * 通过腕表id找到对应的
-     * @param $uid
+     * @param $studentId
+     * @return
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    static public function findQueueIdByUid($uid)
+    static public function findQueueIdByStudentId($studentId)
     {
         try{
             //通过腕表id找到$examScreening和$student的实例
-            $examScreening = ExamScreeningStudent::where('watch_id',$uid)->first();
-            $student = $examScreening->student;
+            $examScreening = ExamScreeningStudent::where('watch_id',$studentId)->first();
 
             //拿到$examScreeningId和$studentId
             $examScreeningId = $examScreening->id;
-            $studentId = $student->id;
 
             //得到queue实例
             $queue = ExamQueue::where('student_id',$studentId)

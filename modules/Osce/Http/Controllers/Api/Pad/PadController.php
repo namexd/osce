@@ -18,6 +18,7 @@ use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\StationVcr;
+use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -30,7 +31,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        id        场所ID
+     * * int        room_id        场所ID
      *
      * @return ${response}
      *
@@ -41,10 +42,10 @@ class PadController extends  CommonController{
      */
        public function getRoomVcr(Request $request){
             $this->validate($request,[
-                'id'  =>'required|integer'
+                'room_id'  =>'required|integer'
             ]);
 
-            $id=$request->get('id');
+            $id=$request->get('room_id');
             $data=RoomVcr::where('room_id',$id)->select()->get();
 
             $list=[];
@@ -67,7 +68,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        id        摄像机ID(必须的)
+     * * int        vcr_id        摄像机ID(必须的)
      *
      * @return ${response}
      *
@@ -78,10 +79,10 @@ class PadController extends  CommonController{
      */
        public function getVcr(Request $request){
            $this->validate($request,[
-               'id'  =>'required|integer'
+               'vcr_id'  =>'required|integer'
            ]);
 
-           $id=$request->get('id');
+           $id=$request->get('vcr_id');
            $data=Vcr::find($id);
            return response()->json(
                $this->success_data($data,1,'success')
@@ -128,9 +129,9 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        vcr_id           摄像机ID(必须的)
-     * * datetime   startTime        开始标记点(必须的)
-     * * datetime   EndTime          结束标记点(必须的)
+     * * int        station_vcr_id            考站-摄像机关联表id(必须的)
+     * * int        exam_id                   考试Id(必须的)
+     * *
      *
      * @return ${response}
      *
@@ -142,13 +143,18 @@ class PadController extends  CommonController{
 
        public function getTimingList(Request $request){
             $this->validate($request,[
-                 'vcr_id' =>'required|integer',
-                 'time'   =>'required',
+                 'station_vcr_id'     =>'required|integer',
+                 'exam_id'            =>'required',
+                 'begin_dt'           =>'sometimes',
+                 'end_dt'             =>'sometimes',
             ]);
-            $vcr_id=$request->get('vcr_id');
-            $time=$request->get('time');
+            $stationVcrId=$request->get('station_vcr_id');
+            $beginDt=$request->get('begin_dt');
+            $examId=$request->get('exam_id');
+            $endDt=$request->get('end_dt');
            try{
-               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time','<',$time)->select()->get();
+               $stationVideoModel=new StationVideo();
+               $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );
@@ -255,6 +261,7 @@ class PadController extends  CommonController{
              $exam_id=$request->get('exam_id');
          try{
              $examRoomList=$examModel->getWaitRoom($exam_id);
+
              return response()->json(
                  $this->success_data($examRoomList,1,'success')
              );
@@ -265,37 +272,31 @@ class PadController extends  CommonController{
                };
        }
 
+
     /**
-     * 根据考试id获取候考场所列表(接口)
-     * @method GET
-     * @url api/1.0/private/osce/pad/status
-     * @access public
-     *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * * int        exam_id        考试id(必须的)
-     * @return \Illuminate\Http\JsonResponse ${response}
-     *
-     * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
-     * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * 考试在后修改状态
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Jiangzhiheng
      */
-    public function getStatus(Request $request)
+    public function getChangeStatus(Request $request)
     {
         $this->validate($request, [
-            'uid' => 'required|integer',
+            'student_id' => 'required|integer',
         ]);
 
         try {
+            //获取当前的服务器时间
+            $date = date('Y-m-d H:i:s');
             //通过考生的腕表id来找到对应的队列id
-            $uid = $request->input('uid');
+            $studentId = $request->input('student_id');
 
             //找到对应的方法找到queue实例
-            $queue = ExamQueue::findQueueIdByUid($uid);
+            $queue = ExamQueue::findQueueIdByStudentId($studentId);
 
             //修改状态
-            $queue->status = 3;
+            $queue->status = 5;
+            $queue->end_dt = $date;
             if (!$queue->save()) {
                 throw new \Exception('状态修改失败！请重试');
             }

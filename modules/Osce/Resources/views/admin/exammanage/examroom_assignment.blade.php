@@ -60,7 +60,7 @@
     }
     .pull-right>select{width: 120px;}
     .teacher-box{
-        width: 80%;
+        width: 75%;
     }
     .sp-teacher .pull-right{width:20%;}
     .teacher-warn{
@@ -79,6 +79,7 @@
         padding: 0;
         margin: 0;
     }
+    #exam-place tbody tr td:last-child>a{color: #1ab394;}
     </style>
 @stop
 
@@ -103,6 +104,7 @@
                         <li class="active"><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
                     </ul>
                 </div>
             </div>
@@ -148,7 +150,7 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td class="necessary">{{(count($item)==1)?'必考':'二选一'}}</td>
+                                                <td class="necessary">{{$getSelect[count($items)]}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
@@ -176,34 +178,45 @@
                                             <th>#</th>
                                             <th>考站</th>
                                             <th>类型</th>
-                                            <th width="300">老师</th>
-                                            <th>SP老师</th>
+                                            <th width="180">老师</th>
+                                            <th width="300">SP老师</th>
                                             <th>邀请SP老师</th>
                                         </tr>
                                         </thead>
                                         <tbody index="{{count($examStationData)}}">
-                                        @forelse($examStationData as $key => $item)
-                                            <tr class="parent-id-{{$item->room_id}}">
-                                                <td>{{$key+1}}<input type="hidden" name="station[{{$key+1}}][id]" value="{{$item->station_id}}"/></td>
-                                                <td>{{$item->station_name}}</td>
-                                                <td>{{($item->type==1)?'技能操作站':(($item->type==2)?'sp站':'理论操作站')}}</td>
+                                        <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
+                                        @forelse($examStationData as $k => $item)
+                                            <tr class="parent-id-{{$item[0]->room_id}}">
+                                                <td>{{$key++}}<input type="hidden" name="station[{{$k1++}}][id]" value="{{$item[0]->station_id}}"/></td>
+                                                <td>{{$item[0]->station_name}}</td>
+                                                <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$key+1}}][teacher_id]">
-                                                        @if($item->type == 1)
-                                                            <option value="{{$item->id}}" selected="selected">{{$item->name}}</option>
-                                                        @endif
+
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="station[{{$k2++}}][teacher_id]">
+                                                        @foreach($item as $value)
+                                                            @if($value->type == 1)
+                                                                <option value="{{$value->id}}" selected="selected">{{$value->name}}</option>
+                                                            @elseif($value->type != 1)
+                                                                <option value = "">==请选择==</option>
+                                                            @endif
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
-                                                        @if($item->type == 2)
-                                                        <div class="input-group teacher pull-left" value="{{$item->status}}">
-                                                            <div class="pull-left">{{$item->name}}</div>
-                                                            <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                        </div>
-                                                        @endif
+                                                        @foreach($item as $b => $value)
+                                                            @if($value->type == 2)
+                                                            <div class="input-group teacher pull-left" value="{{$value->id}}">
+                                                                <input type="hidden" name="station[{{$k3}}][spteacher_id][]" value="{{$value->id}}">
+                                                                <div class="pull-left">{{$value->name}}</div>
+                                                                <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                            </div>
+                                                            @endif
+                                                        @endforeach
+
                                                     </div>
-                                                    <div class="pull-right" value="{{$key+1}}">
+                                                    <div class="pull-right" value="{{$k4++}}">
+                                                        @if($item[0]->station_type == 2)
                                                         <div class="btn-group">
                                                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                           <span class="caret"></span>
@@ -211,10 +224,20 @@
                                                           <ul class="dropdown-menu">
                                                           </ul>
                                                         </div>
+                                                        @else
+                                                        <div class="btn-group">
+                                                          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                          <span class="caret"></span>
+                                                          </button>
+                                                          <ul class="dropdown-menu">
+                                                          </ul>
+                                                        </div>
+                                                        @endif
                                                     </div>
                                                 </td>
                                                 <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
                                             </tr>
+                                            <input type="hidden" {{$k3++}}>
                                         @empty
                                         @endforelse
                                         </tbody>

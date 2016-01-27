@@ -19,6 +19,7 @@ class UsersPm extends Model
 
     public function getList($accept,$sender=null,$module=null,$status=1,$pageSize=10,$pageIndex=0){
 
+
         $total=DB::connection($this->connection)
             ->table($this->table)
             ->where('accept_user_id','=',$accept)
@@ -28,6 +29,7 @@ class UsersPm extends Model
                         ->orWhere('status','=',$status);
             })
             ->count();
+
 
         if($total>0){
 
@@ -41,7 +43,7 @@ class UsersPm extends Model
                             ->orWhere('module','=',$module)
                             ->orWhere('status','=',$status);
                     })
-                    ->skip($pageIndex*$pageSize)
+                    ->skip(($pageIndex-1)*$pageSize)
                     ->take($pageSize)
                     ->get()];
         }

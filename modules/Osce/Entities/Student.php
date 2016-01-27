@@ -22,7 +22,7 @@ class Student extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id','description'];
+    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id', 'description'];
 
     public function userInfo(){
         return $this->hasOne('\App\Entities\User','id','user_id');
@@ -115,6 +115,51 @@ class Student extends CommonModel
     }
 
     /**
+     * 导入考生
+     */
+    public function importStudent($exam_id, $examineeData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //将数组导入到模型中的addInvigilator方法
+            foreach($examineeData as $key => $studentData)
+            {
+                if($studentData['gender'] == '男'){
+                    $studentData['gender'] = 1;
+                }elseif($studentData['gender'] == '女'){
+                    $studentData['gender'] = 2;
+                }else{
+                    $studentData['gender'] = 0;
+                }
+                //姓名不能为空
+                if(empty($studentData['name'])){
+                    throw new \Exception('第'.($key+2).'行姓名不能为空，请修改后重试！');
+                }
+                //验证身份证号
+                if(!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/',$studentData['idcard'])){
+                    throw new \Exception('第'.($key+2).'行身份证号不符规格，请修改后重试！');
+                }
+                //验证手机号
+                if(!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/',$studentData['mobile'])){
+                    throw new \Exception('第'.($key+2).'行手机号不符规格，请修改后重试！');
+                }
+                //添加考生
+                if(!$this->addExaminee($exam_id, $studentData, $key+2))
+                {
+                    throw new \Exception('学生导入数据失败，请修改后重试');
+                }
+            }
+            $connection->commit();
+            return true;
+
+        } catch(\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
      * 单个添加考生
      * @return mixed
      * @throws \Exception
@@ -144,6 +189,11 @@ class Student extends CommonModel
                 }
 
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
+                //手机号未注册，查询手机号码是否已经使用
+                $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
+                if(!empty($mobile)){
+                    throw new \Exception('手机号已经存在，请输入新的手机号');
+                }
                 $password   =   '123456';
                 $user       =   $this   ->  registerUser($examineeData,$password);
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);
@@ -240,7 +290,7 @@ class Student extends CommonModel
 
     //考生查询
     public function getList($formData=''){
-        $builder=$this->Join('exam','student.exam_id','=','exam.id');
+        $builder=$this->leftJoin('exam','student.exam_id','=','exam.id');
         if($formData['exam_name']){
             $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'%');
         }
@@ -258,6 +308,7 @@ class Student extends CommonModel
         ]);
 
         $builder->orderBy('exam.begin_dt');
+
         return $builder->paginate(config('msc.page_size'));
     }
 
@@ -274,8 +325,14 @@ class Student extends CommonModel
 //            ->get();
 //    }
 
-    public function getStudentQueue($exam_id,$screen_id){
-        return  $builder= $this->leftjoin('exam_order',function($join){
+    public function getStudentQueue($exam_id,$screen_id,$countStation){
+        $buondNum=ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)->where('status',1)->select()->get();
+        $buondNum=count($buondNum);
+        $num=$countStation-$buondNum;
+        if($num===0 || $num<0){
+          return array();
+        }
+        $builder= $this->leftjoin('exam_order',function($join){
             $join ->on('student.id','=','exam_order.student_id');
         })->where('exam_order.exam_id',$exam_id)->where('exam_screening_id',$screen_id)->where('exam_order.status',0)->orWhere('exam_order.status',4)->orderBy('begin_dt')
             ->select([
@@ -285,7 +342,8 @@ class Student extends CommonModel
                 'student.mobile as mobile',
                 'exam_order.status as status',
                 'exam_order.exam_screening_id as exam_screening_id',
-            ])->get();
+            ])->paginate($num);
+        return $builder;
     }
 
 }

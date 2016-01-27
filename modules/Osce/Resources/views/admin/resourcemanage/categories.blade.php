@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <style>
     table tr td .form-group {
         margin-bottom: 0;
@@ -26,6 +27,7 @@
 @section('only_js')
 <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 @stop
 
 @section('content')
@@ -44,13 +46,12 @@
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="title">
+                                <input type="text" required class="form-control" id="title" name="title">
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
@@ -91,15 +92,13 @@
                                     </div>
                                 </div>
 
-
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
-
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit">保存</button>
+                                <input class="btn btn-primary" id="submit-btn" type="submit" value="保存">
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                             </div>
                         </div>

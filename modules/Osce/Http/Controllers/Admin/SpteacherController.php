@@ -36,6 +36,7 @@ class SpteacherController extends CommonController
      */
     public function getShow(Request $request, Teacher $model)
     {
+        try {
         //验证略
         //得到请求的病例id和已经选择的sp老师id
         $stationId = $request->input('station_id', '');
@@ -43,13 +44,15 @@ class SpteacherController extends CommonController
 
         //得到老师的列表
         $stationIds[] = $stationId;
-//        dd($spteacherId);
+
 //        $spteacherIds[] =$spteacherId;
         $spteacherIds=array_unique($spteacherId);
-
         $data = $model->showTeacherData($stationIds, $spteacherIds);
 //dd($data);
         return  response()->json($this->success_rows(1,'获取成功',count($data),count($data),1,$data->toArray()));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**

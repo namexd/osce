@@ -12,7 +12,7 @@ use DB;
 class TestResult extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'test_result';
+    protected $table = 'exam_result';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
@@ -42,7 +42,6 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             $TestResultData = [];
-
             if ($testResult = $this->create($data)) {
                 $TestResultData = [
                     'item_id' => $testResult->id,
@@ -54,6 +53,7 @@ class TestResult extends CommonModel
             if (empty($TestResultData)) {
                 throw new \Exception('û���ҵ�������������');
             }
+
             $connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
@@ -77,6 +77,7 @@ class TestResult extends CommonModel
         }else{
 
           $studentExamScore = TestResult::where('student_id','=',$studentId)->select('score')->first();
+
             return   $studentExamScore;
         }
 

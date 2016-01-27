@@ -56,6 +56,7 @@
 <!-- 全局js -->
 
 <script src="{{asset('osce/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script><!--虚拟滚动条插件未使用-->
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 
 <!-- 自定义js -->
