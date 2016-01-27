@@ -1531,4 +1531,20 @@ class ExamController extends CommonController
         $id = $request->input('id');
 		return view('osce::admin.exammanage.waiting_area', ['id'=>$id]);
 	}
+
+    public function postExamRemind(Request $request){
+        $this->validate($request,[
+            'content'  => 'required',
+            'id'       => 'required|integer'
+        ]);
+
+        $content=$request->get('content');
+        $id=$request->get('id');
+        $result=Exam::where('id',$id)->update([
+            'description'  => $content
+        ]);
+        if($result){
+
+        }
+    }
 }
