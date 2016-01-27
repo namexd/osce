@@ -113,6 +113,9 @@ class Notice extends CommonModel
 
             $url    = $this->makeUrl($notice);
             $sendType   =   Config::where('name','=','type')    ->  first();
+            if(!$sendType){
+                throw new \Exception('请到系统设置中设置发送消息的方式');
+            }
             $values      =   json_decode($sendType->value);
             if(empty($values))
             {
