@@ -38,12 +38,12 @@ class OsceTvController extends  CommonController{
               'exam_id'  => 'required|integer'
           ]);
           $exam_id=$request->get('exam_id');
-          $description=Exam::where('id',$exam_id)->select('rules')->first()->rules;
+          $exams=Exam::where('id',$exam_id)->select()->first();
           $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
           $examQueModel= new ExamQueue();
           $list=$examQueModel->getStudent($mode,$exam_id);
 
-          return view('osce::admin.exammanage.exam_remind')->with(['list'=>$list,'description'=>$description]);
+          return view('osce::admin.exammanage.exam_remind')->with(['list'=>$list,'exams'=>$exams]);
 //        return view('osce::admin.exammanage.exam_remind');
     }
 
