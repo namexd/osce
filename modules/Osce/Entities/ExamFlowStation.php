@@ -72,7 +72,7 @@ class ExamFlowStation extends CommonModel
                 $this->stationTeacherAssociation($examId, $value, $user);
             }
 
-            dd($formData);
+//            dd($formData);
             $connection->commit();
             return true;
         } catch (Exception $ex) {
@@ -223,8 +223,11 @@ class ExamFlowStation extends CommonModel
                 $teacherIDs[] = $value['spteacher_id'];
             }
         }
-            dump($teacherIDs);
         //循环，将老师ID放入station_teacher表的数据
+        if(count($teacherIDs)==0)
+        {
+            return $this;
+        }
         foreach ($teacherIDs as $teacherID) {
             $stationTeacherData = [
                 'station_id' => $value['station_id'],
