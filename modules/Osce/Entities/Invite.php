@@ -62,6 +62,7 @@ class Invite extends CommonModel
         } catch (\Exception $ex) {
             throw $ex;
         }
+
     }
         // 发送邀请
 
