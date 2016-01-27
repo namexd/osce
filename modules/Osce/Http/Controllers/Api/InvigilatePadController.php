@@ -140,7 +140,7 @@ class InvigilatePadController extends CommonController
             );
         } else {
             return response()->json(
-                $this->fail(new \Exception('学生信息查询失败'))
+                $this->fail(new \Exception('学生信息查询失败',2))
             );
         }
 

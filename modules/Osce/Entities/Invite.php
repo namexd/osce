@@ -65,8 +65,6 @@ class Invite extends CommonModel
                 } else {
                     throw new \Exception('邀请保存失败');
                 }
-
-
             }
 
 
