@@ -34,6 +34,9 @@
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '教师编号不能为空'
+                            },
                             regexp: {
                                 regexp: /^\w+$/,
                                 message: '教师编号应该由数字，英文或下划线组成'
