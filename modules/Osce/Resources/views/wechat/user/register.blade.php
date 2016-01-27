@@ -86,6 +86,12 @@
             <div class="clear"></div>
 
             <div class="form-group">
+                <label for="code">验证码<span>*</span></label>&nbsp;&nbsp; <input type="button" value="点击发送验证码" id="send_code">
+                <input type="text" name="code" class="form-control ipt_txt" placeholder="请输入验证码"/>
+            </div>
+            <div class="clear"></div>
+
+            <div class="form-group">
                 <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入密码"/>
             </div>
             <div class="form-group">
@@ -99,6 +105,29 @@
 </div>
 <script>
     $(document).ready(function(){
+        //点击发送验证码
+        $("#send_code").click(function(){
+            var phone = $('#mobile').val();
+            var status = false;
+            if(phone=='')layer.alert('请输入手机号！',function(its){
+                status = true;
+                layer.close(its);
+            })
+            if(status)return;
+            $.ajax({
+                type:'post',
+                url:'{{route("osce.wechat.user.postRevertCode")}}',
+                data:{mobile:phone},
+                success:function(res){
+                    if(res.code==1){
+                        layer.alert('发送成功！');
+                    }else{
+                        layer.alert(res.message);
+                    }
+                }
+            })
+        });
+
         $(".radio_label").click(function(){
             if($(this).children("input").checked=="true"){
                 $(this).children(".radio_icon").removeClass("check");
@@ -206,7 +235,7 @@
             code: {
                 validators: {
                     notEmpty: {/*非空提示*/
-                        message: '描述不能为空'
+                        message: '验证码不能为空'
                     }
                }
             },
@@ -227,7 +256,7 @@
                         message: '请输入11位手机号码'
                     },
                     regexp: {
-                        regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                        regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
                         message: '请输入正确的手机号码'
                     }
                }

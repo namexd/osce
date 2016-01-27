@@ -34,6 +34,9 @@
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '教师编号不能为空'
+                            },
                             regexp: {
                                 regexp: /^\w+$/,
                                 message: '教师编号应该由数字，英文或下划线组成'
@@ -51,7 +54,7 @@
                                 message: '请输入11位手机号码'
                             },
                             regexp: {
-                                regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                                regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
                                 message: '请输入正确的手机号码'
                             },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
