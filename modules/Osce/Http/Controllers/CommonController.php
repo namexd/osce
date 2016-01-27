@@ -73,15 +73,19 @@ abstract class CommonController extends Controller
      * 返回失败的json数据
      *
      * @return string
-     * [
+     *
      *    'code'            =>    -999,
      *        'message'        =>    'fail'
      *    ];
      */
     public function fail(\Exception $ex)
     {
+        if($ex->getCode()==0)
+        {
+            $code   =   -999;
+        }
         return [
-            'code' => -999,
+            'code' => $code,
             'message' => '错误信息:' . $ex->getMessage(),
         ];
     }

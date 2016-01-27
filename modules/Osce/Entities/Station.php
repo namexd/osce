@@ -37,7 +37,7 @@ class Station extends CommonModel
      */
     public function room()
     {
-        return $this->belongsToMany('\Modules\Osce\Entities\room','room_station','station_id','room_id');
+        return $this->belongsToMany('\Modules\Osce\Entities\Room','room_station','station_id','room_id');
     }
 
     /**

@@ -245,7 +245,7 @@ class ExamResult extends CommonModel
             'subject.title as title',
             'station.id as station_id'
         ])
-            ->get();
+            ->paginate(config('osce.page_size'));
 
         return $builder;
 
