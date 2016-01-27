@@ -66,15 +66,12 @@ class ExamFlowStation extends CommonModel
                 }
             }
 
-            dump(StationTeacher::where('exam_id',$examId)->get());
             foreach ($formData as $key => $value) {
                 //准备数据，插入station_teacher表
                 $this->stationTeacherAssociation($examId, $value, $user);
             }
 
-            dump(StationTeacher::where('exam_id',$examId)->get());
             $connection->commit();
-            dump(StationTeacher::where('exam_id',$examId)->get());
             return true;
         } catch (Exception $ex) {
             $connection->rollBack();
@@ -214,8 +211,12 @@ class ExamFlowStation extends CommonModel
         $teacherIDs = [];
         if (!empty($value['teacher_id'])) {
             $teacherIDs[] = $value['teacher_id'];
+        }   else {
+            $teacherIDs[] = NULL;
         }
-        if (isset($value['spteacher_id'])) {
+
+
+        if (!empty($value['spteacher_id'])) {
             if (is_array($value['spteacher_id'])) {
                 foreach ($value['spteacher_id'] as $spTeacherId) {
                     $teacherIDs[] = $spTeacherId;
@@ -223,12 +224,10 @@ class ExamFlowStation extends CommonModel
             } else {
                 $teacherIDs[] = $value['spteacher_id'];
             }
+        } else {
+            $teacherIDs[] = NULL;
         }
-        //循环，将老师ID放入station_teacher表的数据
-        if(count($teacherIDs)==0)
-        {
-            return $this;
-        }
+
         foreach ($teacherIDs as $teacherID) {
             $stationTeacherData = [
                 'station_id' => $value['station_id'],

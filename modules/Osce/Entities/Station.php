@@ -369,6 +369,7 @@ class Station extends CommonModel
             -> leftJoin('station_teacher', 'station_teacher.station_id','=','exam_station.station_id')
             -> leftJoin('teacher','teacher.id','=','station_teacher.user_id')
             -> where('exam_station.exam_id' , $exam_id)
+            -> where('station_teacher.exam_id' , $exam_id)
             -> select([
                 $this->table . '.id as station_id',
                 $this->table . '.name as station_name',
