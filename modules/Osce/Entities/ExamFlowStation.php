@@ -66,14 +66,15 @@ class ExamFlowStation extends CommonModel
                 }
             }
 
-
+            dump(StationTeacher::where('exam_id',$examId)->get());
             foreach ($formData as $key => $value) {
                 //准备数据，插入station_teacher表
                 $this->stationTeacherAssociation($examId, $value, $user);
             }
 
-//            dd($formData);
+            dump(StationTeacher::where('exam_id',$examId)->get());
             $connection->commit();
+            dump(StationTeacher::where('exam_id',$examId)->get());
             return true;
         } catch (Exception $ex) {
             $connection->rollBack();
