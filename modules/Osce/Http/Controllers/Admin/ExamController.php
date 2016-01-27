@@ -1547,7 +1547,7 @@ class ExamController extends CommonController
         $content=$request->get('content');
         $id=$request->get('id');
         $result=Exam::where('id',$id)->update([
-            'description'  => $content
+            'rules'  => $content
         ]);
         if($result){
 
