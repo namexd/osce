@@ -10,6 +10,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 use Modules\Osce\Entities\CaseModel;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
@@ -127,6 +128,11 @@ class StationController extends CommonController
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
+
+            //如果该考场id已经在考试中注册，就不允许增添考站到该考场
+            if (!ExamRoom::where('room_id',$roomId)->get()->isEmpty()) {
+                throw new \Exception('选择的考场已经被选择！请换一个考场！');
+            }
 
             //将参数放进一个数组中，方便传送
             $formData = [$stationData, $vcrId, $caseId, $roomId];
