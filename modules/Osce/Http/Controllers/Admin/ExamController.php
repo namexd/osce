@@ -42,6 +42,25 @@ use DB;
 class ExamController extends CommonController
 {
     /**
+     * 配置考场安排里，考场、考站选项
+     */
+    private function getSelect(){
+        $config =   [
+            0   =>  '必考',
+            1   =>  '必考',
+            2   =>  '二选一',
+            3   =>  '三选一',
+            4   =>  '四选一',
+            5   =>  '五选一',
+            6   =>  '六选一',
+            7   =>  '七选一',
+            8   =>  '八选一',
+            9   =>  '九选一',
+            10  =>  '十选一'
+        ];
+        return  $config;
+    }
+    /**
      * 获取考试列表
      * @url       GET /osce/admin/exam/exam-list
      * @access    public
@@ -745,10 +764,16 @@ class ExamController extends CommonController
         foreach ($examRoomData as $item) {
             $serialnumberGroup[$item->serialnumber][$item->id] = $item;
         }
-//        dd($serialnumberGroup);
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
+
+
+        return view('osce::admin.exammanage.examroom_assignment', [
+            'id'                => $exam_id,
+            'examRoomData'      => $serialnumberGroup,
+            'examStationData'   => $examStationData,
+            'getSelect'         => $this->getSelect()
+        ]);
     }
 
     /**
@@ -1302,8 +1327,13 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
-//        dd($stationData->all());
-        return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'roomData'=>$roomData, 'stationData' => $stationData]);
+
+        return view('osce::admin.exammanage.station_assignment', [
+            'id'          => $exam_id,
+            'roomData'    => $roomData,
+            'stationData' => $stationData,
+            'getSelect'   => $this->getSelect()
+        ]);
     }
 
     /**

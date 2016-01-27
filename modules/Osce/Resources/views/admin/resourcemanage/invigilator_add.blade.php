@@ -41,6 +41,19 @@
                             regexp: {
                                 regexp: /^\w+$/,
                                 message: '教师编号应该由数字，英文或下划线组成'
+                            },
+                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                                url: '{{route('osce.admin.invigilator.postCodeUnique')}}',//验证地址
+                                message: '该教师编号已经存在',//提示消息
+                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                type: 'POST',//请求方式
+                                /*自定义提交数据，默认值提交当前input value*/
+                                data: function(validator) {
+                                    return {
+                                        code: $('[name="whateverNameAttributeInYourForm"]').val()
+                                    }
+                                }
                             }
                         }
                     },

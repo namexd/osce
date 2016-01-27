@@ -657,4 +657,31 @@ class InvigilatorController extends CommonController
         return json_encode(['valid' =>true]);
     }
 
+    /**
+     * 判断教师编号是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postCodeUnique(Request $request)
+    {
+        $this->validate($request, [
+            'code'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $code   = $request  -> get('code');
+        //实例化模型
+        $model =  new Teacher();
+        //查询 该编号 是否存在
+        if(empty($id)){
+            $result = $model->where('code', $code)->first();
+        }else{
+            $result = $model->where('code', $code)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
 }
