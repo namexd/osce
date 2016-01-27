@@ -18,6 +18,7 @@ use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\StationVcr;
+use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -30,7 +31,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        id        场所ID
+     * * int        room_id        场所ID
      *
      * @return ${response}
      *
@@ -41,10 +42,10 @@ class PadController extends  CommonController{
      */
        public function getRoomVcr(Request $request){
             $this->validate($request,[
-                'id'  =>'required|integer'
+                'room_id'  =>'required|integer'
             ]);
 
-            $id=$request->get('id');
+            $id=$request->get('room_id');
             $data=RoomVcr::where('room_id',$id)->select()->get();
 
             $list=[];
@@ -67,7 +68,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        id        摄像机ID(必须的)
+     * * int        vcr_id        摄像机ID(必须的)
      *
      * @return ${response}
      *
@@ -78,10 +79,10 @@ class PadController extends  CommonController{
      */
        public function getVcr(Request $request){
            $this->validate($request,[
-               'id'  =>'required|integer'
+               'vcr_id'  =>'required|integer'
            ]);
 
-           $id=$request->get('id');
+           $id=$request->get('vcr_id');
            $data=Vcr::find($id);
            return response()->json(
                $this->success_data($data,1,'success')
@@ -128,9 +129,9 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        vcr_id           摄像机ID(必须的)
-     * * datetime   startTime        开始标记点(必须的)
-     * * datetime   EndTime          结束标记点(必须的)
+     * * int        station_vcr_id            考站-摄像机关联表id(必须的)
+     * * int        exam_id                   考试Id(必须的)
+     * *
      *
      * @return ${response}
      *
@@ -142,21 +143,18 @@ class PadController extends  CommonController{
 
        public function getTimingList(Request $request){
             $this->validate($request,[
-                 'vcr_id'     =>'required|integer',
-                 'exam_id'       =>'required',
-                 'room'       =>'required',
-                 'begin_dt'   =>'required',
-                 'end_dt'     =>'required',
+                 'station_vcr_id'     =>'required|integer',
+                 'exam_id'            =>'required',
+                 'begin_dt'           =>'sometimes',
+                 'end_dt'             =>'sometimes',
             ]);
-            $vcrId=$request->get('vcr_id');
+            $stationVcrId=$request->get('station_vcr_id');
             $beginDt=$request->get('begin_dt');
             $examId=$request->get('exam_id');
-            $room=$request->get('room');
             $endDt=$request->get('end_dt');
            try{
-//               $vcrs=Vcr::where('vcer_id',$vcrId)->where('time','<',$beginDt)->select()->get();
-               $stationVcrModel=new StationVcr();
-               $vcrs=$stationVcrModel->getTiming($vcrId,$beginDt,$examId,$room,$endDt);
+               $stationVideoModel=new StationVideo();
+               $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );

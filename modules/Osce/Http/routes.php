@@ -56,6 +56,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilator/edit-sp-invigilator',['uses'=>'InvigilatorController@getEditSpInvigilator','as'=>'osce.admin.invigilator.getEditSpInvigilator']);
 		Route::post('invigilator/add-sp-invigilator', 	['uses'=>'InvigilatorController@postAddSpInvigilator','as'=>'osce.admin.invigilator.postAddSpInvigilator']);
 		Route::post('invigilator/edit-sp-invigilator', 	['uses'=>'InvigilatorController@postEditSpInvigilator','as'=>'osce.admin.invigilator.postEditSpInvigilator']);
+		Route::post('invigilator/code-unique', 	['uses'=>'InvigilatorController@postCodeUnique','as'=>'osce.admin.invigilator.postCodeUnique']);	//判断编号是否存在
 
 
 		//设置
@@ -302,6 +303,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//注册
 		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.user.getRegister']);
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
+		Route::post('user/revert-code',['uses'=>'UserController@postRevertCode','as'=>'osce.wechat.user.postRevertCode']);	//异步发送验证码
 
 		//发送重找账号
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
@@ -326,7 +328,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.api.invigilatepad.getAuthentication']);
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.api.invigilatepad.getExamGrade']);
-		Route::post('invigilatepad/save-exam-Result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.api.invigilatepad.postSaveExamResult']);
+		Route::post('invigilatepad/save-exam-result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.api.invigilatepad.postSaveExamResult']);
 		Route::post('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@postSaveExamEvaluate','as'=>'osce.api.invigilatepad.postSaveExamEvaluate']);
 		Route::get('invigilatepad/wait_exam', 	['uses'=>'InvigilatePadController@getWaitExam','as'=>'osce.api.invigilatepad.getWaitExam']);
 		Route::get('invigilatepad/wait_exam_list', 	['uses'=>'InvigilatePadController@getWaitExamList','as'=>'osce.api.invigilatepad.getWaitExamList']);

@@ -19,7 +19,7 @@ class OsceTvController extends  CommonController{
     /**
      *候考轮播考生列表
      * @method GET
-     * @url /osce/admin/oscetv/write-detail
+     * @url /osce/admin/oscetv/wait-detail
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -38,7 +38,7 @@ class OsceTvController extends  CommonController{
               'exam_id'  => 'required|integer'
           ]);
           $exam_id=$request->get('exam_id');
-          $description=Exam::where('id',$exam_id)->select('description')->first()->description;
+          $description=Exam::where('id',$exam_id)->select('rules')->first()->rules;
           $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
           $examQueModel= new ExamQueue();
           $list=$examQueModel->getStudent($mode,$exam_id);

@@ -36,32 +36,6 @@
                             }
                         }
                     },
-                    code: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '编号不能为空'
-                            },
-                            regexp: {
-                                regexp:  /^[\u4E00-\u9FA5a-zA-Z0-9_]*$/,
-                                message: '不能输入中文和特殊字符'
-                            },
-                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                                url: '{{route('osce.admin.room.postNameUnique')}}',//验证地址
-                                message: '编号已经存在',//提示消息
-                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST',//请求方式
-                                /*自定义提交数据，默认值提交当前input value*/
-                                data: function(validator) {
-                                    return {
-                                        name: $('[name="whateverNameAttributeInYourForm"]').val()
-                                    }
-                                }
-                            }
-                        }
-                    },
                     description: {
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
@@ -101,23 +75,22 @@
                         <input type="hidden" name="type" value="{{$type}}">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name">
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">编号</label>
 
+                        <div class="form-group" style="display:none">
+                            <label class="col-sm-2 control-label">编号</label>
                             <div class="col-sm-10">
-                                <input type="text"  required  ng-model="num" id="code" class="form-control" name="code">
+                                <input type="text" ng-model="num" id="code" class="form-control" name="code">
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div><div class="form-group">
-                            <label class="col-sm-2 control-label">关联摄像机</label>
+                        <div class="hr-line-dashed" style="display:none"></div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">关联摄像机</label>
                             <div class="col-sm-10">
                                 <select name="vcr_id" id="" class="form-control">
                                     @foreach($vcr as $key=>$item)
@@ -126,22 +99,21 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="hr-line-dashed"></div>
 
-                        <div class="hr-line-dashed"></div><div class="form-group">
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">功能描述</label>
-
                             <div class="col-sm-10">
                                 <input type="text" ng-model="description" id="description" class="form-control" name="description">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">地址</label>
-
                             <div class="col-sm-10">
                                 <input type="text" ng-model="location" id="location" class="form-control" name="address">
                             </div>
-
                         </div>
                         <div class="hr-line-dashed"></div>
 
@@ -150,13 +122,10 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
-                                {{--<button class="btn btn-white" type="submit">取消</button>--}}
                             </div>
                         </div>
                     </form>
-
                 </div>
-
             </div>
         </div>
     </div>
