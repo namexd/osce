@@ -799,7 +799,7 @@ class ExamController extends CommonController
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
             //查看是否有本场考试
-            $exam = Exam::findOrFail($exam_id);
+            Exam::findOrFail($exam_id);
 
 
             //查询 考试id是否有对应的考场数据
