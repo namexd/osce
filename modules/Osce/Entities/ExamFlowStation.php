@@ -72,7 +72,7 @@ class ExamFlowStation extends CommonModel
                 $this->stationTeacherAssociation($examId, $value, $user);
             }
 
-            dd($formData);
+//            dd($formData);
             $connection->commit();
             return true;
         } catch (Exception $ex) {
