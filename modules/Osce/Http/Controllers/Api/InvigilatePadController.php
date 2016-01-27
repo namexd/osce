@@ -20,6 +20,7 @@ use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
+use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Entities\Teacher;
@@ -28,6 +29,7 @@ use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 use Storage;
+use Auth;
 
 class InvigilatePadController extends CommonController
 {
@@ -47,6 +49,7 @@ class InvigilatePadController extends CommonController
                 //拼凑文件名字
                 $fileName = '';
                 //获取文件的MIME类型
+
                 $fileMime = $file->getMimeType();
                 foreach ($params as $param) {
                     $fileName .= $param;
@@ -54,8 +57,8 @@ class InvigilatePadController extends CommonController
                 $fileName .= $file->getClientOriginalExtension(); //获取文件名的正式版
 
                 //取得保存路径
-                $savePath = public_path('osce/Attach/') . $fileMime . '/' . $date . '/' . $params['student_name'] . '/';
-                $savePath = realpath($savePath);
+                $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . $params['student_code'] . '/';
+                $savePath = public_path($savePath) ;
 
                 //如果没有这个文件夹，就新建一个文件夹
                 if (!file_exists($savePath)) {
@@ -436,7 +439,6 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     station_id    考站id   (必须的)
      * @param array $array
      * @return view
      * @throws \Exception
@@ -447,12 +449,15 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttach(Request $request, Array $array)
     {
+        dd(22222);
         try {
             //获取考站、考生、和考试关联的id
-            list($stationId, $studentId, $examScreenId, $testResultId) = $array;
+            list($stationId, $studentId, $examScreenId, $testResultId, $timeAnchors) = $array;
 
             //根据ID找到对应的名字
-            $studentName = Student::findOrFail($studentId)->first()->name;
+            $student = Student::findOrFail($studentId)->first();
+            $studentName = $student->name;
+            $studentCode = $student->code;
             $stationName = Station::findOrFail($stationId)->first()->name;
             $examName = ExamScreening::findOrFail($examScreenId)->ExamInfo->name;
 
@@ -460,6 +465,7 @@ class InvigilatePadController extends CommonController
             $params = [
                 'exam_name' => $examName,
                 'student_name' => $studentName,
+                'student_code' => $studentCode,
                 'station_name' => $stationName,
             ];
             //获取当前日期
@@ -487,15 +493,65 @@ class InvigilatePadController extends CommonController
             }
 
             //拼装文件名
-            $resultPhoto[] = self::uploadFileBuilder($photos, $date, $params, $testResultId);
-            $resultRadio[] = self::uploadFileBuilder($radios, $date, $params, $testResultId);
+            self::uploadFileBuilder($photos, $date, $params, $testResultId);
+            self::uploadFileBuilder($radios, $date, $params, $testResultId);
 
-            $result = [$resultPhoto, $resultRadio];
-            return $result;
+            //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
+            $this->storeAnchor($timeAnchors);
+
+            return true;
 
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * @author Jiangzhiheng
+     * @param $stationId
+     * @param $studentId
+     * @param array $timeAnchors
+     * @return bool
+     * @throws \Exception
+     */
+    private function storeAnchor($stationId, $studentId, $examScreenId, array $timeAnchors) {
+        try {
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('当前用户未登陆');
+            }
+
+            //获得站点摄像机关联表
+            $stationVcr = StationVcr::where('station_id',$stationId)->first();
+            if (empty($stationVcr)) {
+                throw new \Exception('该考站未关联摄像机');
+            }
+
+            //获取考试
+            $exam = ExamScreening::findOrFail($examScreenId);
+
+            foreach ($timeAnchors as $timeAnchor) {
+                //拼凑数组
+                $data = [
+                    'station_vcr_id' => $stationVcr->id,
+                    'begin_dt' => $timeAnchor,
+                    'end_dt' => $timeAnchor,
+                    'created_user_id' => $user->id,
+                    'exam_id' => $exam->id,
+                    'student_id' => $studentId,
+                ];
+
+                //将数据插入库
+                if (!StationVideo::create($data)) {
+                    throw new \Exception('保存失败！请重试！');
+                }
+            }
+
+            return true;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+
     }
 
 
