@@ -206,7 +206,7 @@ class ExamRoom extends CommonModel
 
                 $result=$result ->where($this->table.'.exam_id', '=', $exam_id);
 
-                $result= $result->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port'])
+                $result= $result->select(['station_vcr.id','vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
             -> get();
 
             return $result;
@@ -219,11 +219,11 @@ class ExamRoom extends CommonModel
     public function getWaitRoom($exam_id){
         $time=time();
         try{
-            $builder=$this->Join('exam','exam.id','=','exam_room.exam_id');
+            $builder=$this->Join('exam_plan','exam_plan.exam_id','=','exam_room.exam_id');
             $builder=$builder->Join('room','room.id','=','exam_room.room_id');
-            $builder=$builder->where('exam.id',$exam_id);
+            $builder=$builder->where('exam_plan.exam_id',$exam_id);
             $builder=$builder->whereRaw(
-                'unix_timestamp('.'exam.begin_dt'.') > ?',
+                'unix_timestamp('.'exam_plan.begin_dt'.') > ?',
                 [
                     $time
                 ]
@@ -232,7 +232,8 @@ class ExamRoom extends CommonModel
             $data= $builder->select([
                 'room.id as room_id',
                 'room.name as room_name',
-                'exam.name as exam_name',
+                'room.address as room_address',
+                'room.code as room_code',
             ])->get();
             return $data;
         }catch (\Exception $ex){
