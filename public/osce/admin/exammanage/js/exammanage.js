@@ -722,6 +722,12 @@ function examroom_assignment(){
          */
     }).on("select2:select", function(e){
 
+        //限制选择数量
+        if(($(e.target).val()).length>10){
+            layer.alert('不能大于10条数据！');
+            return;
+        }
+
         var select2_data = e.params.data;
         //检测id相同的教室 如果有就不存如返回，没有就请求并存入
         var rooms = $('#examroom').find('tbody').attr('data');
@@ -2362,6 +2368,12 @@ function station_assignment(){
          * @date    2016-01-13
          */
     }).on("select2:select", function(e){
+
+        //限制选择数量
+        if(($(e.target).val()).length>10){
+            layer.alert('不能大于10条数据！');
+            return;
+        }
 
         var select2_data = e.params.data;
         //检测id相同的教室 如果有就不存如返回，没有就请求并存入
