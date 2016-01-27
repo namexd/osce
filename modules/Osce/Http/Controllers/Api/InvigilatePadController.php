@@ -534,6 +534,7 @@ class InvigilatePadController extends CommonController
                 $data = [
                     'station_vcr_id' => $stationVcr->id,
                     'begin_dt' => $timeAnchor,
+                    'end_dt' => $timeAnchor,
                     'created_user_id' => $user->id,
                     'exam_id' => $exam->id,
                     'student_id' => $studentId,
