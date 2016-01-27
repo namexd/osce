@@ -289,14 +289,14 @@ class StationController extends CommonController
         //将下拉菜单的数据查出
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         if ($id == "") {
-            $vcr = Vcr::where('status', 1)
+            $vcr = Vcr::where('used', 0)
                 ->select(['id', 'name'])
                 ->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
             $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
 
-            $vcr  = Vcr::where('status', 1)
+            $vcr  = Vcr::where('used', 0)
                     ->orWhere(function($query) use($vcrId){
                         $query->where('id','=',$vcrId);
                     })
