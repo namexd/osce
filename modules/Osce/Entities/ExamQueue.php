@@ -263,7 +263,6 @@ class ExamQueue extends CommonModel
      * @param $time  当前时间戳
      * @param $examScreeningId
      * @throws \Exception
-     * @internal param $date
      * @author Jiangzhiheng
      */
     public function createExamQueue($examId, $studentId, $time, $examScreeningId)
