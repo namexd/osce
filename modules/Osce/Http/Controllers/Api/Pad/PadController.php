@@ -18,6 +18,7 @@ use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\StationVcr;
+use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -142,21 +143,18 @@ class PadController extends  CommonController{
 
        public function getTimingList(Request $request){
             $this->validate($request,[
-                 'vcr_id'     =>'required|integer',
-                 'exam_id'       =>'required',
-                 'room'       =>'required',
-                 'begin_dt'   =>'required',
-                 'end_dt'     =>'required',
+                 'station_vcr_id'     =>'required|integer',
+                 'exam_id'            =>'required',
+                 'begin_dt'           =>'sometimes',
+                 'end_dt'             =>'sometimes',
             ]);
-            $vcrId=$request->get('vcr_id');
+            $stationVcrId=$request->get('station_vcr_id');
             $beginDt=$request->get('begin_dt');
             $examId=$request->get('exam_id');
-            $room=$request->get('room');
             $endDt=$request->get('end_dt');
            try{
-//               $vcrs=Vcr::where('vcer_id',$vcrId)->where('time','<',$beginDt)->select()->get();
-               $stationVcrModel=new StationVcr();
-               $vcrs=$stationVcrModel->getTiming($vcrId,$beginDt,$examId,$room,$endDt);
+               $stationVideoModel=new StationVideo();
+               $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );
