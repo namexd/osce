@@ -287,16 +287,12 @@ class Notice extends CommonModel
             {
                 throw new \Exception('没有找到指定的教务人员用户信息');
             }
-
-            if(!is_null($teacher->userInfo))
-            {
-                $data[] =   [
-                    'id'    =>  $teacher->userInfo  ->  id,
-                    'openid'=>  $teacher->userInfo  ->  openid,
-                    'mobile'=>  $teacher->userInfo  ->  mobile,
-                    'email'=>  $teacher->userInfo   ->  email,
-                ];
-            }
+            $data[] =   [
+                'id'    =>  $teacher->userInfo  ->  id,
+                'openid'=>  $teacher->userInfo  ->  openid,
+                'mobile'=>  $teacher->userInfo  ->  mobile,
+                'email'=>  $teacher->userInfo   ->  email,
+            ];
         }
         return $data;
     }
