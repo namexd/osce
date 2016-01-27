@@ -768,7 +768,7 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
-//        dd($request->all());
+       // dd($request->all());
         try{
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
