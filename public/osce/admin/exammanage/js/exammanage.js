@@ -578,25 +578,34 @@ function examroom_assignment(){
     /**
      * 将保存的数据保存
      */
-    var arrStore = [];
+    var arrStore = [],selected = []; //arrStore保存的数据，selected所有id值数组
     $('#examroom').find('tbody').find('tr').each(function(key,elem){
 
-
-        var selected = $(elem).find('td').eq(1).find('select').val();
-        for(var i in selected){
-            if(arrStore.length==0){
-                arrStore.push({id:selected[i],count:1});
-            }else{
-                for(var j in arrStore){
-                    if(arrStore[j].id==selected[i]){
-                        arrStore[j].count += 1;
-                    }else{
-                        arrStore.push({id:selected[i],count:1});
-                    }
-                }
-            }
+        var current = $(elem).find('td').eq(1).find('select').val();
+        for(var i in current){
+            selected.push(current[i]);
         }
     });
+
+    //数组去重
+    var _n = {},_m = {};//_n哈希表，_m哈希表记录数组元素重复次数
+    for(var i = 0; i < selected.length; i++) 
+    {
+        if (!_n[selected[i]]) 
+        {
+            _n[selected[i]] = true;
+            _m[selected[i]] = 1;
+            arrStore.push({id:selected[i],count:1}); 
+        }else{
+            _m[selected[i]] += 1;
+        }
+    }
+
+    //组装数据
+    for(var i in arrStore){
+        arrStore[i].count = _m[arrStore[i].id];
+    }
+
     $('#examroom').find('tbody').attr('data',JSON.stringify(arrStore));
 
 
@@ -1512,11 +1521,14 @@ function examroom_assignment(){
      * @date    2016-01-27
      */
     $('.btn-primary').click(function(){
-        var status = false;
+
+        var status_select = false;
+        var status = true;
         $('#examroom tbody').find('select').each(function(key,elem){
-            if($(elem).val()==null)status = true;
-        });
-        if(status){
+            status = false;
+            if($(elem).val()==null)status_select = true;
+        });alert(status);
+        if(status||status_select){
             layer.alert('考场信息不能为空！');
             return false;
         }
@@ -2201,25 +2213,34 @@ function station_assignment(){
     /**
      * 将保存的数据保存
      */
-    var arrStore = [];
+    var arrStore = [],selected = []; //arrStore保存的数据，selected所有id值数组
     $('#examroom').find('tbody').find('tr').each(function(key,elem){
 
-
-        var selected = $(elem).find('td').eq(1).find('select').val();
-        for(var i in selected){
-            if(arrStore.length==0){
-                arrStore.push({id:selected[i],count:1});
-            }else{
-                for(var j in arrStore){
-                    if(arrStore[j].id==selected[i]){
-                        arrStore[j].count += 1;
-                    }else{
-                        arrStore.push({id:selected[i],count:1});
-                    }
-                }
-            }
+        var current = $(elem).find('td').eq(1).find('select').val();
+        for(var i in current){
+            selected.push(current[i]);
         }
     });
+
+    //数组去重
+    var _n = {},_m = {};//_n哈希表，_m哈希表记录数组元素重复次数
+    for(var i = 0; i < selected.length; i++) 
+    {
+        if (!_n[selected[i]]) 
+        {
+            _n[selected[i]] = true;
+            _m[selected[i]] = 1;
+            arrStore.push({id:selected[i],count:1}); 
+        }else{
+            _m[selected[i]] += 1;
+        }
+    }
+
+    //组装数据
+    for(var i in arrStore){
+        arrStore[i].count = _m[arrStore[i].id];
+    }
+
     $('#examroom').find('tbody').attr('data',JSON.stringify(arrStore));
 
     /**
@@ -3138,11 +3159,13 @@ function station_assignment(){
      * @date    2016-01-27
      */
     $('.btn-primary').click(function(){
-        var status = false;
+        var status_select = false;
+        var status = true;
         $('#examroom tbody').find('select').each(function(key,elem){
-            if($(elem).val()==null)status = true;
+            status = false;
+            if($(elem).val()==null)status_select = true;
         });
-        if(status){
+        if(status||status_select){
             layer.alert('考站信息不能为空！');
             return false;
         }
