@@ -27,7 +27,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class IndexController extends CommonController
 {
-    
+
     /**
      *检测腕表是否存在
      * @method GET 接口

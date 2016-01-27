@@ -318,15 +318,13 @@ class Notice extends CommonModel
             {
                 throw new \Exception('没有找到指定的考生用户信息');
             }
-            if(!is_null($student->userInfo))
-            {
-                $data[] =   [
-                    'id'    =>  $student->userInfo->id,
-                    'openid'=>  $student->userInfo->openid,
-                    'email' =>  $student->userInfo->email,
-                    'mobile' =>  $student->userInfo->mobile,
-                ];
-            }
+
+            $data[] =   [
+                'id'    =>  $student->userInfo->id,
+                'openid'=>  $student->userInfo->openid,
+                'email' =>  $student->userInfo->email,
+                'mobile' =>  $student->userInfo->mobile,
+            ];
         }
         return $data;
     }
@@ -339,15 +337,14 @@ class Notice extends CommonModel
             {
                 throw new \Exception('没有找到指定的教务人员用户信息');
             }
-            if($teacher->userInfo->openid)
-            {
-                $data[] =   [
-                    'id'    =>  $teacher->userInfo->id,
-                    'openid'=>  $teacher->userInfo->openid,
-                    'email' =>  $teacher->userInfo->email,
-                    'mobile'=>  $teacher->userInfo->mobile,
-                ];
-            }
+
+            $data[] =   [
+                'id'    =>  $teacher->userInfo->id,
+                'openid'=>  $teacher->userInfo->openid,
+                'email' =>  $teacher->userInfo->email,
+                'mobile'=>  $teacher->userInfo->mobile,
+            ];
+
         }
         return $data;
     }
