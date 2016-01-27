@@ -31,7 +31,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        id        场所ID
+     * * int        room_id        场所ID
      *
      * @return ${response}
      *
@@ -42,10 +42,10 @@ class PadController extends  CommonController{
      */
        public function getRoomVcr(Request $request){
             $this->validate($request,[
-                'id'  =>'required|integer'
+                'room_id'  =>'required|integer'
             ]);
 
-            $id=$request->get('id');
+            $id=$request->get('room_id');
             $data=RoomVcr::where('room_id',$id)->select()->get();
 
             $list=[];
@@ -68,7 +68,7 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        id        摄像机ID(必须的)
+     * * int        vcr_id        摄像机ID(必须的)
      *
      * @return ${response}
      *
@@ -79,10 +79,10 @@ class PadController extends  CommonController{
      */
        public function getVcr(Request $request){
            $this->validate($request,[
-               'id'  =>'required|integer'
+               'vcr_id'  =>'required|integer'
            ]);
 
-           $id=$request->get('id');
+           $id=$request->get('vcr_id');
            $data=Vcr::find($id);
            return response()->json(
                $this->success_data($data,1,'success')
@@ -129,9 +129,9 @@ class PadController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * int        vcr_id           摄像机ID(必须的)
-     * * datetime   startTime        开始标记点(必须的)
-     * * datetime   EndTime          结束标记点(必须的)
+     * * int        station_vcr_id            考站-摄像机关联表id(必须的)
+     * * int        exam_id                   考试Id(必须的)
+     * *
      *
      * @return ${response}
      *
