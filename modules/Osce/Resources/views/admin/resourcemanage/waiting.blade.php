@@ -27,7 +27,20 @@
                         data:{id:thisElement.parent().parent().parent().attr('value'),type:($('.active').find('a').attr('href')).split('=')[1]},
                         success:function(res){
                             if(res.code==1){
-                                location.href = (location.href).split('?')[0];
+//                                location.reload();
+                                var UrlInfo     =   (location.href).split('?');
+                                var paramInfo   =   UrlInfo[1].split('&');
+                                var pageIndex   =   [];
+                                var paramData   =   new Array;
+                                for (var pageIndex in paramInfo)
+                                {
+                                    var keyArray    =   paramInfo[pageIndex].split('=');
+                                    if(keyArray[0]!='page')
+                                    {
+                                        paramData.push(paramInfo[pageIndex]);
+                                    }
+                                }
+                                location.href = UrlInfo[0]+'?'+paramData.join('&');
                             }else{
                                 layer.alert(res.message)
                             }

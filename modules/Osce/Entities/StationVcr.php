@@ -120,4 +120,28 @@ class StationVcr extends CommonModel
 //        return $data;
 //    }
 
+
+    //获取考站摄像机信息
+    public function getStionVcr($room_id,$exam_id){
+        try{
+            $result = $this->leftJoin('room_station', function($join){
+                $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
+            })-> leftJoin('exam_room', function($join){
+                $join -> on('exam_room.room_id', '=', 'room_station.room_id');
+            })    ->leftJoin('vcr', function($join){
+                $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
+            });
+            $result=$result ->where('room_station.room_id',$room_id);
+
+            $result=$result ->where('exam_room.exam_id', '=', $exam_id);
+
+            $result= $result->select(['station_vcr.id','vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
+                -> get();
+
+            return $result;
+        } catch(\Exception $ex){
+            return $ex;
+        }
+    }
+
 }
