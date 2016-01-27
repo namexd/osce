@@ -336,7 +336,11 @@ class Station extends CommonModel
             return $this->where($this->table.'.id', $id)->delete();
 
         } catch (\Exception $ex) {
-            throw $ex;
+            if($ex->getCode() == 23000){
+                throw new \Exception('不能删除此考站，因为与其他条目相关联！');
+            }else{
+                throw $ex;
+            }
         }
     }
 
