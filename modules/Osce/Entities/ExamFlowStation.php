@@ -66,12 +66,13 @@ class ExamFlowStation extends CommonModel
                 }
             }
 
-            dd($formData);
+
             foreach ($formData as $key => $value) {
                 //准备数据，插入station_teacher表
                 $this->stationTeacherAssociation($examId, $value, $user);
             }
 
+            dd($formData);
             $connection->commit();
             return true;
         } catch (Exception $ex) {
@@ -222,6 +223,7 @@ class ExamFlowStation extends CommonModel
                 $teacherIDs[] = $value['spteacher_id'];
             }
         }
+            dump($teacherIDs);
         //循环，将老师ID放入station_teacher表的数据
         foreach ($teacherIDs as $teacherID) {
             $stationTeacherData = [
