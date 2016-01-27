@@ -44,35 +44,16 @@ class PadController extends  CommonController{
                 'id'  =>'required|integer'
             ]);
 
-//            $id=$request->get('id');
-//            $data=RoomVcr::where('room_id',$id)->select()->get();
-//
-//            $list=[];
-//            foreach($data as $item){
-//               $list[]=[
-//                   $item->getVcr
-//               ];
-//            }
-           $list[0]=[
-               'name' =>'摄像机',
-               'ip' =>'192.168.2.202',
-               'username' =>'摄像机',
-               'password' =>'123456',
-               'port' =>'88',
-               'channel' =>'测试',
-               'description' =>'测试内容1',
-               'status' =>'1',
-           ];
-           $list[1]=[
-               'name' =>'摄像机1',
-               'ip' =>'192.168.2.203',
-               'username' =>'摄像机1',
-               'password' =>'1234567',
-               'port' =>'90',
-               'channel' =>'测试1',
-               'description' =>'测试内容21',
-               'status' =>'2',
-           ];
+            $id=$request->get('id');
+            $data=RoomVcr::where('room_id',$id)->select()->get();
+
+            $list=[];
+            foreach($data as $item){
+               $list[]=[
+                   $item->getVcr
+               ];
+            }
+
             return response()->json(
                 $this->success_data($list,1,'success')
             );
@@ -100,18 +81,8 @@ class PadController extends  CommonController{
                'id'  =>'required|integer'
            ]);
 
-//           $id=$request->get('id');
-//           $data=Vcr::find($id);
-           $data[0]=[
-               'name' =>'摄像机',
-               'ip' =>'192.168.2.202',
-               'username' =>'摄像机',
-               'password' =>'123456',
-               'port' =>'88',
-               'channel' =>'测试',
-               'description' =>'测试内容1',
-               'status' =>'1',
-           ];
+           $id=$request->get('id');
+           $data=Vcr::find($id);
            return response()->json(
                $this->success_data($data,1,'success')
            );
@@ -140,20 +111,10 @@ class PadController extends  CommonController{
                 'room_id' => 'required|integer',
                 'exam_id'    => 'required|integer'
              ]);
-//             $room_id=$request->get('room_id');
-//             $exam_id=$request->get('exam_id');
-//             $examModel=new ExamRoom();
-//             $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
-           $stationVcrs[0]=[
-               'name' =>'摄像机',
-               'ip' =>'192.168.2.202',
-               'username' =>'摄像机',
-               'password' =>'123456',
-               'port' =>'88',
-               'channel' =>'测试',
-               'description' =>'测试内容1',
-               'status' =>'1',
-           ];
+             $room_id=$request->get('room_id');
+             $exam_id=$request->get('exam_id');
+             $examModel=new ExamRoom();
+             $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
              return response()->json(
                  $this->success_data($stationVcrs,1,'success')
              );
@@ -193,21 +154,9 @@ class PadController extends  CommonController{
             $room=$request->get('room');
             $endDt=$request->get('end_dt');
            try{
-//               $vcrs=Vcr::where('vcer_id',$vcr_id)->where('time','<',$beginDt)->select()->get();
-//               $stationVcrModel=new StationVcr();
-//               $vcrs=$stationVcrModel->getTiming($vcrId,$beginDt,$examId,$room,$endDt);
-               $vcrs[0]=[
-                    'begin_dt' => '2016-1-26 9:00:00',
-                    'end_dt'   => '2016-1-26 10:00:00',
-               ];
-               $vcrs[1]=[
-                   'begin_dt' => '2016-1-26 11:00:00',
-                   'end_dt'   => '2016-1-26 12:00:00',
-               ];
-               $vcrs[2]=[
-                   'begin_dt' => '2016-1-26 14:00:00',
-                   'end_dt'   => '2016-1-26 15:00:00',
-               ];
+//               $vcrs=Vcr::where('vcer_id',$vcrId)->where('time','<',$beginDt)->select()->get();
+               $stationVcrModel=new StationVcr();
+               $vcrs=$stationVcrModel->getTiming($vcrId,$beginDt,$examId,$room,$endDt);
                return response()->json(
                    $this->success_data($vcrs,1,'success')
                );
@@ -279,17 +228,11 @@ class PadController extends  CommonController{
               $this->validate($request,[
                   'exam_id'  =>'required|integer'
               ]);
-//              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
-//              $rooms=[];
-//              foreach($examList as $examRoom){
-//                $rooms[]=$examRoom->room;
-//              }
-           $rooms=[
-               'name'=>'测试考场1',
-               'address'=>'测试地址1',
-               'code'=>'12131',
-               'description'=>'5546654',
-           ];
+              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
+              $rooms=[];
+              foreach($examList as $examRoom){
+                $rooms[]=$examRoom->room;
+              }
               return response()->json(
                $this->success_data($rooms,1,'success')
            );
@@ -316,16 +259,11 @@ class PadController extends  CommonController{
              $this->validate($request,[
                  'exam_id'   =>'required|integer'
              ]);
-//             $examModel = new ExamRoom();
-//             $exam_id=$request->get('exam_id');
+             $examModel = new ExamRoom();
+             $exam_id=$request->get('exam_id');
          try{
-//             $examRoomList=$examModel->getWaitRoom($exam_id);
-             $examRoomList=[
-                 'name'=>'测试考场1',
-                 'address'=>'测试地址1',
-                 'code'=>'12131',
-                 'description'=>'5546654',
-             ];
+             $examRoomList=$examModel->getWaitRoom($exam_id);
+
              return response()->json(
                  $this->success_data($examRoomList,1,'success')
              );
@@ -336,22 +274,7 @@ class PadController extends  CommonController{
                };
        }
 
-    /**
-     * 根据考试id获取候考场所列表(接口)
-     * @method GET
-     * @url api/1.0/private/osce/pad/status
-     * @access public
-     *
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * * int        exam_id        考试id(必须的)
-     * @return \Illuminate\Http\JsonResponse ${response}
-     *
-     * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
-     * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
+
     public function getStatus(Request $request)
     {
         $this->validate($request, [
