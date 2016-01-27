@@ -1504,6 +1504,24 @@ function examroom_assignment(){
         }
     });
 
+    
+    /**
+     * 考场信息验证
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-27
+     */
+    $('.btn-primary').click(function(){
+        var status = false;
+        $('#examroom tbody').find('select').each(function(key,elem){
+            if($(elem).val()==null)status = true;
+        });
+        if(status){
+            layer.alert('考场信息不能为空！');
+            return false;
+        }
+    })
+
 }
 
 
@@ -3111,5 +3129,23 @@ function station_assignment(){
 
         }
     });
+
+    
+    /**
+     * 考站信息验证
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-27
+     */
+    $('.btn-primary').click(function(){
+        var status = false;
+        $('#examroom tbody').find('select').each(function(key,elem){
+            if($(elem).val()==null)status = true;
+        });
+        if(status){
+            layer.alert('考站信息不能为空！');
+            return false;
+        }
+    })
 
 }
