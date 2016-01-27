@@ -208,4 +208,7 @@ class Vcr extends CommonModel implements MachineInterface
         $result = [$vcr, $modelVcr];
         return $result;     //关联摄像机
     }
+
+
+
 }

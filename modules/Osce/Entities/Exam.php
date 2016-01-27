@@ -183,10 +183,11 @@ class Exam extends CommonModel
 
             //通过考试流程-考站关系表得到考站信息
             if ($examObj->sequence_mode == 1) {
-                if (!StationTeacher::where('exam_id',$id)->delete()) {
-                    throw new \Exception('弃用考站老师关联失败，请重试！');
+                if (!StationTeacher::where('exam_id',$id)->get()->isEmpty()) {
+                    if (!StationTeacher::where('exam_id',$id)->delete()) {
+                        throw new \Exception('弃用考站老师关联失败，请重试！');
+                    }
                 }
-
             } elseif ($examObj->sequence_mode == 2) {
                 $station = ExamFlowStation::whereIn('flow_id',$flowIds);
                 $stationIds = $station->select('station_id')->get();
