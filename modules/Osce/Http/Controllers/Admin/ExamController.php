@@ -1357,7 +1357,7 @@ class ExamController extends CommonController
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-//        dd($request->all());
+        dd($request->all());
         try {
             //验证
             $this->validate($request, [
@@ -1370,7 +1370,7 @@ class ExamController extends CommonController
             $room = $request->get('room');
             $formData = $request->get('form_data'); //所有的考站数据
 
-            $exam = Exam::findOrFail($examId);
+            Exam::findOrFail($examId);
             //判断是否有本场考试
             //查看是新建还是编辑
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加

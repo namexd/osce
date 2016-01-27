@@ -18,13 +18,13 @@ class DrawlotsTest extends TestCase
 
     public function testOne()
     {
-        $userOb =   \App\Entities\User::find(51);
+        $userOb =   \App\Entities\User::find(1);
         $response   =   $this->actingAs($userOb)
             ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getExaminee');
         $view = $response->getContent();
         $data = json_decode($view);
+//        $this->assertTrue($data);
         dd($data);
-//        $this->assertTrue($data->code==1);
     }
 
 //    public function testTwo()

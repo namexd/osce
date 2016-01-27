@@ -206,6 +206,7 @@ class ExamFlowStation extends CommonModel
      */
     protected function stationTeacherAssociation($examId, $value, $user)
     {
+        dd($value);
         try {
         //先拼装teacher的数据
         $teacherIDs = [];
