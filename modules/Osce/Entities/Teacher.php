@@ -22,7 +22,7 @@ class Teacher extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','name', 'code', 'type', 'case_id', 'create_user_id','status','description'];
+    protected $fillable = ['id','name', 'code', 'type', 'case_id','status', 'create_user_id','description'];
     private $excludeId = [];
 
     protected $type_values  =   [
@@ -241,6 +241,8 @@ class Teacher extends CommonModel
      */
     public function addInvigilator($role_id, $userData , $teacherData)
     {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
         try{
             $mobile = $userData['mobile'];
             $user   = User::where('username', '=', $mobile)->first();
@@ -257,6 +259,7 @@ class Teacher extends CommonModel
                     ]
                 );
                 $this -> sendRegisterEms($mobile, $password);
+
             }else{
                 foreach($userData as $feild=> $value) {
                     $user    ->  $feild  =   $value;
@@ -266,6 +269,11 @@ class Teacher extends CommonModel
                 }
             }
 
+            //查询教师编号是否已经被别人使用
+            $code = $this->where('code', $teacherData['code'])->where('id','<>',$user->id)->first();
+            if(!empty($code)){
+                throw new \Exception('该教师编号已经有别人使用！');
+            }
             //查询老师是否存在
             $teacher = $this->where('id', $user->id)->first();
             if($teacher){
@@ -279,15 +287,17 @@ class Teacher extends CommonModel
 //                    return $teacher;
 //                }
             } else{
-                $teacherData['id'] =   $user   ->  id;
-                if($teacher =   $this   ->  create($teacherData)){
-                    return $teacher;
-                } else{
+                $teacherData['id'] = $user -> id;
+                if(!($teacher = $this -> create($teacherData))){
                     throw new \Exception('教职员工创建失败');
                 }
             }
+            $connection->commit();
+            return $teacher;
+
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
+            $connection->rollBack();
+            throw $ex;
         }
     }
 
@@ -327,7 +337,8 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editInvigilator($id, $userData, $teacherData){
+    public function editInvigilator($id, $userData, $teacherData)
+    {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
@@ -338,6 +349,11 @@ class Teacher extends CommonModel
                 throw new   \Exception('没有找到该教务人员');
             }
 
+            //查询教师编号是否已经被别人使用
+            $code = $this->where('code', $teacherData['code'])->where('id','<>',$id)->first();
+            if(!empty($code)){
+                throw new \Exception('该教师编号已经有别人使用！');
+            }
             foreach($teacherData as $feild => $value) {
                 $teacher    ->  $feild  =   $value;
             }
@@ -379,6 +395,11 @@ class Teacher extends CommonModel
                 throw new   \Exception('教务人员信息变更失败');
             }
 
+            //查询教师编号是否已经被别人使用
+            $code = $this->where('code', $teacherData['code'])->where('id','<>',$id)->first();
+            if(!empty($code)){
+                throw new \Exception('该教师编号已经有别人使用！');
+            }
             //教务人员用户信息变更
             $userInfo   =   $teacher->userInfo;
             foreach($userData as $feild => $value) {

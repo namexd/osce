@@ -128,13 +128,12 @@ class RoomController extends CommonController
      */
     public function postEditRoom(Request $request)
     {
-//        dd($request->all());
         //验证数据，暂时省略
         $this->validate($request, [
-            'id' => 'required|integer',
-            'name' => 'required',
-            'description' => 'required',
-            'type' => 'required'
+            'id'            => 'required|integer',
+            'name'          => 'required',
+            'description'   => 'required',
+            'type'          => 'required'
         ]);
 
         $id         = $request->input('id');
@@ -208,25 +207,25 @@ class RoomController extends CommonController
             //验证
             $this->validate($request, [
                 'vcr_id'        => 'required',
-                'name'  => 'required|unique:osce_mis.room,name',
-                'address' => 'required',
-                'code' => 'required',
-                'description' => 'required',
-                'type' => 'required',
+                'name'          => 'required|unique:osce_mis.room,name',
+                'address'       => 'required',
+                'code'          => 'sometimes',
+                'description'   => 'required',
+                'type'          => 'required',
             ],[
                 'name.unique'   =>  '名称必须唯一',
             ]);
             //TODO   表单内容变化没有提交nfc字段
             $formData = $request->only('name', 'address', 'code', 'description');
-            $vcrId =$request->get('vcr_id');
+            $type   = $request->input('type');
+            $vcrId  = $request->get('vcr_id');
             if (!$user = Auth::user()) {
                 throw new \Exception('当前操作者没有登陆');
             }
             $userId = $user->id;
             $formData['created_user_id'] = $userId;
-            $type = $request->input('type');
+            $formData['cate']            = $type;
 
-            $formData['cate'] = $request->input('type');
             if ($type === '0') {
                 $room->createRoom($formData,$vcrId,$userId);
             } else {
