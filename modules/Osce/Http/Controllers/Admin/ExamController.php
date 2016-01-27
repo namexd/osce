@@ -1357,7 +1357,6 @@ class ExamController extends CommonController
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-        dd($request->all());
         try {
             //验证
             $this->validate($request, [
@@ -1410,7 +1409,6 @@ class ExamController extends CommonController
         $exam   =   Exam::find($exam_id);
         $user   =   Auth::user();
         $plan   =   Cache::get('plan_'.$exam->id.'_'.$user->id);
-//        dd($plan);
         $ExamPlanModel  =   new ExamPlan();
 //
         try{
@@ -1565,22 +1563,30 @@ class ExamController extends CommonController
 
         //获得exam_id
         $id = $request->input('id');
-		return view('osce::admin.exammanage.waiting_area', ['id'=>$id]);
+        $data = Exam::where('id',$id)->select(['rules'])->first();
+
+		return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data]);
 	}
 
     public function postExamRemind(Request $request){
-        $this->validate($request,[
-            'content'  => 'required',
-            'id'       => 'required|integer'
-        ]);
+        try{
+            $this->validate($request,[
+                'content'  => 'required',
+                'id'       => 'required|integer'
+            ]);
 
-        $content=$request->get('content');
-        $id=$request->get('id');
-        $result=Exam::where('id',$id)->update([
-            'rules'  => $content
-        ]);
-        if($result){
+            $content = $request->get('content');
+            $id      = $request->get('id');
+            //保存代考区说明信息
+            $result  = Exam::where('id',$id)->update(['rules'  => $content]);
+            if($result){
+                return redirect()->route('osce.admin.exam.getExamRemind',['id'=>$id]);
+            }else{
+                throw new \Exception('保存失败！');
+            }
 
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 }
