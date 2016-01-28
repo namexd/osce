@@ -128,6 +128,6 @@ class ExamResultController extends CommonController{
         $examResult=new ExamResult();
         $examResult=$examResult->getResultDetail($id);
 
-        return view()->with('examResult',$examResult);
+        return view('osce::admin.exammanage.score_query_detail')->with('examResult',$examResult);
     }
 }

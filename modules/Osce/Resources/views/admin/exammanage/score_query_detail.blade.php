@@ -41,7 +41,8 @@
     <script>
         $(function(){
 
-           var option = {
+            function charts(){
+                var option = {
                     title : {
                         text: '图表分析'
                     },
@@ -107,8 +108,11 @@
                     ]
                 };
 
-            var myChart = echarts.init(document.getElementById('score')); 
-            myChart.setOption(option);
+                var myChart = echarts.init(document.getElementById('score')); 
+                myChart.setOption(option);
+            }
+
+            charts();
 
 
             /**
@@ -124,7 +128,7 @@
                                 '<div class="item active">'+
                                   '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
                                   '<div class="carousel-caption">'+
-                                    '<a href="#" target="_blank">下载</a>'+
+                                    '<a href="http://www.haosou.com" target="_blank">下载</a>'+
                                   '</div>'+
                                 '</div>'+
                                 '<div class="item">'+
