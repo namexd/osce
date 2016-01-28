@@ -32,14 +32,14 @@ class ExamResultController extends CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getResultExam(Request $request){
-
-         $exams=Exam::select()->get();
-         return response()->json(
-           $this->success_data($exams,1,'success')
-         );
-
-    }
+//    public function getResultExam(Request $request){
+//
+//         $exams=Exam::select()->get();
+//         return response()->json(
+//           $this->success_data($exams,1,'success')
+//         );
+//
+//    }
 
     /**
      *
@@ -58,12 +58,12 @@ class ExamResultController extends CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getResultStation(Request $request){
-         $stations=Station::select()->get();
-         return response()->json(
-            $this->success_data($stations,1,'success')
-        );
-    }
+//    public function getResultStation(Request $request){
+//         $stations=Station::select()->get();
+//         return response()->json(
+//            $this->success_data($stations,1,'success')
+//        );
+//    }
 
     /**
      *
@@ -95,8 +95,10 @@ class ExamResultController extends CommonController{
          $stationId=$request->get('station_id');
          $name=$request->get('name');
 
+         $stations=Station::select()->get();
+         $exams=Exam::select()->get();
          $examResult=new ExamResult();
          $examResults=$examResult->getResultList($examId,$stationId,$name);
-         return view('osce::admin.exammanage.score_query')->with('examResults',$examResults);
+         return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams]);
     }
 }

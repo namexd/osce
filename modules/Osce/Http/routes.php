@@ -187,8 +187,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/change-student', ['uses'=>'ExamController@getChangeStudent','as'=>'osce.admin.exam.getChangeStudent']);
 
 		//成绩查询
-		Route::get('exam/result-exam',['uses'=>'ExamResultController@getResultExam','as'=>'osce.admin.getResultExam']);
-		Route::get('exam/result-station',['uses'=>'ExamResultController@getResultStation','as'=>'osce.admin.getResultStation']);
+//		Route::get('exam/result-exam',['uses'=>'ExamResultController@getResultExam','as'=>'osce.admin.getResultExam']);
+//		Route::get('exam/result-station',['uses'=>'ExamResultController@getResultStation','as'=>'osce.admin.getResultStation']);
 		Route::get('exam/exam-result-list',['uses'=>'ExamResultController@geExamResultList','as'=>'osce.admin.geExamResultList']);
 
 		//sp
