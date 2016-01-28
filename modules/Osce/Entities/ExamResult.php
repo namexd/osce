@@ -94,8 +94,11 @@ class ExamResult extends CommonModel
             'exam_result.patient as patient',
             'exam_result.affinity as affinity',
             'subject.title as subject_title',
+            'subject.id as subject_id',
         ])->get();
 
         return $builder;
     }
+
+
 }

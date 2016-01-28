@@ -10,6 +10,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScore;
+use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -130,23 +132,37 @@ class ExamResultController extends CommonController{
         $result=[];
         foreach($examResult as $item){
          $result=[
-             'student' =>$item->student,
-             'teacher' =>$item->teacher,
-             'begin_dt' =>$item->begin_dt,
-             'time' =>$item->time,
-             'score' =>$item->score,
-             'evaluate' =>$item->evaluate,
+             'exam_name' =>$item->exam_name,
+             'student'   =>$item->student,
+             'teacher'   =>$item->teacher,
+             'begin_dt'  =>$item->begin_dt,
+             'time'      =>$item->time,
+             'score'     =>$item->score,
+             'evaluate'  =>$item->evaluate,
              'operation' =>$item->operation,
-             'skilled' =>$item->skilled,
-             'patient' =>$item->patient,
-             'affinity' =>$item->affinity,
+             'skilled'   =>$item->skilled,
+             'patient'   =>$item->patient,
+             'affinity'  =>$item->affinity,
              'subject_title' =>$item->subject_title,
+             'subject_id' =>$item->subject_id,
          ];
         }
         $result['time']=floor($result['time']/60);
         $result['time'].=':';
         $result['time'].=$result['time']%60;
 
-        return view('osce::admin.exammanage.score_query_detail')->with('result',$result);
+        $score=ExamScore::where('exam_result_id',$id)->select()->get();
+        $scores=[];
+        foreach($score as $itm){
+            $scores[]=[
+                'standard'=>$itm->standard,
+                'score'=>$itm->score,
+            ];
+        }
+      
+        return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores]);
     }
+
+
+
 }
