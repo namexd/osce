@@ -97,6 +97,6 @@ class ExamResultController extends CommonController{
 
          $examResult=new ExamResult();
          $examResults=$examResult->getResultList($examId,$stationId,$name);
-         return view()->with('examResults',$examResults);
+         return view('osce::admin.exammanage.score_query')->with('examResults',$examResults);
     }
 }

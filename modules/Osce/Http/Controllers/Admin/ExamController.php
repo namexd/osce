@@ -1563,9 +1563,10 @@ class ExamController extends CommonController
 
         //获得exam_id
         $id = $request->input('id');
+        $suc= $request->get('suc');
         $data = Exam::where('id',$id)->select(['rules'])->first();
 
-		return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data]);
+		return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
 	}
 
     public function postExamRemind(Request $request){
@@ -1580,7 +1581,7 @@ class ExamController extends CommonController
             //保存代考区说明信息
             $result  = Exam::where('id',$id)->update(['rules'  => $content]);
             if($result){
-                return redirect()->route('osce.admin.exam.getExamRemind',['id'=>$id]);
+                return redirect()->route('osce.admin.exam.getExamRemind',['id'=>$id, 'suc'=>1]);
             }else{
                 throw new \Exception('保存失败！');
             }
