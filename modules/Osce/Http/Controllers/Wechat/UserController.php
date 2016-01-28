@@ -153,7 +153,7 @@ class UserController  extends CommonController
                 $user   =   User::where('openid','=',$openid)->first();
                 if($user)
                 {
-                    if(Auth::attempt(['openid' => $user->openid, 'password' =>$user->id]))
+                    if(Auth::login($user))
                     {
                         return redirect()   ->route('osce.wechat.index.getIndex');
                     }
