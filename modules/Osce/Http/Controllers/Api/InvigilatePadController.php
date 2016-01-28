@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScore;
@@ -170,132 +171,34 @@ class InvigilatePadController extends CommonController
 
 
     public function getExamGrade(Request $request,Collection $collection){
-//      $this->validate($request,[
-//            'station_id' =>'required|integer',
-////            'exam_id'  => 'required|integer'
-//      ],[
-//         'station_id.required'=>'没有获取到当前考站',
-//         'exam_id.required'=>'没有获取到当前考试'
-//      ]);
-//
-//        $stationId =$request->get('station_id');
-//        $examId = $request->get('exam_id');
-//        //根据考站id查询出下面所有的考试项目
-//        $station    =   Station::find($stationId);
-//        //考试标准时间
-//        $mins = $station->mins;
-//        $exam =Exam::find($examId);
-//        $StandardModel  =   new Standard();
-//        $standardList   =   $StandardModel->ItmeList($station->subject_id);
-////        dd($standardList);
-//        if(count($standardList)!=0){
-//            return response()->json(
-//        $this->success_data($standardList,1,'数据传送成功')
-//            );
-//        }else{
-//            return response()->json(
-//                $this->fail(new \Exception('数据查询失败'))
-//            );
-//
-//        }
-        $data=array([
-            "test_point1"=>[
-                0=>[
-                    "id"=> 142,
-                    "subject_id"=> 39,
-                    "content"=> "考核点1",
-                    "sort"=> 1,
-                    "score"=> 2,
-                    "pid"=> 0,
-                    "level"=> 1,
-                    "created_user_id"=> 45,
-                    "created_at"=> "2016-01-24 12:07:52",
-                    "updated_at"=> "2016-01-24 12:07:52",
-                    "answer"=> null
-                ],
+      $this->validate($request,[
+            'station_id' =>'required|integer',
+//            'exam_id'  => 'required|integer'
+      ],[
+         'station_id.required'=>'没有获取到当前考站',
+         'exam_id.required'=>'没有获取到当前考试'
+      ]);
 
-                "test_term"=>[
-                    0=>[
-                        "id"=> 143,
-                        "subject_id"=> 39,
-                        "content"=> "考核点1考核项1",
-                        "sort"=> 1,
-                        "score"=> 1,
-                        "pid"=> 142,
-                        "level"=> 2,
-                        "created_user_id"=> 45,
-                        "created_at"=> "2016-01-24 12:07:52",
-                        "updated_at"=> "2016-01-24 12:07:52",
-                        "answer"=> "考核点1考核项1评分标准1"
-                    ]  ,
-                    1=>[
-                        "id"=> 144,
-                        "subject_id"=> 39,
-                        "content"=> "考核点1考核项2",
-                        "sort"=> 2,
-                        "score"=> 1,
-                        "pid"=> 142,
-                        "level"=> 2,
-                        "created_user_id"=> 45,
-                        "created_at"=> "2016-01-24 12:07:52",
-                        "updated_at"=> "2016-01-24 12:07:52",
-                        "answer"=> "考核点1考核项2评分标准2"
-                    ],
-            ],
-
-       ],
-       'test_point2'=>[
-           1=>[
-               "id"=> 145,
-               "subject_id"=> 39,
-               "content"=> "考核点2",
-               "sort"=> 2,
-               "score"=> 2,
-               "pid"=> 0,
-               "level"=> 1,
-               "created_user_id"=>45,
-               "created_at"=> "2016-01-24 12:07:52",
-               "updated_at"=> "2016-01-24 12:07:52",
-               "answer"=> null
-           ],
-            "test_term"=>[
-
-            2=>[
-                "id"=> 146,
-                "subject_id"=> 39,
-                "content"=> "考核点2考核项1",
-                "sort"=> 1,
-                "score"=> 1,
-                "pid"=> 145,
-                "level"=> 2,
-                "created_user_id"=> 45,
-                "created_at"=> "2016-01-24 12:07:52",
-                "updated_at"=> "2016-01-24 12:07:52",
-                "answer"=> "考核点2考核项1评分标准1"
-            ],
-
-            3=>[
-                "id"=> 147,
-                "subject_id"=> 39,
-                "content"=> "考核点2考核项2",
-                "sort"=> 2,
-                "score"=> 1,
-                "pid"=> 145,
-                "level"=> 2,
-                "created_user_id"=> 45,
-                "created_at"=> "2016-01-24 12:07:52",
-                "updated_at"=> "2016-01-24 12:07:52",
-                "answer"=> "考核点2考核项2评分标准2"
-            ],
-        ],
-       ]
-        ]);
-
-//        echo json_encode($data);
-         return response()->json(
-        $this->success_data($data,1,'数据传送成功')
+        $stationId =$request->get('station_id');
+        $examId = $request->get('exam_id');
+        //根据考站id查询出下面所有的考试项目
+        $station    =   Station::find($stationId);
+        //考试标准时间
+        $mins = $station->mins;
+        $exam =Exam::find($examId);
+        $StandardModel  =   new Standard();
+        $standardList   =   $StandardModel->ItmeList($station->subject_id);
+//        dd($standardList);
+        if(count($standardList)!=0){
+            return response()->json(
+        $this->success_data($standardList,1,'数据传送成功')
+            );
+        }else{
+            return response()->json(
+                $this->fail(new \Exception('数据查询失败'))
             );
 
+        }
     }
     /**
      *   * 提交评价
@@ -321,12 +224,10 @@ class InvigilatePadController extends CommonController
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
             'score' =>'required',
-            'evaluate'=>'required'
         ],[
             'subject_id.required'=>'请检查考试项目',
             'standard_id.required'=>'请检查评分标准',
             'score.required'=>'请检查评分标准分值',
-            'evaluate.required'=>'评价内容',
         ]);
         $data =[
             'subject_id'=>Input::get('subject_id'),
@@ -374,6 +275,7 @@ class InvigilatePadController extends CommonController
               'score'=>'required|integer',
               'score_dt'=>'required',
               'teacher_id'=>'required|integer',
+              'evaluate'=>'required'
           ]);
 
         $data   =   [
@@ -386,41 +288,55 @@ class InvigilatePadController extends CommonController
           'score'=>Input::get('score'),//最终成绩
           'score_dt'=>Input::get('score_dt'),//评分时间
           'teacher_id'=>Input::get('teacher_id'),
+          'evaluate'=>Input::get('evaluate'),//评价内容
+          'operation'=>Input::get('operation'),//操作的连贯性
+          'skilled'=>Input::get('skilled'),//工作的娴熟度
+          'patient'=>Input::get('patient'),//病人关怀情况
+          'affinity'=>Input::get('affinity'),//沟通亲和能力
+
         ];
+           //根据考生id获取到考试id
+          $ExamId=Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
 
-        $TestResultModel  =new TestResult();
-        $result= $TestResultModel->addTestResult($data);
-
-
-          //得到考试结果id
-          $testResultId =$result->id;
-          //考站id
-          $stationId =$result->station_id;
-          //学生id
-          $studentId =$result->student_id;
-          //考试场次id
-          $examScreenId = $result->exam_screening_id;
-          $timeAnchors=[1,2,3];
-
-
-          //调用照片上传方法，传入数据。
-           $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
-
-          //存入考试评分详情表
-
-          $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
-//           dd($result);
-          if($result){
-
+           //根据考试获取到考试流程
+          $ExamFlowModel = new  ExamFlow();
+          $studentExamSum = $ExamFlowModel->studentExamSum($ExamId);
+          //查询出学生当前已完成的考试
+          $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $ExamId)->count();
+          if($ExamFinishStatus<$studentExamSum){
               return response()->json(
-                  $this->success_data('',1,'详情保存成功')
+                  $this->fail(new \Exception('该学生还有考试没有完成'))
               );
           }else{
-              return response()->json(
-                  $this->success_data('',0,'详情保存失败')
-              );
+              $TestResultModel  =new TestResult();
+              $result= $TestResultModel->addTestResult($data);
+              //todo 调用zhoufuxiang接口......
           }
+           try{
+               if($result){
+                   //得到考试结果id
+                   $testResultId =$result->id;
+                   //考站id
+                   $stationId =$result->station_id;
+                   //学生id
+                   $studentId =$result->student_id;
+                   //考试场次id
+                   $examScreenId = $result->exam_screening_id;
+                   $timeAnchors=[1,2,3];
+                   //调用照片上传方法，传入数据。
+                   $pictureUpload = $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
+                   //存入考试评分详情表
 
+                   $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
+               }else{
+                   return response()->json(
+                       $this->fail(new \Exception('成绩推送失败'))
+                   );
+
+               }
+           } catch (\Exception $ex) {
+               throw $ex;
+           }
       }
 
     /**
@@ -656,7 +572,7 @@ class InvigilatePadController extends CommonController
           ];
           if($list->status==0){
               return response()->json(
-                  $this->success_data(0,'摄像头损坏')
+                  $this->success_data('',0,'摄像头损坏')
               );
           }else{
               return response()->json(
@@ -693,10 +609,11 @@ class InvigilatePadController extends CommonController
             'station_id.required'=>'考站编号信息必须'
         ]);
 
-        $studentId= Input::get('student_id');
-        $stationId= Input::get('student_id');
-//        $StartTime= Input::get('start_time');
 
+
+        $studentId= $request->get('student_id');
+        $stationId= $request->get('station_id');
+//        $StartTime= Input::get('start_time');
         $ExamQueueModel= new ExamQueue();
         $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId);
         if($AlterResult){
@@ -737,7 +654,7 @@ class InvigilatePadController extends CommonController
         ]);
 
         $studentId= Input::get('student_id');
-        $stationId= Input::get('student_id');
+        $stationId= Input::get('station_id');
 
         $ExamQueueModel= new ExamQueue();
         $EndResult  =  $ExamQueueModel->EndExamAlterStatus($studentId,$stationId);

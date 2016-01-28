@@ -73,12 +73,15 @@ class TestResult extends CommonModel
      */
      public function AcquireExam($studentId){
         if(empty($studentId)){
-              return false;
+              return NULL;
         }else{
 
-          $studentExamScore = TestResult::where('student_id','=',$studentId)->select('score')->first();
-
-            return   $studentExamScore;
+          $studentExamScore = TestResult::where('student_id','=',$studentId)->select('score')->get()->toArray();
+            $StudentScores=0;
+            foreach( $studentExamScore as $val){
+                $StudentScores +=$val['score'];
+            }
+            return   $StudentScores;
         }
 
      }

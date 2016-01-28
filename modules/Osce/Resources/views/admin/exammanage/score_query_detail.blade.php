@@ -18,7 +18,21 @@
         height: 15px;
         width: 18px;
         background-size:18px 15px;
-        background-image: url('{{asset("osce/images/iconfont-shipinliebiao.svg")}}');}
+        background-image: url('{{asset("osce/images/iconfont-shipinliebiao.svg")}}');
+    }
+
+    .carousel-control.right,.carousel-control.left{background-image: none;}
+    .carousel-caption {
+        position: relative;
+        right: 0;
+        bottom:0;
+        left: 0;
+        padding-top: 10px;
+        padding-bottom: 0;
+        color: #fff;
+        text-align: center;
+         text-shadow: none;
+    }
 </style>
 @stop
 
@@ -26,30 +40,9 @@
 <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
     <script>
         $(function(){
-            $('#sourceForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    name: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '病例名称不能为空'
-                            }
-                        }
-                    }
-                }
-            });
 
-
-
-
-           var option = {
+            function charts(){
+                var option = {
                     title : {
                         text: '图表分析'
                     },
@@ -115,10 +108,73 @@
                     ]
                 };
 
-            var myChart = echarts.init(document.getElementById('score')); 
-            myChart.setOption(option);
+                var myChart = echarts.init(document.getElementById('score')); 
+                myChart.setOption(option);
+            }
+
+            charts();
 
 
+            /**
+             * 图片下载页面弹出
+             * @author mao
+             * @version 1.0
+             * @date    2016-01-28
+             */
+            $('.fa-picture-o').click(function(){
+                //轮播dom准备
+                var html = '<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:220px;">'+
+                              '<div class="carousel-inner" role="listbox">'+
+                                '<div class="item active">'+
+                                  '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
+                                  '<div class="carousel-caption">'+
+                                    '<a href="http://www.haosou.com" target="_blank">下载</a>'+
+                                  '</div>'+
+                                '</div>'+
+                                '<div class="item">'+
+                                  '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
+                                  '<div class="carousel-caption">'+
+                                    '<a href="#">下载</a>'+
+                                  '</div>'+
+                                '</div>'+
+                              '</div>'+
+                              '<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">'+
+                                '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'+
+                                '<span class="sr-only">Previous</span>'+
+                              '</a>'+
+                              '<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">'+
+                                '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+
+                                '<span class="sr-only">Next</span>'+
+                              '</a>'+
+                            '</div>';
+
+                //弹出容器
+                layer.open({
+                    type: 1,
+                    closeBtn: 0, //不显示关闭按钮
+                    title:'',
+                    area: ['420px', '240px'],
+                    shift: 2,
+                    shadeClose: true, //开启遮罩关闭
+                    content: html
+                });
+
+            });
+            
+            //视频弹出窗口
+            $('.video').click(function(){
+
+                layer.open({
+                    type: 2,
+                    title: '实时视频',
+                    shadeClose: true,
+                    shade: false,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['893px', '600px'],
+                    content: 'http://www.haosou.com'
+                });
+
+            });
 
 
         })
@@ -138,29 +194,29 @@
                 <tbody>
                     <tr>
                         <td><b>考试</b></td>
-                        <td colspan="3">2016年度OSCE考试第1期</td>
-                        <td><b>考站</b></td>
-                        <td>肠胃炎考站</td>
+                        <td colspan="3">{{$result['exam_name']}}</td>
+                        <td><b>科目</b></td>
+                        <td>{{$result['subject_title']}}</td>
                     </tr>
                     <tr>
                         <td><b>姓名</b></td>
-                        <td>张三</td>
+                        <td>{{$result['student']->name}}</td>
                         <td><b>学号</b></td>
-                        <td>552323</td>
+                        <td>{{$result['student']->code}}</td>
                         <td><b>评价老师</b></td>
-                        <td>李老师</td>
+                        <td>{{$result['teacher']->name}}</td>
                     </tr>
                     <tr>
                         <td><b>答题开始时间</b></td>
-                        <td>2015-11-22 12:00</td>
+                        <td>{{$result['begin_dt']}}</td>
                         <td><b>耗时</b></td>
-                        <td>9:00</td>
+                        <td>{{$result['time']}}</td>
                         <td><b>总成绩</b></td>
-                        <td>86</td>
+                        <td>{{$result['score']}}</td>
                     </tr>
                     <tr>
                         <td><b>评价</b></td>
-                        <td colspan="5">该学生在操作过程中技能娴熟，步骤操作得体，效率较高，对所学知识理解和掌握的较好。</td>
+                        <td colspan="5">{{$result['evaluate']}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -171,45 +227,35 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">操作的连贯性：</label>
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['operation']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">工作的娴熟度：</label>
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['skilled']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病人关怀情况：</label>
-
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['patient']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">沟通亲和力：</label>
-
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['affinity']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                     </div>
@@ -274,6 +320,13 @@
             </table>
         </div>
     </div>
+
+
+
+
+
+
+
 
 </div>
 
