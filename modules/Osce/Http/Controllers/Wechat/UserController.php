@@ -365,8 +365,8 @@ class UserController  extends CommonController
     //获取OpenID
     private function getOpenId(){
         $auth = new \Overtrue\Wechat\Auth(config('wechat.app_id'), config('wechat.secret'));
-        dd($auth);
         $userInfo = $auth->authorize($to = null, $scope = 'snsapi_userinfo', $state = 'STATE');
+        dd($userInfo);
         if(!empty($userInfo)){
             return $userInfo->openid;
         }else{
