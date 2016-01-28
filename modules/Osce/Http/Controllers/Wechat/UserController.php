@@ -151,7 +151,7 @@ class UserController  extends CommonController
                     \Illuminate\Support\Facades\Session::put('openid',$openid);
                 }
                 $user   =   User::where('openid','=',$openid)->first();
-                dd($user);
+                dd($openid);
                 if($user)
                 {
                     return redirect()   ->route('osce.wechat.index.getIndex');
