@@ -9,8 +9,10 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Http\Controllers\CommonController;
+use Auth;
 
 class StudentExamQuery extends  CommonController
 {
@@ -29,11 +31,32 @@ class StudentExamQuery extends  CommonController
      */
 
     public  function getResultsQueryIndex(Request $request){
-          $ExamModel = new Exam();
-           $ExamList= $ExamModel->select()->get();
-          dd($ExamList);
-        return view('osce::wechat.exammanage.exam_notice');
+        $ExamModel = new Exam();
+        $ExamList= $ExamModel->select()->get();
+        //dd($ExamList);
+        return view('osce::wechat.resultquery.examination_detail');
 
+        try{
+            $user= Auth::user();
+            if(empty($user)){
+                throw new \Exception('当前用户未登陆');
+            }
+            //根据用户获得考试id
+            $ExamIdList= Student::where('user_id','=',$user->id)->select('exam_id')->get();
+            $list=[];
+            foreach($ExamIdList as $key=>$data){
+                $list[$key]=[
+                      'exam_id'=>$data->exam_id,
+                ];
+            }
+            $examIds = array_column($list, 'exam_id');
+            $ExamModel = new Exam();
+            $ExamList= $ExamModel->Examname($examIds);
+            //根据考试id获取所有考试
+            return view('osce::wechat.resultquery.examination_list',['ExamList'=>$ExamList]);
+        }catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
 //      ajax
@@ -43,8 +66,12 @@ class StudentExamQuery extends  CommonController
             'exam_id'=>'required|integer'
         ]);
         $examId =Input::get('exam_id');
+        //根据考试id查询出所有考站
         $ExamModel = new Exam();
         $ExamStationList= $ExamModel->ExamStations($examId);
+        
+
+
         if($ExamStationList){
             return response()->json(
                 $this->success_data('',0,'查询失败')
@@ -53,6 +80,11 @@ class StudentExamQuery extends  CommonController
         }
 
     }
+
+
+
+    //考生成绩查询详情页根据考站id查询
+
 
 
 }

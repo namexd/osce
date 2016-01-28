@@ -41,7 +41,8 @@
     <script>
         $(function(){
 
-           var option = {
+            function charts(standard,student_name){
+                var option = {
                     title : {
                         text: '图表分析'
                     },
@@ -49,7 +50,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['平均分','张三'],
+                        data:['平均分',student_name],
                         x:'right'
                     },
                     toolbox: {
@@ -88,7 +89,7 @@
                             data:[55, 67, 76, 68, 60, 68, 77]
                         },
                         {
-                            name:'张三',
+                            name:student_name,
                             type:'line',
                             smooth:true,
                             itemStyle: {
@@ -102,13 +103,23 @@
                                     }
                                 }
                             },
-                            data:[30, 82, 34, 91, 90, 30, 10]
+                            data:standard//[30, 82, 34, 91, 90, 30, 10]
                         }
                     ]
                 };
 
-            var myChart = echarts.init(document.getElementById('score')); 
-            myChart.setOption(option);
+                var myChart = echarts.init(document.getElementById('score')); 
+                myChart.setOption(option);
+            }
+
+            //考核点分数
+            var standard = [];
+            $('#standard li').each(function(key,elem){
+                standard.push($(elem).attr('value'));
+            });
+
+            //触发图表格
+            charts(standard,$('#student').text());
 
 
             /**
@@ -124,7 +135,7 @@
                                 '<div class="item active">'+
                                   '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
                                   '<div class="carousel-caption">'+
-                                    '<a href="#" target="_blank">下载</a>'+
+                                    '<a href="http://www.haosou.com" target="_blank">下载</a>'+
                                   '</div>'+
                                 '</div>'+
                                 '<div class="item">'+
@@ -179,7 +190,13 @@
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
-
+<div style="display:none;">
+    <ul id="standard">
+        @foreach($standard as $key=>$item)
+        <li value="{{$standard[$key]}}"></li>
+        @endforeach
+    </ul>
+</div>
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>考生成绩明细</h5>
@@ -190,29 +207,29 @@
                 <tbody>
                     <tr>
                         <td><b>考试</b></td>
-                        <td colspan="3">2016年度OSCE考试第1期</td>
-                        <td><b>考站</b></td>
-                        <td>肠胃炎考站</td>
+                        <td colspan="3">{{$result['exam_name']}}</td>
+                        <td><b>科目</b></td>
+                        <td>{{$result['subject_title']}}</td>
                     </tr>
                     <tr>
                         <td><b>姓名</b></td>
-                        <td>张三</td>
+                        <td id="student">{{$result['student']->name}}</td>
                         <td><b>学号</b></td>
-                        <td>552323</td>
+                        <td>{{$result['student']->code}}</td>
                         <td><b>评价老师</b></td>
-                        <td>李老师</td>
+                        <td>{{$result['teacher']->name}}</td>
                     </tr>
                     <tr>
                         <td><b>答题开始时间</b></td>
-                        <td>2015-11-22 12:00</td>
+                        <td>{{$result['begin_dt']}}</td>
                         <td><b>耗时</b></td>
-                        <td>9:00</td>
+                        <td>{{$result['time']}}</td>
                         <td><b>总成绩</b></td>
-                        <td>86</td>
+                        <td>{{$result['score']}}</td>
                     </tr>
                     <tr>
                         <td><b>评价</b></td>
-                        <td colspan="5">该学生在操作过程中技能娴熟，步骤操作得体，效率较高，对所学知识理解和掌握的较好。</td>
+                        <td colspan="5">{{$result['evaluate']}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -223,45 +240,35 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">操作的连贯性：</label>
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['operation']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">工作的娴熟度：</label>
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['skilled']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病人关怀情况：</label>
-
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['patient']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">沟通亲和力：</label>
-
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['affinity']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                     </div>
@@ -282,46 +289,20 @@
                 </tr>
                 </thead>
                 <tbody>
+                    @foreach($scores as $key=>$item)
                     <tr>
-                        <td>1</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
+                        <td>
+                            {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
+                        </td>
+                        <td>{{$item['standard']->content}}</td>
+                        <td>{{$item['standard']->score}}</td>
+                        <td>{{$item['score']}}</td>
+                        <td>
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
+                            <a href="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"><span class="read  video"></span></a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>1-1</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1-2</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
