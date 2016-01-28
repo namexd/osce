@@ -135,10 +135,7 @@ class MscController extends Controller {
 
 	//获取OpenID
 	public function getOpenId(){
-/*		'app_id'       => env('WECHAT_APPID', 'wxba93acf17fb61346'), // 必填
-    'secret'       => env('WECHAT_SECRET', 'e588e64f342284825ca72126e1430c43'), // 必填*/
 		$auth = new \Overtrue\Wechat\Auth(config('wechat.app_id'), config('wechat.secret'));
-		dd($auth);
 		$userInfo = $auth->authorize($to = null, $scope = 'snsapi_userinfo', $state = 'STATE');
 		if(!empty($userInfo)){
 			return $userInfo->openid;
