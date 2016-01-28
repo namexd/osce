@@ -36,6 +36,10 @@ class Invite extends CommonModel
                     'end_dt' => $list['end_dt'],
                     'exam_screening_id' => $list['exam_screening_id'],
                 ];
+                if($this->find($inviteDat['id']))
+                {
+                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
+                }
                 $notice = $this->firstOrCreate($inviteDat);
             }
                 if ($notice) {

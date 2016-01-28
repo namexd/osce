@@ -38,17 +38,15 @@
             height: 0;
         }
         .time-list{
-            width: 100px;
+            width: 200px;
             margin-top: 5px;
+            text-align: center;
         }
         .time-list li{
             border: 1px solid #ccc;
         }
         .assign-box>div{
             float: left;
-        }
-        .classroom-box{
-            width: 802px;
         }
         ul,dl{
             padding: 0;
@@ -63,6 +61,7 @@
         dd{
             float: left;
             cursor: pointer;
+            margin: 5px;
         }
         /*dl:hover{
             background-color: #f4f4f4;
@@ -70,11 +69,14 @@
         }*/
         dl{
             border: 1px solid #ccc;
+
         }
         .title{
             border: 1px solid #ccc;
             background-color: #eee;
-            text-align: center;
+
+            padding: 5px;
+            font-weight: 700;
         }
         .dd-active{
             background-color:#ccc;
@@ -91,6 +93,7 @@
         }
         .classroom-box{
             min-height: 500px;
+            text-align: center;
         }
         .room_inner_col{
             margin: 5px 0px;
@@ -100,6 +103,9 @@
         }
         p{
             margin: 0;
+        }
+        .table>li{
+            width: 150px;
         }
     </style>
 @stop
