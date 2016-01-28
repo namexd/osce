@@ -153,7 +153,10 @@ class UserController  extends CommonController
                 $user   =   User::where('openid','=',$openid)->first();
                 if($user)
                 {
-                    return redirect()   ->route('osce.wechat.index.getIndex');
+                    if(Auth::login($user))
+                    {
+                        return redirect()   ->route('osce.wechat.index.getIndex');
+                    }
                 }
             }else{
                 \Illuminate\Support\Facades\Session::put('openid','dfdsfds');
@@ -191,26 +194,31 @@ class UserController  extends CommonController
         ]);
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
-
-        $openid = \Illuminate\Support\Facades\Session::get('openid','');
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
-        {
-            if(!empty($openid))
+        try{
+            $openid = \Illuminate\Support\Facades\Session::get('openid','');
+            if (Auth::attempt(['username' => $username, 'password' => $password]))
             {
-                $user   =   Auth::user();
-                $user   ->  openid  =   $openid;
-                dd($user   ->  save());
-//                if(!$user   ->  save())
-//                {
-//
-//                }
+                if(!empty($openid))
+                {
+                    $user   =   Auth::user();
+                    $user   ->  openid  =   $openid;
+                    if(!$user   ->  save())
+                    {
+                        throw new \Exception('微信登录失败');
+                    }
+                }
+                return redirect()->route('osce.wechat.index.getIndex');
             }
-            return redirect()->route('osce.wechat.index.getIndex');
+            else
+            {
+                throw new \Exception('账号密码错误');
+            }
         }
-        else
+        catch(\Exception $ex)
         {
-            return redirect()->back()->withErrors('账号密码错误');
+            return redirect()->back()->withErrors($ex->getMessage());
         }
+
     }
 
     /**

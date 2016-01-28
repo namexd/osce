@@ -249,6 +249,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
 		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
 		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);
+
+
 	});
 
 
@@ -343,6 +345,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/start-exam', 	['uses'=>'InvigilatePadController@getStartExam','as'=>'osce.api.invigilatepad.getStartExam']);
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 
+		//pad的上传
+		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.postTestAttachImage']);
+		Route::post('upload-radio',['uses'=>'InvigilatePadController@postTestAttachRadio','as'=>'osce.pad.postTestAttachRadio']);
 	});
 });
 
@@ -402,7 +407,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function() {
+	$savePath = 'osce/attach/' . 'image/jpeg' . '/' . '2016-01-28' . '/' . 'studentName' .'_'. '123' . '/';
+	$savePath = public_path($savePath) ;
 
+	dd($savePath);
 
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
