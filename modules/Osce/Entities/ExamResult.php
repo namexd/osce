@@ -94,7 +94,7 @@ class ExamResult extends CommonModel
                     $examResult = $testResult->AcquireExam($student_id);
                     //成绩详情url地址
                     if($url == ''){
-                        $url = 'http://www.baidu.com';
+                        $url = route('osce.wechat.student-exam-query.getResultsQueryIndex',['exam_id'=>$student->exam_id,'student_id'=>$student_id]);
                     }
                     $msgData = [
                         [
