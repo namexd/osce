@@ -413,9 +413,11 @@ class IndexController extends CommonController
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select()->first();
         $nfc=$request->get('nfc_code');
-        $watch_id=Watch::where('nfc_code',$nfc)->select()->first();
-        if($id->id!=$watch_id->id){
-            return \Response::json(array('code'=>3));
+        if($nfc){
+            $watch_id=Watch::where('nfc_code',$nfc)->select()->first();
+            if($id->id!=$watch_id->id){
+                return \Response::json(array('code'=>3));
+            }
         }
         $count=Watch::where('code'   ,'=', $request->get('code'))
             ->update([

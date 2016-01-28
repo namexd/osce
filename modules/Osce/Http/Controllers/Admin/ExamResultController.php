@@ -176,7 +176,7 @@ class ExamResultController extends CommonController{
         for($i=1;$i<=$sort;$i++){
              $avg[]=$standardModel->getAvgScore($i,$result['station_id'],$result['subject_id']);
         }
-        
+
         return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
 
     }
