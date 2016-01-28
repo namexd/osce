@@ -1,6 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
+    <link rel="stylesheet" href="{{asset('osce/admin/css/demo.css')}}">
     <style>
         .tabs{
             margin: 20px 0;
@@ -25,6 +26,7 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/admin/js/webVideoCtrl.js')}}"></script>
     <script src="{{asset('osce/admin/statistics_query/js/statistics_query.js')}}" ></script>
 @stop
 
@@ -50,7 +52,9 @@
                         <li><span class="year">2015/1/16</span><span>12:00:43</span></li>
                     </ul>
                 </div>
-                <div class="col-sm-9"></div>
+                <div class="col-sm-9">
+                    <div id="divPlugin" class="video"></div>
+                </div>
             </div>
         </div>
 
