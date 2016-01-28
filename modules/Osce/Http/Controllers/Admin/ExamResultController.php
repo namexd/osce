@@ -127,7 +127,25 @@ class ExamResultController extends CommonController{
         $id=$request->get('id');
         $examResult=new ExamResult();
         $examResult=$examResult->getResultDetail($id);
-
-        return view()->with('examResult',$examResult);
+        $result=[];
+        foreach($examResult as $item){
+         $result=[
+             'student' =>$item->student,
+             'teacher' =>$item->teacher,
+             'begin_dt' =>$item->begin_dt,
+             'time' =>$item->time,
+             'score' =>$item->score,
+             'evaluate' =>$item->evaluate,
+             'operation' =>$item->operation,
+             'skilled' =>$item->skilled,
+             'patient' =>$item->patient,
+             'affinity' =>$item->affinity,
+             'subject_title' =>$item->subject_title,
+         ];
+        }
+        $result['time']=floor($result['time']/60);
+        $result['time'].=':';
+        $result['time'].=$result['time']%60;
+        return view()->with('result',$result);
     }
 }
