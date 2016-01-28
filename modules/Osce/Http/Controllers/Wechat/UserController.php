@@ -142,18 +142,18 @@ class UserController  extends CommonController
      *
      */
     public function getLogin(){
-        $getOpenid = env('OPENID', true);
+ /*       $getOpenid = env('OPENID', true);
 
         if($getOpenid){
             $openid = \Illuminate\Support\Facades\Session::get('openid','');
             if(empty($openid)){
                 $openid = $this->getOpenId();
-                Session::put('openid',$openid);
+                \Illuminate\Support\Facades\Session::put('openid',$openid);
             }
         }else{
-            Session::put('openid','dfdsfds');
-        }
-        dd($getOpenid);
+            \Illuminate\Support\Facades\Session::put('openid','dfdsfds');
+        }*/
+        dd($openid = $this->getOpenId());
         return view('osce::wechat.user.login');
     }
 
@@ -365,6 +365,7 @@ class UserController  extends CommonController
     //获取OpenID
     private function getOpenId(){
         $auth = new \Overtrue\Wechat\Auth(config('wechat.app_id'), config('wechat.secret'));
+        dd($auth);
         $userInfo = $auth->authorize($to = null, $scope = 'snsapi_userinfo', $state = 'STATE');
         if(!empty($userInfo)){
             return $userInfo->openid;
