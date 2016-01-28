@@ -151,7 +151,6 @@ class UserController  extends CommonController
                     \Illuminate\Support\Facades\Session::put('openid',$openid);
                 }
                 $user   =   User::where('openid','=',$openid)->first();
-                dd($openid);
                 if($user)
                 {
                     return redirect()   ->route('osce.wechat.index.getIndex');
@@ -194,6 +193,7 @@ class UserController  extends CommonController
         $password   =   $request    ->  get('password');
 
         $openid = \Illuminate\Support\Facades\Session::get('openid','');
+        dd($openid);
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
             if(!empty($openid))
