@@ -276,46 +276,20 @@
                 </tr>
                 </thead>
                 <tbody>
+                    @foreach($scores as $key=>$item)
                     <tr>
-                        <td>1</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
+                        <td>
+                            {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
+                        </td>
+                        <td>{{$item['standard']->content}}</td>
+                        <td>{{$item['score']}}</td>
+                        <td>{{$item['standard']->score}}</td>
+                        <td>
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
                             <a href="javascript:void(0)"><span class="read  video"></span></a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>1-1</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1-2</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
