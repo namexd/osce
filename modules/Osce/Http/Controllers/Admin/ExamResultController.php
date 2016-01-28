@@ -178,7 +178,6 @@ class ExamResultController extends CommonController{
            
 
         }
-        dd($totalScore);
         return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard]);
     }
 
