@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScore;
@@ -396,15 +397,23 @@ class InvigilatePadController extends CommonController
           'affinity'=>Input::get('affinity'),//沟通亲和能力
 
         ];
+           //根据考生id获取到考试id
+          $ExamId=Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
 
-
-
-
-
-        $TestResultModel  =new TestResult();
-        $result= $TestResultModel->addTestResult($data);
-
-
+           //根据考试获取到考试流程
+          $ExamFlowModel = new  ExamFlow();
+          $studentExamSum = $ExamFlowModel->studentExamSum($ExamId);
+          //查询出学生当前已完成的考试
+          $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $ExamId)->count();
+          if($ExamFinishStatus<$studentExamSum){
+              return response()->json(
+                  $this->fail(new \Exception('该学生还有考试没有完成'))
+              );
+          }else{
+              $TestResultModel  =new TestResult();
+              $result= $TestResultModel->addTestResult($data);
+              //todo 调用zhoufuxiang接口......
+          }
           //得到考试结果id
           $testResultId =$result->id;
           //考站id
@@ -417,8 +426,10 @@ class InvigilatePadController extends CommonController
 
 
           //调用照片上传方法，传入数据。
-           $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
-
+          $pictureUpload = $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
+          if($pictureUpload){
+              
+          }
           //存入考试评分详情表
 
           $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
