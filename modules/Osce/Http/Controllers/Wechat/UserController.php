@@ -198,12 +198,12 @@ class UserController  extends CommonController
             if(!empty($openid))
             {
                 $user   =   Auth::user();
-                dd($user);
                 $user   ->  openid  =   $openid;
-                if($user   ->  save())
-                {
-
-                }
+                dd($user   ->  save());
+//                if(!$user   ->  save())
+//                {
+//
+//                }
             }
             return redirect()->route('osce.wechat.index.getIndex');
         }
