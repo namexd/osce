@@ -142,6 +142,7 @@ class ExamResultController extends CommonController{
              'operation' =>$item->operation,
              'skilled'   =>$item->skilled,
              'patient'   =>$item->patient,
+             'station_id'   =>$item->station_id,
              'affinity'  =>$item->affinity,
              'subject_title' =>$item->subject_title,
              'subject_id' =>$item->subject_id,
@@ -159,7 +160,7 @@ class ExamResultController extends CommonController{
                 'score'=>$itm->score,
             ];
         }
-      
+
         return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores]);
     }
 

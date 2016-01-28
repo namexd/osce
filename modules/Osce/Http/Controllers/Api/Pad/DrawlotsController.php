@@ -75,20 +75,20 @@ class DrawlotsController extends CommonController
             $user = Auth::user();
             list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
 
-            //从队列表中通过考场ID得到对应的考生信息
-            $examQueue =  ExamQueue::examineeByRoomId($room_id, $stationNum);
-            dd($examQueue);
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
+            $examId = $exam->id;
+            //从队列表中通过考场ID得到对应的考生信息
+            $examQueue =  ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
 
-            if (isNull($exam)) {
+            if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试');
             }
+
             //将老师对应的考站写进对象
             $examQueue->station_name = $station->name;
             $examQueue->station_id = $station->id;
-            $examQueue->exam_id = $exam->id;
-
+            $examQueue->exam_id = $examId;
 
 //            $examQueue = [
 //                0 => ['student_id' => 1,
@@ -132,30 +132,37 @@ class DrawlotsController extends CommonController
      */
     public function getNextExaminee()
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
 
-        list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
+            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
+    //        dd($room_id);
+            //获取正在考试中的考试
+            $exam = Exam::where('status',1)->first();
+            $examId = $exam->id;
 
-        $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $stationNum);
-
-//        $examQueue = [
-//            0 => ['student_id' => 1,
-//                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
-//                'student_code' => '1234',
-//                'student_name' => '测试名字1',
-//                'station_name' => '当前考站1'],
-//            1 => ['student_id' => 2,
-//                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
-//                'student_code' => '12345',
-//                'student_name' => '测试名字2',
-//                'station_name' => '当前考站2'],
-//            2 => ['student_id' => 3,
-//                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
-//                'student_code' => '123456',
-//                'student_name' => '测试名字3',
-//                'station_name' => '当前考站3'],
-//        ];
-        return response()->json($this->success_data($examQueue));
+            $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
+    //        $examQueue = [
+    //            0 => ['student_id' => 1,
+    //                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
+    //                'student_code' => '1234',
+    //                'student_name' => '测试名字1',
+    //                'station_name' => '当前考站1'],
+    //            1 => ['student_id' => 2,
+    //                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
+    //                'student_code' => '12345',
+    //                'student_name' => '测试名字2',
+    //                'station_name' => '当前考站2'],
+    //            2 => ['student_id' => 3,
+    //                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
+    //                'student_code' => '123456',
+    //                'student_name' => '测试名字3',
+    //                'station_name' => '当前考站3'],
+    //        ];
+            return response()->json($this->success_data($examQueue));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -295,16 +302,17 @@ class DrawlotsController extends CommonController
     private function getRoomIdAndStation($user)
     {
         //获取登陆者id，也就是教师id
-        $teacher_id = $user->id;
+        $teacherId = $user->id;
         //获取当前老师的考场对象
-        $room = $this->getRoomId($teacher_id);
+        $room = $this->getRoomId($teacherId);
 
         //获得考场的id
         $room_id = $room->id;
         //获得当前考场考站的个数
         $stationNum = RoomStation::where('room_id',$room_id)->get()->count();
         //获得当前老师所在的考站
-        $station = Teacher::findOrFail($teacher_id)->teacherStation;
+//        $station = Teacher::findOrFail($teacher_id)->teacherStation;
+        $station = StationTeacher::where('user_id',$teacherId)->first()->station;
         return array($room_id, $station, $stationNum);
     }
 

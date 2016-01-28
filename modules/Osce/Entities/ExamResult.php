@@ -82,10 +82,12 @@ class ExamResult extends CommonModel
         $builder=$builder->select([
             'exam_result.id as id',
             'exam.name as exam_name',
+            'exam.id as exam_id',
             'exam_result.begin_dt as begin_dt',
             'exam_result.end_dt as end_dt',
             'exam_result.time as time',
             'exam_result.score as score',
+            'exam_result.station_id as station_id',
             'exam_result.student_id as student_id',
             'exam_result.teacher_id as teacher_id',
             'exam_result.evaluate as evaluate',
