@@ -193,14 +193,17 @@ class UserController  extends CommonController
         $password   =   $request    ->  get('password');
 
         $openid = \Illuminate\Support\Facades\Session::get('openid','');
-        dd($openid);
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
             if(!empty($openid))
             {
                 $user   =   Auth::user();
+                dd($user);
                 $user   ->  openid  =   $openid;
-                $user   ->  save();
+                if($user   ->  save())
+                {
+
+                }
             }
             return redirect()->route('osce.wechat.index.getIndex');
         }
