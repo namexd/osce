@@ -29,12 +29,10 @@ class StudentExamQuery extends  CommonController
      */
 
     public  function getResultsQueryIndex(Request $request){
-
-
-          $ExamModel = new Exam();
-           $ExamList= $ExamModel->select()->get();
-          dd($ExamList);
-        return view('osce::wechat.exammanage.exam_notice');
+        $ExamModel = new Exam();
+        $ExamList= $ExamModel->select()->get();
+        //dd($ExamList);
+        return view('osce::wechat.resultquery.examination_list');
 
     }
 
