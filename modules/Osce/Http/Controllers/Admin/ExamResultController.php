@@ -146,6 +146,7 @@ class ExamResultController extends CommonController{
         $result['time']=floor($result['time']/60);
         $result['time'].=':';
         $result['time'].=$result['time']%60;
-        return view()->with('result',$result);
+
+        return view('osce::admin.exammanage.score_query_detail')->with('result',$result);
     }
 }
