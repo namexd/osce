@@ -194,29 +194,29 @@
                 <tbody>
                     <tr>
                         <td><b>考试</b></td>
-                        <td colspan="3">2016年度OSCE考试第1期</td>
-                        <td><b>考站</b></td>
-                        <td>肠胃炎考站</td>
+                        <td colspan="3">{{$result['exam_name']}}</td>
+                        <td><b>科目</b></td>
+                        <td>{{$result['subject_title']}}</td>
                     </tr>
                     <tr>
                         <td><b>姓名</b></td>
-                        <td>张三</td>
+                        <td>{{$result['student']->name}}</td>
                         <td><b>学号</b></td>
-                        <td>552323</td>
+                        <td>{{$result['student']->code}}</td>
                         <td><b>评价老师</b></td>
-                        <td>李老师</td>
+                        <td>{{$result['teacher']->name}}</td>
                     </tr>
                     <tr>
                         <td><b>答题开始时间</b></td>
-                        <td>2015-11-22 12:00</td>
+                        <td>{{$result['begin_dt']}}</td>
                         <td><b>耗时</b></td>
-                        <td>9:00</td>
+                        <td>{{$result['time']}}</td>
                         <td><b>总成绩</b></td>
-                        <td>86</td>
+                        <td>{{$result['score']}}</td>
                     </tr>
                     <tr>
                         <td><b>评价</b></td>
-                        <td colspan="5">该学生在操作过程中技能娴熟，步骤操作得体，效率较高，对所学知识理解和掌握的较好。</td>
+                        <td colspan="5">{{$result['evaluate']}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -227,45 +227,35 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">操作的连贯性：</label>
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['operation']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">工作的娴熟度：</label>
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['skilled']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病人关怀情况：</label>
-
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['patient']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">沟通亲和力：</label>
-
                             <div class="col-sm-10">
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
-                                <i class="fa fa-star perfect"></i>
+                            @for ($i = 0; $i < 5; $i++)
+                                <i class="fa fa-star {{$i<$result['affinity']?'perfect':''}}"></i>
+                            @endfor
                             </div>
                         </div>
                     </div>
