@@ -54,7 +54,7 @@
                         </div>
                     </div>
                     <div class="input-group col-md-4 col-sm-4 col-xs-12">
-                        <input type="text" placeholder="请输入考生姓名" class="input-md form-control">
+                        <input type="text" placeholder="请输入考生姓名" style="height:36px;" class="input-md form-control">
                          <span class="input-group-btn">
                             <button type="button" class="btn btn-md btn-primary" id="search">搜索</button>
                         </span>
