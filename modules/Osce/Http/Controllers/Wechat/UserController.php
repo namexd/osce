@@ -142,17 +142,18 @@ class UserController  extends CommonController
      *
      */
     public function getLogin(){
-//        $getOpenid = env('OPENID', true);
-//
-//        if($getOpenid){
-//            $openid = \Illuminate\Support\Facades\Session::get('openid','');
-//            if(empty($openid)){
-//                $openid = $this->getOpenId();
-//                Session::put('openid',$openid);
-//            }
-//        }else{
-//            Session::put('openid','dfdsfds');
-//        }
+        $getOpenid = env('OPENID', true);
+
+        if($getOpenid){
+            $openid = \Illuminate\Support\Facades\Session::get('openid','');
+            if(empty($openid)){
+                $openid = $this->getOpenId();
+                Session::put('openid',$openid);
+            }
+        }else{
+            Session::put('openid','dfdsfds');
+        }
+        dd($openid);
         return view('osce::wechat.user.login');
     }
 
