@@ -133,16 +133,19 @@ class ExamQueue extends CommonModel
     /**
      * 鏍规嵁room_id鏉ヨ幏鍙栧搴旂殑鑰冪敓鍒楄〃
      * @param $room_id
+     * @param $examId
+     * @param $stationNum
      * @return
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    static public function examineeByRoomId($room_id, $stationNum)
+    static public function examineeByRoomId($room_id, $examId, $stationNum)
     {
         try {
-            return ExamQueue::leftJoin('student', 'student.exam_id', '=', 'exam_queue.exam_id')
-                ->where('room_id', $room_id)
-                ->where('status', 2)
+            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                ->where('exam_queue.room_id', $room_id)
+                ->where('exam_queue.status', 1)
+                ->where('student.exam_id',56)
                 ->select([
                     'student.id as student_id',
                     'student.name as student_name',
@@ -154,6 +157,7 @@ class ExamQueue extends CommonModel
                     'student.description as student_description',
                 ])
                 ->take($stationNum)
+                ->orderBy('exam_queue.begin_dt','asc')
                 ->get();
         } catch (\Exception $ex) {
             throw $ex;
@@ -168,18 +172,20 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    static public function nextExamineeByRoomId($room_id, $stationNum)
+    static public function nextExamineeByRoomId($room_id, $examId, $stationNum)
     {
         try {
-        return ExamQueue::leftJoin('student','student.exam_id', '=', 'exam_queue.exam_id')
-            ->where('room_id', $room_id)
-            ->where('status',1)
+        return ExamQueue::leftJoin('student','student.id', '=', 'exam_queue.student_id')
+            ->where('exam_queue.room_id', $room_id)
+            ->where('exam_queue.status',1)
+            ->where('exam_queue.exam_id',56)
             ->skip($stationNum)
             ->take($stationNum)
+            ->orderBy('exam_queue.begin_dt','asc')
             ->select([
-                'id',
-                'name',
-                'code'
+                'student.id as student_id',
+                'student.name as student_name',
+                'student.code as student_code'
             ])
             ->get();
         } catch (\Exception $ex) {
@@ -189,9 +195,9 @@ class ExamQueue extends CommonModel
 
     /**
      * 学生腕表信息 考试信息判断
-     * @param $room_id
-     * @return
-     * @throws \Exception
+     * @param $examQueueCollect
+     * @return array
+     * @internal param $room_id
      * @author zhouqiang
      */
     public function nowQueue($examQueueCollect)
