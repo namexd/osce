@@ -32,7 +32,7 @@ class StudentExamQuery extends  CommonController
         $ExamModel = new Exam();
         $ExamList= $ExamModel->select()->get();
         //dd($ExamList);
-        return view('osce::wechat.resultquery.examination_list');
+        return view('osce::wechat.resultquery.examination_detail');
 
     }
 
