@@ -1891,15 +1891,14 @@ function smart_assignment(){
     var testData=eval('('+plan+')');
     $('.classroom-box').html('');//清空排考
     maketotal(testData);//页面加载执行排考
-    $(".table>li").css("width","100px");//给表格设置列宽
     makeTime();
-
     function makeItem(data){
 
         var dl  =   $('<dl class="clearfloat">');
         var items   =   data.items;
         var everyHeight=data.end-data.start;
         everyHeight=everyHeight/6;
+        console.log(everyHeight);
         times.push(data.start);
         dl.css("height",everyHeight+"px");
         for(var i in items)
@@ -2024,7 +2023,6 @@ function smart_assignment(){
             $('.classroom-box').html('');
             $('.time-list>ul').html('');
             maketotal(testData.data);
-            $(".table>li").css("width","100px");//给表格设置列宽
             $('#makePlan').one('click',makePlan);
             makeTime();
         });
@@ -2035,13 +2033,14 @@ function smart_assignment(){
     function makeTime(){
         times=unique(times);
         times=times.sort(function(a,b){return a>b?1:-1});
-        console.log(times);
         var timeTitle=$('<li class="title">时间</li>');
         $(".time-list>ul").append(timeTitle);
         for(var i in times){
             var li=$('<li>');
-            var p1=$('<p>');
-            li.append(p1);
+            var span1=$('<span>');
+            span1.css("margin-right","10px");
+            var span2=$('<span>');
+            li.append(span1).append(span2);
             var dat=new Date(times[i]*1000);
             //var year=dat.getFullYear();
             var month = dat.getMonth()+1;//取得月,js从0开始取,所以+1
@@ -2050,7 +2049,8 @@ function smart_assignment(){
             hour<10?hour='0'+hour:hour=hour;
             var minutes = dat.getMinutes();//取得分钟
             minutes<10?minutes='0'+minutes:minutes=minutes;
-            p1.html(month+"/"+date1+"  "+hour+":"+minutes);
+            span1.html(month+"/"+date1);
+            span2.html(hour+":"+minutes);
             $(".time-list>ul").append(li);
 
             //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
@@ -2064,8 +2064,8 @@ function smart_assignment(){
                 var next    =   times[parseInt(i)+parseInt(1)];
                 var every   =   next-times[i];
                 every=every/6;
-                li.css("height",every+"px");
                 console.log(every);
+                li.css({"height":every+"px","line-height":every+"px"});//时间段的高度
             }
         }
         //$(".time-list>ul").css("height",timeHeight+"px");
