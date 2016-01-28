@@ -38,7 +38,7 @@
 <div>
   <ul>
      <li><a href="{{route('osce.wechat.notice.getSystemList')}}">资讯通知</a><li>
-     <li><a href="#">成绩查询</a><li>
+     <li><a href="{{route('osce.wechat.student-exam-query.getResultsQueryIndex')}}">成绩查询</a><li>
      <li><a href="{{route('osce.wechat.invitation.getList')}}">预约邀请</a><li>
      <li><a href="{{route('osce.wechat.getDiscussionLists')}}">讨论区</a><li>
      <li><a href="{{route('osce.wechat.getTrainlists')}}">考前培训</a><li>
