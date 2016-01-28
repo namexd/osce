@@ -1,6 +1,5 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-<link rel="stylesheet" type="text/css" href="{{asset('osce/common/css/swiper.min.css')}}">
 <style>
     .form-group {
         margin: 10px 0 30px;
@@ -19,13 +18,26 @@
         height: 15px;
         width: 18px;
         background-size:18px 15px;
-        background-image: url('{{asset("osce/images/iconfont-shipinliebiao.svg")}}');}
+        background-image: url('{{asset("osce/images/iconfont-shipinliebiao.svg")}}');
+    }
+
+    .carousel-control.right,.carousel-control.left{background-image: none;}
+    .carousel-caption {
+        position: relative;
+        right: 0;
+        bottom:0;
+        left: 0;
+        padding-top: 10px;
+        padding-bottom: 0;
+        color: #fff;
+        text-align: center;
+         text-shadow: none;
+    }
 </style>
 @stop
 
 @section('only_js')
 <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
-<script src="{{asset('osce/common/js/swiper.min.js')}}"></script>
     <script>
         $(function(){
 
@@ -99,55 +111,65 @@
             myChart.setOption(option);
 
 
-
+            /**
+             * 图片下载页面弹出
+             * @author mao
+             * @version 1.0
+             * @date    2016-01-28
+             */
             $('.fa-picture-o').click(function(){
-
-
-
-            var html = '<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:200px;">'+
-                          '<div class="carousel-inner" role="listbox">'+
-                            '<div class="item active">'+
-                              '<img src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
-                              '<div class="carousel-caption">'+
+                //轮播dom准备
+                var html = '<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:220px;">'+
+                              '<div class="carousel-inner" role="listbox">'+
+                                '<div class="item active">'+
+                                  '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
+                                  '<div class="carousel-caption">'+
+                                    '<a href="#" target="_blank">下载</a>'+
+                                  '</div>'+
+                                '</div>'+
+                                '<div class="item">'+
+                                  '<img style="height:200px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
+                                  '<div class="carousel-caption">'+
+                                    '<a href="#">下载</a>'+
+                                  '</div>'+
+                                '</div>'+
                               '</div>'+
-                            '</div>'+
-                            '<div class="item" style="height:100%;">'+
-                              '<img style="height:150px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
-                              '<div class="carousel-caption">'+
-                                '<a href="#">下载</a>'+
-                              '</div>'+
-                            '</div>'+
-                          '</div>'+
-                          '<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">'+
-                            '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'+
-                            '<span class="sr-only">Previous</span>'+
-                          '</a>'+
-                          '<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">'+
-                            '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+
-                            '<span class="sr-only">Next</span>'+
-                          '</a>'+
-                        '</div>';
+                              '<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">'+
+                                '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'+
+                                '<span class="sr-only">Previous</span>'+
+                              '</a>'+
+                              '<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">'+
+                                '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+
+                                '<span class="sr-only">Next</span>'+
+                              '</a>'+
+                            '</div>';
 
-            layer.open({
-                type: 1,
-                closeBtn: 0, //不显示关闭按钮
-                title:' ',
-                area: ['420px', '240px'],
-                shift: 2,
-                shadeClose: true, //开启遮罩关闭
-                content: html
+                //弹出容器
+                layer.open({
+                    type: 1,
+                    closeBtn: 0, //不显示关闭按钮
+                    title:'',
+                    area: ['420px', '240px'],
+                    shift: 2,
+                    shadeClose: true, //开启遮罩关闭
+                    content: html
+                });
+
             });
+            
+            //视频弹出窗口
+            $('.video').click(function(){
 
-            var mySwiper = new Swiper ('.swiper-container', {
-                loop: true,
-                // 如果需要分页器
-                pagination: '.swiper-pagination',
-                // 如果需要前进后退按钮
-                nextButton: '.swiper-button-next',
-                prevButton: '.swiper-button-prev'
-            });
+                layer.open({
+                    type: 2,
+                    title: '实时视频',
+                    shadeClose: true,
+                    shade: false,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['893px', '600px'],
+                    content: 'http://www.haosou.com'
+                });
 
-                
             });
 
 
