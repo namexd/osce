@@ -295,8 +295,8 @@
                             {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
                         </td>
                         <td>{{$item['standard']->content}}</td>
-                        <td>{{$item['score']}}</td>
                         <td>{{$item['standard']->score}}</td>
+                        <td>{{$item['score']}}</td>
                         <td>
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
                             <a href="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"><span class="read  video"></span></a>
