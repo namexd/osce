@@ -50,7 +50,7 @@
             <tr>
                 <th>#</th>
                 <th>标题</th>
-                <th>发布时间</th>
+                <th>培训时间</th>
                 <th>操作</th>
             </tr>
             </thead>

@@ -49,6 +49,16 @@
 
 
 @section('content')
+<div>
+  <ul>
+     <li><a href="{{route('osce.wechat.notice.getSystemList')}}">资讯通知</a><li>
+     <li><a href="{{route('osce.wechat.student-exam-query.getResultsQueryIndex')}}">成绩查询</a><li>
+     <li><a href="{{route('osce.wechat.invitation.getList')}}">预约邀请</a><li>
+     <li><a href="{{route('osce.wechat.getDiscussionLists')}}">讨论区</a><li>
+     <li><a href="{{route('osce.wechat.getTrainlists')}}">考前培训</a><li>
+     <li><a href="{{route('osce.wechat.notice-list.getSystemList')}}">系统消息</a><li>
+  </ul>
+</div>
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>

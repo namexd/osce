@@ -41,7 +41,7 @@
     <script>
         $(function(){
 
-            function charts(){
+            function charts(standard,student_name){
                 var option = {
                     title : {
                         text: '图表分析'
@@ -50,7 +50,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['平均分','张三'],
+                        data:['平均分',student_name],
                         x:'right'
                     },
                     toolbox: {
@@ -89,7 +89,7 @@
                             data:[55, 67, 76, 68, 60, 68, 77]
                         },
                         {
-                            name:'张三',
+                            name:student_name,
                             type:'line',
                             smooth:true,
                             itemStyle: {
@@ -103,7 +103,7 @@
                                     }
                                 }
                             },
-                            data:[30, 82, 34, 91, 90, 30, 10]
+                            data:standard//[30, 82, 34, 91, 90, 30, 10]
                         }
                     ]
                 };
@@ -112,7 +112,14 @@
                 myChart.setOption(option);
             }
 
-            charts();
+            //考核点分数
+            var standard = [];
+            $('#standard li').each(function(key,elem){
+                standard.push($(elem).attr('value'));
+            });
+
+            //触发图表格
+            charts(standard,$('#student').text());
 
 
             /**
@@ -183,7 +190,13 @@
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
-
+<div style="display:none;">
+    <ul id="standard">
+        @foreach($standard as $key=>$item)
+        <li value="{{$standard[$key]}}"></li>
+        @endforeach
+    </ul>
+</div>
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>考生成绩明细</h5>
@@ -200,7 +213,7 @@
                     </tr>
                     <tr>
                         <td><b>姓名</b></td>
-                        <td>{{$result['student']->name}}</td>
+                        <td id="student">{{$result['student']->name}}</td>
                         <td><b>学号</b></td>
                         <td>{{$result['student']->code}}</td>
                         <td><b>评价老师</b></td>
@@ -282,11 +295,11 @@
                             {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
                         </td>
                         <td>{{$item['standard']->content}}</td>
-                        <td>{{$item['score']}}</td>
                         <td>{{$item['standard']->score}}</td>
+                        <td>{{$item['score']}}</td>
                         <td>
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
+                            <a href="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"><span class="read  video"></span></a>
                         </td>
                     </tr>
                     @endforeach
