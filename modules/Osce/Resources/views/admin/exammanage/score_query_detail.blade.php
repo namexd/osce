@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+<link rel="stylesheet" type="text/css" href="{{asset('osce/common/css/swiper.min.css')}}">
 <style>
     .form-group {
         margin: 10px 0 30px;
@@ -24,30 +25,9 @@
 
 @section('only_js')
 <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
+<script src="{{asset('osce/common/js/swiper.min.js')}}"></script>
     <script>
         $(function(){
-            $('#sourceForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    name: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '病例名称不能为空'
-                            }
-                        }
-                    }
-                }
-            });
-
-
-
 
            var option = {
                     title : {
@@ -119,6 +99,56 @@
             myChart.setOption(option);
 
 
+
+            $('.fa-picture-o').click(function(){
+
+
+
+            var html = '<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:200px;">'+
+                          '<div class="carousel-inner" role="listbox">'+
+                            '<div class="item active">'+
+                              '<img src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
+                              '<div class="carousel-caption">'+
+                              '</div>'+
+                            '</div>'+
+                            '<div class="item" style="height:100%;">'+
+                              '<img style="height:150px; width:100%;" src="{{asset('osce/images/iconfont-shipinliebiao.svg')}}" alt="...">'+
+                              '<div class="carousel-caption">'+
+                                '<a href="#">下载</a>'+
+                              '</div>'+
+                            '</div>'+
+                          '</div>'+
+                          '<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">'+
+                            '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'+
+                            '<span class="sr-only">Previous</span>'+
+                          '</a>'+
+                          '<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">'+
+                            '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+
+                            '<span class="sr-only">Next</span>'+
+                          '</a>'+
+                        '</div>';
+
+            layer.open({
+                type: 1,
+                closeBtn: 0, //不显示关闭按钮
+                title:' ',
+                area: ['420px', '240px'],
+                shift: 2,
+                shadeClose: true, //开启遮罩关闭
+                content: html
+            });
+
+            var mySwiper = new Swiper ('.swiper-container', {
+                loop: true,
+                // 如果需要分页器
+                pagination: '.swiper-pagination',
+                // 如果需要前进后退按钮
+                nextButton: '.swiper-button-next',
+                prevButton: '.swiper-button-prev'
+            });
+
+                
+            });
 
 
         })
@@ -274,6 +304,13 @@
             </table>
         </div>
     </div>
+
+
+
+
+
+
+
 
 </div>
 
