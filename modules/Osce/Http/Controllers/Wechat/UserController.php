@@ -153,7 +153,7 @@ class UserController  extends CommonController
         }else{
             Session::put('openid','dfdsfds');
         }
-        dd($openid);
+        dd($getOpenid);
         return view('osce::wechat.user.login');
     }
 
