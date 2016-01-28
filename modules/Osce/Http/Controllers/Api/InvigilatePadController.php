@@ -325,12 +325,10 @@ class InvigilatePadController extends CommonController
             'subject_id' =>'required|integer',
             'standard_id' =>'required|integer',
             'score' =>'required',
-            'evaluate'=>'required'
         ],[
             'subject_id.required'=>'请检查考试项目',
             'standard_id.required'=>'请检查评分标准',
             'score.required'=>'请检查评分标准分值',
-            'evaluate.required'=>'评价内容',
         ]);
         $data =[
             'subject_id'=>Input::get('subject_id'),
@@ -378,6 +376,7 @@ class InvigilatePadController extends CommonController
               'score'=>'required|integer',
               'score_dt'=>'required',
               'teacher_id'=>'required|integer',
+              'evaluate'=>'required'
           ]);
 
         $data   =   [
@@ -390,34 +389,39 @@ class InvigilatePadController extends CommonController
           'score'=>Input::get('score'),//最终成绩
           'score_dt'=>Input::get('score_dt'),//评分时间
           'teacher_id'=>Input::get('teacher_id'),
+          'evaluate'=>Input::get('evaluate'),//评价内容
+          'operation'=>Input::get('operation'),//操作的连贯性
+          'skilled'=>Input::get('skilled'),//工作的娴熟度
+          'patient'=>Input::get('patient'),//病人关怀情况
+          'affinity'=>Input::get('affinity'),//沟通亲和能力
+
         ];
+
+
+
+
 
         $TestResultModel  =new TestResult();
         $result= $TestResultModel->addTestResult($data);
 
 
           //得到考试结果id
-          $ExamResultId =$result->id;
+          $testResultId =$result->id;
           //考站id
           $stationId =$result->station_id;
           //学生id
           $studentId =$result->student_id;
           //考试场次id
-          $ExamScreeningId = $result->exam_screening_id;
-          $array = [
-              'test_result_id'=>$ExamResultId,
-              'station_id'=>$stationId,
-              'student_id'=>$studentId,
-              'exam_screening_id'=>$ExamScreeningId,
-          ];
+          $examScreenId = $result->exam_screening_id;
+          $timeAnchors=[1,2,3];
 
 
           //调用照片上传方法，传入数据。
-           $this->postTestAttach($request, $array);
+           $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
 
           //存入考试评分详情表
 
-          $SaveEvaluate = $this->postSaveExamEvaluate($request,$ExamResultId);
+          $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
 //           dd($result);
           if($result){
 
@@ -447,19 +451,16 @@ class InvigilatePadController extends CommonController
      * @date   2016-01-16  14:33
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTestAttach(Request $request, Array $array)
+    public function postTestAttach(Request $request,$stationId,$studentId,$examScreenId,$testResultId,$timeAnchors)
     {
-        dd(22222);
         try {
-            //获取考站、考生、和考试关联的id
-            list($stationId, $studentId, $examScreenId, $testResultId, $timeAnchors) = $array;
-
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
             $studentName = $student->name;
             $studentCode = $student->code;
             $stationName = Station::findOrFail($stationId)->first()->name;
             $examName = ExamScreening::findOrFail($examScreenId)->ExamInfo->name;
+
 
             //将参数拼装成一个数组
             $params = [
@@ -468,6 +469,7 @@ class InvigilatePadController extends CommonController
                 'student_code' => $studentCode,
                 'station_name' => $stationName,
             ];
+
             //获取当前日期
             $date = date('Y-m-d');
 
@@ -497,7 +499,8 @@ class InvigilatePadController extends CommonController
             self::uploadFileBuilder($radios, $date, $params, $testResultId);
 
             //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
-            $this->storeAnchor($timeAnchors);
+
+            $this->storeAnchor( $stationId, $studentId, $examScreenId,$timeAnchors);
 
             return true;
 
@@ -590,7 +593,7 @@ class InvigilatePadController extends CommonController
           ];
           if($list->status==0){
               return response()->json(
-                  $this->success_data(0,'摄像头损坏')
+                  $this->success_data('',0,'摄像头损坏')
               );
           }else{
               return response()->json(
@@ -627,15 +630,16 @@ class InvigilatePadController extends CommonController
             'station_id.required'=>'考站编号信息必须'
         ]);
 
-        $studentId= Input::get('student_id');
-        $stationId= Input::get('student_id');
-//        $StartTime= Input::get('start_time');
 
+
+        $studentId= $request->get('student_id');
+        $stationId= $request->get('station_id');
+//        $StartTime= Input::get('start_time');
         $ExamQueueModel= new ExamQueue();
         $AlterResult  =  $ExamQueueModel->AlterTimeStatus($studentId ,$stationId);
         if($AlterResult){
             return response()->json(
-                $this->success_data(1,'开始考试成功')
+                $this->success_data('',1,'开始考试成功')
             );
         }
         return response()->json(
@@ -671,7 +675,7 @@ class InvigilatePadController extends CommonController
         ]);
 
         $studentId= Input::get('student_id');
-        $stationId= Input::get('student_id');
+        $stationId= Input::get('station_id');
 
         $ExamQueueModel= new ExamQueue();
         $EndResult  =  $ExamQueueModel->EndExamAlterStatus($studentId,$stationId);
