@@ -9,64 +9,45 @@
         body{width:100%;height:100%;background:#E1E1E8;font-size:16px;line-height:1em;font-family: "微软雅黑";position:relative}
         ul li{ list-style:none}
         .pin_box{width:720px;height:500px;margin:50px auto 0;}
-        .pin_box table{width:100%;margin-bottom:20px;padding-bottom:10px;background:#fff;}
-        .pin_box table th{height:40px;line-height:40px;background:#2B3A40;color:#fff;}
-        .pin_box table td{text-align: center;line-height:1.5em;padding:10px;color:#333;}
         .pin_box .red{float:right;color:#ED5565;}
         .clearfix:after{content:""; display:table;  clear:both; }
         .clearfix{*zoom:1}
         .pin_title{height:40px;line-height:40px;color:#000;font-weight:bold;text-align: center;}
+        #marquee{margin-top:20px}
         #marquee p{margin:0;line-height:2em;}
+        #name_list{width:100%;height:240px;background:#fff}
+        #name_list dl{float:left}
+        #name_list dl dt{height:40px;line-height:40px;background:#2B3A40;color:#fff;text-align:center}
+        #name_list dl dd{text-align: center;line-height:1.5em;padding:10px;color:#333;}
     </style>
 @stop
 @section('content')
     <div class="pin_box">
-        <p class="clearfix pin_title">临床技能中心2015年第3期技能考试<span class="red time">12-20 08:55</span></p>
-        <table border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                @foreach($list as $key=>$v)
-                <th>{{ $key }}</th>
-                @endforeach
-            </tr>
-            <tr>
-                @foreach($list as $key=>$v)
-                <td>{{$v[0]->name}}</td>
-                @endforeach
-            </tr>
-            <tr>
-                @foreach($list as $key=>$v)
-                   @foreach($v as $z=>$k)
-                   @if($z==1)
-                    <td>{{$k->name}}</td>
-                   @endif
-                   @endforeach
-                @endforeach
-            </tr>
-            <tr>
-                @foreach($list as $key=>$v)
-                    @foreach($v as $z=>$k)
-                        @if($z==2)
-                            <td>{{$k->name}}</td>
-                        @endif
+        <p class="clearfix pin_title">{{ $exams->name }}<span class="red time"><?php echo date('Y-m-d H:i:s',time())?></span></p>
+        <div id="name_list">
+            <input class="name_count" type="hidden" value="{{count($list)}}">
+            @foreach($list as $key=>$lists)
+                <dl>
+                    <dt>{{$key}}</dt>
+                    @foreach($lists as $name)
+                        <dd>{{$name->name}}</dd>
                     @endforeach
-                @endforeach
-            </tr>
-            <tr>
-                @foreach($list as $key=>$v)
-                    @foreach($v as $z=>$k)
-                        @if($z==3)
-                            <td>{{$k->name}}</td>
-                        @endif
-                    @endforeach
-                @endforeach
-            </tr>
-        </table>
+                </dl>
+            @endforeach
+        </div>
         <marquee id="marquee" style="width:100%;height:200px" Behaviour="alternate" scrollamount="2" direction="up" >
             <p style="font-size:18px;color:#ED5565;">考场纪律说明：</p>
-           {{ $description  }}
+           {{ $exams->rules  }}
         </marquee>
     </div>
 @stop{{-- 内容主体区域 --}}
 @section('only_js')
+    <script>
+        $(function(){
+            var i=parseInt($(".name_count").val());
+            var w=100/i;
+            $("#name_list dl").css({width:w+"%"});
+        })
+    </script>
 @stop
 

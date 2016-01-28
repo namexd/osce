@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Wechat;
+use Illuminate\Http\Request;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class StudentExamQuery extends  CommonController
@@ -15,9 +16,9 @@ class StudentExamQuery extends  CommonController
 
 
     //url  /osce/wechat/student-exam-query/results-query-index
-    public  function getResultsQueryIndex(){
-        dd(2222222);
+    public  function getResultsQueryIndex(Request $request){
 
+        
         return view('osce::wechat.exammanage.exam_notice');
 
     }

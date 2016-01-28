@@ -34,11 +34,14 @@
                 </div>
             </div>
             <div class="clearfix form-group"></div>
-        	<form class="container-fluid"  id="list_form" method="post" action="#">
-	             <div class="clearfix form-group">
-	                <label class="col-sm-1 control-label" >说明内容:</label>
+        	<form class="container-fluid"  id="list_form" method="post" action="{{route('osce.admin.exam.postExamRemind')}}">
+				<input type="hidden" name="id" value="{{$id}}">
+	        	<div class="clearfix form-group">
+	            	<label class="col-sm-1 control-label" >说明内容:</label>
 	                <div class="col-sm-11">
-	                    <script id="editor" type="text/plain" style="width:100%;height:500px;cursor: text;" name="content"></script>
+	                    <script id="editor" type="text/plain" style="width:100%;height:500px;cursor: text;" name="content">
+							{{(!empty($data['rules'])?strip_tags($data['rules']):'')}}
+						</script>
 	                </div>
 	            </div>
 	            <div class="clearfix form-group">

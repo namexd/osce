@@ -114,8 +114,8 @@ class PadController extends  CommonController{
              ]);
              $room_id=$request->get('room_id');
              $exam_id=$request->get('exam_id');
-             $examModel=new ExamRoom();
-             $stationVcrs=$examModel->getStionVcr($room_id,$exam_id);
+             $stationModel=new StationVcr();
+             $stationVcrs=$stationModel->getStionVcr($room_id,$exam_id);
              return response()->json(
                  $this->success_data($stationVcrs,1,'success')
              );
@@ -273,21 +273,30 @@ class PadController extends  CommonController{
        }
 
 
-    public function getStatus(Request $request)
+    /**
+     * 考试在后修改状态
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Jiangzhiheng
+     */
+    public function getChangeStatus(Request $request)
     {
         $this->validate($request, [
-            'uid' => 'required|integer',
+            'student_id' => 'required|integer',
         ]);
 
         try {
+            //获取当前的服务器时间
+            $date = date('Y-m-d H:i:s');
             //通过考生的腕表id来找到对应的队列id
-            $uid = $request->input('uid');
+            $studentId = $request->input('student_id');
 
             //找到对应的方法找到queue实例
-            $queue = ExamQueue::findQueueIdByUid($uid);
+            $queue = ExamQueue::findQueueIdByStudentId($studentId);
 
             //修改状态
-            $queue->status = 3;
+            $queue->status = 5;
+            $queue->end_dt = $date;
             if (!$queue->save()) {
                 throw new \Exception('状态修改失败！请重试');
             }

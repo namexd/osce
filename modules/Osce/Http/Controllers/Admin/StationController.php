@@ -113,12 +113,19 @@ class StationController extends CommonController
 //            'description'   => 'required',
 //            'code'          => 'required',
             'mins'          => 'required',
-            'vcr_id'        => 'required|integer',
-            'room_id'       => 'required|integer',
+            'subject_id'    => 'required|integer',
             'case_id'       => 'required|integer',
-            'subject_id'    => 'required|integer'
+            'room_id'       => 'required|integer',
+            'vcr_id'        => 'required|integer'
         ],[
-            'name.unique'   =>  '考站名称必须唯一'
+            'name.required'       =>  '考站名称必填',
+            'name.unique'         =>  '考站名称必须唯一',
+            'type.required'       =>  '考站类型必选',
+            'mins.required'       =>  '时间限制必填',
+            'subject_id.required' =>  '科目必选',
+            'case_id.required'    =>  '病例必选',
+            'room_id.required'    =>  '考场必选',
+            'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         DB::connection('osce_mis')->beginTransaction();
@@ -212,6 +219,15 @@ class StationController extends CommonController
             'vcr_id'        => 'required|integer',
             'case_id'       => 'required|integer',
             'room_id'       => 'required|integer',
+        ],[
+            'name.required'       =>  '考站名称必填',
+            'name.unique'         =>  '考站名称必须唯一',
+            'type.required'       =>  '考站类型必选',
+            'mins.required'       =>  '时间限制必填',
+            'subject_id.required' =>  '科目必选',
+            'case_id.required'    =>  '病例必选',
+            'room_id.required'    =>  '考场必选',
+            'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         try {
@@ -273,14 +289,14 @@ class StationController extends CommonController
         //将下拉菜单的数据查出
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         if ($id == "") {
-            $vcr = Vcr::where('status', 1)
+            $vcr = Vcr::where('used', 0)
                 ->select(['id', 'name'])
                 ->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
             $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
 
-            $vcr  = Vcr::where('status', 1)
+            $vcr  = Vcr::where('used', 0)
                     ->orWhere(function($query) use($vcrId){
                         $query->where('id','=',$vcrId);
                     })

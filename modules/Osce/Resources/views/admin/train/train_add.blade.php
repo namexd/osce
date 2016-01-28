@@ -43,7 +43,6 @@
 		    istoday:false,
 		    choose: function(datas){
 		        end.min = datas;
-		        end.start = datas
 	    	}
 		}
 		var end={
@@ -55,7 +54,6 @@
 		    istime: true,
 		    istoday:false,
 		    choose: function(datas){
-		    	start.min=datas;
 		        start.max = datas;
 		    }
 		}
