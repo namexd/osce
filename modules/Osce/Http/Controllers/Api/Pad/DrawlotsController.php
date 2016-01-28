@@ -15,6 +15,7 @@ use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\StationTeacher;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
@@ -41,6 +42,7 @@ class DrawlotsController extends CommonController
         try {
             //通过教师id去寻找对应的考场,返回考场对象
             $room = StationTeacher::where('user_id', $teacher_id)->first()->station->room;
+
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
             }
@@ -73,18 +75,20 @@ class DrawlotsController extends CommonController
             $user = Auth::user();
             list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
 
-
-            //从队列表中通过考场ID得到对应的考生信息
-            $examQueue =  ExamQueue::examineeByRoomId($room_id, $stationNum);
-
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
+            $examId = $exam->id;
+            //从队列表中通过考场ID得到对应的考生信息
+            $examQueue =  ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
+
+            if (is_null($exam)) {
+                throw new \Exception('今天没有正在进行的考试');
+            }
 
             //将老师对应的考站写进对象
             $examQueue->station_name = $station->name;
             $examQueue->station_id = $station->id;
-            $examQueue->exam_id = $exam->id;
-
+            $examQueue->exam_id = $examId;
 
 //            $examQueue = [
 //                0 => ['student_id' => 1,
@@ -128,30 +132,37 @@ class DrawlotsController extends CommonController
      */
     public function getNextExaminee()
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
 
-        list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
+            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
+    //        dd($room_id);
+            //获取正在考试中的考试
+            $exam = Exam::where('status',1)->first();
+            $examId = $exam->id;
 
-        $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $stationNum);
-
-//        $examQueue = [
-//            0 => ['student_id' => 1,
-//                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
-//                'student_code' => '1234',
-//                'student_name' => '测试名字1',
-//                'station_name' => '当前考站1'],
-//            1 => ['student_id' => 2,
-//                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
-//                'student_code' => '12345',
-//                'student_name' => '测试名字2',
-//                'station_name' => '当前考站2'],
-//            2 => ['student_id' => 3,
-//                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
-//                'student_code' => '123456',
-//                'student_name' => '测试名字3',
-//                'station_name' => '当前考站3'],
-//        ];
-        return response()->json($this->success_data($examQueue));
+            $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
+    //        $examQueue = [
+    //            0 => ['student_id' => 1,
+    //                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
+    //                'student_code' => '1234',
+    //                'student_name' => '测试名字1',
+    //                'station_name' => '当前考站1'],
+    //            1 => ['student_id' => 2,
+    //                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
+    //                'student_code' => '12345',
+    //                'student_name' => '测试名字2',
+    //                'station_name' => '当前考站2'],
+    //            2 => ['student_id' => 3,
+    //                'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160122/0c0df369-9723-4b39-ae42-722136062b0d.jpg',
+    //                'student_code' => '123456',
+    //                'student_name' => '测试名字3',
+    //                'station_name' => '当前考站3'],
+    //        ];
+            return response()->json($this->success_data($examQueue));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -181,6 +192,7 @@ class DrawlotsController extends CommonController
                 'room_id' => 'required|integer'
             ]);
 
+
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->get('room_id');
@@ -201,6 +213,9 @@ class DrawlotsController extends CommonController
 
             //使用抽签的方法进行抽签操作
             $result = $this->drawlots($student, $roomId);
+
+            //判断时间
+            $this->judgeTime($uid);
 
             return response()->json($this->success_data($result));
 
@@ -287,16 +302,46 @@ class DrawlotsController extends CommonController
     private function getRoomIdAndStation($user)
     {
         //获取登陆者id，也就是教师id
-        $teacher_id = $user->id;
+        $teacherId = $user->id;
         //获取当前老师的考场对象
-        $room = $this->getRoomId($teacher_id);
+        $room = $this->getRoomId($teacherId);
+
         //获得考场的id
         $room_id = $room->id;
         //获得当前考场考站的个数
         $stationNum = RoomStation::where('room_id',$room_id)->get()->count();
         //获得当前老师所在的考站
-        $station = Teacher::findOrFail($teacher_id)->teacherStation;
+//        $station = Teacher::findOrFail($teacher_id)->teacherStation;
+        $station = StationTeacher::where('user_id',$teacherId)->first()->station;
         return array($room_id, $station, $stationNum);
+    }
+
+    /**
+     * 判断时间
+     * @param $uid
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
+    private function judgeTime($uid)
+    {
+        //获取当前时间
+        $date = date('Y-m-d H:i;s');
+
+        //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
+        $studentObj = ExamQueue::where('student_id', $uid)->where('status', 2)->first();
+        $studentBeginTime = $studentObj->begin_dt;
+        $studentEndTime = $studentObj->end_dt;
+        if (strtotime($date) > strtotime($studentBeginTime)) {
+            $diff = strtotime($date) - strtotime($studentBeginTime);
+            $studentObjs = ExamQueue::where('student_id', $uid)->where('status', '<', 2)->get();
+            foreach ($studentObjs as $studentObj) {
+                $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentBeginTime) + $diff);
+                $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentEndTime) + $diff);
+                if (!$studentObj->save()) {
+                    throw new \Exception('抽签失败！');
+                }
+            }
+        }
     }
 
 }

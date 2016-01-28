@@ -16,15 +16,26 @@ class DrawlotsTest extends TestCase
 {
     private $user_id = 51;
 
-    public function testOne()
+//    public function testOne()
+//    {
+//        $userOb =   \App\Entities\User::find(1);
+//        $response   =   $this->actingAs($userOb)
+//            ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getExaminee');
+//        $view = $response->getContent();
+//        $data = json_decode($view);
+////        $this->assertTrue($data);
+//        dd($view);
+//    }
+
+    public function testThree()
     {
-        $userOb =   \App\Entities\User::find(51);
+        $userOb =   \App\Entities\User::find(1);
         $response   =   $this->actingAs($userOb)
-            ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getExaminee');
+            ->action('get','\Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController@getNextExaminee');
         $view = $response->getContent();
         $data = json_decode($view);
-        dd($data);
-//        $this->assertTrue($data->code==1);
+//        $this->assertTrue($data.code == 1);
+        dd($view);
     }
 
 //    public function testTwo()

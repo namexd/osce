@@ -21,12 +21,12 @@ class Standard extends CommonModel
     protected $fillable = ['subject_id', 'content', 'sort', 'score', 'created_user_id','pid','level','answer'];
     public $search = [];
 
-    //´´½¨ÈËÓÃ»§¹ØÁª
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
     public function user(){
         return $this->hasOne('App\Entities\User','created_user_id','id');
     }
 
-    //¸¸¼¶¿¼ºËµã
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
     public function parent(){
         return $this->hasOne('Modules\Osce\Entities\Standard','id','pid');
     }
@@ -59,6 +59,24 @@ class Standard extends CommonModel
         return $return;
     }
 
+   public function getScore($stationId,$subjectId){
 
+       $builder=$this-> leftJoin('exam_score', function($join){
+           $join -> on('standard.id', '=', 'exam_score.standard_id');
+       })-> leftJoin('station', function($join){
+           $join -> on('station.subject_id', '=', 'exam_score.subject_id');
+       })-> leftJoin('exam_result', function($join){
+           $join -> on('station.id', '=', 'exam_result.station_id');
+       });
+       $builder=$builder->where('standard.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId);
+
+       $builder=$builder->select([
+           'standard.score as score',
+           'standard.id as id',
+           'standard.sort as sort',
+       ])->orderBy('standard.sort','DESC')->get();
+
+       return $builder;
+    }
 
 }
