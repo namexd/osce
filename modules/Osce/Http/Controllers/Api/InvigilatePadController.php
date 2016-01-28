@@ -140,7 +140,9 @@ class InvigilatePadController extends CommonController
 //                    'name' => $itme->name,
 //                    'code' => $itme->code,
 //                    'idcard' => $itme->idcard,
-//                    'mobile' => $itme->mobile
+//                    'mobile' => $itme->mobile,
+//                    'avator' => $itme->avator
+
 //                ];
 //            }
 //
@@ -303,16 +305,12 @@ class InvigilatePadController extends CommonController
           $studentExamSum = $ExamFlowModel->studentExamSum($ExamId);
           //查询出学生当前已完成的考试
           $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $ExamId)->count();
-          if($ExamFinishStatus<$studentExamSum){
-              return response()->json(
-                  $this->fail(new \Exception('该学生还有考试没有完成'))
-              );
-          }else{
-              $TestResultModel  =new TestResult();
-              $result= $TestResultModel->addTestResult($data);
+          if($ExamFinishStatus == $studentExamSum){
               //todo 调用zhoufuxiang接口......
           }
            try{
+               $TestResultModel  =new TestResult();
+               $result= $TestResultModel->addTestResult($data);
                if($result){
                    //得到考试结果id
                    $testResultId =$result->id;
@@ -326,7 +324,6 @@ class InvigilatePadController extends CommonController
                    //调用照片上传方法，传入数据。
                    $pictureUpload = $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
                    //存入考试评分详情表
-
                    $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
                }else{
                    return response()->json(
