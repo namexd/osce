@@ -101,4 +101,33 @@ class ExamResultController extends CommonController{
          $examResults=$examResult->getResultList($examId,$stationId,$name);
          return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams]);
     }
+
+    /**
+     *获取考试成绩详情页
+     * @method GET
+     * @url /exam/exam-result-detail
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        成绩id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamResultDetail(Request $request){
+       $this->validate($request,[
+           'id'   => 'required|integer'
+       ]);
+
+        $id=$request->get('id');
+        $examResult=new ExamResult();
+        $examResult=$examResult->getResultDetail($id);
+
+        return view()->with('examResult',$examResult);
+    }
 }
