@@ -11,6 +11,12 @@
 <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
 <script type="text/javascript" >
 	var ue = UE.getEditor('editor');
+
+	$(function(){
+		@if(isset($_GET['suc']) && $_GET['suc']==1)
+            layer.alert('保存成功！');
+		@endif
+    })
 </script>
 @stop
 
