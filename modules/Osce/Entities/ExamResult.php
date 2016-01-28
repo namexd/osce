@@ -102,18 +102,18 @@ class ExamResult extends CommonModel
         return $builder;
     }
 
-    public function getStudent($stationId,$subjectId){
-
-        $builder=$this-> leftJoin('station', function($join){
-            $join -> on('station.id', '=', 'exam_result.station_id');
-        })-> leftJoin('subject', function($join){
-            $join -> on('subject.id', '=', 'station.subject_id');
-        });
-
-        $builder=$builder->select([
-            'exam_result.student_id as student_id'
-        ])->get();
-
-        return $builder;
-    }
+//    public function getStudent($stationId,$subjectId){
+//
+//        $builder=$this-> leftJoin('station', function($join){
+//            $join -> on('station.id', '=', 'exam_result.station_id');
+//        })-> leftJoin('subject', function($join){
+//            $join -> on('subject.id', '=', 'station.subject_id');
+//        });
+//
+//        $builder=$builder->select([
+//            'exam_result.student_id as student_id'
+//        ])->get();
+//
+//        return $builder;
+//    }
 }
