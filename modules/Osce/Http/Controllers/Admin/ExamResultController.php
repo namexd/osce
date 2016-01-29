@@ -249,6 +249,6 @@ class ExamResultController extends CommonController{
     {
         $this->validate($request,[
             ''
-        ])
+        ]);
     }
 }
