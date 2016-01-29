@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 
 use App\Entities\User;
 use App\Repositories\Common;
+use DB;
 
 class ExamResult extends CommonModel
 {
@@ -176,7 +177,7 @@ class ExamResult extends CommonModel
 
 
    //微信端学生成绩查询
- public function stationInfo($examScreeningIds){
+    public function stationInfo($examScreeningIds){
 
      $builder=$this->leftJoin('station', function($join){
          $join -> on('station.id', '=', 'exam_result.station_id');
@@ -194,7 +195,6 @@ class ExamResult extends CommonModel
      ])->paginate(config('osce.page_size'));
 
      return $builder;
+    }
 
-
- }
 }

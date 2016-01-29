@@ -2,7 +2,7 @@
 <html lang="zh-CN" class="no-js">
 <head>
     <meta charset="UTF-8">
-    <title>@section('title') 敏行综合管理系统 @show{{-- 页面标题 --}}</title>
+    <title>@section('title') OSCE考试智能管理系统 @show{{-- 页面标题 --}}</title>
     <meta name="description" content="JkBoss" />
     <meta name="keywords" content="JkBoss" />
     <meta name="author" content="敏行综合管理系统" />
