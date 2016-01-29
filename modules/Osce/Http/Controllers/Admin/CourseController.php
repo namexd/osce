@@ -37,7 +37,7 @@ class CourseController extends CommonController
             $subjectId = $request->input('subject_id');
 
             //考试的下拉菜单
-            $downlist = Exam::select('id','name')->get();
+            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->get();
 
             //科目列表数据
             $subject = new Subject();
@@ -97,6 +97,7 @@ class CourseController extends CommonController
 
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
 
+        //将排名的数组循环插入表中
         foreach ($data as $key => &$item) {
             $item->ranking = $key;
         }
@@ -107,5 +108,20 @@ class CourseController extends CommonController
             'avgScore'=>$avgScore,
             'avgTime'=>$avgTime
         ]);
+    }
+
+    public function getStudentScore(Request $request)
+    {
+        $this->validate($request, [
+            'exam_id' => 'sometimes|integer',
+            'message' => 'sometimes'
+        ]);
+
+        //获得参数
+        $examId = $request->input('exam_id',1);
+        $message = $request->input('message',"");
+
+
+        $data = Student::
     }
 }
