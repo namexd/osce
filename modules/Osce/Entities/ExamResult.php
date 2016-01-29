@@ -180,8 +180,6 @@ class ExamResult extends CommonModel
 
      $builder=$this->leftJoin('station', function($join){
          $join -> on('station.id', '=', 'exam_result.station_id');
-     })-> leftJoin('station_teacher', function($join){
-         $join -> on('station_teacher.station_id', '=', 'exam_result.station_id');
      })-> leftJoin('teacher', function($join){
          $join -> on('teacher.id', '=', 'exam_result.teacher_id');
      });
@@ -193,7 +191,7 @@ class ExamResult extends CommonModel
          'teacher.name as grade_teacher',
          'station.type as type',
          'station.name as station_name',
-     ])->get();
+     ])->paginate(config('osce.page_size'));
 
      return $builder;
 
