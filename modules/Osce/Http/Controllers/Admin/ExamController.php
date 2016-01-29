@@ -813,7 +813,7 @@ class ExamController extends CommonController
                 }
 
             }else{
-                if(!$flows -> saveExamroomfAssignmen($exam_id, $roomData, $stationData)){
+                if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
             }
