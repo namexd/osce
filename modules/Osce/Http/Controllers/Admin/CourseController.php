@@ -121,7 +121,13 @@ class CourseController extends CommonController
         $examId = $request->input('exam_id',1);
         $message = $request->input('message',"");
 
+        //获得学生的列表在该考试的列表
+        $list = Student::getStudentScoreList($examId, $message);
+        //为每一条数据插入统计值
+        foreach ($list as $item) {
 
-        $data = Student::
+        }
+
+
     }
 }

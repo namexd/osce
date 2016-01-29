@@ -392,14 +392,13 @@ class Student extends CommonModel
 
             $builder = $builder->select(DB::raw(implode(',',
                 [
-                    'student.name as student_name',
-                    'student.code as student_code',
+                    'student.name as student_name,',
+                    'student.code as student_code,',
                     'exam.name as exam_name',
-                    'count(exam_result.id) as total',
-
                 ]))
+            );
 
-            )
+            return $builder->paginate(config('osce.page_size'));
         }
     }
 
