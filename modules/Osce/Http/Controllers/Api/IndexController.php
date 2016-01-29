@@ -286,6 +286,7 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
+            'name'                  =>  'sometimes',
             'create_user_id'        =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
@@ -300,7 +301,7 @@ class IndexController extends CommonController
             return \Response::json(array('code'=>3));
         }
         $nfc=$request->get('nfc_code');
-        $id=Watch::where('nfc_code',$nfc)->select()->first();
+        $id=Watch::where('nfc',$nfc)->select()->first();
         if($id){
             return \Response::json(array('code'=>3));
         }
@@ -402,6 +403,7 @@ class IndexController extends CommonController
         $this->validate($request,[
             'code'                  =>  'required',
             'status'                =>  'required',
+            'name'                  =>  'sometimes',
             'create_user_id'        =>  'required|integer',
             'description'           =>  'sometimes',
             'factory'               =>  'sometimes',
@@ -412,11 +414,13 @@ class IndexController extends CommonController
 
         $code=$request->get('code');
         $id=Watch::where('code',$code)->select()->first();
-        $nfc=$request->get('nfc_code');
+        $nfc=$request->get('nfc');
         if($nfc){
             $watch_id=Watch::where('nfc_code',$nfc)->select()->first();
-            if($id->id!=$watch_id->id){
-                return \Response::json(array('code'=>3));
+            if($watch_id){
+                if($id->id!=$watch_id->id){
+                    return \Response::json(array('code'=>3));
+                }
             }
         }
         $count=Watch::where('code'   ,'=', $request->get('code'))
@@ -426,6 +430,7 @@ class IndexController extends CommonController
                 'factory'       =>  $request    ->  get('factory'),
                 'sp'            =>  $request    ->  get('sp'),
                 'description'   =>  $request    ->  get('description'),
+                'create_user_id'   =>  $request    ->  get('create_user_id'),
                 'status'        =>  $request    ->  get('status'),
                 'purchase_dt'   =>  $request    ->  get('purchase_dt'),
                 'nfc_code'           =>  $request    ->  get('nfc',''),
@@ -607,7 +612,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
-                        'nfc' => $itm['nfc'],
+                        'nfc' => $v['nfc'],
                         'studentName' => '-',
                     ];
                 }

@@ -19,7 +19,7 @@ class Watch extends CommonModel implements MachineInterface
     protected $table 		= 	'watch';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['code', 'name', 'status', 'description', 'factory', 'sp', 'create_user_id', 'purchase_dt'];
+    protected   $fillable 	=	['code', 'name', 'status', 'description', 'factory', 'sp', 'create_user_id', 'purchase_dt','nfc_code'];
     public      $search    =   [];
 
     protected $statuValues  =   [
@@ -193,7 +193,7 @@ class Watch extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name='',$status=''){
+    public function getList($name='',$status='',$nfc_code=''){
         $builder =   Watch::select();
 
         if($name != '')
@@ -204,7 +204,7 @@ class Watch extends CommonModel implements MachineInterface
         {
             $builder =   $builder    ->  where('status', '=', $status);
         }
-        $builder = $builder -> select(['id', 'code','name', 'status']);
+        $builder = $builder -> select(['id', 'code','name', 'status','nfc_code']);
 
         return  $builder -> orderBy('created_at','desc') ->  paginate(config('osce.page_size'));
     }

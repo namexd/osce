@@ -1327,7 +1327,6 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
-//        dd($stationData);
         return view('osce::admin.exammanage.station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,

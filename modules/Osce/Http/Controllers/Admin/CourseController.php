@@ -37,7 +37,7 @@ class CourseController extends CommonController
             $subjectId = $request->input('subject_id');
 
             //考试的下拉菜单
-            $downlist = Exam::select('id','name')->get();
+            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->get();
 
             //科目列表数据
             $subject = new Subject();
@@ -97,15 +97,39 @@ class CourseController extends CommonController
 
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
 
+        //将排名的数组循环插入表中
         foreach ($data as $key => &$item) {
-            $item->ranking = $key;
+            $item->ranking = $key+1;
         }
 
-        return view('osce::admin.subject_student_list',['data' => $data,
+        return view('osce::admin.statistics_query.subject_student_list',['data' => $data,
             'exam'=>$exam,
             'subject'=>$subject,
             'avgScore'=>$avgScore,
             'avgTime'=>$avgTime
         ]);
     }
+
+    public function getStudentScore(Request $request)
+    {
+        $this->validate($request, [
+            'exam_id' => 'sometimes|integer',
+            'message' => 'sometimes'
+        ]);
+
+        //获得参数
+        $examId = $request->input('exam_id',113);
+        $message = $request->input('message',"");
+
+        //获得学生的列表在该考试的列表
+        $list = Student::getStudentScoreList($examId, $message);
+        //为每一条数据插入统计值
+        foreach ($list as $key => &$item) {
+            $item->ranking = $key+1;
+        }
+
+        return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
+    }
+
+
 }

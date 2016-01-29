@@ -219,8 +219,12 @@ class ExamRoom extends CommonModel
     public function getWaitRoom($exam_id){
         $time=time();
         try{
-            $builder=$this->Join('exam_plan','exam_plan.exam_id','=','exam_room.exam_id');
-            $builder=$builder->Join('room','room.id','=','exam_room.room_id');
+
+            $builder=$this->Join('room','room.id','=','exam_room.room_id');
+            $builder=$builder->join('exam_plan', function($join)
+            {
+                $join->on('exam_room.exam_id', '=', 'exam_plan.exam_id')->On('exam_plan.room_id','=','room.id');
+            });
             $builder=$builder->where('exam_plan.exam_id',$exam_id);
             $builder=$builder->whereRaw(
                 'unix_timestamp('.'exam_plan.begin_dt'.') > ?',

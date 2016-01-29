@@ -158,7 +158,7 @@ class Vcr extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name,$status){
+    public function getList($name,$status,$nfc_code=''){
         $bulder =   $this;
         if($name != '')
         {
