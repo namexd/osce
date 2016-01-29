@@ -623,6 +623,7 @@ class ExamPlan extends CommonModel
                     throw new \Exception('保存考试计划失败');
                 }
             }
+            $this  ->  saveStudentOrder($exam_id);
             $connection ->  commit();
             return true;
         }
@@ -794,4 +795,50 @@ class ExamPlan extends CommonModel
         return $examPlanData;
     }
 
+    /**
+     * 保存学生考试顺序
+     * @access public
+     *
+     * @param $exam_id int  考试ID
+     *
+     * @return void
+     *
+     * @version 0.3
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-29 13:36
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function saveStudentOrder($exam_id){
+        $planList   =   $this->where('exam_id','=',$exam_id)->orderBy('begin_dt','asc')->get();
+        $studentOrderData   =   [];
+        $user   =   \Auth::user();
+        try
+        {
+            foreach($planList as $plan)
+            {
+                if(!array_key_exists($plan->student_id,$studentOrderData))
+                {
+                    $studentOrderData[$plan->student_id] =   [
+                        'exam_id'           =>  $exam_id,
+                        'exam_screening_id' =>  $plan->exam_screening_id,
+                        'student_id'        =>  $plan->student_id,
+                        'begin_dt'          =>  $plan->begin_dt,
+                        'status'            =>  $plan->status,
+                        'created_user_id'   =>  $user->id,
+                    ];
+                }
+            }
+            foreach($studentOrderData as $stduentOrder){
+                if(!ExamOrder::create($stduentOrder))
+                {
+                    throw new \Exception('保存学生考试顺序失败');
+                }
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
 }
