@@ -134,6 +134,7 @@ var subject_vcr = (function(mod){
         alert(szIP + " " + szInfo);
     }
 
+
     /**
      *停止播放
      */
@@ -153,6 +154,61 @@ var subject_vcr = (function(mod){
             }
         });
     }
+    //开始回放
+    mod.StartRealPlay=function(g_iWndIndex){
+        $(".points li").click(function(){
+            var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
+                szIP = $("#ip").val(),
+                bZeroChannel = $("#channels option").eq($("#channels").get(0).selectedIndex).attr("bZero") == "true" ? true : false,
+                iChannelID = $("#channels").val(),
+                szStartTime = $("#starttime").val(),
+                szEndTime = $("#endtime").val(),
+                szInfo = "",
+                bChecked = $("#transstream").prop("checked"),
+                iRet = -1;
+
+            if ("" == szIP) {
+                return;
+            }
+
+            if (bZeroChannel) {// 零通道不支持回放
+                return;
+            }
+
+            if (oWndInfo != null) {// 已经在播放了，先停止
+                WebVideoCtrl.I_Stop();
+            }
+
+            if (bChecked) {// 启用转码回放
+                var oTransCodeParam = {
+                    TransFrameRate: "16",// 0：全帧率，5：1，6：2，7：4，8：6，9：8，10：10，11：12，12：16，14：15，15：18，13：20，16：22
+                    TransResolution: "2",// 255：Auto，3：4CIF，2：QCIF，1：CIF
+                    TransBitrate: "23"// 2：32K，3：48K，4：64K，5：80K，6：96K，7：128K，8：160K，9：192K，10：224K，11：256K，12：320K，13：384K，14：448K，15：512K，16：640K，17：768K，18：896K，19：1024K，20：1280K，21：1536K，22：1792K，23：2048K，24：3072K，25：4096K，26：8192K
+                };
+                iRet = WebVideoCtrl.I_StartPlayback(szIP, {
+                    iChannelID: iChannelID,
+                    szStartTime: szStartTime,
+                    szEndTime: szEndTime,
+                    oTransCodeParam: oTransCodeParam
+                });
+            } else {
+                iRet = WebVideoCtrl.I_StartPlayback(szIP, {
+                    iChannelID: iChannelID,
+                    szStartTime: szStartTime,
+                    szEndTime: szEndTime
+                });
+            }
+
+            if (0 == iRet) {
+                szInfo = "开始回放成功！";
+            } else {
+                szInfo = "开始回放失败！";
+            }
+            alert(szIP + " " + szInfo);
+        })
+
+    }
+
 
     /**
      *选择不同的摄像头
