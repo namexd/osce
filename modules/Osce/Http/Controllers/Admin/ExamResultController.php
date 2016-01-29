@@ -13,6 +13,7 @@ use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -244,11 +245,28 @@ class ExamResultController extends CommonController{
     /**
      * @param Request $request
      * @author Jiangzhiheng
+     * @return \Illuminate\View\View
      */
     public function getResultVideo(Request $request)
     {
-        $this->validate($request,[
-            ''
-        ]);
+        try {
+            $this->validate($request,[
+                'exam_id' => 'required|integer',
+                'student_id' => 'required|integer',
+                'station_id' => 'required|integer'
+            ]);
+
+            //获取数据
+            $examId = $request->input('exam_id');
+            $studentId = $request->input('student_id');
+            $stationId = $request->input('station_id');
+
+            //查询到页面需要的数据
+            $data = StationVideo::label($examId,$studentId,$stationId);
+
+            return view('osce::admin.statistics_query.exam_vcr',$data);
+        } catch (\Exception $ex) {
+            return response()->back()->withErrors($ex->getMessage());
+        }
     }
 }

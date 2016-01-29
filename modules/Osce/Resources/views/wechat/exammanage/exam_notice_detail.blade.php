@@ -28,6 +28,9 @@
         .notice-box{
             word-wrap:break-word;
         }
+        img{
+            width: 100%;
+        }
     </style>
 
 
