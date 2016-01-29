@@ -76,7 +76,7 @@ class ExamResult extends CommonModel
     {
         try {
             //考生信息
-            $student  = Student::where('id', $student_id)->select(['user_id', 'name'])->first();
+            $student  = Student::where('id', $student_id)->select(['user_id','exam_id', 'name'])->first();
             if(!$student){
                 throw new \Exception(' 没有找到该考生信息！');
             }
@@ -99,7 +99,7 @@ class ExamResult extends CommonModel
                     $msgData = [
                         [
                             'title' => '考试成绩查看',
-                            'desc'  => $exam->name.'考试总成绩为：'.$examResult.'分',
+                            'desc'  => $userInfo->name.'同学的 '.$exam->name.' 考试的总成绩为：'.$examResult.'分',
                             'url'   => $url,
                         ],
                     ];
@@ -109,6 +109,8 @@ class ExamResult extends CommonModel
                 }else{
                     throw new \Exception($userInfo->name.' 没有关联微信号');
                 }
+            }else{
+                throw new \Exception(' 没有找到该考生对应的用户信息！');
             }
 
         } catch (\Exception $ex) {
