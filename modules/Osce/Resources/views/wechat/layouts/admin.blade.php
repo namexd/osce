@@ -12,6 +12,9 @@
 	<link href="{{asset('osce/wechat/jquery-confirm/jquery-confirm.css')}}"  rel="stylesheet"/>
 	<link href="{{asset('osce/wechat/common/css/commons.css')}}"  rel="stylesheet"/>
     <link href="{{asset('osce/wechat/common/css/table_commons.css')}}"  rel="stylesheet"/>
+    <style>
+        i.form-control-feedback.glyphicon.glyphicon-ok, i.form-control-feedback.glyphicon.glyphicon-remove{display: none!important;}
+    </style>
 @stop
 
 @section('head_js')

@@ -79,7 +79,7 @@ class Exam extends CommonModel
     {
         try {
             //不寻找已经被软删除的数据
-            $builder = $this->where('status' , '<>' , 0);
+            $builder = $this;//->where('status' , '<>' , 0);
 
             if($formData){
                $builder=$builder->where('name','like',$formData['exam_name'].'%');

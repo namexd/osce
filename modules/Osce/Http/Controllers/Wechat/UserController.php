@@ -398,4 +398,8 @@ class UserController  extends CommonController
             return false;
         }
     }
+
+    public function getWebLogin(){
+        return view('osce::wechat.user.login');
+    }
 }
