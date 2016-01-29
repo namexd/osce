@@ -313,6 +313,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//登陆
 		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
+		Route::get('user/web-login',['uses'=>'UserController@getWebLogin','as'=>'osce.wechat.user.getWebLogin']);
 		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
 
 		//注册
