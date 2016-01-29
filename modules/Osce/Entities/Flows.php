@@ -108,12 +108,16 @@ class Flows extends CommonModel
                     //拼装一下老师的数据
                     if (($item['teacher_id']) !== "") {
                         $teacherIDs[] =  $item['teacher_id'];
+                    } else {
+                        $teacherIDs[] = NULL;
                     }
 
-                    if (isset($item['spteacher_id'])) {
+                    if (!empty($item['spteacher_id'])) {
                         foreach ($item['spteacher_id'] as $value) {
                             $teacherIDs[] = $value;
                         }
+                    } else {
+                        $teacherIDs[] = NULL;
                     }
                     $station_id = $item['id'];
                     //根据考站id，获取对应的病例id

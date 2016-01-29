@@ -200,11 +200,8 @@ class Exam extends CommonModel
                     //通过考站id找到对应的考站-老师关系表
 
                     foreach ($stationIds as $stationId) {
-
                         if (!StationTeacher::where('station_id',$stationId->station_id)->get()->isEmpty()) {
-
-                            dd(StationTeacher::where('station_id',$stationId->station_id)->delete()->toSql());
-                            if (!StationTeacher::where('station_id',$stationId->station_id)->delete()->toSql()) {
+                            if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
                                 throw new \Exception('删除考站老师关联失败，请重试！');
                             }
                         }
