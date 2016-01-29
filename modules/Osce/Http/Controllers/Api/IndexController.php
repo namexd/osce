@@ -612,7 +612,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
-                        'nfc' => $itm['nfc'],
+                        'nfc' => $v['nfc'],
                         'studentName' => '-',
                     ];
                 }
