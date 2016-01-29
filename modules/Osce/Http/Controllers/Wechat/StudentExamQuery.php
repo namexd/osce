@@ -10,9 +10,11 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
@@ -56,39 +58,62 @@ class StudentExamQuery extends  CommonController
         }
     }
 
+
+
 //      ajax  /osce/wechat/student-exam-query/every-exam-list
     public function getEveryExamList(Request $request){
+
 
         $this->validate($request,[
             'exam_id'=>'required|integer'
         ]);
         $examId =Input::get('exam_id');
-        //根据考试id查询出所有考站
-        $stationId= ExamStation::where('exam_id','=',$examId)->select('station_id')->get();
-        $list=[];
-        foreach($stationId as $data){
-            $list[]=[
-                'id'=>$data->station_id,
+         //获取到考试的时间
+        $examTime =Exam::where('id',$examId)->select('begin_dt','end_dt')->first();
+
+
+        //根据考试id找到对应的考试场次
+        $examScreeningId=  ExamScreening::where('exam_id','=',$examId)->select('id')->get();
+        $examScreening=[];
+        foreach($examScreeningId as $data){
+            $examScreening[]=[
+                'id'=>$data->id,
             ];
         }
-        $stationIds = array_column($list, 'id');
-        //根据考站id查询出考站的相关信息
+        $examScreeningIds = array_column($examScreening, 'id');
+        //根据场次id查询出考站的相关信息
         $ExamResultModel= new ExamResult();
-        $stationList =$ExamResultModel->stationInfo($stationIds);
-        dd($stationList);
-        if($stationList){
-            return response()->json(
-                $this->success_data('',0,'查询失败')
-            );
-
+        $stationList =$ExamResultModel->stationInfo($examScreeningIds);
+        $stationData=[];
+        foreach($stationList as $stationType){
+            if($stationType->type == 2){
+                $teacherModel= new Teacher();
+                $spteacher = $teacherModel->spteacher($stationType->id);
+            }
+            $stationData[]=[
+                'station_id'=>$stationType->id,
+                'score'=>$stationType->score,
+                'time'=>$stationType->time,
+                'grade_teacher'=>$stationType->grade_teacher,
+                'type'=>$stationType->type,
+                'station_name'=>$stationType-> station_name,
+                'sp_name'=>$spteacher->name,
+                'begin_dt'=>$examTime->begin_dt,
+                'end_dt'=>$examTime->end_dt,
+            ];
         }
 
+        return response()->json(
+            $this->success_data($stationData,1,'数据传送成功')
+        );
     }
 
 
 
-    //考生成绩查询详情页根据考站id查询
+      //考生成绩查询详情页根据考站id查询
 
+      public  function  getExamDetails(){
 
+      }
 
 }
