@@ -206,11 +206,17 @@
                                                     <div class="teacher-box pull-left">
                                                         @foreach($item as $b => $value)
                                                             @if($value->type == 2)
-                                                            <div class="input-group teacher pull-left" value="{{$value->id}}">
-                                                                <input type="hidden" name="station[{{$k3}}][spteacher_id][]" value="{{$value->id}}">
-                                                                <div class="pull-left">{{$value->name}}</div>
-                                                                <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                            </div>
+                                                                @if($value->status == 0)
+                                                                <div class="input-group teacher pull-left" value="{{$value->id}}">
+                                                                @elseif($value->status == 1)
+                                                                <div class="input-group teacher pull-left teacher-primary" value="{{$value->id}}">
+                                                                @else
+                                                                <div class="input-group teacher pull-left teacher-warn" value="{{$value->id}}">
+                                                                @endif
+                                                                    <input type="hidden" name="station[{{$k3}}][spteacher_id][]" value="{{$value->id}}">
+                                                                    <div class="pull-left">{{$value->name}}</div>
+                                                                    <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                                </div>
                                                             @endif
                                                         @endforeach
 
