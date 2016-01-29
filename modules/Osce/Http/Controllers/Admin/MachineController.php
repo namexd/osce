@@ -129,6 +129,7 @@ class MachineController extends CommonController
         $cate_id    =   $cate_id==0? 1:$cate_id;
         $name       =   e($request   ->  get('name'));
         $status     =   e($request   ->  get('status'));
+        $nfc_code     =   e($request   ->  get('nfc_code'));
         $cate       =   config('osce.machine_category');
         if(is_null($cate))
         {
@@ -139,7 +140,7 @@ class MachineController extends CommonController
             abort(404,'设备类别不存在，请检查数据或联系管理员');
         }
         $model  =   $this   ->  getMachineModel($cate_id);
-        $list   =   $model  ->  getList($name, $status);
+        $list   =   $model  ->  getList($name, $status,$nfc_code);
 
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)

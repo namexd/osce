@@ -192,7 +192,7 @@ class Vcr extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function selectVcr($id, $type)
+    public function selectVcr($id, $type,$nfc_code='')
     {
         if ($type === '0') {
             $modelVcr = RoomVcr::where('room_id', $id)->first();
