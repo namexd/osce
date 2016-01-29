@@ -40,7 +40,6 @@
                         </ul>
                     </div>
                 </div>
-
                 <div class="input-group" style="margin-bottom: 20px;margin-top: 10px;">
                     <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
                         <input type="hidden" name="cate_id" value="1">
@@ -79,6 +78,7 @@
                     <tr>
                         <th>#</th>
                         <th>设备ID</th>
+                        <th>感应ID</th>
                         <th>设备名称</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -89,6 +89,7 @@
                         <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->code}}</td>
+                            <td>{{$item->nfc_code}}</td>
                             <td>{{$item->name}}</td>
                             <td style="color:
                                 @if($item->status==1)#16beb0

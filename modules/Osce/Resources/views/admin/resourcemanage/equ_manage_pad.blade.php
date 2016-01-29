@@ -79,6 +79,7 @@
                     <tr>
                         <th>#</th>
                         <th>设备ID</th>
+                        <th>感应ID</th>
                         <th>设备名称</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -89,6 +90,7 @@
                         <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->code}}</td>
+                            <td>{{$item->nfc_code}}</td>
                             <td>{{$item->name}}</td>
                             <td style="color:
                                     @if($item->status==1)#16beb0
