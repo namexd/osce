@@ -149,4 +149,52 @@ class NoticeController extends CommonController
 
         return view('osce::wechat.exammanage.exam_notice_detail', ['notice' => $notice]);
     }
+
+    /**
+     * 附件下载
+     */
+    public function getDownloadDocument(Request $request)
+    {
+        try{
+            $this->validate($request,[
+                'id'            =>'required|integer',
+                'attch_index'   =>'required|integer',
+            ]);
+            $id     =   $request->get('id');
+            $key    =   $request->get('attch_index');
+            $info  =   InformInfo::find($id);
+            if($info->attachments){
+                $attchments = explode(',', $info->attachments);
+            }else{
+                throw new \Exception('没有找到相应的文件');
+            }
+
+            $thisFile   =   $attchments[$key];
+            $fileNameArray   =   explode('/',$thisFile);
+
+            $this->downloadfile(array_pop($fileNameArray),public_path().$thisFile);
+
+        } catch(\Exception $ex){
+            throw $ex;
+        }
+    }
+
+    /**
+     * 文件下载
+     */
+    private function downloadfile($filename,$filepath){
+        $file=explode('.',$filename);
+        $tFile=array_pop($file);
+        $filename=md5($filename).'.'.$tFile;
+        $filepath   =   iconv('utf-8', 'gbk', $filepath);
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
 }
