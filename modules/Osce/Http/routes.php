@@ -232,7 +232,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
-		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
+//		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);	//osce.admin.getIndex,此路由前面已经使用了，请修改 （TODO zhoufuxiang）
 
 
 	});
