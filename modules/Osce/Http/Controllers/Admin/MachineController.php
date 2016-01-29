@@ -703,7 +703,8 @@ class MachineController extends CommonController
             'factory'       =>  $request    ->  get('factory'),
             'sp'            =>  $request    ->  get('sp'),
             'create_user_id'=>  $user       ->  id,
-            'purchase_dt'   =>  $request    ->  get('purchase_dt')
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+            'nfc_code'      =>  $request    ->  get('nfc_code')
         ];
 
         try{
