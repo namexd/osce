@@ -101,6 +101,10 @@ class ExamResultController extends CommonController{
          $exams=Exam::select()->get();
          $examResult=new ExamResult();
          $examResults=$examResult->getResultList($examId,$stationId,$name);
+         foreach($examResults as $item){
+              $time=floor($item->time/60).':'.($item->time%60);
+              $item->time=$time;
+         }
          return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams]);
     }
 
