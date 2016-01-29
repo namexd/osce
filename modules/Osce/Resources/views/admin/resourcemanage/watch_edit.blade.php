@@ -130,7 +130,13 @@
                                     <input type="text" class="form-control" id="code" name="code" value="{{$item['code']}}">
                                 </div>
                             </div>
-
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">感应ID</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="nfc_code" name="nfc_code" value="{{$item['nfc_code']}}">
+                                </div>
+                            </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">厂家</label>
