@@ -202,6 +202,8 @@
             //视频弹出窗口
             $('.video').click(function(){
 
+                var url = $(this).attr('value');
+
                 layer.open({
                     type: 2,
                     title: '实时视频',
@@ -209,7 +211,7 @@
                     shade: false,
                     maxmin: true, //开启最大化最小化按钮
                     area: ['893px', '600px'],
-                    content: 'http://www.haosou.com'
+                    content: url
                 });
 
             });
@@ -335,7 +337,7 @@
                         <td>{{$item['score']}}</td>
                         <td>
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"><span class="read  video"></span></a>
+                            <a href="javascript:void(0)"><span class="read  video" value="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"></span></a>
                         </td>
                     </tr>
                     @endforeach
