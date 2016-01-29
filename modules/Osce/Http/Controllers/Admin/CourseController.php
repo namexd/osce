@@ -36,6 +36,9 @@ class CourseController extends CommonController
             $examId = $request->input('exam_id');
             $subjectId = $request->input('subject_id');
 
+            //考试的下拉菜单
+            $downlist = Exam::select('id','name')->get();
+
             //科目列表数据
             $subject = new Subject();
             $subjectData = $subject->CourseControllerIndex($examId,$subjectId);
@@ -59,7 +62,7 @@ class CourseController extends CommonController
                     }
                 }
             }
-            return view('osce::admin.statistics_query.subject_scores_list',['data'=>$subjectData]);
+            return view('osce::admin.statistics_query.subject_scores_list',['data'=>$subjectData,'list'=>$downlist]);
         } catch (\Exception $ex) {
             dd($ex->getMessage());
 //            return redirect()->back()->withErrors($ex->getMessage());
@@ -70,6 +73,7 @@ class CourseController extends CommonController
      * 科目管理-学生的主页
      * @param Request $request
      * @author Jiangzhiheng
+     * @return \Illuminate\View\View
      */
     public function getStudent(Request $request)
     {
@@ -77,11 +81,19 @@ class CourseController extends CommonController
         $this->validate($request, [
             'exam_id' => 'required|integer',
             'subject_id' => 'required|integer',
+            'exam' => 'required',
+            'subject' => 'required',
+            'avg_score' => 'required',
+            'avg_time' => 'required'
         ]);
 
         //获得参数
         $examId = $request->input('exam_id');
         $subjectId = $request->input('subjectId');
+        $exam = $request->input('exam');
+        $subject = $request->input('subject');
+        $avgScore = $request->input('avg_score');
+        $avgTime = $request->input('avg_time');
 
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
 
@@ -89,8 +101,11 @@ class CourseController extends CommonController
             $item->ranking = $key;
         }
 
-        return view('osce::admin.');
-
-
+        return view('osce::admin.subject_student_list',['data' => $data,
+            'exam'=>$exam,
+            'subject'=>$subject,
+            'avgScore'=>$avgScore,
+            'avgTime'=>$avgTime
+        ]);
     }
 }
