@@ -9,6 +9,9 @@
 namespace Modules\Osce\Entities;
 
 
+use App\Entities\User;
+use App\Repositories\Common;
+
 class ExamResult extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -66,6 +69,56 @@ class ExamResult extends CommonModel
         return $data;
     }
 
+    /**
+     * 考试成绩实时推送
+     */
+    public function examResultPush($student_id, $url = '')
+    {
+        try {
+            //考生信息
+            $student  = Student::where('id', $student_id)->select(['user_id','exam_id', 'name'])->first();
+            if(!$student){
+                throw new \Exception(' 没有找到该考生信息！');
+            }
+            //对应考试信息
+            $exam = Exam::where('id', $student->exam_id)->select(['name'])->first();
+            if(!$exam){
+                throw new \Exception(' 没有找到对应考试信息！');
+            }
+            //用户信息
+            $userInfo = User::where('id', $student->user_id)->select(['name', 'openid'])->first();
+            if($userInfo){
+                if(!empty($userInfo->openid)){
+                    //查询总成绩
+                    $testResult = new TestResult();
+                    $examResult = $testResult->AcquireExam($student_id);
+                    //成绩详情url地址
+                    if($url == ''){
+                        $url = route('osce.wechat.student-exam-query.getResultsQueryIndex',['exam_id'=>$student->exam_id,'student_id'=>$student_id]);
+                    }
+                    $msgData = [
+                        [
+                            'title' => '考试成绩查看',
+                            'desc'  => $userInfo->name.'同学的 '.$exam->name.' 考试的总成绩为：'.$examResult.'分',
+                            'url'   => $url,
+                        ],
+                    ];
+                    $message = Common::CreateWeiXinMessage($msgData);
+                    Common::sendWeiXin($userInfo->openid, $message);    //单发
+
+                }else{
+                    throw new \Exception($userInfo->name.' 没有关联微信号');
+                }
+            }else{
+                throw new \Exception(' 没有找到该考生对应的用户信息！');
+            }
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+
     public function getResultDetail($id){
 
         $builder=$this-> leftJoin('exam_screening', function($join){
@@ -102,18 +155,51 @@ class ExamResult extends CommonModel
         return $builder;
     }
 
-    public function getStudent($stationId,$subjectId){
+//    public function getStudent($stationId,$subjectId){
+//
+//        $builder=$this-> leftJoin('station', function($join){
+//            $join -> on('station.id', '=', 'exam_result.station_id');
+//        })-> leftJoin('subject', function($join){
+//            $join -> on('subject.id', '=', 'station.subject_id');
+//        });
+//
+//        $builder=$builder->select([
+//            'exam_result.student_id as student_id'
+//        ])->get();
+//
+//        return $builder;
+//    }
 
-        $builder=$this-> leftJoin('station', function($join){
-            $join -> on('station.id', '=', 'exam_result.station_id');
-        })-> leftJoin('subject', function($join){
-            $join -> on('subject.id', '=', 'station.subject_id');
-        });
 
-        $builder=$builder->select([
-            'exam_result.student_id as student_id'
-        ])->get();
 
-        return $builder;
-    }
+
+
+
+   //微信端学生成绩查询
+ public function stationInfo($stationIds){
+
+
+
+     $builder=$this->leftJoin('station', function($join){
+         $join -> on('station.id', '=', 'exam_result.station_id');
+     })-> leftJoin('station_case', function($join){
+         $join -> on('station_case.case_id', '=', 'exam_result.station_id');
+     })-> leftJoin('teacher', function($join){
+         $join -> on('teacher.id', '=', 'station_case.case_id');
+     });
+     $builder=$builder->whereIn('exam_result.id',$stationIds);
+     $builder=$builder->select([
+         'exam_result.station_id as id',
+         'exam_result.score as score',
+         'exam_result.time as time',
+         'exam_result.teacher_id as teacher_id',
+         'station.type as type',
+
+
+     ])->get();
+
+     return $builder;
+
+
+ }
 }

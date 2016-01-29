@@ -21,6 +21,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
 	Route::get('admin/index/dashboard', ['uses'=>'Admin\IndexController@dashboard','as'=>'osce.admin.index.dashboard']);
+	Route::get('admin/index/set-exam', ['uses'=>'Admin\IndexController@getSetExam','as'=>'osce.admin.index.getSetExam']);	//设置开考
 	Route::get('/index', 'OsceController@index');
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		//房间
@@ -231,6 +232,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
+		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
+
+
 	});
 
 	 //Pad端
@@ -320,6 +324,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//学生微信成绩查询
 
 		Route::get('student-exam-query/results-query-index',['uses'=>'StudentExamQuery@getResultsQueryIndex','as'=>'osce.wechat.student-exam-query.getResultsQueryIndex']);
+		Route::get('student-exam-query/every-exam-list',['uses'=>'StudentExamQuery@getEveryExamList','as'=>'osce.wechat.student-exam-query.getEveryExamList']);
 
 	});
 
