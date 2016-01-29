@@ -39,12 +39,13 @@ class InvigilatePadController extends CommonController
      * @param $file
      * @param $date
      * @param array $params
+     * @param $standardId
      * @return static
      * @throws \Exception
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($file, $date, array $params)
+    protected static function uploadFileBuilder($file, $date, array $params, $standardId)
     {
         try {
             //将上传的文件遍历
@@ -78,6 +79,7 @@ class InvigilatePadController extends CommonController
                     'type' => $fileMime,
                     'name' => $fileName,
                     'description' => $date . '-' . $params['student_name'],
+                    'standard_id' => $standardId
                 ];
 
                 //将内容插入数据库
@@ -268,6 +270,7 @@ class InvigilatePadController extends CommonController
      */
 
       public  function postSaveExamResult(Request $request){
+
            $this->validate($request,[
               'student_id'=>'required|integer',
               'station_id'=>'required|integer',
@@ -280,14 +283,17 @@ class InvigilatePadController extends CommonController
               'teacher_id'=>'required|integer',
               'evaluate'=>'required'
           ]);
+           //得到用时
+          $times =Input::get('end_dt')-Input::get('begin_dt');
+           $time =$times/60;
 
-        $data   =   [
+          $data   =   [
           'station_id'=>Input::get('station_id'),
           'student_id'=>Input::get('student_id'),
           'exam_screening_id'=>Input::get('exam_screening_id'),
           'begin_dt'=>Input::get('begin_dt'),//考试开始时间
           'end_dt'=>Input::get('end_dt'),//考试实际结束时间
-          'time'=>Input::get('time'),//考试用时
+          'time'=>$time,//考试用时
           'score'=>Input::get('score'),//最终成绩
           'score_dt'=>Input::get('score_dt'),//评分时间
           'teacher_id'=>Input::get('teacher_id'),
@@ -298,6 +304,8 @@ class InvigilatePadController extends CommonController
           'affinity'=>Input::get('affinity'),//沟通亲和能力
 
         ];
+
+
            //根据考生id获取到考试id
           $ExamId=Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
 
@@ -371,6 +379,7 @@ class InvigilatePadController extends CommonController
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             $exam = Exam::where('status',1)->first();
+            $standardId = $request->input('standard_id');
 
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
@@ -401,7 +410,7 @@ class InvigilatePadController extends CommonController
                 }
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($photos, $date, $params);
+                $result = self::uploadFileBuilder($photos, $date, $params, $standardId);
             }
             return response()->json($this->success_data([$result->id]));
 
@@ -437,6 +446,7 @@ class InvigilatePadController extends CommonController
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             $exam = Exam::where('status',1)->first();
+            $standardId = $request->input('standard_id');
 
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
@@ -466,7 +476,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错');
                 }
 
-                $result = self::uploadFileBuilder($radios, $date, $params);
+                $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
             return response()->json($this->success_data([$result->id]));

@@ -23,7 +23,7 @@ use DB;
 class InvigilatorController extends CommonController
 {
     public function getTest(){
-        return view('osce::admin.statistics_query.subject_scores_list');
+        return view('osce::admin.statistics_query.exam_vcr');
     }
     /**
      * 获取SP考教师列表

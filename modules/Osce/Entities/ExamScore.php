@@ -25,8 +25,7 @@ class ExamScore extends  CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Standard','id','standard_id');
     }
 
-    public function getScore($id){
+    public function getScore($id){}
 
 
-    }
 }

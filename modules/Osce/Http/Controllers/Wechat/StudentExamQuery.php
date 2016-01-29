@@ -9,8 +9,12 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
@@ -54,22 +58,48 @@ class StudentExamQuery extends  CommonController
         }
     }
 
-//      ajax
+
+
+//      ajax  /osce/wechat/student-exam-query/every-exam-list
     public function getEveryExamList(Request $request){
 
         $this->validate($request,[
             'exam_id'=>'required|integer'
         ]);
         $examId =Input::get('exam_id');
-        //根据考试id查询出所有考站
-        $ExamModel = new Exam();
-        $ExamStationList= $ExamModel->ExamStations($examId);
-        
+        //根据考试id找到对应的考试场次
+        $examScreeningId=  ExamScreening::where('exam_id','=',$examId)->select('id')->get();
+        $examScreening=[];
+        foreach($examScreeningId as $data){
+            $examScreening[]=[
+                'id'=>$data->id,
+            ];
+        }
+        $examScreeningIds = array_column($examScreening, 'id');
+        //根据场次id查询出考站的相关信息
+        $ExamResultModel= new ExamResult();
+        $stationList =$ExamResultModel->stationInfo($examScreeningIds);
+        $stationData=[];
+        foreach($stationList as $stationType){
+            if($stationType->type == 2){
+                $teacherModel= new Teacher();
+                $spteacher = $teacherModel->spteacher($stationType->id);
+            }
+            $stationData[]=[
+                'station_id'=>$stationType->id,
+                'score'=>$stationType->score,
+                'time'=>$stationType->time,
+                'grade_teacher'=>$stationType->grade_teacher,
+                'type'=>$stationType->type,
+                'station_name'=>$stationType-> station_name,
+                'sp_name'=>$spteacher->name
+            ];
 
-
-        if($ExamStationList){
+        }
+//        dd($stationData);
+        if($stationList){
             return response()->json(
-                $this->success_data('',0,'查询失败')
+                $this->success_data($stationData,1,'查询失败')
             );
 
         }

@@ -237,4 +237,60 @@ class Subject extends CommonModel
             }
         }
     }
+
+    /**
+     * @param string $examId
+     * @param string $subjectId
+     * @return mixed
+     * @author Jiangzhiheng
+     */
+    public function CourseControllerIndex($examId = "",$subjectId = "")
+    {
+        $builder = $this->leftJoin('station','station.subject_id','=','subject.id')
+            ->leftJoin('exam_result','exam_result.station_id','=','station.id')
+            ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+            ->leftJoin('exam','exam.id','=','exam_screening.exam_id');
+
+        if ($examId != "") {
+            $builder = $builder->where('exam.id','=',$examId);
+        }
+
+        if ($subjectId != "") {
+            $builder = $builder->where('subject.id','=',$subjectId);
+        }
+
+        $builder = $builder->select([
+            'exam.name as exam_name',
+            'exam.id as exam_id',
+            'exam.begin_dt as exam_begin_dt',
+            'subject.id as subject_id',
+            'subject.title as subject_name',
+            'exam_screening.id as exam_screening_id',
+            'station.id as station_id'
+        ])  ->whereNotNull('exam.id')
+            ->groupBy('subject.id')
+            ->paginate(config('osce.page_size'));
+
+        return $builder;
+    }
+
+    /**
+     * @author Jiangzhiheng
+     * @param $examId
+     * @param $subjectId
+     * @return
+     */
+    public function CourseControllerAvg($examId,$subjectId)
+    {
+        return ExamResult::leftJoin('station','exam_result.station_id','=','station.id')
+            ->leftJoin('subject','station.subject_id','=','subject.id')
+            ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+            ->leftJoin('exam','exam.id','=','exam_screening.exam_id')
+            ->where('exam.id','=',$examId)
+            ->where('subject.id','=',$subjectId)
+            ->select(
+                'exam_result.score',
+                'exam_result.time'
+            )->get();
+    }
 }

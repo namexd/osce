@@ -799,7 +799,7 @@ class ExamController extends CommonController
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
             //查看是否有本场考试
-            $exam = Exam::findOrFail($exam_id);
+            Exam::findOrFail($exam_id);
 
 
             //查询 考试id是否有对应的考场数据
@@ -1327,7 +1327,7 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
-
+//        dd($stationData);
         return view('osce::admin.exammanage.station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
@@ -1555,7 +1555,7 @@ class ExamController extends CommonController
     /**
      * 代考区说明
      */
-	public function getExamRemind(Request $request){
+    public function getExamRemind(Request $request){
         //验证
         $this->validate($request, [
             'id' => 'required|integer'
@@ -1565,9 +1565,8 @@ class ExamController extends CommonController
         $id = $request->input('id');
         $suc= $request->get('suc');
         $data = Exam::where('id',$id)->select(['rules'])->first();
-
-		return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
-	}
+        return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
+    }
 
     public function postExamRemind(Request $request){
         try{
@@ -1581,7 +1580,7 @@ class ExamController extends CommonController
             //保存代考区说明信息
             $result  = Exam::where('id',$id)->update(['rules'  => $content]);
             if($result){
-                return redirect()->route('osce.admin.exam.getExamRemind',['id'=>$id, 'suc'=>1]);
+                return redirect()->route('osce.admin.exam.getExamRemind',['id'=>$id,'suc'=>1]);
             }else{
                 throw new \Exception('保存失败！');
             }
@@ -1590,4 +1589,6 @@ class ExamController extends CommonController
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
+
+
 }

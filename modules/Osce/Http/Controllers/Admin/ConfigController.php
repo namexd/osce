@@ -98,7 +98,7 @@ class ConfigController extends CommonController
             //将拿到的数组分别作处理
             //如果是要插入数据库的就插入数据库
             $result =  $config->store($formData);
-
+            $this->getSetWechat($file['wechat_use_alias'],$file['wechat_app_id'],$file['wechat_secret'],$file['wechat_token'],$file['wechat_encoding_key']);
             if (!$result) {
                 DB::connection('osce_mis')->rollBack();
             }
@@ -267,5 +267,27 @@ class ConfigController extends CommonController
         }
     }
 
-
+    private function getSetWechat($use_alias,$app_id,$secret,$token,$encoding_key){
+        $data   =    [
+            'use_alias'    =>   $use_alias,
+            'app_id'       =>   $app_id,
+            'secret'       =>   $secret,
+            'token'        =>   $token,
+            'encoding_key' =>   $encoding_key,
+            ];
+        $str    =    view('osce::admin.sysmanage.wechat_config',$data)->render();
+        $str    =   '<?php '.$str;
+        try
+        {
+            if(!is_writable(WECHAT_CONFIG))
+            {
+                throw new \Exception('config/wechat.php文件不可写');
+            }
+            file_put_contents(WECHAT_CONFIG,$str);
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
 }
