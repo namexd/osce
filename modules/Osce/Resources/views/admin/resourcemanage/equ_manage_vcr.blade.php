@@ -40,7 +40,6 @@
                         </ul>
                     </div>
                 </div>
-
                 <div class="input-group" style="margin-bottom: 20px;margin-top: 10px;">
                     <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}" method="get">
                         <input type="hidden" name="cate_id" value="1">
