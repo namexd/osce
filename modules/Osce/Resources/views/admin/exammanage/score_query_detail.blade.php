@@ -40,8 +40,26 @@
 <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
     <script>
         $(function(){
+            /**
+             * 图表统计
+             * @author mao
+             * @version 1.0
+             * @date    2016-01-29
+             * @param   {array}   standard     考核点分数
+             * @param   {string}   student_name 学生姓名
+             * @param   {array}   avg          考核点平均分
+             * @param   {array}   xAxis          考核点
+             */
+            function charts(standard,student_name,avg,xAxis){
 
-            function charts(standard,student_name){
+                //考核点数据较少处理
+                if(xAxis.length<8){
+                    var len = 7 - xAxis.length;
+                    for(var i = 0;i<=len;i++){
+                        xAxis.push('');
+                    }
+                }
+
                 var option = {
                     title : {
                         text: '图表分析'
@@ -61,7 +79,7 @@
                         {
                             type : 'category',
                             boundaryGap : false,
-                            data : ['考核点1','考核点2','考核点3','考核点4','考核点5','考核点6','考核点7']
+                            data : xAxis//['考核点1','考核点2','','','','','']
                         }
                     ],
                     yAxis : [
@@ -86,7 +104,7 @@
                                     }
                                 }
                             },
-                            data:[55, 67, 76, 68, 60, 68, 77]
+                            data:avg//[55, 67, 76, 68, 60, 68, 77]
                         },
                         {
                             name:student_name,
@@ -113,13 +131,26 @@
             }
 
             //考核点分数
-            var standard = [];
+            var standard = [],avg = [],xAxis = [];
             $('#standard li').each(function(key,elem){
                 standard.push($(elem).attr('value'));
             });
 
+            $('#avg li').each(function(key,elem){
+                avg.push($(elem).attr('value'));
+            });
+
+            if(standard.length>avg.length){
+                for(var i in standard){
+                    xAxis.push('考核点'+(parseInt(i)+1));
+                }
+            }else{
+                for(var i in standard){
+                    xAxis.push('考核点'+(parseInt(i)+1));
+                }
+            }
             //触发图表格
-            charts(standard,$('#student').text());
+            charts(standard,$('#student').text(),avg,xAxis);
 
 
             /**
@@ -194,6 +225,11 @@
     <ul id="standard">
         @foreach($standard as $key=>$item)
         <li value="{{$standard[$key]}}"></li>
+        @endforeach
+    </ul>
+    <ul id="avg">
+        @foreach($avg as $key=>$item)
+        <li value="{{$avg[$key]}}"></li>
         @endforeach
     </ul>
 </div>
