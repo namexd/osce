@@ -182,7 +182,7 @@ class ExamPlan extends CommonModel
                 {
                     $data[$i][$first->serialnumber][$station->id] =   $nowTime;
                 }
-                $nowTime+=$this->cellTime;
+                $nowTime+=$this->cellTime*60;
             }
         }
         //dd($batchStudents);
@@ -358,7 +358,7 @@ class ExamPlan extends CommonModel
                 {
                     $item   =   [
                         'start' =>  $time,
-                        'end'   =>  $time+$this->cellTime,
+                        'end'   =>  $time+$this->cellTime*60,
                         'items' =>  $student
                     ];
                     $roomdData['child'][]=$item;
