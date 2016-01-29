@@ -284,7 +284,8 @@ class InvigilatePadController extends CommonController
               'evaluate'=>'required'
           ]);
            //得到用时
-          $time =Input::get('end_dt')-Input::get('begin_dt');
+          $times =Input::get('end_dt')-Input::get('begin_dt');
+           $time =$times/60;
 
           $data   =   [
           'station_id'=>Input::get('station_id'),
