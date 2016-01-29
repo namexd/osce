@@ -241,7 +241,7 @@ class Station extends CommonModel
 
             $result = Vcr::findOrFail($originalVcrObj->vcr_id);
             //修改其状态,将其状态重置
-            $result->status = 1; //可能是1，也可能是其他值
+            $result->used = 0; //可能是1，也可能是其他值
             //保存
             $result = $result->save();
             if (!$result) {
@@ -269,7 +269,7 @@ class Station extends CommonModel
 
             //更改摄像机表中摄像机的状态
             $vcr = Vcr::findOrFail($vcrId);  //找到选择的摄像机
-            $vcr ->status = 0;  //变更状态,但是不一定是0
+            $vcr ->used = 1;  //变更状态,但是不一定是0
             if (!$result = $vcr->save()) {
                 $connection->rollBack();
                 throw new \Exception('更改摄像机状态失败');
