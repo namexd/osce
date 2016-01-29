@@ -4,10 +4,17 @@
 <link rel="stylesheet" href="{{asset('osce/wechat/css/resultquery.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
-
+	<script type="text/javascript">
+		$(function(){
+			$("#examination").change(function(){
+				
+			})
+		})
+	</script>
 @stop
 
 @section('content')
+	<input type="hidden" id="parameter" value="{'pagename':'examination_list','ajaxurl':''}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
@@ -19,10 +26,9 @@
     </div>
     <div class="form-group">
         <select  id="examination" class="form-control normal_select select_indent" name="student_type" required>
-            <option value="">请选择考试</option>
-            <option value="1">OSCE考试2016年第1期</option>
-            <option value="2">OSCE考试2016年第2期</option>
-            <option value="3">OSCE考试2016年第3期</option>
+        	@foreach($ExamList as $list)
+            	<option value="{{$list->id}}">{{$list->name}}</option>
+	        @endforeach
         </select>
     </div>
     <div class="examination_time">

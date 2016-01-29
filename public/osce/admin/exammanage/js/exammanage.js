@@ -120,8 +120,6 @@ function exam_add(){
         }
     });
 
-
-
     /**
      * 新增一条
      * @author  mao
