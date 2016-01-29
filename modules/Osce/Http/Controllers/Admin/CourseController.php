@@ -99,10 +99,10 @@ class CourseController extends CommonController
 
         //将排名的数组循环插入表中
         foreach ($data as $key => &$item) {
-            $item->ranking = $key;
+            $item->ranking = $key+1;
         }
 
-        return view('osce::admin.subject_student_list',['data' => $data,
+        return view('osce::admin.statistics_query.subject_student_list',['data' => $data,
             'exam'=>$exam,
             'subject'=>$subject,
             'avgScore'=>$avgScore,
@@ -118,16 +118,18 @@ class CourseController extends CommonController
         ]);
 
         //获得参数
-        $examId = $request->input('exam_id',1);
+        $examId = $request->input('exam_id',113);
         $message = $request->input('message',"");
 
         //获得学生的列表在该考试的列表
         $list = Student::getStudentScoreList($examId, $message);
         //为每一条数据插入统计值
-        foreach ($list as $item) {
-
+        foreach ($list as $key => &$item) {
+            $item->ranking = $key+1;
         }
 
-
+        return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
     }
+
+
 }
