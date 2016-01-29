@@ -160,13 +160,15 @@
              * @date    2016-01-28
              */
             $('.fa-picture-o').click(function(){
-
+                
+                //获取img数据
                 var img = [];
                 $(this).parent().siblings('.img').find('li').each(function(key,elem){
 
                     img.push($(elem).attr('value'));
                 });
 
+                //下载的图片dom结构
                 var str = '';
                 for(var i in img){
                     if(i==0){
@@ -342,7 +344,7 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                <tbody>{{dd($scores)}}
+                <tbody>
                     @foreach($scores as $key=>$item)
                     <tr>
                         <td>
@@ -355,7 +357,9 @@
                             <a href="javascript:void(0)">
                               <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
                               <ul class="img" style="display:none;">
-                                  <li value="{{asset('osce/images/iconfont-shipinliebiao.svg')}}"></li>
+                                  @foreach($item['image'] as $k=>$img)
+                                  <li value="{{$img->url}}"></li>
+                                  @endforeach
                                   <li value="{{asset('osce/images/iconfont-shipinliebiao.svg')}}"></li>
                                   <li value="{{asset('osce/images/iconfont-shipinliebiao.svg')}}"></li>
                               </ul>
