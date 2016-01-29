@@ -35,6 +35,10 @@
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
+                            },
+                            stringLength: {
+                                max:20,
+                                message: '名称字数不超过20个'
                             }
                         }
                     },
