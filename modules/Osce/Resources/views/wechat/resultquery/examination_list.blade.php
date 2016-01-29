@@ -4,17 +4,11 @@
 <link rel="stylesheet" href="{{asset('osce/wechat/css/resultquery.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
-	<script type="text/javascript">
-		$(function(){
-			$("#examination").change(function(){
-				
-			})
-		})
-	</script>
+	<script type="text/javascript" src="{{asset('osce/wechat/js/examination.js')}}" ></script>
 @stop
 
 @section('content')
-	<input type="hidden" id="parameter" value="{'pagename':'examination_list','ajaxurl':''}" />
+	<input type="hidden" id="parameter" value="{'pagename':'examination_list','ajaxurl':'{{route('osce.wechat.student-exam-query.getEveryExamList')}}'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
@@ -26,16 +20,17 @@
     </div>
     <div class="form-group">
         <select  id="examination" class="form-control normal_select select_indent" name="student_type" required>
+        	<option value="">请选择考试</option>
         	@foreach($ExamList as $list)
             	<option value="{{$list->id}}">{{$list->name}}</option>
 	        @endforeach
         </select>
     </div>
     <div class="examination_time">
-		<span class="tit">&nbsp;&nbsp;考试时间</span>&nbsp;&nbsp;<span>2016-01-10~2016-01-22</span>
+		<span class="tit">&nbsp;&nbsp;考试时间</span>&nbsp;&nbsp;<span class="time"></span>
 	</div>
     <ul id="exmination_ul">
-    	<li>
+    	<!--<li>
     		<dl>
     			<dd>考站1：82分</dd>
     			<dd>用时：18分23秒</dd>
@@ -65,6 +60,6 @@
     		<p class="clearfix see_msg">
     			<a class="nou right" href="#">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>
     		</p>
-    	</li>
+    	</li>-->
     </ul>
 @stop
