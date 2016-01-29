@@ -241,4 +241,14 @@ class ExamResultController extends CommonController{
         readfile($filepath);
     }
 
+    /**
+     * @param Request $request
+     * @author Jiangzhiheng
+     */
+    public function getResultVideo(Request $request)
+    {
+        $this->validate($request,[
+            ''
+        ])
+    }
 }

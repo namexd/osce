@@ -67,7 +67,17 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                    @foreach($data as $item)
+                        <tr>
+                            <th>{{$item->student_name}}</th>
+                            <th>{{$item->student_code}}</th>
+                            <th>{{$item->exam_name}}</th>
+                            <th>{{$item->station_total}}</th>
+                            <th>{{$item->score_total}}</th>
+                            <th>{{$item->ranking}}</th>
+                            <th>操作</th>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
                 <div class="pull-left">
