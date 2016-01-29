@@ -125,7 +125,7 @@ class Station extends CommonModel
             }
             //将考场摄像头的关联数据写入关联表中
             $stationVcrData = [
-                 'vcr_id'=>$vcrId,
+                'vcr_id'=>$vcrId,
                 'station_id' => $station_id
             ];
             $result = StationVcr::create($stationVcrData);
@@ -133,12 +133,12 @@ class Station extends CommonModel
                 throw new \Exception('将数据写入考场摄像头失败！');
             }
 
-            //更改摄像机表中摄像机的状态
+            //更改摄像机表中摄像机的绑定状态
             $vcr = Vcr::findOrFail($vcrId);
-            $vcr->status = 0;  //变更状态,但是不一定是0
+            $vcr->used = 1;  //变更状态,但是不一定是0
             $result = $vcr->save();
             if ($result === false) {
-                throw new \Exception('更改摄像机表失败！');
+                throw new \Exception('摄像机绑定失败！');
             }
 
             //添加考站病历表的状态
