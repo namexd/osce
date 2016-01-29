@@ -12,6 +12,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class IndexController extends CommonController
 {
+
     public function getIndex(){
         return view('osce::wechat.index.index');
     }

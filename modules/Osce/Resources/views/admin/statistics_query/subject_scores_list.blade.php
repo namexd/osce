@@ -69,7 +69,16 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                    @foreach($data as $item)
+                        <tr>
+                            <th>{{$item->exam_name}}</th>
+                            <th>{{$item->subject_name}}</th>
+                            <th>{{$item->avg_total}}</th>
+                            <th>{{$item->avg_score}}</th>
+                            <th>{{$item->avg_time}}</th>
+                            <th>操作</th>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
                 <div class="pull-left">

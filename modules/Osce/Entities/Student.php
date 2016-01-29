@@ -346,5 +346,29 @@ class Student extends CommonModel
         return $builder;
     }
 
+    /**
+     * 根据考试id和科目id找到对应的考生以及考生的成绩信息
+     * @param $examId
+     * @param $subjectId
+     * @author Jiangzhiheng
+     */
+    static public function getStudentByExamAndSubject($examId, $subjectId)
+    {
+        return Student::leftJoin('exam_result','exam_result.student_id','=','student.id')
+            ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+            ->leftJoin('exam','exam.id','=','exam_screening_id.exam_id')
+            ->leftJoin('station','station.id','=','exam_result.station_id')
+            ->leftJoin('subject','subject.id','=','station.subject_id')
+            ->where('exam.id','=',$examId)
+            ->where('subject.id','=',$subjectId)
+            ->orderBy('exam_result.score','desc')
+            ->select(
+                'student.name as student_name',
+                'student.id as student_id',
+                'exam_result.score as exam_result_score',
+                'exam_result.time as exam_result_time'
+            )
+            ->paginate(config('osce.page_size'));
+    }
 
 }
