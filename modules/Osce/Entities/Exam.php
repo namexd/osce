@@ -487,8 +487,29 @@ class Exam extends CommonModel
        }
     }
 
+    /**
+     * 查询当天所有考试
+     */
+    public function selectExamToday($time = '')
+    {
+        if ($time == '') {
+            $time = time();     //默认为今天
+        }
+        $today = strtotime(date('Y-m-d', $time));    //当天凌晨
 
+        $result = $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
+                                or unix_timestamp(date_format(end_dt, "%Y-%m-%d")) = ?
+                                or (unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) < ?
+                                    and unix_timestamp(date_format(end_dt, "%Y-%m-%d")) > ?)', [$today, $today, $today, $today])
+            ->get();
 
+        return $result;
+    }
+
+    //获取当前学生的所有考试
+    public function  Examname($examIds){
+        return $this->whereIn('id',$examIds)->get();
+    }
 
 
 

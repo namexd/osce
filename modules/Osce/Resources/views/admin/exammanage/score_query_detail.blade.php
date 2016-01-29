@@ -40,8 +40,26 @@
 <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
     <script>
         $(function(){
+            /**
+             * 图表统计
+             * @author mao
+             * @version 1.0
+             * @date    2016-01-29
+             * @param   {array}   standard     考核点分数
+             * @param   {string}   student_name 学生姓名
+             * @param   {array}   avg          考核点平均分
+             * @param   {array}   xAxis          考核点
+             */
+            function charts(standard,student_name,avg,xAxis){
 
-            function charts(){
+                //考核点数据较少处理
+                if(xAxis.length<8){
+                    var len = 7 - xAxis.length;
+                    for(var i = 0;i<=len;i++){
+                        xAxis.push('');
+                    }
+                }
+
                 var option = {
                     title : {
                         text: '图表分析'
@@ -50,7 +68,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['平均分','张三'],
+                        data:['平均分',student_name],
                         x:'right'
                     },
                     toolbox: {
@@ -61,7 +79,7 @@
                         {
                             type : 'category',
                             boundaryGap : false,
-                            data : ['考核点1','考核点2','考核点3','考核点4','考核点5','考核点6','考核点7']
+                            data : xAxis//['考核点1','考核点2','','','','','']
                         }
                     ],
                     yAxis : [
@@ -86,10 +104,10 @@
                                     }
                                 }
                             },
-                            data:[55, 67, 76, 68, 60, 68, 77]
+                            data:avg//[55, 67, 76, 68, 60, 68, 77]
                         },
                         {
-                            name:'张三',
+                            name:student_name,
                             type:'line',
                             smooth:true,
                             itemStyle: {
@@ -103,7 +121,7 @@
                                     }
                                 }
                             },
-                            data:[30, 82, 34, 91, 90, 30, 10]
+                            data:standard//[30, 82, 34, 91, 90, 30, 10]
                         }
                     ]
                 };
@@ -112,7 +130,27 @@
                 myChart.setOption(option);
             }
 
-            charts();
+            //考核点分数
+            var standard = [],avg = [],xAxis = [];
+            $('#standard li').each(function(key,elem){
+                standard.push($(elem).attr('value'));
+            });
+
+            $('#avg li').each(function(key,elem){
+                avg.push($(elem).attr('value'));
+            });
+
+            if(standard.length>avg.length){
+                for(var i in standard){
+                    xAxis.push('考核点'+(parseInt(i)+1));
+                }
+            }else{
+                for(var i in standard){
+                    xAxis.push('考核点'+(parseInt(i)+1));
+                }
+            }
+            //触发图表格
+            charts(standard,$('#student').text(),avg,xAxis);
 
 
             /**
@@ -164,6 +202,8 @@
             //视频弹出窗口
             $('.video').click(function(){
 
+                var url = $(this).attr('value');
+
                 layer.open({
                     type: 2,
                     title: '实时视频',
@@ -171,7 +211,7 @@
                     shade: false,
                     maxmin: true, //开启最大化最小化按钮
                     area: ['893px', '600px'],
-                    content: 'http://www.haosou.com'
+                    content: url
                 });
 
             });
@@ -183,7 +223,18 @@
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
-
+<div style="display:none;">
+    <ul id="standard">
+        @foreach($standard as $key=>$item)
+        <li value="{{$standard[$key]}}"></li>
+        @endforeach
+    </ul>
+    <ul id="avg">
+        @foreach($avg as $key=>$item)
+        <li value="{{$avg[$key]}}"></li>
+        @endforeach
+    </ul>
+</div>
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>考生成绩明细</h5>
@@ -200,7 +251,7 @@
                     </tr>
                     <tr>
                         <td><b>姓名</b></td>
-                        <td>{{$result['student']->name}}</td>
+                        <td id="student">{{$result['student']->name}}</td>
                         <td><b>学号</b></td>
                         <td>{{$result['student']->code}}</td>
                         <td><b>评价老师</b></td>
@@ -276,46 +327,20 @@
                 </tr>
                 </thead>
                 <tbody>
+                    @foreach($scores as $key=>$item)
                     <tr>
-                        <td>1</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
+                        <td>
+                            {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
+                        </td>
+                        <td>{{$item['standard']->content}}</td>
+                        <td>{{$item['standard']->score}}</td>
+                        <td>{{$item['score']}}</td>
+                        <td>
                             <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
+                            <a href="javascript:void(0)"><span class="read  video" value="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"></span></a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>1-1</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1-2</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>操作是否规范？</td>
-                        <td>78</td>
-                        <td>7</td>
-                        <td value="1">
-                            <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  video"></span></a>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

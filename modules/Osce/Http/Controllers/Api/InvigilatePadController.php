@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Standard;
@@ -140,7 +141,9 @@ class InvigilatePadController extends CommonController
 //                    'name' => $itme->name,
 //                    'code' => $itme->code,
 //                    'idcard' => $itme->idcard,
-//                    'mobile' => $itme->mobile
+//                    'mobile' => $itme->mobile,
+//                    'avator' => $itme->avator
+
 //                ];
 //            }
 //
@@ -265,6 +268,7 @@ class InvigilatePadController extends CommonController
      */
 
       public  function postSaveExamResult(Request $request){
+
            $this->validate($request,[
               'student_id'=>'required|integer',
               'station_id'=>'required|integer',
@@ -277,14 +281,16 @@ class InvigilatePadController extends CommonController
               'teacher_id'=>'required|integer',
               'evaluate'=>'required'
           ]);
+           //得到用时
+          $time =Input::get('end_dt')-Input::get('begin_dt');
 
-        $data   =   [
+          $data   =   [
           'station_id'=>Input::get('station_id'),
           'student_id'=>Input::get('student_id'),
           'exam_screening_id'=>Input::get('exam_screening_id'),
           'begin_dt'=>Input::get('begin_dt'),//考试开始时间
           'end_dt'=>Input::get('end_dt'),//考试实际结束时间
-          'time'=>Input::get('time'),//考试用时
+          'time'=>$time,//考试用时
           'score'=>Input::get('score'),//最终成绩
           'score_dt'=>Input::get('score_dt'),//评分时间
           'teacher_id'=>Input::get('teacher_id'),
@@ -295,6 +301,8 @@ class InvigilatePadController extends CommonController
           'affinity'=>Input::get('affinity'),//沟通亲和能力
 
         ];
+
+
            //根据考生id获取到考试id
           $ExamId=Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
 
@@ -303,16 +311,19 @@ class InvigilatePadController extends CommonController
           $studentExamSum = $ExamFlowModel->studentExamSum($ExamId);
           //查询出学生当前已完成的考试
           $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $ExamId)->count();
-          if($ExamFinishStatus<$studentExamSum){
-              return response()->json(
-                  $this->fail(new \Exception('该学生还有考试没有完成'))
-              );
-          }else{
-              $TestResultModel  =new TestResult();
-              $result= $TestResultModel->addTestResult($data);
-              //todo 调用zhoufuxiang接口......
-          }
-           try{
+
+        try{
+            if($ExamFinishStatus == $studentExamSum){
+                //todo 调用zhoufuxiang接口......
+                try{
+                $examResultModel= new ExamResult();
+                $examResultModel->examResultPush($data['student_id']);
+                }catch (\Exception $mssge) {
+                    \Log::alert($mssge->getMessage().';'.$data['student_id'].'成绩推送失败');
+                }
+            }
+               $TestResultModel  =new TestResult();
+               $result= $TestResultModel->addTestResult($data);
                if($result){
                    //得到考试结果id
                    $testResultId =$result->id;
@@ -326,7 +337,6 @@ class InvigilatePadController extends CommonController
                    //调用照片上传方法，传入数据。
                    $pictureUpload = $this->postTestAttach($request, $stationId,$studentId,$examScreenId,$testResultId,$timeAnchors);
                    //存入考试评分详情表
-
                    $SaveEvaluate = $this->postSaveExamEvaluate($request,$testResultId);
                }else{
                    return response()->json(
