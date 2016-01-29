@@ -39,12 +39,13 @@ class InvigilatePadController extends CommonController
      * @param $file
      * @param $date
      * @param array $params
+     * @param $standardId
      * @return static
      * @throws \Exception
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($file, $date, array $params)
+    protected static function uploadFileBuilder($file, $date, array $params, $standardId)
     {
         try {
             //将上传的文件遍历
@@ -78,6 +79,7 @@ class InvigilatePadController extends CommonController
                     'type' => $fileMime,
                     'name' => $fileName,
                     'description' => $date . '-' . $params['student_name'],
+                    'standard_id' => $standardId
                 ];
 
                 //将内容插入数据库
@@ -376,6 +378,7 @@ class InvigilatePadController extends CommonController
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             $exam = Exam::where('status',1)->first();
+            $standardId = $request->input('standard_id');
 
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
@@ -406,7 +409,7 @@ class InvigilatePadController extends CommonController
                 }
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($photos, $date, $params);
+                $result = self::uploadFileBuilder($photos, $date, $params, $standardId);
             }
             return response()->json($this->success_data([$result->id]));
 
@@ -442,6 +445,7 @@ class InvigilatePadController extends CommonController
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             $exam = Exam::where('status',1)->first();
+            $standardId = $request->input('standard_id');
 
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
@@ -471,7 +475,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错');
                 }
 
-                $result = self::uploadFileBuilder($radios, $date, $params);
+                $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
             return response()->json($this->success_data([$result->id]));
