@@ -121,7 +121,8 @@ class MachineController extends CommonController
         $this   ->  validate($request,[
             'cate_id'   =>  'sometimes|integer',
             'name'      =>  'sometimes',
-            'status'    =>  'sometimes'
+            'status'    =>  'sometimes',
+            'nfc_code'    =>  'sometimes',
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
