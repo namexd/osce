@@ -124,7 +124,7 @@ class ExamPlan extends CommonModel
         foreach($batchStudnet as $index=>$student)
         {
             $newIndex           =   $index+1;
-            if($newIndex>=$total)
+            if($newIndex        >=  $total)
             {
                 $newIndex       =   $newIndex-$total;
             }
@@ -182,7 +182,7 @@ class ExamPlan extends CommonModel
                 {
                     $data[$i][$first->serialnumber][$station->id] =   $nowTime;
                 }
-                $nowTime+=$this->cellTime;
+                $nowTime+=$this->cellTime*60;
             }
         }
         //dd($batchStudents);
@@ -199,7 +199,7 @@ class ExamPlan extends CommonModel
         $this   ->  batchTime   =   $batchTime;
         return $this;
     }
-    /*
+    /**
      * 获取报考学生
      */
     public function getExamStudent($exam){
@@ -248,7 +248,7 @@ class ExamPlan extends CommonModel
         $this   ->  flowsIndex  =   $flowsIndex;
         return $data;
     }
-    /*
+    /**
      * 获取考试所有流程节点
      */
     public function getExamFlow($exam){
@@ -358,7 +358,7 @@ class ExamPlan extends CommonModel
                 {
                     $item   =   [
                         'start' =>  $time,
-                        'end'   =>  $time+$this->cellTime,
+                        'end'   =>  $time+$this->cellTime*60,
                         'items' =>  $student
                     ];
                     $roomdData['child'][]=$item;
@@ -551,33 +551,60 @@ class ExamPlan extends CommonModel
 
     public function savePlan($exam_id,$plan){
         $user=\Auth::user();
+        $hasList    =   [];
         foreach($plan as $examScreening => $roomList)
         {
             foreach($roomList as $roomStationId=>$room)
             {
                 $roomStationInfo    =   explode('-',$roomStationId);
+                //dd($room['child']);
                 foreach($room['child'] as $timeList)
                 {
                     foreach($timeList['items'] as $student)
                     {
                         if($student->id)
                         {
-                            $data[]=[
-                                'exam_id'           =>  $exam_id,
-                                'exam_screening_id' =>  $examScreening,
-                                'student_id'        =>  $student->id,
-                                'station_id'        =>  intval($roomStationInfo[1]),
-                                'room_id'           =>  intval($roomStationInfo[0]),
-                                'begin_dt'          =>  date('Y-m-d H:i:s',$timeList['start']),
-                                'end_dt'            =>  date('Y-m-d H:i:s',$timeList['end']),
-                                'status'            =>  1,
-                                'created_user_id'   =>  $user->id,
-                            ];
+                            if(array_key_exists(1,$roomStationInfo))
+                            {
+                                if(array_key_exists($student->id,$hasList))
+                                {
+                                    if(in_array(intval($roomStationInfo[1]),$hasList[$student->id]))
+                                    {
+                                        continue;
+                                    }
+                                }
+                                $data[]=[
+                                    'exam_id'           =>  $exam_id,
+                                    'exam_screening_id' =>  $examScreening,
+                                    'student_id'        =>  $student->id,
+                                    'station_id'        =>  intval($roomStationInfo[1]),
+                                    'room_id'           =>  intval($roomStationInfo[0]),
+                                    'begin_dt'          =>  date('Y-m-d H:i:s',$timeList['start']),
+                                    'end_dt'            =>  date('Y-m-d H:i:s',$timeList['end']),
+                                    'status'            =>  1,
+                                    'created_user_id'   =>  $user->id,
+                                ];
+                                $hasList[$student->id][]=$roomStationInfo[1];
+                            }
+                            else
+                            {
+                                $data[]=[
+                                    'exam_id'           =>  $exam_id,
+                                    'exam_screening_id' =>  $examScreening,
+                                    'student_id'        =>  $student->id,
+                                    'room_id'           =>  intval($roomStationInfo[0]),
+                                    'begin_dt'          =>  date('Y-m-d H:i:s',$timeList['start']),
+                                    'end_dt'            =>  date('Y-m-d H:i:s',$timeList['end']),
+                                    'status'            =>  1,
+                                    'created_user_id'   =>  $user->id,
+                                ];
+                            }
                         }
                     }
                 }
             }
         }
+
         $connection =   \DB::connection($this->connection);
         $connection ->  beginTransaction();
         try{
@@ -596,6 +623,7 @@ class ExamPlan extends CommonModel
                     throw new \Exception('保存考试计划失败');
                 }
             }
+            $this  ->  saveStudentOrder($exam_id);
             $connection ->  commit();
             return true;
         }
@@ -639,10 +667,21 @@ class ExamPlan extends CommonModel
         {
             foreach($examPlanList as $examPlan)
             {
-                $roomStationInfoData[$screeningId][$examPlan->room_id.'-'.$examPlan->station_id]=[
-                    'name'  =>  $examPlan->room->name.'-'.$examPlan->room->station,
-                    'child' =>  []
-                ];
+                if(is_null($examPlan->station_id))
+                {
+                    $roomStationInfoData[$screeningId][$examPlan->room_id]=[
+                        'name'  =>  $examPlan->room->name,
+                        'child' =>  []
+                    ];
+                }
+                else
+                {
+                    $roomStationInfoData[$screeningId][$examPlan->room_id.'-'.$examPlan->station_id]=[
+                        'name'  =>  $examPlan->room->name.'-'.$examPlan->room->station,
+                        'child' =>  []
+                    ];
+                }
+
             }
         }
 
@@ -656,12 +695,30 @@ class ExamPlan extends CommonModel
                 foreach($roomTime as $timeInfo){
                     foreach($timeInfo as $item)
                     {
-                        $items[]=$item;
+                        if(array_key_exists(1,$roomStaionInfo))
+                        {
+                            if($item['station_id']==$roomStaionInfo[1])
+                            {
+                                $items[]=$item;
+                            }
+                        }
+                        else
+                        {
+                            $items[]=$item;
+                        }
                     }
                 }
-                $roomStationBatchData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child']=$items;
+                if(array_key_exists(1,$roomStaionInfo))
+                {
+                    $roomStationBatchData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child']=$items;
+                }
+                else
+                {
+                    $roomStationBatchData[$screeningId][$roomStaionInfo[0]]['child']=$items;
+                }
             }
         }
+
         foreach($roomStationBatchData as $screeningId=>$examPlanList)
         {
             foreach($examPlanList as $roomStaionId=>$examPlan)
@@ -669,7 +726,14 @@ class ExamPlan extends CommonModel
                 $roomStaionInfo =   explode('-',$roomStaionId);
                 foreach($examPlan['child'] as  $bacthIndex=>$examPlan)
                 {
-                    $roomStationItemData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child'][$bacthIndex]  = $examPlan;
+                    if(array_key_exists(1,$roomStaionInfo))
+                    {
+                        $roomStationItemData[$screeningId][$roomStaionInfo[0].'-'.$roomStaionInfo[1]]['child'][$bacthIndex]  = $examPlan;
+                    }
+                    else
+                    {
+                        $roomStationItemData[$screeningId][$roomStaionInfo[0]]['child'][$bacthIndex]  = $examPlan;
+                    }
                 }
             }
         }
@@ -681,28 +745,100 @@ class ExamPlan extends CommonModel
                 $roomStaionInfo =   explode('-',$roomStaionId);
                 foreach($examPlan['child'] as $bacthIndex=>$examPlan)
                 {
-                    $examPlanData
-                    [$screeningId]
-                    [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
-                    ['name']   =   $examPlan->room->name.'-'.$examPlan->station->name;
-                    $examPlanData
+                    if(array_key_exists(1,$roomStaionInfo))
+                    {
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
+                        ['name']   =   $examPlan->room->name.'-'.$examPlan->station->name;
+                        $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['start'] =  strtotime($examPlan->begin_dt);
-                    $examPlanData
+                        $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['end'] =  strtotime($examPlan->end_dt);
-                    $examPlanData
+                        $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['items'][] =   $examPlan->student;
+                    }
+                    else
+                    {
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['name']   =   $examPlan->room->name;
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['child'][$bacthIndex]
+                        ['start'] =  strtotime($examPlan->begin_dt);
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['child'][$bacthIndex]
+                        ['end'] =  strtotime($examPlan->end_dt);
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0]]
+                        ['child'][$bacthIndex]
+                        ['items'][] =   $examPlan->student;
+                    }
                 }
             }
         }
         return $examPlanData;
+    }
+
+    /**
+     * 保存学生考试顺序
+     * @access public
+     *
+     * @param $exam_id int  考试ID
+     *
+     * @return void
+     *
+     * @version 0.3
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-01-29 13:36
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function saveStudentOrder($exam_id){
+        $planList   =   $this->where('exam_id','=',$exam_id)->orderBy('begin_dt','asc')->get();
+        $studentOrderData   =   [];
+        $user   =   \Auth::user();
+        try
+        {
+            foreach($planList as $plan)
+            {
+                if(!array_key_exists($plan->student_id,$studentOrderData))
+                {
+                    $studentOrderData[$plan->student_id] =   [
+                        'exam_id'           =>  $exam_id,
+                        'exam_screening_id' =>  $plan->exam_screening_id,
+                        'student_id'        =>  $plan->student_id,
+                        'begin_dt'          =>  $plan->begin_dt,
+                        'status'            =>  $plan->status,
+                        'created_user_id'   =>  $user->id,
+                    ];
+                }
+            }
+            foreach($studentOrderData as $stduentOrder){
+                if(!ExamOrder::create($stduentOrder))
+                {
+                    throw new \Exception('保存学生考试顺序失败');
+                }
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
     }
 }

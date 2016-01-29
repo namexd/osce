@@ -10,6 +10,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 use Modules\Osce\Entities\CaseModel;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
@@ -29,7 +30,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.exammanage.exam_notice_add');
+        return view('osce::admin.exammanage.score_query_detail');
     }
 
     /**
@@ -51,16 +52,19 @@ class StationController extends CommonController
         $orderType = empty(config('order_type')) ? 'created_at' : config('order_type');
         $orderBy = empty(config('order_by')) ? 'desc' : config('order_by');
 
+        //搜索名字
+        $name = e($request->get('name'));
+
         //拼凑一个order数组
         $order = [$orderType, $orderBy];
         //考站类型
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试'];
 
         //获得展示数据
-        $data = $model->showList($order);
+        $data = $model->showList($order,  $ajax = false, $name);
 
         //将展示数据放在页面上
-        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate]);
+        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate, 'name'=>$name]);
 
     }
 
@@ -102,25 +106,40 @@ class StationController extends CommonController
      */
     public function postAddStation(Request $request, Station $model)
     {
+        //验证略
+        $this->validate($request, [
+            'name'          => 'required|unique:osce_mis.station,name',
+            'type'          => 'required|integer',
+//            'description'   => 'required',
+//            'code'          => 'required',
+            'mins'          => 'required',
+            'subject_id'    => 'required|integer',
+            'case_id'       => 'required|integer',
+            'room_id'       => 'required|integer',
+            'vcr_id'        => 'required|integer'
+        ],[
+            'name.required'       =>  '考站名称必填',
+            'name.unique'         =>  '考站名称必须唯一',
+            'type.required'       =>  '考站类型必选',
+            'mins.required'       =>  '时间限制必填',
+            'subject_id.required' =>  '科目必选',
+            'case_id.required'    =>  '病例必选',
+            'room_id.required'    =>  '考场必选',
+            'vcr_id.required'     =>  '关联摄像机必选',
+        ]);
+
+        DB::connection('osce_mis')->beginTransaction();
         try {
-            DB::connection('osce_mis')->beginTransaction();
-            //验证略
-            $this->validate($request, [
-                'name'          => 'required',
-                'type'          => 'required|integer',
-//                'description'   => 'required',
-//                'code'          => 'required',
-                'mins'          => 'required',
-                'vcr_id'        => 'required|integer',
-                'room_id'       => 'required|integer',
-                'case_id'       => 'required|integer',
-                'subject_id'    => 'required|integer'
-            ]);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $stationData = $request->only('name', 'type', 'mins', 'subject_id');
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
+
+            //如果该考场id已经在考试中注册，就不允许增添考站到该考场
+            if (!ExamRoom::where('room_id',$roomId)->get()->isEmpty()) {
+                throw new \Exception('选择的考场已经被选择！请换一个考场！');
+            }
 
             //将参数放进一个数组中，方便传送
             $formData = [$stationData, $vcrId, $caseId, $roomId];
@@ -129,12 +148,10 @@ class StationController extends CommonController
             $time = $request->input('mins');
             $request->session()->flash('time', $time);
             if (!($request->session()->has('time'))) {
-                DB::connection('osce_mis')->rollBack();
                 throw new \Exception('未能将时间保存！');
             }
 
             if (!($model->addStation($formData))) {
-                DB::connection('osce_mis')->rollBack();
                 throw new \Exception('未能将考站保存！');
             };
 
@@ -142,6 +159,7 @@ class StationController extends CommonController
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
 
         } catch (\Exception $ex) {
+            DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors($ex->getMessage());
         }
 
@@ -196,16 +214,25 @@ class StationController extends CommonController
             'type'          => 'required|integer',
             'mins'          => 'required|integer',
             'subject_id'    => 'required|integer',
-            'description'   => 'required',
-            'code'          => 'required',
+//            'description'   => 'required',
+//            'code'          => 'required',
             'vcr_id'        => 'required|integer',
             'case_id'       => 'required|integer',
             'room_id'       => 'required|integer',
+        ],[
+            'name.required'       =>  '考站名称必填',
+            'name.unique'         =>  '考站名称必须唯一',
+            'type.required'       =>  '考站类型必选',
+            'mins.required'       =>  '时间限制必填',
+            'subject_id.required' =>  '科目必选',
+            'case_id.required'    =>  '病例必选',
+            'room_id.required'    =>  '考场必选',
+            'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'code', 'type', 'description', 'subject_id', 'mins');
+            $placeData = $request->only('name', 'type', 'subject_id', 'mins');
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
@@ -244,10 +271,10 @@ class StationController extends CommonController
             //将id传入删除的方法
             $result = $station->deleteData($id);
             if($result) {
-                return json_encode($this->success_data(['删除成功！']));
+                return $this->success_data(['删除成功！']);
             }
         } catch (\Exception $ex) {
-            return json_encode($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 
@@ -262,14 +289,14 @@ class StationController extends CommonController
         //将下拉菜单的数据查出
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         if ($id == "") {
-            $vcr = Vcr::where('status', 1)
+            $vcr = Vcr::where('used', 0)
                 ->select(['id', 'name'])
                 ->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
             $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
 
-            $vcr  = Vcr::where('status', 1)
+            $vcr  = Vcr::where('used', 0)
                     ->orWhere(function($query) use($vcrId){
                         $query->where('id','=',$vcrId);
                     })
@@ -279,9 +306,36 @@ class StationController extends CommonController
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间
         $subject= Subject::all(['id', 'title']);
-//        dd($subject);
-
 
         return array($placeCate, $vcr, $case, $room, $subject);  //评分标准
+    }
+
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'name'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $name   = $request  -> get('name');
+
+        //实例化模型
+        $model =  new Station();
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('name', $name)->first();
+        }else{
+            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
     }
 }

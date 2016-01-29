@@ -47,8 +47,8 @@ class UserController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postRegister(Request $request){
-
+    public function postRegister(Request $request)
+    {
         $this   ->validate($request,[
             'mobile'    =>  'required',
             'password'  =>  'required|confirmed',
@@ -58,6 +58,7 @@ class UserController  extends CommonController
             'gender'    =>  'sometimes',
             'nickname'  =>  'sometimes',
             'idcard'    =>  'sometimes',
+            'code'      =>  'required',
         ],[
             'mobile.required'       =>  '手机号必填',
             'password.required'     =>  '密码必填',
@@ -65,6 +66,7 @@ class UserController  extends CommonController
             'repassword.confirmed'  =>  '两次密码输入不一致',
             'name.required'         =>  '姓名必填',
             'type.required'         =>  '注册类型必选',
+            'code.required'         =>  '验证码必填',
         ]);
         $mobile     =   $request    ->  get('mobile');
         $password   =   $request    ->  get('password');
@@ -73,11 +75,10 @@ class UserController  extends CommonController
         $gender     =   $request    ->  get('gender');
         $nickname   =   $request    ->  get('nickname');
         $idcard     =   $request    ->  get('idcard');
+        $code       =   $request    ->  get('code');        //验证码
         \DB::beginTransaction();
-        try
-        {
-//            dd($mobile,$password,$type,$name,$gender,$nickname,$idcard);
-            if($type)
+        try{
+            if($type==1)
             {
                 $idcard =   $request    ->  get('idcard');
                 if(empty($idcard))
@@ -92,6 +93,13 @@ class UserController  extends CommonController
             }
             else
             {
+                //验证 验证码
+                $codeDate = ['mobile'=>$mobile, 'code'=>$code];
+                $userRepository = new UserRepository();
+                if(!($userRepository->getRegCheckMobileVerfiy($codeDate))){
+                    throw new \Exception('验证码错误');
+                }
+
                 $user   =   Common::registerUser(['username'=>$mobile],$password);
                 $user   ->  name        =   $name;
                 $user   ->  gender      =   $gender;
@@ -119,6 +127,7 @@ class UserController  extends CommonController
 
     }
 
+
     /**
      * 登录表单
      * @url GET /osce/wechat/user/login
@@ -133,6 +142,28 @@ class UserController  extends CommonController
      *
      */
     public function getLogin(){
+        $getOpenid = env('OPENID', true);
+        try{
+            if($getOpenid){
+                $openid = \Illuminate\Support\Facades\Session::get('openid','');
+                if(empty($openid)){
+                    $openid = $this->getOpenId();
+                    \Illuminate\Support\Facades\Session::put('openid',$openid);
+                }
+                $user   =   User::where('openid','=',$openid)->first();
+                if($user)
+                {
+                    Auth::login($user);
+                    return redirect()   ->route('osce.wechat.index.getIndex');
+                }
+            }else{
+                \Illuminate\Support\Facades\Session::put('openid','dfdsfds');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            //暂时未做当前页刷新报错问题
+        }
         return view('osce::wechat.user.login');
     }
 
@@ -161,15 +192,31 @@ class UserController  extends CommonController
         ]);
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
+        try{
+            $openid = \Illuminate\Support\Facades\Session::get('openid','');
+            if (Auth::attempt(['username' => $username, 'password' => $password]))
+            {
+                if(!empty($openid))
+                {
+                    $user   =   Auth::user();
+                    $user   ->  openid  =   $openid;
+                    if(!$user   ->  save())
+                    {
+                        throw new \Exception('微信登录失败');
+                    }
+                }
+                return redirect()->route('osce.wechat.index.getIndex');
+            }
+            else
+            {
+                throw new \Exception('账号密码错误');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
 
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
-        {
-            return redirect()->route('osce.wechat.index.getIndex');
-        }
-        else
-        {
-            return redirect()->back()->withErrors('账号密码错误');
-        }
     }
 
     /**
@@ -321,4 +368,34 @@ class UserController  extends CommonController
     }
 
 
+    /**
+     * 异步发送验证码
+     */
+    public function postRevertCode(UserRepository $userR, Request $request){
+        $this->validate($request,[
+            'mobile'    =>  'required'
+        ]);
+        $mobile = $request  ->  get('mobile');
+        $result = $userR->getRegMoblieVerify($mobile);
+        if($result){
+            return response()->json(
+                $this->success_data('发送成功！')
+            );
+        }else{
+            return response()->json(
+                $this->fail('发送失败！')
+            );
+        }
+    }
+
+    //获取OpenID
+    private function getOpenId(){
+        $auth = new \Overtrue\Wechat\Auth(config('wechat.app_id'), config('wechat.secret'));
+        $userInfo = $auth->authorize($to = null, $scope = 'snsapi_userinfo', $state = 'STATE');
+        if(!empty($userInfo)){
+            return $userInfo->openid;
+        }else{
+            return false;
+        }
+    }
 }

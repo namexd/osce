@@ -17,9 +17,11 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
+use Modules\Osce\Entities\ExamPlanForRoom;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
+use Modules\Osce\Entities\InformInfo;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
@@ -40,8 +42,27 @@ use DB;
 class ExamController extends CommonController
 {
     /**
+     * 配置考场安排里，考场、考站选项
+     */
+    private function getSelect(){
+        $config =   [
+            0   =>  '必考',
+            1   =>  '必考',
+            2   =>  '二选一',
+            3   =>  '三选一',
+            4   =>  '四选一',
+            5   =>  '五选一',
+            6   =>  '六选一',
+            7   =>  '七选一',
+            8   =>  '八选一',
+            9   =>  '九选一',
+            10  =>  '十选一'
+        ];
+        return  $config;
+    }
+    /**
      * 获取考试列表
-     * @api       GET /osce/admin/exam/exam-list
+     * @url       GET /osce/admin/exam/exam-list
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -70,7 +91,7 @@ class ExamController extends CommonController
 
     /**
      * 删除考试
-     * @api       POST /osce/admin/exam/delete
+     * @url       POST /osce/admin/exam/delete
      * @access    public
      * @param Request $request post请求<br><br>
      *                         <b>post请求字段：</b>
@@ -92,92 +113,10 @@ class ExamController extends CommonController
             //获取id
             $id = $request->input('id');  //id为考试id
 
-            //开启事务
-            DB::beginTransaction();
-            //进入模型逻辑
-            //删除与考场相关的流程
-            $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get(); //获得流程的id
-            $examScreening = ExamScreening::where('exam_id',$id);
-
-
-            //删除考试考场学生表
-                foreach ($examScreening->select('id')->get() as $item) {
-                    if (count(ExamScreeningStudent::where('exam_screening_id',$item->id)->get()) != 0) {
-                        if (!ExamScreeningStudent::where('exam_screening_id',$item->id)->delete()) {
-                            throw new \Exception('删除考试考场学生关系表失败，请重试！');
-                        }
-                    }
-                }
-
-            //删除考试考场关联表
-            if (count($examScreening-> get()) != 0) {
-                if (!$examScreening-> first() ->delete()) {
-                    throw new \Exception('删除考试考场关系表失败，请重试！');
-                }
-            }
-
-            //删除考试考场关联
-            if (count(ExamRoom::where('exam_id',$id)->first()) != 0) {
-                if (!ExamRoom::where('exam_id',$id)->delete()) {
-                    throw new \Exception('删除考试考场关联失败，请重试！');
-                }
-            }
-
-
-            //删除考试流程关联
-            if (count(ExamFlow::where('exam_id',$id)->first()) != 0) {
-                if (!ExamFlow::where('exam_id',$id)->delete()) {
-                    throw new \Exception('删除考试流程关联失败，请重试！');
-                }
-            }
-
-            //删除考试考场流程关联
-            if (count(ExamFlowRoom::where('exam_id',$id)->first()) != 0) {
-                if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
-                    throw new \Exception('删除考试考场流程关联失败，请重试！');
-                }
-            }
-
-            //通过考试流程-考站关系表得到考站信息
-
-            $station = ExamFlowStation::whereIn('flow_id',$flowIds);
-            $stationIds = $station->select('station_id')->get();
-            if (count($stationIds) != 0) {
-                //删除考试流程-考站关系表信息
-                if (!$station->delete()) {
-                    throw new \Exception('删除考试考站流程关联失败，请重试！');
-                }
-
-                //通过考站id找到对应的考站-老师关系表
-                foreach ($stationIds as $stationId) {
-                    if (!StationTeacher::where('station_id',$stationId)->delete()) {
-
-                        throw new \Exception('删除考站老师关联失败，请重试！');
-                    }
-                }
-
-            }
-
-            //删除考试本体
-            $result = $exam->where('id',$id)->delete();
-            if ($result != true) {
-                throw new \Exception('删除考试失败，请重试！');
-            }
-
-            //如果有flow的话，就删除
-            if (count($flowIds) != 0) {
-                foreach ($flowIds as $flowId) {
-                    if (!Flows::where('id',$flowId)->delete()) {
-                        throw new \Exception('删除流程失败，请重试！');
-                    }
-                }
-            }
-
-            DB::commit();
-            return response()->json($this->success_data(['删除成功！']));
+            $exam->deleteData($id);
+            return $this->success_data(['删除成功！']);
         } catch (\Exception $ex) {
-            DB::rollback();
-            return response()->json($this->fail($ex));
+            return $this->fail($ex);
         }
     }
 
@@ -216,12 +155,15 @@ class ExamController extends CommonController
      */
     public function postAddExam(Request $request, Exam $model)
     {
+
         $this   ->  validate($request,[
             'name'          =>  'required',
             'time'          =>  'required',
+            'address'       =>  'required',
         ],[
             'name.required'     =>  '考试名称必填',
             'time.required'     =>  '考试时间必填',
+            'address.required'  =>  '考试地址必填',
         ]);
 
         $user   =   Auth::user();
@@ -234,40 +176,45 @@ class ExamController extends CommonController
         $begin_dt = '';
         $end_dt = '';
 
-        //判断输入的时间是否有误
-        foreach($examScreeningData as $key => $value){
-
-            if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
-                throw new \Exception('输入的时间有误！');
-            }
-            //获取第一组时间数据
-            if($key == 1){
-                $begin_dt = $value['begin_dt'];
-                $end_dt = $value['end_dt'];
-            }
-            //获取最早开始时间，最晚结束时间
-            if($key>1 && (strtotime($begin_dt) > strtotime($value['begin_dt']))){
-                $begin_dt = $value['begin_dt'];
-            }
-            if($key>1 && (strtotime($end_dt) < strtotime($value['end_dt']))){
-                $end_dt = $value['end_dt'];
-            }
-            $examScreeningData[$key]['create_user_id'] = $user -> id;
-        }
-        //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-        $examData = [
-            'code'           => 100,
-            'name'           => e($request  ->  get('name')),
-            'begin_dt'       => $begin_dt,
-            'end_dt'         => $end_dt,
-            'status'         => 1,
-            'total'          => 0,
-            'create_user_id' => $user -> id,
-            'sequence_cate'  => e($request  ->  get('sequence_cate')),
-            'sequence_mode'  => e($request  ->  get('sequence_mode'))
-        ];
-
         try{
+            //判断输入的时间是否有误
+            foreach($examScreeningData as $key => $value){
+                $bd = $value['begin_dt'];   //开始时间
+                $ed = $value['end_dt'];     //结束时间
+                if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
+                    throw new \Exception('时间输入有误,请重新选择！');
+                }
+                //获取第一组时间数据
+                if($key == 1){
+                    $begin_dt   = $bd;
+                    $end_dt     = $ed;
+                }
+                if($key>1 && $examScreeningData[$key-1]['end_dt']> $bd){
+                    throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
+                }
+                //获取最早开始时间，最晚结束时间
+                if($key == 1){
+                    $begin_dt   = $bd;
+                }
+                if($key == count($examScreeningData)){
+                    $end_dt = $ed;
+                }
+                $examScreeningData[$key]['create_user_id'] = $user -> id;
+            }
+            //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+            $examData = [
+                'code'           => 100,
+                'name'           => e($request  ->  get('name')),
+                'begin_dt'       => $begin_dt,
+                'end_dt'         => $end_dt,
+                'status'         => 1,
+                'total'          => 0,
+                'create_user_id' => $user -> id,
+                'sequence_cate'  => e($request  ->  get('sequence_cate')),
+                'sequence_mode'  => e($request  ->  get('sequence_mode')),
+                'address'        => e($request  ->  get('address'))
+            ];
+
             if($exam = $model -> addExam($examData, $examScreeningData))
             {
                 //TODO：罗海华2016-01-18 13:55将 成功后的重定向 改为编辑页面
@@ -276,13 +223,13 @@ class ExamController extends CommonController
                 throw new \Exception('新增考试失败');
             }
         } catch(\Exception $ex) {
-            return response()->back()->withError($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
     /**
      * 编辑考试基本信息表单页面
-     * @api   GET /osce/admin/exam/getEditExam
+     * @url   GET /osce/admin/exam/edit-exam
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -319,7 +266,7 @@ class ExamController extends CommonController
 
     /**
      * 保存编辑考试基本信息
-     * @api POST /osce/admin/exam/postEditExam
+     * @url POST /osce/admin/exam/postEditExam
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -343,10 +290,12 @@ class ExamController extends CommonController
         $this->validate($request, [
             'exam_id'   => 'required',
             'name'      => 'required',
-            'time'      => 'required'
+            'time'      => 'required',
+            'address'   => 'required'
         ],[
             'name.required'     => '考试名称必须',
             'time.required'     => '考试时间必须',
+            'address.required'  => '考试地址必须',
         ]);
 
         //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
@@ -362,36 +311,38 @@ class ExamController extends CommonController
         $begin_dt = '';
         $end_dt = '';
 
-        //判断输入的时间是否有误
-        foreach($examScreeningData as $key => $value){
-            if(!strtotime($value['begin_dt']) || !strtotime($value['end_dt'])){
-                throw new \Exception('输入的时间有误！');
-            }
-            //获取第一组时间数据
-            if($key == 0){
-                $begin_dt = $value['begin_dt'];
-                $end_dt = $value['end_dt'];
-            }
-            //获取最早开始时间，最晚结束时间
-            if($key>0 && strtotime($begin_dt) > strtotime($value['begin_dt'])){
-                $begin_dt = $value['begin_dt'];
-            }
-            if($key>0 && strtotime($end_dt) < strtotime($value['end_dt'])){
-                $end_dt = $value['end_dt'];
-            }
-            $examScreeningData[$key]['create_user_id'] = $user -> id;
-        }
-        //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-        $examData = [
-            'name'           => $request  ->  get('name'),
-            'begin_dt'       => $begin_dt,
-            'end_dt'         => $end_dt,
-            'total'          => count(Student::where('exam_id', $exam_id)->get()),
-            'sequence_cate'  => $request  ->  get('sequence_cate'),
-            'sequence_mode'  => $request  ->  get('sequence_mode'),
-        ];
-
         try{
+            //判断输入的时间是否有误
+            foreach($examScreeningData as $key => $value){
+                $bd = $value['begin_dt'];   //开始时间
+                $ed = $value['end_dt'];     //结束时间
+                if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
+                    throw new \Exception('时间输入有误！');
+                }
+                if($key>1 && $examScreeningData[$key-1]['end_dt']> $bd){
+                    throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
+                }
+                //获取最早开始时间，最晚结束时间
+                if($key == 1){
+                    $begin_dt   = $bd;
+                }
+                if($key == count($examScreeningData)){
+                    $end_dt = $ed;
+                }
+                $examScreeningData[$key]['create_user_id'] = $user -> id;
+            }
+
+            //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+            $examData = [
+                'name'          => e($request  ->  get('name')),
+                'begin_dt'      => $begin_dt,
+                'end_dt'        => $end_dt,
+                'total'         => count(Student::where('exam_id', $exam_id)->get()),
+                'sequence_cate' => $request  ->  get('sequence_cate'),
+                'sequence_mode' => $request  ->  get('sequence_mode'),
+                'address'       => e($request  ->  get('address')),
+            ];
+
             if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
             {
                 return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
@@ -399,13 +350,13 @@ class ExamController extends CommonController
                 throw new \Exception('修改考试失败');
             }
         } catch(\Exception $ex) {
-            throw $ex;
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
     /**
      * 考生管理
-     * @api   GET /osce/admin/exam/getStudentManage
+     * @url   GET /osce/admin/exam/student-manage
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -429,7 +380,7 @@ class ExamController extends CommonController
 
         try {
             $exam_id = intval($request->input('id'));            //获取id
-            $keyword = e($request->input('keyword'));            //获取搜索关键字
+            $keyword = trim(e($request->input('keyword')));            //获取搜索关键字
 
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
@@ -444,7 +395,7 @@ class ExamController extends CommonController
 
     /**
      * 删除考生
-     * @api    POST /osce/admin/exam/postDelStudent
+     * @url    POST /osce/admin/exam/postDelStudent
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -458,7 +409,6 @@ class ExamController extends CommonController
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function postDelStudent(Request $request, Student $student)
     {
@@ -486,7 +436,7 @@ class ExamController extends CommonController
 
     /**
      * 新增考生表单页面
-     * @api GET /osce/admin/exam/add-examinee
+     * @url GET /osce/admin/exam/add-examinee
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -499,7 +449,6 @@ class ExamController extends CommonController
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getAddExaminee(Request $request){
         $id = $request->get('id');
@@ -508,7 +457,7 @@ class ExamController extends CommonController
 
     /**
      * 新增考生
-     * @api post /osce/admin/exam/add-examinee
+     * @url post /osce/admin/exam/add-examinee
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -524,7 +473,6 @@ class ExamController extends CommonController
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * '
      */
     public function postAddExaminee(Request $request, Student $model)
     {
@@ -532,12 +480,14 @@ class ExamController extends CommonController
             'exam_id'       =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'tell'          =>  'required',
+            'mobile'        =>  'required',
+            'code'          =>  'required',
             'images_path'   =>  'required',
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
-            'tell.required'         =>  '手机号必填',
+            'mobile.required'       =>  '手机号必填',
+            'code.required'         =>  '学号必填',
             'images_path.required'  =>  '请上传照片',
         ]);
 
@@ -545,13 +495,14 @@ class ExamController extends CommonController
         $exam_id = $request->get('exam_id');
         //考生数据
         $examineeData = [
-            'name'           => $request  ->  get('name'),          //姓名
-            'gender'         => $request  ->  get('sex'),           //性别
-            'idcard'         => $request  ->  get('idcard'),        //身份证号
-            'mobile'         => $request  ->  get('tell'),          //手机号
-            'code'           => $request  ->  get('examinee_id'),   //学号
-            'avator'         => $request  ->  get('images_path')[0],//照片
-            'email'          => $request  ->  get('email'),         //邮箱
+            'name'          => $request  ->  get('name'),          //姓名
+            'gender'        => $request  ->  get('gender'),        //性别
+            'idcard'        => $request  ->  get('idcard'),        //身份证号
+            'mobile'        => $request  ->  get('mobile'),        //手机号
+            'code'          => $request  ->  get('code'),          //学号
+            'avator'        => $request  ->  get('images_path')[0],//照片
+            'email'         => $request  ->  get('email'),         //邮箱
+            'description'   => $request  ->  get('description'),   //备注
         ];
 
         try{
@@ -582,7 +533,7 @@ class ExamController extends CommonController
             'id'            =>  'required',
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'examinee_id'   =>  'sometimes',
+            'code'          =>  'sometimes',
             'gender'        =>  'required',
             'mobile'        =>  'required',
             'description'   =>  'sometimes',
@@ -600,13 +551,23 @@ class ExamController extends CommonController
             'name'          =>  $request->get('name'),
             'idcard'        =>  $request->get('idcard'),
             'mobile'        =>  $request->get('mobile'),
-            'code'          =>  $request->get('examinee_id'),
-            'avator'        =>  $images[count($images)-1],
+            'code'          =>  $request->get('code'),
+            'avator'        =>  $images[0],
             'description'   =>  $request->get('description'),
         ];
 
         try{
             if($student) {
+                //查询学号是否存在
+                $code = Student::where('code', $data['code'])->where('user_id','<>',$student->user_id)->first();
+                if(!empty($code)){
+                    throw new \Exception('该学号已经有别人使用！');
+                }
+                //查询手机号码是否已经被别人使用
+                $mobile = User::where(['mobile' => $data['mobile']])->where('id','<>',$student->user_id)->first();
+                if(!empty($mobile)){
+                    throw new \Exception('手机号已经存在，请输入新的手机号');
+                }
                 foreach($data as $feild => $value) {
                     if(!empty($value)){
                         $student->  $feild  =   $value;
@@ -636,7 +597,7 @@ class ExamController extends CommonController
     }
     /**
      * Excel导入考生
-     * @api GET /osce/admin/exam/getImportStudent
+     * @url GET /osce/admin/exam/getImportStudent
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -649,7 +610,6 @@ class ExamController extends CommonController
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getImportStudent(Request $request){
 
@@ -661,7 +621,6 @@ class ExamController extends CommonController
     public function postImportStudent($id,Request $request, Student $student)
     {
         try {
-
             //获得上传的数据
             $exam_id= $id;
             $data = Common::getExclData($request, 'student');
@@ -670,22 +629,10 @@ class ExamController extends CommonController
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
 
-            //将数组导入到模型中的addInvigilator方法
-            foreach($examineeData as $studentData)
-            {
-                if($studentData['gender'] == '男'){
-                    $studentData['gender'] = 1;
-                }elseif($studentData['gender'] == '女'){
-                    $studentData['gender'] = 2;
-                }else{
-                    $studentData['gender'] = 0;
-                }
-
-                if(!$student->addExaminee($exam_id, $studentData))
-                {
-                    throw new \Exception('学生导入数据失败，请稍后重试');
-                }
+            if(!$student->importStudent($exam_id, $examineeData)){
+                throw new \Exception('学生导入数据失败，请修改重试');
             }
+
             echo json_encode($this->success_data(['code'=>1]));
 
         } catch (\Exception $ex) {
@@ -695,7 +642,7 @@ class ExamController extends CommonController
 
     /**
      * 考生查询
-     * @api GET /osce/admin/exam/student-query
+     * @url GET /osce/admin/exam/student-query
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -715,23 +662,25 @@ class ExamController extends CommonController
     public function getStudentQuery(Request $request)
     {
         //验证规则，暂时留空
-        $this   ->    validate($request,[
+        $this -> validate($request,[
               'exam_name'      => 'sometimes',
               'student_name'   => 'sometimes',
         ]);
         //获取各字段
-        $formData = $request->only('exam_name', 'student_name');
+        $exam_name      = trim($request->get('exam_name'));
+        $student_name   = trim($request->get('student_name'));
+        $formData = ['exam_name'=>$exam_name, 'student_name'=>$student_name];
         //获取当前场所的类
-         $examModel= new Student();
+        $examModel= new Student();
         //从模型得到数据
-           $data=$examModel->getList($formData);
+        $data=$examModel->getList($formData);
         //展示页面
-        return view('osce::admin.exammanage.examinee_query', ['data' => $data]);
+        return view('osce::admin.exammanage.examinee_query', ['data'=>$data, 'exam_name'=>$exam_name, 'student_name'=>$student_name]);
     }
 
     /**
      * 通过考试的id获取考站
-     * @api       GET /osce/admin/exam/station-list
+     * @url       GET /osce/admin/exam/station-list
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -792,7 +741,7 @@ class ExamController extends CommonController
 
     /**
      * 考场安排
-     * @api GET /osce/admin/exam/getExamroomAssignment
+     * @url GET /osce/admin/exam/getExamroomAssignment
      * * string        参数英文名        参数中文名(必须的)
      *
      * @param Request $request
@@ -813,16 +762,23 @@ class ExamController extends CommonController
         $examRoomData = $examRoom -> getExamRoomData($exam_id);
         $serialnumberGroup = [];
         foreach ($examRoomData as $item) {
-            $serialnumberGroup[$item->serialnumber][] = $item;
+            $serialnumberGroup[$item->serialnumber][$item->id] = $item;
         }
         //获取考试对应的考站数据
-        $examStationData = $examRoom -> getExamStation($exam_id);
-        return view('osce::admin.exammanage.examroom_assignment', ['id' => $exam_id, 'examRoomData' => $serialnumberGroup, 'examStationData' => $examStationData]);
+        $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
+
+
+        return view('osce::admin.exammanage.examroom_assignment', [
+            'id'                => $exam_id,
+            'examRoomData'      => $serialnumberGroup,
+            'examStationData'   => $examStationData,
+            'getSelect'         => $this->getSelect()
+        ]);
     }
 
     /**
      * 保存 考场安排数据
-     * @api POST /osce/admin/exam/postExamroomAssignmen
+     * @url POST /osce/admin/exam/postExamroomAssignmen
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -837,12 +793,15 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
-//        try{
-            DB::beginTransaction();
+        try{
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
+            //查看是否有本场考试
+            Exam::findOrFail($exam_id);
+
+
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -850,23 +809,19 @@ class ExamController extends CommonController
             $flows = new Flows();
             if(count($examRoomData) != 0){
                 if(!$flows -> editExamroomAssignmen($exam_id, $roomData, $stationData)){
-                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
 
             }else{
                 if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
-                    DB::rollback();
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
             }
-            DB::commit();
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
 
-//        } catch(\Exception $ex){
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
-
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
 
@@ -885,7 +840,10 @@ class ExamController extends CommonController
      */
     public function getRoomListData()
     {
-        $data = Room::select(['id', 'name'])->get();
+        //如果改考场下面没有关联考站，就不给展示在列表
+        //获得所有的在room_station考场列表id
+        $isExist = RoomStation::select(['room_id'])->groupBy('room_id')->get()->pluck('room_id');
+        $data = Room::whereIn('id',$isExist)->select(['id', 'name'])->get();
 
         return response()->json(
             $this->success_data($data, 1, 'success')
@@ -907,7 +865,6 @@ class ExamController extends CommonController
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getStationData(Request $request)
     {
@@ -940,7 +897,6 @@ class ExamController extends CommonController
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getTeacherListData(Request $request)
     {
@@ -1169,22 +1125,34 @@ class ExamController extends CommonController
         {
             throw new \Exception('没有找到该考试');
         }
-        $ExamPlanModel   =   new ExamPlan();
-        $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+
+
         $user   =   Auth::user();
         Cache::pull('plan_'.$exam->id.'_'.$user->id);
         Cache::pull('plan_time_'.$exam->id.'_'.$user->id);
-        Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
-        $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-            return $ExamPlanModel->getTimeList();
-        });
-        $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-            return $ExamPlanModel->getStationStudent();
-        });
+
+        if($exam->sequence_mode==1)
+        {
+            $ExamPlanModel =   new ExamPlanForRoom();
+            $plan   =   $ExamPlanModel    ->  IntelligenceEaxmPlan($exam);
+        }
+        else
+        {
+            $ExamPlanModel   =   new ExamPlan();
+            Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
+            $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+            $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                return $ExamPlanModel->getStationStudent();
+            });
+            $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                return $ExamPlanModel->getTimeList();
+            });
+        }
 
         $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
             return $plan;
         });
+
         return response()->json(
             $this->success_data($plan)
         );
@@ -1356,10 +1324,16 @@ class ExamController extends CommonController
         $exam_id = $request->input('id');
 
         //展示已经关联的考站和老师列表
-        $teacher = new Teacher();
-        $stationData = $teacher->stationTeacher($exam_id);
-
-        return view('osce::admin.exammanage.station_assignment', ['id' => $exam_id, 'stationData' => $stationData]);
+        $station = new Station();
+        $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
+        $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
+//        dd($stationData);
+        return view('osce::admin.exammanage.station_assignment', [
+            'id'          => $exam_id,
+            'roomData'    => $roomData,
+            'stationData' => $stationData,
+            'getSelect'   => $this->getSelect()
+        ]);
     }
 
     /**
@@ -1392,15 +1366,19 @@ class ExamController extends CommonController
 
             //获取数据
             $examId = $request->get('id');
+            $room = $request->get('room');
             $formData = $request->get('form_data'); //所有的考站数据
+
+            Exam::findOrFail($examId);
+            //判断是否有本场考试
             //查看是新建还是编辑
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
-                $examFlowStation -> createExamAssignment($examId, $formData);
+                $examFlowStation -> createExamAssignment($examId, $room, $formData);
             } else { //否则就是编辑
-                $examFlowStation -> updateExamAssignment($examId, $formData);
+                $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
-            return redirect()->route('osce.admin.exam.getExamList');
+            return redirect()->route('osce.admin.exam.getStationAssignment',['id'=>$examId]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -1431,9 +1409,8 @@ class ExamController extends CommonController
         $exam   =   Exam::find($exam_id);
         $user   =   Auth::user();
         $plan   =   Cache::get('plan_'.$exam->id.'_'.$user->id);
-//        dd($plan);
         $ExamPlanModel  =   new ExamPlan();
-
+//
         try{
             if($ExamPlanModel  ->savePlan($exam_id,$plan))
             {
@@ -1469,7 +1446,7 @@ class ExamController extends CommonController
         try {
             $id = $request->get('id');
             //通过id找到对应的模式
-            $examMode = Exam::where('id',$id)->first()->sequence_mode;
+            $examMode = Exam::findOrFail($id)->sequence_mode;
             switch ($examMode) {
                 case '1' :
                     $result =  $this->getExamroomAssignment($request);
@@ -1574,4 +1551,44 @@ class ExamController extends CommonController
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
     }
+
+    /**
+     * 代考区说明
+     */
+    public function getExamRemind(Request $request){
+        //验证
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+        //获得exam_id
+        $id = $request->input('id');
+        $suc= $request->get('suc');
+        $data = Exam::where('id',$id)->select(['rules'])->first();
+        return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
+    }
+
+    public function postExamRemind(Request $request){
+        try{
+            $this->validate($request,[
+                'content'  => 'required',
+                'id'       => 'required|integer'
+            ]);
+
+            $content = $request->get('content');
+            $id      = $request->get('id');
+            //保存代考区说明信息
+            $result  = Exam::where('id',$id)->update(['rules'  => $content]);
+            if($result){
+                return redirect()->route('osce.admin.exam.getExamRemind',['id'=>$id,'suc'=>1]);
+            }else{
+                throw new \Exception('保存失败！');
+            }
+
+        } catch(\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+
 }

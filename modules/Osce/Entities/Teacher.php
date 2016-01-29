@@ -22,7 +22,7 @@ class Teacher extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','name', 'code', 'type', 'case_id', 'create_user_id','status'];
+    protected $fillable = ['id','name', 'code', 'type', 'case_id','status', 'create_user_id','description'];
     private $excludeId = [];
 
     protected $type_values  =   [
@@ -81,8 +81,7 @@ class Teacher extends CommonModel
                 $this->excludeId = $teacher_id;
             }
             $excludeId = $this->excludeId;
-            $excludeIds[] = $excludeId;
-
+            $excludeIds = (explode(",",$teacher_id));
             if (count($excludeId) !== 0) {
                 $builder = $builder->leftJoin('cases',function($join){
                     $join    ->  on('cases.id','=', 'teacher.case_id');
@@ -90,18 +89,17 @@ class Teacher extends CommonModel
             }
             $data=$builder->select('teacher.name','teacher.id','cases.name as cname','cases.id as caseId')->get()->toArray();
             $list=[];
-            foreach($data as $k=>$v){
-                $list[$k]['teacher_id']=$v['id'];
-                $list[$k]['teacher_name']=$v['name'];
-                $list[$k]['case_name']=$v['cname'];
-                $list[$k]['case_id']=$v['caseId'];
+            foreach($data as $k=>$Teacher){
+                $list[]=[
+                    'teacher_id'=>$Teacher['id'],
+                    'teacher_name'=>$Teacher['name'],
+                    'case_name'=>$Teacher['cname'],
+                    'case_id'=>$Teacher['caseId'],
+                ];
+                $openId= Teacher::find($Teacher['id'])->userInfo;
+//                dd($openId);
+                $list[$k]['openid']=$openId['openid'];
             }
-//            dd($list);
-//             $openId= $this->where('id', '=', $list['teacher_id'])->with('userInfo')->first()->toArray();
-            $openId= Teacher::find($list[$k]['teacher_id'])->userInfo->toArray();
-
-            $list[$k]['openid']=$openId['openid'];
-//            dd($list);
             return $list;
 
         }catch (\Exception $ex) {
@@ -125,7 +123,7 @@ class Teacher extends CommonModel
     {
         try {
             //将传入的$spteacherId插进数组中
-            if ($spteacherId !== null) {
+            if (count($spteacherId) != 0) {
                 $this->excludeId = $spteacherId;
             }
 
@@ -134,8 +132,13 @@ class Teacher extends CommonModel
             }
 
             //通过传入的$station_id得到病例id
-            $case_id = StationCase::where('station_case.station_id', '=', $stationId)
-                ->select('case_id')->first()->case_id;
+            $case = StationCase::where('station_case.station_id', '=', $stationId)
+                ->select('case_id');
+            if ($case->get()->isEmpty()) {
+                throw new \Exception('未找到对应的病例');
+            } else {
+                $case_id = $case->first()->case_id;
+            }
 
             $builder = $this->where('type' , '=' , 2); //查询教师类型为指定类型的教师
             $builder = $builder->where('case_id' , '=' , $case_id); //查询符合病例的教师
@@ -183,6 +186,15 @@ class Teacher extends CommonModel
             ->  paginate(config('osce.page_size'));
     }
 
+    public function getSpInvigilatorInfo(){
+        return  $this   ->  where('type','=',2)
+            ->leftjoin('cases',function($join){
+                $join ->on('cases.id','=',$this->table.'.case_id');
+            })
+            ->select([$this->table.'.*', 'cases.name as case_name'])
+            ->  paginate(config('osce.page_size'));
+    }
+
     /**
      * 获取非SP监考老师列表
      * @access public
@@ -227,26 +239,43 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addInvigilator($data)
+    public function addInvigilator($role_id, $userData , $teacherData)
     {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
         try{
-            $mobile =   $data['mobile'];
-            $user   =   User::where('username', '=', $mobile)->first();
+            $mobile = $userData['mobile'];
+            $user   = User::where('username', '=', $mobile)->first();
 
             if(!$user){
                 $password   =   Common::getRandStr(6);
-                $user       =   $this   ->  registerUser($data,$password);
+                $user       =   $this   ->  registerUser($userData, $password);
                 DB::table('sys_user_role')->insert(
                     [
-                        'role_id'=>$data['role_id'],
-                        'user_id'=>$user->id,
+                        'role_id'   =>$role_id,
+                        'user_id'   =>$user->id,
                         'created_at'=>time(),
                         'updated_at'=>time(),
                     ]
                 );
-                $this       ->  sendRegisterEms($mobile,$password);
+                $this -> sendRegisterEms($mobile, $password);
+
+            }else{
+                foreach($userData as $feild=> $value) {
+                    $user    ->  $feild  =   $value;
+                }
+                if(!$result = $user -> save()) {
+                    throw new \Exception('用户修改失败，请重试！');
+                }
             }
-            $teacher    =   $this   ->  find($user  ->  id);
+
+            //查询教师编号是否已经被别人使用
+            $code = $this->where('code', $teacherData['code'])->where('id','<>',$user->id)->first();
+            if(!empty($code)){
+                throw new \Exception('该教师编号已经有别人使用！');
+            }
+            //查询老师是否存在
+            $teacher = $this->where('id', $user->id)->first();
             if($teacher){
                 throw new \Exception('该教职员工已经存在');
 //                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
@@ -258,15 +287,17 @@ class Teacher extends CommonModel
 //                    return $teacher;
 //                }
             } else{
-                $data['id'] =   $user   ->  id;
-                if($teacher =   $this   ->  create($data)){
-                    return $teacher;
-                } else{
+                $teacherData['id'] = $user -> id;
+                if(!($teacher = $this -> create($teacherData))){
                     throw new \Exception('教职员工创建失败');
                 }
             }
+            $connection->commit();
+            return $teacher;
+
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
+            $connection->rollBack();
+            throw $ex;
         }
     }
 
@@ -306,55 +337,84 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editInvigilator($id,$name,$mobile,$type){
-        //教务人员信息变更
-        $teacher    =   $this   ->  find($id);
+    public function editInvigilator($id, $userData, $teacherData)
+    {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //教务人员信息变更
+            $teacher    =   $this   ->  find($id);
 
-        if(!$teacher)
-        {
-            throw new   \Exception('没有找到该教务人员');
-        }
-        $teacher    ->  name    =   $name;
-        $teacher    ->  type    =   $type;
+            if(!$teacher){
+                throw new   \Exception('没有找到该教务人员');
+            }
 
-        if(!$teacher->save())
-        {
-            throw new   \Exception('教务人员名称变更失败');
-        }
-        //教务人员用户信息变更
-        $userInfo   =   $teacher->userInfo;
-        $userInfo   ->  name    =$name;
-        $userInfo   ->  mobile  =$mobile;
+            //查询教师编号是否已经被别人使用
+            $code = $this->where('code', $teacherData['code'])->where('id','<>',$id)->first();
+            if(!empty($code)){
+                throw new \Exception('该教师编号已经有别人使用！');
+            }
+            foreach($teacherData as $feild => $value) {
+                $teacher    ->  $feild  =   $value;
+            }
+            if(!$teacher->save()){
+                throw new   \Exception('教务人员信息变更失败');
+            }
 
-        if(!$userInfo->save())
-        {
-            throw new   \Exception('教务人员用户信息变更失败');
+            //教务人员用户信息变更
+            $userInfo   =   $teacher->userInfo;
+            foreach($userData as $feild => $value) {
+                $userInfo    ->  $feild  =   $value;
+            }
+            if(!$userInfo->save()){
+                throw new   \Exception('教务人员用户信息变更失败');
+            }
+            $connection->commit();
+            return $teacher;
+
+        } catch(\Exception $ex){
+            $connection->rollBack();
+            throw $ex;
         }
-        return $teacher;
+
     }
 
-    public function editSpInvigilator($id,$name,$mobile,$caseId){
-        //教务人员信息变更
-        $teacher    =   $this   ->  find($id);
-        if(!$teacher)
-        {
-            throw new   \Exception('没有找到该教务人员');
+    public function editSpInvigilator($id, $userData, $teacherData){
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
+        try{
+            //教务人员信息变更
+            $teacher    =   $this   ->  find($id);
+            if(!$teacher){
+                throw new   \Exception('没有找到该教务人员');
+            }
+            foreach($teacherData as $feild => $value) {
+                $teacher    ->  $feild  =   $value;
+            }
+            if(!$teacher->save()){
+                throw new   \Exception('教务人员信息变更失败');
+            }
+
+            //查询教师编号是否已经被别人使用
+            $code = $this->where('code', $teacherData['code'])->where('id','<>',$id)->first();
+            if(!empty($code)){
+                throw new \Exception('该教师编号已经有别人使用！');
+            }
+            //教务人员用户信息变更
+            $userInfo   =   $teacher->userInfo;
+            foreach($userData as $feild => $value) {
+                $userInfo    ->  $feild  =   $value;
+            }
+            if(!$userInfo->save()){
+                throw new   \Exception('教务人员用户信息变更失败');
+            }
+            $connection->commit();
+            return $teacher;
+
+        } catch(\Exception $ex){
+            $connection->rollBack();
+            throw $ex;
         }
-        $teacher    ->  name    =   $name;
-        $teacher    ->  case_id =   $caseId;
-        if(!$teacher->save())
-        {
-            throw new   \Exception('教务人员名称变更失败');
-        }
-        //教务人员用户信息变更
-        $userInfo   =   $teacher->userInfo;
-        $userInfo   ->  name    =   $name;
-        $userInfo   ->  mobile  =   $mobile;
-        if(!$userInfo->save())
-        {
-            throw new   \Exception('教务人员用户信息变更失败');
-        }
-        return $teacher;
     }
 
     /**
@@ -365,7 +425,7 @@ class Teacher extends CommonModel
     public function getTeacherList($formData)
     {
         try{
-            $teacher = $this->whereIn('type', [1,3]);
+            $teacher = $this->where('type', 1);
                 if(!empty($formData)){
                     if(count($formData) == 1){
                         //$teacher->where('id', '<>', implode(',', $formData));
@@ -382,26 +442,26 @@ class Teacher extends CommonModel
         }
     }
 
-    public function registerTeacher(){
-        //$this   ->  registerUser();
-    }
-
     /**
      * 获得与考站想关联的老师
-     * @param array $stationIds
+     * @param $exam_id
      * @return mixed
+     * @internal param array $stationIds
      */
     public function stationTeacher($exam_id)
     {
-        return $this->leftJoin('station_teacher',
-            function ($join) {
-                $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
-            })
+        return $this
+            -> leftJoin('exam_station','exam_station.exam_id','=','station_teacher.exam_id')
+            -> leftJoin('station_teacher',
+                function ($join) {
+                    $join->on('station_teacher.user_id' , '=' , $this->table . '.id');
+                })
             -> leftJoin('station',
                 function ($join) {
-                    $join->on('station.id','=','station_teacher.station_id');
+                    $join->on('station.id','=','exam_station.station_id');
                 })
-            -> where('station_teacher.exam_id' , $exam_id)
+
+            -> where('exam_station.exam_id' , $exam_id)
             -> select([
                 $this->table . '.id as teacher_id',
                 $this->table . '.name as teacher_name',

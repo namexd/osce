@@ -37,21 +37,30 @@
 			elem: '#start',
 		   	event: 'click',
 			format: 'YYYY/MM/DD hh:mm:ss',
+			min: laydate.now(),
+		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
 		        end.min = datas;
-		        end.start = datas
 	    	}
 		}
 		var end={
 			elem: '#end',
 		   	event: 'click',
 			format: 'YYYY/MM/DD hh:mm:ss',
+			min: laydate.now(),
+		    max: '2099-06-16 23:59:59',
 		    istime: true,
+		    istoday:false,
 		    choose: function(datas){
 		        start.max = datas;
 		    }
 		}
+		$("#end").click(function(){
+			end.min = $('#start').val();
+			laydate(end);
+		});
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);
@@ -86,20 +95,6 @@
                         }
                     }
                 },
-                begin_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '开始时间不能为空'
-                        }
-                   }
-                },
-                end_dt: {
-                	validators: {
-	                	notEmpty: {/*非空提示*/
-                            message: '结束时间不能为空'
-                        }
-                   }
-                },
                 teacher: {
                 	validators: {
 	                	notEmpty: {/*非空提示*/
@@ -131,31 +126,32 @@
                         if(ln<=1){
                             $(".upload_list").append(str);
                         }else{
-                            $.alert({
-                                title: '提示：',
-                                content: '最多上传2个文件!',
-                                confirmButton: '确定',
-                                confirm: function(){
-                                }
-                            });
+                        	layer.alert('最多上传2个文件！',function(index1){layer.close(index1);});
                         }
                     }
                 },
 	            error: function (data, status, e)
 	            {
-	                $.alert({
-	                  	title: '提示：',
-	                  	content: '通讯失败!',
-	                  	confirmButton: '确定',
-	                  	confirm: function(){
-                		}
-	              	});
+	                layer.alert('上传失败！',function(index2){layer.close(index2);});
 	            }
 	        });
 	    }) ;
 	    $(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
 	    });
+	    
+	    $(".fabu_btn").click(function(){
+	    	var start=$("#start").val();
+	    	var end=$("#end").val();
+	    	if(start==""){
+	    		layer.alert('你还没有选择开始时间!',function(its){layer.close(its)});
+              	return false;
+	    	}
+	    	if(end==""){
+	    		layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
+              	return false;
+	    	}
+	    })
  	})
  </script>
 @stop
@@ -168,7 +164,8 @@
             <h5>编辑考前培训</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" id="form1" class="form-horizontal" action="#">
+            <form method="post" id="form1" class="form-horizontal" action="{{route('osce.admin.postEditTrain')}}">
+            		<input type="hidden" name="id" value="{{$data['id'] }}" />
                     <div class="form-group">
                         <label class="col-sm-2 control-label">培训名称:</label>
                         <div class="col-sm-10">
@@ -186,14 +183,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" value="{{ $data['begin_dt']  }}" type="text" name="begin_dt" id="start" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" value="{{ $data['begin_dt']  }}" type="text" name="begin_dt" id="start" readonly="readonly" placeholder="YYYY/MM/DD hh:mm:ss">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">结束时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" value="{{ $data['end_dt']  }}" type="text" name="end_dt" id="end" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" value="{{ $data['end_dt']  }}" type="text" name="end_dt" id="end" readonly="readonly" placeholder="YYYY/MM/DD hh:mm:ss">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -218,27 +215,23 @@
                         		上传附件
 								<input type="file" name="file" id="file0"/>
 							</span>
-							@if($data['attachments'])
-                                <div class="upload_list">
+							<div class="upload_list">
+								@if($data['attachments'])
                                     @foreach($data['attachments'] as $data)
                                         <p>
                                             <input type="hidden" name="file[]" id="" value="{{ $data }}" />
                                                 <i class="fa fa-2x fa-delicious"></i>&nbsp;{{ substr ($data,27)  }}&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
                                         </p>
                                     @endforeach
-                                </div>
-                            @else
-                                <p>
-                                    <input type="hidden" name="file[]" id="" value="" />
-                                    <i class="fa fa-2x fa-delicious"></i>&nbsp;&nbsp;<i class="fa fa-2x fa-remove clo6"></i>
-                                </p>
-                            @endif
+	                            @else
+	                            @endif
+                            </div>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">发布</button>
+                            <input class="btn btn-primary fabu_btn" type="submit" value="发布">
                             <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>

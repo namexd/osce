@@ -19,33 +19,32 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom','deletes':'{{route('osce.admin.room.postDelete')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'examroom','deletes':'{{route('osce.admin.room.postDelete')}}','firstpage':'{{route('osce.admin.room.getRoomList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考场管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.room.getAddRoom')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.room.getAddRoom',['type'=>$type])}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
-    <form class="container-fluid ibox-content" id="list_form" method="get" action="{{route('osce.admin.room.getRoomList')}}?type=1">
+    <form class="container-fluid ibox-content" id="list_form" method="get" action="{{route('osce.admin.room.getRoomList',['type'=>'1'])}}">
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-
-                        @foreach($area as $item)
-                            <li
-                            @if($item->cate == 1)
-                                class="active"
-                            @endif><a href="{{route('osce.admin.room.getRoomList')}}?type={{$item->cate}}">{{$item->name}}</a></li>
+                        @foreach($area as $key => $item)
+                            <li class="{{($key === 0)?'active':''}}">
+                                <a href="{{route('osce.admin.room.getRoomList',['type'=>$key])}}">{{$item}}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
             </div>
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword" value="{{(isset($keyword)?$keyword:'')}}">
+                <input type="hidden" name="type" value="0">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                 </span>
@@ -58,7 +57,6 @@
                     <th>场所名称</th>
                     <th>描述</th>
                     <th>操作</th>
-
                 </tr>
                 </thead>
                 <tbody>
@@ -67,9 +65,11 @@
                         <td>{{$k+1}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
-                        <td value="{{$item->id}}">
-                            <a href="{{route('osce.admin.room.getEditRoom')}}?id={{$item->id}}&type={{$type}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                        <td>
+                            <a href="{{route('osce.admin.room.getEditRoom',['id'=>$item->id,'type'=>$type])}}">
+                                <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                            </a>
+                            <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                 @empty
@@ -81,12 +81,7 @@
                 共{{$data->total()}}条
             </div>
             <div class="btn-group pull-right">
-                <nav>
-                    <ul class="pagination">
-                        {!! $data->render() !!}
-                    </ul>
-                </nav>
-               
+                {!! $data->appends($_GET)->render() !!}
             </div>
 
         </div>

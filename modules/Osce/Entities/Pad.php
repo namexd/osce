@@ -18,14 +18,14 @@ class Pad extends CommonModel implements MachineInterface
     protected $table 		= 	'pad';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	[ 'name', 'code','status','create_user_id'];
+    protected   $fillable 	=	['code', 'name', 'status', 'create_user_id', 'factory', 'sp', 'purchase_dt'];
     public      $search    =   [];
 
     protected $statuValues  =   [
-        0   =>  '未使用',
         1   =>  '使用中',
-        2   =>  '维修',
-        3   =>  '报废',
+        0   =>  '未使用',
+        2   =>  '报废',
+        3   =>  '维修',
     ];
 
     public function getMachineStatuValues(){
@@ -72,7 +72,7 @@ class Pad extends CommonModel implements MachineInterface
             {
                 throw new \Exception('没有找到PAD新增数据');
             }
-            //$machine    =   Machine::create($machineData);
+
             $machine    =   true;
             if($machine)
             {
@@ -191,7 +191,7 @@ class Pad extends CommonModel implements MachineInterface
         {
             $bulder =   $bulder    ->  where('status', '=', $status);
         }
-        $bulder = $bulder -> select(['id', 'name', 'status']);
+        $bulder = $bulder -> select(['id', 'code', 'name', 'status']);
 
         return  $bulder ->  paginate(config('osce.page_size'));
     }

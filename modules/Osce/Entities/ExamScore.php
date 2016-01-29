@@ -21,4 +21,11 @@ class ExamScore extends  CommonModel
     protected $hidden = [];
     protected $fillable = ['exam_result_id', 'subject_id', 'standard_id', 'score', 'evaluate','create_user_id'];
 
+    public function standard(){
+        return $this->hasOne('\Modules\Osce\Entities\Standard','id','standard_id');
+    }
+
+    public function getScore($id){}
+
+
 }

@@ -10,7 +10,7 @@
     <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'sp_invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'sp_invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}','firstpage':'{{route('osce.admin.invigilator.getSpInvigilatorList')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
@@ -30,6 +30,7 @@
                 <tr>
                     <th>#</th>
                     <th>姓名</th>
+                    <th>病例</th>
                     <th>联系电话</th>
                     <th>最后登录时间</th>
                     <th>操作</th>
@@ -40,6 +41,7 @@
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$item->name}}</td>
+                        <td>{{$item->case_name}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
                         <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
                         <td value="{{$item->id}}">

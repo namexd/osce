@@ -48,18 +48,20 @@
                 <table class="table table-striped" id="table-striped">
 	                <thead>
 		                <tr>
+                            <th>#</th>
 		                    <th>类型名称</th>
 		                    <th>描述</th>
 		                    <th>操作</th>
 		                </tr>
 	                </thead>
 	                <tbody>
-					@foreach($data as $item)
+					@foreach($data as $key => $item)
 	                    <tr>
+                            <td>{{$key+1}}</td>
 	                        <td>{{$item->name}}</td>
 	                        <td>{{$item->description}}</td>
-	                        <td value="{{$item->id}}">
-	                            <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+	                        <td>
+	                            <a href="javascript:void(0)"><span class="read  state1"><i class="fa fa-trash-o fa-2x" aid="{{$item->id}}"></i></span></a>
 	                        </td>
 	                    </tr>
 					@endforeach
@@ -71,4 +73,29 @@
         </div>
     </form>
 </div>
+<script>
+    $(function(){
+        //删除考试区域
+        $(".fa-trash-o").click(function(){
+            var thisElement=$(this);
+            var aid=thisElement.attr("aid");
+            layer.alert('确认删除？',function(){
+                $.ajax({
+                    type:'post',
+                    async:true,
+                    url:'{{route('osce.admin.config.postDelArea')}}',
+                    data:{id:aid},
+                    success:function(data){
+                        if(data.code == 1){
+                            layer.alert('删除成功！');
+                            location.reload();
+                        }else {
+                            layer.alert(data.message);
+                        }
+                    }
+                })
+            });
+        })
+    })
+</script>
 @stop{{-- 内容主体区域 --}}

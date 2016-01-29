@@ -78,15 +78,20 @@ class CaseController extends CommonController
     {
         //验证略过
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required|unique:osce_mis.cases,name'
         ],[
-            'name.required'     =>  '病例名称不能为空'
+            'name.required'     =>  '病例名称不能为空',
+            'name.unique'       =>  '病例名称必须唯一'
         ]);
 
         //获得提交的字段
         $formData = $request->only('name', 'description');
 
         DB::connection('osce_mis')->beginTransaction();
+        if (CaseModel::where('name', str_replace(' ','',$formData['name']))->first()) {
+            DB::connection('osce_mis')->rollBack();
+            return redirect()->back()->withErrors('该病例名称已存在!');
+        }
         $result = $caseModel->insertData($formData);
         if ($result == false) {
             DB::connection('osce_mis')->rollBack();
@@ -95,8 +100,6 @@ class CaseController extends CommonController
 
         DB::connection('osce_mis')->commit();
         return redirect()->route('osce.admin.case.getCaseList');
-
-
     }
 
     /**
@@ -155,6 +158,11 @@ class CaseController extends CommonController
         $formData = $request->only('name', 'description');
 
         DB::connection('osce_mis')->beginTransaction();
+        $case = CaseModel::where('name', str_replace(' ','',$formData['name']))->where('id','<>',$id)->first();
+        if ($case) {
+            DB::connection('osce_mis')->rollBack();
+            return redirect()->back()->withErrors('该病例名称已存在!');
+        }
         $result = $caseModel->updateData($id, $formData);
         if ($result != true) {
             DB::connection('osce_mis')->rollBack();
@@ -190,4 +198,34 @@ class CaseController extends CommonController
             return $this->fail($ex);
         }
     }
+
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'name'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $name   = $request  -> get('name');
+
+        //实例化模型
+        $model =  new CaseModel();
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('name', $name)->first();
+        }else{
+            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
+
 }

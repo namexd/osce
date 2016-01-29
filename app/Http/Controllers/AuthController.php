@@ -118,6 +118,11 @@ class AuthController extends BaseController
         if(!empty($id)){
             $data['roleId'] = $id;
         }
+		if($id==config('config.superRoleId',1))
+		{
+            $ex =   new \Exception('超级管理员权限不允许修改');
+			return redirect()->back()->withErrors($ex->getMessage());
+		}
         $PermissionList = $SysRolePermission->getPermissionList($data);
         $MenusList = $SysMenus->getMenusList();
         $FunctionsList = $SysFunctions->getFunctionsList();
@@ -132,13 +137,13 @@ class AuthController extends BaseController
             }
         }
 
+
         $data = [
             'PermissionIdArr'=>$PermissionIdArr,
             'MenusList'=>$MenusList,
             'FunctionsList'=>$FunctionsList,
             'role_id'=>$id
         ];
-
         return  view('usermanage.rolemanage_detail',$data);
     }
 
@@ -270,10 +275,12 @@ class AuthController extends BaseController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function AddAuth(SysPermissions $SysPermissions,SysMenus $SysMenus){
-        $data = [
-
-        ];
-
+        $data = [];
+        $osceAuthList   =   config('osce.authList',[]);
+        foreach($osceAuthList as $id    =>  $item)
+        {
+            $data[$id] =   $item;
+        }
         $SysMenus->AddMenus($data);
     }
 }   

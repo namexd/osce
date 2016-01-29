@@ -2,6 +2,15 @@
 
 @section('only_css')
     <link href="{{asset('')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/css/common.css')}}" rel="stylesheet">
+    <style>
+    .btn-success{
+        background-color: #16beb0!important;
+        border-color: #16beb0!important;
+    }
+    .modal-title{color: #676a6c!important;}
+    tbody td .state1{color: #1ab394!important;}
+    </style>
 @stop
 
 @section('only_js')
@@ -16,7 +25,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title overflow">
                 <h5>角色权限管理</h5>
-                <button type="button" class="btn btn-primary right" id="add_role" data-toggle="modal" data-target="#myModal">新增角色</button>
+                <button type="button" class="btn btn-outline btn-default" id="add_role" style="float: right;" data-toggle="modal" data-target="#myModal">新增角色</button>
             </div>
             <div class="container-fluid ibox-content">
                 <table class="table table-striped" id="table-striped">
@@ -36,9 +45,9 @@
                         <td class="role_descrip">{{@$role->description}}</td>
 
                         <td class="opera">
-                            <span class="state1 edit_role modal-control" data-toggle="modal" data-target="#myModal" data="{{@$role->id}}">编辑</span>
-                            <a class="state1 modal-control" href="{{ route('auth.SetPermissions',[@$role->id]) }}">设置权限</a>
-                            <span class="state2 delete" data="{{@$role->id}}">删除</span>
+                            <span class="state1 edit_role modal-control" data-toggle="modal" data-target="#myModal" data="{{@$role->id}}"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                            <a class="state1 modal-control" href="{{ route('auth.SetPermissions',[@$role->id]) }}"><i class="fa  fa-cog fa-2x"></i></a>
+                            <span class="state2 delete" data="{{@$role->id}}"><i class="fa fa-trash-o fa-2x"></i></span>
                         </td>
                     </tr>
                 @endforeach

@@ -36,6 +36,8 @@
     #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
     .fa-remove{cursor:pointer;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-ok {top: -2px;}
+    .check_label + i.form-control-feedback.glyphicon.glyphicon-remove {top: -2px;}
     </style>
 @stop
 
@@ -55,7 +57,7 @@
             <h5>编辑通知</h5>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal" action="">
+            <form id="sourceForm" method="post" class="form-horizontal" action="">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">考试:</label>
                         <div class="col-sm-10">
@@ -74,17 +76,17 @@
                         <div class="col-sm-10 select_code" id="checkbox_div">
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(1,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <span class="check_name">考生</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(2,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <span class="check_name">老师</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(3,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" checked="checked" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
                                 <span class="check_name">sp老师</span>
                             </label>
                         </div>
@@ -100,7 +102,9 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <input id="content" style="display: none;" value="{!! $item->content !!}" />
+                            <div id="content" style="display: none;">
+                                {!! $item->content !!}
+                            </div>
                             <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content" ></script>
                         </div>
                     </div>
@@ -113,7 +117,9 @@
                             </span>
                             <div class="upload_list upload_list_doc">
                                 @forelse(explode(',',$item->attachments) as $attachment)
+                                    @if($attachment!='')
                                 <p><input type="hidden" name="attach[]" id="" value="{{$attachment}}" /><?php $pathInfo=explode('/',$attachment)?>{{array_pop($pathInfo)}}&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>
+                                    @endif
                                 @empty
                                 @endforelse
                             </div>

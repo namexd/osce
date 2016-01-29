@@ -31,7 +31,7 @@
         </div>
     <div class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
-          <form method="post" action="{{route('osce.admin.topic.getList')}}">
+          <form method="get" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control">
                 <span class="input-group-btn">
@@ -44,7 +44,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>课题名称</th>
+                    <th>科目名称</th>
                     <th>描述</th>
                     <th>操作</th>
                 </tr>
@@ -85,13 +85,21 @@ $(function(){
     $(".fa-trash-o").click(function(){
         var thisElement=$(this);
 
-        layer.alert('确认删除？',function(){
+        layer.confirm('确认删除？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
             $.ajax({
                 type:'get',
-                async:false,
+                async:true,
                 url:"{{route('osce.admin.topic.getDelTopic')}}?id="+thisElement.parent().parent().parent().attr('value'),
-                success:function(data){
-                    location.reload();
+                success:function(res){
+
+                    if(res.code==1){
+                        location.href = (location.href).split('?')[0];
+                    }else{
+                        layer.alert(res.message)
+                    }
+                    //location.href = (location.href).split('?')[0];
                 }
             })
         });

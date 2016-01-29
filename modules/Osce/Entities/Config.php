@@ -29,7 +29,6 @@ class Config extends CommonModel
     public function store(array $formData)
     {
         try {
-//            dd($formData);
             //$key就是字段名,$item为键值数组，有必要再遍历一次，将每个值都插入数据库
             foreach ($formData as $key => $item) {
                 //如果$item是数组的话，就说明是多选

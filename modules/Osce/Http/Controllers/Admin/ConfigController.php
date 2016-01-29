@@ -41,7 +41,8 @@ class ConfigController extends CommonController
         if (count($tempDB) != 0) {
             $tempDB[0]['value'] = json_decode($tempDB[0]->value);
         } else {
-            $tempDB[0]['value'] = ['0' => '1'];
+            $tempDB = [];
+            $tempDB[0]['value'] = [];
         }
         return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
     }
@@ -97,7 +98,7 @@ class ConfigController extends CommonController
             //将拿到的数组分别作处理
             //如果是要插入数据库的就插入数据库
             $result =  $config->store($formData);
-
+            $this->getSetWechat($file['wechat_use_alias'],$file['wechat_app_id'],$file['wechat_secret'],$file['wechat_token'],$file['wechat_encoding_key']);
             if (!$result) {
                 DB::connection('osce_mis')->rollBack();
             }
@@ -176,16 +177,22 @@ class ConfigController extends CommonController
     {
         //验证
         $this->validate($request, [
-            'name' => 'required',
+            'name'  => 'required|unique:osce_mis.area,name',
             'description' => 'required',
-            'cate' => 'required|integer',
-            'code' => 'required'
+            'cate'  => 'required|integer|unique:osce_mis.area,cate',
+            'code'  => 'required'
+        ],[
+            'name.unique'   =>  '名称必须唯一',
+            'cate.unique'   =>  '类别必须唯一',
         ]);
 
         //接受数据
         $formData = $request->all();
         $formData['created_user_id'] = \Auth::user()->id;
         try {
+            if(Area::where('cate', $formData['cate'])->first()){
+                throw new \Exception('该数字 类别已存在，请重新填写！');
+            }
             if (!Area::create($formData)) {
                 throw new \Exception('数据保存失败！请重试');
             }
@@ -196,4 +203,91 @@ class ConfigController extends CommonController
         }
     }
 
+    /**
+     * 删除考试区域
+     * @url GET /osce/admin/config/postDelArea
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        考试区域id(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postDelArea(Request $request, Area $area){
+        //验证
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+        $id = intval($request->get('id'));
+        try{
+            $result = $area->deleteArea($id);
+            if($result ==true){
+                return $this->success_data('删除成功！');
+            }
+
+        } catch(\Exception $ex){
+            return $this->fail($ex);
+        }
+    }
+
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'title'     => 'required',
+            'name'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $title  = $request  -> get('title');
+        $name   = $request  -> get('name');
+        
+        //实例化模型
+        $model =  new A;
+        //查询 该名字 是否存在
+        if(empty($id)){
+            $result = $model->where('name', $name)->first();
+        }else{
+            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
+
+    private function getSetWechat($use_alias,$app_id,$secret,$token,$encoding_key){
+        $data   =    [
+            'use_alias'    =>   $use_alias,
+            'app_id'       =>   $app_id,
+            'secret'       =>   $secret,
+            'token'        =>   $token,
+            'encoding_key' =>   $encoding_key,
+            ];
+        $str    =    view('osce::admin.sysmanage.wechat_config',$data)->render();
+        $str    =   '<?php '.$str;
+        try
+        {
+            if(!is_writable(WECHAT_CONFIG))
+            {
+                throw new \Exception('config/wechat.php文件不可写');
+            }
+            file_put_contents(WECHAT_CONFIG,$str);
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
 }

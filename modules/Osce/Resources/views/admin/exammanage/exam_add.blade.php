@@ -11,6 +11,10 @@ input.laydate-icon{
     width: 151px;
     line-height: 30px;
 }
+.time-modify{
+    margin-top: 25px!important;
+    margin-bottom: 30px!important;
+}
 </style>
 @stop
 
@@ -28,7 +32,6 @@ input.laydate-icon{
 
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postAddExam')}}">
-                        <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试名称</label>
                             <div class="col-sm-10">
@@ -40,7 +43,7 @@ input.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试地点</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="code" name="code">
+                                <input type="text" required class="form-control" id="address" name="address">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -59,7 +62,7 @@ input.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">排序方式</label>
                             <div class="col-sm-10">
-                                <select class="form-control" style="width:200px;" name="sequence_mode" v>
+                                <select class="form-control" style="width:200px;" name="sequence_mode" >
                                     <option value="1">以考场分组</option>
                                     <option value="2">以考站分组</option>
                                 </select>
@@ -81,7 +84,7 @@ input.laydate-icon{
                                             <th>操作</th>
                                         </tr>
                                         </thead>
-                                        <tbody index="0">
+                                        <tbody index="0" id="add-exam">
                                         </tbody>
                                     </table>
 
@@ -91,7 +94,7 @@ input.laydate-icon{
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
+                            <div class="col-sm-4 col-sm-offset-2 time-modify">
                                 <button class="btn btn-primary" type="submit">创建考试</button>
                                 <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 

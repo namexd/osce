@@ -24,21 +24,13 @@ $(function(){
  */
 function test_station(){
 
-    $('table').on('click','.fa-trash-o',function(){
+   $(".delete").click(function(){
+       var thisElement = $(this);
+       deleteItems('post',pars.deletes,thisElement.attr("value"),pars.firstpage);
+   })
 
-        var thisElement = $(this);
-        layer.alert('确认删除？',function(){
-            $.ajax({
-                type:'post',
-                async:true,
-                url:pars.deletes,
-                data:{id:thisElement.parent().parent().parent().attr('value')},
-                success:function(res){
-                    //location.reload();
-                }
-            })
-        });
-    })
+
+
 }
 
 /**
@@ -48,7 +40,9 @@ function test_station(){
  * @date    2016-01-06
  */
 function clinicalcase(){
-	deleteItem(pars.deletes);
+   $(".delete").click(function(){
+       deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+   })
 }
 
 /**
@@ -58,7 +52,9 @@ function clinicalcase(){
  * @date    2016-01-06
  */
 function examroom(){
-	deleteItem(pars.deletes);
+    $(".delete").click(function(){
+        deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+    })
 }
 
 /**
@@ -73,7 +69,7 @@ function deleteItem(url){
 	$('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
-        layer.alert('确认删除？',function(){
+        layer.alert('确认删除？',{btn:['确认','取消']},function(){
             $.ajax({
                 type:'post',
                 async:true,
@@ -84,7 +80,7 @@ function deleteItem(url){
                     if(data.code==1){
                         location.reload();
                     }else{
-                        layer.alert(data.message);
+                        layer.msg(data.message);
                     }
 
                 },
@@ -99,6 +95,51 @@ function deleteItem(url){
 
 
 function categories(){
+
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            title: {/*键名username和input name值对应*/
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            },
+            desc: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '描述不能为空'
+                    }
+                }
+            }
+        }
+    });
+
+    $('#submit-btn').click(function(){
+        var flag = null;
+        $('tbody').find('.col-sm-10').each(function(key,elem){
+            flag = true;
+            if($(elem).find('input').val()==''){
+                flag = false;
+            }
+        });
+        if(flag==false){
+            layer.alert('考核点或考核项不能为空！');
+            return false;
+        }
+        if(flag==null){
+            layer.alert('请新增考核点！');
+            return false;
+        }
+    });
+
+
     /**
      * 新增一条父考核点
      * @author  mao
@@ -121,7 +162,7 @@ function categories(){
                 '</div>'+
                 '</td>'+
                 '<td>'+
-                '<select class="form-control" name="score['+index+'][total]">'+
+                '<select style="display:none;" class="form-control" name="score['+index+'][total]">'+
                 '<option value="1">1</option>'+
                 '<option value="2">2</option>'+
                 '<option value="3">3</option>'+
@@ -188,19 +229,53 @@ function categories(){
         thisElement.attr('current',child);
 
         //分数自动加减
+        //var thisElement = $(this).parent().parent();
+        var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
+        thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html);
+        //父亲节点
+        var className = thisElement.attr('class'),
+            parent =  className.split('-')[1];
+
+        //自动加减节点
+        var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
+
+
+        //改变value值,消除连续变换值的变化
+        var total = 0;//= parseInt(change.val())+parseInt($(this).val());
+        $('.'+className).each(function(key,elem){
+            if($(elem).attr('parent')==parent){
+                return;
+            }else{
+                total += parseInt($(elem).find('td').eq(2).find('select').val());
+            }
+        });
+
+        //当没有子类的时候
+        if(total==0){
+            return;
+        }
+
         var option = '';
+        for(var k =1;k<=total;k++){
+            option += '<option value="'+k+'">'+k+'</option>';
+        }
+        change.html(option);
+        change.val(total);
+
+        $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
+        change.after('<span>'+parseInt(total)+'</span>');
+
+        /*var option = '';
         for(var k =0;k<=child;k++){
             option += '<option value="'+k+'">'+k+'</option>';
         }
         thisElement.find('td').eq(2).find('select').html(option);
         thisElement.find('td').eq(2).find('select').val(child);
         //禁用下拉
-        thisElement.find('td').eq(2).find('select').hide();
+        //thisElement.find('td').eq(2).find('select').hide();
         thisElement.find('td').eq(2).find('span').remove();
         thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
-
-        var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
-        thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html)
+*/
 
         //更新计数
         increment(thisElement);
@@ -290,8 +365,8 @@ function categories(){
             if(total==0){
                 total = 1;
                 cu = 0;
-                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
-                change.show();
+                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').text('');
+                //change.show();
                 //dom
                 var option = '';
                 for(var k =1;k<=4;k++){
@@ -385,13 +460,14 @@ function categories(){
         var className = thisElement.attr('class');
         var parent =  1;
         var value = [];
+        var valueTotal = null;
 
         //存储select的值
         $('.'+className).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
                 value.push($(elem).find('td').eq(2).find('select').val());
             }else{
-               return;
+               valueTotal = $(elem).find('td').eq(2).find('select').val();
             }
         });
         //存储dom结构
@@ -413,25 +489,38 @@ function categories(){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
                 $(elem).attr('class','pid-'+parent);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+
                 parent += 1;
             }else{
                 var child = $(elem).attr('child'),
                         parent_p = parent - 1;
                 $(elem).find('td').eq(0).text(parent_p+'-'+child);
                 $(elem).attr('class','pid-'+parent_p);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+
                 child += 1;
             }
         });
-        
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
-                $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
-                $(elem).find('td').eq(2).find('select').val(value[key-1]);
+
+                $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(value[key-1]);
             }else{
-               return;
+                $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
             }
         });
+
 
     });
 
@@ -447,6 +536,7 @@ function categories(){
         var className = thisElement.attr('class');
         var parent =  1;
         var value = [];
+        var valueTotal = null;
 
 
         //存储select的值
@@ -454,7 +544,7 @@ function categories(){
             if($(elem).attr('parent')==undefined){
                 value.push($(elem).find('td').eq(2).find('select').val());
             }else{
-               return;
+               valueTotal = $(elem).find('td').eq(2).find('select').val();
             }
         });
         //存储dom结构
@@ -468,7 +558,7 @@ function categories(){
 
         //上移
         $('.'+className).remove();
-        $('.pid-'+preIndex+'[parent="'+preIndex+'"]').after(thisDOM);
+        $('.pid-'+preIndex+':last').after(thisDOM);
 
         //更新序号
         $('tbody tr').each(function(key,elem){
@@ -476,12 +566,23 @@ function categories(){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
                 $(elem).attr('class','pid-'+parent);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+
                 parent += 1;
             }else{
                 var child = $(elem).attr('child'),
                         parent_p = parent - 1;
                 $(elem).find('td').eq(0).text(parent_p+'-'+child);
                 $(elem).attr('class','pid-'+parent_p);
+
+                //更新name表单序号
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
+                $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+
                 child += 1;
             }
         });
@@ -489,10 +590,12 @@ function categories(){
         //更新数据
         $('.pid-'+preIndex).each(function(key,elem){
             if($(elem).attr('parent')==undefined){
-                $(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+                //$(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
+                $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
                 $(elem).find('td').eq(2).find('select').val(value[key-1]);
             }else{
-               return;
+                $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
+                $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
             }
         });
 
@@ -545,16 +648,19 @@ function categories(){
                                        '</div>'+
                                        '</td>'+
                                        '<td>'+
-                                       '<select class="form-control" name="score['+index+'][total]">'+
+                                       '<select class="form-control" style="display:none;" name="score['+index+'][total]">'+
                                        '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
                                        '<option value="1">1</option>'+
                                        '<option value="2">2</option>'+
                                        '<option value="3">3</option>'+
                                        '<option value="4">4</option>'+
                                        '</select>'+
+                                       '<span>'+res[i].score+'</span>'+
                                        '</td>'+
                                        '<td>'+
                                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>'+
+                                       '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>'+
                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                        '</td>'+
                                        '</tr>';
@@ -590,8 +696,8 @@ function categories(){
                                                '</td>'+
                                                '<td>'+
                                                '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>'+
-                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>'+
+                                               '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>'+
                                                '</td>'+
                                                '</tr>';
                                    }
@@ -612,15 +718,20 @@ function categories(){
         }) ;
 
 
-
+        /**
+         * 考核分数自动加减
+         * @author mao
+         * @version 1.0
+         * @date    2016-01-20
+         */
         $('tbody').on('change','select',function(){
             var thisElement = $(this).parent().parent();
             //父亲节点
-            var className = thisElement.attr('class');
+            var className = thisElement.attr('class'),
                 parent =  className.split('-')[1];
+
             //自动加减节点
             var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
-
 
 
             //改变value值,消除连续变换值的变化
@@ -643,7 +754,7 @@ function categories(){
                 option += '<option value="'+k+'">'+k+'</option>';
             }
             change.html(option);
-            change.val(total-1);
+            change.val(total);
 
             $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
             change.after('<span>'+parseInt(total)+'</span>')
@@ -657,7 +768,7 @@ function categories(){
 function invigilator(){
     //删除老师
     $(".delete").click(function(){
-        deleteItems("post",pars.deletes,$(this).attr("tid"));
+        deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
 }
 
@@ -690,12 +801,12 @@ function sp_invigilator(){
     //删除老师
     $(".delete").click(function(){
 
-        deleteItems("post",pars.deletes,$(this).attr("tid"));
+        deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
 }
 
 //删除方法封装,其中id为当前dom的value值
-function deleteItems(type,url,id){
+function deleteItems(type,url,id,firstpage){
     layer.alert('确认删除',{btn:['确认','取消']},function(){
         $.ajax({
             type:type,
@@ -703,8 +814,9 @@ function deleteItems(type,url,id){
             url:url,
             data:{id:id},
             success:function(data){
+                console.log(data.code);
                 if(data.code == 1){
-                    location.reload();
+                    location.href=firstpage;
                 }else {
                     layer.msg(data.message);
                 }

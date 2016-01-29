@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\AreaVcr;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\StationVcr;
@@ -231,6 +232,7 @@ class MachineController extends CommonController
                 default :
                         $machine    =     $this   ->  addCameras($request);
             }
+
             if($machine){
                 return redirect()   ->  route('osce.admin.machine.getMachineList',['cate_id'=>$cate_id]) ;
             } else{
@@ -326,16 +328,24 @@ class MachineController extends CommonController
             'channel'       =>  'required',
             'description'   =>  'sometimes',
             'status'        =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'设备编码必填',
-            'ip.required'       =>'设备IP地址必填',
-            'username.required' =>'设备登录用户名必填',
-            'password.required' =>'设备登录密码必填',
-            'port.required'     =>'设备端口必填',
-            'channel.required'  =>'设备网口必填',
-            'status.required'   =>'设备状态必选',
+            'name.required'         =>'设备名称必填',
+            'name.unique'           =>'设备名称必须唯一',
+            'code.required'         =>'设备编码必填',
+            'ip.required'           =>'设备IP地址必填',
+            'username.required'     =>'设备登录用户名必填',
+            'password.required'     =>'设备登录密码必填',
+            'port.required'         =>'设备端口必填',
+            'channel.required'      =>'设备网口必填',
+            'status.required'       =>'设备状态必选',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
@@ -346,18 +356,21 @@ class MachineController extends CommonController
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
-        try{
 
-            $model      =   $this   ->  getMachineModel($cate_id);
+        try{
+            $model      =   new Vcr();
             if($cameras =   $model  ->  addMachine($data)){
                 return $cameras;
             } else{
                 throw new \Exception('新增摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
@@ -391,6 +404,9 @@ class MachineController extends CommonController
             'port'          =>  'required',
             'channel'       =>  'required',
             'description'   =>  'sometimes',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
             'id.required'       =>'设备ID必填',
             'name.required'     =>'设备名称必填',
@@ -400,7 +416,11 @@ class MachineController extends CommonController
             'password.required' =>'设备登录密码必填',
             'port.required'     =>'设备端口必填',
             'channel.required'  =>'设备网口必填',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
+
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
@@ -412,17 +432,21 @@ class MachineController extends CommonController
             'channel'       =>  $request    ->  get('channel'),
             'description'   =>  $request    ->  get('description'),
             'status'        =>  $request    ->  get('status'),
+            'sp'            =>  $request    ->  get('sp'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
+
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Vcr();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else{
                 throw new \Exception('编辑摄像头失败');
             }
         } catch(\Exception $ex){
-            return response()->back()->withError($ex->getMessage());
+            //return response()->back()->withError($ex->getMessage());
+            throw $ex;
         }
     }
 
@@ -439,7 +463,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddCameras(){
-        return view('osce::admin.resourcemanage.vcr_add');
+        $model = new Vcr();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.vcr_add', ['status'=>$status]);
     }
 
     /**
@@ -465,9 +491,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Vcr();
+        $status   =   $model  ->  getMachineStatuValues();
         $vcr    =   Vcr::find($id);
 
-        return view('osce::admin.resourcemanage.vcr_edit',['item'=>$vcr]);
+        return view('osce::admin.resourcemanage.vcr_edit',['item'=>$vcr, 'status'=>$status]);
     }
 
     /**
@@ -490,13 +518,20 @@ class MachineController extends CommonController
      */
     private function addPad(Request $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.pad',
             'code'          =>  'required',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
             'status'        =>  'required',
         ],[
-            'name.required'     =>  '设备名称必填',
-            'code.required'     =>  '设备编号必填',
-            'status.required'   =>  '设备状态必填',
+            'name.required'         =>  '设备名称必填',
+            'name.unique'           =>  '设备名称必须唯一',
+            'code.required'         =>  '设备ID必填',
+            'factory.required'      =>  '厂家必填',
+            'sp.required'           =>  '型号必填',
+            'purchase_dt.required'  =>  '采购日期必填',
+            'status.required'       =>  '设备状态必填',
         ]);
 
         $user   =   Auth::user();
@@ -504,15 +539,17 @@ class MachineController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $data   =   [
-            'name'          =>  $request    ->  get('name'),
+            'name'          =>  e($request  ->  get('name')),
             'code'          =>  $request    ->  get('code'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
             'status'        =>  $request    ->  get('status'),
             'create_user_id'=>  $user       ->  id
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model  =   new Pad();
             if($pad =   $model  ->  addMachine($data)){
                 return $pad;
             } else{
@@ -530,22 +567,30 @@ class MachineController extends CommonController
             'name'          =>  'required',
             'code'          =>  'required',
             'status'        =>  'sometimes',
+            'factory'       =>  'required',
+            'sp'            =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'id.required'       =>'设备ID必填',
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'设备编码必填',
-            'status.required'   =>'设备状态必填',
+            'id.required'           =>'ID必填',
+            'name.required'         =>'设备名称必填',
+            'code.required'         =>'设备ID必填',
+            'status.required'       =>'状态必填',
+            'factory.required'      =>'厂家必填',
+            'sp.required'           =>'型号必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
             'status'        =>  $request    ->  get('status'),
+            'factory'       =>  e($request  ->  get('factory')),
+            'sp'            =>  $request    ->  get('sp'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
         ];
-        $cate_id    =   $request    ->  get('cate_id');
 
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Pad();
             if($cameras =   $model  ->  editMachine($data)){
                 return $cameras;
             } else {
@@ -570,7 +615,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddPad(){
-        return view('osce::admin.resourcemanage.pad_add');
+        $model = new Pad();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.pad_add',['status'=>$status]);
     }
 
     /**
@@ -596,9 +643,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Pad();
+        $status   =   $model  ->  getMachineStatuValues();
         $pad    =   Pad::find($id);
 
-        return view('osce::admin.resourcemanage.pad_edit',['item'=>$pad]);
+        return view('osce::admin.resourcemanage.pad_edit',['item'=>$pad, 'status'=>$status]);
     }
 
     /**
@@ -621,18 +670,21 @@ class MachineController extends CommonController
      */
     private function addWatch(Request  $request){
         $this   ->  validate($request,[
-            'name'          =>  'required',
+            'name'          =>  'required|unique:osce_mis.watch,name',
             'code'          =>  'required|unique:osce_mis.watch',
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'required',
+            'purchase_dt'   =>  'required',
         ],[
-            'name.required'     =>  '腕表名称必填',
-            'code.required'     =>  '腕表编号必填',
-            'factory.required'  =>  '生产厂家必填',
-            'sp.required'       =>  '型号规格必填',
-            'status.required'   =>  '腕表状态必选',
-            'code.unique'       =>  '腕表编码已存在',
+            'name.required'         =>  '腕表名称必填',
+            'name.unique'           =>  '腕表名称必须唯一',
+            'code.required'         =>  '腕表ID必填',
+            'code.unique'           =>  '腕表ID已存在',
+            'factory.required'      =>  '厂家必填',
+            'sp.required'           =>  '型号必填',
+            'status.required'       =>  '状态必选',
+            'purchase_dt.required'  =>  '采购日期必填',
         ]);
 
         $user   =   Auth::user();
@@ -641,18 +693,18 @@ class MachineController extends CommonController
         }
 
         $data   =   [
-            'name'          =>  $request    ->  get('name'),
             'code'          =>  $request    ->  get('code'),
-            'factory'       =>  $request    ->  get('factory'),
-            'sp'            =>  $request    ->  get('sp'),
+            'name'          =>  $request    ->  get('name'),
             'status'        =>  $request    ->  get('status'),
             'description'   =>  $request    ->  get('description'),
-            'create_user_id'=>  $user       ->  id
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'create_user_id'=>  $user       ->  id,
+            'purchase_dt'   =>  $request    ->  get('purchase_dt')
         ];
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model    =   new Watch();
             if($watch =   $model  ->  addMachine($data)){
 //                $action='新增';
 //                $data=array(
@@ -679,13 +731,15 @@ class MachineController extends CommonController
             'factory'       =>  'required',
             'sp'            =>  'required',
             'status'        =>  'sometimes',
+            'purchase_dt'   =>  'required',
         ],[
-            'id.required'       =>'设备ID必填',
-            'name.required'     =>'设备名称必填',
-            'code.required'     =>'腕表编码必填',
-            'factory.required'  =>'生产厂家必填',
-            'sp.required'       =>'型号规格必填',
-            'status.required'   =>'设备状态必填',
+            'id.required'           =>'设备ID必填',
+            'name.required'         =>'设备名称必填',
+            'code.required'         =>'腕表编码必填',
+            'factory.required'      =>'生产厂家必填',
+            'sp.required'           =>'型号规格必填',
+            'status.required'       =>'设备状态必填',
+            'purchase_dt.required'  =>'采购日期必填',
         ]);
 
         $code=$request->get('code');
@@ -698,32 +752,22 @@ class MachineController extends CommonController
 
             }
         }
+        $data   =   [
+            'id'            =>  $request    ->  get('id'),
+            'name'          =>  $request    ->  get('name'),
+            'factory'       =>  $request    ->  get('factory'),
+            'sp'            =>  $request    ->  get('sp'),
+            'description'   =>  $request    ->  get('description'),
+            'status'        =>  $request    ->  get('status'),
+            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
+        ];
         $code=Watch::where('id',$request->get('id'))->select('code')->first()->code;
-        if($code==$request->get('code')){
-
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-            ];
-        }else{
-            $data   =   [
-                'id'            =>  $request    ->  get('id'),
-                'name'          =>  $request    ->  get('name'),
-                'code'          =>  $request    ->  get('code'),
-                'factory'       =>  $request    ->  get('factory'),
-                'sp'            =>  $request    ->  get('sp'),
-                'description'   =>  $request    ->  get('description'),
-                'status'        =>  $request    ->  get('status'),
-            ];
+        if($code!=$request->get('code')){
+            $data['code']   =   $request    ->  get('code');
         }
 
-        $cate_id    =   $request    ->  get('cate_id');
         try{
-            $model      =   $this   ->  getMachineModel($cate_id);
+            $model      =   new Watch();
             if($cameras =   $model  ->  editMachine($data))
             {
 //                $action='编辑';
@@ -758,7 +802,9 @@ class MachineController extends CommonController
      *
      */
     public function getAddWatch(){
-        return view('osce::admin.resourcemanage.watch_add');
+        $model = new Watch();
+        $status   =   $model  ->  getMachineStatuValues();
+        return view('osce::admin.resourcemanage.watch_add',['status'=>$status]);
     }
 
     /**
@@ -784,9 +830,11 @@ class MachineController extends CommonController
         ]);
 
         $id     =   intval($request    ->  get('id'));
+        $model = new Watch();
+        $status   =   $model  ->  getMachineStatuValues();
         $watch  =   Watch::find($id);
 
-        return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch]);
+        return view('osce::admin.resourcemanage.watch_edit',['item'=>$watch, 'status'=>$status]);
     }
 
     /**
@@ -812,14 +860,21 @@ class MachineController extends CommonController
             $id      = $request ->input('id');
             $cate_id = $request ->input('cate_id');
             if($cate_id ==1){
-                if($result = StationVcr::where('vcr_id',$id)->first()){
+                if(!StationVcr::where('vcr_id',$id)->get()->isEmpty()){
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
-                if($result = RoomVcr::where('vcr_id',$id)->first()){
+                if(!RoomVcr::where('vcr_id',$id)->get()->isEmpty()){
+                    throw new \Exception('该设备已于其他设备关联,无法删除!');
+                }
+                if (!AreaVcr::where('vcr_id',$id)->get()->isEmpty()) {
                     throw new \Exception('该设备已于其他设备关联,无法删除!');
                 }
             }
-
+            if($cate_id ==3){
+                if($result = WatchLog::where('watch_id',$id)->first()){
+                    throw new \Exception('该设备使用过,无法删除!');
+                }
+            }
             $model   = $this    ->getMachineModel($cate_id);
             //通过id删除相应的设备
             if($result = $model->where('id', $id)->delete()) {
@@ -832,5 +887,39 @@ class MachineController extends CommonController
         }
     }
 
+    /**
+     * 判断名称是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'cate'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $cate   = $request  -> get('cate');
+        $name   = $request  -> get('name');
+        $code   = $request  -> get('code');
+        //实例化模型
+        $model  =   $this   ->  getMachineModel($cate);
+        //存在设备ID
+        if(!empty($code)){
+            $model = $model->where('code', $code);
+        }else{
+            $model = $model->where('name', $name);
+        }
+        //存在ID，为编辑
+        if(!empty($id)){
+            $model = $model->where('id', '<>', $id);
+        }
+        $result = $model->first();
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
 
 }

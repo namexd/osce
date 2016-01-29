@@ -18,6 +18,12 @@ class ExamScreening extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag'];
+    protected $statuValues = [
+        1 => '等候考试',
+        2 => '正在考试',
+        3 => '考试结束',
+        4 => '未知状态',
+    ];
 
      //关联考试表
     public function  ExamInfo(){
@@ -79,6 +85,8 @@ class ExamScreening extends CommonModel
 
     }
 
+    public function closeExam($exam_id){
 
+    }
 
 }

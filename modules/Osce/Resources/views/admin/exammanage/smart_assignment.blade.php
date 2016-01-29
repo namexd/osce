@@ -22,7 +22,10 @@
             line-height: 30px;
         }
         .assign-box{
+            width:1000px;
+            height: 600px;
             margin-top: 20px;
+            overflow: scroll;
         }
         .classroom-box>ul>li{
             float: left;
@@ -35,18 +38,15 @@
             height: 0;
         }
         .time-list{
-            width: 100px;
+            width: 200px;
             margin-top: 5px;
+            text-align: center;
         }
         .time-list li{
             border: 1px solid #ccc;
         }
         .assign-box>div{
             float: left;
-        }
-        .classroom-box{
-            width: 1402px;
-
         }
         ul,dl{
             padding: 0;
@@ -61,6 +61,7 @@
         dd{
             float: left;
             cursor: pointer;
+            margin: 5px;
         }
         /*dl:hover{
             background-color: #f4f4f4;
@@ -68,11 +69,14 @@
         }*/
         dl{
             border: 1px solid #ccc;
+
         }
         .title{
             border: 1px solid #ccc;
             background-color: #eee;
-            text-align: center;
+
+            padding: 5px;
+            font-weight: 700;
         }
         .dd-active{
             background-color:#ccc;
@@ -89,6 +93,7 @@
         }
         .classroom-box{
             min-height: 500px;
+            text-align: center;
         }
         .room_inner_col{
             margin: 5px 0px;
@@ -97,7 +102,10 @@
             background-color: #0a6aa1;
         }
         p{
-            margin: 0 10px;
+            margin: 0;
+        }
+        .table>li{
+            width: 150px;
         }
     </style>
 @stop
@@ -122,9 +130,10 @@
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$_GET['id']}}">基础信息</a></li>
-                            <li class=""><a href="{{route('osce.admin.exam.getExamroomAssignment',['id'=>$_GET['id']])}}">考场安排</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$_GET['id']])}}">考场安排</a></li>
                             <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$_GET['id']])}}">考生管理</a></li>
                             <li class="active"><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$_GET['id']])}}">智能排考</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$_GET['id']])}}">待考区说明</a></li>
                         </ul>
                     </div>
                 </div>

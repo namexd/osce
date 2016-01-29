@@ -15,18 +15,18 @@ use DB;
 
 class Vcr extends CommonModel implements MachineInterface
 {
-    protected $connection	=	'osce_mis';
+    protected $connection   =	'osce_mis';
     protected $table 		= 	'vcr';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status'];
-    public      $search    =   [];
+    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status','created_user_id','sp','factory','purchase_dt'];
+    public      $search     =   [];
 
     protected $statuValues  =   [
-        0   =>  '离线',
         1   =>  '在线',
-        2   =>  '维修',
-        3   =>  '报废',
+        0   =>  '离线',
+        2   =>  '报废',
+        3   =>  '维修',
     ];
 
     /**
@@ -73,33 +73,14 @@ class Vcr extends CommonModel implements MachineInterface
         $connection ->beginTransaction();
         try
         {
-            $machineData    =   [];
-
             if($vcr =   $this   ->  create($data))
-            {
-                $machineData=   [
-                    'item_id'    =>  $vcr    ->  id,
-                    'type'      =>  1,
-                ];
-            }
-            else
-            {
-                throw new \Exception('新增摄像机失败');
-            }
-            if(empty($machineData))
-            {
-                throw new \Exception('没有找到摄像机新增数据');
-            }
-            //$machine    =   Machine::create($machineData);
-            $machine    =   true;
-            if($machine)
             {
                 $connection -> commit();
                 return $vcr;
             }
             else
             {
-                throw new   \Exception('新增摄像机资源失败');
+                throw new \Exception('新增摄像机失败');
             }
         }
         catch(\Exception $ex)
@@ -136,56 +117,29 @@ class Vcr extends CommonModel implements MachineInterface
     public function editMachine($data){
         $connection =   DB::connection($this->connection);
         $connection ->beginTransaction();
-        try
-        {
-            $vcr            =   $this   ->  find($data['id']);
-            if($vcr)
-            {
-                foreach($data as $feild=> $value)
-                {
-                    if($feild=='id')
-                    {
+        try{
+            $vcr = $this    -> find($data['id']);
+
+            if($vcr) {
+                foreach($data as $feild=> $value) {
+                    if($feild=='id') {
                         continue;
                     }
                     $vcr    ->  $feild  =   $value;
                 }
-                if($vcr     ->  save())
-                {
-//                    $machine    =   Machine ::where('item_id','=',$vcr    ->  id)
-//                                            ->where('type','=',1)
-//                                            ->first();
+                $connection->enableQueryLog();
+                $result = $vcr -> save();
+                $a  =   $connection->getQueryLog();
+                if(!$result = $vcr -> save()) {
+                    throw new \Exception('修改失败，请重试！');
                 }
-                else
-                {
-                    $machine    =   false;
-                }
-            }
-            else
-            {
+            } else {
                 throw new \Exception('没有找到该摄像机');
             }
+            $connection -> commit();
+            return $vcr;
 
-//            if($machine)
-//            {
-//                $machine    ->  name    =   $data['name'];
-//                if($machine->save())
-//                {
-                    $connection -> commit();
-//                }
-//                else
-//                {
-//                    throw new \Exception('保存摄像机资源信息失败');
-//                }
-
-                return $vcr;
-//            }
-//            else
-//            {
-//                throw new   \Exception('没有找到摄像机资源信息');
-//            }
-        }
-        catch(\Exception $ex)
-        {
+        } catch(\Exception $ex){
             $connection->rollBack();
             throw $ex;
         }
@@ -214,8 +168,47 @@ class Vcr extends CommonModel implements MachineInterface
         {
             $bulder =   $bulder    ->  where('status', '=', $status);
         }
-        $bulder = $bulder -> select(['id', 'name', 'status']);
+        $bulder = $bulder -> select(['id', 'code', 'name', 'status']);
 
         return  $bulder ->  paginate(config('osce.page_size'));
     }
+
+
+    /**
+     * 查询没被其他考场关联的摄像机
+     * @api GET /osce/wechat/resources-manager/selectVcr
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        id        参数中文名(必须的)
+     * * string        type      参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function selectVcr($id, $type)
+    {
+        if ($type === '0') {
+            $modelVcr = RoomVcr::where('room_id', $id)->first();
+        } else {
+            $modelVcr = AreaVcr::where('area_id', $id)->first();
+        }
+
+        $vcr = Vcr::where('status', '<', 2)
+            ->where('used',0)
+            ->orWhere('id', $modelVcr->vcr_id)
+            ->select(['id', 'name'])->get();
+
+        $result = [$vcr, $modelVcr];
+        return $result;     //关联摄像机
+    }
+
+
+
 }

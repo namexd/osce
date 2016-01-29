@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <style>
     table tr td .form-group {
         margin-bottom: 0;
@@ -15,8 +16,8 @@
     }
     .ibox-content{padding-top: 20px;}
     .btn-outline:hover{color: #fff!important;}
-    .ibox-title{border-top: 0;}
-    .ibox-content{
+    .form-group .ibox-title{border-top: 0;}
+    .form-group .ibox-content{
         border-top: 0;
         padding-left: 0;
     }
@@ -26,6 +27,7 @@
 @section('only_js')
 <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 @stop
 
 @section('content')
@@ -44,13 +46,12 @@
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="title">
+                                <input type="text" required class="form-control" id="title" name="title">
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
@@ -66,11 +67,11 @@
                                     <div class="ibox-title">
                                         <h5></h5>
                                         <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                             <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
                                                 导入<input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
                                             <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
-                                            <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
                                     <div class="ibox-content">
@@ -91,15 +92,13 @@
                                     </div>
                                 </div>
 
-
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
-
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit">保存</button>
+                                <input class="btn btn-primary" id="submit-btn" type="submit" value="保存">
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                             </div>
                         </div>

@@ -7,6 +7,10 @@ return [
 	'order_type' => 'created_at',
 	'order_by' => 'desc',
     'num'    =>10,
+    'student_num'    =>20,
+	'begin_dt_buffer' => 10,
+
+	'topticOptionMaxNumer'	=>	10,
 
 	'importForCnToEn'=>[
 		// 中英文 字段名对照
@@ -30,7 +34,7 @@ return [
 			'联系电话'	=>	'mobile',
 			'电子邮箱'	=>	'email',
 			'头像'		=>	'avator',
-			'备注'		=>	'level'
+			'备注'		=>	'description'
 		],
 	],
 	'machine_category'=>[
@@ -40,19 +44,27 @@ return [
 		],
 		2 =>[
 			'id'=>2,
-			'name'=>'Pad',
+			'name'=>'PAD',
 		],
 		3 =>[
 			'id'=>3,
-			'name'=>'Watch',
+			'name'=>'腕表',
 		]
 	],
 	'manager'=>[
-		1
+		5
 	],
 	'prepare'	=>	10,
 	'spRoleId'		=>	4,
 	'invigilatorRoleId'	=>	1,
 	'studentRoleId'		=>	2,
 	'adminRoleId'	=>	3,
+
+	//场所类型的管理
+	'room_cate' => [
+		0	=>	'考场',
+		1	=>	'中控室',
+		2	=>	'走廊',
+		3	=>	'侯考区'
+	]
 ];
