@@ -54,6 +54,11 @@
                 </div>
                 <div class="col-sm-9">
                     <div id="divPlugin" class="video"></div>
+                    <input type="button" class="btn" value="暂停" id="pause" />
+                    <input type="button" class="btn" value="恢复" id="resume" />
+                    <input type="button" class="btn" value="慢放" id="playslow" />
+                    <input type="button" class="btn" value="快放" id="playfast"/>
+                    <input type="button" class="btn" value="停止回放" id="stopplay"/>
                 </div>
             </div>
         </div>
