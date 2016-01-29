@@ -49,16 +49,6 @@
 
 
 @section('content')
-<div>
-  <ul>
-     <li><a href="{{route('osce.wechat.notice.getSystemList')}}">资讯通知</a><li>
-     <li><a href="{{route('osce.wechat.student-exam-query.getResultsQueryIndex')}}">成绩查询</a><li>
-     <li><a href="{{route('osce.wechat.invitation.getList')}}">预约邀请</a><li>
-     <li><a href="{{route('osce.wechat.getDiscussionLists')}}">讨论区</a><li>
-     <li><a href="{{route('osce.wechat.getTrainlists')}}">考前培训</a><li>
-     <li><a href="{{route('osce.wechat.notice-list.getSystemList')}}">系统消息</a><li>
-  </ul>
-</div>
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
@@ -68,22 +58,6 @@
 
     <div>
         <div class="container container_index">
-            <!-- <div class="row clearfix manageindex row1">
-                <div class="col-sm-6 column">
-                    <div class="normal_background ">
-                        <span class="manageindex_icon icon1"></span>
-                        <a  href="" ><span>开放设备的预约使用</span></a>
-                    </div>
-                </div>
-                <div class="col-sm-6 column">
-                    <a href="">
-                    <div class="normal_background">
-                        <span class="manageindex_icon icon2"></span>
-                        <span>开放实验室的预约使用</span>
-                    </div>
-                    </a>
-                </div>
-            </div> -->
             <div class="row clearfix manageindex row2">
                 <div class="col-xs-6 column">
                     <a  href="{{route('osce.wechat.notice.getSystemList')}}" >
@@ -94,10 +68,12 @@
                     </a>
                 </div>
                 <div class="col-xs-6 column">
-                    <div class="normal_background">
-                        <span class="manageindex_icon icon2"></span>
-                        <p>成绩查询</p>
-                    </div>
+                    <a href="{{route('osce.wechat.student-exam-query.getResultsQueryIndex')}}">
+                        <div class="normal_background">
+                            <span class="manageindex_icon icon2"></span>
+                            <p>成绩查询</p>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-xs-6 column">
                   <a href="{{route('osce.wechat.invitation.getList')}}">
@@ -135,19 +111,4 @@
         </div>
 
     </div>
-
-    <!-- <div class="footer">
-     <ul class="w_90">
-         <li>
-             <a href="#"><span class="icon1"></span><p>消息</p></a>
-         </li>
-         <li class="check">
-             <a href="#"><span class="icon2"></span><p>信息管理</p></a>
-         </li>
-         <li>
-             <a href=""><span class="icon3"></span><p>我</p></a>
-         </li>
-     </ul>
-
-    </div> -->
 @stop

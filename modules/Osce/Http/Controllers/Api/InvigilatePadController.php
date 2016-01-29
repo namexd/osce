@@ -268,6 +268,7 @@ class InvigilatePadController extends CommonController
      */
 
       public  function postSaveExamResult(Request $request){
+
            $this->validate($request,[
               'student_id'=>'required|integer',
               'station_id'=>'required|integer',
@@ -280,14 +281,16 @@ class InvigilatePadController extends CommonController
               'teacher_id'=>'required|integer',
               'evaluate'=>'required'
           ]);
+           //得到用时
+          $time =Input::get('end_dt')-Input::get('begin_dt');
 
-        $data   =   [
+          $data   =   [
           'station_id'=>Input::get('station_id'),
           'student_id'=>Input::get('student_id'),
           'exam_screening_id'=>Input::get('exam_screening_id'),
           'begin_dt'=>Input::get('begin_dt'),//考试开始时间
           'end_dt'=>Input::get('end_dt'),//考试实际结束时间
-          'time'=>Input::get('time'),//考试用时
+          'time'=>$time,//考试用时
           'score'=>Input::get('score'),//最终成绩
           'score_dt'=>Input::get('score_dt'),//评分时间
           'teacher_id'=>Input::get('teacher_id'),
@@ -298,6 +301,8 @@ class InvigilatePadController extends CommonController
           'affinity'=>Input::get('affinity'),//沟通亲和能力
 
         ];
+
+
            //根据考生id获取到考试id
           $ExamId=Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
 

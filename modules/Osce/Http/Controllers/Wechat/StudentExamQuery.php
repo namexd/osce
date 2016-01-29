@@ -9,6 +9,8 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -55,7 +57,7 @@ class StudentExamQuery extends  CommonController
         }
     }
 
-//      ajax
+//      ajax  /osce/wechat/student-exam-query/every-exam-list
     public function getEveryExamList(Request $request){
 
         $this->validate($request,[
@@ -63,12 +65,19 @@ class StudentExamQuery extends  CommonController
         ]);
         $examId =Input::get('exam_id');
         //根据考试id查询出所有考站
-        $ExamModel = new Exam();
-        $ExamStationList= $ExamModel->ExamStations($examId);
-        
-
-
-        if($ExamStationList){
+        $stationId= ExamStation::where('exam_id','=',$examId)->select('station_id')->get();
+        $list=[];
+        foreach($stationId as $data){
+            $list[]=[
+                'id'=>$data->station_id,
+            ];
+        }
+        $stationIds = array_column($list, 'id');
+        //根据考站id查询出考站的相关信息
+        $ExamResultModel= new ExamResult();
+        $stationList =$ExamResultModel->stationInfo($stationIds);
+        dd($stationList);
+        if($stationList){
             return response()->json(
                 $this->success_data('',0,'查询失败')
             );
