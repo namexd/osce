@@ -300,8 +300,8 @@ class IndexController extends CommonController
         if($id){
             return \Response::json(array('code'=>3));
         }
-        $nfc=$request->get('nfc_code');
-        $id=Watch::where('nfc',$nfc)->select()->first();
+        $nfc=$request->get('nfc');
+        $id=Watch::where('nfc_code',$nfc)->select()->first();
         if($id){
             return \Response::json(array('code'=>3));
         }
@@ -612,7 +612,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
-                        'nfc' => $itm['nfc'],
+                        'nfc' => $v['nfc'],
                         'studentName' => '-',
                     ];
                 }
