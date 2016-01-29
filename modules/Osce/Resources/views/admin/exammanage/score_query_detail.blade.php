@@ -160,12 +160,12 @@
              * @date    2016-01-28
              */
             $('.fa-picture-o').click(function(){
-                
+
                 //获取img数据
                 var img = [];
                 $(this).parent().siblings('.img').find('li').each(function(key,elem){
 
-                    img.push($(elem).attr('value'));
+                    img.push({src:$(elem).attr('value'),download:$(elem).attr('download')});
                 });
 
                 //下载的图片dom结构
@@ -173,16 +173,16 @@
                 for(var i in img){
                     if(i==0){
                         str += '<div class="item active">'+
-                              '<img style="height:200px; width:100%;" src="'+img[i]+'" alt="...">'+
+                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
                               '<div class="carousel-caption">'+
-                                '<a href="'+img[i]+'" target="_blank">下载</a>'+
+                                '<a href="'+img[i].download+'" target="_blank">下载</a>'+
                               '</div>'+
                             '</div>';
                     }else{
                         str += '<div class="item">'+
-                              '<img style="height:200px; width:100%;" src="'+img[i]+'" alt="...">'+
+                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
                               '<div class="carousel-caption">'+
-                                '<a href="'+img[i]+'" target="_blank">下载</a>'+
+                                '<a href="'+img[i].download+'" target="_blank">下载</a>'+
                               '</div>'+
                             '</div>';
                     }
@@ -358,10 +358,9 @@
                               <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
                               <ul class="img" style="display:none;">
                                   @foreach($item['image'] as $k=>$img)
-                                  <li value="{{$img->url}}"></li>
+                                  <li value="{{$img->url}}" download="{{route('osce.admin.getDownloadImage',array('id'=>$img->id))}}"></li>
                                   @endforeach
-                                  <li value="{{asset('osce/images/iconfont-shipinliebiao.svg')}}"></li>
-                                  <li value="{{asset('osce/images/iconfont-shipinliebiao.svg')}}"></li>
+                                 
                               </ul>
                             </a>
                             <a href="javascript:void(0)"><span class="read  video" value="url?exam_id={{$result['student']->id}}&student_id={{$result['student']->exam_id}}&station_id={{$result['station_id']}}"></span></a>
