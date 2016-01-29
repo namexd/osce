@@ -63,10 +63,15 @@ class StudentExamQuery extends  CommonController
 //      ajax  /osce/wechat/student-exam-query/every-exam-list
     public function getEveryExamList(Request $request){
 
+
         $this->validate($request,[
             'exam_id'=>'required|integer'
         ]);
         $examId =Input::get('exam_id');
+         //获取到考试的时间
+        $examTime =Exam::where('id',$examId)->select('begin_dt','end_dt')->first();
+
+
         //根据考试id找到对应的考试场次
         $examScreeningId=  ExamScreening::where('exam_id','=',$examId)->select('id')->get();
         $examScreening=[];
@@ -92,24 +97,23 @@ class StudentExamQuery extends  CommonController
                 'grade_teacher'=>$stationType->grade_teacher,
                 'type'=>$stationType->type,
                 'station_name'=>$stationType-> station_name,
-                'sp_name'=>$spteacher->name
+                'sp_name'=>$spteacher->name,
+                'begin_dt'=>$examTime->begin_dt,
+                'end_dt'=>$examTime->end_dt,
             ];
-
-        }
-//        dd($stationData);
-        if($stationList){
-            return response()->json(
-                $this->success_data($stationData,1,'查询失败')
-            );
-
         }
 
+        return response()->json(
+            $this->success_data($stationData,1,'数据传送成功')
+        );
     }
 
 
 
-    //考生成绩查询详情页根据考站id查询
+      //考生成绩查询详情页根据考站id查询
 
+      public  function  getExamDetails(){
 
+      }
 
 }
