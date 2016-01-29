@@ -13,6 +13,7 @@ use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class ExamResultController extends CommonController{
@@ -158,12 +159,23 @@ class ExamResultController extends CommonController{
         $result['time'].=$result['time']%60;
 
         $score=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->select()->get();
-        $scores=[];
+        $image=[];
         foreach($score as $itm){
-            $scores[]=[
+            $image[]=[
                 'standard'=>$itm->standard,
                 'score'=>$itm->score,
+                'image'=>'',
             ];
+        }
+
+        $scores=[];
+        foreach($image as $img){
+            $scores[]=[
+                'standard'=>$img['standard'],
+                'score'=>$img['score'],
+                'image'=>TestAttach::where('test_result_id',$result['id'])->where('standard_id',$img['standard']->id)->select()->get(),
+            ];
+
         }
 
         $standard=[];
