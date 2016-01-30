@@ -46,7 +46,7 @@
                                 message: '编号不能为空'
                             },
                             regexp: {
-                                regexp:  /^[a-zA-Z0-9]+$/,
+                                regexp:  /^[a-zA-Z0-9:]+$/,
                                 message: '请输入正确的编号'
                             },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
