@@ -30,9 +30,9 @@ class WatchLog extends CommonModel{
        $time=time();
        $examQue=new ExamQueue();
        $array=[$student_id,$exam_id,$exam_screen_id,$time];
-       \Log::info($array);
-       $examQue->createExamQueue($exam_id, $student_id,$time,$exam_screen_id);
-       \Log::info('test');
+//       \Log::info($array);
+       $result=$examQue->createExamQueue($exam_id, $student_id,$time,$exam_screen_id);
+       \Log::info($result);
          if($data['context']){
              $data['context']=serialize($data['context']);
          }

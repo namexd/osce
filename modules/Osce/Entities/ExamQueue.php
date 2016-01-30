@@ -297,6 +297,7 @@ class ExamQueue extends CommonModel
                     throw new \Exception('该名学生的与腕表的录入失败！');
                 };
             }
+            return 1;
         } catch (\Exception $ex) {
             throw $ex;
         }
