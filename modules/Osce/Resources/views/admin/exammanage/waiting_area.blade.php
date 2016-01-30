@@ -46,7 +46,7 @@
 	            	<label class="col-sm-1 control-label" >说明内容:</label>
 	                <div class="col-sm-11">
 	                    <script id="editor" type="text/plain" style="width:100%;height:500px;cursor: text;" name="content">
-							{{(!empty($data['rules'])?strip_tags($data['rules']):'')}}
+							{!! (!empty($data['rules'])?strip_tags($data['rules']):'') !!}
 						</script>
 	                </div>
 	            </div>
