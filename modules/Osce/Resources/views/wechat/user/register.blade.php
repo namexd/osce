@@ -101,7 +101,7 @@
                 <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
-            <input class="btn" type="submit" id="#bling" value="提交审核" />
+            <input class="btn" type="submit" id="register" value="提交审核" />
         </form>
 
     </div>
@@ -497,7 +497,7 @@
     }
     $('#bling').submit(function(){
         var yz_num = $('input[name="yz_num"]').val();
-        var role_type=$('#card-list option:selected').val();//角色类型
+
         if(yz_num=="0"||role_type=="0"){
             $.alert({
                 title: '提示：',
@@ -662,6 +662,19 @@
             });
         }
     })
+    $('#register').click(function(){
+        var role_type=$('#card-list option:selected').val();//角色类型
+        if(role_type==0){
+            $.alert({
+                title: '提示：',
+                content: '角色类型必填',
+                confirmButton: '确定',
+                confirm: function(){
+                }
+            });
+            return false;
+        }
 
+    })
 </script>
 @stop

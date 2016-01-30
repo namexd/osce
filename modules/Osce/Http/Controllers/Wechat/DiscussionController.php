@@ -137,12 +137,13 @@ class DiscussionController extends  CommonController{
           ]);
            $user=Auth::user();
            $userId=$user->id;
+           $manager=config('osce.manager');
            if(!$userId){
                return \Response::json(array('code'=>2));
            }
           $id    =   intval($request   ->  get('id'));
-          $createId=Discussion::where('id',$id)->select()->first();
-          if($createId!=$userId){
+          $createId=Discussion::where('id',$id)->select()->first()->id;
+          if($createId!=$userId||$userId!=$manager[0]){
              $url=1;
           }else{
               $url=2;
