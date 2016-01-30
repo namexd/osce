@@ -141,7 +141,7 @@ class DiscussionController extends  CommonController{
                return \Response::json(array('code'=>2));
            }
           $id    =   intval($request   ->  get('id'));
-          $createId=Discussion::where('id',$id)->select()->first();
+          $createId=Discussion::where('id',$id)->select()->first()->id;
           if($createId!=$userId){
              $url=1;
           }else{
