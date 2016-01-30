@@ -241,13 +241,13 @@ class DrawlotsController extends CommonController
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('status' , '=' , 0)
                 ->get();
-            dd($station);
+            
             //获得该场考试的exam_id
             if ($station->isEmpty()) {
                 throw new \Exception('当前队列中找不到符合的考试');
             }
 
-            $examId = $station->exam_id;
+            $examId = $station->first()->exam_id;
 
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
