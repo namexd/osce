@@ -507,12 +507,7 @@ class IndexController extends CommonController
      */
     public function getExamList(){
         $exam=new Exam();
-        $time=time();
-        $start=date('Y-m-d 00:00:00',$time);
-        $time=strtotime($start);
-        $end=date('Y-m-d 23:59:59' ,$time );
-        $endtime=strtotime($end);
-        $examList=$exam->getTodayList($time,$endtime);
+        $examList=$exam->getTodayList();
         if(count($examList)){
             return response()->json(
                 $this->success_rows(1,'success',count($examList),$pagesize=1,count($examList),$examList)

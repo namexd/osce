@@ -409,8 +409,8 @@ class Exam extends CommonModel
         return $builder->paginate(config('msc.page_size'));
     }
 //查询今日考试
-    public function getTodayList($startTime,$endtime){
-
+    public function getTodayList(){
+          $time=time();
           $builder=$this->select(DB::raw(
               implode(',',[
                   $this->table.'.id as id',
@@ -422,15 +422,15 @@ class Exam extends CommonModel
             )
           );
         $builder=$builder->whereRaw(
-             'unix_timestamp('.$this->table.'.begin_dt) > ?',
+             'unix_timestamp(date(exam.begin_dt)) < ?',
              [
-                 $startTime
+                 $time
              ]
          );
         $builder=$builder->whereRaw(
-             'unix_timestamp('.$this->table.'.end_dt) < ?',
+             'unix_timestamp('.$this->table.'.end_dt) > ?',
              [
-                 $endtime
+                 $time
              ]
          );
         $data=$builder->get();
