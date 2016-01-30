@@ -12,7 +12,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 
 		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
+		Route::get('user/reset-password-verify',['uses'=>'UserController@getResetPasswordVerify','as'=>'osce.wechat.user.getResetPasswordVerify']);
 		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
+		Route::post('user/reset-password',['uses'=>'UserController@postResetPassword','as'=>'osce.wechat.user.postResetPassword']);
 		//忘记密码
 		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.wechat.user.getForgetPassword']);
 	});
@@ -234,9 +236,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
 
-		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
-		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.getStudent']);
-		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.getStudentScore']);
+//		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
+//		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.getStudent']);
+//		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.getStudentScore']);
 
 //		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);	//osce.admin.getIndex,此路由前面已经使用了，请修改 （TODO zhoufuxiang）
 
@@ -325,6 +327,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.user.getRegister']);
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 		Route::post('user/revert-code',['uses'=>'UserController@postRevertCode','as'=>'osce.wechat.user.postRevertCode']);	//异步发送验证码
+		Route::get('user/Proof-number',['uses'=>'UserController@getProofNumber','as'=>'osce.wechat.user.getProofNumber']);	//异步发送验证码
 
 		//发送重找账号
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);

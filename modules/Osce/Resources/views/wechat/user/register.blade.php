@@ -101,6 +101,7 @@
                 <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
+            <input type="hidden"  name="url" value="{{@$url}}">
             <input class="btn" type="submit" id="register" value="提交审核" />
         </form>
 

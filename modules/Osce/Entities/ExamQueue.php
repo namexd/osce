@@ -242,9 +242,12 @@ class ExamQueue extends CommonModel
      */
       public function AlterTimeStatus($studentId ,$stationId ){
           $nowTime=   date('Y-m-d H:i:s',time());
-          return ExamQueue::where('student_id','=',$studentId)
+             $startExam= ExamQueue::where('student_id','=',$studentId)
               ->where('station_id','=',$stationId)
               ->update(['begin_dt'=>$nowTime,'status'=>2]);
+
+          return $startExam;
+
       }
 
     /**
@@ -256,9 +259,10 @@ class ExamQueue extends CommonModel
      */
      public function EndExamAlterStatus($studentId ,$stationId){
          $nowTime=   date('Y-m-d H:i:s',time());
-         return ExamQueue::where('student_id','=',$studentId)
-             ->whereRaw('station_id','=',$stationId)
+          $endExam=    ExamQueue::where('student_id','=',$studentId)
+             ->where('station_id','=',$stationId)
              ->update(['end_dt'=>$nowTime,'status'=>3]);
+         return $endExam;
      }
 
 
@@ -286,7 +290,7 @@ class ExamQueue extends CommonModel
             //将当前的时间与计划表的时间减去缓冲时间做对比，如果是比计划的时间小，就直接用计划的时间。
             //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
             //config('osce.begin_dt_buffer')为缓冲时间
-            foreach ($objs as &$item) {
+            foreach ($objs as $item) {
                 if ($time > strtotime($item->begin_dt)-(config('osce.begin_dt_buffer') * 60)) {
                     $item->begin_dt = date('Y-m-d H:i:s',$time + (config('osce.begin_dt_buffer') * 60));
                 }
