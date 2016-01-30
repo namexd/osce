@@ -205,9 +205,9 @@ class DrawlotsController extends CommonController
             if (!$student = $watchLog ->student) {
                 throw new \Exception('没有找到对应的学生信息！');
             }
-
+            $studentId = $watchLog->student_id;
             //如果考生走错了房间
-            if (!ExamQueue::where('room_id',$roomId)->where('student_id',$uid)->select('id')->first()) {
+            if (!ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->select('id')->first()) {
                 throw new \Exception('该名学生走错了考场！');
             }
 
