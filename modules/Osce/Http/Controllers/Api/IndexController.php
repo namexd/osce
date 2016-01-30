@@ -129,14 +129,14 @@ class IndexController extends CommonController
         $students=$this->getStudentList($request);
         $idcards=[];
         $students=json_decode($students->content());
-        \Log::info($students);
+        \Log::error($students);
         foreach($students->data as $item){
          $idcards[]=$item->idcard;
         }
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
         }
-        \Log::info($idcards);
+        \Log::error($idcards);
         \Log::info($id_card);
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
@@ -214,6 +214,7 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
+               ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_id',$exam_id)->update(['is_end'=>1]);
             }
             return \Response::json(array('code'=>1));
         }else{
