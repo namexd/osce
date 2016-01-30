@@ -218,7 +218,7 @@ class DrawlotsController extends CommonController
             $result = $this->drawlots($student, $roomId);
 
             //判断时间
-            $this->judgeTime($uid);
+            $this->judgeTime($studentId);
 
             return response()->json($this->success_data($result));
 
