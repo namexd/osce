@@ -19,7 +19,7 @@ use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
-class StudentExamQuery extends  CommonController
+class StudentExamQueryController extends  CommonController
 {
     /**
      * 获取考试 ，还回数据个页面
@@ -60,9 +60,22 @@ class StudentExamQuery extends  CommonController
         }
     }
 
+    /**
+     * 获取每场考试下的所有考站信息
+     * @method GET
+     * @url /osce/wechat/student-exam-query/every-exam-list
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return json
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
 
 
-//      ajax  /osce/wechat/student-exam-query/every-exam-list
+
     public function getEveryExamList(Request $request){
 
 
@@ -93,6 +106,7 @@ class StudentExamQuery extends  CommonController
                 $spteacher = $teacherModel->spteacher($stationType->id);
             }
             $stationData[]=[
+                'exam_result_id'=>$stationType->exam_result_id,
                 'station_id'=>$stationType->id,
                 'score'=>$stationType->score,
                 'time'=>$stationType->time,
@@ -109,10 +123,22 @@ class StudentExamQuery extends  CommonController
         );
     }
 
+    /**
+     * 考生成绩查询详情页根据考站id查询
+     * @method GET
+     * @url /osce/wechat/student-exam-query/exam-details
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return view
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
 
 
-    //考生成绩查询详情页根据考站id查询
-    ///osce/wechat/student-exam-query/exam-details
+
     public function  getExamDetails(Request $request)
     {
 

@@ -186,14 +186,14 @@ class ExamResult extends CommonModel
      });
      $builder=$builder->whereIn('exam_result.exam_screening_id',$examScreeningIds);
      $builder=$builder->select([
+         'exam_result.id as exam_result_id ',
          'exam_result.station_id as id',
          'exam_result.score as score',
          'exam_result.time as time',
          'teacher.name as grade_teacher',
          'station.type as type',
          'station.name as station_name',
-     ])
-         ->paginate(config('osce.page_size'));
+     ])->paginate(config('osce.page_size'));
 
      return $builder;
     }

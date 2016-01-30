@@ -33,7 +33,7 @@
         </div>
         <div class="form-group">
             <label for="">提交时间</label>
-            <div class="txt">2016-11-21&nbsp;08:25:00</div>
+            <div class="txt">{{$examResult->end_dt}}</div>
         </div>
         <div class="form-group">
             <label for="">评价</label>

@@ -202,7 +202,6 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('数据查询失败'))
             );
-
         }
     }
     /**
@@ -234,11 +233,11 @@ class InvigilatePadController extends CommonController
             'standard_id.required'=>'请检查评分标准',
             'score.required'=>'请检查评分标准分值',
         ]);
+
         $data =[
             'subject_id'=>Input::get('subject_id'),
             'standard_id'=>Input::get('standard_id'),
             'score'=>Input::get('score'),
-            'evaluate'=>Input::get('evaluate'),
         ];
         $data['exam_result_id'] =$ExamResultId;
         $Save =ExamScore::create($data);
