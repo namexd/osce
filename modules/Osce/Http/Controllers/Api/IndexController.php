@@ -200,6 +200,7 @@ class IndexController extends CommonController
         $student_id=$student_id->student_id;
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select();
         \Log::info($student_id);
+        \Log::info($exam_id);
         \Log::info($screen_id);
         $exam_screen_id=$screen_id->exam_screening_id;
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
