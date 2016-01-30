@@ -1901,14 +1901,14 @@ function smart_assignment(){
         for(var i in items)
         {
             var dd  = $('<dd>');
-            if(items[i].name!=undefined)
+            if(items[i]!=null)
             {
                 dd.text(items[i].name+",");
+                dd.attr("sid",items[i].id);
+                dd.addClass('student_'+items[i].id).addClass('stu');
+                dd.attr("data-sid",items[i].id);
+                dd.bind("click",changeStudent);
             }
-            dd.attr("sid",items[i].id);
-            dd.addClass('student_'+items[i].id).addClass('stu');
-            dd.attr("data-sid",items[i].id);
-            dd.bind("click",changeStudent);
             dl.append(dd);
         }
         return dl;
