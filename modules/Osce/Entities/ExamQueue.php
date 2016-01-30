@@ -293,7 +293,7 @@ class ExamQueue extends CommonModel
                 }
 
                 //将数据插入数据库
-                if (!ExamQueue::create($objs->toArray())) {
+                if (!ExamQueue::create($objs->first()->toArray())) {
                     throw new \Exception('该名学生的与腕表的录入失败！');
                 };
             }
