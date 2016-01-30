@@ -242,9 +242,12 @@ class ExamQueue extends CommonModel
      */
       public function AlterTimeStatus($studentId ,$stationId ){
           $nowTime=   date('Y-m-d H:i:s',time());
-          return ExamQueue::where('student_id','=',$studentId)
+             $startExam= ExamQueue::where('student_id','=',$studentId)
               ->where('station_id','=',$stationId)
               ->update(['begin_dt'=>$nowTime,'status'=>2]);
+          
+          return $startExam;
+
       }
 
     /**
