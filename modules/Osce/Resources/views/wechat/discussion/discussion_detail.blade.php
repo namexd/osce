@@ -212,9 +212,13 @@
 
 @section('content')
     <ul class="option">
+        @if($url==1)
         <li><a href="{{route('osce.wechat.postAddReply',array('id'=>$row['question']['id']))}}">回复</a></li>
-        <li><a href="{{route('osce.wechat.postEditQuestion',array('id'=>$row['question']['id']))}}">编辑</a></li>
-        <li><a href="javascript:void(0)" url="{{route('osce.wechat.getDelQuestion') }}" id="del">删除</a></li>
+        @elseif($url==2)
+            <li><a href="{{route('osce.wechat.postAddReply',array('id'=>$row['question']['id']))}}">回复</a></li>
+            <li><a href="{{route('osce.wechat.postEditQuestion',array('id'=>$row['question']['id']))}}">编辑</a></li>
+            <li><a href="javascript:void(0)" url="{{route('osce.wechat.getDelQuestion') }}" id="del">删除</a></li>
+        @endif
     </ul>
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">

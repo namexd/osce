@@ -14,6 +14,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\WatchLog;
@@ -192,30 +193,32 @@ class DrawlotsController extends CommonController
                 'room_id' => 'required|integer'
             ]);
 
-
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->get('room_id');
             //根据uid来查对应的考生
-            $watchLog = ExamScreeningStudent::where('watch_id',$uid)->first();
+            $watchLog = ExamScreeningStudent::where('watch_id',$uid)->where('is_end',0)->orderBy('created_at','desc')->first();
 
             if (!$watchLog) {
                 throw new \Exception('没有找到对应的腕表信息！');
             }
+
             if (!$student = $watchLog ->student) {
                 throw new \Exception('没有找到对应的学生信息！');
             }
 
+            $studentId = $watchLog->student_id;
             //如果考生走错了房间
-            if (!ExamQueue::where('room_id',$roomId)->where('student_id',$uid)->select('id')->first()) {
-                throw new \Exception('该名学生走错了考场！');
+//            dd($studentId,$roomId);
+            if (ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->get()->isEmpty()) {
+                throw new \Exception('当前考生走错了考场');
             }
 
             //使用抽签的方法进行抽签操作
             $result = $this->drawlots($student, $roomId);
 
             //判断时间
-            $this->judgeTime($uid);
+            $this->judgeTime($studentId);
 
             return response()->json($this->success_data($result));
 
@@ -239,8 +242,13 @@ class DrawlotsController extends CommonController
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('status' , '=' , 0)
                 ->get();
+
             //获得该场考试的exam_id
-            $examId = $station->exam_id;
+            if ($station->isEmpty()) {
+                throw new \Exception('当前队列中找不到符合的考试');
+            }
+
+            $examId = $station->first()->exam_id;
 
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
@@ -261,9 +269,9 @@ class DrawlotsController extends CommonController
                 $ranStationId = $stationIds->random();
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id',$student->id)->first()) {
-                    throw new \Exception('在队列中没有找到考生信息');
+                    throw new \Exception('没有找到考生信息');
                 };
-                $examQueue -> status = 3;
+                $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
                 if (!$examQueue -> save()) {
                     throw new \Exception('抽签失败！请重试');
@@ -278,12 +286,20 @@ class DrawlotsController extends CommonController
                     ->where('status',0)
                     ->orderBy('begin_dt','asc')
                     ->get();
+
                 if ($examQueue->isEmpty()) {
-                    throw new \Exception('在队列中没有找到考生信息');
+                    throw new \Exception('该名考生不在计划中');
                 }
 
                 //获得他应该要去的考站id
-                $stationId = $examQueue->first()->station_id;
+                $tempObj = $examQueue->first();
+                $stationId = $tempObj->station_id;
+
+                //将队列状态变更为1
+                $tempObj->status = 1;
+                if (!$tempObj->save()) {
+                    throw new \Exception('当前抽签失败');
+                }
 
                 //查出考站的信息
                 return Station::findOrFail($stationId);
@@ -328,7 +344,10 @@ class DrawlotsController extends CommonController
         $date = date('Y-m-d H:i;s');
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
-        $studentObj = ExamQueue::where('student_id', $uid)->where('status', 2)->first();
+        $studentObj = ExamQueue::where('student_id', $uid)->where('status', 1)->first();
+        if (!$studentObj) {
+            throw new \Exception('当前没有符合条件的队列');
+        }
         $studentBeginTime = $studentObj->begin_dt;
         $studentEndTime = $studentObj->end_dt;
         if (strtotime($date) > strtotime($studentBeginTime)) {

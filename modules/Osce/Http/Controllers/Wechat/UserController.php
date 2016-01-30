@@ -22,6 +22,7 @@ class UserController  extends CommonController
 
         //获取当前URl地址
         $current_url =$_SERVER['HTTP_REFERER'];
+
          return view('osce::wechat.user.register',['url'=>$current_url]);
 
     }
@@ -119,13 +120,30 @@ class UserController  extends CommonController
                 {
                     \DB::commit();
 
+//                    https://open.weixin.qq.com/connect/oauth2/authorize?appid=
+//                    wxba93acf17fb61346
+//                    &
+//                    redirect_uri=
+//                        http%3A%2F%2Fosce.dev.cd.misrobot.com%2Fosce%2Fwechat%2Fuser%2Flogin
+//                &
+//                response_type=code&scope=snsapi_base&state=123#wechat_redirect
+                    if($url=='login')
+                    {
+                        $urlArray=[];
+                        $urlArray[]='https://open.weixin.qq.com/connect/oauth2/authorize?appid='.config('wechat.app_id');
+                        $urlArray[]='redirect_uri='.urldecode(route('osce.wechat.user.getLogin'));
+                        $urlArray[]='response_type=code';
+                        $urlArray[]='scope=snsapi_base';
+                        $urlArray[]='state=123#wechat_redirect';
+                         dd(implode("&",$urlArray));
+//                        return  redirect()->intended(implode("&",$urlArray));
 
+                    }
+                    else
+                    {
+                        return redirect()->route('osce.wechat.user.getLogin');
+                    }
 
-
-//                    if(){
-//
-//                    }
-                    return redirect()->route('osce.wechat.user.getLogin');
                 }
                 else
                 {
