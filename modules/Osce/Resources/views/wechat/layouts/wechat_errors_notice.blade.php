@@ -1,5 +1,6 @@
 <?php
 $errorsInfo =(array)$errors->getMessages();
+
 if(!empty($errorsInfo))
 {
     $errorsInfo = array_shift($errorsInfo);
