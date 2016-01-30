@@ -38,6 +38,15 @@ class Flows extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamFlowRoom','flow_id','id');
     }
 
+    /**
+     * 以考场的为中心的保存
+     * @param $exam_id
+     * @param $roomData
+     * @param $stationData
+     * @return bool
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
     public function saveExamroomAssignmen($exam_id, $roomData, $stationData)
     {
         $connection = DB::connection($this->connection);
@@ -150,6 +159,15 @@ class Flows extends CommonModel
         }
     }
 
+    /**
+     * 以考场为中心的保存
+     * @param $exam_id
+     * @param $roomData
+     * @param $stationData
+     * @return bool
+     * @throws \Exception
+     * @author Jiangzhiheng
+     */
     public function editExamroomAssignmen($exam_id, $roomData, $stationData)
     {
         $connection = DB::connection($this->connection);
