@@ -1900,7 +1900,11 @@ function smart_assignment(){
         dl.css("height",everyHeight+"px");
         for(var i in items)
         {
-            var dd  = $('<dd>').text(items[i].name+",");
+            var dd  = $('<dd>');
+            if(items[i].name!=undefined)
+            {
+                dd.text(items[i].name+",");
+            }
             dd.attr("sid",items[i].id);
             dd.addClass('student_'+items[i].id).addClass('stu');
             dd.attr("data-sid",items[i].id);
