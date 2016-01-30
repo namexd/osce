@@ -552,6 +552,7 @@ class ExamPlan extends CommonModel
     public function savePlan($exam_id,$plan){
         $user=\Auth::user();
         $hasList    =   [];
+
         foreach($plan as $examScreening => $roomList)
         {
             foreach($roomList as $roomStationId=>$room)
@@ -609,6 +610,11 @@ class ExamPlan extends CommonModel
         $connection ->  beginTransaction();
         try{
             $oldPlanList    =   $this   -> getOldPlanByExamId($exam_id);
+            $exam       =   Exam::find($exam_id);
+            if($exam->status!=0)
+            {
+                throw new \Exception('当前考试已在不在未开始状态，不能再次编辑排考信息');
+            }
             foreach($oldPlanList as $oldPlan)
             {
                 if(!$oldPlan    ->  delete())
