@@ -18,10 +18,11 @@ use Auth;
 class UserController  extends CommonController
 {
 
-    public function getRegister(){
+    public function getRegister(Request $request){
 
         //获取当前URl地址
-        $current_url =$_SERVER['HTTP_REFERER'];
+        //$current_url =$_SERVER['HTTP_REFERER'];
+         $current_url    =   $request->server('referer');
 
          return view('osce::wechat.user.register',['url'=>$current_url]);
 
@@ -449,6 +450,23 @@ class UserController  extends CommonController
       //验证电话号码   /osce/wechat/user/Proof-number
 
     public function getProofNumber(Request $request){
+        $this->validate($request,[
+            'mobile'    =>  'required',
+        ]);
+        $mobile= $request->get('mobile');
+
+        if(!empty($mobile)){
+            $result = User::where('mobile', $mobile)->first();
+            if($result){
+                return json_encode(array(
+                    'valid' =>false,
+                ));
+            }
+        }
+        return json_encode(array(
+            'valid' =>true,
+        ));
+
 
     }
 
