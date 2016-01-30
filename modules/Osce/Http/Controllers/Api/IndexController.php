@@ -202,7 +202,7 @@ class IndexController extends CommonController
         $ExamFlowModel = new  ExamFlow();
         $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
         if($ExamFinishStatus!=$studentExamSum){
-          return \Response::json(array('code'=>5));
+          return \Response::json(array('code'=>3));
         }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->first();
         $exam_screen_id=$screen_id->exam_screening_id;
