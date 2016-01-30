@@ -321,7 +321,7 @@ class Station extends CommonModel
             if(!empty($stationCase)){
                 StationCase::where('station_id', $id)->delete();
             }
-            $stationVcr = StationVcr::where('station_id', $id)->select('id')->first();
+            $stationVcr = StationVcr::where('station_id', $id)->select('id','vcr_id')->first();
             if(!empty($stationVcr)){
                 //更改摄像头的状态
                 $vcr = Vcr::findOrFail($stationVcr->vcr_id);
@@ -343,7 +343,7 @@ class Station extends CommonModel
             }
             return $this->where($this->table.'.id', $id)->delete();
 
-        } catch (\Exception $ex) {
+        } catch (\Exception $ex) {   //23000是指的有外键约束，说明与其他条目相关联
             if($ex->getCode() == 23000){
                 throw new \Exception('不能删除此考站，因为与其他条目相关联！');
             }else{

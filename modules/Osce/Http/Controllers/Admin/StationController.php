@@ -81,12 +81,10 @@ class StationController extends CommonController
     public function getAddStation(Request $request)
     {
         //验证略
-
-
         list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList();
 
         //获得上次的时间限制
-        $time = $request->session()->get('time');
+        $time = session('time');
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourcemanage.test_station_add',
             ['placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case, 'room' => $room, 'subject' => $subject, 'time' => $time]);
@@ -146,8 +144,8 @@ class StationController extends CommonController
 
             //将当前时间限定的值放入session
             $time = $request->input('mins');
-            $request->session()->flash('time', $time);
-            if (!($request->session()->has('time'))) {
+            $request->session()->put('time', $time);
+            if (!$request->session()->has('time')) {
                 throw new \Exception('未能将时间保存！');
             }
 
