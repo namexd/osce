@@ -18,10 +18,11 @@ use Auth;
 class UserController  extends CommonController
 {
 
-    public function getRegister(){
+    public function getRegister(Request $request){
 
         //获取当前URl地址
-        $current_url =$_SERVER['HTTP_REFERER'];
+        //$current_url =$_SERVER['HTTP_REFERER'];
+         $current_url    =   $request->server('referer');
 
          return view('osce::wechat.user.register',['url'=>$current_url]);
 
@@ -101,7 +102,7 @@ class UserController  extends CommonController
             }
             else
             {
-                //验证 验证码
+//                验证 验证码
                 $codeDate = ['mobile'=>$mobile, 'code'=>$code];
                 $userRepository = new UserRepository();
                 if(!($userRepository->getRegCheckMobileVerfiy($codeDate))){
@@ -112,13 +113,15 @@ class UserController  extends CommonController
                 $user   ->  name        =   $name;
                 $user   ->  gender      =   $gender;
                 $user   ->  nickname    =   $nickname;
+
                 if($idcard)
                 {
                     $user   ->  name    =   $idcard;
+
                 }
                 if($user->save())
                 {
-                    \DB::commit();
+//                    \DB::commit();
 
 //                    https://open.weixin.qq.com/connect/oauth2/authorize?appid=
 //                    wxba93acf17fb61346
@@ -135,8 +138,8 @@ class UserController  extends CommonController
                         $urlArray[]='response_type=code';
                         $urlArray[]='scope=snsapi_base';
                         $urlArray[]='state=123#wechat_redirect';
-                         dd(implode("&",$urlArray));
-//                        return  redirect()->intended(implode("&",$urlArray));
+//                         dd(implode("&",$urlArray));
+                        return  redirect()->intended(implode("&",$urlArray));
 
                     }
                     else
@@ -444,4 +447,28 @@ class UserController  extends CommonController
 
         return view('osce::wechat.user.login');
     }
+      //验证电话号码   /osce/wechat/user/Proof-number
+
+    public function getProofNumber(Request $request){
+        $this->validate($request,[
+            'mobile'    =>  'required',
+        ]);
+        $mobile= $request->get('mobile');
+
+        if(!empty($mobile)){
+            $result = User::where('mobile', $mobile)->first();
+            if($result){
+                return json_encode(array(
+                    'valid' =>false,
+                ));
+            }
+        }
+        return json_encode(array(
+            'valid' =>true,
+        ));
+
+
+    }
+
+
 }
