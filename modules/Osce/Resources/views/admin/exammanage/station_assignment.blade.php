@@ -204,7 +204,13 @@
                                                     <div class="teacher-box pull-left">
                                                         @foreach($item as $value)
                                                             @if($value->teacher_type == 2)
+                                                            @if($value->teacher_status == 2)
+                                                            <div class="input-group teacher pull-left teacher-warn" value="{{$value->teacher_id}}">
+                                                            @elseif($value->teacher_status == 1)
+                                                            <div class="input-group teacher pull-left teacher-primary" value="{{$value->teacher_id}}">
+                                                            @else
                                                             <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
+                                                            @endif
                                                                 <input type="hidden" name="form_data[{{$index}}][spteacher_id][]" value="{{$value->teacher_id}}">
                                                                 <div class="pull-left">{{$value->teacher_name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
