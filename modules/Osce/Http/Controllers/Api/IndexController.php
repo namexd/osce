@@ -214,8 +214,7 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
-                $result=ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screen_id',$exam_screen_id)->where('exam_id',$exam_id)->update(['is_end'=>1]);
-                \Log::info($result);
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screen_id',$exam_screen_id)->update(['is_end'=>1]);
             }
             return \Response::json(array('code'=>1));
         }else{
