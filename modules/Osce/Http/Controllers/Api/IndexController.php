@@ -9,6 +9,7 @@ use Modules\Osce\Entities\Exam;
 
 use Modules\Osce\Entities\ExamAbsent;
 
+use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamOrder;
@@ -197,9 +198,13 @@ class IndexController extends CommonController
             }
         }
         $student_id=$student_id->student_id;
-        \Log::info($student_id);
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $exam_id)->count();
+        $ExamFlowModel = new  ExamFlow();
+        $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
+        if($ExamFinishStatus!=$studentExamSum){
+          return \Response::json(array('code'=>5));
+        }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->first();
-        \Log::info($screen_id);
         $exam_screen_id=$screen_id->exam_screening_id;
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
