@@ -271,7 +271,7 @@ class DrawlotsController extends CommonController
                 if (!$examQueue = ExamQueue::where('student_id',$student->id)->first()) {
                     throw new \Exception('在队列中没有找到考生信息');
                 };
-                $examQueue -> status = 3;
+                $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
                 if (!$examQueue -> save()) {
                     throw new \Exception('抽签失败！请重试');
@@ -291,7 +291,14 @@ class DrawlotsController extends CommonController
                 }
 
                 //获得他应该要去的考站id
-                $stationId = $examQueue->first()->station_id;
+                $tempObj = $examQueue->first();
+                $stationId = $tempObj->station_id;
+
+                //将队列状态变更为1
+                $a = $tempObj->status = 1;
+                if (!$a->save()) {
+                    throw new \Exception('当前抽签失败');
+                }
 
                 //查出考站的信息
                 return Station::findOrFail($stationId);
@@ -336,7 +343,10 @@ class DrawlotsController extends CommonController
         $date = date('Y-m-d H:i;s');
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
-        $studentObj = ExamQueue::where('student_id', $uid)->where('status', 2)->first();
+        $studentObj = ExamQueue::where('student_id', $uid)->where('status', 1)->first();
+        if (!$studentObj) {
+            throw new \Exception('当前没有符合条件的队列');
+        }
         $studentBeginTime = $studentObj->begin_dt;
         $studentEndTime = $studentObj->end_dt;
         if (strtotime($date) > strtotime($studentBeginTime)) {
