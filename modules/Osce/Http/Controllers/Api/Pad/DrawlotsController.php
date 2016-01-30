@@ -295,8 +295,8 @@ class DrawlotsController extends CommonController
                 $stationId = $tempObj->station_id;
 
                 //将队列状态变更为1
-                $a = $tempObj->status = 1;
-                if (!$a->save()) {
+                $tempObj->status = 1;
+                if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败');
                 }
 
