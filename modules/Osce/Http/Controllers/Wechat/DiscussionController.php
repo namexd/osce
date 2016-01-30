@@ -141,6 +141,12 @@ class DiscussionController extends  CommonController{
                return \Response::json(array('code'=>2));
            }
           $id    =   intval($request   ->  get('id'));
+          $createId=Discussion::where('id',$id)->select()->first();
+          if($createId!=$userId){
+             $url=1;
+          }else{
+              $url=2;
+          }
           $list=Discussion::where('id',$id)->select()->get();
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getReplyPagination($id);
@@ -200,7 +206,7 @@ class DiscussionController extends  CommonController{
             );
      
 
-          return view('osce::wechat.discussion.discussion_detail')->with(['data'=>$data,'row'=>$row]);
+          return view('osce::wechat.discussion.discussion_detail')->with(['data'=>$data,'row'=>$row,'url'=>$url]);
       }
 
 
