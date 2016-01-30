@@ -252,6 +252,7 @@ class DrawlotsController extends CommonController
 
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
+                dd(123);
                 //获得已经被选择的考站id对象
                 $stationIds = $station->pluck('station_id');
                 //将其变成一个一维数组
@@ -269,7 +270,7 @@ class DrawlotsController extends CommonController
                 $ranStationId = $stationIds->random();
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id',$student->id)->first()) {
-                    throw new \Exception('在队列中没有找到考生信息');
+                    throw new \Exception('没有找到考生信息');
                 };
                 $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
@@ -287,7 +288,7 @@ class DrawlotsController extends CommonController
                     ->orderBy('begin_dt','asc')
                     ->get();
                 if ($examQueue->isEmpty()) {
-                    throw new \Exception('该名考生已经抽签');
+                    throw new \Exception('该名考生不在计划中');
                 }
 
                 //获得他应该要去的考站id
