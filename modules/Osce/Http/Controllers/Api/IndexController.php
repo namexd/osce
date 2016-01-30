@@ -220,7 +220,7 @@ class IndexController extends CommonController
                     'student_id'     =>$student_id,
                 );
                 $watchModel=new WatchLog();
-                $watchModel->unwrapRecord($data);
+                $watchModel->unwrapRecord($data);   
             }
             return \Response::json(array('code'=>1));
         }else{
