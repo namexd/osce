@@ -125,15 +125,7 @@ class UserController  extends CommonController
                 }
                 if($user->save())
                 {
-//                    \DB::commit();
-
-//                    https://open.weixin.qq.com/connect/oauth2/authorize?appid=
-//                    wxba93acf17fb61346
-//                    &
-//                    redirect_uri=
-//                        http%3A%2F%2Fosce.dev.cd.misrobot.com%2Fosce%2Fwechat%2Fuser%2Flogin
-//                &
-//                response_type=code&scope=snsapi_base&state=123#wechat_redirect
+                    \DB::commit();
                     if($url=='login')
                     {
                         $urlArray=[];
@@ -142,7 +134,6 @@ class UserController  extends CommonController
                         $urlArray[]='response_type=code';
                         $urlArray[]='scope=snsapi_base';
                         $urlArray[]='state=123#wechat_redirect';
-//                         dd(implode("&",$urlArray));
                         return  redirect()->intended(implode("&",$urlArray));
 
                     }
