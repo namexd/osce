@@ -1374,6 +1374,7 @@ class ExamController extends CommonController
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $room, $formData);
             } else { //否则就是编辑
+//                dd($examId,$formData);
                 $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
