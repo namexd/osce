@@ -188,7 +188,7 @@ class IndexController extends CommonController
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=ExamScreeningStudent::where('watch_id',$id)->where('is_end',0)->select('student_id')->first();
+        $student_id=WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
         if(!$student_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
@@ -199,8 +199,6 @@ class IndexController extends CommonController
         }
         $student_id=$student_id->student_id;
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select();
-        \Log::info($exam_id);
-        \Log::info($student_id);
         $exam_screen_id=$screen_id->exam_screening_id;
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
         $ExamFlowModel = new  ExamFlow();
