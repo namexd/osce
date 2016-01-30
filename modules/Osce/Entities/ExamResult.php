@@ -192,7 +192,8 @@ class ExamResult extends CommonModel
          'teacher.name as grade_teacher',
          'station.type as type',
          'station.name as station_name',
-     ])->paginate(config('osce.page_size'));
+     ])
+         ->paginate(config('osce.page_size'));
 
      return $builder;
     }

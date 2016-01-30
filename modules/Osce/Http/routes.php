@@ -233,9 +233,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
+
 		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
 		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.getStudent']);
 		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.getStudentScore']);
+
+		
 	});
 
 	 //Pad端
@@ -272,6 +275,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('notice/system-list',['uses'=>'NoticeController@getSystemList','as'=>'osce.wechat.notice.getSystemList']);
 		Route::get('notice/view',['uses'=>'NoticeController@getView','as'=>'osce.wechat.notice.getView']);
 		Route::get('notice/system-view',['uses'=>'NoticeController@getSystemView','as'=>'osce.wechat.notice.getSystemView']);
+		Route::get('notice/download-document',['uses'=>'NoticeController@getDownloadDocument','as'=>'osce.wechat.notice.getDownloadDocument']);
 
 		Route::get('notice-list/system-list',['uses'=>'NoticeListController@getSystemList','as'=>'osce.wechat.notice-list.getSystemList']);
 		Route::get('notice-list/system-view',['uses'=>'NoticeListController@getSystemView','as'=>'osce.wechat.notice-list.getSystemView']);
@@ -313,6 +317,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//登陆
 		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
+		Route::get('user/web-login',['uses'=>'UserController@getWebLogin','as'=>'osce.wechat.user.getWebLogin']);
 		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
 
 		//注册
@@ -326,6 +331,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		Route::get('student-exam-query/results-query-index',['uses'=>'StudentExamQuery@getResultsQueryIndex','as'=>'osce.wechat.student-exam-query.getResultsQueryIndex']);
 		Route::get('student-exam-query/every-exam-list',['uses'=>'StudentExamQuery@getEveryExamList','as'=>'osce.wechat.student-exam-query.getEveryExamList']);
+		Route::get('student-exam-query/exam-details',['uses'=>'StudentExamQuery@getExamDetails','as'=>'osce.wechat.student-exam-query.getExamDetails']);
 
 	});
 

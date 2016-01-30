@@ -207,7 +207,7 @@ class ExamController extends CommonController
                 'name'           => e($request  ->  get('name')),
                 'begin_dt'       => $begin_dt,
                 'end_dt'         => $end_dt,
-                'status'         => 1,
+                'status'         => 0,
                 'total'          => 0,
                 'create_user_id' => $user -> id,
                 'sequence_cate'  => e($request  ->  get('sequence_cate')),
@@ -813,7 +813,7 @@ class ExamController extends CommonController
                 }
 
             }else{
-                if(!$flows -> saveExamroomAssignmen($exam_id, $roomData, $stationData)){
+                if(!$flows -> saveExamroomfAssignmen($exam_id, $roomData, $stationData)){
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
             }

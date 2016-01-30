@@ -28,6 +28,9 @@
         .notice-box{
             word-wrap:break-word;
         }
+        img{
+            width: 100%;
+        }
     </style>
 
 
@@ -68,7 +71,7 @@
                     <div>
                         @if($notice->attachments)
                             @foreach($notice->attachments as $key=>$list)
-                                <a href="{{ route('osce.admin.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}">
+                                <a href="{{ route('osce.wechat.notice.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}">
                                     <?php $pathInfo = explode('/',$list) ?>
                                         {{array_pop($pathInfo)}}
                                 </a><br />
