@@ -674,7 +674,8 @@ class IndexController extends CommonController
               $countStation[]=$item->station_id;
              }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*3;
+                $batch=config('osce.batch_num');//默认为2
+                $countStation=count($countStation)*$batch;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
@@ -696,7 +697,8 @@ class IndexController extends CommonController
                     $countStation[]=$item->station_id;
                 }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*3;
+                $batch=config('osce.batch_num');
+                $countStation=count($countStation)*$batch;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
