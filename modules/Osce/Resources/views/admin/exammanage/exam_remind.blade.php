@@ -37,7 +37,7 @@
         </div>
         <marquee id="marquee" style="width:100%;height:200px" Behaviour="alternate" scrollamount="2" direction="up" >
             <p style="font-size:18px;color:#ED5565;">考场纪律说明：</p>
-           {{ $exams->rules  }}
+            {!! $exams->rules !!}
         </marquee>
     </div>
 @stop{{-- 内容主体区域 --}}
