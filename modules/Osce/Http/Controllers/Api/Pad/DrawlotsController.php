@@ -73,22 +73,32 @@ class DrawlotsController extends CommonController
         try {
             //首先得到登陆者信息
             $user = Auth::user();
+
+            if (empty($user)) {
+                throw new \Exception('当前用户没有登陆！');
+            }
+
             list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
 
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
-            $examId = $exam->id;
-            //从队列表中通过考场ID得到对应的考生信息
-            $examQueue =  ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
 
             if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试');
             }
 
-            //将老师对应的考站写进对象
-            $examQueue->station_name = $station->name;
-            $examQueue->station_id = $station->id;
-            $examQueue->exam_id = $examId;
+            $examId = $exam->id;
+            //从队列表中通过考场ID得到对应的考生信息
+            $examQueue =  ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
+
+            if (!$examQueue->isEmpty()) {
+                //将老师对应的考站写进对象
+                $examQueue->station_name = $station->name;
+                $examQueue->station_id = $station->id;
+                $examQueue->exam_id = $examId;
+            } else {
+                throw new \Exception('当前没有符合标准的数据');
+            }
 
 //            $examQueue = [
 //                0 => ['student_id' => 1,
@@ -263,7 +273,7 @@ class DrawlotsController extends CommonController
                 if (!$examQueue = ExamQueue::where('student_id',$student->id)->first()) {
                     throw new \Exception('在队列中没有找到考生信息');
                 };
-                $examQueue -> status = 3;
+                $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
                 if (!$examQueue -> save()) {
                     throw new \Exception('抽签失败！请重试');
