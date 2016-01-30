@@ -109,7 +109,7 @@ class UserController  extends CommonController
 //                验证 验证码
                 $codeDate = ['mobile'=>$mobile, 'code'=>$code];
                 $userRepository = new UserRepository();
-                if(!($userRepository->getRegCheckMobileVerfiy($codeDate))){
+                if(!empty($userRepository->getRegCheckMobileVerfiy($codeDate))){
                     throw new \Exception('验证码错误');
                 }
 
