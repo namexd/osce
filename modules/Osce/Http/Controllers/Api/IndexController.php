@@ -132,8 +132,6 @@ class IndexController extends CommonController
         foreach($students->data as $item){
          $idcards[]=$item->idcard;
         }
-        \Log::info($idcards);
-        \Log::info($id_card);
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
         }
@@ -671,6 +669,7 @@ class IndexController extends CommonController
              }
                 $countStation=array_unique($countStation);
                 $countStation=count($countStation)*2;
+                \Log::info($countStation);
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
