@@ -202,6 +202,16 @@ class IndexController extends CommonController
         if(!$screen_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
+                $action='解绑';
+                $updated_at =date('Y-m-d H:i:s',time());
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$updated_at,'status'=>0),
+                    'student_id'     =>$student_id,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->unwrapRecord($data);
                 return \Response::json(array('code'=>2));
             }else{
                 return \Response::json(array('code'=>0));
