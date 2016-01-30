@@ -256,7 +256,7 @@ class UserController  extends CommonController
      * @url GET /osce/wechat/user/forget-password
      * @access public
      *
-     * @return void
+     * @return view
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -264,7 +264,8 @@ class UserController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getForgetPassword(){
+    public function getForgetPassword(Request $request){
+        session(['referer'=>$request->server('HTTP_REFERER')]);
         return view('osce::wechat.user.forget_pwd');
     }
 
@@ -359,25 +360,28 @@ class UserController  extends CommonController
         $this   ->  validate($request,[
             'mobile'    =>  'required',
             'verify'    =>  'required',
-            'password'  =>  'required',
-            'repassword'=>  'required|confirmed:password',
+            'password'  =>  'required|confirmed',
+            'password_confirmation'=>  'required',
         ],[
-            'mobile.required'    =>  '请输入手机号',
-            'verify.required'    =>  '请输入验证码',
-            'password.required'  =>  '请输入密码',
-            'repassword.required'=>  '请输入确认密码',
-            'repassword.confirmed'=>  '两次密码',
+            'mobile.required'       =>  '请输入手机号',
+            'verify.required'       =>  '请输入验证码',
+            'password.required'     =>  '请输入密码',
+            'password_confirmation.required'=>  '请输入确认密码',
+            'password.confirmed'    =>  '两次密码',
         ]);
+
+        //dd($referer);
         $data   =   [
             'mobile'    =>  $request    ->  get('mobile'),
             'code'      =>  $request    ->  get('verify'),
         ];
         $password   =   $request    ->  get('password');
         try{
-            if($user->getRegCheckMobileVerfiy($data))
+            if(!empty($user->getRegCheckMobileVerfiy($data)))
             {
                 $password  =   bcrypt($password);
-                $user   =   User::where('mobile','=',$password)->first();
+                $user   =   User::where('mobile','=',$data['mobile'])->first();
+
                 if(empty($user))
                 {
                     throw new \Exception('用户不存在');
@@ -385,7 +389,12 @@ class UserController  extends CommonController
                 $user       ->   password   =   $password;
                 if($user    ->  save())
                 {
-                    return  redirect()      ->  route('osce.wechat.user.getLogin');
+                    $referer    =   session('referer');
+                    return  redirect()      ->  intended($referer);
+                }
+                else
+                {
+                    throw new \Exception('修改密码失败');
                 }
             }
             else

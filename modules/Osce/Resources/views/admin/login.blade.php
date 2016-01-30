@@ -87,12 +87,12 @@
 					<input type="hidden" name="client_id"  id="client_id" value="ios">
 					<input type="hidden" name="client_secret" id="client_secret" value="111">
 					<div class="clearfix">
-						<label class="check_label checkbox_input">
+						<label class="check_label checkbox_input" style="display: none">
                             <div class="check_icon check" style="display: inline-block"></div>
                             <input type="checkbox" name="message_type[]" value="1" data-bv-field="message_type[]">
                             <span class="check_name">记住密码</span>
                         </label>
-						<a style="float:right" href="javascript:;">
+						<a style="float:right" href="{{route('osce.wechat.user.getForgetPassword')}}">
 							<small class="txt">忘记密码？</small>
 						</a>
 					</div>
