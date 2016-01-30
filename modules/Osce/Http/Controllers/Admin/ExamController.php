@@ -1141,6 +1141,7 @@ class ExamController extends CommonController
             $ExamPlanModel   =   new ExamPlan();
             Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
             $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+
             $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
                 return $ExamPlanModel->getStationStudent();
             });

@@ -41,7 +41,7 @@
 
 @section('beforeBody')
 @show{{--在正文之后填充一些东西 --}}
-
+@extends('osce::wechat.layouts.wechat_errors_notice')
 @section('body')
 @show{{-- 正文部分 --}}
 

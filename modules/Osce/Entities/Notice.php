@@ -167,10 +167,8 @@ class Notice extends CommonModel
     public function sendWechat($notice,$to,$url){
         $msgData    =   [
             [
-                'title' =>  $notice->exam->name.'通知',
-            ],
-            [
-                'title' =>  $notice->title,
+                'title' =>  '资讯通知',
+                'desc' =>  $notice->exam->name,
                 'url'   =>  $url
             ]
         ];
