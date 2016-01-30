@@ -287,7 +287,7 @@ class DrawlotsController extends CommonController
                     ->orderBy('begin_dt','asc')
                     ->get();
                 if ($examQueue->isEmpty()) {
-                    throw new \Exception('在队列中没有找到考生信息');
+                    throw new \Exception('该名考生已经抽签');
                 }
 
                 //获得他应该要去的考站id
