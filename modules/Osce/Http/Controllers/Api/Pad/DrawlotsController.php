@@ -14,6 +14,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\WatchLog;
@@ -208,8 +209,8 @@ class DrawlotsController extends CommonController
 
             $studentId = $watchLog->student_id;
             //如果考生走错了房间
-            dd($studentId);
-            if (!is_null(ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->select('id')->first())) {
+//            dd($studentId,$roomId);
+            if (ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->get()->isEmpty()) {
                 throw new \Exception('当前考生走错了考场');
             }
 
@@ -241,8 +242,13 @@ class DrawlotsController extends CommonController
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('status' , '=' , 0)
                 ->get();
+
             //获得该场考试的exam_id
-            $examId = $station->exam_id;
+            if ($station->isEmpty()) {
+                throw new \Exception('当前队列中找不到符合的考试');
+            }
+
+            $examId = $station->first()->exam_id;
 
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
