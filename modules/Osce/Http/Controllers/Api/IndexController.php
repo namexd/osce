@@ -122,9 +122,9 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 3));
         }
         $student_id=$student_id->id;
-        $planId=ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();
+        $planId=ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id');
         \Log::error($planId);
-        \Log::info($planId);
+        \Log::info($planId->toSql());
         if(!$planId ){
             return \Response::json(array('code' =>4));
         }
