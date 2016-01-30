@@ -824,7 +824,7 @@ class ExamPlan extends CommonModel
                         'exam_screening_id' =>  $plan->exam_screening_id,
                         'student_id'        =>  $plan->student_id,
                         'begin_dt'          =>  $plan->begin_dt,
-                        'status'            =>  $plan->status,
+                        'status'            =>  0,
                         'created_user_id'   =>  $user->id,
                     ];
                 }
