@@ -119,12 +119,13 @@ class UserController  extends CommonController
                 {
                     \DB::commit();
 
-
-
-
-//                    if(){
-//
-//                    }
+//                    https://open.weixin.qq.com/connect/oauth2/authorize?appid=
+//                    wxba93acf17fb61346
+//                    &
+//                    redirect_uri=
+//                        http%3A%2F%2Fosce.dev.cd.misrobot.com%2Fosce%2Fwechat%2Fuser%2Flogin
+//                &
+//                response_type=code&scope=snsapi_base&state=123#wechat_redirect
                     return redirect()->route('osce.wechat.user.getLogin');
                 }
                 else

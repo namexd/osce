@@ -137,6 +137,7 @@ class InvitationController extends CommonController
 
     public function getInvitationRespond(Request $request, ExamSpTeacher $teacher)
     {
+
         $this->validate($request, [
             'status' => 'required|integer',
             'id' => 'required|integer'
