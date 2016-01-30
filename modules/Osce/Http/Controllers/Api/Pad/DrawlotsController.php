@@ -14,6 +14,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\WatchLog;
@@ -241,7 +242,7 @@ class DrawlotsController extends CommonController
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('status' , '=' , 0)
                 ->get();
-            
+
             //获得该场考试的exam_id
             if ($station->isEmpty()) {
                 throw new \Exception('当前队列中找不到符合的考试');
