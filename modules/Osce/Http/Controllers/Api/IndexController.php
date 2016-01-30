@@ -776,7 +776,7 @@ class IndexController extends CommonController
         ]);
         $exam_id=$request->get('exam_id');
         $idcard=$request->get('id_card');
-        $studentId=Student::where('idcard',$idcard)->select('id')->first();
+        $studentId=Student::where('idcard',$idcard)->where('exam_id',$exam_id)->select('id')->first();
         if(!$studentId){
           return \Response::json(array('code'=>2));//未找到该学生
         }
