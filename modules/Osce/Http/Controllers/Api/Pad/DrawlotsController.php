@@ -192,7 +192,6 @@ class DrawlotsController extends CommonController
                 'room_id' => 'required|integer'
             ]);
 
-
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->get('room_id');
@@ -202,6 +201,7 @@ class DrawlotsController extends CommonController
             if (!$watchLog) {
                 throw new \Exception('没有找到对应的腕表信息！');
             }
+
             if (!$student = $watchLog ->student) {
                 throw new \Exception('没有找到对应的学生信息！');
             }
