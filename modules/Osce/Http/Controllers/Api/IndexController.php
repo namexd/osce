@@ -126,6 +126,7 @@ class IndexController extends CommonController
         if(!$planId ){
             return \Response::json(array('code' =>4));
         }
+        \Log::error($planId);
         $students=$this->getStudentList($request);
         $idcards=[];
         $students=json_decode($students->content());
@@ -137,10 +138,10 @@ class IndexController extends CommonController
         }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
-//        $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
-//            if (!$result) {
-//                return \Response::json(array('code' => 2));
-//            }
+        $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
+            if (!$result) {
+                return \Response::json(array('code' => 2));
+            }
         $result = Watch::where('id', $id)->update(['status' => 1]);
         if ($result) {
             $action = '绑定';
