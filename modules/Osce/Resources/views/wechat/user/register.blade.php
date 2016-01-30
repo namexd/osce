@@ -98,6 +98,7 @@
                 <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
+            <input type=hidden name=url value= {{@$url}}>
             <input class="btn" type="submit" id="#bling" value="提交审核" />
         </form>
 
@@ -416,13 +417,13 @@
                         message: '请输入您的密码'
                     },
                     stringLength: {
-                         required: true, 
+                         required: true,
                          minlength:12,
                          message: '密码必须6个字符以上'
                     },
 
                }
-               
+
             },
             confirm_password: {
                   validators: {
@@ -439,8 +440,8 @@
                           message: '两次输入的密码不一致'
                       },
                }
-               
-            }                
+
+            }
         }
     });
 

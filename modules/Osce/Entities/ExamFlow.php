@@ -53,7 +53,9 @@ class ExamFlow extends CommonModel
     public function studentExamSum($examId)
     {
         //查到学生考试排序模式
+
         $SequenceMode = Exam::where('id', '=', $examId)->select('sequence_mode')->first();
+
 
         if ($SequenceMode->sequence_mode == 1) {
             //根据考场排序

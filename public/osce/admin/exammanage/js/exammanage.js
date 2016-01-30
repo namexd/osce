@@ -1900,11 +1900,15 @@ function smart_assignment(){
         dl.css("height",everyHeight+"px");
         for(var i in items)
         {
-            var dd  = $('<dd>').text(items[i].name+",");
-            dd.attr("sid",items[i].id);
-            dd.addClass('student_'+items[i].id).addClass('stu');
-            dd.attr("data-sid",items[i].id);
-            dd.bind("click",changeStudent);
+            var dd  = $('<dd>');
+            if(items[i]!=null)
+            {
+                dd.text(items[i].name+",");
+                dd.attr("sid",items[i].id);
+                dd.addClass('student_'+items[i].id).addClass('stu');
+                dd.attr("data-sid",items[i].id);
+                dd.bind("click",changeStudent);
+            }
             dl.append(dd);
         }
         return dl;

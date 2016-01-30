@@ -30,7 +30,7 @@ class ExamQueue extends CommonModel
 
     public function student()
     {
-        return $this->hasMany('\Modules\Osce\Entities\student', 'id', 'student_id');
+        return $this->hasMany('\Modules\Osce\Entities\Student', 'id', 'student_id');
     }
 
     public function getStudent($mode, $exam_id)
@@ -277,13 +277,12 @@ class ExamQueue extends CommonModel
             //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
             $objs = ExamPlan::where('exam_id',$examId)
                 ->where('student_id',$studentId)
-                ->where('exam_screening_id', $examScreeningId)
+//                ->where('exam_screening_id', $examScreeningId)
                 ->orderBy('begin_dt','asc')
                 ->get();
             if ($objs->isEmpty()) {
                 throw new \Exception('该学生的考试场次有误，请核实！');
             }
-
             //将当前的时间与计划表的时间减去缓冲时间做对比，如果是比计划的时间小，就直接用计划的时间。
             //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
             //config('osce.begin_dt_buffer')为缓冲时间
@@ -293,7 +292,7 @@ class ExamQueue extends CommonModel
                 }
 
                 //将数据插入数据库
-                if (!ExamQueue::create($objs->all())) {
+                if (!ExamQueue::create($objs->first()->toArray())) {
                     throw new \Exception('该名学生的与腕表的录入失败！');
                 };
             }

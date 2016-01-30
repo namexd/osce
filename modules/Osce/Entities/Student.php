@@ -329,6 +329,7 @@ class Student extends CommonModel
         $buondNum=ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)->where('status',1)->select()->get();
         $buondNum=count($buondNum);
         $num=$countStation-$buondNum;
+        \Log::info($num);
         if($num===0 || $num<0){
           return array();
         }
