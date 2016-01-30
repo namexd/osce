@@ -28,7 +28,7 @@ class CourseController extends CommonController
     {
         try {
             //验证
-            $this->validate($request,[
+            $this->validate($request, [
                 'exam_id' => 'sometimes|integer',
                 'subject_id' => 'sometimes|integer',
             ]);
@@ -37,23 +37,26 @@ class CourseController extends CommonController
             $subjectId = $request->input('subject_id');
 
             //考试的下拉菜单
-            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->get();
+            $examDownlist = Exam::select('id', 'name')->orderBy('begin_dt', 'desc')->get();
+
+            //科目的下拉菜单
+            $subjectDownlist = Subject::select('id', 'name')->get();
 
             //科目列表数据
             $subject = new Subject();
-            $subjectData = $subject->CourseControllerIndex($examId,$subjectId);
+            $subjectData = $subject->CourseControllerIndex($examId, $subjectId);
 
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
-                $avg =$subject->CourseControllerAvg(
+                $avg = $subject->CourseControllerAvg(
                     $item->exam_id,
                     $item->subject_id
                 );
                 //如果不为空avg不为空
                 if (!empty($avg)) {
                     if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                        $item->avg_score = $avg->pluck('score')->sum()/$avg->pluck('score')->count();
-                        $item->avg_time = date('H:i:s',$avg->pluck('time')->sum()/$avg->pluck('time')->count());
+                        $item->avg_score = $avg->pluck('score')->sum() / $avg->pluck('score')->count();
+                        $item->avg_time = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
                         $item->avg_total = $avg->count();
                     } else {
                         $item->avg_score = 0;
@@ -62,7 +65,8 @@ class CourseController extends CommonController
                     }
                 }
             }
-            return view('osce::admin.statistics_query.subject_scores_list',['data'=>$subjectData,'list'=>$downlist]);
+            return view('osce::admin.statistics_query.subject_scores_list',
+                ['data' => $subjectData, 'list1' => $examDownlist, 'list2' => $subjectDownlist]);
         } catch (\Exception $ex) {
             dd($ex->getMessage());
 //            return redirect()->back()->withErrors($ex->getMessage());
@@ -99,14 +103,15 @@ class CourseController extends CommonController
 
         //将排名的数组循环插入表中
         foreach ($data as $key => &$item) {
-            $item->ranking = $key+1;
+            $item->ranking = $key + 1;
         }
 
-        return view('osce::admin.statistics_query.subject_student_list',['data' => $data,
-            'exam'=>$exam,
-            'subject'=>$subject,
-            'avgScore'=>$avgScore,
-            'avgTime'=>$avgTime
+        return view('osce::admin.statistics_query.subject_student_list', [
+            'data' => $data,
+            'exam' => $exam,
+            'subject' => $subject,
+            'avgScore' => $avgScore,
+            'avgTime' => $avgTime
         ]);
     }
 
@@ -118,17 +123,17 @@ class CourseController extends CommonController
         ]);
 
         //获得参数
-        $examId = $request->input('exam_id',113);
-        $message = $request->input('message',"");
+        $examId = $request->input('exam_id', 113);
+        $message = $request->input('message', "");
 
         //获得学生的列表在该考试的列表
         $list = Student::getStudentScoreList($examId, $message);
         //为每一条数据插入统计值
         foreach ($list as $key => &$item) {
-            $item->ranking = $key+1;
+            $item->ranking = $key + 1;
         }
 
-        return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
+        return view('osce::admin.statistics_query.student_scores_list', ['data' => $list]);
     }
 
 

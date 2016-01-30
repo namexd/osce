@@ -323,8 +323,16 @@ class Station extends CommonModel
             }
             $stationVcr = StationVcr::where('station_id', $id)->select('id')->first();
             if(!empty($stationVcr)){
+                //更改摄像头的状态
+                $vcr = Vcr::findOrFail($stationVcr->vcr_id);
+                $vcr->used = 0;
+                if (!$vcr->save()) {
+                    throw new \Exception('修改摄像头状态失败！');
+                }
+
                 StationVcr::where('station_id', $id)->delete();
             }
+
             $stationTeacher = StationTeacher::where('station_id', $id)->first();
             if(!empty($stationTeacher)){
                 StationTeacher::where('station_id', $id)->delete();
