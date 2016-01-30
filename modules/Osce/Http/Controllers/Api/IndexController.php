@@ -199,7 +199,7 @@ class IndexController extends CommonController
         }
         $student_id=$student_id->student_id;
         $screen_id=ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();
-        if($screen_id){
+        if(!$screen_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
                 return \Response::json(array('code'=>2));
