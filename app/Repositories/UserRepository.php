@@ -476,7 +476,7 @@ class UserRepository extends BaseRepository
     public function getResetPasswordVerify($mobile){
         $SysValidatecode=new SysValidatecode();
         try{
-            $verify=$SysValidatecode->getMobileRegVerify($mobile);
+            $verify=$SysValidatecode->getMobileResetPasswordVerify($mobile);
             $dataReturn=[
                 'expiretime'=>$verify->expiretime,
                 'mobile'=>$verify->mobile
@@ -518,8 +518,8 @@ class UserRepository extends BaseRepository
         $sysValidatecodeModel=new SysValidatecode();
         $verifyList=$sysValidatecodeModel->where('uid','=',0)
             ->where('mobile','=',$mobile)
-            ->where('expiretime','>=',time())
-            ->where('type','=',1)->get();
+            ->where('expiretime','>',time())
+            ->where('type','=',2)->get();
         $codeList=[];
         $codeIndexList=[];
         foreach ($verifyList as $item) {
