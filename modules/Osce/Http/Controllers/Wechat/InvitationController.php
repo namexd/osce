@@ -135,7 +135,7 @@ class InvitationController extends CommonController
      */
 
 
-    public function getInvitationRespond(Request $request, Teacher $teacher)
+    public function getInvitationRespond(Request $request, ExamSpTeacher $teacher)
     {
         $this->validate($request, [
             'status' => 'required|integer',
@@ -143,6 +143,7 @@ class InvitationController extends CommonController
         ]);
         $status = $request->get('status');
         $teacher_id = $request->get('id');
+
         $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update(['status'=>$status]);
 //        echo json_decode(11111);die;
         if ($result) {

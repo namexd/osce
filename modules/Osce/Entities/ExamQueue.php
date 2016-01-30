@@ -30,7 +30,7 @@ class ExamQueue extends CommonModel
 
     public function student()
     {
-        return $this->hasMany('\Modules\Osce\Entities\student', 'id', 'student_id');
+        return $this->hasMany('\Modules\Osce\Entities\Student', 'id', 'student_id');
     }
 
     public function getStudent($mode, $exam_id)
