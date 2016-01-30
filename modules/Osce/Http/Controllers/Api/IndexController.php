@@ -129,6 +129,7 @@ class IndexController extends CommonController
         $students=$this->getStudentList($request);
         $idcards=[];
         $students=json_decode($students->content());
+        \Log::info($students);
         foreach($students->data as $item){
          $idcards[]=$item->idcard;
         }
@@ -671,7 +672,7 @@ class IndexController extends CommonController
               $countStation[]=$item->station_id;
              }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*2;
+                $countStation=count($countStation)*3;
                 \Log::info($countStation.'考场');
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
@@ -694,7 +695,7 @@ class IndexController extends CommonController
                     $countStation[]=$item->station_id;
                 }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*2;
+                $countStation=count($countStation)*3;
                 \Log::info($countStation.'考站');
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
