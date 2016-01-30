@@ -85,4 +85,30 @@ class SysValidatecode extends Model
             throw($ex);
         }
     }
+
+    public function getMobileResetPasswordVerify($mobile){
+        $data=[
+            'uid'=>0,
+            'mobile'=>$mobile,
+            'expiretime'=>time()+1800,
+            'type'=>2,
+            'code'=>$this->makeRandStr(6),
+            'email'=>''
+        ];
+        try{
+            $verify= $this->create($data);
+            if($verify)
+            {
+                return $verify;
+            }
+            else
+            {
+                throw(new \Exception('验证码存储失败'));
+            }
+        }
+        catch(\Exception $ex)
+        {
+            throw($ex);
+        }
+    }
 }

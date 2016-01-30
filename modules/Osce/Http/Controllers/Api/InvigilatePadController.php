@@ -698,7 +698,7 @@ class InvigilatePadController extends CommonController
         $EndResult  =  $ExamQueueModel->EndExamAlterStatus($studentId,$stationId);
         if($EndResult){
             return response()->json(
-                $this->success_data(1,'结束考试成功')
+                $this->success_data('',1,'结束考试成功')
             );
         }
         return response()->json(
