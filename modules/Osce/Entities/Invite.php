@@ -38,7 +38,7 @@ class Invite extends CommonModel
                     'station_id' =>$list['station_id'],
                     'status'=>0,
                 ];
-                if($this->find($inviteDat['id']))
+                if($this->find($inviteDat['user_id']))
                 {
                     throw new \Exception('同一个老师不能同时收到两个不同邀请');
                 }
@@ -58,7 +58,7 @@ class Invite extends CommonModel
                           $examspModel-> addExamSp($ExamSpList);
                     }
                     //邀请用户
-                    $this->sendMsg($data);
+                    $this->sendMsg($data,$notice);
 //
                     return $notice;
                 } else {
@@ -72,12 +72,12 @@ class Invite extends CommonModel
     }
         // 发送邀请
 
-    public function sendMsg($data)
+    public function sendMsg($data,$notice)
     {
 
         try {
             foreach ($data as $key => $openIdList) {
-                $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['teacher_id']]);
+                $url = route('osce.wechat.invitation.getMsg', ['teacher_id' => $openIdList['teacher_id']],['id'=>$notice->id]);
                 $msgData = [
                     [
                         'title' => '邀请通知',
