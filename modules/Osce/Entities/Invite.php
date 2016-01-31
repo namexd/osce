@@ -21,7 +21,7 @@ class Invite extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id'];
+    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id','station_id','status','user_id'];
     private $excludeId = [];
 
     //保存并发送邀请
@@ -38,10 +38,10 @@ class Invite extends CommonModel
                     'station_id' =>$list['station_id'],
                     'status'=>0,
                 ];
-//                if($this->find($inviteDat['id']))
-//                {
-//                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
-//                }
+                if($this->find($inviteDat['id']))
+                {
+                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
+                }
                   $notice = $this->Create($inviteDat);
             }
                 if ($notice) {

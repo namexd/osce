@@ -45,6 +45,7 @@ class InvitationController extends CommonController
     public function getInvitationList(Request $request)
     {
 
+
         $this->validate($request, [
             'teacher_id' => 'required',
             'exam_id' => 'required|integer',
