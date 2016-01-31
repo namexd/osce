@@ -53,7 +53,7 @@ class ExamQueue extends CommonModel
         $data = [];
         foreach ($examFlowRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
-            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->take(config('osce.num'))->get();
+            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->take(config('osce.wait_student_num'))->get();
             foreach ($students as $examQueue) {
                 foreach ($examQueue->student as $student) {
 //                  $student->roomName=$roomName;
@@ -72,7 +72,7 @@ class ExamQueue extends CommonModel
         $data = [];
         foreach ($examFlowStationList as $examFlowStation) {
             $stationName = $examFlowStation->station->name;
-            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->take(config('osce.num'))->get();
+            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->take(config('osce.wait_student_num'))->get();
             foreach ($students as $ExamQueue) {
                 foreach ($ExamQueue->student as $student) {
 //                   $student->stationName=$stationName;
