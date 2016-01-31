@@ -385,7 +385,7 @@ class ExamQueue extends CommonModel
             ->select([
                 'student.name as name',
                 'student.id as student_id',
-            ])->take(4)->get();
+            ])->distinct()->take(4)->get();
         return $builder;
     }
 
