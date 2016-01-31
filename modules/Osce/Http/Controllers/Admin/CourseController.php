@@ -37,12 +37,11 @@ class CourseController extends CommonController
             $subjectId = $request->input('subject_id');
 
             //考试的下拉菜单
-            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->get();
+            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->where('exam.status','<>',0)->get();
 
             //科目列表数据
             $subject = new Subject();
             $subjectData = $subject->CourseControllerIndex($examId,$subjectId);
-
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
                 $avg =$subject->CourseControllerAvg(
@@ -64,8 +63,7 @@ class CourseController extends CommonController
             }
             return view('osce::admin.statistics_query.subject_scores_list',['data'=>$subjectData,'list'=>$downlist]);
         } catch (\Exception $ex) {
-            dd($ex->getMessage());
-//            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -112,13 +110,20 @@ class CourseController extends CommonController
 
     public function getStudentScore(Request $request)
     {
+
         $this->validate($request, [
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
         ]);
-
+        //获得最近的考试的id
+        $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
+        if (is_null($lastExam)) {
+            throw new \Exception('目前没有已经结束的考试');
+        } else {
+            $lastExamId = $lastExam->id;
+        }
         //获得参数
-        $examId = $request->input('exam_id',113);
+        $examId = $request->input('exam_id',$lastExamId);
         $message = $request->input('message',"");
 
         //获得学生的列表在该考试的列表
