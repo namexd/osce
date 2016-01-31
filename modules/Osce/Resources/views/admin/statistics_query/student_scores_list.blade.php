@@ -70,16 +70,16 @@
                     <tbody>
                     @forelse($data as $item)
                         <tr>
-                            <th>{{$item->student_name}}</th>
-                            <th>{{$item->student_code}}</th>
-                            <th>{{$item->exam_name}}</th>
-                            <th>{{$item->station_total}}</th>
-                            <th>{{$item->score_total}}</th>
-                            <th>{{$item->ranking}}</th>
-                            <th>操作</th>
+                            <td>{{$item->student_name}}</td>
+                            <td>{{$item->student_code}}</td>
+                            <td>{{$item->exam_name}}</td>
+                            <td>{{$item->station_total}}</td>
+                            <td>{{$item->score_total}}</td>
+                            <td>{{$item->ranking}}</td>
+                            <td>操作</td>
                         </tr>
                     @empty
-                        <tr><td colspan="6">目前没有已结束的考试</td></tr>
+                        <tr><td colspan="7">目前没有已结束的考试</td></tr>
                     @endforelse
                     </tbody>
                 </table>
