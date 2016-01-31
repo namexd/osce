@@ -169,6 +169,10 @@ class ExamPlan extends CommonModel
 //        }
 
         $batchStudents          =   [];
+        if($batchNum==0)
+        {
+            throw new \Exception('考试时间不足一个考站的时间');
+        }
         for($i=1;$i<=$batchNum;$i++)
         {
             $thisBatchStudents      =   $this   ->  getPerBatchStudent();

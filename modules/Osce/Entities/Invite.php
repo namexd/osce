@@ -21,7 +21,7 @@ class Invite extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id'];
+    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id','station_id','status','user_id'];
     private $excludeId = [];
 
     //保存并发送邀请
@@ -30,24 +30,26 @@ class Invite extends CommonModel
         try {
             foreach ($data as  $list) {
                 $inviteDat = [
-                    'id'  =>$list['teacher_id'],
+                    'user_id'  =>$list['teacher_id'],
                     'name'  => $list['exam_name'],
                     'begin_dt' => $list['begin_dt'],
                     'end_dt' => $list['end_dt'],
                     'exam_screening_id' => $list['exam_screening_id'],
+                    'station_id' =>$list['station_id'],
+                    'status'=>0,
                 ];
                 if($this->find($inviteDat['id']))
                 {
                     throw new \Exception('同一个老师不能同时收到两个不同邀请');
                 }
-                  $notice = $this->firstOrCreate($inviteDat);
+                  $notice = $this->Create($inviteDat);
             }
                 if ($notice) {
                     foreach($data as  $SpTeacher){
                         $ExamSpList = [
 //                           'id'=>$data[$k]['teacher_id'],
-                          'invite_id' => $SpTeacher['teacher_id'],
-                            'exam_screening_id' => $SpTeacher['exam_id'],
+                             'invite_id' => $notice->id,
+                            'exam_screening_id' => $SpTeacher['exam_screening_id'],
                             'case_id' => $SpTeacher['case_id'],
                             'teacher_id' => $SpTeacher['teacher_id'],
                         ];
