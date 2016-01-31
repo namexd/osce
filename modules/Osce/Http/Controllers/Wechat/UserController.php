@@ -87,7 +87,7 @@ class UserController  extends CommonController
         $code       =   $request    ->  get('code');        //验证码
         //判断是否选择角色类型
         if(empty($type)){
-            return view('osce::wechat.user.register');
+            return view('osce.wechat.user.getRegister');
           }
         \DB::beginTransaction();
         try{
