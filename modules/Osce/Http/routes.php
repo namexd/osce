@@ -241,6 +241,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
 		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.course.getStudent']);
 		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.course.getStudentScore']);
+		Route::get('course/student-details',['uses'=>'CourseController@getStudentDetails','as'=>'osce.admin.course.getStudentDetails']);
 
 		//Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);	//osce.admin.getIndex,此路由前面已经使用了，请修改 （TODO zhoufuxiang）
 
@@ -335,9 +336,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 		//学生微信成绩查询
 
-		Route::get('student-exam-query/results-query-index',['uses'=>'StudentExamQuery@getResultsQueryIndex','as'=>'osce.wechat.student-exam-query.getResultsQueryIndex']);
-		Route::get('student-exam-query/every-exam-list',['uses'=>'StudentExamQuery@getEveryExamList','as'=>'osce.wechat.student-exam-query.getEveryExamList']);
-		Route::get('student-exam-query/exam-details',['uses'=>'StudentExamQuery@getExamDetails','as'=>'osce.wechat.student-exam-query.getExamDetails']);
+		Route::get('student-exam-query/results-query-index',['uses'=>'StudentExamQueryController@getResultsQueryIndex','as'=>'osce.wechat.student-exam-query.getResultsQueryIndex']);
+		Route::get('student-exam-query/every-exam-list',['uses'=>'StudentExamQueryController@getEveryExamList','as'=>'osce.wechat.student-exam-query.getEveryExamList']);
+		Route::get('student-exam-query/exam-details',['uses'=>'StudentExamQueryController@getExamDetails','as'=>'osce.wechat.student-exam-query.getExamDetails']);
 
 	});
 

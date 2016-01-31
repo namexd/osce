@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -144,6 +145,32 @@ class CourseController extends CommonController
         }
 
         return view('osce::admin.statistics_query.student_scores_list',['data'=>$list,'examDownlist'=>$examDownlist]);
+    }
+
+    /**
+     * 考生成绩详情
+     * @param Request $request
+     * @author zhouqiang
+     * @return \Illuminate\View\View
+     * url    /osce/admin/course/student-details
+     */
+
+    public  function getStudentDetails(Request $request){
+
+        $this->validate($request,[
+
+          'student_id'=>'required|integer'
+        ]);
+        $studentId= $request->get('student_id');
+        $examresultModel= new ExamResult();
+        $studentList= $examresultModel->getstudentData($studentId);
+        dd($studentList);
+        if($studentList){
+
+        }
+
+
+
     }
 
 
