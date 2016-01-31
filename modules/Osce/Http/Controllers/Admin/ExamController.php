@@ -1155,9 +1155,6 @@ class ExamController extends CommonController
                 return $plan;
             });
             return response()->json(
-                $this->fail(new \Exception('测试失败'))
-            );
-            return response()->json(
                 $this->success_data($plan)
             );
         }
