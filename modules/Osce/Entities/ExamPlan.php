@@ -74,8 +74,8 @@ class ExamPlan extends CommonModel
             $screeningTimeList      =   $this   ->  setEachBatchTime($examScreening,$batchNum);
             $timeList[$examScreening->id]   =   $screeningTimeList;
         }
-        echo 333;
         $plan   =   $this->distribute($timeList);
+        //dd($timeList);
         $this   ->  timeList    =   $timeList;
         $groupData  =   $this->makeGroupPlanByRoom($plan);
         return  $groupData;
@@ -169,7 +169,10 @@ class ExamPlan extends CommonModel
 //        }
 
         $batchStudents          =   [];
-        dd($batchNum);
+        if($batchNum==0)
+        {
+            throw new \Exception('考试时间不足一个考站的时间');
+        }
         for($i=1;$i<=$batchNum;$i++)
         {
             $thisBatchStudents      =   $this   ->  getPerBatchStudent();
@@ -188,7 +191,6 @@ class ExamPlan extends CommonModel
         }
         //dd($batchStudents);
         //$thisScreeningStudents[]                =   $batchStudents;
-
         $screeningStudents[$examScreening->id]  =   $batchStudents;
         $this->screeningStudents=   $screeningStudents;
 
