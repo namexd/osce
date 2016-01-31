@@ -71,19 +71,19 @@
                     <tbody>
                     @foreach($data as $item)
                         <tr>
-                            <th>{{$item->exam_name}}</th>
-                            <th>{{$item->subject_name}}</th>
-                            <th>{{$item->avg_total}}</th>
-                            <th>{{$item->avg_score}}</th>
-                            <th>{{$item->avg_time}}</th>
-                            <th><a href="{{route('osce.admin.course.getStudent',[
+                            <td>{{$item->exam_name}}</td>
+                            <td>{{$item->subject_name}}</td>
+                            <td>{{$item->avg_total}}</td>
+                            <td>{{$item->avg_score}}</td>
+                            <td>{{$item->avg_time}}</td>
+                            <td><a href="{{route('osce.admin.course.getStudent',[
                             'exam_id'=>$item->exam_id,
                             'subject_id'=>$item->subject_id,
                             'exam'=>$item->exam_name,
                             'subject'=>$item->subject_name,
                             'avg_score'=>$item->avg_score,
                             'avg_time'=>$item->avg_time
-                            ])}}">查看</a></th>
+                            ])}}"> <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span></a></td>
                         </tr>
                     @endforeach
                     </tbody>

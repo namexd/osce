@@ -76,7 +76,11 @@
                             <td>{{$item->station_total}}</td>
                             <td>{{$item->score_total}}</td>
                             <td>{{$item->ranking}}</td>
-                            <td>操作</td>
+                            <td>
+                                <a href="">
+                                    <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr><td colspan="7">目前没有已结束的考试</td></tr>
