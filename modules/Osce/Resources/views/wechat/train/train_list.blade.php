@@ -49,7 +49,7 @@
 						        		'<p class="font12 p_bottom">'+
 						        			'<span class="font14 student_name">'+data[i].author.name+'</span>'+
 						        			'<span class="clo9">&nbsp;'+data[i].time+'</span>'+
-						        			'<span class="right comment">已读&nbsp;66</span>'+
+						        			'<span class="right comment">已读&nbsp;'+data[i].clicks+'</span>'+
 						        		'</p>'+
 						        	'</a>'+
 						        '</li>';
