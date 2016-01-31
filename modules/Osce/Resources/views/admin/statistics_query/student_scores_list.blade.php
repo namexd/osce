@@ -67,7 +67,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($data as $item)
+                    @forelse($data as $item)
                         <tr>
                             <th>{{$item->student_name}}</th>
                             <th>{{$item->student_code}}</th>
@@ -77,6 +77,8 @@
                             <th>{{$item->ranking}}</th>
                             <th>操作</th>
                         </tr>
+                    @empty
+                        <tr><td colspan="6">目前没有已结束的考试</td></tr>
                     @endforeach
                     </tbody>
                 </table>

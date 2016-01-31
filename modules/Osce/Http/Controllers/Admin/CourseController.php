@@ -108,7 +108,6 @@ class CourseController extends CommonController
 
     public function getStudentScore(Request $request)
     {
-
         $this->validate($request, [
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
@@ -116,20 +115,21 @@ class CourseController extends CommonController
         //获得最近的考试的id
         $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
         if (is_null($lastExam)) {
-            throw new \Exception('目前没有已经结束的考试');
+            $list = [];
         } else {
             $lastExamId = $lastExam->id;
-        }
-        //获得参数
-        $examId = $request->input('exam_id',$lastExamId);
-        $message = $request->input('message',"");
+            //获得参数
+            $examId = $request->input('exam_id',$lastExamId);
+            $message = $request->input('message',"");
 
-        //获得学生的列表在该考试的列表
-        $list = Student::getStudentScoreList($examId, $message);
-        //为每一条数据插入统计值
-        foreach ($list as $key => &$item) {
-            $item->ranking = $key+1;
+            //获得学生的列表在该考试的列表
+            $list = Student::getStudentScoreList($examId, $message);
+            //为每一条数据插入统计值
+            foreach ($list as $key => &$item) {
+                $item->ranking = $key+1;
+            }
         }
+
 
         return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
     }
