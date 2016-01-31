@@ -36,6 +36,7 @@
         <div class="panel blank-panel">
             <form class="container-fluid ibox-content" action="" method="get" id="list_form">
                 <div  class="row" style="margin:20px 0;">
+
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <label class="pull-left exam-name">考试:</label>
                         <div class="pull-left exam-list">
