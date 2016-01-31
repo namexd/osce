@@ -55,10 +55,10 @@ class InvitationController extends CommonController
             'exam_id.required'=>'考试编号必须',
             'station_id.required'=>'考站编号必须',
         ]);
+
         $teacher_id = $request->get('teacher_id');
         $exam_id = $request->get('exam_id');
         $stationId= $request->get('station_id');
-        dd($stationId);
 
         //根据老师id查询老师的信息和openid
         $teacher = new Teacher();
@@ -77,6 +77,7 @@ class InvitationController extends CommonController
                 $data[$key]['exam_screening_id']= $examscreening->id;
                 $data[$key]['station_id']=$stationId;
             }
+
         $InviteModel = new Invite();
         try{
             if ($InviteModel->addInvite($data)) {
@@ -119,13 +120,11 @@ class InvitationController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
         $userId =$user->id;
-        //根据用户id查出该用户对邀请的处理
-        $status = Teacher::where('id','=',$userId)->select('status')->first();
+
         $notice = new Invite();
 //        $list = $notice->get();
-        $list = $notice-> where('id','=',$userId)->get();
-//        dd($list);
-        return view('osce::wechat.exammanage.sp_invitation',['list'=>$list],['status'=>$status]);//这里页面应该为列表页面
+        $list = $notice-> where('user_id','=',$userId)->get();
+        return view('osce::wechat.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
     }
 
 
@@ -145,7 +144,7 @@ class InvitationController extends CommonController
      */
 
 
-    public function getInvitationRespond(Request $request, Teacher $teacher)
+    public function getInvitationRespond(Request $request, Invite $Invite)
     {
 
         $this->validate($request, [
@@ -153,9 +152,9 @@ class InvitationController extends CommonController
             'id' => 'required|integer'
         ]);
         $status = $request->get('status');
-        $teacher_id = $request->get('id');
+        $id = $request->get('id');
 
-        $result = $teacher->where('id', '=', $teacher_id)->where('type','=',2)->update(['status'=>$status]);
+        $result = $Invite->where('id', '=', $id)->update(['status'=>$status]);
 //        echo json_decode(11111);die;
         if ($result) {
             return response()->json(
@@ -184,14 +183,16 @@ class InvitationController extends CommonController
      */
     public function getMsg()
     {
-        $id = intval(Input::get('id'));//老师的id
-        $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt')->first();
+
+        $id = intval(Input::get('id'));//邀请id
+        $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt','status','user_id')->first();
           if($inviteModel){
-              $caseId =ExamSpTeacher::where('teacher_id','=',$id)->select('case_id')->first()->case_id;
+              $caseId =ExamSpTeacher::where('teacher_id','=',$inviteModel->user_id)->select('case_id')->first();
               if(!$caseId){
                   throw new \Exception('没有找到相关病例');
               }else{
-                  $caseModel =CaseModel:: where('id','=',$caseId)->select('name')->first()->name;
+                  $caseModel =CaseModel:: where('id','=',$caseId->case_id)->select('name')->first()->name;
+
               }
         }else{
               throw new \Exception('请检查登陆稍后再试!');
@@ -201,6 +202,7 @@ class InvitationController extends CommonController
              'begin_dt' =>$inviteModel->begin_dt,
              'end_dt' =>$inviteModel->end_dt,
              'case_name' =>$caseModel,
+             'status'=>$inviteModel->status
         ];
 //          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [

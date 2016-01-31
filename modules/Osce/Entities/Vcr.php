@@ -19,7 +19,7 @@ class Vcr extends CommonModel implements MachineInterface
     protected $table 		= 	'vcr';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status','created_user_id','sp','factory','purchase_dt'];
+    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status','created_user_id','sp','factory','purchase_dt','used'];
     public      $search     =   [];
 
     protected $statuValues  =   [

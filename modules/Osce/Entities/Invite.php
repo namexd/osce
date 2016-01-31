@@ -22,7 +22,6 @@ class Invite extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id','station_id','status','user_id'];
-    private $excludeId = [];
 
     //保存并发送邀请
     public function addInvite(array $data)
@@ -38,10 +37,10 @@ class Invite extends CommonModel
                     'station_id' =>$list['station_id'],
                     'status'=>0,
                 ];
-                if($this->find($inviteDat['id']))
-                {
-                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
-                }
+//                if($this->find($inviteDat['user_id']))
+//                {
+//                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
+//                }
                   $notice = $this->Create($inviteDat);
             }
                 if ($notice) {
@@ -58,7 +57,7 @@ class Invite extends CommonModel
                           $examspModel-> addExamSp($ExamSpList);
                     }
                     //邀请用户
-                    $this->sendMsg($data);
+                    $this->sendMsg($data,$notice);
 //
                     return $notice;
                 } else {
@@ -72,12 +71,12 @@ class Invite extends CommonModel
     }
         // 发送邀请
 
-    public function sendMsg($data)
+    public function sendMsg($data,$notice)
     {
 
         try {
             foreach ($data as $key => $openIdList) {
-                $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['teacher_id']]);
+                $url = route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
                 $msgData = [
                     [
                         'title' => '邀请通知',
@@ -106,5 +105,20 @@ class Invite extends CommonModel
         }
     }
 
+    //邀请状态
+    public function status($examId)
+    {
+        //获得exam_screening_id
+        $examScreeningId = ExamScreening::where('exam_id',$examId)->select('id')->first()->id;
+
+        return Invite::leftJoin('exam_screening',
+            function ($join) use ($examScreeningId){
+                $join->on('exam_screening.id','=','invite.exam_screening_id')
+                    ->where('invite.exam_screening_id','=',$examScreeningId);
+            })->select(
+            'invite.status as invite_status',
+            'invite.user_id as invite_user_id'
+            )->get();
+    }
 
 }
