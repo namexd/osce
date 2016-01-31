@@ -227,6 +227,8 @@ class IndexController extends CommonController
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
                 return \Response::json(array('code'=>1));
+            }else{
+                return \Response::json(array('code'=>0));
             }
         }
         $result=Watch::where('id',$id)->update(['status'=>0]);
