@@ -223,7 +223,10 @@ class IndexController extends CommonController
         $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
         if($ExamFinishStatus==$studentExamSum){
             ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);
-            ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
+            $result=ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
+            if($result){
+                return \Response::json(array('code'=>1));
+            }
         }
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){

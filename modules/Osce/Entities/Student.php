@@ -358,10 +358,9 @@ class Student extends CommonModel
             ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
             ->leftJoin('exam','exam.id','=','exam_screening.exam_id')
             ->leftJoin('station','station.id','=','exam_result.station_id')
-            ->leftJoin('subject','subject.id','=','station.subject_id')
             ->where('exam.id','=',$examId)
             ->where('exam.status','<>',0)
-            ->where('subject.id','=',$subjectId)
+            ->where('station.subject_id','=',$subjectId)
             ->orderBy('exam_result.score','desc')
             ->select(
                 'student.name as student_name',
