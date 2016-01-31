@@ -2017,6 +2017,7 @@ function smart_assignment(){
     //智能排考
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
+            alert(testData.code);
             if(testData.code!=-999)
             {
                 alert(testData.message);
