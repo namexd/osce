@@ -2734,7 +2734,6 @@ function station_assignment(){
                 ids.push(id);
             }
         });
-
         $.ajax({
             type:'get',
             url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids+'&station_id='+thisElement.attr('value'),
