@@ -2737,7 +2737,7 @@ function station_assignment(){
         });
         $.ajax({
             type:'get',
-            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
+            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids+'&station_id='+thisElement.attr('value'),
             success:function(res){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');

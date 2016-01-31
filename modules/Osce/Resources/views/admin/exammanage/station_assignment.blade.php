@@ -230,7 +230,7 @@
                                                         @endif
                                                     </div>
                                                 </td>
-                                                <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
+                                                <td><a href="javascript:void(0)" class="invitaion-teacher" value="{{$item[0]->station_id}}">发起邀请</a></td>
                                             </tr>
                                             <?php $index++?>
                                         @empty
