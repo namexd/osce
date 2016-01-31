@@ -1119,44 +1119,51 @@ class ExamController extends CommonController
         ]);
 
         $id         =   $request    ->  get('id');
-
-        $exam       =   Exam::find($id);
-        if(is_null($exam))
+        try
         {
-            throw new \Exception('没有找到该考试');
-        }
+            $exam       =   Exam::find($id);
+            if(is_null($exam))
+            {
+                throw new \Exception('没有找到该考试');
+            }
 
 
-        $user   =   Auth::user();
-        Cache::pull('plan_'.$exam->id.'_'.$user->id);
-        Cache::pull('plan_time_'.$exam->id.'_'.$user->id);
+            $user   =   Auth::user();
+            Cache::pull('plan_'.$exam->id.'_'.$user->id);
+            Cache::pull('plan_time_'.$exam->id.'_'.$user->id);
 
-        if($exam->sequence_mode==1)
-        {
-            $ExamPlanModel =   new ExamPlanForRoom();
-            $plan   =   $ExamPlanModel    ->  IntelligenceEaxmPlan($exam);
-        }
-        else
-        {
-            $ExamPlanModel   =   new ExamPlan();
-            Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
-            $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+            if($exam->sequence_mode==1)
+            {
+                $ExamPlanModel =   new ExamPlanForRoom();
+                $plan   =   $ExamPlanModel    ->  IntelligenceEaxmPlan($exam);
+            }
+            else
+            {
+                $ExamPlanModel   =   new ExamPlan();
+                Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
+                $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
 
-            $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-                return $ExamPlanModel->getStationStudent();
+                $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                    return $ExamPlanModel->getStationStudent();
+                });
+                $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                    return $ExamPlanModel->getTimeList();
+                });
+            }
+
+            $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
+                return $plan;
             });
-            $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-                return $ExamPlanModel->getTimeList();
-            });
+            return response()->json(
+                $this->success_data($plan)
+            );
         }
-
-        $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
-            return $plan;
-        });
-
-        return response()->json(
-            $this->success_data($plan)
-        );
+        catch (\Exception $ex)
+        {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
     }
 
     /**
