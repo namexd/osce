@@ -295,7 +295,7 @@ class PadController extends  CommonController{
             $queue = ExamQueue::findQueueIdByStudentId($studentId);
 
             //修改状态
-            $queue->status = 5;
+            $queue->status = 3;
             $queue->end_dt = $date;
             if (!$queue->save()) {
                 throw new \Exception('状态修改失败！请重试');
