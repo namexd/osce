@@ -87,14 +87,12 @@ class CourseController extends CommonController
 
         //获得参数
         $examId = $request->input('exam_id');
-        $subjectId = $request->input('subjectId');
+        $subjectId = $request->input('subject_id');
         $exam = $request->input('exam');
         $subject = $request->input('subject');
         $avgScore = $request->input('avg_score');
         $avgTime = $request->input('avg_time');
-
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
-
         //将排名的数组循环插入表中
         foreach ($data as $key => &$item) {
             $item->ranking = $key+1;
