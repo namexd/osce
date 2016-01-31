@@ -80,7 +80,7 @@
                         </tr>
                     @empty
                         <tr><td colspan="6">目前没有已结束的考试</td></tr>
-                    @endforeach
+                    @endforelse
                     </tbody>
                 </table>
                 <div class="pull-left">
