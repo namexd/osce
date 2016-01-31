@@ -74,9 +74,8 @@ class ExamPlan extends CommonModel
             $screeningTimeList      =   $this   ->  setEachBatchTime($examScreening,$batchNum);
             $timeList[$examScreening->id]   =   $screeningTimeList;
         }
+        echo 333;
         $plan   =   $this->distribute($timeList);
-        echo 123;
-        dd($timeList);
         $this   ->  timeList    =   $timeList;
         $groupData  =   $this->makeGroupPlanByRoom($plan);
         return  $groupData;
@@ -170,6 +169,7 @@ class ExamPlan extends CommonModel
 //        }
 
         $batchStudents          =   [];
+        dd($batchNum);
         for($i=1;$i<=$batchNum;$i++)
         {
             $thisBatchStudents      =   $this   ->  getPerBatchStudent();
@@ -188,6 +188,7 @@ class ExamPlan extends CommonModel
         }
         //dd($batchStudents);
         //$thisScreeningStudents[]                =   $batchStudents;
+
         $screeningStudents[$examScreening->id]  =   $batchStudents;
         $this->screeningStudents=   $screeningStudents;
 
