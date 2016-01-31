@@ -22,6 +22,7 @@ use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
 use Modules\Osce\Entities\InformInfo;
+use Modules\Osce\Entities\Invite;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
@@ -1335,6 +1336,18 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
+        $invite = new Invite();
+        $inviteData = $invite->status($exam_id);
+
+        //将邀请状态插入$stationData
+        foreach ($stationData as &$item) {
+            foreach ($inviteData as $value) {
+                if ($item->teacher_id == $value->user_id) {
+                    $item->invite_status = $value->invite_status;
+                }
+            }
+        }
+
         return view('osce::admin.exammanage.station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,

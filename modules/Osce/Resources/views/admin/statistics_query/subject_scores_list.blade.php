@@ -83,7 +83,7 @@
                             'subject'=>$item->subject_name,
                             'avg_score'=>$item->avg_score,
                             'avg_time'=>$item->avg_time
-                            ])}}">操作</a></th>
+                            ])}}">查看</a></th>
                         </tr>
                     @endforeach
                     </tbody>

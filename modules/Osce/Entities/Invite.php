@@ -22,7 +22,6 @@ class Invite extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id','station_id','status','user_id'];
-    private $excludeId = [];
 
     //保存并发送邀请
     public function addInvite(array $data)
@@ -106,5 +105,20 @@ class Invite extends CommonModel
         }
     }
 
+    //邀请状态
+    public function status($examId)
+    {
+        //获得exam_screening_id
+        $examScreeningId = ExamScreening::where('exam_id',$examId)->select('id')->first()->id;
+
+        return Invite::leftJoin('exam_screening',
+            function ($join) use ($examScreeningId){
+                $join->on('exam_screening.id','=','invite.exam_screening_id')
+                    ->where('invite.exam_screening_id','=',$examScreeningId);
+            })->select(
+            'invite.status as invite_status',
+            'invite.user_id as invite_user_id'
+            )->get();
+    }
 
 }
