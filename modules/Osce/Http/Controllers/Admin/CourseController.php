@@ -150,15 +150,13 @@ class CourseController extends CommonController
     /**
      * 考生成绩详情
      * @param Request $request
-     * @author zhouqiang
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View url    /osce/admin/course/student-details
      * url    /osce/admin/course/student-details
+     * @throws \Exception
+     * @author zhouqiang
      */
-
     public  function getStudentDetails(Request $request){
-
         $this->validate($request,[
-
           'student_id'=>'required|integer'
         ]);
         $studentId= $request->get('student_id');
@@ -168,7 +166,8 @@ class CourseController extends CommonController
         if(!$studentList){
             throw new \Exception('数据查询失败');
         }
-            return view();
+
+        return view('osce::admin.statistics_query.student_subject_list',['studentList'=>$studentList]);
 
     }
 

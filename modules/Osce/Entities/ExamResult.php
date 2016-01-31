@@ -205,9 +205,9 @@ class ExamResult extends CommonModel
 
     /**
      *  pc端学生成绩查询
-     * @param Request $request
-     * @author zhouqiang
+     * @param $studentId
      * @return \Illuminate\View\View
+     * @author zhouqiang
      */
 
     public function getstudentData($studentId){
@@ -218,7 +218,9 @@ class ExamResult extends CommonModel
             $join -> on('teacher.id', '=', 'exam_result.teacher_id');
         })-> leftJoin('exam', function($join){
             $join -> on('exam.id', '=', 'student.exam_id');
-        });
+        })-> leftJoin('station_teacher','station_teacher.user_id','=','teacher.id')
+            ->leftJoin('station','station.id','=','station_teacher.station_id')
+            ->leftJoin('subject','subject.id','=','station.subject_id');
         $builder=$builder->where('exam_result.student_id',$studentId);
         $builder=$builder->select([
             'exam_result.station_id as id',
@@ -230,6 +232,7 @@ class ExamResult extends CommonModel
             'exam.name as exam_name',
             'exam.begin_dt as begin_dt',
             'exam.end_dt as end_dt',
+            'subject.title as title'
         ])
             ->get();
 
