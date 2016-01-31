@@ -255,7 +255,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
 //
 		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
-		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);
+		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']); //抽签
 		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);
 
 
@@ -358,8 +358,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 
 		//pad的上传
-		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.postTestAttachImage']);
-		Route::post('upload-radio',['uses'=>'InvigilatePadController@postTestAttachRadio','as'=>'osce.pad.postTestAttachRadio']);
+		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);
+		Route::post('upload-radio',['uses'=>'InvigilatePadController@postTestAttachRadio','as'=>'osce.pad.InvigilatePad.postTestAttachRadio']);
+		Route::post('store-anchor',['uses'=>'InvigilatePadController@StoreAnchor','as'=>'osce.pad.InvigilatePad.StoreAnchor']);
 	});
 });
 

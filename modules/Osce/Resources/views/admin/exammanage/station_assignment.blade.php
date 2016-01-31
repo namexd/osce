@@ -188,8 +188,8 @@
                                         <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1; $index=1?>
                                         @forelse($stationData as $tempKey => $item)
                                             <tr class="parent-id-{{$item[0]->station_id}}">
-                                                <input type="hidden" class="station_id" value="{{$item[0]->station_id}}">
                                                 <td>{{$key++}}<input type="hidden" name="form_data[{{$k1++}}][station_id]" value="{{$item[0]->station_id}}"/></td>
+                                                <input type="hidden" class="station_id" value="{{$item[0]->station_id}}">
                                                 <td>{{$item[0]->station_name}}</td>
                                                 <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
