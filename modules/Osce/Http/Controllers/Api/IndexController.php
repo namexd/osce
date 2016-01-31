@@ -226,6 +226,16 @@ class IndexController extends CommonController
             ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
+                $action='解绑';
+                $updated_at =date('Y-m-d H:i:s',time());
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$updated_at,'status'=>0),
+                    'student_id'     =>$student_id,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->unwrapRecord($data);
                 return \Response::json(array('code'=>1));
             }else{
                 return \Response::json(array('code'=>0));
