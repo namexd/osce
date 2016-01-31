@@ -37,10 +37,10 @@ class CourseController extends CommonController
             $subjectId = $request->input('subject_id');
 
             //考试的下拉菜单
-            $examDownlist = Exam::select('id', 'name')->orderBy('begin_dt', 'desc')->get();
+            $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
 
             //科目的下拉菜单
-            $subjectDownlist = Subject::select('id', 'name')->get();
+            $subjectDownlist = Subject::select('id', 'title')->get();
 
             //科目列表数据
             $subject = new Subject();
@@ -70,7 +70,8 @@ class CourseController extends CommonController
                     'subjectDownlist'=>$subjectDownlist
                 ]);
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
+            dd($ex->getMessage());
+//            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -119,11 +120,14 @@ class CourseController extends CommonController
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
         ]);
+
+        $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
         //获得最近的考试的id
         $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
         if (is_null($lastExam)) {
             $list = [];
         } else {
+
             $lastExamId = $lastExam->id;
             //获得参数
             $examId = $request->input('exam_id',$lastExamId);
@@ -137,7 +141,7 @@ class CourseController extends CommonController
             }
         }
 
-        return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
+        return view('osce::admin.statistics_query.student_scores_list',['data'=>$list,'examDownlist'=>$examDownlist]);
     }
 
 
