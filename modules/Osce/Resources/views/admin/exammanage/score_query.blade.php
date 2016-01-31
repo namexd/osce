@@ -35,8 +35,10 @@
                 <div  class="row" style="margin:20px 0;">
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <label class="pull-left left-text">考试名称:</label>
+
                         <div class="pull-left right-list">
                             <select id="select_Category" required  class="form-control m-b" name="exam_id">
+                                <option value="">全部考试</option>
                                 @foreach($exams as $key=>$item)
                                 <option value="{{$item->id}}">{{$item->name}}</option>
                                 @endforeach
@@ -47,6 +49,7 @@
                         <label class="pull-left left-text">考站名称:</label>
                         <div class="pull-left right-list">
                             <select id="select_Category" required  class="form-control m-b" name="station_id">
+                                <option value="">全部考站</option>
                                 @foreach($stations as $key=>$item)
                                 <option value="{{$item->id}}">{{$item->name}}</option>
                                 @endforeach
@@ -81,7 +84,9 @@
                             <td>{{$item->begin_dt}}</td>
                             <td>{{$item->time}}</td>
                             <td>{{$item->score}}</td>
-                            <td><a href="{{route('osce.admin.getExamResultDetail')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span></a></td>
+                            <td>
+                                <a href="{{route('osce.admin.getExamResultDetail')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span></a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

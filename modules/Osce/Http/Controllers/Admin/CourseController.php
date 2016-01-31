@@ -130,7 +130,6 @@ class CourseController extends CommonController
             }
         }
 
-
         return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
     }
 
