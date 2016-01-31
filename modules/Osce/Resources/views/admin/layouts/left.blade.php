@@ -75,7 +75,7 @@
                                 </li>
                                 <li><a class="active J_menuItem" href="{{route('osce.admin.exam.getStudentQuery')}}">考生查询</a>
                                 </li>
-                                <li><a class="active J_menuItem" href="">成绩查询</a>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.geExamResultList')}}">成绩查询</a>
                                 </li>
                                 <li><a class="active J_menuItem" href="{{route('osce.admin.notice.getList')}}">资讯&通知</a></li>
                                 <li><a class="active J_menuItem" href="{{route('osce.admin.getTrainList')}}">考前培训</a>
@@ -84,6 +84,13 @@
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">统计分析</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.course.getIndex')}}">科目成绩统计</a>
+                                </li>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.course.getStudent')}}">考生成绩统计</a>
+                                </li>
+
+                            </ul>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-gear"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
