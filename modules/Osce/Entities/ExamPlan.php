@@ -75,7 +75,8 @@ class ExamPlan extends CommonModel
             $timeList[$examScreening->id]   =   $screeningTimeList;
         }
         $plan   =   $this->distribute($timeList);
-        dd($plan);
+        echo 123;
+        dd($timeList);
         $this   ->  timeList    =   $timeList;
         $groupData  =   $this->makeGroupPlanByRoom($plan);
         return  $groupData;
