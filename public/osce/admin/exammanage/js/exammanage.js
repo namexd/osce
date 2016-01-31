@@ -2017,11 +2017,18 @@ function smart_assignment(){
     //智能排考
     function makePlan(){
         $.get(pars.makePlanUrl,function(testData){
-            $('.classroom-box').html('');
-            $('.time-list>ul').html('');
-            maketotal(testData.data);
-            //$('#makePlan').one('click',makePlan);
-            makeTime();
+            if(testData.code==-999)
+            {
+                alert(testData.message);
+            }
+            else
+            {
+                $('.classroom-box').html('');
+                $('.time-list>ul').html('');
+                maketotal(testData.data);
+                //$('#makePlan').one('click',makePlan);
+                makeTime();
+            }
         });
     }
     $('#makePlan').click(function(){

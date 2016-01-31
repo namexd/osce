@@ -188,7 +188,7 @@ class IndexController extends CommonController
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=ExamScreeningStudent::where('watch_id',$id)->where('is_end',0)->select('student_id')->first();
+        $student_id=WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
         if(!$student_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
@@ -198,7 +198,25 @@ class IndexController extends CommonController
             }
         }
         $student_id=$student_id->student_id;
-        $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->first();
+        $screen_id=ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();
+        if(!$screen_id){
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                $action='解绑';
+                $updated_at =date('Y-m-d H:i:s',time());
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$updated_at,'status'=>0),
+                    'student_id'     =>$student_id,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->unwrapRecord($data);
+                return \Response::json(array('code'=>2));
+            }else{
+                return \Response::json(array('code'=>0));
+            }
+        }
         $exam_screen_id=$screen_id->exam_screening_id;
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
         $ExamFlowModel = new  ExamFlow();
@@ -674,7 +692,8 @@ class IndexController extends CommonController
               $countStation[]=$item->station_id;
              }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*3;
+                $batch=config('osce.batch_num');//默认为2
+                $countStation=count($countStation)*$batch;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
@@ -696,7 +715,8 @@ class IndexController extends CommonController
                     $countStation[]=$item->station_id;
                 }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*3;
+                $batch=config('osce.batch_num');
+                $countStation=count($countStation)*$batch;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
