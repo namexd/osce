@@ -2724,7 +2724,6 @@ function station_assignment(){
     $('#exam-place').on('click','.invitaion-teacher',function(){
 
         var thisElement = $(this);
-
         //老师id
         var ids = [];
         thisElement.parent().prev().find('.teacher-box').find('.teacher').each(function(key,elem){
@@ -2737,7 +2736,7 @@ function station_assignment(){
         });
         $.ajax({
             type:'get',
-            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
+            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids+'&station_id='+thisElement.attr('value'),
             success:function(res){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');

@@ -19,4 +19,5 @@ class TestAttach extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['test_result_id', 'url', 'type', 'name', 'description','standard_id'];
+
 }

@@ -356,10 +356,11 @@ class Student extends CommonModel
     {
         return Student::leftJoin('exam_result','exam_result.student_id','=','student.id')
             ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-            ->leftJoin('exam','exam.id','=','exam_screening_id.exam_id')
+            ->leftJoin('exam','exam.id','=','exam_screening.exam_id')
             ->leftJoin('station','station.id','=','exam_result.station_id')
             ->leftJoin('subject','subject.id','=','station.subject_id')
             ->where('exam.id','=',$examId)
+            ->where('exam.status','<>',0)
             ->where('subject.id','=',$subjectId)
             ->orderBy('exam_result.score','desc')
             ->select(
@@ -398,11 +399,11 @@ class Student extends CommonModel
                     'sum(exam_result.score) as score_total',
                     'count(*) as station_total'
                 ]))
-            );
-            $builder = $builder->groupBy('exam_result.student_id') ->orderBy('score_total','desc');
+            )->where('exam.status','<>',0);
+            $builder = $builder->groupBy('exam_result.student_id')
+                ->orderBy('score_total','desc');
 
             return $builder->paginate(config('osce.page_size'));
-//            return $builder->toSql();
         }
     }
 
