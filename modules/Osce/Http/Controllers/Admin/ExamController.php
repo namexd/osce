@@ -1149,7 +1149,7 @@ class ExamController extends CommonController
                 return $ExamPlanModel->getTimeList();
             });
         }
-        dd($plan);
+
         $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
             return $plan;
         });
