@@ -2724,9 +2724,13 @@ function station_assignment(){
                 ids.push(id);
             }
         });
+
+        //考站id
+        var stationId = $(".station_id").val();
+
         $.ajax({
             type:'get',
-            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
+            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids+'&station_id='+stationId,
             success:function(res){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');
