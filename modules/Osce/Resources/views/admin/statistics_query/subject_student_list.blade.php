@@ -26,10 +26,10 @@
         </div>
         <div class="container-fluid ibox-content">
             <div class="row tabs">
-                <div class="col-sm-2 col-md-2">考试：<span></span></div>
-                <div class="col-sm-2 col-md-2">科目：<span></span></div>
-                <div class="col-sm-2 col-md-2">平均成绩：<span></span></div>
-                <div class="col-sm-2 col-md-2">平均用时：<span></span></div>
+                <div class="col-sm-2 col-md-2">考试：{{$exam}}<span></span></div>
+                <div class="col-sm-2 col-md-2">科目：{{$subject}}<span></span></div>
+                <div class="col-sm-2 col-md-2">平均成绩：{{$avgScore}}<span></span></div>
+                <div class="col-sm-2 col-md-2">平均用时：{{$avgTime}}<span></span></div>
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -42,8 +42,15 @@
                 </tr>
                 </thead>
                 <tbody>
-
-
+                @foreach($data as $item)
+                    <tr>
+                        <th>{{$item->student_name}}</th>
+                        <th>{{$item->ranking}}</th>
+                        <th>{{$item->exam_result_score}}</th>
+                        <th>{{$item->exam_result_time}}</th>
+                        <th>操作</th>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
 

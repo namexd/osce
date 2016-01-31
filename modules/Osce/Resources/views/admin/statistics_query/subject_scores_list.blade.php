@@ -76,7 +76,14 @@
                             <th>{{$item->avg_total}}</th>
                             <th>{{$item->avg_score}}</th>
                             <th>{{$item->avg_time}}</th>
-                            <th>操作</th>
+                            <th><a href="{{route('osce.admin.course.getStudent',[
+                            'exam_id'=>$item->exam_id,
+                            'subject_id'=>$item->subject_id,
+                            'exam'=>$item->exam_name,
+                            'subject'=>$item->subject_name,
+                            'avg_score'=>$item->avg_score,
+                            'avg_time'=>$item->avg_time
+                            ])}}">操作</a></th>
                         </tr>
                     @endforeach
                     </tbody>
