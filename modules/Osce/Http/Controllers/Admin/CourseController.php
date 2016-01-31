@@ -37,12 +37,11 @@ class CourseController extends CommonController
             $subjectId = $request->input('subject_id');
 
             //考试的下拉菜单
-            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->get();
+            $downlist = Exam::select('id','name')->orderBy('begin_dt','desc')->where('exam.status','<>',0)->get();
 
             //科目列表数据
             $subject = new Subject();
             $subjectData = $subject->CourseControllerIndex($examId,$subjectId);
-
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
                 $avg =$subject->CourseControllerAvg(
@@ -64,8 +63,7 @@ class CourseController extends CommonController
             }
             return view('osce::admin.statistics_query.subject_scores_list',['data'=>$subjectData,'list'=>$downlist]);
         } catch (\Exception $ex) {
-            dd($ex->getMessage());
-//            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -89,14 +87,12 @@ class CourseController extends CommonController
 
         //获得参数
         $examId = $request->input('exam_id');
-        $subjectId = $request->input('subjectId');
+        $subjectId = $request->input('subject_id');
         $exam = $request->input('exam');
         $subject = $request->input('subject');
         $avgScore = $request->input('avg_score');
         $avgTime = $request->input('avg_time');
-
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
-
         //将排名的数组循环插入表中
         foreach ($data as $key => &$item) {
             $item->ranking = $key+1;
@@ -116,17 +112,24 @@ class CourseController extends CommonController
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
         ]);
+        //获得最近的考试的id
+        $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
+        if (is_null($lastExam)) {
+            $list = [];
+        } else {
+            $lastExamId = $lastExam->id;
+            //获得参数
+            $examId = $request->input('exam_id',$lastExamId);
+            $message = $request->input('message',"");
 
-        //获得参数
-        $examId = $request->input('exam_id',113);
-        $message = $request->input('message',"");
-
-        //获得学生的列表在该考试的列表
-        $list = Student::getStudentScoreList($examId, $message);
-        //为每一条数据插入统计值
-        foreach ($list as $key => &$item) {
-            $item->ranking = $key+1;
+            //获得学生的列表在该考试的列表
+            $list = Student::getStudentScoreList($examId, $message);
+            //为每一条数据插入统计值
+            foreach ($list as $key => &$item) {
+                $item->ranking = $key+1;
+            }
         }
+
 
         return view('osce::admin.statistics_query.student_scores_list',['data'=>$list]);
     }

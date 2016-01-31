@@ -171,7 +171,7 @@ class ExamPlan extends CommonModel
         $batchStudents          =   [];
         if($batchNum==0)
         {
-            throw new \Exception('考试时间不足一个考站的时间');
+            throw new \Exception();
         }
         for($i=1;$i<=$batchNum;$i++)
         {
@@ -766,6 +766,7 @@ class ExamPlan extends CommonModel
         {
             foreach($examPlanList as $roomStaionId=>$examPlan)
             {
+                //dd($examPlanList);
                 $roomStaionInfo =   explode('-',$roomStaionId);
                 foreach($examPlan['child'] as $bacthIndex=>$examPlan)
                 {
@@ -775,16 +776,21 @@ class ExamPlan extends CommonModel
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['name']   =   $examPlan->room->name.'-'.$examPlan->station->name;
+
+
                         $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['start'] =  strtotime($examPlan->begin_dt);
+
                         $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['end'] =  strtotime($examPlan->end_dt);
+
+
                         $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]

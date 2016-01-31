@@ -1198,6 +1198,9 @@ class ExamController extends CommonController
         }
         $ExamPlanModel  =   new ExamPlan();
         $plan   =   $ExamPlanModel  ->  showPlan($exam);
+
+        $plan   =   $this           ->  getEmptyTime($plan);
+
         $user   =   Auth::user();
         Cache::pull('plan_'.$exam->id.'_'.$user->id);
         $plan   =   Cache::rememberForever('plan_'.$exam->id.'_'.$user->id,function() use ($plan){
@@ -1340,12 +1343,18 @@ class ExamController extends CommonController
         $inviteData = $invite->status($exam_id);
 
         //将邀请状态插入$stationData
-        foreach ($stationData as &$item) {
-            foreach ($inviteData as $value) {
-                if ($item->teacher_id == $value->user_id) {
-                    $item->invite_status = $value->invite_status;
+        foreach ($stationData as &$items) {
+            foreach ($items as &$item) {
+                foreach ($inviteData as $value) {
+                    if ($item->teacher_id == $value->invite_user_id) {
+                        $item->invite_status = $value->invite_status;
+                    } else {
+                        $item->invite_status = 0;
+                    }
                 }
             }
+
+
         }
 
         return view('osce::admin.exammanage.station_assignment', [
@@ -1611,5 +1620,41 @@ class ExamController extends CommonController
         }
     }
 
+    private function getEmptyTime($plan){
+        $data   =   [];
+        foreach($plan as $scringId=>$scring)
+        {
+            $scringData =   [];
+            foreach($scring as $key=>$item)
+            {
+                //dd($item);
+                $itemData   =   [
+                    'name'  =>  $item['name'],
+                    'child' =>  []
+                ];
+                $end    =   0;
+                foreach($item['child'] as $child)
+                {
+                    if($end!=0)
+                    {
+                        if($child['start']>$end+10)
+                        {
+                            $emptyItem  =   [
+                                "start" => $end,
+                                "end"   => $child['start'],
+                                'items' =>  [],
+                            ];
+                            $itemData['child'][]=$emptyItem;
+                        }
+                    }
+                    $itemData['child'][]    =   $child;
+                    $end    =   $child['end'];
+                }
 
+                $scringData[$key]   =   $itemData;
+            }
+            $data[$scringId]        =   $scringData;
+        }
+        return $data;
+    }
 }
