@@ -174,7 +174,6 @@
                 aysnc:true,
                 data:{id:thisId,pagesize:current},
                 success:function(res){
-                    console.log(res)
                     totalpages = res.total;
                     var html = '';
                     var index = (current - 1)*10;
