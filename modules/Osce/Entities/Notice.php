@@ -172,6 +172,7 @@ class Notice extends CommonModel
                 'url'   =>  $url
             ]
         ];
+        dd($to);
         $message    =   Common::CreateWeiXinMessage($msgData);
         Common::sendWeixinToMany($message,$to);
     }
@@ -219,7 +220,6 @@ class Notice extends CommonModel
         try{
             $accept = implode(',',$groups);
             $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
-            dd($to);
             $notice =   $this   ->  addNotice($data,$to,$accept);
             return $notice;
 
