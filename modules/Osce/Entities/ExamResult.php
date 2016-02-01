@@ -220,8 +220,8 @@ class ExamResult extends CommonModel
             $join -> on('teacher.id', '=', 'exam_result.teacher_id');
         })-> leftJoin('exam', function($join){
             $join -> on('exam.id', '=', 'student.exam_id');
-        })-> leftJoin('station_teacher','station_teacher.user_id','=','teacher.id')
-            ->leftJoin('station','station.id','=','station_teacher.station_id')
+        })
+            ->leftJoin('station','station.id','=','exam_result.station_id')
             ->leftJoin('subject','subject.id','=','station.subject_id');
         $builder=$builder->where('exam_result.student_id',$studentId);
         $builder=$builder->select([
@@ -229,12 +229,15 @@ class ExamResult extends CommonModel
             'exam_result.score as score',
             'exam_result.time as time',
             'teacher.name as grade_teacher',
+            'student.id as student_id',
             'student.name as student_name',
             'student.code as student_code',
+            'exam.id as exam_id',
             'exam.name as exam_name',
             'exam.begin_dt as begin_dt',
             'exam.end_dt as end_dt',
-            'subject.title as title'
+            'subject.title as title',
+            'station.id as station_id'
         ])
             ->get();
 
