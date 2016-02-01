@@ -516,9 +516,8 @@ class Exam extends CommonModel
      */
     public function CourseControllerIndex($examId = "", $subjectId = "")
     {
-        $builder = $this->Join('exam_screening','exam_screening.exam_id','=','exam.id')
-            ->Join('exam_result','exam_result.exam_screening_id','=','exam_screening.id')
-            ->Join('station','station.id','=','exam_result.station_id')
+        $builder = $this->Join('station_teacher','station_teacher.exam_id','=','exam.id')
+            ->Join('station','station.id','=','station_teacher.station_id')
             ->Join('subject','subject.id','=','station.subject_id');
 
         if ($examId != "") {
