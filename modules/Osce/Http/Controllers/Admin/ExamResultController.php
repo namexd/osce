@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVideo;
@@ -108,7 +109,7 @@ class ExamResultController extends CommonController{
              $item->time = date('H:i:s',$item->time);
              date_default_timezone_set("PRC");
          }
-         return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams]);
+         return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
     }
 
     /**
@@ -274,5 +275,39 @@ class ExamResultController extends CommonController{
         } catch (\Exception $ex) {
             return response()->back()->withErrors($ex->getMessage());
         }
+    }
+
+    /**
+     *ajax请求获取当前考试下的考站
+     * @method GET
+     * @url /user/
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        exam_id        考试id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamStationList(Request $request){
+        $this->validate($request,[
+           'exam_id'  =>'required',
+        ]);
+
+        $exam_id=$request->get('exam_id');
+        $stations=ExamStation::where('exam_id',$exam_id)->select()->get();
+        $data=[];
+        foreach($stations as $station){
+             $data[]=[$station->station];
+        }
+
+        return response()->json(
+            $this->success_data($data,1,'success')
+        );
     }
 }
