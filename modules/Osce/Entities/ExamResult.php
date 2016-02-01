@@ -25,6 +25,10 @@ class ExamResult extends CommonModel
     protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'end_dt', 'begin_dt', 'time',
         'create_user_id', 'score', 'score_dt', 'teacher_id','evaluate','operation','skilled','patient','affinity'];
 
+    public function examScreening(){
+        return $this->hasOne('\Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
+    }
+
     public function student(){
         return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
     }
