@@ -85,7 +85,7 @@ $(function(){
                                     <option value="{{$subject_id}}" {{$subject_id!=null?'selected':''}}>{{$exam->name}}</option>
                                 </select>
                             <span class="input-group-btn pull-left" style="margin-left: 10px;">
-                                <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                                <button type="submit" class="btn btn-primary" id="search" style="border-radius: 3px;">搜索</button>
                             </span>
                             </div>
                         </div>
