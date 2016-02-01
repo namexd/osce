@@ -191,12 +191,13 @@ class UserController  extends CommonController
             }else{
                 \Illuminate\Support\Facades\Session::put('openid','dfdsfds');
             }
+            return view('osce::wechat.user.login');
         }
         catch(\Exception $ex)
         {
             //暂时未做当前页刷新报错问题
+            abort(404);
         }
-        return view('osce::wechat.user.login');
     }
 
     /**
