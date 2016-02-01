@@ -173,7 +173,14 @@ class Notice extends CommonModel
             ]
         ];
         $message    =   Common::CreateWeiXinMessage($msgData);
-        Common::sendWeixinToMany($message,$to);
+        if(count($to)==1)
+        {
+            Common::sendWeiXin($to[0],$message);
+        }
+        else
+        {
+            Common::sendWeixinToMany($message,$to);
+        }
     }
 
     public function sendPm($notice,$to,$url){
