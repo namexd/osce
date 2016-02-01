@@ -300,7 +300,7 @@ class PadController extends  CommonController{
             if (!$queue->save()) {
                 throw new \Exception('状态修改失败！请重试');
             }
-            return response()->json($this->success_data(['修改成功！']));
+            return response()->json($this->success_data([$date]));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
