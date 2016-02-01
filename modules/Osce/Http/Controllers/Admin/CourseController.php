@@ -202,7 +202,7 @@ class CourseController extends CommonController
             $exam = new Exam();
             $data = $exam->CourseControllerIndex($examId);
 
-            return response()->json($this->success_data($data));
+            return response()->json($this->success_data($data->toArray()));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
