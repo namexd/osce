@@ -34,7 +34,7 @@
                         layer.alert(res.message);
                     }else{
                         var data = res.data;
-                        var html = '<option value="">全部考试</option>';
+                        var html = '<option value="">全部考站</option>';
                         for(var i in data){
                             html += '<option value="'+data[i][0].id+'">'+data[i][0].name+'</option>';
                         }
