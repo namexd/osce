@@ -172,11 +172,11 @@ class UserController  extends CommonController
      *
      */
     public function getLogin(){
-        $getOpenid = env('OPENID', true);
+        $getOpenid = env('OPENID',false);
         try{
             if($getOpenid){
                 $openid = \Illuminate\Support\Facades\Session::get('openid','');
-                if(empty($openid)){
+                if(empty($openid)||$openid=='dfdsfds'){
                     $openid = $this->getOpenId();
                     \Illuminate\Support\Facades\Session::put('openid',$openid);
                 }
