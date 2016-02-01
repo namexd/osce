@@ -760,11 +760,13 @@ class MachineController extends CommonController
         if($nfc){
             $watch_id=Watch::where('nfc_code',$nfc)->select()->first();
             if($watch_id){
-                if($id->id!=$watch_id->id){
+                $watch_id=$watch_id->id;
+                if($id!=$watch_id){
                     return  redirect()->back()->withErrors('nfc标签代码值已存在');
                 }
             }
         }
+
         $data   =   [
             'id'            =>  $request    ->  get('id'),
             'name'          =>  $request    ->  get('name'),
