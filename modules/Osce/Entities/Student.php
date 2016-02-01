@@ -367,6 +367,7 @@ class Student extends CommonModel
             ->select(
                 'student.name as student_name',
                 'student.id as student_id',
+                'exam_result.id as exam_result_id',
                 'exam_result.score as exam_result_score',
                 'exam_result.time as exam_result_time'
             )
