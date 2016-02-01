@@ -49,6 +49,7 @@ class CourseController extends CommonController
                 $examId,
                 $subjectId
             );
+//            dd($subjectData->toArray());
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
                 $avg = $subject->CourseControllerAvg(

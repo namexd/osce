@@ -514,12 +514,12 @@ class Exam extends CommonModel
      * @return mixed
      * @author Jiangzhiheng
      */
-    public function CourseControllerIndex($examId = "",$subjectId = "")
+    public function CourseControllerIndex($examId = "", $subjectId = "")
     {
         $builder = $this->Join('station_teacher','station_teacher.exam_id','=','exam.id')
             ->Join('exam_result','exam_result.station_id','=','station_teacher.station_id')
-            ->Join('station','station.id','=','station_teacher.station_id')
-            ->Join('subject','subject.id','=','station.subject_id');
+            ->leftJoin('station','station.id','=','exam_result.station_id')
+            ->leftJoin('subject','subject.id','=','station.subject_id');
 
         if ($examId != "") {
             $builder = $builder->where('exam.id','=',$examId);
@@ -537,7 +537,7 @@ class Exam extends CommonModel
             'subject.title as subject_name',
             'station.id as station_id'
         ])
-//            ->whereNotNull('exam.id')
+            ->whereNotNull('exam.id')
             ->where('exam.status','<>',0)
             ->distinct()
 //            ->groupBy('subject.id')
