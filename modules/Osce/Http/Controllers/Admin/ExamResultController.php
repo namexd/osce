@@ -305,7 +305,7 @@ class ExamResultController extends CommonController{
         foreach($stations as $station){
              $data[]=$station->station;
         }
-      
+
         return response()->json(
             $this->success_data($data,1,'success')
         );
