@@ -264,7 +264,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
      public function EndExamAlterStatus($studentId ,$stationId,$nowTime ){
-         $nowTime   =   date('Y-m-d H:i:s',time());
+         $nowTime   =   date('Y-m-d H:i:s',$nowTime);
          $endExam   =   ExamQueue::where('student_id','=',$studentId)
                     ->  where('station_id','=',$stationId)
                     ->  update(['end_dt'=>$nowTime,'status'=>3]);
