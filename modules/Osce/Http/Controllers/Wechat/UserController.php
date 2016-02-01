@@ -173,15 +173,13 @@ class UserController  extends CommonController
      */
     public function getLogin(){
         $getOpenid = env('OPENID',true);
-//        try{
+        try{
             if($getOpenid){
                 $openid = \Illuminate\Support\Facades\Session::get('openid','');
                 if(empty($openid)||$openid=='dfdsfds'){
                     $openid = $this->getOpenId();
-                    dd($openid);
                     \Illuminate\Support\Facades\Session::put('openid',$openid);
                 }
-                dd($openid);
                 $user   =   User::where('openid','=',$openid)->first();
                 if($user)
                 {
@@ -192,12 +190,12 @@ class UserController  extends CommonController
                 \Illuminate\Support\Facades\Session::put('openid','dfdsfds');
             }
             return view('osce::wechat.user.login');
-//        }
-//        catch(\Exception $ex)
-//        {
+        }
+        catch(\Exception $ex)
+        {
             //暂时未做当前页刷新报错问题
-            //abort(404);
-//        }
+            abort(404);
+        }
     }
 
     /**
