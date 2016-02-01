@@ -21,27 +21,25 @@
             <option value="3">OSCE考试2016年第3期</option>
         </select>
     </div>
-	@forelse($examresultList as $examResult)
   	<div class="examination_msg">
 		<div class="form-group">
             <label for="">评价老师</label>
-            <div class="txt">{{$examResult->teacher->name}}</div>
+            <div class="txt">{{$examresultList->teacher->name}}</div>
         </div>
         <div class="form-group">
             <label for="">成绩</label>
-            <div class="txt">{{$examResult->score}}</div>
+            <div class="txt">{{$examresultList->score}}</div>
         </div>
         <div class="form-group">
             <label for="">提交时间</label>
-            <div class="txt">{{$examResult->end_dt}}</div>
+            <div class="txt">{{$examresultList->end_dt}}</div>
         </div>
         <div class="form-group">
             <label for="">评价</label>
-            <div class="txt">{{$examResult->evaluate}}</div>
+            <div class="txt">{{$examresultList->evaluate}}</div>
         </div>
   	</div>
-	@empty
-		@endforelse
+
   	<div class="detail_box">
 	  	<table id="detail_tb">
 	  		<tr>
