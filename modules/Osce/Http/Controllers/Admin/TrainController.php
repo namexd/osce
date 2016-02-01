@@ -260,6 +260,9 @@ class TrainController extends  CommonController{
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
         $train=InformTrain::where('id',$id)->select()->get();
+        $clicks=InformTrain::where('id',$id)->first()->clicks;
+        $clicks=$clicks+1;
+        InformTrain::where('id',$id)->update(['clicks'=>$clicks]);
         foreach($train as $item){
             $data=[
                 'id'    =>$item->id,

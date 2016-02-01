@@ -18,7 +18,7 @@ class TestResult extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'begin_dt', 'end_dt','time','score','score_dt','teacher_id','create_user_id'];
+    protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'begin_dt', 'end_dt','time','score','score_dt','teacher_id','create_user_id','evaluate','operation','skilled','patient','affinity'];
 
    //������ѧ����
     public function student(){
@@ -27,6 +27,7 @@ class TestResult extends CommonModel
 
     //��������վ��
     public  function  station(){
+
         return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
 
     }

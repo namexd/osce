@@ -9,6 +9,7 @@ use Modules\Osce\Entities\Exam;
 
 use Modules\Osce\Entities\ExamAbsent;
 
+use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamOrder;
@@ -117,7 +118,7 @@ class IndexController extends CommonController
         $id_card=$request->get('id_card');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=Student::where('idcard',$id_card)->select()->first();
+        $student_id=Student::where('idcard',$id_card)->where('exam_id',$exam_id)->select()->first();
         if(!$student_id){
             return \Response::json(array('code' => 3));
         }
@@ -154,6 +155,7 @@ class IndexController extends CommonController
             $watchModel = new WatchLog();
             $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
             ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
+            Exam::where('id',$exam_id)->update(['status'=>1]);
             return \Response::json(array('code' => 1));
         } else {
             return \Response::json(array('code' => 0));
@@ -186,7 +188,7 @@ class IndexController extends CommonController
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=ExamScreeningStudent::where('watch_id',$id)->select('student_id')->orderBy('id','DESC')->first();
+        $student_id=WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
         if(!$student_id){
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
@@ -196,10 +198,53 @@ class IndexController extends CommonController
             }
         }
         $student_id=$student_id->student_id;
+        $screen_id=ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();
+        if(!$screen_id){
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                $action='解绑';
+                $updated_at =date('Y-m-d H:i:s',time());
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$updated_at,'status'=>0),
+                    'student_id'     =>$student_id,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->unwrapRecord($data);
+                return \Response::json(array('code'=>2));
+            }else{
+                return \Response::json(array('code'=>0));
+            }
+        }
+        $exam_screen_id=$screen_id->exam_screening_id;
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
+        $ExamFlowModel = new  ExamFlow();
+        $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
+        if($ExamFinishStatus==$studentExamSum){
+            ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);
+            ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                $action='解绑';
+                $updated_at =date('Y-m-d H:i:s',time());
+                $data=array(
+                    'watch_id'       =>$id,
+                    'action'         =>$action,
+                    'context'        =>array('time'=>$updated_at,'status'=>0),
+                    'student_id'     =>$student_id,
+                );
+                $watchModel=new WatchLog();
+                $watchModel->unwrapRecord($data);
+                return \Response::json(array('code'=>1));
+            }else{
+                return \Response::json(array('code'=>0));
+            }
+        }
         $result=Watch::where('id',$id)->update(['status'=>0]);
         if($result){
             $action='解绑';
-            $result=ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
+            $result=ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
             if($result){
                 $updated_at =date('Y-m-d H:i:s',time());
                 $data=array(
@@ -502,12 +547,7 @@ class IndexController extends CommonController
      */
     public function getExamList(){
         $exam=new Exam();
-        $time=time();
-        $start=date('Y-m-d 00:00:00',$time);
-        $time=strtotime($start);
-        $end=date('Y-m-d 23:59:59' ,$time );
-        $endtime=strtotime($end);
-        $examList=$exam->getTodayList($time,$endtime);
+        $examList=$exam->getTodayList();
         if(count($examList)){
             return response()->json(
                 $this->success_rows(1,'success',count($examList),$pagesize=1,count($examList),$examList)
@@ -668,7 +708,8 @@ class IndexController extends CommonController
               $countStation[]=$item->station_id;
              }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*2;
+                $batch=config('osce.batch_num');//默认为2
+                $countStation=count($countStation)*$batch;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
@@ -690,7 +731,8 @@ class IndexController extends CommonController
                     $countStation[]=$item->station_id;
                 }
                 $countStation=array_unique($countStation);
-                $countStation=count($countStation)*2;
+                $batch=config('osce.batch_num');
+                $countStation=count($countStation)*$batch;
                 $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
                 $data=[];
                 foreach($list as $itm){
@@ -776,7 +818,7 @@ class IndexController extends CommonController
         ]);
         $exam_id=$request->get('exam_id');
         $idcard=$request->get('id_card');
-        $studentId=Student::where('idcard',$idcard)->select('id')->first();
+        $studentId=Student::where('idcard',$idcard)->where('exam_id',$exam_id)->select('id')->first();
         if(!$studentId){
           return \Response::json(array('code'=>2));//未找到该学生
         }

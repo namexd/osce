@@ -78,7 +78,6 @@ class StudentExamQueryController extends  CommonController
 
     public function getEveryExamList(Request $request){
 
-
         $this->validate($request,[
             'exam_id'=>'required|integer'
         ]);
@@ -95,6 +94,7 @@ class StudentExamQueryController extends  CommonController
                 'id'=>$data->id,
             ];
         }
+
         $examScreeningIds = array_column($examScreening, 'id');
         //根据场次id查询出考站的相关信息
         $ExamResultModel= new ExamResult();
@@ -118,6 +118,7 @@ class StudentExamQueryController extends  CommonController
                 'sp_name'=>$spteacher->name,
                 'begin_dt'=>$examTime->begin_dt,
                 'end_dt'=>$examTime->end_dt,
+                'exam_screening_id'=>$stationType->exam_screening_id
             ];
         }
         return response()->json(
@@ -145,19 +146,18 @@ class StudentExamQueryController extends  CommonController
     {
 
         $this->validate($request, [
-            'exam_result_id' => 'required|integer'
+            'exam_screening_id' => 'required|integer'
         ]);
 
-        $examresultId= Input::get('exam_result_id');
+        $examresultId=  intval(Input::get('exam_screening_id'));
 
          //根据考试结果id查询出该结果详情
-        $examresultList=ExamResult::where('id','=',$examresultId)->get();
+        $examresultList=ExamResult::where('exam_screening_id','=',$examresultId)->get();
 
 
          //查询出详情列表
         $examscoreModel= new ExamScore();
         $examScoreList=$examscoreModel->getExamScoreList($examresultId);
-//        dd($examScoreList);
 
         $groupData  =   [];
         foreach($examScoreList as $examScore){
@@ -171,6 +171,7 @@ class StudentExamQueryController extends  CommonController
             $indexData[]    =   $groupInfo;
         }
         $list   =   [];
+
         foreach($indexData as $goupData)
         {
             $childrens  =   is_null($goupData['child'])? []:$goupData['child'];
@@ -182,8 +183,19 @@ class StudentExamQueryController extends  CommonController
                 $list[] =   $children;
             }
         }
+//        dd($list);
 
         return view('osce::wechat.resultquery.examination_detail',['examScoreList'=>$list],['examresultList'=>$examresultList]);
     }
+
+
+
+
+
+
+
+
+
+
 
 }

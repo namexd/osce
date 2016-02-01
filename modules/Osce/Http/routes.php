@@ -12,7 +12,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 
 		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
+		Route::get('user/reset-password-verify',['uses'=>'UserController@getResetPasswordVerify','as'=>'osce.wechat.user.getResetPasswordVerify']);
 		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
+		Route::post('user/reset-password',['uses'=>'UserController@postResetPassword','as'=>'osce.wechat.user.postResetPassword']);
 		//忘记密码
 		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.wechat.user.getForgetPassword']);
 	});
@@ -233,10 +235,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('train/upload-file',['uses'=>'TrainController@postUploadFile','as'=>'osce.admin.postUploadFile']);
 		Route::get('train/download-document',['uses'=>'TrainController@getDownloadDocument','as'=>'osce.admin.getDownloadDocument']);
 
+		//视频的着陆页
+		Route::get('exam-result/result-video',['uses'=>'ExamResultController@getResultVideo','as'=>'osce.admin.course.getResultVideo']);
 
-		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.getIndex']);
-		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.getStudent']);
-		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.getStudentScore']);
+		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
+		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.course.getStudent']);
+		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.course.getStudentScore']);
+		Route::get('course/student-details',['uses'=>'CourseController@getStudentDetails','as'=>'osce.admin.course.getStudentDetails']);
 
 		
 	});
@@ -255,10 +260,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('wait-room',['uses'=>'PadController@getWaitRoom']);
 //
 		Route::get('examinee',['uses'=>'DrawlotsController@getExaminee','as'=>'osce.pad.getExaminee']);  //pad端通过教师查询考室id
-		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']); //抽签
-		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);
+		Route::get('station',['uses'=>'DrawlotsController@getStation','as'=>'osce.pad.getStation']);  //抽签的方法
+		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);  //下一组考生
 
-
+		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
 	});
 
 
@@ -324,6 +329,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.user.getRegister']);
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
 		Route::post('user/revert-code',['uses'=>'UserController@postRevertCode','as'=>'osce.wechat.user.postRevertCode']);	//异步发送验证码
+		Route::get('user/Proof-number',['uses'=>'UserController@getProofNumber','as'=>'osce.wechat.user.getProofNumber']);	//异步发送验证码
 
 		//发送重找账号
 		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
@@ -356,6 +362,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/wait_exam_list', 	['uses'=>'InvigilatePadController@getWaitExamList','as'=>'osce.api.invigilatepad.getWaitExamList']);
 		Route::get('invigilatepad/start-exam', 	['uses'=>'InvigilatePadController@getStartExam','as'=>'osce.api.invigilatepad.getStartExam']);
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
+		Route::get('invigilatepad/test-index', 	['uses'=>'InvigilatePadController@getTestIndex','as'=>'osce.api.invigilatepad.getTestIndex']);
 
 		//pad的上传
 		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);

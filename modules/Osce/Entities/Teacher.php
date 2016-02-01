@@ -477,13 +477,14 @@ class Teacher extends CommonModel
 
 
     /**
-     * 获得与考站关联的老师
+     * 微信端学生成绩查询相关的sp老师
      * @param $exam_id
      * @return mixed
      * @internal param array $stationIds
+     *  @author   zhouqiang
      */
 
-    public function getSpTeacher($station){
+    public function spteacher($station){
         return Teacher::leftJoin('station_teacher', function($join){
             $join -> on('teacher.id', '=', 'station_teacher.user_id');
         })->where('station_teacher.station_id','=',$station)

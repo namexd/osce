@@ -13,6 +13,9 @@
             color: #333!important;
         }
         .user_header,.btn{background: #1ab394;}
+        .must{
+            color: #ff0000;
+        }
     </style>
 @stop
 
@@ -39,11 +42,11 @@
         {{-- RegTeacherOp --}}
         <form name="form" method="post" id="sourceForm" action="{{route('osce.wechat.user.postRegister')}}" id="frmTeacher">
             <div class="form-group">
-                <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span>*</span></label>
+                <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span class="must">*</span></label>
                 <input  type="text" name="nickname" class="form-control" id="name"/>
             </div>
             <div class="form-group">
-                <label for="name">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<span>*</span></label>
+                <label for="name">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<span class="must">*</span></label>
                 <input  type="text" name="name" class="form-control" id="name"/>
             </div>
             <div class="form-group">
@@ -66,7 +69,7 @@
                    <option value="1">学生</option>
                    <option value="2">老师</option>
                </select>
-               <label for="ipt_zjh"><span>*</span></label>
+               <label for="ipt_zjh"><span class="must">*</span></label>
            </div>
 
             <div class="form-group card-list no_zjh" style="width:65%;float:right;" >
@@ -80,13 +83,13 @@
             </div>
             <div class="clear"></div>
             <div class="form-group">
-                <label for="mobile">手机号码<span>*</span></label>
+                <label for="mobile">手机号码<span class="must">*</span></label>
                 <input type="number" class="form-control" id="mobile" name="mobile" />
             </div>
             <div class="clear"></div>
 
             <div class="form-group">
-                <label for="code">验证码<span>*</span></label>&nbsp;&nbsp; <input type="button" value="点击发送验证码" id="send_code">
+                <label for="code">验证码<span class="must">*</span></label>&nbsp;&nbsp; <input type="button" value="点击发送验证码" id="send_code">
                 <input type="text" name="code" class="form-control ipt_txt" placeholder="请输入验证码"/>
             </div>
             <div class="clear"></div>
@@ -98,7 +101,8 @@
                 <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请输入再次确认密码"/>
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
-            <input class="btn" type="submit" id="#bling" value="提交审核" />
+            <input type="hidden"  name="url" value="{{@$url}}">
+            <input class="btn" type="submit" id="register" value="提交审核" />
         </form>
 
     </div>
@@ -258,6 +262,13 @@
                     regexp: {
                         regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
                         message: '请输入正确的手机号码'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: '{{route('osce.wechat.user.getProofNumber')}}',//验证地址
+                        message: '该手机号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'get'//请求方式
                     }
                }
             },
@@ -290,27 +301,27 @@
                     },
                     stringLength: {
                         required: true,
-                        minlength:12,
+                        min:6,
                         message: '密码必须6个字符以上'
                     },
 
                 }
 
             },
-            repassword: {
+            password_confirmation: {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '请再次输入密码'
                     },
                     stringLength: {
                         required: true,
-                        minlength:12,
+                        min:6,
                         message: '密码必须6个字符以上'
                     },
                     identical: {
                         field: 'password',
                         message: '两次输入的密码不一致'
-                    },
+                    }
                 }
 
             }
@@ -417,21 +428,21 @@
                     },
                     stringLength: {
                          required: true, 
-                         minlength:12,
+                         min:6,
                          message: '密码必须6个字符以上'
                     },
 
                }
                
             },
-            confirm_password: {
+            password_confirmation: {
                   validators: {
                     notEmpty: {/*非空提示*/
                         message: '请再次输入密码'
                     },
                     stringLength: {
                           required: true,
-                          minlength:12,
+                          min:6,
                           message: '密码必须6个字符以上'
                     },
                       identical: {
@@ -447,7 +458,6 @@
     /*证件选择*/
     $('#card-list').change(function(){
         var type=$(this).val();
-
         if(type=="0"){
             $(".no_zjh").show();
             $(".ipt_zjh").hide();
@@ -495,7 +505,8 @@
     }
     $('#bling').submit(function(){
         var yz_num = $('input[name="yz_num"]').val();
-        if(yz_num=="0"){
+
+        if(yz_num=="0"||role_type=="0"){
             $.alert({
                 title: '提示：',
                 content: '验证码错误!',
@@ -659,6 +670,19 @@
             });
         }
     })
+    $('#register').click(function(){
+        var role_type=$('#card-list option:selected').val();//角色类型
+        if(role_type==0){
+            $.alert({
+                title: '提示：',
+                content: '角色类型必填',
+                confirmButton: '确定',
+                confirm: function(){
+                }
+            });
+            return false;
+        }
 
+    })
 </script>
 @stop

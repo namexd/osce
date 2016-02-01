@@ -22,6 +22,7 @@ use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
 use Modules\Osce\Entities\InformInfo;
+use Modules\Osce\Entities\Invite;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
@@ -1119,43 +1120,51 @@ class ExamController extends CommonController
         ]);
 
         $id         =   $request    ->  get('id');
-
-        $exam       =   Exam::find($id);
-        if(is_null($exam))
+        try
         {
-            throw new \Exception('没有找到该考试');
-        }
+            $exam       =   Exam::find($id);
+            if(is_null($exam))
+            {
+                throw new \Exception('没有找到该考试');
+            }
 
 
-        $user   =   Auth::user();
-        Cache::pull('plan_'.$exam->id.'_'.$user->id);
-        Cache::pull('plan_time_'.$exam->id.'_'.$user->id);
+            $user   =   Auth::user();
+            Cache::pull('plan_'.$exam->id.'_'.$user->id);
+            Cache::pull('plan_time_'.$exam->id.'_'.$user->id);
 
-        if($exam->sequence_mode==1)
-        {
-            $ExamPlanModel =   new ExamPlanForRoom();
-            $plan   =   $ExamPlanModel    ->  IntelligenceEaxmPlan($exam);
-        }
-        else
-        {
-            $ExamPlanModel   =   new ExamPlan();
-            Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
-            $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
-            $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-                return $ExamPlanModel->getStationStudent();
+            if($exam->sequence_mode==1)
+            {
+                $ExamPlanModel =   new ExamPlanForRoom();
+                $plan   =   $ExamPlanModel    ->  IntelligenceEaxmPlan($exam);
+            }
+            else
+            {
+                $ExamPlanModel   =   new ExamPlan();
+                Cache::pull('plan_station_student_'.$exam->id.'_'.$user->id);
+                $plan   =   $ExamPlanModel   ->  IntelligenceEaxmPlan($exam);
+
+                $timeList   =   Cache::rememberForever('plan_station_student_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                    return $ExamPlanModel->getStationStudent();
+                });
+                $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
+                    return $ExamPlanModel->getTimeList();
+                });
+            }
+
+            $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
+                return $plan;
             });
-            $timeList   =   Cache::rememberForever('plan_time_'.$exam->id.'_'.$user->id,function() use ($ExamPlanModel){
-                return $ExamPlanModel->getTimeList();
-            });
+            return response()->json(
+                $this->success_data($plan)
+            );
         }
-
-        $plan = Cache::rememberForever('plan_'.$exam->id.'_'.$user->id, function() use($plan) {
-            return $plan;
-        });
-
-        return response()->json(
-            $this->success_data($plan)
-        );
+        catch (\Exception $ex)
+        {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
     }
 
     /**
@@ -1189,6 +1198,9 @@ class ExamController extends CommonController
         }
         $ExamPlanModel  =   new ExamPlan();
         $plan   =   $ExamPlanModel  ->  showPlan($exam);
+
+        $plan   =   $this           ->  getEmptyTime($plan);
+
         $user   =   Auth::user();
         Cache::pull('plan_'.$exam->id.'_'.$user->id);
         $plan   =   Cache::rememberForever('plan_'.$exam->id.'_'.$user->id,function() use ($plan){
@@ -1327,6 +1339,24 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
+        $invite = new Invite();
+        $inviteData = $invite->status($exam_id);
+
+        //将邀请状态插入$stationData
+        foreach ($stationData as &$items) {
+            foreach ($items as &$item) {
+                foreach ($inviteData as $value) {
+                    if ($item->teacher_id == $value->invite_user_id) {
+                        $item->invite_status = $value->invite_status;
+                    } else {
+                        $item->invite_status = 0;
+                    }
+                }
+            }
+
+
+        }
+
         return view('osce::admin.exammanage.station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
@@ -1374,6 +1404,7 @@ class ExamController extends CommonController
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $room, $formData);
             } else { //否则就是编辑
+//                dd($examId,$formData);
                 $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
@@ -1589,5 +1620,41 @@ class ExamController extends CommonController
         }
     }
 
+    private function getEmptyTime($plan){
+        $data   =   [];
+        foreach($plan as $scringId=>$scring)
+        {
+            $scringData =   [];
+            foreach($scring as $key=>$item)
+            {
+                //dd($item);
+                $itemData   =   [
+                    'name'  =>  $item['name'],
+                    'child' =>  []
+                ];
+                $end    =   0;
+                foreach($item['child'] as $child)
+                {
+                    if($end!=0)
+                    {
+                        if($child['start']>$end+10)
+                        {
+                            $emptyItem  =   [
+                                "start" => $end,
+                                "end"   => $child['start'],
+                                'items' =>  [],
+                            ];
+                            $itemData['child'][]=$emptyItem;
+                        }
+                    }
+                    $itemData['child'][]    =   $child;
+                    $end    =   $child['end'];
+                }
 
+                $scringData[$key]   =   $itemData;
+            }
+            $data[$scringId]        =   $scringData;
+        }
+        return $data;
+    }
 }

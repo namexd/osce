@@ -21,8 +21,7 @@ class Invite extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id'];
-    private $excludeId = [];
+    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id','station_id','status','user_id'];
 
     //保存并发送邀请
     public function addInvite(array $data)
@@ -30,24 +29,30 @@ class Invite extends CommonModel
         try {
             foreach ($data as  $list) {
                 $inviteDat = [
-                    'id'  =>$list['teacher_id'],
+                    'user_id'  =>$list['teacher_id'],
                     'name'  => $list['exam_name'],
                     'begin_dt' => $list['begin_dt'],
                     'end_dt' => $list['end_dt'],
                     'exam_screening_id' => $list['exam_screening_id'],
+                    'station_id' =>$list['station_id'],
+                    'status'=>0,
                 ];
-                if($this->find($inviteDat['id']))
+                //查询出数据库是否有该老师在这场考试邀请过
+                $examScreening= Invite::where('exam_screening_id','=',$inviteDat['exam_screening_id'])->first();
+                //查询出老师名字
+                $teacherName= Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
+                if($examScreening)
                 {
-                    throw new \Exception('同一个老师不能同时收到两个不同邀请');
+                    throw new \Exception('该场考试该老师'.$teacherName->name.'已邀请过！！！');
                 }
-                $notice = $this->firstOrCreate($inviteDat);
+                  $notice = $this->Create($inviteDat);
             }
-                if ($notice) {
+                if ($notice){
                     foreach($data as  $SpTeacher){
                         $ExamSpList = [
 //                           'id'=>$data[$k]['teacher_id'],
-                          'invite_id' => $SpTeacher['teacher_id'],
-                            'exam_screening_id' => $SpTeacher['exam_id'],
+                             'invite_id' => $notice->id,
+                            'exam_screening_id' => $SpTeacher['exam_screening_id'],
                             'case_id' => $SpTeacher['case_id'],
                             'teacher_id' => $SpTeacher['teacher_id'],
                         ];
@@ -56,7 +61,7 @@ class Invite extends CommonModel
                           $examspModel-> addExamSp($ExamSpList);
                     }
                     //邀请用户
-                    $this->sendMsg($data);
+                    $this->sendMsg($data,$notice);
 //
                     return $notice;
                 } else {
@@ -70,12 +75,12 @@ class Invite extends CommonModel
     }
         // 发送邀请
 
-    public function sendMsg($data)
+    public function sendMsg($data,$notice)
     {
 
         try {
             foreach ($data as $key => $openIdList) {
-                $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['teacher_id']]);
+                $url = route('osce.wechat.invitation.getMsg',['id'=>$notice->id]);
                 $msgData = [
                     [
                         'title' => '邀请通知',
@@ -104,5 +109,20 @@ class Invite extends CommonModel
         }
     }
 
+    //邀请状态
+    public function status($examId)
+    {
+        //获得exam_screening_id
+        $examScreeningId = ExamScreening::where('exam_id',$examId)->select('id')->first()->id;
+
+        return Invite::leftJoin('exam_screening',
+            function ($join) use ($examScreeningId){
+                $join->on('exam_screening.id','=','invite.exam_screening_id')
+                    ->where('invite.exam_screening_id','=',$examScreeningId);
+            })->select(
+            'invite.status as invite_status',
+            'invite.user_id as invite_user_id'
+            )->get();
+    }
 
 }

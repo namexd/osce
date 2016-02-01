@@ -29,6 +29,7 @@ class ExamScore extends  CommonModel
 
     public  function getExamScoreList($examresultId){
         $examScoreList=$this->where('exam_result_id','=',$examresultId)->get();
+
         return $examScoreList;
 
     }

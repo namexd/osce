@@ -175,11 +175,10 @@ class ExamResult extends CommonModel
 
 
     /**
-     *微信端学生成绩查询
-     * @param $room_id
-     * @return
-     * @throws \Exception
+     *  微信端学生每一个考站成绩查询
+     * @param Request $request
      * @author zhouqiang
+     * @return \Illuminate\View\View
      */
 
 
@@ -199,9 +198,50 @@ class ExamResult extends CommonModel
          'teacher.name as grade_teacher',
          'station.type as type',
          'station.name as station_name',
-     ])->paginate(config('osce.page_size'));
+         'exam_result.exam_screening_id as exam_screening_id'
+     ])
+         ->paginate(config('osce.page_size'));
 
      return $builder;
     }
+
+    /**
+     *  pc端学生成绩查询
+     * @param $studentId
+     * @return \Illuminate\View\View
+     * @author zhouqiang
+     */
+
+    public function getstudentData($studentId){
+
+        $builder=$this->leftJoin('student', function($join){
+            $join -> on('student.id', '=', 'exam_result.student_id');
+        })-> leftJoin('teacher', function($join){
+            $join -> on('teacher.id', '=', 'exam_result.teacher_id');
+        })-> leftJoin('exam', function($join){
+            $join -> on('exam.id', '=', 'student.exam_id');
+        })-> leftJoin('station_teacher','station_teacher.user_id','=','teacher.id')
+            ->leftJoin('station','station.id','=','station_teacher.station_id')
+            ->leftJoin('subject','subject.id','=','station.subject_id');
+        $builder=$builder->where('exam_result.student_id',$studentId);
+        $builder=$builder->select([
+            'exam_result.station_id as id',
+            'exam_result.score as score',
+            'exam_result.time as time',
+            'teacher.name as grade_teacher',
+            'student.name as student_name',
+            'student.code as student_code',
+            'exam.name as exam_name',
+            'exam.begin_dt as begin_dt',
+            'exam.end_dt as end_dt',
+            'subject.title as title'
+        ])
+            ->get();
+
+        return $builder;
+
+    }
+
+
 
 }

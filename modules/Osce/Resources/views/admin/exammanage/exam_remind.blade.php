@@ -23,7 +23,7 @@
 @stop
 @section('content')
     <div class="pin_box">
-        <p class="clearfix pin_title">{{ $exams->name }}<span class="red time"><?php echo date('Y-m-d H:i:s',time())?></span></p>
+        <p class="clearfix pin_title">{{ $exams->name }}<span class="red time"><?php echo date('Y-m-d H:i',time())?></span></p>
         <div id="name_list">
             <input class="name_count" type="hidden" value="{{count($list)}}">
             @foreach($list as $key=>$lists)
@@ -37,7 +37,7 @@
         </div>
         <marquee id="marquee" style="width:100%;height:200px" Behaviour="alternate" scrollamount="2" direction="up" >
             <p style="font-size:18px;color:#ED5565;">考场纪律说明：</p>
-           {{ $exams->rules  }}
+            {!! $exams->rules !!}
         </marquee>
     </div>
 @stop{{-- 内容主体区域 --}}

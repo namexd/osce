@@ -24,7 +24,7 @@ class ExamScreeningStudent extends CommonModel
 
     public function student()
     {
-        return $this->hasOne('\Modules\Osce\Entities\student','id','student_id');
+        return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
     }
 
     /**

@@ -271,21 +271,23 @@ class Student extends CommonModel
      */
 
 
-    public  function studentList($teacher_id){
+    public  function studentList($stationId){
         return Student::leftjoin('exam_queue',function($join){
             $join ->on('student.id','=','exam_queue.student_id');
         })->leftjoin('station_teacher',function($join){
             $join ->on('exam_queue.station_id','=','station_teacher.station_id');
-        })->where('station_teacher.user_id','=',$teacher_id)
+        })->where('exam_queue.station_id','=',$stationId)
             ->where('exam_queue.status','=',1)
+            -> orderBy('exam_queue.begin_dt','asc')
             ->select([
                 'student.name as name',
                 'student.code as code',
                 'student.idcard as idcard',
                 'student.mobile as mobile',
-                'exam_queue.status as status'
+                'exam_queue.status as status',
+                'student.id as student_id'
             ])
-            ->get();
+            ->first();
     }
 
     //考生查询
@@ -356,11 +358,11 @@ class Student extends CommonModel
     {
         return Student::leftJoin('exam_result','exam_result.student_id','=','student.id')
             ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-            ->leftJoin('exam','exam.id','=','exam_screening_id.exam_id')
+            ->leftJoin('exam','exam.id','=','exam_screening.exam_id')
             ->leftJoin('station','station.id','=','exam_result.station_id')
-            ->leftJoin('subject','subject.id','=','station.subject_id')
             ->where('exam.id','=',$examId)
-            ->where('subject.id','=',$subjectId)
+            ->where('exam.status','<>',0)
+            ->where('station.subject_id','=',$subjectId)
             ->orderBy('exam_result.score','desc')
             ->select(
                 'student.name as student_name',
@@ -398,11 +400,11 @@ class Student extends CommonModel
                     'sum(exam_result.score) as score_total',
                     'count(*) as station_total'
                 ]))
-            );
-            $builder = $builder->groupBy('exam_result.student_id') ->orderBy('score_total','desc');
+            )->where('exam.status','<>',0);
+            $builder = $builder->groupBy('exam_result.student_id')
+                ->orderBy('score_total','desc');
 
             return $builder->paginate(config('osce.page_size'));
-//            return $builder->toSql();
         }
     }
 

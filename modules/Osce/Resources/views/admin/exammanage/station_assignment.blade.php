@@ -193,7 +193,7 @@
                                                 <td>{{$item[0]->station_name}}</td>
                                                 <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="form_data[{{$k2++}}][teacher_id]">
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="form_data[{{$index}}][teacher_id]">
                                                         @foreach($item as $value)
                                                             @if($value->teacher_type == 1)
                                                                 <option value="{{$value->teacher_id}}" selected="selected">{{$value->teacher_name}}</option>
@@ -204,9 +204,14 @@
                                                 <td class="sp-teacher">
                                                     <div class="teacher-box pull-left">
                                                         @foreach($item as $value)
-{{--                                                            {{dd($item)}}--}}
                                                             @if($value->teacher_type == 2)
+                                                            @if($value->invite_status == 2)
+                                                            <div class="input-group teacher pull-left teacher-warn" value="{{$value->teacher_id}}">
+                                                            @elseif($value->invite_status == 1)
+                                                            <div class="input-group teacher pull-left teacher-primary" value="{{$value->teacher_id}}">
+                                                            @else
                                                             <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
+                                                            @endif
                                                                 <input type="hidden" name="form_data[{{$index}}][spteacher_id][]" value="{{$value->teacher_id}}">
                                                                 <div class="pull-left">{{$value->teacher_name}}</div>
                                                                 <div class="pull-left"><i class="fa fa-times"></i></div>
@@ -215,7 +220,7 @@
                                                         @endforeach
                                                     </div>
                                                     <div class="pull-right" value="{{$k4++}}">
-                                                        @if($item[0]->station_type == 2)
+                                                        @if($item[0]->teacher_type == 2)
                                                         <div class="btn-group">
                                                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                           <span class="caret"></span>
@@ -226,7 +231,7 @@
                                                         @endif
                                                     </div>
                                                 </td>
-                                                <td><a href="javascript:void(0)" class="invitaion-teacher">发起邀请</a></td>
+                                                <td><a href="javascript:void(0)" class="invitaion-teacher" value="{{$item[0]->station_id}}">发起邀请</a></td>
                                             </tr>
                                             <?php $index++?>
                                         @empty

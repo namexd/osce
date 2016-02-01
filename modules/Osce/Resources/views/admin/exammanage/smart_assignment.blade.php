@@ -152,11 +152,13 @@
 
             </div>
             <textarea id="plan" style="display: none;">{{json_encode($plan)}}</textarea>
-            <div class="operate">
+            @if($exam->status==0)
+            <div class="operate" >
                 <button class="btn btn-default" type="button" id="makePlan">智能排考</button>
                 <button class="btn btn-default save" type="submit">保存方案</button>
                 <button class="btn btn-default" type="button" style="display: none;">导出excel</button>
             </div>
+            @endif
         </form>
     </div>
 @stop{{-- 内容主体区域 --}}

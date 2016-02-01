@@ -18,8 +18,13 @@ use Auth;
 class UserController  extends CommonController
 {
 
-    public function getRegister(){
-        return view('osce::wechat.user.register');
+    public function getRegister(Request $request){
+
+        //获取当前URl地址
+        //$current_url =$_SERVER['HTTP_REFERER'];
+         $current_url    =   $request->server('referer');
+
+         return view('osce::wechat.user.register',['url'=>$current_url]);
 
     }
 
@@ -49,6 +54,7 @@ class UserController  extends CommonController
      */
     public function postRegister(Request $request)
     {
+
         $this   ->validate($request,[
             'mobile'    =>  'required',
             'password'  =>  'required|confirmed',
@@ -68,6 +74,9 @@ class UserController  extends CommonController
             'type.required'         =>  '注册类型必选',
             'code.required'         =>  '验证码必填',
         ]);
+        $urls= $request    ->  get('url');
+        $fileNameArray   =   explode('/',$urls);
+        $url             =   array_pop($fileNameArray);
         $mobile     =   $request    ->  get('mobile');
         $password   =   $request    ->  get('password');
         $type       =   $request    ->  get('type');
@@ -76,6 +85,10 @@ class UserController  extends CommonController
         $nickname   =   $request    ->  get('nickname');
         $idcard     =   $request    ->  get('idcard');
         $code       =   $request    ->  get('code');        //验证码
+        //判断是否选择角色类型
+        if(empty($type)){
+            return view('osce.wechat.user.getRegister');
+          }
         \DB::beginTransaction();
         try{
             if($type==1)
@@ -93,10 +106,10 @@ class UserController  extends CommonController
             }
             else
             {
-                //验证 验证码
+//                验证 验证码
                 $codeDate = ['mobile'=>$mobile, 'code'=>$code];
                 $userRepository = new UserRepository();
-                if(!($userRepository->getRegCheckMobileVerfiy($codeDate))){
+                if(!empty($userRepository->getRegCheckMobileVerfiy($codeDate))){
                     throw new \Exception('验证码错误');
                 }
 
@@ -104,14 +117,31 @@ class UserController  extends CommonController
                 $user   ->  name        =   $name;
                 $user   ->  gender      =   $gender;
                 $user   ->  nickname    =   $nickname;
+
                 if($idcard)
                 {
                     $user   ->  name    =   $idcard;
+
                 }
                 if($user->save())
                 {
                     \DB::commit();
-                    return redirect()->route('osce.wechat.user.getLogin');
+                    if($url=='login')
+                    {
+                        $urlArray=[];
+                        $urlArray[]='https://open.weixin.qq.com/connect/oauth2/authorize?appid='.config('wechat.app_id');
+                        $urlArray[]='redirect_uri='.urldecode(route('osce.wechat.user.getLogin'));
+                        $urlArray[]='response_type=code';
+                        $urlArray[]='scope=snsapi_base';
+                        $urlArray[]='state=123#wechat_redirect';
+                        return  redirect()->intended(implode("&",$urlArray));
+
+                    }
+                    else
+                    {
+                        return redirect()->route('osce.wechat.user.getLogin');
+                    }
+
                 }
                 else
                 {
@@ -224,7 +254,7 @@ class UserController  extends CommonController
      * @url GET /osce/wechat/user/forget-password
      * @access public
      *
-     * @return void
+     * @return view
      *
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
@@ -232,7 +262,8 @@ class UserController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getForgetPassword(){
+    public function getForgetPassword(Request $request){
+        session(['referer'=>$request->server('HTTP_REFERER')]);
         return view('osce::wechat.user.forget_pwd');
     }
 
@@ -327,25 +358,28 @@ class UserController  extends CommonController
         $this   ->  validate($request,[
             'mobile'    =>  'required',
             'verify'    =>  'required',
-            'password'  =>  'required',
-            'repassword'=>  'required|confirmed:password',
+            'password'  =>  'required|confirmed',
+            'password_confirmation'=>  'required',
         ],[
-            'mobile.required'    =>  '请输入手机号',
-            'verify.required'    =>  '请输入验证码',
-            'password.required'  =>  '请输入密码',
-            'repassword.required'=>  '请输入确认密码',
-            'repassword.confirmed'=>  '两次密码',
+            'mobile.required'       =>  '请输入手机号',
+            'verify.required'       =>  '请输入验证码',
+            'password.required'     =>  '请输入密码',
+            'password_confirmation.required'=>  '请输入确认密码',
+            'password.confirmed'    =>  '两次密码',
         ]);
+
+        //dd($referer);
         $data   =   [
             'mobile'    =>  $request    ->  get('mobile'),
             'code'      =>  $request    ->  get('verify'),
         ];
         $password   =   $request    ->  get('password');
         try{
-            if($user->getRegCheckMobileVerfiy($data))
+            if(!empty($user->getRegCheckMobileVerfiy($data)))
             {
                 $password  =   bcrypt($password);
-                $user   =   User::where('mobile','=',$password)->first();
+                $user   =   User::where('mobile','=',$data['mobile'])->first();
+
                 if(empty($user))
                 {
                     throw new \Exception('用户不存在');
@@ -353,7 +387,12 @@ class UserController  extends CommonController
                 $user       ->   password   =   $password;
                 if($user    ->  save())
                 {
-                    return  redirect()      ->  route('osce.wechat.user.getLogin');
+                    $referer    =   session('referer');
+                    return  redirect()      ->  intended($referer);
+                }
+                else
+                {
+                    throw new \Exception('修改密码失败');
                 }
             }
             else
@@ -400,6 +439,42 @@ class UserController  extends CommonController
     }
 
     public function getWebLogin(){
+
         return view('osce::wechat.user.login');
     }
+    /**
+     * 提交成绩评分详情，考试结果
+     * @method get
+     * @url /osce/wechat/user/Proof-number
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     mobile    电话号码  (必须的)
+     * @return view
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getProofNumber(Request $request){
+        $this->validate($request,[
+            'mobile'    =>  'required',
+        ]);
+        $mobile= $request->get('mobile');
+        if(!empty($mobile)){
+            $result = User::where('mobile', $mobile)->first();
+            if($result){
+                return json_encode(array(
+                    'valid' =>false,
+                ));
+            }
+        }
+        return json_encode(array(
+            'valid' =>true,
+        ));
+
+
+    }
+
+
 }

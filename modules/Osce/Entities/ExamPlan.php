@@ -169,6 +169,10 @@ class ExamPlan extends CommonModel
 //        }
 
         $batchStudents          =   [];
+        if($batchNum==0)
+        {
+            throw new \Exception();
+        }
         for($i=1;$i<=$batchNum;$i++)
         {
             $thisBatchStudents      =   $this   ->  getPerBatchStudent();
@@ -354,11 +358,25 @@ class ExamPlan extends CommonModel
                     'name'  =>  $room->name.'-'.$this->stations[array_shift($roomIdInfo)]->name,
                     'child' =>  []
                 ];
+                $end    =   0;
                 foreach($timePlan as $time=>$student)
                 {
+                    if($end!=0)
+                    {
+                        $perEnd =   $end;
+                        if($time<=$perEnd)
+                        {
+                            $roomdData['child'][]=[
+                                'start' =>  $perEnd,
+                                'end'   =>  $time,
+                                'items' =>  []
+                            ];
+                        }
+                    }
+                    $end    =   $time+$this->cellTime*60;
                     $item   =   [
                         'start' =>  $time,
-                        'end'   =>  $time+$this->cellTime*60,
+                        'end'   =>  $end,
                         'items' =>  $student
                     ];
                     $roomdData['child'][]=$item;
@@ -552,6 +570,7 @@ class ExamPlan extends CommonModel
     public function savePlan($exam_id,$plan){
         $user=\Auth::user();
         $hasList    =   [];
+
         foreach($plan as $examScreening => $roomList)
         {
             foreach($roomList as $roomStationId=>$room)
@@ -609,6 +628,11 @@ class ExamPlan extends CommonModel
         $connection ->  beginTransaction();
         try{
             $oldPlanList    =   $this   -> getOldPlanByExamId($exam_id);
+            $exam       =   Exam::find($exam_id);
+            if($exam->status!=0)
+            {
+                throw new \Exception('当前考试已在不在未开始状态，不能再次编辑排考信息');
+            }
             foreach($oldPlanList as $oldPlan)
             {
                 if(!$oldPlan    ->  delete())
@@ -742,6 +766,7 @@ class ExamPlan extends CommonModel
         {
             foreach($examPlanList as $roomStaionId=>$examPlan)
             {
+                //dd($examPlanList);
                 $roomStaionInfo =   explode('-',$roomStaionId);
                 foreach($examPlan['child'] as $bacthIndex=>$examPlan)
                 {
@@ -751,16 +776,21 @@ class ExamPlan extends CommonModel
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['name']   =   $examPlan->room->name.'-'.$examPlan->station->name;
+
+
                         $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['start'] =  strtotime($examPlan->begin_dt);
+
                         $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
                         ['end'] =  strtotime($examPlan->end_dt);
+
+
                         $examPlanData
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
@@ -813,6 +843,10 @@ class ExamPlan extends CommonModel
         $planList   =   $this->where('exam_id','=',$exam_id)->orderBy('begin_dt','asc')->get();
         $studentOrderData   =   [];
         $user   =   \Auth::user();
+        if(ExamOrder::where('exam_id','=',$exam_id)->delete()===false)
+        {
+            throw new \Exception('弃用旧安排失败');
+        }
         try
         {
             foreach($planList as $plan)
@@ -824,7 +858,7 @@ class ExamPlan extends CommonModel
                         'exam_screening_id' =>  $plan->exam_screening_id,
                         'student_id'        =>  $plan->student_id,
                         'begin_dt'          =>  $plan->begin_dt,
-                        'status'            =>  $plan->status,
+                        'status'            =>  0,
                         'created_user_id'   =>  $user->id,
                     ];
                 }

@@ -124,15 +124,15 @@ class ExamFlowStation extends CommonModel
                     $this->examStationAssociationSave($examId, $flowsId, $user, $key, $value);
                 }
             }
-            foreach ($formData as $key => $value) {
-                //删除stationTeacher表
-                if (!StationTeacher::where('station_id',$value['station_id'])->get()->isEmpty()) {
-                    if (!StationTeacher::where('station_id',$value['station_id'])->delete()) {
-                        throw new \Exception('删除考站老师失败，请重试！');
-                    }
+
+            //删除stationTeacher表
+            if (!StationTeacher::where('exam_id',$examId)->get()->isEmpty()) {
+                if (!StationTeacher::where('exam_id',$examId)->delete()) {
+                    throw new \Exception('删除考站老师失败，请重试！');
                 }
+            }
 
-
+            foreach ($formData as $key => $value) {
                 //准备数据，插入station_teacher表
                 $this->stationTeacherAssociation($examId, $value, $user);
             }
@@ -288,4 +288,5 @@ class ExamFlowStation extends CommonModel
             throw $ex;
           }
         }
+
 }

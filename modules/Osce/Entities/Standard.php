@@ -59,6 +59,10 @@ class Standard extends CommonModel
         return $return;
     }
 
+
+
+
+
    public function getScore($stationId,$subjectId){
 
        $builder=$this-> leftJoin('exam_score', function($join){
