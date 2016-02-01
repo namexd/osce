@@ -34,13 +34,16 @@
                         layer.alert(res.message);
                     }else{
                         var data = res.data;
-                        var html = '';
+                        var html = '<option value="">全部考试</option>';
                         for(var i in data){
-                            html += '<option value="'+data[i][0][0].id+'">'+data[i][0][0].name+'</option>';
+                            html += '<option value="'+data[i][0].id+'">'+data[i][0].name+'</option>';
                         }
 
                         $('#station_Category').html(html);
                     }
+                },
+                error:function(res){
+                    layer.alert('通讯失败！')
                 }
             });
         });
