@@ -35,7 +35,6 @@ class Notice extends CommonModel
             {
                 //通知用户
                 $this   ->  sendMsg($notice,$to,$accept);
-                dd(5555);
                 $connection ->commit();
                 return $notice;
             }
