@@ -158,10 +158,9 @@ class StudentExamQueryController extends  CommonController
         ]);
 
         $examScreeningId=  intval(Input::get('exam_screening_id'));
-
          //根据考试场次id查询出该结果详情
         $examresultList=ExamResult::where('exam_screening_id','=',$examScreeningId)->first();
-
+        //得到考试名字
         $examName=ExamScreening::where('id',$examScreeningId)->select('exam_id')->first()->ExamInfo;
 
 
