@@ -137,6 +137,7 @@ class Notice extends CommonModel
                                 $notice->accept =   $accept;
                                 $notice->save();
                                 $this->sendWechat($notice,array_pluck($to,'openid'),$url);
+                                dd(3333);
                                 break;
                             case 2:
                                 $this->sendEmail($notice,array_pluck($to,'email'),$url);
