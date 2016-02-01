@@ -40,20 +40,22 @@ class CourseController extends CommonController
             //考试的下拉菜单
             $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
 
-            //科目的下拉菜单
-            $subjectDownlist = Subject::select('id', 'title')->get();
+            //TODO:科目的下拉菜单 已经废弃，改用ajax
 
             //科目列表数据
             $subject = new Subject();
             $exam = new Exam();
-            $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
+            $subjectData = $exam->CourseControllerIndex(
+                $examId,
+                $subjectId
+            );
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
                 $avg = $subject->CourseControllerAvg(
                     $item->exam_id,
                     $item->subject_id
                 );
-                //如果不为空avg不为空
+                //如果avg不为空
                 if (!empty($avg)) {
                     if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
                         $item->avg_score = $avg->pluck('score')->sum()/$avg->pluck('score')->count();
@@ -68,10 +70,12 @@ class CourseController extends CommonController
                     }
                 }
             }
+
             return view('osce::admin.statistics_query.subject_scores_list',
                 ['data'=>$subjectData,
                     'examDownlist'=>$examDownlist,
-                    'subjectDownlist'=>$subjectDownlist
+                    'exam_id'=>$examId,
+                    'subject_id'=>$subjectId
                 ]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
@@ -118,6 +122,12 @@ class CourseController extends CommonController
         ]);
     }
 
+    /**
+     * 考生统计
+     * @param Request $request
+     * @return \Illuminate\View\View
+     * @author Jiangzhiheng
+     */
     public function getStudentScore(Request $request)
     {
         $this->validate($request, [
@@ -144,7 +154,12 @@ class CourseController extends CommonController
                 $item->ranking = $key+1;
             }
         }
-        return view('osce::admin.statistics_query.student_scores_list',['data'=>$list,'examDownlist'=>$examDownlist]);
+        return view('osce::admin.statistics_query.student_scores_list',[
+            'data'=>$list,
+            'examDownlist'=>$examDownlist,
+            'exam_id'=>$examId,
+            'message'=>$message
+        ]);
     }
 
     /**
@@ -171,4 +186,28 @@ class CourseController extends CommonController
 
     }
 
+    /**
+     * 动态获取ajax列表
+     * @author Jiangzhiheng
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSubject(Request $request)
+    {
+        //验证
+        $this->validate($request, [
+            'exam_id'=>'sometimes|integer'
+        ]);
+
+        $examId = $request->input('exam_id',"");
+
+        try {
+            $exam = new Exam();
+            $data = $exam->CourseControllerIndex($examId);
+
+            return response()->json($this->success_data($data->toArray()));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+    }
 }

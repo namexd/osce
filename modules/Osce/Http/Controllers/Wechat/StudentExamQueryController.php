@@ -87,7 +87,7 @@ class StudentExamQueryController extends  CommonController
         try{
 
 
-        $examTime =Exam::where('id',$examId)->select('begin_dt','end_dt')->first();
+        $examTime =Exam::where('id',$examId)->select('begin_dt','end_dt','name')->first();
 
         //根据考试id找到对应的考试场次
         $examScreeningId=  ExamScreening::where('exam_id','=',$examId)->select('id')->get();
@@ -157,25 +157,26 @@ class StudentExamQueryController extends  CommonController
             'exam_screening_id' => 'required|integer'
         ]);
 
-        $examresultId=  intval(Input::get('exam_screening_id'));
-
+        $examScreeningId=  intval(Input::get('exam_screening_id'));
          //根据考试场次id查询出该结果详情
-        $examresultList=ExamResult::where('exam_screening_id','=',$examresultId)->first();
+        $examresultList=ExamResult::where('exam_screening_id','=',$examScreeningId)->first();
+        //得到考试名字
+        $examName=ExamScreening::where('id',$examScreeningId)->select('exam_id')->first()->ExamInfo;
 
 
          //查询出详情列表
         $examscoreModel= new ExamScore();
         $examScoreList=$examscoreModel->getExamScoreList($examresultList->id);
-        if(!$examScoreList){
-            dd(111111);
-            throw new \Exception('没有找到该考站成绩详情');
 
-        }
         $groupData  =   [];
         foreach($examScoreList as $examScore){
             $groupData[$examScore->standard->pid][] =   $examScore;
         }
         $indexData  =   [];
+
+        if(empty($groupData[0])){
+            throw new \Exception('请检查该考站是否有评分详情');
+        }
         foreach($groupData[0] as $group)
         {
             $groupInfo  =   $group;
@@ -197,7 +198,7 @@ class StudentExamQueryController extends  CommonController
         }
 //        dd($list);
 
-        return view('osce::wechat.resultquery.examination_detail',['examScoreList'=>$list],['examresultList'=>$examresultList]);
+        return view('osce::wechat.resultquery.examination_detail',['examScoreList'=>$list],['examresultList'=>$examresultList,'examName'=>$examName]);
     }
 
 

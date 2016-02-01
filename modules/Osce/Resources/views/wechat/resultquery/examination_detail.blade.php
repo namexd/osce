@@ -18,7 +18,7 @@
     </div>
     <div class="form-group">
         <select  id="examination" disabled="disabled" class="form-control normal_select select_indent" name="student_type" required>
-            <option value="3">OSCE考试2016年第3期</option>
+            <option value="3">{{$examName->name}}</option>
         </select>
     </div>
   	<div class="examination_msg">

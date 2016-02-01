@@ -19,7 +19,36 @@
 @stop
 
 @section('only_js')
+<script>
+    $(function(){
 
+        $('#select_Category').change(function(){
+
+            var examId = $(this).val();
+            $.ajax({
+                type:'get',
+                url:'{{route("osce.admin.getExamStationList")}}',
+                data:{exam_id:examId},
+                success:function(res){
+                    if(res.code!=1){
+                        layer.alert(res.message);
+                    }else{
+                        var data = res.data;
+                        var html = '<option value="">全部考站</option>';
+                        for(var i in data){
+                            html += '<option value="'+data[i][0].id+'">'+data[i][0].name+'</option>';
+                        }
+
+                        $('#station_Category').html(html);
+                    }
+                },
+                error:function(res){
+                    layer.alert('通讯失败！')
+                }
+            });
+        });
+    })
+</script>
 @stop
 
 
@@ -40,7 +69,7 @@
                             <select id="select_Category" class="form-control m-b" name="exam_id">
                                 <option value="">全部考试</option>
                                 @foreach($exams as $key=>$item)
-                                <option value="{{$item->id}}">{{$item->name}}</option>
+                                <option value="{{$item->id}}" {{$exam_id==$item->id?"selected":""}}>{{$item->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -48,16 +77,16 @@
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <label class="pull-left left-text">考站名称:</label>
                         <div class="pull-left right-list">
-                            <select id="select_Category" class="form-control m-b" name="station_id">
+                            <select id="station_Category" class="form-control m-b" name="station_id">
                                 <option value="">全部考站</option>
                                 @foreach($stations as $key=>$item)
-                                <option value="{{$item->id}}">{{$item->name}}</option>
+                                <option value="{{$item->id}}" {{$station_id==$item->id?"selected":""}}>{{$item->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="input-group col-md-4 col-sm-4 col-xs-12">
-                        <input type="text" placeholder="请输入考生姓名" style="height:36px;" name="name" class="input-md form-control">
+                        <input type="text" placeholder="请输入考生姓名" style="height:36px;" name="name" value="{{$name!=null?$name:''}}"class="input-md form-control">
                          <span class="input-group-btn">
                             <button type="submit" class="btn btn-md btn-primary" id="search">搜索</button>
                         </span>

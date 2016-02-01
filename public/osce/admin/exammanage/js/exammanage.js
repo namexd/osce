@@ -2742,7 +2742,6 @@ function station_assignment(){
 
         //考站id
         var stationId = $(".station_id").val();
-        alert(stationId);
         $.ajax({
             type:'get',
             //url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,

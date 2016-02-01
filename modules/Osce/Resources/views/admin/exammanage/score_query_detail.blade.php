@@ -351,7 +351,7 @@
                         <td>
                             {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
                         </td>
-                        <td><div style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:600px;">{{$item['standard']->content}}</div></td>
+                        <td><div title="{{$item['standard']->content}}" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:600px;">{{$item['standard']->content}}</div></td>
                         <td>{{$item['standard']->score}}</td>
                         <td>{{$item['score']}}</td>
                         <td>

@@ -42,7 +42,7 @@ class DrawlotsController extends CommonController
     {
         try {
             //通过教师id去寻找对应的考场,返回考场对象
-            $room = StationTeacher::where('user_id', $teacher_id)->first()->station->room;
+            $room = StationTeacher::where('user_id', $teacher_id)->orderBy('begin_dt','desc')->first()->station->room;
 
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
@@ -58,6 +58,7 @@ class DrawlotsController extends CommonController
      * @method GET
      * @url api/1.0/osce/drawlots/examinee
      * @access public
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
      *
      * @internal param Request $request
@@ -69,17 +70,13 @@ class DrawlotsController extends CommonController
      * @date 2016-01-20 12:01
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExaminee()
+    public function getExaminee(Request $request)
     {
         try {
-            //首先得到登陆者信息
-            $user = Auth::user();
+            //首先得到登陆者id
+            $id = $request->input('id');
 
-            if (empty($user)) {
-                throw new \Exception('当前用户没有登陆！');
-            }
-
-            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
+            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id);
 
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
@@ -130,6 +127,7 @@ class DrawlotsController extends CommonController
      * @method GET
      * @url api/1.0  /osce/drawlots/next-examinee
      * @access public
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
      *
      * @internal param Request $request
@@ -141,13 +139,12 @@ class DrawlotsController extends CommonController
      * @date 2016-01-23 12:06
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getNextExaminee()
+    public function getNextExaminee(Request $request)
     {
         try {
-            $user = Auth::user();
+            $id = $request->input('id');
 
-            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($user);
-    //        dd($room_id);
+            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id);
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
             $examId = $exam->id;
@@ -232,6 +229,27 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($result));
 
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+    }
+
+    /**
+     * 登陆之后根据老师id返回考站信息
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Jiangzhiheng
+     */
+    public function getStationList(Request $request)
+    {
+        try {
+            //获取当前登陆者id
+            $id = $request->input('id');
+
+            //根据id获取考站信息
+            $station = StationTeacher::where('user_id',$id)->first()->station;
+
+            return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
@@ -325,20 +343,17 @@ class DrawlotsController extends CommonController
      * @return array
      * @author Jiangzhiheng
      */
-    private function getRoomIdAndStation($user)
+    private function getRoomIdAndStation($id)
     {
-        //获取登陆者id，也就是教师id
-        $teacherId = $user->id;
         //获取当前老师的考场对象
-        $room = $this->getRoomId($teacherId);
+        $room = $this->getRoomId($id);
 
         //获得考场的id
         $room_id = $room->id;
         //获得当前考场考站的个数
         $stationNum = RoomStation::where('room_id',$room_id)->get()->count();
         //获得当前老师所在的考站
-//        $station = Teacher::findOrFail($teacher_id)->teacherStation;
-        $station = StationTeacher::where('user_id',$teacherId)->first()->station;
+        $station = StationTeacher::where('user_id',$id)->first()->station;
         return array($room_id, $station, $stationNum);
     }
 
