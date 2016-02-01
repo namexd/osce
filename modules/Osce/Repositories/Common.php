@@ -120,6 +120,14 @@ class Common
         }
     }
 
+    public function relativeAdminUser($user){
+        DB::table('sys_user_role')->insert([
+            'role_id'=>config('osce.adminRoleId',3),
+            'user_id'=>$user->id,
+            'created_at'=>time(),
+            'updated_at'=>time(),
+        ]);
+    }
     public function updateAdminUser($id,$data){
         try{
             //查询手机号是否已经存在

@@ -481,7 +481,7 @@ class UserRepository extends BaseRepository
                 'expiretime'=>$verify->expiretime,
                 'mobile'=>$verify->mobile
             ];
-            Common::sendSms($verify->mobile,'你正在重置密码，验证码为：'.$verify->code);
+            Common::sendSms($verify->mobile,'你正在重置密码，验证码为：'.$verify->code.' 【敏行医学】');
             return $dataReturn;
         }
         catch(\Exception $ex)
