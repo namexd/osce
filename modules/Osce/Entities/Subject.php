@@ -197,8 +197,6 @@ class Subject extends CommonModel
             foreach($points as $point)
             {
                 $SubjectItemModel   -> addItem($subject,$point);
-
-
             }
         }
         catch(\Exception $ex)
