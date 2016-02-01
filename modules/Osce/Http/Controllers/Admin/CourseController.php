@@ -67,7 +67,7 @@ class CourseController extends CommonController
                     }
                 }
             }
-
+            dd($subjectData);
             return view('osce::admin.statistics_query.subject_scores_list',
                 ['data'=>$subjectData,
                     'examDownlist'=>$examDownlist,
