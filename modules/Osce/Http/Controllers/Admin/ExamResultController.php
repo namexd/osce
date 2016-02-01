@@ -104,13 +104,9 @@ class ExamResultController extends CommonController{
          $examResult=new ExamResult();
          $examResults=$examResult->getResultList($examId,$stationId,$name);
          foreach($examResults as $item){
-              if($item->time<60){
-                  $time='0:'.($item->time);
-                  $item->time=$time;
-              }else{
-                  $time=floor($item->time/60).':'.($item->time%60);
-                  $item->time=$time;
-              }
+             date_default_timezone_set("UTC");
+             $item->time = date('H:i:s',$item->time);
+             date_default_timezone_set("PRC");
          }
          return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams]);
     }
@@ -160,13 +156,9 @@ class ExamResultController extends CommonController{
              'subject_id' =>$item->subject_id,
          ];
         }
-        if($result['time']<60){
-            $result['time']='0:'.($result['time']);
-        }else{
-            $result['time']=floor($result['time']/60);
-            $result['time'].=':';
-            $result['time'].=$result['time']%60;
-        }
+        date_default_timezone_set("UTC");
+        $result['time'] = date('H:i:s',$result['time']);
+        date_default_timezone_set("PRC");
         $score=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->select()->get();
         $image=[];
         foreach($score as $itm){
