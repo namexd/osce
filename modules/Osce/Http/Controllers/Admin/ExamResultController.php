@@ -296,14 +296,20 @@ class ExamResultController extends CommonController{
      */
     public function getExamStationList(Request $request){
         $this->validate($request,[
-           'exam_id'  =>'required',
+           'exam_id'  =>'sometimes',
         ]);
-
-        $exam_id=$request->get('exam_id');
-        $stations=ExamStation::where('exam_id',$exam_id)->select()->get();
         $data=[];
-        foreach($stations as $station){
-             $data[]=$station->station;
+        $exam_id=$request->get('exam_id');
+        if($exam_id){
+            $stations=ExamStation::where('exam_id',$exam_id)->select()->get();
+            foreach($stations as $station){
+                $data[]=$station->station;
+            }
+        }else{
+            $stations=ExamStation::select()->get();
+            foreach($stations as $station){
+                $data[]=$station->station;
+            }
         }
 
         return response()->json(
