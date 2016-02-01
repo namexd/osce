@@ -129,6 +129,7 @@ class Notice extends CommonModel
             {
                 foreach($values as $value)
                 {
+                    echo $value;
                     try
                     {
                         switch($value)
