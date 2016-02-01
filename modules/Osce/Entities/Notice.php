@@ -219,6 +219,7 @@ class Notice extends CommonModel
         try{
             $accept = implode(',',$groups);
             $to     =   $this   ->  getGroupsOpendIds($groups,$exam_id);
+            dd($to);
             $notice =   $this   ->  addNotice($data,$to,$accept);
             return $notice;
 
