@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\App;
 class InvigilatePadTest extends TestCase
 {
-//  public function  testInvigilatePad(){
+  public function  testInvigilatePad(){
 //      $standard_id =   1;
 //      $subject_id =2;
 //      $data    =   [
@@ -24,7 +24,7 @@ class InvigilatePadTest extends TestCase
 //      ];
 //      $respone =   $this->action('post','\Modules\Osce\Http\Controllers\api\InvigilatePadController@postSaveExamEvaluate','',$data);
 //      $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamEvaluate');
-//  }
+  }
     public function testSaveExamResult(){
 
         $student_id = 1;
