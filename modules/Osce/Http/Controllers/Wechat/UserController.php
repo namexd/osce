@@ -176,7 +176,7 @@ class UserController  extends CommonController
         try{
             if($getOpenid){
                 $openid = \Illuminate\Support\Facades\Session::get('openid','');
-                if(empty($openid)){
+                if(empty($openid)||$openid=='dfdsfds'){
                     $openid = $this->getOpenId();
                     \Illuminate\Support\Facades\Session::put('openid',$openid);
                 }
@@ -226,7 +226,6 @@ class UserController  extends CommonController
             $openid = \Illuminate\Support\Facades\Session::get('openid','');
             if (Auth::attempt(['username' => $username, 'password' => $password]))
             {
-                dd($openid);
                 if(!empty($openid))
                 {
                     $user   =   Auth::user();
