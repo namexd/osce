@@ -538,8 +538,8 @@ class Exam extends CommonModel
             'station.id as station_id'
         )
             ->where('exam.status','<>',0)
-//            ->distinct()
-            ->groupBy('subject.id')
+            ->distinct()
+//            ->groupBy('subject.id')
             ->paginate(config('osce.page_size'));
 
         return $builder;
