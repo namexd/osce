@@ -64,12 +64,11 @@
                 @endforeach
                 </tbody>
             </table>
-
             <div class="pull-left">
-
+                共{{$studentList->total()}}条
             </div>
-            <div class="pull-right">
-
+            <div class="btn-group pull-right">
+               {!! $studentList->appends($_GET)->render() !!}
             </div>
 
         </div>

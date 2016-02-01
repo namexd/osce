@@ -82,7 +82,9 @@ $(function(){
                             <div  class="pull-left examinee-list">
                                 <select name="subject_id" id="subject-id" class="form-control" style="width: 250px;">
                                     <option value="">全部科目</option>
-                                    <option value="{{$subject_id}}" {{$subject_id!=null?'selected':''}}>{{$exam->name}}</option>
+                                    @if($subject_id)
+                                    <option value="{{$subject_id}}" {{$subject_id!=null?'selected':''}}>{{$subject_id}}</option>
+                                    @endif
                                 </select>
                             <span class="input-group-btn pull-left" style="margin-left: 10px;">
                                 <button type="submit" class="btn btn-primary" id="search" style="border-radius: 3px;">搜索</button>
@@ -125,10 +127,10 @@ $(function(){
                     </tbody>
                 </table>
                 <div class="pull-left">
-
+                    共{{$data->total()}}条
                 </div>
                 <div class="btn-group pull-right">
-
+                   {!! $data->appends($_GET)->render() !!}
                 </div>
             </div>
         </div>

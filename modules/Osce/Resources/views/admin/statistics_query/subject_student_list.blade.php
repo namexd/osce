@@ -57,14 +57,20 @@
                 @endforeach
                 </tbody>
             </table>
-
+            @if(count($data)>0)
             <div class="pull-left">
-
+                共{{$data->count()}}条
             </div>
-            <div class="pull-right">
-
+            <div class="btn-group pull-right">
+               {!! $data->appends($_GET)->render() !!}
             </div>
-
+            @else
+                <div class="pull-left">
+                    共0条
+                </div>
+                <div class="btn-group pull-right">
+                </div>
+            @endif
         </div>
 
     </div>
