@@ -45,7 +45,8 @@ class CourseController extends CommonController
 
             //科目列表数据
             $subject = new Subject();
-            $subjectData = $subject->CourseControllerIndex($examId, $subjectId);
+            $exam = new Exam();
+            $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
                 $avg = $subject->CourseControllerAvg(
