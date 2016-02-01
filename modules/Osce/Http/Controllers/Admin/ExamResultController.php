@@ -303,7 +303,7 @@ class ExamResultController extends CommonController{
         $stations=ExamStation::where('exam_id',$exam_id)->select()->get();
         $data=[];
         foreach($stations as $station){
-             $data[]=[$station->station];
+             $data[]=$station->station;
         }
 
         return response()->json(
