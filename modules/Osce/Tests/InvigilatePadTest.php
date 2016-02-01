@@ -26,7 +26,8 @@ class InvigilatePadTest extends TestCase
 //      $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamEvaluate');
   }
     public function testSaveExamResult(){
-
+        $standard_id =[20,21,23];
+        $subject_id =2;
         $student_id = 1;
         $station_id =5;
         $exam_screening_id=65;
@@ -34,6 +35,8 @@ class InvigilatePadTest extends TestCase
         $Nowtime =date('Y-m-d H:i:s',time());
 
         $data    =   [
+            'subject_id'=> $subject_id,
+            'standard_id'=>$standard_id,
             'evaluate'=>   '评价内容',//评价内容
             'operation'=>   rand(1,5),//操作的连贯性
             'skilled'=>     rand(1,5),//工作的娴熟度
@@ -55,6 +58,20 @@ class InvigilatePadTest extends TestCase
         $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamResult');
 
     }
+
+    //开始结束考试
+
+    public function getStartExam(){
+        $response =   $this->action('get','\Modules\Osce\Http\Controllers\Api\InvigilatePadController@getStartExam','',['student_id'=>2,'station_id'=>3]);
+        $view=$response->getContent();
+//        $response = $this->action('get','\Modules\Osce\Http\Controllers\Api\InvigilatePadController@getEndExam','', ['student_id'=>2,'station_id'=>3]);
+//        $view=$response->getContent();
+        dd($view);
+
+
+
+    }
+
 
 
 
