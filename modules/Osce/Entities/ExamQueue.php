@@ -246,9 +246,9 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
-      public function AlterTimeStatus($studentId ,$stationId ){
-          $nowTime=   date('Y-m-d H:i:s',time());
-             $startExam= ExamQueue::where('student_id','=',$studentId)
+      public function AlterTimeStatus($studentId ,$stationId,$nowTime){
+          $nowTime  =   date('Y-m-d H:i:s',$nowTime);
+          $startExam= ExamQueue::where('student_id','=',$studentId)
               ->where('station_id','=',$stationId)
               ->update(['begin_dt'=>$nowTime,'status'=>2]);
 
@@ -263,11 +263,11 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
-     public function EndExamAlterStatus($studentId ,$stationId){
-         $nowTime=   date('Y-m-d H:i:s',time());
-          $endExam=    ExamQueue::where('student_id','=',$studentId)
-             ->where('station_id','=',$stationId)
-             ->update(['end_dt'=>$nowTime,'status'=>3]);
+     public function EndExamAlterStatus($studentId ,$stationId,$nowTime ){
+         $nowTime   =   date('Y-m-d H:i:s',time());
+         $endExam   =   ExamQueue::where('student_id','=',$studentId)
+                    ->  where('station_id','=',$stationId)
+                    ->  update(['end_dt'=>$nowTime,'status'=>3]);
          return $endExam;
      }
 

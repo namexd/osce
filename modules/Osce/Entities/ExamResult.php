@@ -175,7 +175,7 @@ class ExamResult extends CommonModel
 
 
     /**
-     *  微信端学生成绩查询
+     *  微信端学生每一个考站成绩查询
      * @param Request $request
      * @author zhouqiang
      * @return \Illuminate\View\View
@@ -197,6 +197,7 @@ class ExamResult extends CommonModel
          'teacher.name as grade_teacher',
          'station.type as type',
          'station.name as station_name',
+         'exam_result.exam_screening_id as exam_screening_id'
      ])
          ->paginate(config('osce.page_size'));
 

@@ -10,6 +10,7 @@ $(function(){
 
 function examination_list(){
 	$("#examination").change(function(){
+
 		var id=$(this).val();
 		var url=pars.ajaxurl;
 		if(id==0){
