@@ -304,8 +304,9 @@ class ExamResultController extends CommonController{
         $data=[];
         foreach($stations as $station){
              $station_name=$station->station;
-             $data[$station->station_id]=$station_name[0]->name;
+             $data[][$station->station_id]=$station_name[0]->name;
         }
+        $data=json_encode($data);
         return response()->json(
             $this->success_data($data,1,'success')
         );
