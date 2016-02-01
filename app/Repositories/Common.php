@@ -382,6 +382,7 @@ class Common{
             throw new \Exception('你选择的接收用户数量为0');
         }
         $broadcast = new Broadcast(config('wechat.app_id'), config('wechat.secret'));
+        dd($OpendIdArray);
         $broadcast->send($message)->to($OpendIdArray);
     }
 }
