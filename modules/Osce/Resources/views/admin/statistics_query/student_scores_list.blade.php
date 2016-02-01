@@ -94,10 +94,10 @@
                     </tbody>
                 </table>
                 <div class="pull-left">
-
+                    共{{$data->total()}}条
                 </div>
                 <div class="btn-group pull-right">
-
+                   {!! $data->appends($_GET)->render() !!}
                 </div>
             </div>
         </div>
