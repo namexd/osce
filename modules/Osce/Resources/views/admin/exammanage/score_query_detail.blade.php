@@ -74,7 +74,7 @@
                     toolbox: {
                         show : false
                     },
-                    calculable : true,
+                    calculable : false,
                     xAxis : [
                         {
                             type : 'category',
