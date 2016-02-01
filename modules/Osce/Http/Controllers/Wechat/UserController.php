@@ -193,7 +193,7 @@ class UserController  extends CommonController
         }
         catch(\Exception $ex)
         {
-            暂时未做当前页刷新报错问题
+            //暂时未做当前页刷新报错问题
             abort(404);
         }
     }
