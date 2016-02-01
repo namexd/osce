@@ -178,6 +178,7 @@ class UserController  extends CommonController
                 $openid = \Illuminate\Support\Facades\Session::get('openid','');
                 if(empty($openid)||$openid=='dfdsfds'){
                     $openid = $this->getOpenId();
+                    dd($openid);
                     \Illuminate\Support\Facades\Session::put('openid',$openid);
                 }
                 $user   =   User::where('openid','=',$openid)->first();
