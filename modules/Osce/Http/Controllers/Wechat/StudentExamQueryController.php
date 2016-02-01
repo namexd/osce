@@ -121,6 +121,7 @@ class StudentExamQueryController extends  CommonController
                 'exam_screening_id'=>$stationType->exam_screening_id
             ];
         }
+
         return response()->json(
             $this->success_data($stationData,1,'数据传送成功')
         );
