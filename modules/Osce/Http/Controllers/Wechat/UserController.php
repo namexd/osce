@@ -172,7 +172,7 @@ class UserController  extends CommonController
      *
      */
     public function getLogin(){
-        $getOpenid = env('OPENID',false);
+        $getOpenid = env('OPENID',true);
         dd($getOpenid);
         try{
             if($getOpenid){
