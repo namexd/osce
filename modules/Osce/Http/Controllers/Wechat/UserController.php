@@ -173,13 +173,11 @@ class UserController  extends CommonController
      */
     public function getLogin(){
         $getOpenid = env('OPENID',false);
-        dd($getOpenid);
         try{
             if($getOpenid){
                 $openid = \Illuminate\Support\Facades\Session::get('openid','');
                 if(empty($openid)){
                     $openid = $this->getOpenId();
-                    dd($openid);
                     \Illuminate\Support\Facades\Session::put('openid',$openid);
                 }
                 $user   =   User::where('openid','=',$openid)->first();
