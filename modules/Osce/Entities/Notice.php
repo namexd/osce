@@ -138,7 +138,6 @@ class Notice extends CommonModel
                                 $notice->save();
 
                                 $this->sendWechat($notice,array_pluck($to,'openid'),$url);
-                                dd(3333);
                                 break;
                             case 2:
                                 $this->sendEmail($notice,array_pluck($to,'email'),$url);
@@ -155,7 +154,6 @@ class Notice extends CommonModel
                     }
                     catch(\Exception $ex)
                     {
-                        dd($ex->getMessage());
                         \Log::alert('通知发送失败');
                     }
                 }
@@ -176,15 +174,14 @@ class Notice extends CommonModel
             ]
         ];
         $message    =   Common::CreateWeiXinMessage($msgData);
-//        if(count($to)==1)
-//        {
-//            Common::sendWeiXin($to[0],$message);
-//        }
-//        else
-//        {
+        if(count($to)==1)
+        {
+            Common::sendWeiXin($to[0],$message);
+        }
+        else
+        {
             Common::sendWeixinToMany($message,$to);
-        dd(123);
-//        }
+        }
     }
 
     public function sendPm($notice,$to,$url){
