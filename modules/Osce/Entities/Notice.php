@@ -129,7 +129,6 @@ class Notice extends CommonModel
             {
                 foreach($values as $value)
                 {
-                    echo $value;
                     try
                     {
                         switch($value)
@@ -137,6 +136,7 @@ class Notice extends CommonModel
                             case 1:
                                 $notice->accept =   $accept;
                                 $notice->save();
+
                                 $this->sendWechat($notice,array_pluck($to,'openid'),$url);
                                 dd(3333);
                                 break;
@@ -155,6 +155,7 @@ class Notice extends CommonModel
                     }
                     catch(\Exception $ex)
                     {
+                        dd($ex->getMessage());
                         \Log::alert('通知发送失败');
                     }
                 }
