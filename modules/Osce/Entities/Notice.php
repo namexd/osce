@@ -180,6 +180,7 @@ class Notice extends CommonModel
 //        else
 //        {
             Common::sendWeixinToMany($message,$to);
+        dd(123);
 //        }
     }
 
