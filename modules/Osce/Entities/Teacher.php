@@ -248,7 +248,15 @@ class Teacher extends CommonModel
             $user   = User::where('username', '=', $mobile)->first();
 
             if(!$user){
-                $password   =   Common::getRandStr(6);
+                if(config('debug')==true)
+                {
+                    $password   =   123456;
+                }
+                else
+                {
+                    $password   =   Common::getRandStr(6);
+                }
+
                 $user       =   $this   ->  registerUser($userData, $password);
                 DB::table('sys_user_role')->insert(
                     [
