@@ -129,7 +129,7 @@ class InvigilatePadController extends CommonController
         $this->validate($request, [
             'station_id' => 'required|integer'
         ], [
-            'station_id.required' => '考站id必须'
+            'station_id.required' => '考站编号必须'
         ]);
         $stationId = (int)$request->input('station_id');
         $studentModel = new  Student();
@@ -231,7 +231,9 @@ class InvigilatePadController extends CommonController
             'score.required' => '请检查评分标准分值',
         ]);
 
-        $data = [
+            $standard = Input::get('standard_id');
+
+          $data = [
             'subject_id' => Input::get('subject_id'),
             'standard_id' => Input::get('standard_id'),
             'score' => Input::get('score'),
@@ -331,6 +333,7 @@ class InvigilatePadController extends CommonController
                 $examScreenId = $result->exam_screening_id;
                 //根据考试附件结果id修改表里的考试结果id
                 //  todo 待最后确定。。。。。。。。
+
                 //存入考试 评分详情表
 
                 $SaveEvaluate = $this->postSaveExamEvaluate($request, $testResultId);

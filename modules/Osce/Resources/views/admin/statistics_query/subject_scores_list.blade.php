@@ -54,10 +54,6 @@
                             <div  class="pull-left examinee-list">
                                 <select name="subject_id" id="" class="form-control" style="width: 250px;">
                                     <option value="">全部科目</option>
-                                    @forelse($subjectDownlist as $subject)
-                                        <option value="{{$subject->id}}">{{$subject->title}}</option>
-                                    @empty
-                                    @endforelse
                                 </select>
                             <span class="input-group-btn pull-left" style="margin-left: 10px;">
                                 <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
