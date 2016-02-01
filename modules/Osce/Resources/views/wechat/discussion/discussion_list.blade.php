@@ -34,7 +34,6 @@
                     var html = '';
                     var index = (current - 1)*10;
                     data = res.data.rows;
-                  	console.log(data);
                     for(var i in data){
                         //准备dom
                         //计数
