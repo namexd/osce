@@ -20,7 +20,7 @@ use Cache;
 class CourseController extends CommonController
 {
     /**
-     * 科目统计的主页
+     * 科目统计的主页,此控制器暂时只支持一次一个考试
      * @param Request $request
      * @author Jiangzhiheng
      * @return \Illuminate\View\View
@@ -33,42 +33,45 @@ class CourseController extends CommonController
                 'exam_id' => 'sometimes|integer',
                 'subject_id' => 'sometimes|integer',
             ]);
-
-            $examId = $request->input('exam_id');
-            $subjectId = $request->input('subject_id');
-
             //考试的下拉菜单
             $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
 
-            //TODO:科目的下拉菜单 已经废弃，改用ajax
-
-            //科目列表数据
-            $subject = new Subject();
-            $exam = new Exam();
-            $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
+            //获取近段时间进行的考试
+            $examObj = Exam::where('status','<>',0)->first();
+            if (is_null($examObj)) {
+                $subjectData = [];
+                $examId = '';
+                $subjectId = '';
+            } else {
+                $examId = $request->input('exam_id',$examObj->id);
+                $subjectId = $request->input('subject_id');
+                //科目列表数据
+                $subject = new Subject();
+                $exam = new Exam();
+                $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
 //            dd($subjectData);
-            foreach ($subjectData as &$item) {
-                //找到按科目为基础的所有分数还有总人数
-                $avg = $subject->CourseControllerAvg(
-                    $item->exam_id,
-                    $item->subject_id
-                );
-                //如果avg不为空
-                if (!empty($avg)) {
-                    if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                        $item->avg_score = $avg->pluck('score')->sum()/$avg->pluck('score')->count();
-                        date_default_timezone_set("UTC");
-                        $item->avg_time = date('H:i:s',$avg->pluck('time')->sum()/$avg->pluck('time')->count());
-                        date_default_timezone_set("PRC");
-                        $item->avg_total = $avg->count();
-                    } else {
-                        $item->avg_score = 0;
-                        $item->avg_time = 0;
-                        $item->avg_total = $avg->count();
+                foreach ($subjectData as &$item) {
+                    //找到按科目为基础的所有分数还有总人数
+                    $avg = $subject->CourseControllerAvg(
+                        $item->exam_id,
+                        $item->subject_id
+                    );
+                    //如果avg不为空
+                    if (!empty($avg)) {
+                        if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
+                            $item->avg_score = $avg->pluck('score')->sum()/$avg->pluck('score')->count();
+                            date_default_timezone_set("UTC");
+                            $item->avg_time = date('H:i:s',$avg->pluck('time')->sum()/$avg->pluck('time')->count());
+                            date_default_timezone_set("PRC");
+                            $item->avg_total = $avg->count();
+                        } else {
+                            $item->avg_score = 0;
+                            $item->avg_time = 0;
+                            $item->avg_total = $avg->count();
+                        }
                     }
                 }
             }
-
             return view('osce::admin.statistics_query.subject_scores_list',
                 ['data'=>$subjectData,
                     'examDownlist'=>$examDownlist,

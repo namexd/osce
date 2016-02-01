@@ -516,12 +516,23 @@ class Exam extends CommonModel
      */
     public function CourseControllerIndex($examId = "", $subjectId = "")
     {
-        $builder = $this->Join('station_teacher',
-            function ($join) {
-                $join->on('station_teacher.exam_id','=','exam.id')
-                    ->whereNotNull('station_teacher.user_id');
+        //获取使用过的考站
+        $stationIds = ExamResult::leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+//            ->where('exam_screening.exam_id','=',$examId)
+            ->groupBy('exam_result.station_id')
+            ->get()
+            ->pluck('station_id')
+            ->toArray();
+
+        $builder = StationTeacher::leftJoin('station','station.id','=','station_teacher.station_id')
+            ->Join('exam_result',
+                function($join){
+                $join->on('exam_result.station_id','=','station_teacher.station_id');
             })
-            ->Join('station','station.id','=','station_teacher.station_id')
+            ->Join('exam',
+                function($join){
+                    $join->on('exam.id','=','station_teacher.exam_id');
+                })
             ->Join('subject','subject.id','=','station.subject_id');
 
 //        $builder = ExamResult::Join('station','station.id','=','exam_result.station_id')
@@ -546,8 +557,10 @@ class Exam extends CommonModel
             'station.id as station_id'
         )
             ->where('exam.status','<>',0)
+            ->whereNotNull('station_teacher.user_id')
+            ->whereIn('station.id',$stationIds)
 //            ->distinct()
-//            ->groupBy('subject.id')
+            ->groupBy('subject.id')
             ->paginate(config('osce.page_size'));
 
         return $builder;
