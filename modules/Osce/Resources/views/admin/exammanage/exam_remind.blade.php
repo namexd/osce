@@ -47,6 +47,9 @@
             var i=parseInt($(".name_count").val());
             var w=100/i;
             $("#name_list dl").css({width:w+"%"});
+            setInterval(function(){
+            	window.location.reload();
+            },60000)
         })
     </script>
 @stop

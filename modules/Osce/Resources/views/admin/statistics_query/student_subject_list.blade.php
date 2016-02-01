@@ -26,10 +26,10 @@
         </div>
         <div class="container-fluid ibox-content">
             <div class="row tabs">
-                <div class="col-sm-2 col-md-2">考试：{{$studentList[0]->exam_name}}<span></span></div>
-                <div class="col-sm-2 col-md-2">考试时间：{{$studentList[0]->begin_dt}} ~ {{$studentList[0]->end_dt}}<span></span></div>
+                <div class="col-sm-2 col-md-3">考试：{{$studentList[0]->exam_name}}<span></span></div>
+                <div class="col-sm-2 col-md-4">考试时间：{{$studentList[0]->begin_dt}} ~ {{$studentList[0]->end_dt}}<span></span></div>
                 <div class="col-sm-2 col-md-2">姓名：{{$studentList[0]->student_name}}<span></span></div>
-                <div class="col-sm-2 col-md-2">学号：{{$studentList[0]->student_code}}<span></span></div>
+                <div class="col-sm-2 col-md-3">学号：{{$studentList[0]->student_code}}<span></span></div>
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -53,7 +53,10 @@
                         <td>{{$item->score}}</td>
                         <td>{{$item->grade_teacher}}</td>
                         <td>
-                            <a href="">
+                            <a href="{{route('osce.admin.course.getResultVideo',[
+                            'exam_id'=>$item->exam_id,
+                            'student_id'=>$item->student_id,
+                            'station_id'=>$item->station_id])}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                             </a>
                         </td>
