@@ -46,6 +46,7 @@ class CourseController extends CommonController
             $subject = new Subject();
             $exam = new Exam();
             $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
+            dd($subjectData);
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
                 $avg = $subject->CourseControllerAvg(
@@ -67,7 +68,7 @@ class CourseController extends CommonController
                     }
                 }
             }
-            dd($subjectData);
+
             return view('osce::admin.statistics_query.subject_scores_list',
                 ['data'=>$subjectData,
                     'examDownlist'=>$examDownlist,
