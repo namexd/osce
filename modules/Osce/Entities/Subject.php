@@ -98,17 +98,17 @@ class Subject extends CommonModel
      * 编辑课题
      * @access public
      *
-     * * @param $id
-     * * @param array $data
-     * * @param array $points
-     *
+     * *
+     * @param $id
+     * @param array $data
+     * @param $id
+     * * * @param array $data
+     * * * @param array $points
      * @return object
-     *
-     * @version 1.0
+     * @throws \Exception @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2016-01-03 18:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function editTopic($id,$data,$points){
         $subject    =   $this->findOrFail($id);
@@ -142,7 +142,8 @@ class Subject extends CommonModel
      * 新增考核点
      * @access public
      *
-     * * @param $subject
+     * *
+     * @param $subject
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
@@ -153,13 +154,10 @@ class Subject extends CommonModel
      * * string        参数英文名        参数中文名(必须的)
      * * string        参数英文名        参数中文名(必须的)
      *
-     * @return void
-     *
-     * @version 1.0
+     * @throws \Exception @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2016-01-03
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     protected function addPoint($subject,array $points){
         $SubjectItemModel    = new SubjectItem();
@@ -244,10 +242,10 @@ class Subject extends CommonModel
      */
     public function CourseControllerIndex($examId = "",$subjectId = "")
     {
-        $builder = $this->Join('station','station.subject_id','=','subject.id')
-            ->Join('exam_result','exam_result.station_id','=','station.id')
-            ->Join('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-            ->Join('exam','exam.id','=','exam_screening.exam_id');
+        $builder = $this->leftJoin('station','station.subject_id','=','subject.id')
+            ->leftJoin('exam_result','exam_result.station_id','=','station.id')
+            ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+            ->leftJoin('exam','exam.id','=','exam_screening.exam_id');
 
         if ($examId != "") {
             $builder = $builder->where('exam.id','=',$examId);
@@ -266,7 +264,7 @@ class Subject extends CommonModel
             'exam_screening.id as exam_screening_id',
             'station.id as station_id'
         ])
-//            ->whereNotNull('exam.id')
+            ->whereNotNull('exam.id')
             ->where('exam.status','<>',0)
             ->groupBy('subject.id')
             ->paginate(config('osce.page_size'));
