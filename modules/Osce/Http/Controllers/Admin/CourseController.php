@@ -119,6 +119,12 @@ class CourseController extends CommonController
         ]);
     }
 
+    /**
+     * 考生统计
+     * @param Request $request
+     * @return \Illuminate\View\View
+     * @author Jiangzhiheng
+     */
     public function getStudentScore(Request $request)
     {
         $this->validate($request, [
