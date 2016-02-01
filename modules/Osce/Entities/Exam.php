@@ -517,7 +517,7 @@ class Exam extends CommonModel
     public function CourseControllerIndex($examId = "", $subjectId = "")
     {
         $builder = $this->Join('station_teacher','station_teacher.exam_id','=','exam.id')
-            ->Join('exam_result','exam_result.station_id','=','station_teacher.station_id')
+            ->Join('exam_result','exam_result.station_id','=','station_teacher.station_id');
 //            ->Join('station','station.id','=','exam_result.station_id')
 //            ->Join('subject','subject.id','=','station.subject_id');
 
@@ -532,7 +532,7 @@ class Exam extends CommonModel
         $builder = $builder->select(
             'exam.name as exam_name',
             'exam.id as exam_id',
-            'exam.begin_dt as exam_begin_dt',
+            'exam.begin_dt as exam_begin_dt'
 //            'subject.id as subject_id',
 //            'subject.title as subject_name',
 //            'station.id as station_id'
