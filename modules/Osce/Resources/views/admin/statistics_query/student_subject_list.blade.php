@@ -53,7 +53,10 @@
                         <td>{{$item->score}}</td>
                         <td>{{$item->grade_teacher}}</td>
                         <td>
-                            <a href="">
+                            <a href="{{route('osce.admin.course.getResultVideo',[
+                            'exam_id'=>$item->exam_id,
+                            'student_id'=>$item->student_id,
+                            'station_id'=>$item->station_id])}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                             </a>
                         </td>

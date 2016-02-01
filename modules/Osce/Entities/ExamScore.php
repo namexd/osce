@@ -25,10 +25,13 @@ class ExamScore extends  CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Standard','id','standard_id');
     }
 
+    public  function examResult(){
+        return $this->hasOne('\Modules\Osce\Entities\ExamResult','id','exam_result_id');
+    }
     public function getScore($id){}
 
     public  function getExamScoreList($examresultId){
-        $examScoreList=$this->where('exam_result_id','=',$examresultId)->get();
+        $examScoreList=$this->where('exam_screening_id','=',$examresultId)->get();
 
         return $examScoreList;
 
