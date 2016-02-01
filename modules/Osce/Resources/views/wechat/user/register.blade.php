@@ -57,11 +57,11 @@
         <form name="form" method="post" id="sourceForm" action="{{route('osce.wechat.user.postRegister')}}" id="frmTeacher">
             <div class="form-group">
                 <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span class="must"></span></label>
-                <input  type="text" name="nickname" class="form-control" id="name"/>
+                <input  type="text" name="nickname" class="form-control" id="name" placeholder="昵称"/>
             </div>
             <div class="form-group">
                 <label for="name">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<span class="must"></span></label>
-                <input  type="text" name="name" class="form-control" id="name"/>
+                <input  type="text" name="name" class="form-control" id="name" placeholder="姓名"/>
             </div>
             <div class="form-group">
                 <div class="radio_box">
@@ -99,7 +99,7 @@
             <div class="clear"></div>
             <div class="form-group">
                 <label for="mobile">手机号码<span class="must"></span></label>
-                <input type="number" class="form-control" id="mobile" name="mobile" />
+                <input type="number" class="form-control" id="mobile" name="mobile" placeholder="请输入手机号"/>
             </div>
             <div class="clear"></div>
 
