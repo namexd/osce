@@ -54,7 +54,7 @@ return [
 		]
 	],
 	'manager'=>[
-		5
+		0
 	],
 	'prepare'	=>	10,
 	'spRoleId'		=>	4,

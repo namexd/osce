@@ -45,11 +45,7 @@ class CourseController extends CommonController
             //科目列表数据
             $subject = new Subject();
             $exam = new Exam();
-            $subjectData = $exam->CourseControllerIndex(
-                $examId,
-                $subjectId
-            );
-//            dd($subjectData->toArray());
+            $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
             foreach ($subjectData as &$item) {
                 //找到按科目为基础的所有分数还有总人数
                 $avg = $subject->CourseControllerAvg(
@@ -135,7 +131,8 @@ class CourseController extends CommonController
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
         ]);
-
+        $examId =   '';
+        $message=   '';
         $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
         //获得最近的考试的id
         $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
