@@ -110,11 +110,11 @@ class NoticeController extends CommonController
             }
             $noticeModel = new Notice();
             if ($noticeModel->sendNotice($title, $content, $exam_id, $groups, $attach)) {
+                dd(123);
                 return redirect()->route('osce.admin.notice.getList');
             } else {
                 throw new \Exception('通知创建失败');
             }
-            dd(123);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
