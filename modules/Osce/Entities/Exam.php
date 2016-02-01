@@ -516,7 +516,8 @@ class Exam extends CommonModel
      */
     public function CourseControllerIndex($examId = "", $subjectId = "")
     {
-        $builder = $this->Join('station_teacher','station_teacher.exam_id','=','exam.id')
+        $builder = $this->Join('exam_screening','exam_screening.exam_id','=','exam.id')
+            ->Join('exam_result','exam_result.exam_screening_id','=','exam_screening.id')
             ->Join('station','station.id','=','exam_result.station_id')
             ->Join('subject','subject.id','=','station.subject_id');
 
@@ -537,7 +538,7 @@ class Exam extends CommonModel
             'station.id as station_id'
         )
             ->where('exam.status','<>',0)
-            ->distinct()
+//            ->distinct()
 //            ->groupBy('subject.id')
             ->paginate(config('osce.page_size'));
 
