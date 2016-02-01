@@ -516,14 +516,14 @@ class Exam extends CommonModel
      */
     public function CourseControllerIndex($examId = "", $subjectId = "")
     {
-//        $builder = $this->Join('station_teacher','station_teacher.exam_id','=','exam.id')
-//            ->Join('station','station.id','=','station_teacher.station_id')
-//            ->Join('subject','subject.id','=','station.subject_id');
+        $builder = $this->Join('station_teacher','station_teacher.exam_id','=','exam.id')
+            ->Join('station','station.id','=','station_teacher.station_id')
+            ->Join('subject','subject.id','=','station.subject_id');
 
-        $builder = ExamResult::Join('station','station.id','=','exam_result.station_id')
-            ->Join('subject','subject.id','=','station.subject_id')
-            ->Join('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-            ->Join('exam','exam_screening.exam_id','=','exam.id');
+//        $builder = ExamResult::Join('station','station.id','=','exam_result.station_id')
+//            ->Join('subject','subject.id','=','station.subject_id')
+//            ->Join('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+//            ->Join('exam','exam_screening.exam_id','=','exam.id');
 
         if ($examId != "") {
             $builder = $builder->where('exam.id','=',$examId);
