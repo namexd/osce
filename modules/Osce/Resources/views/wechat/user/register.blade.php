@@ -16,6 +16,20 @@
         .must{
             color: #ff0000;
         }
+        .layui-layer-title{
+            background: #fff!important;
+            color: #1ab394!important;
+            font-size: 16px!important;
+        }
+        .layui-layer-btn {
+            background: #fff !important;
+            border-top: 1px #fff solid !important;
+        }
+        .layui-layer-btn0{
+            border:1px solid #1ab394!important;
+            background: #1ab394 !important;
+        }
+        i.form-control-feedback.glyphicon.glyphicon-ok, i.form-control-feedback.glyphicon.glyphicon-remove{display: none!important;}
     </style>
 @stop
 
@@ -42,11 +56,11 @@
         {{-- RegTeacherOp --}}
         <form name="form" method="post" id="sourceForm" action="{{route('osce.wechat.user.postRegister')}}" id="frmTeacher">
             <div class="form-group">
-                <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span class="must">*</span></label>
+                <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span class="must"></span></label>
                 <input  type="text" name="nickname" class="form-control" id="name"/>
             </div>
             <div class="form-group">
-                <label for="name">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<span class="must">*</span></label>
+                <label for="name">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<span class="must"></span></label>
                 <input  type="text" name="name" class="form-control" id="name"/>
             </div>
             <div class="form-group">
@@ -63,13 +77,14 @@
                     </label>
                 </div>
             </div>
+            <div class="clear"></div>
             <div class="form-group card-list" style="width:35%;float: left;">
-               <select name="type" id="card-list">
+               <select name="type" id="card-list" style="height:34px;">
                    <option value="0">角色类型</option>
                    <option value="1">学生</option>
                    <option value="2">老师</option>
                </select>
-               <label for="ipt_zjh"><span class="must">*</span></label>
+               <label for="ipt_zjh"><span class="must"></span></label>
            </div>
 
             <div class="form-group card-list no_zjh" style="width:65%;float:right;" >
@@ -83,14 +98,15 @@
             </div>
             <div class="clear"></div>
             <div class="form-group">
-                <label for="mobile">手机号码<span class="must">*</span></label>
+                <label for="mobile">手机号码<span class="must"></span></label>
                 <input type="number" class="form-control" id="mobile" name="mobile" />
             </div>
             <div class="clear"></div>
 
             <div class="form-group">
-                <label for="code">验证码<span class="must">*</span></label>&nbsp;&nbsp; <input type="button" value="点击发送验证码" id="send_code">
-                <input type="text" name="code" class="form-control ipt_txt" placeholder="请输入验证码"/>
+                <input type="button" class="btn" value="点击发送验证码" id="send_code" style="width:34%;float:right;">
+                <input type="text" name="code" class="form-control ipt_txt" placeholder="请输入验证码" style="width:65%;float:left;"/>
+                <div class="clear"></div>
             </div>
             <div class="clear"></div>
 
