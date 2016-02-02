@@ -94,6 +94,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('machine/edit-watch', 	['uses'=>'MachineController@getEditWatch','as'=>'osce.admin.machine.getEditWatch']);
 		Route::post('machine/machine-delete', 	['uses'=>'MachineController@postMachineDelete','as'=>'osce.admin.machine.postMachineDelete']);
 		Route::post('machine/name-unique',['uses'=>'MachineController@postNameUnique','as'=>'osce.admin.machine.postNameUnique']);	//判断名称是否存在
+		Route::get('machine/watch-log-list',['uses'=>'MachineController@getWatchLogList','as'=>'osce.admin.machine.getWatchLogList']);	//腕表使用记录
 
 
 		//考核点

@@ -63,14 +63,9 @@
         width: 75%;
     }
     .sp-teacher .pull-right{width:20%;}
-    .teacher-warn{
-        background-color: #ebccd1;
-        color: #fff;
-    }
-    .teacher-primary{
-        background-color: #dff0d8;
-        color: #fff;
-    }
+    .teacher-warn{background-color: #ebccd1;}
+    .teacher-primary{background-color: #dff0d8;}
+    .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
     .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
     button.btn.btn-default.dropdown-toggle {
         height: 34px;
