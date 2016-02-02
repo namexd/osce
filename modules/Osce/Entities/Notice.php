@@ -138,6 +138,7 @@ class Notice extends CommonModel
                                 $this->sendWechat($notice,array_pluck($to,'openid'),$url);
                                 break;
                             case 2:
+                                dd($to);
                                 $this->sendSms($notice,array_pluck($to,'mobile'),$url);
                                 break;
                             case 3:
