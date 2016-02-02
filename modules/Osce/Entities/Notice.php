@@ -126,7 +126,6 @@ class Notice extends CommonModel
             }
             if(is_array($values))
             {
-                dd($values);
                 foreach($values as $value)
                 {
                     try
@@ -136,10 +135,10 @@ class Notice extends CommonModel
                             case 1:
                                 $notice->accept =   $accept;
                                 $notice->save();
-
                                 $this->sendWechat($notice,array_pluck($to,'openid'),$url);
                                 break;
                             case 2:
+                                dd($to);
                                 $this->sendSms($notice,array_pluck($to,'mobile'),$url);
                                 break;
                             case 3:
