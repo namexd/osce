@@ -42,6 +42,16 @@ class StudentExamQueryController extends  CommonController
             if(empty($user)){
                 throw new \Exception('当前用户未登陆');
             }
+            //检查用户是学生还是监考老师
+            $invigilateTeacher = Teacher::find($user->id);
+            if($invigilateTeacher && $invigilateTeacher->type == 1){
+                //查询出所有的考试
+                $ExamList= Exam::all();
+
+                dd($ExamList);
+            }
+
+
             //根据用户获得考试id
             $ExamIdList= Student::where('user_id','=',$user->id)->select('exam_id')->get();
             $list=[];
@@ -199,6 +209,10 @@ class StudentExamQueryController extends  CommonController
     }
 
 
+    //监考老师查询成绩页面
+    public function getTeacher(){
+
+    }
 
 
 
