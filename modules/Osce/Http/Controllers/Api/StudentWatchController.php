@@ -54,7 +54,7 @@ class StudentWatchController extends CommonController
     public function   getStudentExamReminder(Request $request)
     {
         $this->validate($request, [
-            'code' => 'required|integer'
+            'code' => 'required'
         ]);
         $data = [
             'title' => '',
