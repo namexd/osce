@@ -36,12 +36,11 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getTrainList(){
-//      $user=Auth::user();
-//      $userId=$user->id;
-//
-//      if(!$userId){
-//        return false;
-//      }
+      $user=Auth::user();
+      if(!$user){
+        return redirect()->back()->withErrors('请登陆');
+      }
+
         $trainModel=new InformTrain();
 //        $pagination=$trainModel->getPaginate();
 //        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
@@ -84,6 +83,9 @@ class TrainController extends  CommonController{
         ]);
 
         $user=Auth::user();
+        if(!$user){
+            return redirect()->back()->withErrors('请登陆');
+        }
         $userId=$user->id;
 //        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
 //        $data['attachments']=serialize($request->input('file'));
@@ -128,14 +130,20 @@ class TrainController extends  CommonController{
         ]);
         $id=intval($request->get('id'));
 
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-//        $manager=config('osce.manager');
-//        if($userId!==$id || $createId!==$manager[0]){
-//            return redirect()->back()->withInput()->withErrors('权限不足');
-//
-//        }
+        $user=Auth::user();
+        $userId=$user->id;
+        if(!$userId){
+            return \Response::json(array('code'=>2));
+        }
+        $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+        $manager=config('osce.manager');
+        if($createId!=$userId){
+            $url=1;
+        }elseif($userId==$manager[0]){
+            $url=2;
+        }else{
+            $url=2;
+        }
         $list=InformTrain::where('id',$id)->select()->get();
 
         foreach($list as $item){
@@ -155,7 +163,7 @@ class TrainController extends  CommonController{
         if($data['attachments']){
             $data['attachments']=unserialize($data['attachments']);
         }
-        return view('osce::admin.train.train_edit')->with('data',$data);
+        return view('osce::admin.train.train_edit')->with(['data'=>$data,'url'=>$url]);
     }
 
     /**
@@ -187,19 +195,19 @@ class TrainController extends  CommonController{
         ]);
         $data=$request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
 
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
-//        $manager=config('osce.manager');
-//        if($userId!==$createId || $createId!==$manager[0]){
-//            return redirect()->back()->withInput()->withErrors('权限不足');
-//        }
-        $data['attachments']=serialize($request->input('file'));
-        $result=InformTrain::where('id',$data['id'])->update($data);
-        if($result){
-            return redirect('/osce/admin/train/train-list')->with('success','编辑成功');
+        $user=Auth::user();
+        $userId=$user->id;
+        $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
+        if($userId==$createId || in_array($userId,config('osce.manager'))){
+            $data['attachments']=serialize($request->input('file'));
+            $result=InformTrain::where('id',$data['id'])->update($data);
+            if($result){
+                return redirect('/osce/admin/train/train-list')->with('success','编辑成功');
+            }
+            return redirect()->back()->withInput()->withErrors('编辑失败');
+        }else{
+            return redirect()->back()->withInput()->withErrors('权限不足');
         }
-        return redirect()->back()->withInput()->withErrors('编辑失败');
     }
 
     /**
@@ -225,19 +233,24 @@ class TrainController extends  CommonController{
         ]);
 
         $id=intval($request->get('id'));
-//        $user=Auth::user();
-//        $userId=$user->id;
-//        $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
+        $user=Auth::user();
+        $userId=$user->id;
+        $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
 //        $manager=config('osce.manager');
 //        if($userId!==$createId || $createId!==$manager[0]){
 //            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
 
-        $result=InformTrain::where('id',$id)->delete();
-        if($result){
-            return redirect('/osce/admin/train/train-list')->with('success','删除成功');
+        if($userId==$createId || in_array($userId,config('osce.manager'))){
+            $result=InformTrain::where('id',$id)->delete();
+            if($result){
+                return redirect('/osce/admin/train/train-list')->with('success','删除成功');
+            }
+            return redirect()->back()->withInput()->withErrors('删除失败');
+        }else{
+            return redirect()->back()->withInput()->withErrors('权限不足');
         }
-        return redirect()->back()->withInput()->withErrors('删除失败');
+
     }
 
     /**
