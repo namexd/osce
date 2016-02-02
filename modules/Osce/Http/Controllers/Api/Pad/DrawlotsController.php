@@ -260,15 +260,17 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
 
+            if (is_null($exam)) {
+                throw new \Exception('当前没有考试！', -2);
+            }
+
             //拿到房间
             $room = $this->getRoomId($id,$exam->id);
 
             //将考场名字和考站名字封装起来
             $station->name = $room->name . '-' . $station->name;
 
-            if (is_null($exam)) {
-                throw new \Exception('当前没有考试！', -2);
-            }
+
 
             $station->exam_id = $exam->id;
 
