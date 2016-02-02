@@ -138,7 +138,6 @@ class Notice extends CommonModel
                                 $this->sendWechat($notice,array_pluck($to,'openid'),$url);
                                 break;
                             case 2:
-                                dd($to);
                                 $this->sendSms($notice,array_pluck($to,'mobile'),$url);
                                 break;
                             case 3:
@@ -374,7 +373,6 @@ class Notice extends CommonModel
         $content=   [];
         $content[]  =   $notice->exam->name. ' ' .$notice->title;
         $content[]  =   '详情查看'.$url;
-        dd($to);
         foreach(array_pluck($to,'mobile') as $mobile)
         {
             $sender ->  send($mobile,implode('',$content).' 【敏行医学】');
