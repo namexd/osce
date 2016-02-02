@@ -343,7 +343,6 @@ class DrawlotsController extends CommonController
                 //将考站的信息返回
                 return Station::findOrFail($ranStationId);
             } else {
-                dd($student);
                 //如果是以考站分组，直接按计划好的顺序给出
                 //查询该学生当前应该在哪个考站考试
                 $examQueue = ExamQueue::where('student_id',$student->id)
