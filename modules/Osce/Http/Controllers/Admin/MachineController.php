@@ -938,4 +938,26 @@ class MachineController extends CommonController
         }
     }
 
+
+    public function getWatchLogList(Request $request){
+        $this->validate($request,[
+            'code'       => 'sometimes',
+            'student_name' => 'sometimes',
+            'begin_dt'   => 'sometimes',
+            'end_dt'     => 'sometimes',
+        ]);
+
+        $code=$request->get('code');
+        $studentName=$request->get('student_name');
+        $beginDt=$request->get('begin_dt');
+        $endDt=$request->get('end_dt');
+
+        $watchLogModel=new WatchLog();
+        $list=$watchLogModel->getList($code,$studentName,$beginDt,$endDt);
+        foreach($list as $item){
+           $item->context=unserialize($item->context);
+        }
+
+        return view()->with(['list'=>$list]);
+    }
 }
