@@ -12,7 +12,7 @@ class WatchLog extends CommonModel{
     protected $table 		= 	'watch_log';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	[ 'watch_id', 'action','context','create_user_id'];
+    protected   $fillable 	=	[ 'watch_id', 'action','context','create_user_id','student_id'];
     public      $search    =   [];
 
     /**
@@ -22,9 +22,13 @@ class WatchLog extends CommonModel{
      */
     public function student()
     {
-        return $this->hasOne('\Modules\Osce\Entities\student', 'id', 'student_id');
+        return $this->hasOne('\Modules\Osce\Entities\Student', 'id', 'student_id');
     }
 
+    public function watch()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Watch', 'id', 'watch_id');
+    }
 
    public function historyRecord($data,$student_id,$exam_id,$exam_screen_id){
        $time=time();
@@ -33,7 +37,7 @@ class WatchLog extends CommonModel{
          if($data['context']){
              $data['context']=serialize($data['context']);
          }
-          WatchLog::insert([
+          WatchLog::create([
               'watch_id' => $data['watch_id'],
               'action' => $data['action'],
               'context' => $data['context'],
@@ -45,11 +49,55 @@ class WatchLog extends CommonModel{
        if($data['context']){
            $data['context']=serialize($data['context']);
        }
-       WatchLog::insert([
+       WatchLog::create([
            'watch_id' => $data['watch_id'],
            'action' => $data['action'],
            'context' => $data['context'],
            'student_id' => $data['student_id']
        ]);
+   }
+
+   public function getList($code='',$studentName='',$beginDt='',$endDt=''){
+
+       $builder=$this->leftJoin ('watch',
+           function ($join) {
+               $join->on('watch.id' , '=' , 'watch_log.watch_id');
+           })->leftJoin( 'student',
+           function ($join) {
+               $join->on('student.id' , '=' , 'watch_log.student_id');
+           });
+
+       if($code){
+           $builder=$builder->where('code','like',$code.'%');
+       }
+
+       if($studentName){
+           $builder=$builder->where('student.name','like',$studentName.'%');
+       }
+
+       if($beginDt){
+           $builder=$builder->whereRaw(
+               'unix_timestamp(' . $this->table . '.created_at) < ?',
+               [
+                   $beginDt
+               ]
+           );
+       }
+
+       if($endDt){
+           $builder=$builder->whereRaw(
+               'unix_timestamp(' . $this->table . '.updated_at) > ?',
+               [
+                   $endDt
+               ]
+           );
+       }
+
+       $builder=$builder  ->select([
+               'student.name as name',
+               'watch.code as code',
+               'watch_log.context as context',
+           ])->paginate(config('osce.page_size'));
+       return $builder;
    }
 }

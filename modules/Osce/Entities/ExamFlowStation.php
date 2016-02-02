@@ -90,6 +90,11 @@ class ExamFlowStation extends CommonModel
     public function updateExamAssignment($examId,array $room,array $formData = [])
     {
         try {
+            //如果考试已经开始或者是结束了，就不能允许继续进行了
+            if (Exam::findOrFail($examId)->status != 0) {
+                throw new \Exception('当场考试已经开始或已经考完，无法再修改！');
+            }
+
             //使用事务
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
