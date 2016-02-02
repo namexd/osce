@@ -38,7 +38,7 @@ class TrainController extends  CommonController{
     public function getTrainList(){
       $user=Auth::user();
       if(!$user){
-        return redirect()->back()->withErrors('请登陆');
+        return redirect()->back()->withErrors(['请登陆']);
       }
 
         $trainModel=new InformTrain();
@@ -59,10 +59,12 @@ class TrainController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        name               培训名称(必须的)
+     * * string        address            地址(必须的)
+     * * datetime      begin_dt           开始时间(必须的)
+     * * datetime      end_dt             结束时间(必须的)
+     * * string        teacher            培训讲师(必须的)
+     * * string        content            内容(必须的)
      *
      * @return ${response}
      *
@@ -84,7 +86,7 @@ class TrainController extends  CommonController{
 
         $user=Auth::user();
         if(!$user){
-            return redirect()->back()->withErrors('请登陆');
+            return redirect()->back()->withErrors(['请登陆']);
         }
         $userId=$user->id;
 //        $data=$request->only(['name','address','begin_dt','end_dt','teacher','content']);
@@ -104,7 +106,7 @@ class TrainController extends  CommonController{
         if($result){
          return redirect('/osce/admin/train/train-list')->with('success','新增成功');
         }
-        return redirect()->back()->withInput()->withErrors('新增失败');
+        return redirect()->back()->withInput()->withErrors(['新增失败']);
     }
 
     /**
@@ -174,7 +176,13 @@ class TrainController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int           id                 主键id(必须的)
+     * * string        name               培训名称(必须的)
+     * * string        address            地址(必须的)
+     * * datetime      begin_dt           开始时间(必须的)
+     * * datetime      end_dt             结束时间(必须的)
+     * * string        teacher            培训讲师(必须的)
+     * * string        content            内容(必须的)
      *
      * @return ${response}
      *
@@ -204,9 +212,9 @@ class TrainController extends  CommonController{
             if($result){
                 return redirect('/osce/admin/train/train-list')->with('success','编辑成功');
             }
-            return redirect()->back()->withInput()->withErrors('编辑失败');
+            return redirect()->back()->withInput()->withErrors(['编辑失败']);
         }else{
-            return redirect()->back()->withInput()->withErrors('权限不足');
+            return redirect()->back()->withInput()->withErrors(['权限不足']);
         }
     }
 
@@ -246,9 +254,9 @@ class TrainController extends  CommonController{
             if($result){
                 return redirect('/osce/admin/train/train-list')->with('success','删除成功');
             }
-            return redirect()->back()->withInput()->withErrors('删除失败');
+            return redirect()->back()->withInput()->withErrors(['删除失败']);
         }else{
-            return redirect()->back()->withInput()->withErrors('权限不足');
+            return redirect()->back()->withInput()->withErrors(['权限不足']);
         }
 
     }
