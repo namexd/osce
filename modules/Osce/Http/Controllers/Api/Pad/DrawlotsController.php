@@ -151,7 +151,7 @@ class DrawlotsController extends CommonController
             $examId = $exam->id;
 
             list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id,$exam);
-
+            dd($stationNum);
 
             $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
     //        $examQueue = [
