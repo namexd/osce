@@ -18,6 +18,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\WatchLog;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
@@ -206,10 +207,17 @@ class DrawlotsController extends CommonController
             $uid = $request->input('uid');
             $roomId = $request->get('room_id');
             //根据uid来查对应的考生
-            $watchLog = ExamScreeningStudent::where('watch_id',$uid)->where('is_end',0)->orderBy('created_at','desc')->first();
+            //根据uid查到对应的watchid
+            $watch = Watch::where('code',$uid)->first();
+
+            if (is_null($watch)) {
+                throw new \Exception('没有找到对应的腕表信息',-3);
+            }
+
+            $watchLog = ExamScreeningStudent::where('watch_id',$watch->id)->where('is_end',0)->orderBy('created_at','desc')->first();
 
             if (!$watchLog) {
-                throw new \Exception('没有找到对应的腕表信息！');
+                throw new \Exception('没有找到学生对应的腕表信息！');
             }
 
             if (!$student = $watchLog ->student) {
@@ -217,8 +225,8 @@ class DrawlotsController extends CommonController
             }
 
             $studentId = $watchLog->student_id;
+
             //如果考生走错了房间
-//            dd($studentId,$roomId);
             if (ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->get()->isEmpty()) {
                 throw new \Exception('当前考生走错了考场');
             }
@@ -292,9 +300,13 @@ class DrawlotsController extends CommonController
      */
     private function drawlots($student, $roomId)
     {
+
         try {
+            //获取正在考试中的考试
+            $examId = $student->exam_id;
             //从ExamQueue表中将房间和状态对应的列表查出
             $station = ExamQueue::where('room_id' , '=' , $roomId)
+                ->where('exam_id',$examId)
                 ->where('status' , '=' , 0)
                 ->get();
 
@@ -302,8 +314,6 @@ class DrawlotsController extends CommonController
             if ($station->isEmpty()) {
                 throw new \Exception('当前队列中找不到符合的考试');
             }
-
-            $examId = $station->first()->exam_id;
 
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
@@ -338,6 +348,8 @@ class DrawlotsController extends CommonController
                 //如果是以考站分组，直接按计划好的顺序给出
                 //查询该学生当前应该在哪个考站考试
                 $examQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('room_id',$roomId)
+                    ->where('exam_id',$examId)
                     ->where('status',0)
                     ->orderBy('begin_dt','asc')
                     ->get();

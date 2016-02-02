@@ -384,6 +384,5 @@ class Common{
         }
         $broadcast = new Broadcast(config('wechat.app_id'), config('wechat.secret'));
         $result =   $broadcast->send($message)->to($OpendIdArray);
-        dd($result);
     }
 }
