@@ -249,7 +249,13 @@ class DrawlotsController extends CommonController
             $id = $request->input('id');
 
             //根据id获取考站信息
-            $station = StationTeacher::where('user_id',$id)->first()->station;
+            $stationTeacher = StationTeacher::where('user_id',$id)->first();
+
+            if (is_null($stationTeacher)) {
+                throw new \Exception('当前老师没有考试！', -1);
+            }
+
+            $station = $stationTeacher->station;
 
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
