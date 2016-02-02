@@ -300,9 +300,13 @@ class DrawlotsController extends CommonController
      */
     private function drawlots($student, $roomId)
     {
+
         try {
+            //获取正在考试中的考试
+            $examId = $student->exam_id;
             //从ExamQueue表中将房间和状态对应的列表查出
             $station = ExamQueue::where('room_id' , '=' , $roomId)
+                ->where('exam_id',$examId)
                 ->where('status' , '=' , 0)
                 ->get();
 
@@ -310,8 +314,6 @@ class DrawlotsController extends CommonController
             if ($station->isEmpty()) {
                 throw new \Exception('当前队列中找不到符合的考试');
             }
-
-            $examId = $station->first()->exam_id;
 
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
@@ -346,10 +348,12 @@ class DrawlotsController extends CommonController
                 //如果是以考站分组，直接按计划好的顺序给出
                 //查询该学生当前应该在哪个考站考试
                 $examQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('room_id',$roomId)
+                    ->where('exam_id',$examId)
                     ->where('status',0)
                     ->orderBy('begin_dt','asc')
                     ->get();
-                dd($examQueue);
+
                 if ($examQueue->isEmpty()) {
                     throw new \Exception('该名考生不在计划中');
                 }
