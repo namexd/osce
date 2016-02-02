@@ -195,7 +195,7 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
-        try {
+//        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -231,9 +231,9 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($result));
 
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
