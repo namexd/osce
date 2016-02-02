@@ -34,9 +34,25 @@
                         layer.alert(res.message);
                     }else{
                         var data = res.data;
-                        var html = '<option value="">全部考站</option>';
+                        var result = [];
+                        //数据结构
                         for(var i in data){
-                            html += '<option value="'+data[i][0].id+'">'+data[i][0].name+'</option>';
+                            result.push({id:data[i][0].id,name:data[i][0].name});
+                        }
+
+                        //数据去重
+                        var _r = {},current = [];
+                        for(var i in result){
+                            if(!_r[result[i].id]){
+                                _r[result[i].id] = true;
+                                current.push(result[i]);
+                            }
+                        }
+
+                        //写入dom
+                        var html = '<option value="">全部考站</option>';
+                        for(var i in current){
+                            html += '<option value="'+current[i].id+'">'+current[i].name+'</option>';
                         }
 
                         $('#station_Category').html(html);
