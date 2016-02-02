@@ -392,7 +392,7 @@ class DrawlotsController extends CommonController
         //获得考场的id
         $room_id = $room->id;
         //获得当前考场考站的个数
-        $stationNum = RoomStation::where('room_id',$room_id)->get()->count();
+        $stationNum = StationTeacher::where('exam_id',$exam->id)->groupBy('station_id')->get()->count();
         //获得当前老师所在的考站
         $station = StationTeacher::where('user_id',$id)->first()->station;
         return array($room_id, $station, $stationNum);
