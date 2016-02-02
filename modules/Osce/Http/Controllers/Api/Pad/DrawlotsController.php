@@ -225,7 +225,7 @@ class DrawlotsController extends CommonController
             }
 
             $studentId = $watchLog->student_id;
-        dd($studentId);
+
             //如果考生走错了房间
             if (ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->get()->isEmpty()) {
                 throw new \Exception('当前考生走错了考场');
