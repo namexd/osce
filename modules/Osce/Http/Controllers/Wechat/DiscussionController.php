@@ -122,7 +122,7 @@ class DiscussionController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        id        主键id(必须的)
      *
      * @return ${response}
      *
@@ -427,8 +427,9 @@ class DiscussionController extends  CommonController{
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int            id               主键id(必须的)
+     * * string        title             标题(必须的)
+     * * string        content           内容(必须的)
      *
      * @return ${response}
      *
