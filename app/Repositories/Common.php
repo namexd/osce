@@ -32,8 +32,9 @@ class Common{
      *
      */
     public static function sendSms($mobile,$message){
-
-        (new SendReminderSms($mobile,$message))->onQueue('sms');
+        $sender=\App::make('messages.sms');
+        $sender->send($mobile,$message);
+        //(new SendReminderSms($mobile,$message))->onQueue('sms');
 
     }
 
@@ -382,6 +383,7 @@ class Common{
             throw new \Exception('你选择的接收用户数量为0');
         }
         $broadcast = new Broadcast(config('wechat.app_id'), config('wechat.secret'));
-        $broadcast->send($message)->to($OpendIdArray);
+        $result =   $broadcast->send($message)->to($OpendIdArray);
+        dd($result);
     }
 }

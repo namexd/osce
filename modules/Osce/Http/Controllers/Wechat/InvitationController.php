@@ -26,7 +26,7 @@ use url;
 
 class InvitationController extends CommonController
 {
-    
+
     /**
      *sp邀请
      * @api GET /osce/wechat/invitation/invitation-list
@@ -52,34 +52,35 @@ class InvitationController extends CommonController
             'station_id' => 'required|integer',
         ], [
             'teacher_id.required' => '邀请编号必须',
-            'exam_id.required'=>'考试编号必须',
-            'station_id.required'=>'考站编号必须',
+            'exam_id.required' => '考试编号必须',
+            'station_id.required' => '考站编号必须',
         ]);
 
         $teacher_id = $request->get('teacher_id');
         $exam_id = $request->get('exam_id');
-        $stationId= $request->get('station_id');
+        $stationId = $request->get('station_id');
 
         //根据老师id查询老师的信息和openid
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);
-          //根据考试id查询出考试相关信息
+        //根据考试id查询出考试相关信息
         $ExamModel = new Exam();
-        $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
+//        $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
+        $ExamList = $ExamModel->find($exam_id);
         //根据考试id查询出场次id
-        $examscreening = ExamScreening::where('exam_id','=',$exam_id)->select('id')->first();
-
-            foreach($data as $key=>$v){
-                $data[$key]['exam_name'] = $ExamList['name'];
-                $data[$key]['begin_dt'] = $ExamList['begin_dt'];
-                $data[$key]['end_dt'] = $ExamList['end_dt'];
-                $data[$key]['exam_id'] = $exam_id;
-                $data[$key]['exam_screening_id']= $examscreening->id;
-                $data[$key]['station_id']=$stationId;
-            }
+        //$examscreening = ExamScreening::where('exam_id','=',$exam_id)->select('id')->first();
+        $examscreening = $ExamList->examScreening->first();
+        foreach ($data as $key => $v) {
+            $data[$key]['exam_name'] = $ExamList['name'];
+            $data[$key]['begin_dt'] = $ExamList['begin_dt'];
+            $data[$key]['end_dt'] = $ExamList['end_dt'];
+            $data[$key]['exam_id'] = $exam_id;
+            $data[$key]['exam_screening_id'] = $examscreening->id;
+            $data[$key]['station_id'] = $stationId;
+        }
 
         $InviteModel = new Invite();
-        try{
+        try {
             if ($InviteModel->addInvite($data)) {
                 return response()->json(
                     $this->success_data()
@@ -87,9 +88,7 @@ class InvitationController extends CommonController
             } else {
                 throw new \Exception('邀请失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
             );
@@ -114,17 +113,16 @@ class InvitationController extends CommonController
     public function getList()
     {
 
-        $user= Auth::user();
-        if(empty($user))
-        {
+        $user = Auth::user();
+        if (empty($user)) {
             throw new \Exception('未找到当前操作人信息');
         }
-        $userId =$user->id;
+        $userId = $user->id;
 
         $notice = new Invite();
 //        $list = $notice->get();
-        $list = $notice-> where('user_id','=',$userId)->get();
-        return view('osce::wechat.exammanage.sp_invitation',['list'=>$list]);//这里页面应该为列表页面
+        $list = $notice->where('user_id', '=', $userId)->get();
+        return view('osce::wechat.exammanage.sp_invitation', ['list' => $list]);//这里页面应该为列表页面
     }
 
 
@@ -154,15 +152,15 @@ class InvitationController extends CommonController
         $status = $request->get('status');
         $id = $request->get('id');
 
-        $result = $Invite->where('id', '=', $id)->update(['status'=>$status]);
+        $result = $Invite->where('id', '=', $id)->update(['status' => $status]);
 //        echo json_decode(11111);die;
         if ($result) {
             return response()->json(
-                $this->success_data($result,1,'操作成功')
+                $this->success_data($result, 1, '操作成功')
             );
         } else {
             return response()->json(
-                $this->success_data(0,'操作失败')
+                $this->success_data(0, '操作失败')
             );
         }
     }
@@ -185,29 +183,29 @@ class InvitationController extends CommonController
     {
 
         $id = intval(Input::get('id'));//邀请id
-        $inviteModel =Invite::where('id','=',$id)->select('name','begin_dt','end_dt','status','user_id')->first();
-          if($inviteModel){
-              $caseId =ExamSpTeacher::where('teacher_id','=',$inviteModel->user_id)->select('case_id')->first();
-              if(!$caseId){
-                  throw new \Exception('没有找到相关病例');
-              }else{
-                  $caseModel =CaseModel:: where('id','=',$caseId->case_id)->select('name')->first()->name;
+        $inviteModel = Invite::where('id', '=', $id)->select('name', 'begin_dt', 'end_dt', 'status', 'user_id')->first();
+        if ($inviteModel) {
+            $caseId = ExamSpTeacher::where('teacher_id', '=', $inviteModel->user_id)->select('case_id')->first();
+            if (!$caseId) {
+                throw new \Exception('没有找到相关病例');
+            } else {
+                $caseModel = CaseModel:: where('id', '=', $caseId->case_id)->select('name')->first()->name;
 
-              }
-        }else{
-              throw new \Exception('请检查登陆稍后再试!');
-          }
-        $list=[
-             'exam_name' =>$inviteModel->name,
-             'begin_dt' =>$inviteModel->begin_dt,
-             'end_dt' =>$inviteModel->end_dt,
-             'case_name' =>$caseModel,
-             'status'=>$inviteModel->status
+            }
+        } else {
+            throw new \Exception('请检查登陆稍后再试!');
+        }
+        $list = [
+            'exam_name' => $inviteModel->name,
+            'begin_dt' => $inviteModel->begin_dt,
+            'end_dt' => $inviteModel->end_dt,
+            'case_name' => $caseModel,
+            'status' => $inviteModel->status
         ];
 //          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [
             'id' => $id,
-            'list'=>$list
+            'list' => $list
         ]);
     }
 

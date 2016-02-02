@@ -114,7 +114,6 @@ class NoticeController extends CommonController
             } else {
                 throw new \Exception('通知创建失败');
             }
-
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

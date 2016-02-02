@@ -64,13 +64,21 @@
                 @endforeach
                 </tbody>
             </table>
+            @if ($studentList->count() > 0)
             <div class="pull-left">
                 共{{$studentList->total()}}条
             </div>
             <div class="btn-group pull-right">
                {!! $studentList->appends($_GET)->render() !!}
             </div>
+            @else
+                <div class="pull-left">
+                    共0条
+                </div>
+                <div class="btn-group pull-right">
 
+                </div>
+            @endif
         </div>
 
     </div>
