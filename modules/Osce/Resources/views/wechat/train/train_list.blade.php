@@ -37,6 +37,10 @@
                         //计数
                         var key = (index+1+parseInt(i))
                         var author  =   data[i].author;
+                        var num=data[i].clicks;
+                        if(num==""){
+                            num=0;
+                        }
                         if(author==null)
                         {
                             continue;
@@ -49,7 +53,7 @@
 						        		'<p class="font12 p_bottom">'+
 						        			'<span class="font14 student_name">'+data[i].author.name+'</span>'+
 						        			'<span class="clo9">&nbsp;'+data[i].time+'</span>'+
-						        			'<span class="right comment">已读&nbsp;'+data[i].clicks+'</span>'+
+						        			'<span class="right comment">已读&nbsp;'+num+'</span>'+
 						        		'</p>'+
 						        	'</a>'+
 						        '</li>';
