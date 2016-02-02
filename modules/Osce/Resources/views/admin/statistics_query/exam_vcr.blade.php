@@ -48,8 +48,10 @@
                     <h4>标记点</h4>
                     <hr style="margin-top: 10px;margin-bottom: 10px">
                     <ul class="points">
-                        <li><span class="year">2015/1/16</span><span>12:00:43</span></li>
-                        <li><span class="year">2015/1/16</span><span>12:00:43</span></li>
+                        @forelse($data as $item)
+                            <li><span class="year">{{$item->anchor}}</span></li>
+                        @empty
+                        @endforelse
                     </ul>
                 </div>
                 <div class="col-sm-9">

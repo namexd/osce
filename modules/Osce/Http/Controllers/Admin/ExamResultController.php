@@ -270,8 +270,8 @@ class ExamResultController extends CommonController{
 
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId);
-
-            return view('osce::admin.statistics_query.exam_vcr',$data);
+            dd($examId,$studentId,$stationId,$data->toArray());
+            return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
         } catch (\Exception $ex) {
             return response()->back()->withErrors($ex->getMessage());
         }
