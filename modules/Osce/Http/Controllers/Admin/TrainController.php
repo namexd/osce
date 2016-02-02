@@ -101,6 +101,7 @@ class TrainController extends  CommonController{
             'content'            => $request->get('content'),
             'attachments'        => serialize($request->input('file')),
             'create_user_id'     => $userId,
+            'clicks'             => 0,
         ];
         $result=InformTrain::create($data);
         if($result){
