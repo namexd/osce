@@ -18,6 +18,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\WatchLog;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
@@ -206,10 +207,17 @@ class DrawlotsController extends CommonController
             $uid = $request->input('uid');
             $roomId = $request->get('room_id');
             //根据uid来查对应的考生
-            $watchLog = ExamScreeningStudent::where('watch_id',$uid)->where('is_end',0)->orderBy('created_at','desc')->first();
+            //根据uid查到对应的watchid
+            $watch = Watch::where('code',$uid)->first();
+
+            if (is_null($watch)) {
+                throw new \Exception('没有找到对应的腕表信息',-3);
+            }
+
+            $watchLog = ExamScreeningStudent::where('watch_id',$watch->id)->where('is_end',0)->orderBy('created_at','desc')->first();
 
             if (!$watchLog) {
-                throw new \Exception('没有找到对应的腕表信息！');
+                throw new \Exception('没有找到学生对应的腕表信息！');
             }
 
             if (!$student = $watchLog ->student) {
