@@ -19,6 +19,7 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\Teacher;
+use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 
@@ -49,11 +50,9 @@ class StudentExamQueryController extends CommonController
             $invigilateTeacher = Teacher::find($user->id);
             if ($invigilateTeacher && $invigilateTeacher->type == 1) {
                 //查询出所有的考试   todo 监考老师查询出所有考试
-                $ExamList = Exam::all();
-
-//                dd($ExamList);
+                 $ExamList = Exam::all();
+                return view('osce::wechat.resultquery.examination_list_teacher',['ExamList'=>$ExamList]);
             }
-
 
             //根据用户获得考试id
             $ExamIdList = Student::where('user_id', '=', $user->id)->select('exam_id')->get();
@@ -68,7 +67,7 @@ class StudentExamQueryController extends CommonController
             $ExamList = $ExamModel->Examname($examIds);
             //根据考试id获取所有考试
             //dd($ExamList);
-            return view('osce::wechat.resultquery.examination_list_teacher',['ExamList'=>$ExamList]);
+            return view('osce::wechat.resultquery.examination_list',['ExamList'=>$ExamList]);
         }catch (\Exception $ex) {
             throw $ex;
         }
@@ -210,22 +209,57 @@ class StudentExamQueryController extends CommonController
         return view('osce::wechat.resultquery.examination_detail', ['examScoreList' => $list], ['examresultList' => $examresultList, 'examName' => $examName]);
     }
 
+      //动态查询出考试科目
+      //url /osce/wechat/student-exam-query/subject-list
+    public function getSubjectList(Request $request){
+
+        $this->validate($request, [
+            'exam_id' => 'required|integer'
+
+        ]);
+        $examId = $request->get('exam_id');
+        //根据考试查询出最近的考试科目
+        $subjectModel= new Subject();
+        $subject = $subjectModel->getSubjectList($examId);
+        $subjectData=[];
+        foreach($subject as $subjectList){
+            $subjectData[]=[
+                'subject_name'=>$subjectList->subject_name,
+                'subject_id'=>$subjectList->id,
+                'exam_id'=>$examId
+            ];
+        }
+        if($subject){
+            return response()->json(
+                $this->success_data($subjectData, 1, '科目数据传送成功')
+            );
+        }else{
+            return response()->json(
+                $this->fail(new \Exception('科目数据传送成功'))
+            );
+        }
 
 
 
+    }
 
-    //监考老师查询成绩页面
+
+
+    //监考老师查询科目成绩页面
     //url /osce/wechat/student-exam-query/teacher-check-score
     public function getTeacherCheckScore(Request $request)
     {
         $this->validate($request, [
-            'exam_id' => 'required|integer'
+            'exam_id' => 'required|integer',
+            'subject_id' => 'requied|integer'
         ]);
         $examId = $request->get('exam_id');
+        $subjectId  = $request->get('subject_id');
+
         //调用科目成绩统计查询的接口方法
         $subject = new Subject();
         $examModel = new Exam();
-        $SubjectDetails = $examModel->CourseControllerIndex($examId);
+        $SubjectDetails = $examModel->CourseControllerIndex($examId,$subjectId);
 
         foreach ($SubjectDetails as &$item) {
             //找到按科目为基础的所有分数还有总人数
@@ -249,6 +283,8 @@ class StudentExamQueryController extends CommonController
             }
         }
         //调用查看总成绩的方法
+        $tesresultModel = new TestResult();
+        $scores = $tesresultModel->AcquireExam($studentId);
 
 
 

@@ -341,6 +341,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('student-exam-query/every-exam-list',['uses'=>'StudentExamQueryController@getEveryExamList','as'=>'osce.wechat.student-exam-query.getEveryExamList']);
 		Route::get('student-exam-query/exam-details',['uses'=>'StudentExamQueryController@getExamDetails','as'=>'osce.wechat.student-exam-query.getExamDetails']);
 		Route::get('student-exam-query/teacher-check-score',['uses'=>'StudentExamQueryController@getTeacherCheckScore','as'=>'osce.wechat.student-exam-query.getTeacherCheckScore']);
+		Route::get('student-exam-query/subject-list',['uses'=>'StudentExamQueryController@getSubjectList','as'=>'osce.wechat.student-exam-query.getSubjectList']);
 
 	});
 
