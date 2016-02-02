@@ -90,7 +90,7 @@ class StudentWatchController extends CommonController
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-        dump($examQueueCollect);
+//        dump($examQueueCollect);
          //判断考试的状态
         $nowNextQueue = $ExamQueueModel->nowQueue($examQueueCollect);
         $nowQueue = $nowNextQueue[0];
