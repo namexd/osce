@@ -136,6 +136,12 @@ class IndexController extends CommonController
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));
         }
+        $examStatus=Exam::where('status','=',1)->select()->first();
+        if($examStatus){
+            if($examStatus->id!=$exam_id){
+                return \Response::json(array('code'=>6));
+            }
+        }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
         $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
