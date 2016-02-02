@@ -249,6 +249,7 @@ class ExamResultController extends CommonController{
     }
 
     /**
+     * 视频页面的着陆页
      * @param Request $request
      * @author Jiangzhiheng
      * @return \Illuminate\View\View
@@ -269,7 +270,7 @@ class ExamResultController extends CommonController{
 
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId);
-
+            dd($data);
             return view('osce::admin.statistics_query.exam_vcr',$data);
         } catch (\Exception $ex) {
             return response()->back()->withErrors($ex->getMessage());
