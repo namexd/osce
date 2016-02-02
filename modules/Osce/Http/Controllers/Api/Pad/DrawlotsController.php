@@ -244,12 +244,18 @@ class DrawlotsController extends CommonController
      */
     public function getStationList(Request $request)
     {
-        try {
+//        try {
             //获取当前登陆者id
             $id = $request->input('id');
 
             //根据id获取考站信息
-            $station = StationTeacher::where('user_id',$id)->first()->station;
+            $stationTeacher = StationTeacher::where('user_id',$id)->first();
+
+            if (is_null($stationTeacher)) {
+                throw new \Exception('当前老师没有考试！', -1);
+            }
+
+            $station = $stationTeacher->station;
 
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
@@ -267,9 +273,9 @@ class DrawlotsController extends CommonController
             $station->exam_id = $exam->id;
 
             return response()->json($this->success_data($station));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
