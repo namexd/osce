@@ -126,12 +126,21 @@ $(function(){
                     @endforeach
                     </tbody>
                 </table>
-                <div class="pull-left">
-                    共{{$data->total()}}条
-                </div>
-                <div class="btn-group pull-right">
-                   {!! $data->appends($_GET)->render() !!}
-                </div>
+                @if($data->count() != 0)
+                    <div class="pull-left">
+                        共{{$data->total()}}条
+                    </div>
+                    <div class="btn-group pull-right">
+                       {!! $data->appends($_GET)->render() !!}
+                    </div>
+                @else
+                    <div class="pull-left">
+                        共0条
+                    </div>
+                    <div class="btn-group pull-right">
+
+                    </div>
+                @endif
             </div>
         </div>
     </div>

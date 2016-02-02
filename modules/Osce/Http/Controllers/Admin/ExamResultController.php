@@ -189,7 +189,7 @@ class ExamResultController extends CommonController{
 
         $standardModel=new Standard();
         $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
-        if($totalScore){
+        if(is_null($totalScore)){
             $sort=$totalScore[0]->sort;
             $avg=[];
             for($i=1;$i<=$sort;$i++){
@@ -198,7 +198,6 @@ class ExamResultController extends CommonController{
         }else{
             $avg=[0];
         }
-
 
 
         return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
