@@ -126,6 +126,7 @@ class Notice extends CommonModel
             }
             if(is_array($values))
             {
+                dd($values);
                 foreach($values as $value)
                 {
                     try
