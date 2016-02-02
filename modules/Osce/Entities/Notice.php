@@ -373,7 +373,7 @@ class Notice extends CommonModel
         $content=   [];
         $content[]  =   $notice->exam->name. ' ' .$notice->title;
         $content[]  =   '详情查看'.$url;
-        foreach(array_pluck($to,'mobile') as $mobile)
+        foreach($to as $mobile)
         {
             $sender ->  send($mobile,implode('',$content).' 【敏行医学】');
         }
