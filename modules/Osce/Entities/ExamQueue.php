@@ -181,6 +181,7 @@ class ExamQueue extends CommonModel
     static public function nextExamineeByRoomId($room_id, $examId, $stationNum)
     {
         try {
+            dd($stationNum);
         return ExamQueue::leftJoin('student','student.id', '=', 'exam_queue.student_id')
             ->where('exam_queue.room_id', $room_id)
             ->where('exam_queue.status',0)
