@@ -146,11 +146,12 @@ class DrawlotsController extends CommonController
     {
         try {
             $id = $request->input('id');
-
-            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id);
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
             $examId = $exam->id;
+
+            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id,$exam);
+
 
             $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
     //        $examQueue = [

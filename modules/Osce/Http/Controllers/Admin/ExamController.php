@@ -1405,7 +1405,6 @@ class ExamController extends CommonController
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $room, $formData);
             } else { //否则就是编辑
-//                dd($examId,$formData);
                 $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
@@ -1657,5 +1656,25 @@ class ExamController extends CommonController
             $data[$scringId]        =   $scringData;
         }
         return $data;
+    }
+
+    /**
+     * 展示考试组成的方法
+     * @author Jiangzhiheng
+     */
+    private function getExamConstitute ($examId) {
+        try {
+            $tempString = '';
+            $temp = StationTeacher::where('exam_id',$examId)->groupBy('station_id')->with('station')->get();
+            //获得每个考站数据的type
+            foreach ($temp as $item) {
+                switch ($item->type) {
+                    case 1:
+
+                }
+            }
+        } catch (\Exception $ex) {
+
+        }
     }
 }
