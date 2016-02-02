@@ -61,17 +61,17 @@ class StudentWatchController extends CommonController
             'willStudents' => '',
             'estTime' => '',
             'willRoomName' => '',
-            'RoomName' => '',
+            'roomName' => '',
             'nextExamName' => '',
             'surplus' => '',
             'score' => '',
             ];
-           $code =0;
+        $code =0;
         $watchCode = $request->input('code');
 
         //根据设备编号找到设备id
         $watchId= Watch::where('code','=',$watchCode)->select('id')->first();
-//         根据腕表id找到对应的考试场次和学生
+        //  根据腕表id找到对应的考试场次和学生
 
         $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->select('student_id','exam_screening_id')->first();
         if (!$watchStudent) {
@@ -81,7 +81,7 @@ class StudentWatchController extends CommonController
             );
         }
         //得到场次id
-        $examScreeningId= $watchStudent->exam_screening_id;
+//        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
         $studentId = $watchStudent->student_id;
        // 根据考生id找到当前的考试
@@ -131,7 +131,7 @@ class StudentWatchController extends CommonController
             if ($nowQueue->status == 1) {
                 if (strtotime($nowQueue->begin_dt) - $nowTime <= 120 && strtotime($nowQueue->begin_dt) - $nowTime > 0) {
                     $examRoomName = $nowQueue->room_name;
-                    $data['RoomName'] = $examRoomName;
+                    $data['roomName'] = $examRoomName;
                     $data['title'] = '考生开考通知';
                     $code=2;
 

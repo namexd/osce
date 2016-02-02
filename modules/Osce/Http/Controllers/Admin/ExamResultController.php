@@ -189,7 +189,7 @@ class ExamResultController extends CommonController{
 
         $standardModel=new Standard();
         $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
-        if($totalScore){
+        if(is_null($totalScore)){
             $sort=$totalScore[0]->sort;
             $avg=[];
             for($i=1;$i<=$sort;$i++){
@@ -198,7 +198,6 @@ class ExamResultController extends CommonController{
         }else{
             $avg=[0];
         }
-
 
 
         return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
@@ -250,6 +249,7 @@ class ExamResultController extends CommonController{
     }
 
     /**
+     * 视频页面的着陆页
      * @param Request $request
      * @author Jiangzhiheng
      * @return \Illuminate\View\View
@@ -270,7 +270,7 @@ class ExamResultController extends CommonController{
 
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId);
-
+            dd($data);
             return view('osce::admin.statistics_query.exam_vcr',$data);
         } catch (\Exception $ex) {
             return response()->back()->withErrors($ex->getMessage());
