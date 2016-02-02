@@ -91,16 +91,6 @@ class DrawlotsController extends CommonController
             $examId = $exam->id;
             //从队列表中通过考场ID得到对应的考生信息
             $examQueue =  ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
-
-            if (!$examQueue->isEmpty()) {
-                //将老师对应的考站写进对象
-                $examQueue->station_name = $station->name;
-                $examQueue->station_id = $station->id;
-                $examQueue->exam_id = $examId;
-            } else {
-                throw new \Exception('当前没有符合标准的数据');
-            }
-
 //            $examQueue = [
 //                0 => ['student_id' => 1,
 //                    'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160120/f5cc03fc-a654-4d9b-8a0c-bede8a5d4730.jpg',
@@ -146,11 +136,11 @@ class DrawlotsController extends CommonController
     {
         try {
             $id = $request->input('id');
-
-            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id);
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
             $examId = $exam->id;
+
+            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id,$exam);
 
             $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
     //        $examQueue = [
@@ -391,7 +381,7 @@ class DrawlotsController extends CommonController
         //获得考场的id
         $room_id = $room->id;
         //获得当前考场考站的个数
-        $stationNum = RoomStation::where('room_id',$room_id)->get()->count();
+        $stationNum = StationTeacher::where('exam_id',$exam->id)->groupBy('station_id')->get()->count();
         //获得当前老师所在的考站
         $station = StationTeacher::where('user_id',$id)->first()->station;
         return array($room_id, $station, $stationNum);

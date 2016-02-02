@@ -938,4 +938,45 @@ class MachineController extends CommonController
         }
     }
 
+    /**
+     *
+     * @method GET
+     * @url /machine/watch-log-list
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string          code             设备ID(必须的)
+     * * string          student_name     使用人(必须的)
+     * * datetime        begin_dt         开始时间(必须的)
+     * * datetime        end_dt           结束时间(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchLogList(Request $request){
+        $this->validate($request,[
+            'code'       => 'sometimes',
+            'student_name' => 'sometimes',
+            'begin_dt'   => 'sometimes',
+            'end_dt'     => 'sometimes',
+        ]);
+
+        $code=$request->get('code');
+        $studentName=$request->get('student_name');
+        $beginDt=$request->get('begin_dt');
+        $endDt=$request->get('end_dt');
+
+        $watchLogModel=new WatchLog();
+        $list=$watchLogModel->getList($code,$studentName,$beginDt,$endDt);
+        foreach($list as $item){
+           $item->context=unserialize($item->context);
+        }
+
+        return view('osce::admin.resourcemanage.equ_manage_watch_list')->with(['list'=>$list]);
+    }
 }

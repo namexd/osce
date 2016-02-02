@@ -94,6 +94,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('machine/edit-watch', 	['uses'=>'MachineController@getEditWatch','as'=>'osce.admin.machine.getEditWatch']);
 		Route::post('machine/machine-delete', 	['uses'=>'MachineController@postMachineDelete','as'=>'osce.admin.machine.postMachineDelete']);
 		Route::post('machine/name-unique',['uses'=>'MachineController@postNameUnique','as'=>'osce.admin.machine.postNameUnique']);	//判断名称是否存在
+		Route::get('machine/watch-log-list',['uses'=>'MachineController@getWatchLogList','as'=>'osce.admin.machine.getWatchLogList']);	//腕表使用记录
 
 
 		//考核点
@@ -431,10 +432,13 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function() {
-	$savePath = 'osce/attach/' . 'image/jpeg' . '/' . '2016-01-28' . '/' . 'studentName' .'_'. '123' . '/';
-	$savePath = public_path($savePath) ;
+	$a = StationTeacher::where('exam_id',113)->groupBy('station_id')->with('station')->get();
+	foreach ($a as $items) {
+		$item = $items->station;
+		dd($item);
+	}
 
-	dd($savePath);
+
 
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {

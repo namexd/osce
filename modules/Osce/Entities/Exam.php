@@ -174,18 +174,14 @@ class Exam extends CommonModel
                 }
             }
 
-            //删除考试考场流程关联
-            if (!ExamFlowRoom::where('exam_id',$id)->get()->isEmpty()) {
-                if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
-                    throw new \Exception('删除考试考场流程关联失败，请重试！');
-                }
-            }
+
 
             //通过考试流程-考站关系表得到考站信息
             if ($examObj->sequence_mode == 1) {
-                if (!StationTeacher::where('exam_id',$id)->get()->isEmpty()) {
-                    if (!StationTeacher::where('exam_id',$id)->delete()) {
-                        throw new \Exception('弃用考站老师关联失败，请重试！');
+                //删除考试考场流程关联
+                if (!ExamFlowRoom::where('exam_id',$id)->get()->isEmpty()) {
+                    if (!ExamFlowRoom::where('exam_id',$id)->delete()) {
+                        throw new \Exception('删除考试考场流程关联失败，请重试！');
                     }
                 }
             } elseif ($examObj->sequence_mode == 2) {
@@ -198,14 +194,19 @@ class Exam extends CommonModel
                     }
 
                     //通过考站id找到对应的考站-老师关系表
-
-                    foreach ($stationIds as $stationId) {
-                        if (!StationTeacher::where('station_id',$stationId->station_id)->get()->isEmpty()) {
-                            if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
-                                throw new \Exception('删除考站老师关联失败，请重试！');
-                            }
+                    if (!StationTeacher::where('exam_id',$id)->get()->isEmpty()) {
+                        if (!StationTeacher::where('exam_id',$id)->delete()) {
+                            throw new \Exception('弃用考站老师关联失败，请重试！');
                         }
                     }
+
+//                    foreach ($stationIds as $stationId) {
+//                        if (!StationTeacher::where('station_id',$stationId->station_id)->get()->isEmpty()) {
+//                            if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
+//                                throw new \Exception('删除考站老师关联失败，请重试！');
+//                            }
+//                        }
+//                    }
                 }
             }
 
@@ -236,6 +237,7 @@ class Exam extends CommonModel
             return true;
 
         } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
     }
