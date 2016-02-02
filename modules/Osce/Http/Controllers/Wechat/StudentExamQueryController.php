@@ -51,7 +51,7 @@ class StudentExamQueryController extends CommonController
                 //查询出所有的考试   todo 监考老师查询出所有考试
                 $ExamList = Exam::all();
 
-                dd($ExamList);
+//                dd($ExamList);
             }
 
 
@@ -68,8 +68,8 @@ class StudentExamQueryController extends CommonController
             $ExamList = $ExamModel->Examname($examIds);
             //根据考试id获取所有考试
             //dd($ExamList);
-            return view('osce::wechat.resultquery.examination_list', ['ExamList' => $ExamList]);
-        } catch (\Exception $ex) {
+            return view('osce::wechat.resultquery.examination_list_teacher',['ExamList'=>$ExamList]);
+        }catch (\Exception $ex) {
             throw $ex;
         }
     }
