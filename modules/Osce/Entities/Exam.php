@@ -525,7 +525,6 @@ class Exam extends CommonModel
             ->get()
             ->pluck('station_id')
             ->toArray();
-
         $builder = StationTeacher::leftJoin('station','station.id','=','station_teacher.station_id')
             ->Join('exam_result',
                 function($join){
