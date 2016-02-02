@@ -27,7 +27,7 @@
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
                 <a  href="{{route('osce.admin.machine.getAddWatch')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-                <a  href="{{route('osce.admin.machine.getAddWatch')}}" class="btn btn-outline btn-default" style="float: right;margin-right:10px!important;">使用记录</a>
+                <a  href="{{route('osce.admin.machine.getWatchLogList')}}" class="btn btn-outline btn-default" style="float: right;margin-right:10px!important;">使用记录</a>
             </div>
         </div>
 
