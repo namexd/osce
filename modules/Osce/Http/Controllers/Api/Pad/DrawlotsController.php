@@ -349,7 +349,7 @@ class DrawlotsController extends CommonController
                     ->where('status',0)
                     ->orderBy('begin_dt','asc')
                     ->get();
-
+                dd($examQueue);
                 if ($examQueue->isEmpty()) {
                     throw new \Exception('该名考生不在计划中');
                 }
