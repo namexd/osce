@@ -232,7 +232,7 @@
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
                             <input class="btn btn-primary fabu_btn" type="submit" value="发布">
-                            <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
+                            <a class="btn btn-white cancel" href="{{route("osce.admin.getTrainList")}}">取消</a>
                         </div>
                     </div>
             </form>
