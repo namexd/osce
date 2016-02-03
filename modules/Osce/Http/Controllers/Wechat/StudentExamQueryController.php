@@ -283,8 +283,8 @@ class StudentExamQueryController extends CommonController
             }
         }
         //调用查看总成绩的方法
-        $tesresultModel = new TestResult();
-        $scores = $tesresultModel->AcquireExam($studentId);
+//        $tesresultModel = new TestResult();
+//        $scores = $tesresultModel->AcquireExam($studentId);
 
 
 
