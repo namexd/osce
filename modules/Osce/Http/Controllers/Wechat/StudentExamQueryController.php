@@ -102,8 +102,6 @@ class StudentExamQueryController extends CommonController
         //获取到考试的时间
         try {
             //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
-
-
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
 
             //根据考试id找到对应的考试场次
@@ -120,6 +118,10 @@ class StudentExamQueryController extends CommonController
             $ExamResultModel = new ExamResult();
             $stationList = $ExamResultModel->stationInfo($examScreeningIds);
             $stationData = [];
+//            if(!empty($studentId)){
+//                $studentInfo= Student::where('id',$studentId)->find();
+//            }
+
             foreach ($stationList as $stationType) {
 //            if($stationType->type == 2){
                 //获取到sp老师信息
@@ -127,6 +129,7 @@ class StudentExamQueryController extends CommonController
                 $spteacher = $teacherModel->getSpTeacher($stationType->station_id);
 
 //            }
+
                 $stationData[] = [
                     'exam_result_id' => $stationType->exam_result_id,
                     'station_id' => $stationType->id,
@@ -138,7 +141,9 @@ class StudentExamQueryController extends CommonController
                     'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
                     'begin_dt' => $examTime->begin_dt,
                     'end_dt' => $examTime->end_dt,
-                    'exam_screening_id' => $stationType->exam_screening_id
+                    'exam_screening_id' => $stationType->exam_screening_id,
+//                    'student_name' =>$studentInfo->name,
+//                    'student_mobile' =>$studentInfo->mobile,
                 ];
             }
             return response()->json(

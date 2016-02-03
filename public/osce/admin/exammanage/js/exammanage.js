@@ -1093,6 +1093,13 @@ function examroom_assignment(){
                 ids.push(id);
             }
         });
+
+        //选择sp老师
+        if(ids.length==0){
+            layer.alert('请选择sp老师！');
+            return;
+        };
+
         $.ajax({
             type:'get',
             url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
@@ -2739,6 +2746,12 @@ function station_assignment(){
                 ids.push(id);
             }
         });
+
+        //选择sp老师
+        if(ids.length==0){
+            layer.alert('请选择sp老师！');
+            return;
+        };
 
         //考站id
         var stationId = $(".station_id").val();
