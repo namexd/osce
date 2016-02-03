@@ -70,12 +70,13 @@ class StationVideo extends CommonModel
      */
     static public function label($examId, $studentId, $stationId)
     {
-        return StationVideo::leftJoin('station_vcr','station_video.station_vcr_id','=','station_vcr.id')
-            ->leftJoin('vcr','vcr.id','=','station_vcr.vcr_id')
-            ->leftJoin('exam_result','exam_result.station_id','=','station_vcr.station_id')
+        return StationVideo::Join('station_vcr','station_video.station_vcr_id','=','station_vcr.id')
+            ->Join('vcr','vcr.id','=','station_vcr.vcr_id')
+            ->Join('exam_result','exam_result.station_id','=','station_vcr.station_id')
             ->where('station_video.exam_id','=',$examId)
             ->where('station_video.student_id',$studentId)
             ->where('station_vcr.station_id',$stationId)
+            ->groupBy('station_video.begin_dt')
             ->select(
                 'vcr.ip as ip',
                 'vcr.username as username',

@@ -9,6 +9,7 @@ class OsceController extends Controller {
 	public function index()
 	{
 		try{
+
 			$SysMenus	=	new SysMenus();
 
 			$user	=	\Auth::user();
@@ -20,11 +21,14 @@ class OsceController extends Controller {
 			{
 				throw new \Exception('非法用户，请按照要求注册');
 			}
+
 			$MenusList = $SysMenus	->getRoleMenus($userRole->role_id);
+
 			$MenusList = $this		->node_merge($MenusList);
 		}
 		catch(\Exception $ex)
 		{
+
 			return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
 		}
 		return view('osce::admin.layouts.admin',['list'=>$MenusList,'role_id'=>$userRole->role_id]);
@@ -39,6 +43,10 @@ class OsceController extends Controller {
 	protected  function node_merge($node,$pid=0){
 		$arr = array();
 		foreach($node as $v){
+			if(empty($v))
+			{
+				continue;
+			}
 			if($v['pid'] == $pid){
 				$v["child"] = $this->node_merge($node,$v["id"]);
 				$arr[] = $v;

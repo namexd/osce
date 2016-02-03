@@ -331,7 +331,7 @@ class InvigilatePadController extends CommonController
                 //考试场次id
                 $examScreenId = $result->exam_screening_id;
                 //根据考试附件结果id修改表里的考试结果id
-                //  todo 待最后确定。。。。。。。。
+                // todo 待最后确定。。。。。。。。
 
 
 

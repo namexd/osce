@@ -105,7 +105,7 @@
             margin: 0;
         }
         .table>li{
-            width: 150px;
+            width: 250px;
         }
     </style>
 @stop
