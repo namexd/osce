@@ -18,7 +18,7 @@ if(!empty($errorsInfo))
 <script>
     $(function(){
         $('.closeNotice').click(function(){
-            $(this).parents('pnotice').remove();
+            $(this).parents('.pnotice').remove();
         });
     })
 </script>

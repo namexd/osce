@@ -25,7 +25,7 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
+<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 @stop
