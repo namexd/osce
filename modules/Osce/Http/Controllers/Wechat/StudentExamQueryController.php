@@ -102,7 +102,6 @@ class StudentExamQueryController extends CommonController
         //获取到考试的时间
         try {
             //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
-
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
 
             //根据考试id找到对应的考试场次
@@ -119,6 +118,10 @@ class StudentExamQueryController extends CommonController
             $ExamResultModel = new ExamResult();
             $stationList = $ExamResultModel->stationInfo($examScreeningIds);
             $stationData = [];
+//            if(!empty($studentId)){
+//                $studentInfo= Student::where('id',$studentId)->find();
+//            }
+
             foreach ($stationList as $stationType) {
 //            if($stationType->type == 2){
                 //获取到sp老师信息
@@ -126,6 +129,7 @@ class StudentExamQueryController extends CommonController
                 $spteacher = $teacherModel->getSpTeacher($stationType->station_id);
 
 //            }
+
                 $stationData[] = [
                     'exam_result_id' => $stationType->exam_result_id,
                     'station_id' => $stationType->id,
@@ -137,7 +141,9 @@ class StudentExamQueryController extends CommonController
                     'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
                     'begin_dt' => $examTime->begin_dt,
                     'end_dt' => $examTime->end_dt,
-                    'exam_screening_id' => $stationType->exam_screening_id
+                    'exam_screening_id' => $stationType->exam_screening_id,
+//                    'student_name' =>$studentInfo->name,
+//                    'student_mobile' =>$studentInfo->mobile,
                 ];
             }
             return response()->json(
@@ -266,7 +272,7 @@ class StudentExamQueryController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * @return json
+     * @return  json
      * @version 0.4
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
@@ -282,6 +288,7 @@ class StudentExamQueryController extends CommonController
         $examId = $request->get('exam_id');
         $stationId = $request->get('station_id');
         //根据考站找到对应的科目
+        $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
         $subjectId = Station::find($stationId)->subject_id;
         $subjectName = Subject::find($subjectId)->title;
         //调用科目成绩统计查询的接口方法
@@ -308,24 +315,29 @@ class StudentExamQueryController extends CommonController
 
         //获取该考试科目所有的学生
         $studentData = $studentModel->getStudentByExamAndSubject($examId, $subjectId);
-        $subjectData=[];
+        $subjectData = [];
         //根据考生id查出该考试在本考试的总成绩
         foreach ($studentData as $studentId) {
             //调用查看总成绩的方法
             $tesresultModel = new TestResult();
             $StudentScores = $tesresultModel->AcquireExam($studentId->student_id);
             $item[$studentId->student_name] = $StudentScores;
-            $subjectData[]=[
-                'avg_score'=>$item['avg_score'],
-                'avg_time'=>$item['avg_time'],
-                'avg_total'=>$item['avg_total'],
-                'student_name'=>$studentId->student_name,
-                'subject_name'=>$subjectName,
-                'student_id'=>$studentId->student_id,
-                'Scores'=>$StudentScores,
+            $subjectData[] = [
+                'avg_score' => $item['avg_score'],
+                'avg_time' => $item['avg_time'],
+                'avg_total' => $item['avg_total'],
+                'student_name' => $studentId->student_name,
+                'subject_name' => $subjectName,
+                'student_id' => $studentId->student_id,
+                'exam_id' => $examId,
+                'Scores' => $StudentScores,
+                'exam_begin_dt' => $examTime->begin_dt,
+                'exam_end_dt' => $examTime->end_dt,
             ];
         }
-          dd($subjectData);
+        return response()->json(
+            $this->success_data($subjectData, 1, '科目数据传送成功')
+        );
     }
 
 
