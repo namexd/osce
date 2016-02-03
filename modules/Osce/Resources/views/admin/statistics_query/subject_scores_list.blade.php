@@ -126,7 +126,7 @@ $(function(){
                     @endforeach
                     </tbody>
                 </table>
-                @if($data->count() != 0)
+                @if(count($data) != 0)
                     <div class="pull-left">
                         共{{$data->total()}}条
                     </div>
