@@ -31,6 +31,11 @@
         img{
             width: 100%;
         }
+        .notice-file a{
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
     </style>
 
 
@@ -68,7 +73,7 @@
                     </div>
 
                     <br />附件<br />
-                    <div>
+                    <div class="notice-file">
                         @if($notice->attachments)
                             @foreach($notice->attachments as $key=>$list)
                                 <a href="{{ route('osce.wechat.notice.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}">
