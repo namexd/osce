@@ -146,28 +146,49 @@ class IndexController extends CommonController
         $exam_screen_id=$screen_id->exam_screening_id;
         $id=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
         if($id){
-            ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
+            $result = Watch::where('id', $id)->update(['status' => 1]);
+            if ($result) {
+                $action = '绑定';
+                $updated_at =date('Y-m-d H:i:s',time());
+                $data = array(
+                    'watch_id' => $id,
+                    'action' => $action,
+                    'context' => array('time' => $updated_at, 'status' => 1),
+                    'student_id' => $student_id
+                );
+                $watchModel = new WatchLog();
+                $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
+                ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
+                ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
+                Exam::where('id',$exam_id)->update(['status'=>1]);
+                return \Response::json(array('code' => 1));
+            } else {
+                return \Response::json(array('code' => 0));
+            }
+
         }else{
-            ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
+            $result = Watch::where('id', $id)->update(['status' => 1]);
+            if ($result) {
+                $action = '绑定';
+                $updated_at =date('Y-m-d H:i:s',time());
+                $data = array(
+                    'watch_id' => $id,
+                    'action' => $action,
+                    'context' => array('time' => $updated_at, 'status' => 1),
+                    'student_id' => $student_id
+                );
+                $watchModel = new WatchLog();
+                $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
+                ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
+                ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
+                Exam::where('id',$exam_id)->update(['status'=>1]);
+                return \Response::json(array('code' => 1));
+            } else {
+                return \Response::json(array('code' => 0));
+            }
+
         }
-        $result = Watch::where('id', $id)->update(['status' => 1]);
-        if ($result) {
-            $action = '绑定';
-            $updated_at =date('Y-m-d H:i:s',time());
-            $data = array(
-                'watch_id' => $id,
-                'action' => $action,
-                'context' => array('time' => $updated_at, 'status' => 1),
-                'student_id' => $student_id
-            );
-            $watchModel = new WatchLog();
-            $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
-            ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
-            Exam::where('id',$exam_id)->update(['status'=>1]);
-            return \Response::json(array('code' => 1));
-        } else {
-            return \Response::json(array('code' => 0));
-        }
+
 
     }
 
