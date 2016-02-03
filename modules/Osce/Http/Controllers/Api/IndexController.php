@@ -146,15 +146,9 @@ class IndexController extends CommonController
         $exam_screen_id=$screen_id->exam_screening_id;
         $id=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
         if($id){
-            $result = ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
-            if (!$result) {
-                return \Response::json(array('code' => 2));
-            }
+            ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
         }else{
-            $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
-            if (!$result) {
-                return \Response::json(array('code' => 2));
-            }
+            ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
         }
         $result = Watch::where('id', $id)->update(['status' => 1]);
         if ($result) {
