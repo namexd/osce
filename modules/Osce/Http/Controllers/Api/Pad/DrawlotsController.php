@@ -308,7 +308,7 @@ class DrawlotsController extends CommonController
                 ->first();
 
             if (!is_null($temp)) {
-                return Station::findOrFail($temp->id);
+                return Station::findOrFail($temp->station_id);
             }
 
             //从ExamQueue表中将房间和状态对应的列表查出
