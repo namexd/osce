@@ -1670,6 +1670,9 @@ class ExamController extends CommonController
     /**
      * 展示考试组成的方法
      * @author Jiangzhiheng
+     * @param $examId
+     * @return string
+     * @throws \Exception
      */
     private function getExamConstitute ($examId) {
         try {
@@ -1699,16 +1702,21 @@ class ExamController extends CommonController
                     $tempString .= $tempType1 . '技能站';
                 }
                 if ($tempType2 != 0) {
-                    $tempString .= $tempType2 . 'sp站';
+                    $tempString .= '+' . $tempType2 . 'sp站';
                 }
                 if ($tempType3 != 0) {
-                    $tempString .= $tempType3 . '理论站';
+                    $tempString .= '+' . $tempType3 . '理论站';
+                }
+
+                //如果字符串开头为+号，则替换掉
+                if (strpos($tempString,'+') === 0) {
+                    $tempString = substr($tempString,1);
                 }
 
                 return $tempString;
             }
         } catch (\Exception $ex) {
-
+            throw $ex;
         }
     }
 }
