@@ -157,7 +157,7 @@ class StudentWatchController extends CommonController
                         ->whereBetween('status', [1, 2])
                         ->count();
 
-                    $examtimes = strtotime($nowQueue->begin_dt);
+                    $examtimes = date('H:i:s',strtotime($nowQueue->begin_dt));
                     $examRoomName = $nowQueue->room_name;
                     $data['title'] = '考生等待信息';
                     $data['willStudents'] = $willStudents;
@@ -167,7 +167,9 @@ class StudentWatchController extends CommonController
                 }
 
             } else {
+                date_default_timezone_set('UTC');
                 $surplus = ((strtotime($nowQueue['begin_dt']) + ($nowQueue->mins * 60)) - $nowTime);
+                date_default_timezone_set('Asia/Shanghai');
                 if ($surplus <= 0) {
                     if (!empty($nextQueue)) {
                         $nextExamName = $nextQueue ['room_name'];
@@ -178,7 +180,7 @@ class StudentWatchController extends CommonController
                         $data['title'] = '目前没有下一场，请等待下一步通知';
                     }
                 } else {
-                    $surplus = floor($surplus / 60) . ':' . $surplus % 60;
+//                    $surplus = floor($surplus / 60) . ':' . $surplus % 60;
                     $data['surplus'] = $surplus;
                     $data['title'] = '当前考站剩余时间';
                     $code =4;
