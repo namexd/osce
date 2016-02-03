@@ -637,7 +637,6 @@ class ExamController extends CommonController
             $studentList = array_shift($data);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
-
             if(!$student->importStudent($exam_id, $examineeData)){
                 throw new \Exception('学生导入数据失败，请修改重试');
             }

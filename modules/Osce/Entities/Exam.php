@@ -567,6 +567,22 @@ class Exam extends CommonModel
         return $builder;
     }
 
-
-
+    /**查询与监考老师相关的考试
+     * @param string $userId
+     * @return mixed
+     * @author zhouqiang
+     */
+      public function getInvigilateTeacher($userId){
+          return $this->leftJoin( 'station_teacher',
+              function ($join) {
+                  $join->on($this->table . '.id' , '=' , 'station_teacher.exam_id');
+              })
+              ->where('station_teacher.user_id','=',$userId)
+              ->select([
+                  'exam.name as exam_name',
+                  'station_teacher.exam_id as exam_id',
+                  'station_teacher.station_id as station_id',
+              ])
+              ->get();
+      }
 }
