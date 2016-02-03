@@ -23,12 +23,12 @@ return array (
     'email' => 
     array (
       'driver' => 'email',
-      'server' => '192.168.1.254',
+      'server' => 'smtp.163.com',
       'protocol' => 'POP3',
       'port' => '25',
       'ssl' => 'flase',
-      'username' => 'jiangzhiheng',
-      'password' => 'misrobot',
+      'username' => 'qingshuruyonghuming',
+      'password' => 'qingshurumima',
     ),
     'pm' => 
     array (

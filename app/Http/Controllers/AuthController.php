@@ -137,12 +137,14 @@ class AuthController extends BaseController
             }
         }
 
+        $name=SysRoles::where('id',$id)->select('name')->first()->name;
 
         $data = [
             'PermissionIdArr'=>$PermissionIdArr,
             'MenusList'=>$MenusList,
             'FunctionsList'=>$FunctionsList,
-            'role_id'=>$id
+            'role_id'=>$id,
+            'name'=>$name
         ];
         return  view('usermanage.rolemanage_detail',$data);
     }
@@ -172,7 +174,7 @@ class AuthController extends BaseController
         $role_id = $Request->get('role_id');
         $permissionIdArr = $Request->get('permission_id');
         $status = $SysRolePermission->where('role_id','=',$role_id)->get();
-
+        //dd($permissionIdArr);
         DB::connection('sys_mis')->beginTransaction();
         $rew = false;
         if(empty($status->toArray())){

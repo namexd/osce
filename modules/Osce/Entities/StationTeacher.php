@@ -24,4 +24,5 @@ class StationTeacher extends CommonModel
     {
         return $this->belongsTo('\Modules\Osce\Entities\Station','station_id','id');
     }
+
 }

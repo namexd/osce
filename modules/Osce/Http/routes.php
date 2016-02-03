@@ -94,6 +94,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('machine/edit-watch', 	['uses'=>'MachineController@getEditWatch','as'=>'osce.admin.machine.getEditWatch']);
 		Route::post('machine/machine-delete', 	['uses'=>'MachineController@postMachineDelete','as'=>'osce.admin.machine.postMachineDelete']);
 		Route::post('machine/name-unique',['uses'=>'MachineController@postNameUnique','as'=>'osce.admin.machine.postNameUnique']);	//判断名称是否存在
+		Route::get('machine/watch-log-list',['uses'=>'MachineController@getWatchLogList','as'=>'osce.admin.machine.getWatchLogList']);	//腕表使用记录
 
 
 		//考核点
@@ -340,6 +341,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('student-exam-query/results-query-index',['uses'=>'StudentExamQueryController@getResultsQueryIndex','as'=>'osce.wechat.student-exam-query.getResultsQueryIndex']);
 		Route::get('student-exam-query/every-exam-list',['uses'=>'StudentExamQueryController@getEveryExamList','as'=>'osce.wechat.student-exam-query.getEveryExamList']);
 		Route::get('student-exam-query/exam-details',['uses'=>'StudentExamQueryController@getExamDetails','as'=>'osce.wechat.student-exam-query.getExamDetails']);
+		Route::get('student-exam-query/teacher-check-score',['uses'=>'StudentExamQueryController@getTeacherCheckScore','as'=>'osce.wechat.student-exam-query.getTeacherCheckScore']);
+		Route::get('student-exam-query/subject-list',['uses'=>'StudentExamQueryController@getSubjectList','as'=>'osce.wechat.student-exam-query.getSubjectList']);
 
 	});
 
@@ -353,7 +356,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//学生腕表
 		Route::get('student-watch/wait-exam-list',['uses'=>'StudentWatchController@getWaitExamList']);
-		Route::get('student-watch/student-exam-reminder',['uses'=>'StudentWatchController@getStudentExamReminder']);
+		Route::get('student-watch/student-exam-reminder',['uses'=>'StudentWatchController@getStudentExamReminder','as'=>'osce.api.student-watch.getStudentExamReminder']);
+		Route::get('student-watch/watch-nfc',['uses'=>'StudentWatchController@getWatchNfc','as'=>'osce.api.student-watch.getWatchNfc']);
 
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.api.invigilatepad.getAuthentication']);
@@ -429,10 +433,6 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function() {
-	$savePath = 'osce/attach/' . 'image/jpeg' . '/' . '2016-01-28' . '/' . 'studentName' .'_'. '123' . '/';
-	$savePath = public_path($savePath) ;
-
-	dd($savePath);
 
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {

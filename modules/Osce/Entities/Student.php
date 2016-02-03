@@ -176,6 +176,7 @@ class Student extends CommonModel
 
             //根据条件：查找用户是否有账号和密码
             $user = User::where(['username' => $examineeData['mobile']])->first();
+
             //如果查找到了，对用户信息 进行编辑处理
             if(count($user) != 0){
                 $user -> name   = $examineeData['name'];    //姓名
@@ -191,16 +192,18 @@ class Student extends CommonModel
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
                 //手机号未注册，查询手机号码是否已经使用
                 $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
+
                 if(!empty($mobile)){
+
                     throw new \Exception('手机号已经存在，请输入新的手机号');
                 }
                 $password   =   '123456';
                 $user       =   $this   ->  registerUser($examineeData,$password);
                 $this       ->  sendRegisterEms($examineeData['mobile'],$password);
             }
-
             //查询学号是否存在
             $code = $this->where('code', $examineeData['code'])->where('user_id','<>',$user->id)->first();
+
             if(!empty($code)){
                 throw new \Exception((empty($key)?'':('第'.$key.'行')).'该学号已经有别人使用！');
             }
@@ -225,6 +228,7 @@ class Student extends CommonModel
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
                 $examineeData['create_user_id'] = $operator->id;
+
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');
                 }
@@ -262,6 +266,7 @@ class Student extends CommonModel
     }
     public function sendRegisterEms($mobile,$password){
         //发送短消息
+        Common::sendRegisterEms($mobile,$password);
     }
 
     /**
@@ -337,7 +342,10 @@ class Student extends CommonModel
         }
         $builder= $this->leftjoin('exam_order',function($join){
             $join ->on('student.id','=','exam_order.student_id');
-        })->where('exam_order.exam_id',$exam_id)->where('exam_screening_id',$screen_id)->where('exam_order.status',0)->orWhere('exam_order.status',4)->orderBy('begin_dt');
+        })->where('exam_order.exam_id','=',$exam_id)->where('exam_order.exam_screening_id','=',$screen_id);
+        $builder=$builder->where(function($query){
+            $query->where('exam_order.status','=',0)->orWhere('exam_order.status','=',4);
+        });
         $builder=$builder->select([
                 'student.name as name',
                 'student.idcard as idcard',
@@ -408,6 +416,18 @@ class Student extends CommonModel
 
             return $builder->paginate(config('osce.page_size'));
         }
+    }
+
+    /**
+     *查询一场考试下的所有生
+     * @author zhongaing
+     * @param $examId
+     * @param $message
+     */
+    public function getExamStudent($examId){
+        $students= $this->where('exam_id','=',$examId)->get();
+        return   $students;
+
     }
 
 }

@@ -135,14 +135,13 @@ class Notice extends CommonModel
                             case 1:
                                 $notice->accept =   $accept;
                                 $notice->save();
-
                                 $this->sendWechat($notice,array_pluck($to,'openid'),$url);
                                 break;
                             case 2:
-                                $this->sendEmail($notice,array_pluck($to,'email'),$url);
+                                $this->sendSms($notice,array_pluck($to,'mobile'),$url);
                                 break;
                             case 3:
-                                $this->sendSms($notice,array_pluck($to,'mobile'),$url);
+                                $this->sendEmail($notice,array_pluck($to,'email'),$url);
                                 break;
                             case 4:
                                 $this->sendPm($notice,array_pluck($to,'id'),$url);
@@ -374,7 +373,7 @@ class Notice extends CommonModel
         $content=   [];
         $content[]  =   $notice->exam->name. ' ' .$notice->title;
         $content[]  =   '详情查看'.$url;
-        foreach(array_pluck($to,'mobile') as $mobile)
+        foreach($to as $mobile)
         {
             $sender ->  send($mobile,implode('',$content).' 【敏行医学】');
         }

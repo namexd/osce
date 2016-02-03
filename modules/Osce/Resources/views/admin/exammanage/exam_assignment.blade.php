@@ -44,7 +44,7 @@
                     <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->begin_dt}}~{{$item->end_dt}}</td>
-                    <td>{{$item->description}}</td>
+                    <td>{{$item->constitute}}</td>
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>

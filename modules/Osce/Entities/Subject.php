@@ -256,4 +256,24 @@ class Subject extends CommonModel
                 'exam_result.time'
             )->get();
     }
+
+
+    /** 获取考下的所有考试科目
+     * @author zhouqing
+     * @param $examId
+     * @param $subjectId
+     * @return
+     */
+     public  function  getSubjectList($examId){
+         $SubjectData = $this->leftJoin('station','station.subject_id','=','subject.id')
+                            ->leftJoin('exam_station','exam_station.station_id','=','station.id')
+                            ->where('exam_id','=',$examId)
+                            ->select(
+                                'subject.title as subject_name',
+                                'subject.id as id'
+                            )->get();
+                return  $SubjectData;
+
+     }
+
 }

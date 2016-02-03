@@ -219,8 +219,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">备注:</label>
                                 <div class="col-sm-10">
-                                    <textarea name="note" id="" cols="" rows=""
-                                              class="form-control">{{$item->note}}</textarea>
+                                    <textarea name="description" id="" cols="" rows=""
+                                              class="form-control">{{$item->description}}</textarea>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

@@ -35,6 +35,10 @@
             background-color: #1ab394;
             border-color: #1ab394;
         }
+        body {
+            font-family: 微软雅黑;
+            font-size: 14px;
+        }
     </style>
 @stop
 
@@ -47,7 +51,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>设备管理员</h5>
+                <h5>{{ $name }}</h5>
             </div>
             <div class="ibox-content">
                 <div style="margin-top: 10px;display: none;">

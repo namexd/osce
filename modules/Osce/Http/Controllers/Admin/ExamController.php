@@ -13,7 +13,6 @@ use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
-
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -39,7 +38,6 @@ use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
 use DB;
-
 class ExamController extends CommonController
 {
     /**
@@ -61,6 +59,7 @@ class ExamController extends CommonController
         ];
         return  $config;
     }
+
     /**
      * 获取考试列表
      * @url       GET /osce/admin/exam/exam-list
@@ -70,7 +69,9 @@ class ExamController extends CommonController
      *                         string        keyword         关键字
      *                         string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
      *                         string        order_by        排序方式 枚举 e.g:desc,asc
+     * @param Exam $exam
      * @return view
+     * @throws \Exception
      * @version   1.0
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -86,6 +87,12 @@ class ExamController extends CommonController
 
         //从模型得到数据
         $data = $exam->showExamList($formData);
+
+        //得到考试组成
+        foreach ($data as &$item) {
+            $item->constitute = $this->getExamConstitute($item['id']);
+        }
+
         return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
 
     }
@@ -484,6 +491,7 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'code'          =>  'required',
             'images_path'   =>  'required',
+
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
@@ -629,7 +637,6 @@ class ExamController extends CommonController
             $studentList = array_shift($data);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
-
             if(!$student->importStudent($exam_id, $examineeData)){
                 throw new \Exception('学生导入数据失败，请修改重试');
             }
@@ -1398,13 +1405,15 @@ class ExamController extends CommonController
             $room = $request->get('room');
             $formData = $request->get('form_data'); //所有的考站数据
 
-            Exam::findOrFail($examId);
             //判断是否有本场考试
             //查看是新建还是编辑
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $room, $formData);
             } else { //否则就是编辑
-//                dd($examId,$formData);
+                //如果考试已经开始或者是结束了，就不能允许继续进行了
+                if (Exam::findOrFail($examId)->status != 0) {
+                    throw new \Exception('当场考试已经开始或已经考完，无法再修改！');
+                }
                 $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
@@ -1656,5 +1665,58 @@ class ExamController extends CommonController
             $data[$scringId]        =   $scringData;
         }
         return $data;
+    }
+
+    /**
+     * 展示考试组成的方法
+     * @author Jiangzhiheng
+     * @param $examId
+     * @return string
+     * @throws \Exception
+     */
+    private function getExamConstitute ($examId) {
+        try {
+            $tempString = '';
+            $tempType1 = 0;
+            $tempType2 = 0;
+            $tempType3 = 0;
+            $temp = StationTeacher::where('exam_id',$examId)->groupBy('station_id')->get();
+            if (!$temp->isEmpty()) {
+                //获得每个考站数据的type
+                foreach ($temp as $item) {
+                    switch ($item->station->type) {
+                        case 1:
+                            $tempType1 = $tempType1+1;
+                            break;
+                        case 2:
+                            $tempType2 = $tempType2+1;
+                            break;
+                        case 3:
+                            $tempType3 = $tempType3+1;
+                            break;
+                        default:
+                            throw new \Exception('系统错误，请重试');
+                    }
+                }
+                if ($tempType1 != 0) {
+                    $tempString .= $tempType1 . '技能站';
+                }
+                if ($tempType2 != 0) {
+                    $tempString .= '+' . $tempType2 . 'sp站';
+                }
+                if ($tempType3 != 0) {
+                    $tempString .= '+' . $tempType3 . '理论站';
+                }
+
+                //如果字符串开头为+号，则替换掉
+                if (strpos($tempString,'+') === 0) {
+                    $tempString = substr($tempString,1);
+                }
+
+                return $tempString;
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }

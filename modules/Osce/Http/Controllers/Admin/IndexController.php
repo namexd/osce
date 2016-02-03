@@ -53,6 +53,10 @@ class IndexController extends CommonController
             ]);
             //获取考试ID
             $exam_id = $request->get('id');
+            if(Exam::where('status','=',1)->count()>0)
+            {
+                throw new \Exception('当前已经有一场正在进行的考试了');
+            }
             $exam = Exam::find($exam_id);
             if(is_null($exam)){
                 throw new \Exception('没有找到相关考试');

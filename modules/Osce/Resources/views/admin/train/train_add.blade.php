@@ -24,7 +24,7 @@
 
 
 @section('only_js')
-<script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.config.js')}}"></script>
+<script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor1.config.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/ueditor.all.min.js')}}"></script>
 <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
@@ -225,7 +225,7 @@
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
                             <input class="btn btn-primary fabu_btn" type="submit" value="发布">
-                            <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
+                            <a class="btn btn-white cancel" href="{{route("osce.admin.getTrainList")}}">取消</a>
                         </div>
                     </div>
             </form>

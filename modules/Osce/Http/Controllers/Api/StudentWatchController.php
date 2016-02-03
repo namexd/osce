@@ -54,24 +54,33 @@ class StudentWatchController extends CommonController
     public function   getStudentExamReminder(Request $request)
     {
         $this->validate($request, [
-            'code' => 'required|integer'
+            'nfc_code' => 'required'
         ]);
         $data = [
             'title' => '',
             'willStudents' => '',
             'estTime' => '',
             'willRoomName' => '',
-            'RoomName' => '',
+            'roomName' => '',
             'nextExamName' => '',
             'surplus' => '',
             'score' => '',
             ];
-           $code =0;
-        $watchCode = $request->input('code');
+        $code =0;
+        $watchNfcCode = $request->input('nfc_code');
+//        dd($watchCode);
 
         //根据设备编号找到设备id
-        $watchId= Watch::where('code','=',$watchCode)->select('id')->first();
-//         根据腕表id找到对应的考试场次和学生
+        $watchId= Watch::where('code','=',$watchNfcCode)->select('id')->first();
+        if(!$watchId){
+            $code=-1;
+            $data['title'] = '没有找到到腕表信息';
+            return response()->json(
+                $this->success_data($data ,$code)
+            );
+        }
+
+        //  根据腕表id找到对应的考试场次和学生
 
         $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->select('student_id','exam_screening_id')->first();
         if (!$watchStudent) {
@@ -90,7 +99,7 @@ class StudentWatchController extends CommonController
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-        dump($examQueueCollect);
+//        dump($examQueueCollect);
          //判断考试的状态
         $nowNextQueue = $ExamQueueModel->nowQueue($examQueueCollect);
         $nowQueue = $nowNextQueue[0];
@@ -121,8 +130,10 @@ class StudentWatchController extends CommonController
                     $code=6;
                 } else {
 
+                    $code=-2;
+                    $data['title'] = '成绩推送失败';
                     return response()->json(
-                        $this->fail(new \Exception('成绩推送失败'))
+                        $this->success_data($data ,$code)
                     );
                 }
             }
@@ -131,7 +142,7 @@ class StudentWatchController extends CommonController
             if ($nowQueue->status == 1) {
                 if (strtotime($nowQueue->begin_dt) - $nowTime <= 120 && strtotime($nowQueue->begin_dt) - $nowTime > 0) {
                     $examRoomName = $nowQueue->room_name;
-                    $data['RoomName'] = $examRoomName;
+                    $data['roomName'] = $examRoomName;
                     $data['title'] = '考生开考通知';
                     $code=2;
 
@@ -143,7 +154,7 @@ class StudentWatchController extends CommonController
                     $examRoomName = $nowQueue->room_name;
                     $data['title'] = '考生等待信息';
                     $data['willStudents'] = $willStudents;
-                    $data['estTime'] = $examtimes;
+                    $data['estTime'] =$examtimes;
                     $data['willRoomName'] = $examRoomName;
                     $code = 1;
                 }
@@ -171,6 +182,46 @@ class StudentWatchController extends CommonController
             $this->success_data($data ,$code)
         );
     }
+    /**
+     * 根据腕表code得到nfc_code
+     * @method GET
+     * @url /osce/api/student-watch/watch-nfc
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     code       (必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+     public  function getWatchNfc(Request $request){
+         $this->validate($request,[
+             'code'=>'required',
+         ]);
+         $code = $request->get('code');
+          $watchNfc = Watch::where('nfc_code','=',$code)->first();
+         if($watchNfc){
+             $data=[
+                 'nfc_code'=>$watchNfc->code,
+             ];
+             return response()->json(
+                 $this->success_data($data,1)
+             );
+         }else{
+             $data=[
+                 'nfc_code'=>'',
+             ];
+             return response()->json(
+                 $this->success_data($data,-2,'没有找到对应的nfc_code')
+             );
+         }
 
+
+     }
 
 }

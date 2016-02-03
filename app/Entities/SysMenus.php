@@ -79,6 +79,17 @@ class SysMenus extends Model
 
     }
 
-
+    public function getRoleMenus($roleId){
+        $list   =   SysPermissionMenu::leftJoin('sys_role_permission','sys_permission_menu.permission_id','=','sys_role_permission.permission_id')
+            ->  where('sys_role_permission.role_id','=',$roleId)
+            ->  get();
+        $menus  =   [];
+        foreach($list as $item)
+        {
+            $menu       =   $item-> menus;
+            $menus[]    =   $menu;
+        }
+        return collect($menus);
+    }
 
 }
