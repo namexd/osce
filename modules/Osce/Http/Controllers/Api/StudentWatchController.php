@@ -54,7 +54,7 @@ class StudentWatchController extends CommonController
     public function   getStudentExamReminder(Request $request)
     {
         $this->validate($request, [
-            'code' => 'required'
+            'nfc_code' => 'required'
         ]);
         $data = [
             'title' => '',
@@ -67,11 +67,11 @@ class StudentWatchController extends CommonController
             'score' => '',
             ];
         $code =0;
-        $watchCode = $request->input('code');
+        $watchNfcCode = $request->input('nfc_code');
 //        dd($watchCode);
 
         //根据设备编号找到设备id
-        $watchId= Watch::where('code','=',$watchCode)->select('id')->first();
+        $watchId= Watch::where('nfc_code','=',$watchNfcCode)->select('id')->first();
         if(!$watchId){
             $code=-1;
             $data['title'] = '没有找到到腕表信息';
@@ -154,7 +154,7 @@ class StudentWatchController extends CommonController
                     $examRoomName = $nowQueue->room_name;
                     $data['title'] = '考生等待信息';
                     $data['willStudents'] = $willStudents;
-                    $data['estTime'] = $examtimes;
+                    $data['estTime'] =$examtimes;
                     $data['willRoomName'] = $examRoomName;
                     $code = 1;
                 }
@@ -182,6 +182,46 @@ class StudentWatchController extends CommonController
             $this->success_data($data ,$code)
         );
     }
+    /**
+     * 根据腕表code得到nfc_code
+     * @method GET
+     * @url /osce/api/student-watch/watch-nfc
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     watch_id    腕表 id   (必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+     public  function getWatchNfc(Request $request){
+         $this->validate($request,[
+             'code'=>'required',
+         ]);
+         $code = $request->get('code');
+          $watchNfc = Watch::where('code','=',$code)->first();
+         if($watchNfc){
+             $data=[
+                 'nfc_code'=>$watchNfc->nfc_code,
+             ];
+             return response()->json(
+                 $this->success_data($data,1)
+             );
+         }else{
+             $data=[
+                 'nfc_code'=>'',
+             ];
+             return response()->json(
+                 $this->success_data($data,2,'没有找到对应的nfc_code')
+             );
+         }
 
+
+     }
 
 }
