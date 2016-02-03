@@ -32,6 +32,7 @@
             width: 100%;
         }
         .notice-file a{
+            display: inherit;
             overflow: hidden;
             text-overflow:ellipsis;
             white-space:nowrap;
