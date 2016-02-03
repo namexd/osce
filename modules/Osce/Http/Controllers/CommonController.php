@@ -75,14 +75,13 @@ abstract class CommonController extends Controller
      * @param \Exception $ex
      * @return string 'code'            =>    -999,
      *
-     * 'code'            =>    -999,
-     * 'message'        =>    'fail'
+     * 'code'            =>     -999,
+     * 'message'        =>      'fail'
      * ];
      */
     public function fail(\Exception $ex)
     {
-        if($ex->getCode()==0)
-        {
+        if($ex->getCode() == 0) {
             $code   =   -999;
         } else {
             $code   =   $ex -> getCode();
@@ -92,6 +91,4 @@ abstract class CommonController extends Controller
             'message' => '错误信息:' . $ex->getMessage(),
         ];
     }
-
-
 }
