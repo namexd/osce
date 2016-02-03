@@ -72,6 +72,7 @@ class StudentWatchController extends CommonController
 
         //根据设备编号找到设备id
         $watchId= Watch::where('code','=',$watchNfcCode)->select('id')->first();
+
         if(!$watchId){
             $code=-1;
             $data['title'] = '没有找到到腕表信息';
@@ -82,7 +83,9 @@ class StudentWatchController extends CommonController
 
         //  根据腕表id找到对应的考试场次和学生
 
-        $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->select('student_id','exam_screening_id')->first();
+        $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->where('is_end','=',0)->select('student_id','exam_screening_id')->first();
+
+
         if (!$watchStudent) {
             $data['title'] = '没有找到学生的腕表信息';
             return response()->json(
@@ -93,12 +96,15 @@ class StudentWatchController extends CommonController
 //        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
         $studentId = $watchStudent->student_id;
+
        // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
+
         $examId = $examInfo->exam_id;
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
+
 //        dump($examQueueCollect);
          //判断考试的状态
         $nowNextQueue = $ExamQueueModel->nowQueue($examQueueCollect);
@@ -150,6 +156,7 @@ class StudentWatchController extends CommonController
                     $willStudents = ExamQueue::where('room_id', '=', $nowQueue['room_id'])
                         ->whereBetween('status', [1, 2])
                         ->count();
+
                     $examtimes = strtotime($nowQueue->begin_dt);
                     $examRoomName = $nowQueue->room_name;
                     $data['title'] = '考生等待信息';
