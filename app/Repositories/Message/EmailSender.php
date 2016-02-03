@@ -14,17 +14,18 @@ class EmailSender implements Message{
     }
 
     public function send($accept,$content,$title=null,$module=null,$sender=0,$pid=0) {
-        $flag = Mail::raw($content,function($message) use($accept,$title){
-//            $message->from(config('mail.from.address'), config('mail.from.name'));
-            $message->to('174451864@qq.com')->subject('邮件');
-        });
+        try {
+            $flag = Mail::raw($content,function($message) use($accept,$title){
+    //            $message->from(config('mail.from.address'), config('mail.from.name'));
+                $message->to($accept)->subject($title);
+            });
 
-        if($flag){
-            echo '发送邮件成功，请查收！';
-        } else{
-            echo '发送邮件失败，请重试！';
+            if(!$flag){
+                throw new \Exception('邮件发送失败，请重试');
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
         }
-
     }
 
     public function get($id){

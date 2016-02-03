@@ -15,10 +15,8 @@ class MailController extends CommonController
 {
     public function send()
     {
-        Mail::raw('这是一封测试邮件', function ($message) {
-            $to = '174451864@qq.com';
-            $message ->to($to)->subject('测试邮件');
-        });
+        $a = new EmailSender(new ConfigController());
+        $a->send('174451864@qq.com','这是测试内容','测试内容');
     }
 
 }
