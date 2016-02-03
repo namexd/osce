@@ -47,6 +47,7 @@ class SysRolePermission extends Model
     public function AddRolePermission($permissionIdArr,$role_id){
 
         $return = true;
+        $this->where('role_id','=',$role_id)->delete();
         if(!empty($permissionIdArr) && is_array($permissionIdArr)){
             foreach($permissionIdArr as $v){
                 $data = [
@@ -58,7 +59,6 @@ class SysRolePermission extends Model
                     $return = false;
                     break;
                 }
-
             }
         }
         return  $return;
