@@ -1,4 +1,4 @@
-@extends('msc::wechat.layouts.user')
+@extends('osce::wechat.layouts.user')
 @section('only_head_css')
     <link href="{{asset('msc/wechat/user/css/commons.css')}}"  rel="stylesheet"/>
     <style>
@@ -6,6 +6,7 @@
             margin-top: 20px;
 
         }
+        .user_header,.submit_btn{background: #1ab394!important;}
     </style>
 @stop
 
