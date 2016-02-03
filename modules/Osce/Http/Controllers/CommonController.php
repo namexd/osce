@@ -83,6 +83,8 @@ abstract class CommonController extends Controller
         if($ex->getCode()==0)
         {
             $code   =   -999;
+        } else {
+            $code   =   $ex -> getCode();
         }
         return [
             'code' => $code,
