@@ -332,9 +332,9 @@ class DrawlotsController extends CommonController
                 //为该名考生分配一个还没有选择的station_id
                 $stationIds = RoomStation::where('room_id',$roomId)
                     ->whereNotIn('station_id', $stationIds)
-                    ->select([
+                    ->select(
                         'station_id'
-                    ])
+                    )
                     ->get();
 
                 //随机获取一个考站
