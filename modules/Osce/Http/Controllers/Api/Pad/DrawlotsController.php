@@ -283,7 +283,7 @@ class DrawlotsController extends CommonController
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
-        }
+//        }
     }
 
     /**

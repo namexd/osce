@@ -319,9 +319,15 @@ class DiscussionController extends  CommonController{
           $data=$request->only(['id','content']);
           $result=Discussion::create(['content'=>$data['content'],'pid'=>$data['id'],'create_user_id'=>$userId]);
           if($result){
-              return  redirect('/osce/wechat/discussion/check-question?id='.$data['id'])->withErrors('回复成功');
+//              return  redirect('/osce/wechat/discussion/check-question?id='.$data['id'])->withErrors('回复成功');
+              return response()->json(
+                  $this->success_data($data,1,'回复成功')
+              );
           }
-              return  redirect()->back()->withErrors('回复失败');
+//              return  redirect()->back()->withErrors('回复失败');
+          return response()->json(
+              $this->success_data($data,2,'回复失败')
+          );
       }
 
     /**
