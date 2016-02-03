@@ -434,7 +434,6 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 Route::get('test/test', function() {
 
-
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$test = $request->only('test');
