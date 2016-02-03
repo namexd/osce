@@ -179,8 +179,7 @@ class RoomController extends CommonController
         $type = $request->input('type');
 
         //TODO:zhoufuxiang，查询没有被其他考场关联的摄像机
-        $vcr = Vcr::where('status', '<', 2)
-            ->where('used',0)
+        $vcr = Vcr::where('used',0)
             ->select(['id', 'name'])->get();     //关联摄像机
 
 
