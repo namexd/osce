@@ -1,15 +1,8 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
-    <link rel="stylesheet" href="{{asset('osce/admin/css/demo.css')}}">
     <style>
-        .tabs{
-            margin: 20px 0;
-            font-weight: 700;
-        }
-        .year{
-            margin-right: 20px;
-        }
+
         ul{
             margin: 0;
             padding: 0;
@@ -22,18 +15,19 @@
         .points>li:hover{
             background-color: #eee;
         }
+        .video{
+            padding-left: 50px;
+        }
     </style>
 @stop
-
 @section('only_js')
     <script src="{{asset('osce/admin/js/webVideoCtrl.js')}}"></script>
     <script src="{{asset('osce/admin/statistics_query/js/statistics_query.js')}}" ></script>
 @stop
 
-
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'exam_vcr'}" />
-    <div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="wrapper-content">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考试视频</h5>
@@ -54,16 +48,19 @@
                         @endforelse
                     </ul>
                 </div>
-                <div class="col-sm-9">
-                    <div id="divPlugin" class="video"></div>
-                    <input type="button" class="btn" value="暂停" id="pause" />
-                    <input type="button" class="btn" value="恢复" id="resume" />
-                    <input type="button" class="btn" value="慢放" id="playslow" />
-                    <input type="button" class="btn" value="快放" id="playfast"/>
-                    <input type="button" class="btn" value="停止回放" id="stopplay"/>
+                <div class="col-sm-9 video">
+                    <div id="divPlugin" class="plugin"></div>
+                    <div id="progress" class="progress" style="width: 600px;">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+
+                        </div>
+                    </div>
+                    <input class="pause" value="暂停"  type="button">
+                    <input class="resume" value="恢复"  type="button">
                 </div>
             </div>
         </div>
 
     </div>
+
 @stop{{-- 内容主体区域 --}}

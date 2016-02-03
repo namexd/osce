@@ -28,9 +28,10 @@ class DrawlotsController extends CommonController
      * @method GET
      * @url /osce/drawlots/room-id
      * @access public
+     * @param $teacher_id
+     * @param $examId
      * @return \Illuminate\Http\JsonResponse ${response}
      *
-     * @internal param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      *
      * @version 1.0
@@ -38,11 +39,11 @@ class DrawlotsController extends CommonController
      * @date 2016-01-20 12:01
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    private function getRoomId($teacher_id)
+    private function getRoomId($teacher_id,$examId)
     {
         try {
             //通过教师id去寻找对应的考场,返回考场对象
-            $room = StationTeacher::where('user_id', $teacher_id)->orderBy('begin_dt','desc')->first()->station->room;
+            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id',$examId)->orderBy('created_at','desc')->first()->station->room;
 
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
@@ -76,10 +77,11 @@ class DrawlotsController extends CommonController
             //首先得到登陆者id
             $id = $request->input('id');
 
-            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id);
-
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
+
+            list($room_id, $station, $stationNum) = $this->getRoomIdAndStation($id,$exam);
+
 
             if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试');
@@ -249,6 +251,21 @@ class DrawlotsController extends CommonController
             //根据id获取考站信息
             $station = StationTeacher::where('user_id',$id)->first()->station;
 
+            //获取正在考试中的考试
+            $exam = Exam::where('status',1)->first();
+
+            //拿到房间
+            $room = $this->getRoomId($id,$exam->id);
+
+            //将考场名字和考站名字封装起来
+            $station->name = $room->name . '-' . $station->name;
+
+            if (is_null($exam)) {
+                throw new \Exception('当前没有考试！', -2);
+            }
+
+            $station->exam_id = $exam->id;
+
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -339,14 +356,15 @@ class DrawlotsController extends CommonController
     }
 
     /**
-     * @param $user
+     * @param $id
+     * @param $exam
      * @return array
      * @author Jiangzhiheng
      */
-    private function getRoomIdAndStation($id)
+    private function getRoomIdAndStation($id,$exam)
     {
         //获取当前老师的考场对象
-        $room = $this->getRoomId($id);
+        $room = $this->getRoomId($id,$exam->id);
 
         //获得考场的id
         $room_id = $room->id;
