@@ -288,57 +288,59 @@ class StudentExamQueryController extends CommonController
         $examId = $request->get('exam_id');
         $stationId = $request->get('station_id');
         //根据考站找到对应的科目
-        $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
-        $subjectId = Station::find($stationId)->subject_id;
-        $subjectName = Subject::find($subjectId)->title;
-        //调用科目成绩统计查询的接口方法
-        $subject = new Subject();
-        $studentModel = new Student();
-        //找到按科目为基础的所有分数还有总人数
-        $avg = $subject->CourseControllerAvg($examId, $subjectId);
-        //如果avg不为空
-        $item = [];
-        if (!empty($avg)) {
+        try {
+            $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
+            $subjectId = Station::find($stationId)->subject_id;
+            $subjectName = Subject::find($subjectId)->title;
+            //调用科目成绩统计查询的接口方法
+            $subject = new Subject();
+            $studentModel = new Student();
+            //找到按科目为基础的所有分数还有总人数
+            $avg = $subject->CourseControllerAvg($examId, $subjectId);
+            //如果avg不为空
+            $item = [];
+            if (!empty($avg)) {
 
-            if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                $item['avg_score'] = $avg->pluck('score')->sum() / $avg->pluck('score')->count();
-                date_default_timezone_set("UTC");
-                $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
-                date_default_timezone_set("PRC");
-                $item['avg_total'] = $avg->count();
-            } else {
-                $item['avg_score'] = 0;
-                $item['avg_time'] = 0;
-                $item['avg_total'] = $avg->count();
+                if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
+                    $item['avg_score'] = $avg->pluck('score')->sum() / $avg->pluck('score')->count();
+                    date_default_timezone_set("UTC");
+                    $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
+                    date_default_timezone_set("PRC");
+                    $item['avg_total'] = $avg->count();
+                } else {
+                    $item['avg_score'] = 0;
+                    $item['avg_time'] = 0;
+                    $item['avg_total'] = $avg->count();
+                }
             }
-        }
 
-        //获取该考试科目所有的学生
-        $studentData = $studentModel->getStudentByExamAndSubject($examId, $subjectId);
-        $subjectData = [];
-        //根据考生id查出该考试在本考试的总成绩
-        foreach ($studentData as $studentId) {
-            //调用查看总成绩的方法
-            $tesresultModel = new TestResult();
-            $StudentScores = $tesresultModel->AcquireExam($studentId->student_id);
-            $item[$studentId->student_name] = $StudentScores;
-            $subjectData[] = [
-                'avg_score' => $item['avg_score'],
-                'avg_time' => $item['avg_time'],
-                'avg_total' => $item['avg_total'],
-                'student_name' => $studentId->student_name,
-                'subject_name' => $subjectName,
-                'student_id' => $studentId->student_id,
-                'exam_id' => $examId,
-                'Scores' => $StudentScores,
-                'exam_begin_dt' => $examTime->begin_dt,
-                'exam_end_dt' => $examTime->end_dt,
-            ];
+            //获取该考试科目所有的学生
+            $studentData = $studentModel->getStudentByExamAndSubject($examId, $subjectId);
+            $subjectData = [];
+            //根据考生id查出该考试在本考试的总成绩
+            foreach ($studentData as $studentId) {
+                //调用查看总成绩的方法
+                $tesresultModel = new TestResult();
+                $StudentScores = $tesresultModel->AcquireExam($studentId->student_id);
+                $item[$studentId->student_name] = $StudentScores;
+                $subjectData[] = [
+                    'avg_score' => $item['avg_score'],
+                    'avg_time' => $item['avg_time'],
+                    'avg_total' => $item['avg_total'],
+                    'student_name' => $studentId->student_name,
+                    'subject_name' => $subjectName,
+                    'student_id' => $studentId->student_id,
+                    'exam_id' => $examId,
+                    'Scores' => $StudentScores,
+                    'exam_begin_dt' => $examTime->begin_dt,
+                    'exam_end_dt' => $examTime->end_dt,
+                ];
+            }
+            return response()->json(
+                $this->success_data($subjectData, 1, '科目数据传送成功')
+            );
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
         }
-        return response()->json(
-            $this->success_data($subjectData, 1, '科目数据传送成功')
-        );
     }
-
-
 }

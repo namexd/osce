@@ -43,7 +43,8 @@
                         <td>{{$item->name}}</td>
                         <td>{{$item->case_name}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
-                        <td>{{(is_null($item->userInfo) && isset($item->userInfo->lastlogindate))? $item->userInfo->lastlogindate:'-'}}</td>
+
+                        <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                         <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}">
                                 <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
