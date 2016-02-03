@@ -27,7 +27,7 @@ class InvigilatorController extends CommonController
     }
     /**
      * 获取SP考教师列表
-     * @url GET /osce/admin/invigilator/invigilator-list
+     * @url GET /osce/admin/invigilator/sp-invigilator-list
      * @access public
      *
      * @param Request $request get 请求<br><br>
@@ -49,6 +49,7 @@ class InvigilatorController extends CommonController
        $Invigilator    =   new Teacher();
 
         $list       =   $Invigilator    ->getSpInvigilatorInfo();
+
         $isSpValues =   $Invigilator    ->getIsSpValues();
         return view('osce::admin.resourcemanage.sp_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
@@ -77,6 +78,7 @@ class InvigilatorController extends CommonController
         $Invigilator    =   new Teacher();
 
         $list       =   $Invigilator    ->  getInvigilatorList();
+
         $isSpValues =   $Invigilator    ->  getIsSpValues();
 
         return view('osce::admin.resourcemanage.invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
