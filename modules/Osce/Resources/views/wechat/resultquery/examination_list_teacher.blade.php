@@ -15,7 +15,7 @@
 @stop
 
 @section('content')
-	<input type="hidden" id="parameter" value="{'pagename':'examination_list_teacher','ajaxurl':'{{route('osce.wechat.student-exam-query.getEveryExamList')}}','detailUrl':'{{route('osce.wechat.student-exam-query.getExamDetails')}}'}" />
+	<input type="hidden" id="parameter" value="{'pagename':'examination_list_teacher','ajaxurl':'{{route('osce.wechat.student-exam-query.getTeacherCheckScore')}}','detailUrl':'{{route('osce.wechat.student-exam-query.getTeacherCheckScore')}}'}" />
     <div class="user_header">
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
@@ -26,10 +26,10 @@
        	</a>
     </div>
     <div class="form-group">
-        <select  id="examination" class="form-control normal_select select_indent" name="student_type" required>
+        <select  id="examination" class="form-control normal_select select_indent invigilation" name="student_type" required>
         	<option value="">请选择考试</option>
         	@foreach($ExamList as $list)
-            	<option value="{{$list->exam_id}}">{{$list->exam_name}}</option>
+            	<option value="{{$list->exam_id}}" data="{{$list->station_id}}">{{$list->exam_name}}</option>
 	        @endforeach
         </select>
     </div>
