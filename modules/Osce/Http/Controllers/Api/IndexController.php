@@ -360,6 +360,7 @@ class IndexController extends CommonController
         if($id){
             return \Response::json(array('code'=>3));
         }
+
         try{
             $watch=Watch::create([
                 'code'          =>  $request->get('code'),
@@ -652,7 +653,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
-                        'nfc' => $itm['nfc'],
+                        'nfc' => $v['nfc'],
                         'studentName' => $studentName,
                     ];
                 } else {
