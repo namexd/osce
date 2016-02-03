@@ -68,9 +68,18 @@ class StudentWatchController extends CommonController
             ];
         $code =0;
         $watchCode = $request->input('code');
+//        dd($watchCode);
 
         //根据设备编号找到设备id
         $watchId= Watch::where('code','=',$watchCode)->select('id')->first();
+        if(!$watchId){
+            $code=-1;
+            $data['title'] = '没有找到到腕表信息';
+            return response()->json(
+                $this->success_data($data ,$code)
+            );
+        }
+
         //  根据腕表id找到对应的考试场次和学生
 
         $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->select('student_id','exam_screening_id')->first();
