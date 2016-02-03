@@ -478,10 +478,9 @@ class IndexController extends CommonController
                 }
             }
         }
-        $count=Watch::where('code'   ,'=', $request->get('code'))
+        $count=Watch::where('code'   ,'=', $code)
             ->update([
                 'name'          =>  $request    ->  get('name'),
-                'code'          =>  $request    ->  get('code'),
                 'factory'       =>  $request    ->  get('factory'),
                 'sp'            =>  $request    ->  get('sp'),
                 'description'   =>  $request    ->  get('description'),
