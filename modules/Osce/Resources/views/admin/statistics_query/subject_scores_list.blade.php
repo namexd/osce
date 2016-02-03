@@ -81,9 +81,10 @@ $(function(){
                             <div  class="pull-left examinee-list">
                                 <select name="subject_id" id="subject-id" class="form-control" style="width: 250px;">
                                     <option value="">全部科目</option>
-                                    @if($subject_id)
-                                    <option value="{{$subject_id}}" {{$subject_id!=null?'selected':''}}>{{$subject_id}}</option>
-                                    @endif
+                                    @forelse($data as $value)
+                                        <option value="{{$value['subject_id']}}" @if($subject_id==$value['subject_id'])selected="selected"  @else @endif>{{$value['subject_name']}}</option>
+                                    @empty
+                                    @endforelse
                                 </select>
                             <span class="input-group-btn pull-left" style="margin-left: 10px;">
                                 <button type="submit" class="btn btn-primary" id="search" style="border-radius: 3px;">搜索</button>

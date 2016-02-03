@@ -24,7 +24,7 @@
     $(function(){
 
         var start = {
-            elem: '#start', //需显示日期的元素选择器
+            elem: '#starts', //需显示日期的元素选择器
             event: 'click', //触发事件
             format: 'YYYY-MM-DD hh:mm:ss', //日期格式
             istime: true, //是否开启时间选择
@@ -43,7 +43,7 @@
         };
 
         var end = {
-            elem: '#end', //需显示日期的元素选择器
+            elem: '#ends', //需显示日期的元素选择器
             event: 'click', //触发事件
             format: 'YYYY-MM-DD hh:mm:ss', //日期格式
             istime: true, //是否开启时间选择
@@ -73,7 +73,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">成绩查询</h5>
+                <h5 class="title-label">使用记录</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
                 <a href="javascript:history.back(-1)" class="btn btn-outline btn-default" style="float: right;">返回</a>
@@ -86,33 +86,33 @@
                         <label class="pull-left left-text">设备ID:</label>
 
                         <div class="pull-left right-list">
-                            <input class="form-control m-b" name="code" />
+                            <input class="form-control m-b" name="code" value="{{$code==null?'':$code }}"/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-12">
                         <label class="pull-left left-text">使用人:</label>
                         <div class="pull-left right-list">
-                            <input class="form-control m-b" name="student_name" />
+                            <input class="form-control m-b" name="student_name" value="{{$student_name==null?'':$student_name }}"/>
                         </div>
                     </div>
-                    <div class="col-md-2 col-sm-2 col-xs-12">
+                    <div class="col-md-3 col-sm-3 col-xs-12">
                         <label class="pull-left left-text">使用时间:</label>
                         <div class="pull-left right-list">
-                            <input class="form-control" name="begin_dt"  id="start"/>
+                            <input class="form-control" name="begin_dt"  id="starts" value="{{$begin_dt==null?'':$begin_dt }}"/>
                         </div>
                     </div>
-                    <div class="col-md-2 col-sm-2 col-xs-12">
+                    <div class="col-md-3 col-sm-3 col-xs-12">
                         <label class="pull-left left-text">到</label>
-                        <div class="pull-left right-list">
-                            <input class="form-control" name="end_dt" id="end"/>
+                        <div class="pull-left right-list" style="margin-right:20px;" >
+                            <input class="form-control" name="end_dt" id="ends" value="{{$end_dt==null?'':$end_dt }}"/>
                         </div>
+                        <button class="btn  btn-primary" type="submit"  style="float:left;" />搜索</button>
                     </div>
-
-                    <div class="col-md-2 col-sm-2 col-xs-12">
+                    <!-- <div class="col-md-2 col-sm-2 col-xs-12">
                         <div class="pull-left right-list">
                             <button class="btn  btn-primary" type="submit" />搜索</button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <table class="table table-striped" id="table-striped">
                     <thead>
