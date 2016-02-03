@@ -144,10 +144,18 @@ class IndexController extends CommonController
         }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
-        $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
+        $id=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
+        if($id){
+            $result = ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
             if (!$result) {
                 return \Response::json(array('code' => 2));
             }
+        }else{
+            $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
+            if (!$result) {
+                return \Response::json(array('code' => 2));
+            }
+        }
         $result = Watch::where('id', $id)->update(['status' => 1]);
         if ($result) {
             $action = '绑定';
@@ -261,6 +269,7 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
             }
             return \Response::json(array('code'=>1));
         }else{
