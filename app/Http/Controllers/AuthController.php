@@ -172,7 +172,7 @@ class AuthController extends BaseController
         $role_id = $Request->get('role_id');
         $permissionIdArr = $Request->get('permission_id');
         $status = $SysRolePermission->where('role_id','=',$role_id)->get();
-
+        //dd($permissionIdArr);
         DB::connection('sys_mis')->beginTransaction();
         $rew = false;
         if(empty($status->toArray())){

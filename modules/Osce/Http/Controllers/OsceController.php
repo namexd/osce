@@ -10,22 +10,23 @@ class OsceController extends Controller {
 	{
 		try{
 			$SysMenus	=	new SysMenus();
-			$MenusList = $SysMenus->getMenusList();
-			$MenusList = $this->node_merge($MenusList);
+
 			$user	=	\Auth::user();
 			//sys_user_role
 			$connection	=	\DB::connection('sys_mis');
 			$userRole	=	$connection	->	table('sys_user_role')	->	where('user_id','=',$user->id)->first();
+
 			if(is_null($userRole))
 			{
 				throw new \Exception('非法用户，请按照要求注册');
 			}
+			$MenusList = $SysMenus	->getRoleMenus($userRole->role_id);
+			$MenusList = $this		->node_merge($MenusList);
 		}
 		catch(\Exception $ex)
 		{
 			return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
 		}
-
 		return view('osce::admin.layouts.admin',['list'=>$MenusList,'role_id'=>$userRole->role_id]);
 	}
 	//递归通过pid 将其压入到一个多维数组!

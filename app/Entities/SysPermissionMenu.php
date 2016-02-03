@@ -30,7 +30,9 @@ class SysPermissionMenu extends Model
         return  $this->hasMany('App\Entities\SysMenus','id','menu_id');
     }
 
-
+    public function menus(){
+        return $this->hasOne('App\Entities\SysMenus','id','menu_id');
+    }
 
 
 }
