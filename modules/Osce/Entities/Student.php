@@ -228,6 +228,7 @@ class Student extends CommonModel
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
                 $examineeData['create_user_id'] = $operator->id;
+
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');
                 }
@@ -415,6 +416,18 @@ class Student extends CommonModel
 
             return $builder->paginate(config('osce.page_size'));
         }
+    }
+
+    /**
+     *查询一场考试下的所有生
+     * @author zhongaing
+     * @param $examId
+     * @param $message
+     */
+    public function getExamStudent($examId){
+        $students= $this->where('exam_id','=',$examId)->get();
+        return   $students;
+
     }
 
 }

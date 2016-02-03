@@ -14,6 +14,7 @@ use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Exam;
@@ -49,9 +50,10 @@ class StudentExamQueryController extends CommonController
             //检查用户是学生还是监考老师
             $invigilateTeacher = Teacher::find($user->id);
             if ($invigilateTeacher && $invigilateTeacher->type == 1) {
-                //查询出所有的考试   todo 监考老师查询出所有考试
-                 $ExamList = Exam::all();
-                return view('osce::wechat.resultquery.examination_list_teacher',['ExamList'=>$ExamList]);
+                // 根据老师id找到老师所监考得考试考站
+                $examModel = new Exam();
+                $ExamList = $examModel->getInvigilateTeacher($user->id);
+                return view('osce::wechat.resultquery.examination_list_teacher', ['ExamList' => $ExamList]);
             }
 
             //根据用户获得考试id
@@ -67,8 +69,8 @@ class StudentExamQueryController extends CommonController
             $ExamList = $ExamModel->Examname($examIds);
             //根据考试id获取所有考试
             //dd($ExamList);
-            return view('osce::wechat.resultquery.examination_list',['ExamList'=>$ExamList]);
-        }catch (\Exception $ex) {
+            return view('osce::wechat.resultquery.examination_list', ['ExamList' => $ExamList]);
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }
@@ -209,9 +211,23 @@ class StudentExamQueryController extends CommonController
         return view('osce::wechat.resultquery.examination_detail', ['examScoreList' => $list], ['examresultList' => $examresultList, 'examName' => $examName]);
     }
 
-      //动态查询出考试科目
-      //url /osce/wechat/student-exam-query/subject-list
-    public function getSubjectList(Request $request){
+
+    /**
+     * 动态查询出考试科目
+     * @method GET
+     * @url /osce/wechat/student-exam-query/subject-list
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return json
+     * @version 0.4
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function getSubjectList(Request $request)
+    {
 
         $this->validate($request, [
             'exam_id' => 'required|integer'
@@ -219,75 +235,97 @@ class StudentExamQueryController extends CommonController
         ]);
         $examId = $request->get('exam_id');
         //根据考试查询出最近的考试科目
-        $subjectModel= new Subject();
+        $subjectModel = new Subject();
         $subject = $subjectModel->getSubjectList($examId);
-        $subjectData=[];
-        foreach($subject as $subjectList){
-            $subjectData[]=[
-                'subject_name'=>$subjectList->subject_name,
-                'subject_id'=>$subjectList->id,
-                'exam_id'=>$examId
+        $subjectData = [];
+        foreach ($subject as $subjectList) {
+            $subjectData[] = [
+                'subject_name' => $subjectList->subject_name,
+                'subject_id' => $subjectList->id,
+                'exam_id' => $examId
             ];
         }
-        if($subject){
+        if ($subject) {
             return response()->json(
                 $this->success_data($subjectData, 1, '科目数据传送成功')
             );
-        }else{
+        } else {
             return response()->json(
                 $this->fail(new \Exception('科目数据传送成功'))
             );
         }
 
 
-
     }
 
 
+    /**
+     * 监考老师查询科目成绩和学生情况
+     * @method GET
+     * @url  /osce/wechat/student-exam-query/teacher-check-score
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return json
+     * @version 0.4
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
 
-    //监考老师查询科目成绩页面
-    //url /osce/wechat/student-exam-query/teacher-check-score
     public function getTeacherCheckScore(Request $request)
     {
         $this->validate($request, [
             'exam_id' => 'required|integer',
-            'subject_id' => 'requied|integer'
+            'station_id' => 'required|integer'
         ]);
         $examId = $request->get('exam_id');
-        $subjectId  = $request->get('subject_id');
-
+        $stationId = $request->get('station_id');
+        //根据考站找到对应的科目
+        $subjectId = Station::find($stationId)->subject_id;
+        $subjectName = Subject::find($subjectId)->title;
         //调用科目成绩统计查询的接口方法
         $subject = new Subject();
-        $examModel = new Exam();
-        $SubjectDetails = $examModel->CourseControllerIndex($examId,$subjectId);
+        $studentModel = new Student();
+        //找到按科目为基础的所有分数还有总人数
+        $avg = $subject->CourseControllerAvg($examId, $subjectId);
+        //如果avg不为空
+        $item = [];
+        if (!empty($avg)) {
 
-        foreach ($SubjectDetails as &$item) {
-            //找到按科目为基础的所有分数还有总人数
-            $avg = $subject->CourseControllerAvg(
-                $item->exam_id,
-                $item->subject_id
-            );
-            //如果avg不为空
-            if (!empty($avg)) {
-                if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                    $item->avg_score = $avg->pluck('score')->sum() / $avg->pluck('score')->count();
-                    date_default_timezone_set("UTC");
-                    $item->avg_time = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
-                    date_default_timezone_set("PRC");
-                    $item->avg_total = $avg->count();
-                } else {
-                    $item->avg_score = 0;
-                    $item->avg_time = 0;
-                    $item->avg_total = $avg->count();
-                }
+            if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
+                $item['avg_score'] = $avg->pluck('score')->sum() / $avg->pluck('score')->count();
+                date_default_timezone_set("UTC");
+                $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
+                date_default_timezone_set("PRC");
+                $item['avg_total'] = $avg->count();
+            } else {
+                $item['avg_score'] = 0;
+                $item['avg_time'] = 0;
+                $item['avg_total'] = $avg->count();
             }
         }
-        //调用查看总成绩的方法
-//        $tesresultModel = new TestResult();
-//        $scores = $tesresultModel->AcquireExam($studentId);
 
-
-
+        //获取该考试科目所有的学生
+        $studentData = $studentModel->getStudentByExamAndSubject($examId, $subjectId);
+        $subjectData=[];
+        //根据考生id查出该考试在本考试的总成绩
+        foreach ($studentData as $studentId) {
+            //调用查看总成绩的方法
+            $tesresultModel = new TestResult();
+            $StudentScores = $tesresultModel->AcquireExam($studentId->student_id);
+            $item[$studentId->student_name] = $StudentScores;
+            $subjectData[]=[
+                'avg_score'=>$item['avg_score'],
+                'avg_time'=>$item['avg_time'],
+                'avg_total'=>$item['avg_total'],
+                'student_name'=>$studentId->student_name,
+                'subject_name'=>$subjectName,
+                'student_id'=>$studentId->student_id,
+                'Scores'=>$StudentScores,
+            ];
+        }
+          dd($subjectData);
     }
 
 

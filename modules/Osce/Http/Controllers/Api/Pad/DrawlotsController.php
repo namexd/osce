@@ -91,6 +91,12 @@ class DrawlotsController extends CommonController
             $examId = $exam->id;
             //从队列表中通过考场ID得到对应的考生信息
             $examQueue =  ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
+
+            //将学生照片的地址换成绝对路径
+            foreach ($examQueue as &$item) {
+                $item->student_avator = url('public' . $examQueue->student_avator);
+            }
+
 //            $examQueue = [
 //                0 => ['student_id' => 1,
 //                    'student_avator' => 'http://211.149.235.45:9090/mixiong//uploads/20160120/f5cc03fc-a654-4d9b-8a0c-bede8a5d4730.jpg',

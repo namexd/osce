@@ -621,7 +621,7 @@ function categories(){
                     data    =   eval('('+data+')');
 
                     if(data.code == 1){
-                        //layer.alert('导入成功！');
+                        layer.alert('导入成功！');
                         
                         /**
                          * 数据导入
