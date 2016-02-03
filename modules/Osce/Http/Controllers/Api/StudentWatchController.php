@@ -207,7 +207,7 @@ class StudentWatchController extends CommonController
           $watchNfc = Watch::where('nfc_code','=',$code)->first();
          if($watchNfc){
              $data=[
-                 'nfc_code'=>$watchNfc->nfc_code,
+                 'nfc_code'=>$watchNfc->code,
              ];
              return response()->json(
                  $this->success_data($data,1)
