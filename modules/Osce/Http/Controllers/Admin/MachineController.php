@@ -939,7 +939,7 @@ class MachineController extends CommonController
     }
 
     /**
-     *
+     *腕表使用记录列表
      * @method GET
      * @url /machine/watch-log-list
      * @access public
