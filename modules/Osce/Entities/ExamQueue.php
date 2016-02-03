@@ -53,14 +53,14 @@ class ExamQueue extends CommonModel
         $data = [];
         foreach ($examFlowRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
-            $room_id=$examFlowRoom->room_id;
+            $room_id = $examFlowRoom->room_id;
 //            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->get();
-            $ExamQueue=new ExamQueue();
-            $students=$ExamQueue->getWaitStudentRoom($room_id,$exam->id);
+            $ExamQueue = new ExamQueue();
+            $students = $ExamQueue->getWaitStudentRoom($room_id, $exam->id);
             foreach ($students as $examQueue) {
-                    foreach ($examQueue->student as $student) {
+                foreach ($examQueue->student as $student) {
 //                  $student->roomName=$roomName;
-                        $data[$roomName][] = $student;
+                    $data[$roomName][] = $student;
                 }
             }
         }
@@ -76,14 +76,14 @@ class ExamQueue extends CommonModel
         foreach ($examFlowStationList as $examFlowStation) {
             $stationName = $examFlowStation->station->name;
             $station_id = $examFlowStation->station_id;
-            $ExamQueue=new ExamQueue();
-            $students=$ExamQueue->getWaitStudentStation($station_id,$exam->id);
+            $ExamQueue = new ExamQueue();
+            $students = $ExamQueue->getWaitStudentStation($station_id, $exam->id);
 //            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->get();
             foreach ($students as $ExamQueue) {
-                    foreach ($ExamQueue->student as $student) {
+                foreach ($ExamQueue->student as $student) {
 //                   $student->stationName=$stationName;
-                        $data[$stationName][] = $student;
-                    }
+                    $data[$stationName][] = $student;
+                }
             }
         }
         return $data;
@@ -151,7 +151,7 @@ class ExamQueue extends CommonModel
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', 0)
-                ->where('student.exam_id',$examId)
+                ->where('student.exam_id', $examId)
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -163,7 +163,7 @@ class ExamQueue extends CommonModel
                     'student.description as student_description'
                 )
                 ->take($stationNum)
-                ->orderBy('exam_queue.begin_dt','asc')
+                ->orderBy('exam_queue.begin_dt', 'asc')
                 ->get();
         } catch (\Exception $ex) {
             throw $ex;
@@ -181,19 +181,19 @@ class ExamQueue extends CommonModel
     static public function nextExamineeByRoomId($room_id, $examId, $stationNum)
     {
         try {
-        return ExamQueue::leftJoin('student','student.id', '=', 'exam_queue.student_id')
-            ->where('exam_queue.room_id', $room_id)
-            ->where('exam_queue.status',0)
-            ->where('exam_queue.exam_id',$examId)
-            ->skip($stationNum)
-            ->take($stationNum)
-            ->orderBy('exam_queue.begin_dt','asc')
-            ->select([
-                'student.id as student_id',
-                'student.name as student_name',
-                'student.code as student_code'
-            ])
-            ->get();
+            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                ->where('exam_queue.room_id', $room_id)
+                ->where('exam_queue.status', 0)
+                ->where('exam_queue.exam_id', $examId)
+                ->skip($stationNum)
+                ->take($stationNum)
+                ->orderBy('exam_queue.begin_dt', 'asc')
+                ->select([
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.code as student_code'
+                ])
+                ->get();
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -239,6 +239,7 @@ class ExamQueue extends CommonModel
         ksort($queueLeave);
         return array_shift($queueLeave);
     }
+
     /**
      * 开始考试时，改变时间和状态
      * @param  $studentId $stationId
@@ -246,15 +247,16 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
-      public function AlterTimeStatus($studentId ,$stationId,$nowTime){
-          $nowTime  =   date('Y-m-d H:i:s',$nowTime);
-          $startExam= ExamQueue::where('student_id','=',$studentId)
-              ->where('station_id','=',$stationId)
-              ->update(['begin_dt'=>$nowTime,'status'=>2]);
+    public function AlterTimeStatus($studentId, $stationId, $nowTime)
+    {
+        $nowTime = date('Y-m-d H:i:s', $nowTime);
+        $startExam = ExamQueue::where('student_id', '=', $studentId)
+            ->where('station_id', '=', $stationId)
+            ->update(['begin_dt' => $nowTime, 'status' => 2]);
 
-          return $startExam;
+        return $startExam;
 
-      }
+    }
 
     /**
      * 结束考试时，改变时间和状态
@@ -263,13 +265,14 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
-     public function EndExamAlterStatus($studentId ,$stationId,$nowTime ){
-         $nowTime   =   date('Y-m-d H:i:s',$nowTime);
-         $endExam   =   ExamQueue::where('student_id','=',$studentId)
-                    ->  where('station_id','=',$stationId)
-                    ->  update(['end_dt'=>$nowTime,'status'=>3]);
-         return $endExam;
-     }
+    public function EndExamAlterStatus($studentId, $stationId, $nowTime)
+    {
+        $nowTime = date('Y-m-d H:i:s', $nowTime);
+        $endExam = ExamQueue::where('student_id', '=', $studentId)
+            ->where('station_id', '=', $stationId)
+            ->update(['end_dt' => $nowTime, 'status' => 3]);
+        return $endExam;
+    }
 
 
     /**
@@ -284,10 +287,10 @@ class ExamQueue extends CommonModel
     public function createExamQueue($examId, $studentId, $time, $examScreeningId)
     {
         try {
-            //先查看exam_queue表中是否已经有了数据，防止脏数据
+			//先查看exam_queue表中是否已经有了数据，防止脏数据
             $examObj =  ExamQueue::where('exam_id',$examId)
                 ->where('student_id',$studentId)
-                ->orderBy('begin_dt','asc')
+	            ->orderBy('begin_dt', 'asc')
                 ->get();
             if ($examObj->isEmpty()) {
                 //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
@@ -329,17 +332,17 @@ class ExamQueue extends CommonModel
      */
     static public function findQueueIdByStudentId($studentId)
     {
-        try{
+        try {
             //通过腕表id找到$examScreening和$student的实例
-            $examScreening = ExamScreeningStudent::where('watch_id',$studentId)->first();
+            $examScreening = ExamScreeningStudent::where('watch_id', $studentId)->first();
 
             //拿到$examScreeningId和$studentId
             $examScreeningId = $examScreening->id;
 
             //得到queue实例
-            $queue = ExamQueue::where('student_id',$studentId)
-                ->where('exam_screening_id',$examScreeningId)
-                ->where('status',2)
+            $queue = ExamQueue::where('student_id', $studentId)
+                ->where('exam_screening_id', $examScreeningId)
+                ->where('status', 2)
                 ->first();
 
             return $queue;
@@ -355,21 +358,22 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author zhouchong
      */
-    public function getWaitStudentStation($station_id='',$exam_id=''){
+    public function getWaitStudentStation($station_id = '', $exam_id = '')
+    {
 
-        $builder=$this->leftJoin ('exam_flow_station',
+        $builder = $this->leftJoin('exam_flow_station',
             function ($join) {
-                $join->on('exam_queue.station_id' , '=' , 'exam_flow_station.station_id');
-            })->leftJoin( 'student',
+                $join->on('exam_queue.station_id', '=', 'exam_flow_station.station_id');
+            })->leftJoin('student',
             function ($join) {
-                $join->on('student.id' , '=' , 'exam_queue.student_id');
-            })->where('exam_queue.station_id', '=', $station_id)->where('exam_queue.exam_id','=',$exam_id)->where('exam_queue.status','=',0)
+                $join->on('student.id', '=', 'exam_queue.student_id');
+            })->where('exam_queue.station_id', '=', $station_id)->where('exam_queue.exam_id', '=', $exam_id)->where('exam_queue.status', '=', 0)
             ->select([
                 'student.name as name',
                 'student.id as student_id',
             ])->distinct()->take(4)->get();
 
-       return $builder;
+        return $builder;
     }
 
 
@@ -380,15 +384,16 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author zhouchong
      */
-    public function getWaitStudentRoom($room_id='',$exam_id=''){
+    public function getWaitStudentRoom($room_id = '', $exam_id = '')
+    {
 
-        $builder=$this->leftJoin ('exam_flow_room',
+        $builder = $this->leftJoin('exam_flow_room',
             function ($join) {
-                $join->on('exam_queue.room_id' , '=' , 'exam_flow_room.room_id');
-            })->leftJoin( 'student',
+                $join->on('exam_queue.room_id', '=', 'exam_flow_room.room_id');
+            })->leftJoin('student',
             function ($join) {
-                $join->on('student.id' , '=' , 'exam_queue.student_id');
-            })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id','=',$exam_id)->where('exam_queue.status','=',0)
+                $join->on('student.id', '=', 'exam_queue.student_id');
+            })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id', '=', $exam_id)->where('exam_queue.status', '=', 0)
             ->select([
                 'student.name as name',
                 'student.id as student_id',

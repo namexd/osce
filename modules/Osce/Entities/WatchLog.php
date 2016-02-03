@@ -68,7 +68,7 @@ class WatchLog extends CommonModel{
            });
 
        if($code){
-           $builder=$builder->where('code','like',$code.'%');
+           $builder=$builder->where('watch.code','like',$code.'%');
        }
 
        if($studentName){
@@ -85,7 +85,7 @@ class WatchLog extends CommonModel{
        }
 
        if($endDt){
-           $builder=$builder->whereRaw(
+           $builder=$builder->orWhereRaw(
                'unix_timestamp(' . $this->table . '.updated_at) > ?',
                [
                    $endDt
