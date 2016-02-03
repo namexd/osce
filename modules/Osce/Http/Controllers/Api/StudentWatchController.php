@@ -189,7 +189,7 @@ class StudentWatchController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     watch_id    腕表 id   (必须的)
+     * * string     code       (必须的)
      *
      * @return json
      *
@@ -217,7 +217,7 @@ class StudentWatchController extends CommonController
                  'nfc_code'=>'',
              ];
              return response()->json(
-                 $this->success_data($data,2,'没有找到对应的nfc_code')
+                 $this->success_data($data,-2,'没有找到对应的nfc_code')
              );
          }
 
