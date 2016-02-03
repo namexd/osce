@@ -105,6 +105,13 @@ class ConfigController extends CommonController
 
             //如果是要插入配置文件
             $result = $config->config($file);
+            $this->getSetMail(
+                $file['email_server'],
+                $file['email_port'],
+                $file['email_protocol'],
+                $file['email_ssl'],
+                $file['email_username'],
+                $file['email_password']);
             if (!$result) {
                 DB::connection('osce_mis')->rollBack();
             }
@@ -284,6 +291,39 @@ class ConfigController extends CommonController
                 throw new \Exception('config/wechat.php文件不可写');
             }
             file_put_contents(WECHAT_CONFIG,$str);
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+
+    private function getSetMail($emailServer,$emailPort,$emailProtocol,$emailSsl,$emailUsername,$emailPassword) {
+        //将协议选项上的true或者是false变成ssl或者是null
+        if ($emailSsl == 'flase') {
+            $emailSsl = 'NULL';
+        } else {
+            $emailSsl = "'ssl'";
+        }
+        $data   =    [
+            'email_server'      =>   $emailServer,
+            'email_port'        =>   $emailPort,
+            'email_protocol'    =>   $emailProtocol,
+            'email_ssl'         =>   $emailSsl,
+            'email_username'    =>   $emailUsername,
+            'email_password'    =>   $emailPassword
+        ];
+
+        $str = view('osce::admin.sysmanage.mail_config',$data)->render();
+        $str = '<?php ' . $str;
+
+        try
+        {
+            if(!is_writable(MAIL_CONFIG))
+            {
+                throw new \Exception('config/mail.php文件不可写');
+            }
+            file_put_contents(MAIL_CONFIG,$str);
         }
         catch(\Exception $ex)
         {

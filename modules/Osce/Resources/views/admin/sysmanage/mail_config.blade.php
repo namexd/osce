@@ -1,4 +1,5 @@
-<?php return [
+
+return [
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,7 @@
 |
 */
 
-'host' => env('MAIL_HOST', 'smtp.163.com'),
+'host' => env('MAIL_HOST', '{{$email_server}}'),
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +40,7 @@
 |
 */
 
-'port' => env('MAIL_PORT', 25),
+'port' => env('MAIL_PORT', {{$email_port}}),
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +53,7 @@
 |
 */
 
-'from' => ['address' => 'qingshuruyonghuming', 'name' => null],
+'from' => ['address' => '{{$email_username}}', 'name' => null],
 
 /*
 |--------------------------------------------------------------------------
@@ -65,7 +66,7 @@
 |
 */
 
-'encryption' => env('MAIL_ENCRYPTION', NULL),
+'encryption' => env('MAIL_ENCRYPTION', {{$email_ssl}}),
 
 /*
 |--------------------------------------------------------------------------
@@ -78,7 +79,7 @@
 |
 */
 
-'username' => env('MAIL_USERNAME','qingshuruyonghuming'),
+'username' => env('MAIL_USERNAME','{{$email_username}}'),
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +92,7 @@
 |
 */
 
-'password' => env('MAIL_PASSWORD','qingshurumima'),
+'password' => env('MAIL_PASSWORD','{{$email_password}}'),
 
 /*
 |--------------------------------------------------------------------------
