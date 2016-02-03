@@ -71,11 +71,11 @@ class WatchLog extends CommonModel{
            });
 
        if($code){
-           $builder=$builder->where('watch.code','like',$code.'%');
+           $builder=$builder->where('watch.code','like','%'.$code.'%');
        }
 
        if($studentName){
-           $builder=$builder->where('student.name','like',$studentName.'%');
+           $builder=$builder->where('student.name','like','%'.$studentName.'%');
        }
 
        if($beginDt){
