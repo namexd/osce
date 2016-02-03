@@ -265,6 +265,7 @@ class Student extends CommonModel
     }
     public function sendRegisterEms($mobile,$password){
         //发送短消息
+        Common::sendRegisterEms($mobile,$password);
     }
 
     /**
