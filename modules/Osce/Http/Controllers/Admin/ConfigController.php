@@ -300,10 +300,10 @@ class ConfigController extends CommonController
 
     private function getSetMail($emailServer,$emailPort,$emailProtocol,$emailSsl,$emailUsername,$emailPassword) {
         //将协议选项上的true或者是false变成ssl或者是null
-        if ($emailSsl == false) {
-            $emailSsl = NULL;
+        if ($emailSsl == 'flase') {
+            $emailSsl = 'NULL';
         } else {
-            $emailSsl = 'ssl';
+            $emailSsl = "'ssl'";
         }
         $data   =    [
             'email_server'      =>   $emailServer,
@@ -315,7 +315,7 @@ class ConfigController extends CommonController
         ];
 
         $str = view('osce::admin.sysmanage.mail_config',$data)->render();
-        $str = '<?php ' . "<br />" . $str;
+        $str = '<?php ' . $str;
 
         try
         {
