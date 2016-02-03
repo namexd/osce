@@ -284,30 +284,37 @@ class ExamQueue extends CommonModel
     public function createExamQueue($examId, $studentId, $time, $examScreeningId)
     {
         try {
-            //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
-            $objs = ExamPlan::where('exam_id',$examId)
+            //先查看exam_queue表中是否已经有了数据，防止脏数据
+            $examObj =  ExamQueue::where('exam_id',$examId)
                 ->where('student_id',$studentId)
-//                ->where('exam_screening_id', $examScreeningId)
                 ->orderBy('begin_dt','asc')
                 ->get();
-            if ($objs->isEmpty()) {
-                throw new \Exception('该学生的考试场次有误，请核实！');
-            }
-            //将当前的时间与计划表的时间减去缓冲时间做对比，如果是比计划的时间小，就直接用计划的时间。
-            //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
-            //config('osce.begin_dt_buffer')为缓冲时间
-            foreach ($objs as $item) {
-                if ($time > strtotime($item->begin_dt)-(config('osce.begin_dt_buffer') * 60)) {
-                    $item->begin_dt = date('Y-m-d H:i:s',$time + (config('osce.begin_dt_buffer') * 60));
+            if ($examObj->isEmpty()) {
+                //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
+                $objs = ExamPlan::where('exam_id',$examId)
+                    ->where('student_id',$studentId)
+                    ->orderBy('begin_dt','asc')
+                    ->get();
+                if ($objs->isEmpty()) {
+                    throw new \Exception('该学生的考试场次有误，请核实！');
                 }
+                //将当前的时间与计划表的时间减去缓冲时间做对比，如果是比计划的时间小，就直接用计划的时间。
+                //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
+                //config('osce.begin_dt_buffer')为缓冲时间
+                foreach ($objs as $item) {
+                    if ($time > strtotime($item->begin_dt)-(config('osce.begin_dt_buffer') * 60)) {
+                        $item->begin_dt = date('Y-m-d H:i:s',$time + (config('osce.begin_dt_buffer') * 60));
+                    }
 
-                $item->status = 0;
+                    $item->status = 0;
 
-                //将数据插入数据库
-                if (!ExamQueue::create($item->toArray())) {
-                    throw new \Exception('该名学生的与腕表的录入失败！');
-                };
+                    //将数据插入数据库
+                    if (!ExamQueue::create($item->toArray())) {
+                        throw new \Exception('该名学生的与腕表的录入失败！');
+                    };
+                }
             }
+
         } catch (\Exception $ex) {
             throw $ex;
         }
