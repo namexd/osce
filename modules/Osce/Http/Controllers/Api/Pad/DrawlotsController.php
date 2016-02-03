@@ -144,6 +144,9 @@ class DrawlotsController extends CommonController
             $id = $request->input('id');
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
+            if (is_null($exam)) {
+                throw new \Exception('当前没有正在进行的考试',3000);
+            }
             $examId = $exam->id;
 
             list($room_id, $stationNum) = $this->getRoomIdAndStation($id,$exam);
