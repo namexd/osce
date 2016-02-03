@@ -192,7 +192,7 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -235,9 +235,9 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -303,6 +303,7 @@ class DrawlotsController extends CommonController
 
             //得知当前学生是否已经抽签
             $temp = ExamQueue::where('room_id' , '=' , $roomId)
+                ->where('student_id',$student->id)
                 ->where('exam_id',$examId)
                 ->where('status' , '=' , 1)
                 ->first();
