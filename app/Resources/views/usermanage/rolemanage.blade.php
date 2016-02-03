@@ -10,6 +10,10 @@
     }
     .modal-title{color: #676a6c!important;}
     tbody td .state1{color: #1ab394!important;}
+    body {
+        font-family: 微软雅黑;
+        font-size: 14px;
+    }
     </style>
 @stop
 
@@ -23,9 +27,9 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="ibox float-e-margins">
-            <div class="ibox-title overflow">
+            <div class="ibox-title">
                 <h5>角色权限管理</h5>
-                <button type="button" class="btn btn-outline btn-default" id="add_role" style="float: right;" data-toggle="modal" data-target="#myModal">新增角色</button>
+                <button type="button" class="btn btn-outline btn-default" id="add_role" style="margin:0;float:right;margin-top:-10px;" data-toggle="modal" data-target="#myModal">新增角色</button>
             </div>
             <div class="container-fluid ibox-content">
                 <table class="table table-striped" id="table-striped">

@@ -432,13 +432,8 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function() {
-//	$a = StationTeacher::where('exam_id',113)->groupBy('station_id')->with('station')->get();
-//	foreach ($a as $items) {
-//		$item = $items->station;
-//		dd($item);
-//	}
-//	$a = 'pic';
-//	dd(url('public/' . $a));
+	$a = new \Modules\Osce\Http\Controllers\MailController();
+	$a->send();
 
 
 });

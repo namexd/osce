@@ -35,6 +35,10 @@
             background-color: #1ab394;
             border-color: #1ab394;
         }
+        body {
+            font-family: 微软雅黑;
+            font-size: 14px;
+        }
     </style>
 @stop
 
