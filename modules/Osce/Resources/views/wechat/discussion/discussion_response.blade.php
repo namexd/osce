@@ -69,6 +69,19 @@
         }
         .btn2{background: #1ab394}
         .has-feedback label~.form-control-feedback {top: 26px;}
+        .layui-layer-title{
+            background: #fff!important;
+            color: #1ab394!important;
+            font-size: 16px!important;
+        }
+        .layui-layer-btn {
+            background: #fff !important;
+            border-top: 1px #fff solid !important;
+        }
+        .layui-layer-btn0{
+            border:1px solid #1ab394!important;
+            background: #1ab394 !important;
+        }
     </style>
 @stop
 @section('only_head_js')
@@ -96,6 +109,27 @@ $(function(){
                     }
                 }
             });
+
+    $('.btn2').click(function(){
+
+        var content = $('#context').val();
+
+        $.ajax({
+            type:'post',
+            url:'{{route("osce.wechat.postAddReply")}}',
+            data:{content:content,id:$('input[name=id]').val()},
+            success:function(res){
+                if(res.code!=1){
+                    layer.alert(res.message);
+                }else{
+                    layer.alert('回复成功！',function(its){
+                        location.href = '{{route("osce.wechat.getCheckQuestion")}}?id='+$('input[name=id]').val();
+                    });
+                }
+            }
+        });
+    });
+
 })
 </script> 
 @stop
@@ -133,14 +167,14 @@ $(function(){
     @endforeach
     <ul class="history-list">
         <li>
-            <form action="{{  route('osce.wechat.postAddReply') }}" method="post" id="list_form">
+            <form id="list_form">
                 <input type="hidden" name="id" value="{{ $list->id }}">
 
                 <div class="form-group">
                   <label class="" for="name">&nbsp;</label>
                   <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
                 </div>
-                <input type="submit" value="提交" class="btn2" />
+                <input type="button" value="提交" class="btn2" />
             </form>
         </li>
     </ul>
