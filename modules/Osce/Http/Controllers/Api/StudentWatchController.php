@@ -157,7 +157,7 @@ class StudentWatchController extends CommonController
                         ->whereBetween('status', [1, 2])
                         ->count();
 
-                    $examtimes = date('H:i:s',strtotime($nowQueue->begin_dt));
+                    $examtimes = date('H:i:s',(strtotime($nowQueue->begin_dt)+config('osce.begin_dt_buffer')*60));
                     $examRoomName = $nowQueue->room_name;
                     $data['title'] = '考生等待信息';
                     $data['willStudents'] = $willStudents;
@@ -167,9 +167,9 @@ class StudentWatchController extends CommonController
                 }
 
             } else {
-                date_default_timezone_set('UTC');
-                $surplus = ((strtotime($nowQueue['begin_dt']) + ($nowQueue->mins * 60)) - $nowTime);
-                date_default_timezone_set('Asia/Shanghai');
+//                date_default_timezone_set('UTC');
+                 $surplus = strtotime($nowQueue['end_dt'] -(strtotime($nowQueue['begin_dt'])));
+//                date_default_timezone_set('Asia/Shanghai');
                 if ($surplus <= 0) {
                     if (!empty($nextQueue)) {
                         $nextExamName = $nextQueue ['room_name'];
