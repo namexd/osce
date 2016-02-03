@@ -291,7 +291,8 @@ class Student extends CommonModel
                 'student.mobile as mobile',
                 'student.avator as avator',
                 'exam_queue.status as status',
-                'student.id as student_id'
+                'student.id as student_id',
+                'student.exam_sequence as exam_sequence',
             ])
             ->first();
     }
