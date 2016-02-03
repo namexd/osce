@@ -85,7 +85,7 @@ class WatchLog extends CommonModel{
        }
 
        if($endDt){
-           $builder=$builder->whereRaw(
+           $builder=$builder->orWhereRaw(
                'unix_timestamp(' . $this->table . '.updated_at) > ?',
                [
                    $endDt

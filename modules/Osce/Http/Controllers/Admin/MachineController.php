@@ -977,6 +977,6 @@ class MachineController extends CommonController
            $item->context=unserialize($item->context);
         }
 
-        return view('osce::admin.resourcemanage.equ_manage_watch_list')->with(['list'=>$list]);
+        return view('osce::admin.resourcemanage.equ_manage_watch_list')->with(['list'=>$list,'code'=>$code,'student_name'=>$studentName,'begin_dt'=>$beginDt,'end_dt'=>$endDt]);
     }
 }
