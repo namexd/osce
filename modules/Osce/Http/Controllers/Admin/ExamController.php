@@ -13,7 +13,6 @@ use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
-
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -39,7 +38,6 @@ use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
 use DB;
-
 class ExamController extends CommonController
 {
     /**
