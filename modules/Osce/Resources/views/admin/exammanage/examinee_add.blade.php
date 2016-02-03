@@ -191,6 +191,13 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label" >准考证号:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="exam_sequence" name="exam_sequence"  class="form-control">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">联系电话:</label>
 
                                 <div class="col-sm-10">
