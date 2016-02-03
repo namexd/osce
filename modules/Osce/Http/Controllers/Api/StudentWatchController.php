@@ -130,8 +130,10 @@ class StudentWatchController extends CommonController
                     $code=6;
                 } else {
 
+                    $code=-2;
+                    $data['title'] = '成绩推送失败';
                     return response()->json(
-                        $this->fail(new \Exception('成绩推送失败'))
+                        $this->success_data($data ,$code)
                     );
                 }
             }

@@ -248,7 +248,7 @@ class DrawlotsController extends CommonController
      */
     public function getStationList(Request $request)
     {
-//        try {
+        try {
             //获取当前登陆者id
             $id = $request->input('id');
 
@@ -281,8 +281,8 @@ class DrawlotsController extends CommonController
             $station->exam_id = $exam->id;
 
             return response()->json($this->success_data($station));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
 //        }
     }
 
