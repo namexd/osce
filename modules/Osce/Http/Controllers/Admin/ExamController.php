@@ -1680,11 +1680,11 @@ class ExamController extends CommonController
             $tempType1 = 0;
             $tempType2 = 0;
             $tempType3 = 0;
-            $temp = StationTeacher::where('exam_id',$examId)->groupBy('station_id')->with('station')->get();
+            $temp = StationTeacher::where('exam_id',$examId)->groupBy('station_id')->get();
             if (!$temp->isEmpty()) {
                 //获得每个考站数据的type
                 foreach ($temp as $item) {
-                    switch ($item->type) {
+                    switch ($item->station->type) {
                         case 1:
                             $tempType1 = $tempType1+1;
                             break;
