@@ -800,7 +800,7 @@ class IndexController extends CommonController
     }
 
     /**
-     *
+     *迟到学生处理
      * @method GET
      * @url /api/1.0/private/osce/watch/skip-last
      * @access public
@@ -837,17 +837,16 @@ class IndexController extends CommonController
     }
 
     /**
-     *
+     *迟到或者缺考学生的处理
      * @method GET
-     * @url /api/1.0/private/osce/watch/close-exam
+     * @url
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        studentId        学生id(必须的)
+     * * int        exam_id          考试id(必须的)
+     * * int        screen_id        场次id(必须的)
      *
      * @return ${response}
      *

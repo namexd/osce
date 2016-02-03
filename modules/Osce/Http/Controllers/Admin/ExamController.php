@@ -13,7 +13,6 @@ use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
-
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -39,7 +38,6 @@ use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
 use DB;
-
 class ExamController extends CommonController
 {
     /**
@@ -639,7 +637,6 @@ class ExamController extends CommonController
             $studentList = array_shift($data);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
-
             if(!$student->importStudent($exam_id, $examineeData)){
                 throw new \Exception('学生导入数据失败，请修改重试');
             }

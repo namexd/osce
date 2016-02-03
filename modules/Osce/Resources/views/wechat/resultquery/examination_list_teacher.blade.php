@@ -29,7 +29,7 @@
         <select  id="examination" class="form-control normal_select select_indent" name="student_type" required>
         	<option value="">请选择考试</option>
         	@foreach($ExamList as $list)
-            	<option value="{{$list->id}}">{{$list->name}}</option>
+            	<option value="{{$list->exam_id}}">{{$list->exam_name}}</option>
 	        @endforeach
         </select>
     </div>
