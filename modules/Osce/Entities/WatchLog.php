@@ -59,6 +59,9 @@ class WatchLog extends CommonModel{
 
    public function getList($code='',$studentName='',$beginDt='',$endDt=''){
 
+       $beginDt=strtotime($beginDt);
+       $endDt=strtotime($endDt);
+
        $builder=$this->leftJoin ('watch',
            function ($join) {
                $join->on('watch.id' , '=' , 'watch_log.watch_id');
@@ -68,16 +71,16 @@ class WatchLog extends CommonModel{
            });
 
        if($code){
-           $builder=$builder->where('watch.code','like',$code.'%');
+           $builder=$builder->where('watch.code','like','%'.$code.'%');
        }
 
        if($studentName){
-           $builder=$builder->where('student.name','like',$studentName.'%');
+           $builder=$builder->where('student.name','like','%'.$studentName.'%');
        }
 
        if($beginDt){
            $builder=$builder->whereRaw(
-               'unix_timestamp(' . $this->table . '.created_at) < ?',
+               'unix_timestamp(' . $this->table . '.created_at) > ?',
                [
                    $beginDt
                ]
@@ -85,8 +88,8 @@ class WatchLog extends CommonModel{
        }
 
        if($endDt){
-           $builder=$builder->orWhereRaw(
-               'unix_timestamp(' . $this->table . '.updated_at) > ?',
+           $builder=$builder->WhereRaw(
+               'unix_timestamp(' . $this->table . '.updated_at) < ?',
                [
                    $endDt
                ]
