@@ -92,7 +92,7 @@ class StudentWatchController extends CommonController
 //        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
         $studentId = $watchStudent->student_id;
-
+        dd($studentId);
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
 

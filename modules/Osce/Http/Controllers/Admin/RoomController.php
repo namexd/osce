@@ -197,9 +197,8 @@ class RoomController extends CommonController
      */
     public function postCreateRoom(Request $request, Room $room)
     {
-        try {
-            //验证
-            $this->validate($request, [
+        //验证
+        $this->validate($request, [
                 'vcr_id'        => 'required',
                 'name'          => 'required|unique:osce_mis.room,name',
                 'address'       => 'required',
@@ -209,7 +208,9 @@ class RoomController extends CommonController
             ],[
                 'name.unique'   =>  '名称必须唯一',
                 'vcr_id.required'=> '摄像头id必须输入'
-            ]);
+            ]
+        );
+        try {
             //TODO   表单内容变化没有提交nfc字段
             $formData = $request->only('name', 'address', 'code', 'description');
             $cate   = $request->input('cate',0);
