@@ -62,7 +62,7 @@
                                 <label class="col-sm-2 control-label">考试名称</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="name" name="name" value="{{$examData['name']}}">
+                                    <input type="text" required class="form-control" id="name" name="name" value="{{$examData['name']}}" {{$examData['status']==0?'':'disabled'}}>
                                     <input type="hidden" required class="form-control" id="cate_id" name="cate_id" value="2" />
                                 </div>
                             </div>
@@ -71,14 +71,14 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试地点</label>
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="address" name="address" value="{{$examData['address']}}">
+                                    <input type="text" required class="form-control" id="address" name="address" value="{{$examData['address']}}" {{$examData['status']==0?'':'disabled'}}>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" style="width:200px;" name="sequence_cate" >
+                                    <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate" >
                                         <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
                                         <option value="2" {{($examData['sequence_cate']==2)?'selected=selected':''}}>顺序</option>
                                     </select>
@@ -88,7 +88,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">排序方式</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" style="width:200px;" name="sequence_mode" v>
+                                    <select class="form-control" style="width:200px;" {{$examData['status']==0?'':'disabled'}} name="sequence_mode" v>
                                         <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
                                         <option value="2" {{($examData['sequence_mode']==2)?'selected=selected':''}}>以考站分组</option>
                                     </select>
@@ -99,7 +99,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试时间</label>
                                 <div class="col-sm-10">
-                                    <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right; {{$examData['status']==0?'':'display:none'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                                     <table class="table table-bordered" id="add-basic">
                                         <thead>
                                         <tr>
@@ -114,12 +114,12 @@
                                         @forelse($examScreeningData as $key => $item)
                                             <tr>
                                                 <td>{{$key+1}}</td>
-                                                <td class="laydate">
+                                                <td class="laydate" {{$examData['status']==0?'':'disabled;'}}>
                                                     <input type="hidden" name="time[{{$key+1}}][id]" value="{{$item->id}}">
                                                     <input type="hidden" name="time[{{$key+1}}][exam_id]" value="{{$id}}">
                                                     <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
                                                 </td>
-                                                <td class="laydate">
+                                                <td class="laydate" {{$examData['status']==0?'':'disabled;'}}>
                                                     <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
                                                 </td>
                                                 <?php
@@ -132,7 +132,7 @@
                                                 ?>
                                                 <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
                                                 <td>
-                                                    <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read  state2" {{$examData['status']==0?'':'style=display:none;'}}><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                 </td>
                                             </tr>
                                         @empty
@@ -147,7 +147,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2 time-modify">
-                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-primary" type="submit" {{$examData['status']==0?'':'style=display:none;'}}>保存</button>
                                     <a class="btn btn-white" href="{{route("osce.admin.exam.getExamList")}}">取消</a>
                                 </div>
                             </div>

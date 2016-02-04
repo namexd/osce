@@ -91,6 +91,12 @@
                                     <textarea disabled name="description" id="description" cols="" rows="" class="form-control">{{$item->description}}</textarea>
                                 </div>
                             </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2 time-modify">
+                                    <a class="btn btn-white" href="javascript:history.back(-1)">返回</a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

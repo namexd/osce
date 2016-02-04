@@ -250,23 +250,40 @@ class ExamQueue extends CommonModel
     public function AlterTimeStatus($studentId, $stationId, $nowTime)
 
     {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
 
-        //根据学生id查出学生的所有开始和结束时间
-        $studentTimes= ExamQueue::where('student_id','=',$studentId)->get();
-        $status= ExamQueue::where('student_id','=',$studentId)->where('station_id', '=', $stationId)->update(['status'=>2]);
-        if($status){
-            foreach ($studentTimes as $item) {
-                if ($nowTime > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
-                    $item->begin_dt = date('Y-m-d H:i:s', $nowTime + (config('osce.begin_dt_buffer') * 60));
+            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
+                ->update(['status' => 2]);
+            if ($status) {
+                $studentTimes = ExamQueue::where('student_id', '=', $studentId)
+                    ->whereIn('exam_queue.status', [1, 2])
+                    ->orderBy('begin_dt', 'asc')
+                    ->get();
+                foreach ($studentTimes as  $item) {
+                    if ($nowTime > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
+                        if ($item->status == 2) {
+                            $item->begin_dt = date('Y-m-d H:i:s', $nowTime + (config('osce.begin_dt_buffer') * 60));
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + (config('osce.begin_dt_buffer') * 60));
+                        } else {
+                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60));
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + (config('osce.begin_dt_buffer') * 60));
+                        }
+                        if (!$item->save()) {
+                            throw new \Exception('队列时间更新失败');
+                        }else{
+                            return true;
+                        }
+                    }
                 }
-                $nowTime = $item->begin_dt;
-                $startExam = ExamQueue::where('student_id', '=', $studentId)
-                    ->update(['begin_dt' => $nowTime]);
-                if (!$startExam) {
-                    throw new \Exception('该名学生的时间顺推失败！');
-                };
+            }else{
+                $connection->commit();
+                return false;
             }
-            return $status;
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
         }
 
     }
@@ -300,16 +317,16 @@ class ExamQueue extends CommonModel
     public function createExamQueue($examId, $studentId, $time, $examScreeningId)
     {
         try {
-			//先查看exam_queue表中是否已经有了数据，防止脏数据
-            $examObj =  ExamQueue::where('exam_id',$examId)
-                ->where('student_id',$studentId)
-	            ->orderBy('begin_dt', 'asc')
+            //先查看exam_queue表中是否已经有了数据，防止脏数据
+            $examObj = ExamQueue::where('exam_id', $examId)
+                ->where('student_id', $studentId)
+                ->orderBy('begin_dt', 'asc')
                 ->get();
             if ($examObj->isEmpty()) {
                 //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
-                $objs = ExamPlan::where('exam_id',$examId)
-                    ->where('student_id',$studentId)
-                    ->orderBy('begin_dt','asc')
+                $objs = ExamPlan::where('exam_id', $examId)
+                    ->where('student_id', $studentId)
+                    ->orderBy('begin_dt', 'asc')
                     ->get();
                 if ($objs->isEmpty()) {
                     throw new \Exception('该学生的考试场次有误，请核实！');
@@ -318,8 +335,8 @@ class ExamQueue extends CommonModel
                 //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
                 //config('osce.begin_dt_buffer')为缓冲时间
                 foreach ($objs as $item) {
-                    if ($time > strtotime($item->begin_dt)-(config('osce.begin_dt_buffer') * 60)) {
-                        $item->begin_dt = date('Y-m-d H:i:s',$time + (config('osce.begin_dt_buffer') * 60));
+                    if ($time > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
+                        $item->begin_dt = date('Y-m-d H:i:s', $time + (config('osce.begin_dt_buffer') * 60));
                     }
 
                     $item->status = 0;

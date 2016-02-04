@@ -1110,6 +1110,16 @@ function examroom_assignment(){
                     layer.alert(res.message);
                 }
 
+            },
+            error:function(res){
+                var data = JSON.parse(res.responseText);
+                var str = '';
+
+                for(var i in data){
+                    str += data[i][0];
+                }
+
+                layer.alert(str);
             }
         });
         //location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
@@ -1662,8 +1672,15 @@ function exam_notice_add(){
                     $(".upload_list").append(str);
                 }
             },
-            error: function (data, status, e){
-                layer.alert('通讯失败!');
+            error:function(res){
+                var data = JSON.parse(res.responseText);
+                var str = '';
+
+                for(var i in data){
+                    str += data[i][0];
+                }
+
+                layer.alert(str);
             }
         });
     }) ;
@@ -2766,6 +2783,9 @@ function station_assignment(){
                     layer.alert(res.message);
                 }
 
+            },
+            error:function(){
+                layer.alert('通讯失败！');
             }
         });
         //location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
