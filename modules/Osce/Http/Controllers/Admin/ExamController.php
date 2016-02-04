@@ -393,8 +393,9 @@ class ExamController extends CommonController
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
 
+            $status=Exam::where('id','=',$exam_id)->select()->first()->status;
             //展示页面
-            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword]);
+            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withError($ex);
@@ -780,9 +781,11 @@ class ExamController extends CommonController
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
 
+        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
 
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,
+            'status'                => $status,
             'examRoomData'      => $serialnumberGroup,
             'examStationData'   => $examStationData,
             'getSelect'         => $this->getSelect()
@@ -1368,11 +1371,12 @@ class ExamController extends CommonController
 
 
         }
-
+       $status=Exam::where('id',$exam_id)->select('status')->first()->status;
         return view('osce::admin.exammanage.station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
             'stationData' => $stationData,
+            'status'      => $status,
             'getSelect'   => $this->getSelect()
         ]);
     }

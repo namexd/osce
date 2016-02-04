@@ -647,17 +647,17 @@ class InvigilatePadController extends CommonController
             'station_id.required' => '考站编号信息必须'
         ]);
         $nowTime = time();
-        $nowTimes = strtotime($nowTime);
+
+
 
         $studentId = $request->get('student_id');
         $stationId = $request->get('station_id');
         $ExamQueueModel = new ExamQueue();
-        $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTimes);
 
-
+        $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
         if ($AlterResult) {
             return response()->json(
-                $this->success_data($nowTimes, 1, '开始考试成功')
+                $this->success_data($nowTime, 1, '开始考试成功')
             );
         }
         return response()->json(
@@ -696,14 +696,11 @@ class InvigilatePadController extends CommonController
         $studentId = Input::get('student_id');
         $stationId = Input::get('station_id');
         $nowTime = time();
-        $nowTimes = strtotime($nowTime);
-
-
         $ExamQueueModel = new ExamQueue();
         $EndResult = $ExamQueueModel->EndExamAlterStatus($studentId, $stationId, $nowTime);
         if ($EndResult) {
             return response()->json(
-                $this->success_data($nowTimes, 1, '结束考试成功')
+                $this->success_data($nowTime, 1, '结束考试成功')
             );
         }
         return response()->json(

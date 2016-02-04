@@ -123,7 +123,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
-                                    <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right;{{$status==0?'':'display:none;'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                                     <table class="table table-bordered" id="examroom">
                                         <thead>
                                         <tr>
@@ -140,7 +140,7 @@
                                             <tr class="pid-{{$k1++}}">
                                                 <td>{{$key++}}</td>
                                                 <td width="498">
-                                                    <select class="form-control js-example-basic-multiple room-station" name="room[{{$k2++}}][]" multiple="multiple">
+                                                    <select class="form-control js-example-basic-multiple room-station" {{$status==0?'':'disabled'}} name="room[{{$k2++}}][]" multiple="multiple">
                                                         @foreach($item as $k => $value)
                                                             <option value="{{$value->station_id}}" selected="selected">{{$value->station_name}}</option>
                                                         @endforeach
@@ -148,9 +148,9 @@
                                                 </td>
                                                 <td class="necessary">{{$getSelect[$k+1]}}</td>
                                                 <td>
-                                                    <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
-                                                    <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)" {{$status==0?'':'style=display:none;'}}><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)" {{$status==0?'':'style=display:none;'}}><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)" {{$status==0?'':'style=display:none;'}}><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
                                                 </td>
                                             </tr>
                                         @empty
@@ -188,7 +188,7 @@
                                                 <td>{{$item[0]->station_name}}</td>
                                                 <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" name="form_data[{{$index}}][teacher_id]">
+                                                    <select class="form-control teacher-teach js-example-basic-multiple" {{$status==0?'':'disabled'}} name="form_data[{{$index}}][teacher_id]">
                                                         @foreach($item as $value)
                                                             @if($value->teacher_type == 1)
                                                                 <option value="{{$value->teacher_id}}" selected="selected">{{$value->teacher_name}}</option>
@@ -226,7 +226,7 @@
                                                         @endif
                                                     </div>
                                                 </td>
-                                                <td><a href="javascript:void(0)" class="invitaion-teacher" value="{{$item[0]->station_id}}">发起邀请</a></td>
+                                                <td><a href="javascript:void(0)" class="invitaion-teacher" value="{{$item[0]->station_id}}" {{$status==0?'':'style=display:none;'}}>发起邀请</a></td>
                                             </tr>
                                             <?php $index++?>
                                         @empty
@@ -241,7 +241,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-primary" type="submit" {{$status==0?'':'style=display:none;'}}>保存</button>
                                     <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
 
                                 </div>

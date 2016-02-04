@@ -27,8 +27,8 @@ return array (
       'protocol' => 'POP3',
       'port' => '25',
       'ssl' => 'flase',
-      'username' => 'qingshuruyonghuming',
-      'password' => 'qingshurumima',
+      'username' => 'j511002@163.com',
+      'password' => '5110021',
     ),
     'pm' => 
     array (
