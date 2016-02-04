@@ -158,7 +158,7 @@ class StudentWatchController extends CommonController
                         ->whereBetween('status', [1, 2])
                         ->count();
 
-                    $examtimes = date('H:i:s',(strtotime($nowQueue->begin_dt)+config('osce.begin_dt_buffer')*60));
+                    $examtimes = date('H:i',(strtotime($nowQueue->begin_dt)+config('osce.begin_dt_buffer')*60));
                     $examRoomName = $nowQueue->room_name;
                     $data['title'] = '考生等待信息';
                     $data['willStudents'] = $willStudents;
