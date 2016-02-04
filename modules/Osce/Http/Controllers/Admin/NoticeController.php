@@ -254,14 +254,6 @@ class NoticeController extends CommonController
             );
         }
     }
-
-
-
-
-
-    public  function   getMsg($id){
-
-}
 }
 
 
