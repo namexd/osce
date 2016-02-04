@@ -75,19 +75,8 @@ class CourseController extends CommonController
                     }
                 }
 
-                /*
-                 * 给考试对应的科目下拉数据
-                 */
-                $subjectIdList = StationTeacher::where('exam_id',$examId)
-                    ->groupBy('station_id')->get()->pluck('station_id');
+                $subjectList = $this->subjectDownlist($examId);
 
-                $stationList = Station::whereIn('id',$subjectIdList)->groupBy('subject_id')->get();
-
-                $subjectList = [];
-                foreach ($stationList as $item) {
-                    $subjectList[] = $item->subject;
-                }
-                $subjectList = collect($subjectList);
             }
             return view('osce::admin.statistics_query.subject_scores_list',
                 ['data'=>$subjectData,
@@ -223,12 +212,35 @@ class CourseController extends CommonController
         $examId = $request->input('exam_id',"");
 
         try {
-            $exam = new Exam();
-            $data = $exam->CourseControllerIndex($examId);
+            $subjectList = $this->subjectDownlist($examId);
 
-            return response()->json($this->success_data($data->toArray()));
+            return response()->json($this->success_data($subjectList->toArray()));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 出科目的下拉菜单
+     * @param $examId
+     * @return array|\Illuminate\Support\Collection
+     * @author Jiangzhiheng
+     */
+    private function subjectDownlist($examId)
+    {
+        /*
+         * 给考试对应的科目下拉数据
+         */
+        $subjectIdList = StationTeacher::where('exam_id', $examId)
+            ->groupBy('station_id')->get()->pluck('station_id');
+
+        $stationList = Station::whereIn('id', $subjectIdList)->groupBy('subject_id')->get();
+
+        $subjectList = [];
+        foreach ($stationList as $value) {
+            $subjectList[] = $value->subject;
+        }
+        $subjectList = collect($subjectList);
+        return $subjectList;
     }
 }
