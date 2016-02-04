@@ -121,6 +121,10 @@ class Common
     }
 
     public function relativeAdminUser($user){
+        if(DB::table('sys_user_role')->where('role_id','=',config('osce.adminRoleId',3))->where('user_id','=',$user->id)->count())
+        {
+            throw new \Exception('该管理员已经添加了');
+        }
         DB::table('sys_user_role')->insert([
             'role_id'=>config('osce.adminRoleId',3),
             'user_id'=>$user->id,
