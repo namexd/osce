@@ -317,6 +317,7 @@ class Student extends CommonModel
             'student.idcard as idCard',
             'student.mobile as mobile',
             'student.user_id as user_id',
+            'student.id as id',
         ]);
 
         $builder->orderBy('exam.begin_dt');
@@ -357,7 +358,7 @@ class Student extends CommonModel
                 'student.mobile as mobile',
                 'exam_order.status as status',
                 'exam_order.exam_screening_id as exam_screening_id',
-            ])->paginate($num);
+            ])->orderBy('exam_order.begin_dt')->paginate($num);
         return $builder;
     }
 

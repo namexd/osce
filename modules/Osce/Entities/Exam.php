@@ -407,7 +407,7 @@ class Exam extends CommonModel
             'student.user_id as user_id',
         ]);
 
-        $builder->orderBy('exam.begin_dt');
+        $builder->orderBy('exam.begin_dt','DESC');
         return $builder->paginate(config('msc.page_size'));
     }
 //查询今日考试
