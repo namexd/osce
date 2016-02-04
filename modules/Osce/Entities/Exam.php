@@ -536,10 +536,6 @@ class Exam extends CommonModel
                 })
             ->Join('subject','subject.id','=','station.subject_id');
 
-//        $builder = ExamResult::Join('station','station.id','=','exam_result.station_id')
-//            ->Join('subject','subject.id','=','station.subject_id')
-//            ->Join('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-//            ->Join('exam','exam_screening.exam_id','=','exam.id');
 
         if ($examId != "") {
             $builder = $builder->where('exam.id','=',$examId);

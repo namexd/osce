@@ -84,7 +84,8 @@ class StationVideo extends CommonModel
                 'vcr.port as port',
                 'vcr.channel as channel',
                 'station_video.begin_dt as anchor',
-                'exam_result.begin_dt as begin_dt'
+                'exam_result.begin_dt as begin_dt',
+                'exam_result.end_dt as end_dt'
             )
             ->get();
     }
