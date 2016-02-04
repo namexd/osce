@@ -310,7 +310,7 @@ class Student extends CommonModel
             $builder=$builder->where('student.name','like','%'.$formData['student_name'].'%');
         }
 
-        $builder->select([
+        $builder    =   $builder->select([
             'exam.name as exam_name',
             'student.name as student_name',
             'student.code as code',
@@ -320,9 +320,10 @@ class Student extends CommonModel
             'student.id as id',
         ]);
 
-        $builder->orderBy('exam.begin_dt');
+        $builder    =   $builder    ->  orderBy('exam.begin_dt','desc');
+        $builder    =   $builder    ->  orderBy('student.id','desc');
 
-        return $builder->paginate(config('msc.page_size'));
+        return $builder->paginate(config('osce.page_size'));
     }
 
 //    public  function studentList($watch_id){
