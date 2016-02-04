@@ -80,8 +80,7 @@ class StudentWatchController extends CommonController
             );
         }
         //  根据腕表id找到对应的考试场次和学生
-
-        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->select('student_id', 'exam_screening_id')->first();
+        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (!$watchStudent) {
             $data['title'] = '没有找到学生的腕表信息';
             return response()->json(
@@ -92,7 +91,6 @@ class StudentWatchController extends CommonController
 //        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
         $studentId = $watchStudent->student_id;
-        dd($studentId);
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
 
@@ -100,8 +98,6 @@ class StudentWatchController extends CommonController
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-
-        dump($examQueueCollect);
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
 
