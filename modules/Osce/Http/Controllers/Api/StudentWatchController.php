@@ -174,7 +174,7 @@ class StudentWatchController extends CommonController
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
-        $surplus =  strtotime($item->end_dt)-time();
+        $surplus = strtotime($item->end_dt)-time();
         $data=[
             'code'      =>  4,
             'title'     =>  '当前考站剩余时间',
@@ -187,6 +187,7 @@ class StudentWatchController extends CommonController
 
     private function getStatusThree($examQueueCollect){
         $nextExamQueue  =   '';
+        $examQueue      =   '';
         foreach($examQueueCollect as $examQueue)
         {
             if($examQueue->status!=3)
@@ -209,7 +210,15 @@ class StudentWatchController extends CommonController
 
         if(empty($nextExamQueue))
         {
-            //return $this->kaowanle();
+            if(!empty($examQueue))
+            {
+                return $this->getExamComplete($examQueue);
+            }
+            else
+            {
+                throw new \Exception('没有发现该考生相关排考计划');
+            }
+
         }
         else
         {
@@ -219,6 +228,18 @@ class StudentWatchController extends CommonController
                 'roomName' =>$nextExamQueue->room->name ,
             ];
         }
+        return $data;
+    }
+    private function  getExamComplete($examQueue){
+        $testresultModel = new TestResult();
+
+        $score =  $testresultModel->AcquireExam($examQueue->student_id);
+        $data = [
+            'code'  =>  6,
+            'title' =>'考试完成，最总成绩',
+            'score' => $score,
+        ];
+
         return $data;
     }
 
