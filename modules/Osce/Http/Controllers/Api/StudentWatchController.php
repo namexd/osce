@@ -259,22 +259,34 @@ class StudentWatchController extends CommonController
         $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
-        
-          //判断预计考试时间
-          $examtimes = date('H:i:s', (strtotime($item->begin_dt)));
 
-            //判断进入如的考场教室名字
+        //判断预计考试时间
+        $examtimes = date('H:i:s', (strtotime($item->begin_dt)));
+        //判断进入如的考场教室名字
         $examRoomName = $item->room->name;
-           $data =[
-               'code'=> 1,
-               'title'=> '考生等待信息',
-               'willStudents'=> $willStudents,
-               'estTime'=> $examtimes,
-               'willRoomName'=> $examRoomName,
+        if($willStudents>0){
 
-           ];
+            $data =[
+                'code'=> 1,
+                'title'=> '考生等待信息',
+                'willStudents'=> $willStudents,
+                'estTime'=> $examtimes,
+                'willRoomName'=> $examRoomName,
+
+            ];
+        }else{
+            $data =[
+                'code'=> 3,
+                'title'=> '请进入考试教室',
+                'willStudents'=> '',
+                'estTime'=> '',
+                'willRoomName'=> $examRoomName,
+
+            ];
+        }
         return $data;
    }
+
 
 
 
