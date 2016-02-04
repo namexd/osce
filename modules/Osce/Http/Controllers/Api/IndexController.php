@@ -557,8 +557,15 @@ class IndexController extends CommonController
      */
     public function getExamList(){
         $exam=new Exam();
-        $examList=$exam->getTodayList();
+        $status=0;
+        $examList=$exam->getTodayList($status);
         if(count($examList)){
+            foreach($examList as $item){
+                 if($item->status==1){
+                     $status=1;
+                     $examList=$exam->getTodayList($status);
+                 }
+            }
             return response()->json(
                 $this->success_rows(1,'success',count($examList),$pagesize=1,count($examList),$examList)
             );

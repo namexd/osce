@@ -411,7 +411,7 @@ class Exam extends CommonModel
         return $builder->paginate(config('msc.page_size'));
     }
 //查询今日考试
-    public function getTodayList(){
+    public function getTodayList($status=''){
           $time=time();
           $builder=$this->select(DB::raw(
               implode(',',[
@@ -420,6 +420,7 @@ class Exam extends CommonModel
                   $this->table.'.begin_dt as begin_dt',
                   $this->table.'.end_dt as end_dt',
                   $this->table.'.description as description',
+                  $this->table.'.status as status',
               ])
             )
           );
@@ -435,6 +436,9 @@ class Exam extends CommonModel
                  $time
              ]
          );
+        if($status){
+          $builder=$builder->where('status','=',1)->take(1);
+        }
         $data=$builder->get();
 
         return $data;
