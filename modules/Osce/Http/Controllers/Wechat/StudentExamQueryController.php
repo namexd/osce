@@ -53,6 +53,7 @@ class StudentExamQueryController extends CommonController
                 // 根据老师id找到老师所监考得考试考站
                 $examModel = new Exam();
                 $ExamList = $examModel->getInvigilateTeacher($user->id);
+
                 return view('osce::wechat.resultquery.examination_list_teacher', ['ExamList' => $ExamList]);
             }
 
@@ -103,6 +104,7 @@ class StudentExamQueryController extends CommonController
         try {
             //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
+
 
             //根据考试id找到对应的考试场次
             $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
@@ -287,20 +289,23 @@ class StudentExamQueryController extends CommonController
         ]);
         $examId = $request->get('exam_id');
         $stationId = $request->get('station_id');
-
-        //根据考站找到对应的科目
         try {
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
-            $subjectId = Station::find($stationId)->subject_id;
 
+            //根据考站找到对应的科目
+            $subjectId = Station::find($stationId)->subject_id;
             $subjectName = Subject::find($subjectId)->title;
             //调用科目成绩统计查询的接口方法
-            $subject = new Subject();
+            $subjectModel = new Subject();
             $studentModel = new Student();
             //找到按科目为基础的所有分数还有总人数
-            $avg = $subject->CourseControllerAvg($examId, $subjectId);
+            $avg = $subjectModel->CourseControllerAvg($examId, $subjectId);
             //如果avg不为空
-            $item = [];
+            $item = [
+                'exam_begin_dt' => $examTime->begin_dt,
+                'exam_end_dt' => $examTime->end_dt,
+                'subject_name' => $subjectName,
+            ];
             if (!empty($avg)) {
 
                 if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
@@ -324,22 +329,19 @@ class StudentExamQueryController extends CommonController
                 //调用查看总成绩的方法
                 $tesresultModel = new TestResult();
                 $StudentScores = $tesresultModel->AcquireExam($studentId->student_id);
-                $item[$studentId->student_name] = $StudentScores;
+//                $item[$studentId->student_name] = $StudentScores;
                 $subjectData[] = [
-                    'avg_score' => $item['avg_score'],
-                    'avg_time' => $item['avg_time'],
-                    'avg_total' => $item['avg_total'],
                     'student_name' => $studentId->student_name,
-                    'subject_name' => $subjectName,
                     'student_id' => $studentId->student_id,
                     'exam_id' => $examId,
                     'Scores' => $StudentScores,
-                    'exam_begin_dt' => $examTime->begin_dt,
-                    'exam_end_dt' => $examTime->end_dt,
+
                 ];
             }
+
+//            dd($item,$subjectData);
             return response()->json(
-                $this->success_data($subjectData, 1, '科目数据传送成功')
+                $this->success_data(['subjectData'=>$subjectData,'item'=>$item], 1, '科目数据传送成功')
             );
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
