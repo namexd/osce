@@ -48,7 +48,11 @@
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                        @if($item->status==0)
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                        @else
+                        
+                        @endif
                     </td>
                 </tr>
                 @endforeach

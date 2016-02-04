@@ -149,27 +149,23 @@ class CaseController extends CommonController
     {
         //验证,略过
         $this->validate($request, [
+            'id' => 'required|integer',
             'name' => 'required'
         ],[
+            'id.required'     =>  '病例id不能为空',
             'name.required'     =>  '病例名称不能为空'
         ]);
 
+        try {
         $id = $request->input('id');
         $formData = $request->only('name', 'description');
 
-        DB::connection('osce_mis')->beginTransaction();
-        $case = CaseModel::where('name', str_replace(' ','',$formData['name']))->where('id','<>',$id)->first();
-        if ($case) {
-            DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withErrors('该病例名称已存在!');
-        }
-        $result = $caseModel->updateData($id, $formData);
-        if ($result != true) {
-            DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withInput()->withErrors('数据未能成功修改,请重试!');
-        }
-        DB::connection('osce_mis')->commit();
+        $caseModel->updateCase($id, $formData);
+
         return redirect()->route('osce.admin.case.getCaseList');
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**

@@ -78,21 +78,21 @@ class CourseController extends CommonController
                 /*
                  * 给考试对应的科目下拉数据
                  */
-                $subJectIdList = StationTeacher::where('exam_id',$examId)
+                $subjectIdList = StationTeacher::where('exam_id',$examId)
                     ->groupBy('station_id')->get()->pluck('station_id');
 
-                $stationList = Station::whereIn('id',$subJectIdList)->get();
+                $stationList = Station::whereIn('id',$subjectIdList)->groupBy('subject_id')->get();
 
-                $subJectList = [];
+                $subjectList = [];
                 foreach ($stationList as $item) {
-                    $subJectList[] = $item->subject;
+                    $subjectList[] = $item->subject;
                 }
-                $subJectList = collect($subJectList);
+                $subjectList = collect($subjectList);
             }
             return view('osce::admin.statistics_query.subject_scores_list',
                 ['data'=>$subjectData,
                     'examDownlist'=>$examDownlist,
-                    'subjectDownlist'=>$subJectList,
+                    'subjectDownlist'=>$subjectList,
                     'exam_id'=>$examId,
                     'subject_id'=>$subjectId
                 ]);

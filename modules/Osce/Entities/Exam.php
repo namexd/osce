@@ -21,6 +21,12 @@ class Exam extends CommonModel
     protected $hidden = [];
     protected $fillable = ['code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id', 'description', 'sequence_cate', 'sequence_mode', 'rules', 'address'];
 
+
+    protected $statuValues  =   [
+        0   =>  '未开考',
+        1   =>  '正在考试',
+        2   =>  '考试结束',
+    ];
     /**
      * 考试与考站的关联
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -92,7 +98,8 @@ class Exam extends CommonModel
                 'begin_dt',
                 'end_dt',
                 'description',
-                'total'
+                'total',
+                'status'
             ])->orderBy('begin_dt', 'desc');
 
             return $builder->paginate(10);
