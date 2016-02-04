@@ -17,7 +17,7 @@
         $('.fa-trash-o').click(function(){
             var thisElement = $(this)
             $.ajax({
-                type:'post',
+                type:'get',
                 url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
                 data:{id:thisElement.parent().parent().attr('value')},
                 success:function(res){
