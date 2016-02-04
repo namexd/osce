@@ -174,7 +174,7 @@ class StudentWatchController extends CommonController
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
-        $surplus = strtotime($item->end_dt) - strtotime($item->begin_dt);
+        $surplus = time() - strtotime($item->end_dt);
         $data=[
             'code'      =>  4,
             'title'     =>  '当前考站剩余时间',
