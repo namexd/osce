@@ -134,7 +134,7 @@ class StudentWatchController extends CommonController
         {
             return $this->getStatusThree($examQueueCollect);
         }
-        //return $this->getStatusWaitExam($examQueueCollect);
+        return $this->getStatusWaitExam($examQueueCollect);
 
     }
     //判断腕表提醒状态为1时
@@ -259,6 +259,7 @@ class StudentWatchController extends CommonController
         $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
+        
           //判断预计考试时间
           $examtimes = date('H:i:s', (strtotime($item->begin_dt)));
 
