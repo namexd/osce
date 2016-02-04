@@ -180,6 +180,7 @@ class RoomController extends CommonController
 
         //TODO:zhoufuxiang，查询没有被其他考场关联的摄像机
         $vcr = Vcr::where('used',0)
+            ->whereNotIn('status',[2,3])
             ->select(['id', 'name'])->get();     //关联摄像机
 
 
@@ -213,6 +214,7 @@ class RoomController extends CommonController
                 'type'          => 'required',
             ],[
                 'name.unique'   =>  '名称必须唯一',
+                'vcr_id.required'=> '摄像头id必须输入'
             ]);
             //TODO   表单内容变化没有提交nfc字段
             $formData = $request->only('name', 'address', 'code', 'description');

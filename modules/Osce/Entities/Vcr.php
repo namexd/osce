@@ -200,7 +200,7 @@ class Vcr extends CommonModel implements MachineInterface
             $modelVcr = AreaVcr::where('area_id', $id)->first();
         }
 
-        $vcr = Vcr::where('status', '<', 2)
+        $vcr = Vcr::whereNotIn('status',[2,3])
             ->where('used',0)
             ->orWhere('id', $modelVcr->vcr_id)
             ->select(['id', 'name'])->get();
