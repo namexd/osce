@@ -652,7 +652,7 @@ class InvigilatePadController extends CommonController
         $studentId = $request->get('student_id');
         $stationId = $request->get('station_id');
         $ExamQueueModel = new ExamQueue();
-        $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
+        $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTimes);
 
 
         if ($AlterResult) {

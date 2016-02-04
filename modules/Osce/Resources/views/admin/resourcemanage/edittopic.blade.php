@@ -77,7 +77,7 @@
                                             </thead>
                                             <tbody index="{{$prointNum-1}}">
                                             @forelse($list as $data)
-                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}" current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child='.$data->sort.''}}>
+                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}"  current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child='.$data->sort.''}}>
                                                     <td>{{$data->pid==0? $data->sort:$data->parent->sort.'-'.$data->sort}}</td>
                                                     <td>
                                                         <div class="form-group">
