@@ -287,10 +287,12 @@ class StudentExamQueryController extends CommonController
         ]);
         $examId = $request->get('exam_id');
         $stationId = $request->get('station_id');
+
         //根据考站找到对应的科目
         try {
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
             $subjectId = Station::find($stationId)->subject_id;
+
             $subjectName = Subject::find($subjectId)->title;
             //调用科目成绩统计查询的接口方法
             $subject = new Subject();
