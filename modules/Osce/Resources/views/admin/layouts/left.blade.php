@@ -49,7 +49,7 @@
                         <div class="logo-element">
                         </div>
                     </li>
-                    @if($role_id==config('superRoleId'))
+                    @if($role_id==config('config.superRoleId'))
                         <li class="active">
                             <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
