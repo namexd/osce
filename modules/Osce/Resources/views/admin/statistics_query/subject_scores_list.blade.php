@@ -69,6 +69,7 @@ $(function(){
                             <label class="pull-left exam-name">考试:</label>
                             <div class="pull-left exam-list">
                                 <select name="exam_id" id="exam-id" class="form-control" style="width: 250px;">
+                                    <option value="">全部考试</option>
                                     @forelse($examDownlist as $exam)
                                         <option value="{{$exam->id}}" {{$exam_id==$exam->id?'selected':''}}>{{$exam->name}}</option>
                                     @empty
