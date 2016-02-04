@@ -17,7 +17,7 @@
         $('.fa-trash-o').click(function(){
             var thisElement = $(this)
             $.ajax({
-                type:'post',
+                type:'get',
                 url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
                 data:{id:thisElement.parent().parent().attr('value')},
                 success:function(res){
@@ -25,7 +25,7 @@
                         layer.alert(res.message);
                     }else{
                         layer.alert('删除成功！',function(its){
-                            location.href = '{{route("osce.admin.notice.getDelNotice")}}';
+                            location.href = '{{route("osce.admin.notice.getList")}}';
                             layer.close(its);
                         });
                     }

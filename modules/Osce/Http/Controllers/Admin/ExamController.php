@@ -1774,22 +1774,26 @@ class ExamController extends CommonController
        $this->validate($request,[
            'exam_id' => 'required',
            'exam_sequence' => 'required',
-           'id' => 'required',
+           'id' => 'sometimes',
        ]);
        $examId=$request->get('exam_id');
        $exam_sequence=$request->get('exam_sequence');
        $studentId=$request->get('id');
 //       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
        $id=Student::where('exam_id',$examId)->where('exam_sequence',$exam_sequence)->select('id')->id;
-//        if(empty($id)){
-//            $result = Student::where('exam_id',$examId)->where('exam_sequence', $exam_sequence)->first();
-//        }else{
-//            $result = Student::where('exam_id',$examId)->where('id', '<>', $id)->first();
-//        }
-        if($id!=$studentId){
-            return json_encode(['valid' =>false]);
+        if(empty($studentId)){
+            if(!$id){
+                return json_encode(['valid' =>false]);
+            }else{
+                return json_encode(['valid' =>true]);
+            }
         }else{
-            return json_encode(['valid' =>true]);
+            if($id!=$studentId){
+                return json_encode(['valid' =>false]);
+            }else{
+                return json_encode(['valid' =>true]);
+            }
         }
+
     }
 }
