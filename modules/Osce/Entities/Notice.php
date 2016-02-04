@@ -366,7 +366,7 @@ class Notice extends CommonModel
             $content[]  =   '<a href="'.$url.'">查看详情</a>\n';
             $sender ->  send(array_pluck($to,'email'),implode('',$content));
         } catch (\Exception $ex) {
-            \Log::info('邮件通知发送失败');
+            \Log::info($ex->getMessage());
         }
     }
 
