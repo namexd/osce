@@ -1759,4 +1759,22 @@ class ExamController extends CommonController
 
         return view('osce::admin.exammanage.examinee_query_detail', ['item' => $student]);
     }
+
+    /**
+     * 判断准考证号是否已经存在
+     * @url POST /osce/admin/exam/postExamSequenceUnique
+     * @author zhouchong <zhouchong@misrobot.com>     *
+     */
+    public function postExamSequenceUnique(Request $request){
+       $this->validate($request,[
+           'exam_id' => 'required'
+       ]);
+       $examId=$request->get('exam_id');
+       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
+        if($examSequence){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
 }
