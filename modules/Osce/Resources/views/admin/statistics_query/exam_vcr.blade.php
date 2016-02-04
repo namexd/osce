@@ -2,7 +2,6 @@
 
 @section('only_css')
     <style>
-
         ul{
             margin: 0;
             padding: 0;
@@ -17,6 +16,18 @@
         }
         .video{
             padding-left: 50px;
+            position: relative;
+        }
+        .progress{
+            cursor: pointer;
+            margin-bottom: 50px;
+        }
+        .resume,.pause{
+            position: absolute;
+            bottom:0;
+        }
+        .pause{
+            display: none;
         }
     </style>
 @stop
@@ -26,7 +37,15 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'ip':'','port':'','username':'','password':'','channel':''}" />
+    @if($data->count() != 0)
+    <input type="hidden" id="parameter" value="{'ip':'{{$data[0]['ip']}}',
+    'port':'{{$data[0]['port']}}','username':'{{$data[0]['username']}}',
+    'password':'{{$data[0]['password']}}','channel':'{{$data[0]['channel']}}',
+    'starttime':'{{$data[0]['begin_dt']}}','endtime':'{{$data[0]['end_dt']}}'}" />
+    @else
+    <input type="hidden" id="parameter" value="{'ip':'',
+    'port':'','username':'','password':'','channel':''}" />
+    @endif
     <div class="wrapper-content">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -55,8 +74,12 @@
 
                         </div>
                     </div>
-                    <input class="pause" value="暂停"  type="button">
-                    <input class="resume" value="恢复"  type="button">
+                    <button type="button" class="btn btn-default btn-md pause">
+                        <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-md resume">
+                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                    </button>
                 </div>
             </div>
         </div>

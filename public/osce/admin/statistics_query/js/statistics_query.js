@@ -281,12 +281,12 @@ var courseObserveDetail = (function(mod){
             });
         });
     }
-    mod.StartPlayback=function(g_iWndIndex,szIP,szStartTime,szEndTime) {
+    mod.StartPlayback=function(g_iWndIndex,szIP,szStartTime,szEndTime,iChannelID) {
 
         var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
         //szIP = $("#ip").val(),
             bZeroChannel = false,
-            iChannelID = 2,
+            //iChannelID = 2,
             //szStartTime = "2016-01-30 10:33:23",
             //szEndTime = "2016-01-30 11:33:23",
             szInfo = "",
@@ -342,7 +342,13 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     //进度条板块变量
     var timer=null;
-    var allTime=3600;//结束时间减去开始时间
+    var end=new Date(pars.endtime.split(" ")[0].split("-")[0],pars.endtime.split(" ")[0].split("-")[1]-1,pars.endtime.split(" ")[0].split("-")[2],
+        pars.endtime.split(" ")[1].split(":")[0], pars.endtime.split(" ")[1].split(":")[1], pars.endtime.split(" ")[1].split(":")[2]);
+    end=Date.parse(end)/1000;
+    var start=new Date(pars.starttime.split(" ")[0].split("-")[0],pars.starttime.split(" ")[0].split("-")[1]-1,pars.starttime.split(" ")[0].split("-")[2],
+        pars.starttime.split(" ")[1].split(":")[0], pars.starttime.split(" ")[1].split(":")[1], pars.starttime.split(" ")[1].split(":")[2]);
+    start=Date.parse(start)/1000;
+    var allTime=end-start;//结束时间减去开始时间
     var step=allTime/600;//代表几秒向右前进1px;
     //初始化
     courseObserveDetail.initVideo(600,300,1,"divPlugin",'');
@@ -351,13 +357,15 @@ $(function(){
     //切换视频
     //courseObserveDetail.changeVideo(2);
     //开始回放
-    courseObserveDetail.StartPlayback(0,pars.ip,"2016-01-30 10:33:23","2016-01-30 11:33:23");
+    courseObserveDetail.StartPlayback(0,pars.ip,pars.starttime,pars.endtime,pars.channel);
     //进度条
     progressMove();
     //暂停
     clickPause(0);
     //恢复
     clickResume(0);
+    //默认打开声音
+    clickOpenSound();
     //停止
     courseObserveDetail.stopPlay(0);
     //数据实时更新
@@ -373,7 +381,7 @@ $(function(){
             clearTimeout(timer);
             i=0;
             $(".progress-bar").css("width",0);
-            courseObserveDetail.StartPlayback(0,'192.168.1.250',"2016-01-30 10:33:23","2016-01-30 11:33:23");
+            courseObserveDetail.StartPlayback(0,pars.ip,pars.starttime,pars.endtime,pars.channel);
 
             var oWndInfo = WebVideoCtrl.I_GetWindowStatus(0),
                 szInfo   = "";
@@ -416,7 +424,9 @@ $(function(){
     }
     // 暂停
     function clickPause(g_iWndIndex) {
-        $(".pause").click(function(){
+        $(".resume").click(function(){
+            $(".pause").show();
+            $(".resume").hide();
             var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
                 szInfo = "";
 
@@ -454,7 +464,9 @@ $(function(){
     }
 // 恢复
     function clickResume(g_iWndIndex){
-        $(".resume").click(function(){
+        $(".pause").click(function(){
+            $(".pause").hide();
+            $(".resume").show();
             var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
                 szInfo = "";
 
@@ -474,13 +486,39 @@ $(function(){
         res<10?res='0'+res:res=res;
         return res;
     }
+    // 打开声音
+    function clickOpenSound(){
+        var szInfo="";
+        setTimeout(function(){
+            var iRet = WebVideoCtrl.I_OpenSound();
+
+            if (0 == iRet) {
+                szInfo = "打开声音成功！";
+            } else {
+                szInfo = "打开声音失败！";
+            }
+        },2000);
+        //alert( szInfo);
+    }
+    // 关闭声音
+    function clickCloseSound() {
+        var szInfo = "";
+            var iRet = WebVideoCtrl.I_CloseSound();
+            if (0 == iRet) {
+                szInfo = "关闭声音成功！";
+            } else {
+                szInfo = "关闭声音失败！";
+            }
+            //alert(szInfo);
+    }
     //获取点击相对位置
     $("#progress").click(function(e){
         var left=e.clientX-($("#progress").offset().left);
         var current=progressMove();
         $(".progress-bar").css("width",left+"px");
         //alert(left*step);
-        var dateTime=new Date(2016,0,30,10,33,23);
+        var dateTime=new Date(pars.starttime.split(" ")[0].split("-")[0],pars.starttime.split(" ")[0].split("-")[1]-1,pars.starttime.split(" ")[0].split("-")[2],
+            pars.starttime.split(" ")[1].split(":")[0], pars.starttime.split(" ")[1].split(":")[1], pars.starttime.split(" ")[1].split(":")[2]);
         var seconds =   Date.parse(dateTime);
         //alert(seconds+left*step*1000);
         seconds     =   seconds+left*step*1000;
@@ -497,9 +535,18 @@ $(function(){
         var s=dat.getSeconds();
         s=times(s);
         var newstart=year+"-"+month+"-"+days+" "+hour+":"+min+":"+s;
-        courseObserveDetail.StartPlayback(0,'192.168.1.250',newstart,"2016-01-30 11:33:23");
+        courseObserveDetail.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
     })
-
+    //选择标记点跳转视频
+    $(".points li").click(function(){
+        var point=$(this).find("span").text();
+        var pointTime=new Date(point.split(" ")[0].split("-")[0],point.split(" ")[0].split("-")[1]-1,point.split(" ")[0].split("-")[2],
+            point.split(" ")[1].split(":")[0], point.split(" ")[1].split(":")[1], point.split(" ")[1].split(":")[2]);
+        pointTime=Date.parse(pointTime);
+        var move=(pointTime/1000-start)/step;//点击锚点时进度条应跳的位置
+        $(".progress-bar").css("width",move+"px");
+        courseObserveDetail.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
+    })
 })
 
 
