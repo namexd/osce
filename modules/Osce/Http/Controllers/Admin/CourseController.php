@@ -12,6 +12,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -36,7 +38,9 @@ class CourseController extends CommonController
             //考试的下拉菜单
             $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
 
-            //获取近段时间进行的考试
+            /*
+             * 获取近段时间进行的考试
+             */
             $examObj = Exam::where('status','<>',0)->first();
             if (is_null($examObj)) {
                 $subjectData = [];
@@ -49,7 +53,6 @@ class CourseController extends CommonController
                 $subject = new Subject();
                 $exam = new Exam();
                 $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
-//            dd($subjectData);
                 foreach ($subjectData as &$item) {
                     //找到按科目为基础的所有分数还有总人数
                     $avg = $subject->CourseControllerAvg(
@@ -71,10 +74,25 @@ class CourseController extends CommonController
                         }
                     }
                 }
+
+                /*
+                 * 给考试对应的科目下拉数据
+                 */
+                $subJectIdList = StationTeacher::where('exam_id',$examId)
+                    ->groupBy('station_id')->get()->pluck('station_id');
+
+                $stationList = Station::whereIn('id',$subJectIdList)->get();
+
+                $subJectList = [];
+                foreach ($stationList as $item) {
+                    $subJectList[] = $item->subject;
+                }
+                $subJectList = collect($subJectList);
             }
             return view('osce::admin.statistics_query.subject_scores_list',
                 ['data'=>$subjectData,
                     'examDownlist'=>$examDownlist,
+                    'subjectDownlist'=>$subJectList,
                     'exam_id'=>$examId,
                     'subject_id'=>$subjectId
                 ]);
