@@ -638,7 +638,12 @@ class ExamController extends CommonController
         try {
             //获得上传的数据
             $exam_id= $id;
-            $data = Common::getExclData($request, 'student');
+            $data   = Common::getExclData($request, 'student');
+            $exam   =   Exam::find($exam_id);
+            if($exam->status!=0)
+            {
+                throw new \Exception('此考试当前状态下不允许新增');
+            }
             //去掉sheet
             $studentList = array_shift($data);
             //将中文表头转为英文
@@ -1758,5 +1763,23 @@ class ExamController extends CommonController
         $student    =   Student::find($id);
 
         return view('osce::admin.exammanage.examinee_query_detail', ['item' => $student]);
+    }
+
+    /**
+     * 判断准考证号是否已经存在
+     * @url POST /osce/admin/exam/postExamSequenceUnique
+     * @author zhouchong <zhouchong@misrobot.com>     *
+     */
+    public function postExamSequenceUnique(Request $request){
+       $this->validate($request,[
+           'exam_id' => 'required'
+       ]);
+       $examId=$request->get('exam_id');
+       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
+        if($examSequence){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
     }
 }
