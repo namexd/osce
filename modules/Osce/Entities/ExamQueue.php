@@ -116,36 +116,37 @@ class ExamQueue extends CommonModel
      */
     public function StudentExamQueue($studentId)
     {
-        $todayStart = date('Y-m-d 00:00:00');
-        $todayEnd = date('Y-m-d 23:59:59');
-        return ExamQueue::leftJoin('room', function ($join) {
-            $join->on('room.id', '=', 'exam_queue.room_id');
-
-        })->leftJoin('station', function ($join) {
-
-            $join->on('station.id', '=', 'exam_queue.station_id');
-
-        })->leftJoin('student', function ($join) {
-
-            $join->on('student.id', '=', 'exam_queue.student_id');
-        })
-            ->where($this->table . '.student_id', '=', $studentId)
-            ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
-         AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
-//            ->whereIn('exam_queue.status', [1, 2])
-            ->orderBy('begin_dt', 'asc')
-            ->select([
-                'room.name as room_name',
-                'student.name as name',
-                'exam_queue.begin_dt as begin_dt',
-                'exam_queue.end_dt as end_dt',
-                'exam_queue.room_id as room_id',
-                'exam_queue.station_id as station_id',
-                'exam_queue.status as status',
-                'exam_queue.id as id',
-                'station.mins as mins',
-                'exam_queue.exam_id as exam_id'
-            ])->get();
+//        $todayStart = date('Y-m-d 00:00:00');
+//        $todayEnd = date('Y-m-d 23:59:59');
+//        return ExamQueue::leftJoin('room', function ($join) {
+//            $join->on('room.id', '=', 'exam_queue.room_id');
+//
+//        })->leftJoin('station', function ($join) {
+//
+//            $join->on('station.id', '=', 'exam_queue.station_id');
+//
+//        })->leftJoin('student', function ($join) {
+//
+//            $join->on('student.id', '=', 'exam_queue.student_id');
+//        })
+//            ->where($this->table . '.student_id', '=', $studentId)
+//            ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
+//         AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+////            ->whereIn('exam_queue.status', [1, 2])
+//            ->orderBy('begin_dt', 'asc')
+//            ->select([
+//                'room.name as room_name',
+//                'student.name as name',
+//                'exam_queue.begin_dt as begin_dt',
+//                'exam_queue.end_dt as end_dt',
+//                'exam_queue.room_id as room_id',
+//                'exam_queue.station_id as station_id',
+//                'exam_queue.status as status',
+//                'exam_queue.id as id',
+//                'station.mins as mins',
+//                'exam_queue.exam_id as exam_id'
+//            ])->get();
+        return $this->where('student_id','=',$studentId)->get();
     }
 
 
