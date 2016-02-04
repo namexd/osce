@@ -93,6 +93,7 @@
                         <th>性别</th>
                         <th>学号</th>
                         <th>身份证号</th>
+                        <th>准考证号</th>
                         <th>联系电话</th>
                         <th>操作</th>
                     </tr>
@@ -104,6 +105,7 @@
                             <td>{{$item->userInfo->gender}}</td>
                             <td>{{$item->code}}</td>
                             <td>{{$item->idcard}}</td>
+                            <td>{{$item->exam_sequence}}</td>
                             <td>{{$item->mobile}}</td>
                             <td>
                                 <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>

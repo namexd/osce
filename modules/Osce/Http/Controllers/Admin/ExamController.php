@@ -491,13 +491,14 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'code'          =>  'required',
             'images_path'   =>  'required',
-
+            'exam_sequence' =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'code.required'         =>  '学号必填',
             'images_path.required'  =>  '请上传照片',
+            'exam_sequence.required'=>  '准考证号必填'
         ]);
 
         //考试id
@@ -512,6 +513,7 @@ class ExamController extends CommonController
             'avator'        => $request  ->  get('images_path')[0],//照片
             'email'         => $request  ->  get('email'),         //邮箱
             'description'   => $request  ->  get('description'),   //备注
+            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
         ];
 
         try{
@@ -532,7 +534,7 @@ class ExamController extends CommonController
         ]);
 
         $id =   $request    ->  get('id');
-        $student    =   Student::find($id);
+        $student    =   Student::findOrFail($id);
 
         return view('osce::admin.exammanage.examinee_edit', ['item' => $student]);
     }
@@ -547,11 +549,13 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'description'   =>  'sometimes',
             'images_path'   =>  'required',
+            'exam_sequence' =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'images_path.required'  =>  '请上传照片',
+            'exam_sequence.required'=>  '准考证号必填'
         ]);
         $id =   $request->get('id');
         $student    =   Student::find($id);
@@ -563,6 +567,7 @@ class ExamController extends CommonController
             'code'          =>  $request->get('code'),
             'avator'        =>  $images[0],
             'description'   =>  $request->get('description'),
+            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
         ];
 
         try{
@@ -1405,12 +1410,15 @@ class ExamController extends CommonController
             $room = $request->get('room');
             $formData = $request->get('form_data'); //所有的考站数据
 
-            Exam::findOrFail($examId);
             //判断是否有本场考试
             //查看是新建还是编辑
             if (count(ExamFlowStation::where('exam_id',$examId)->get()) == 0) {  //若是为真，就说明是添加
                 $examFlowStation -> createExamAssignment($examId, $room, $formData);
             } else { //否则就是编辑
+                //如果考试已经开始或者是结束了，就不能允许继续进行了
+                if (Exam::findOrFail($examId)->status != 0) {
+                    throw new \Exception('当场考试已经开始或已经考完，无法再修改！');
+                }
                 $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
@@ -1715,5 +1723,36 @@ class ExamController extends CommonController
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     *考生查询详情页
+     * @method GET
+     * @url /exam/check-student
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getCheckStudent(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+        ]);
+
+        $id =   $request    ->  get('id');
+        $student    =   Student::find($id);
+
+        return view('osce::admin.exammanage.examinee_query_detail', ['item' => $student]);
     }
 }

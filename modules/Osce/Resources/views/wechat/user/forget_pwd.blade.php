@@ -1,4 +1,4 @@
-@extends('msc::wechat.layouts.admin')
+@extends('osce::wechat.layouts.admin')
 @section('only_head_css')
     <link href="{{asset('msc/wechat/user/css/commons.css')}}"  rel="stylesheet"/>
     <style>

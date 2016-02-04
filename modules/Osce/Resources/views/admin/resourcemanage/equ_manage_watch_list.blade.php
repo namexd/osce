@@ -76,7 +76,7 @@
                 <h5 class="title-label">使用记录</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a href="javascript:history.back(-1)" class="btn btn-outline btn-default" style="float: right;">返回</a>
+                <a href="{{route('osce.admin.machine.getMachineList')}}?cate_id=3" class="btn btn-outline btn-default" style="float: right;">返回</a>
             </div>
         </div>
         <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.machine.getWatchLogList')}}" method="get">

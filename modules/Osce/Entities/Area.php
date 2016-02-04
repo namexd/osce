@@ -61,7 +61,7 @@ class Area extends CommonModel
                 }
                 foreach ($areaVcrs as $areaVcr) {
                     $vcr = Vcr::findOrFail($areaVcr->vcr_id);
-                    $vcr->status = 0;
+                    $vcr->used = 0;
                     if (!$vcr->save()) {
                         throw new \Exception('更新摄像机状态失败！');
                     }

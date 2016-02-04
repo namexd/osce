@@ -144,10 +144,6 @@ class IndexController extends CommonController
         }
         $screen_id=ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
         $exam_screen_id=$screen_id->exam_screening_id;
-        $result = ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
-            if (!$result) {
-                return \Response::json(array('code' => 2));
-            }
         $result = Watch::where('id', $id)->update(['status' => 1]);
         if ($result) {
             $action = '绑定';
@@ -160,6 +156,13 @@ class IndexController extends CommonController
             );
             $watchModel = new WatchLog();
             $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
+            $id=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
+            if($id){
+                ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
+            }else{
+                ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
+
+            }
             ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
             Exam::where('id',$exam_id)->update(['status'=>1]);
             return \Response::json(array('code' => 1));
@@ -261,6 +264,7 @@ class IndexController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->unwrapRecord($data);
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
             }
             return \Response::json(array('code'=>1));
         }else{
@@ -356,6 +360,7 @@ class IndexController extends CommonController
         if($id){
             return \Response::json(array('code'=>3));
         }
+
         try{
             $watch=Watch::create([
                 'code'          =>  $request->get('code'),
@@ -474,10 +479,9 @@ class IndexController extends CommonController
                 }
             }
         }
-        $count=Watch::where('code'   ,'=', $request->get('code'))
+        $count=Watch::where('code'   ,'=', $code)
             ->update([
                 'name'          =>  $request    ->  get('name'),
-                'code'          =>  $request    ->  get('code'),
                 'factory'       =>  $request    ->  get('factory'),
                 'sp'            =>  $request    ->  get('sp'),
                 'description'   =>  $request    ->  get('description'),
@@ -649,7 +653,7 @@ class IndexController extends CommonController
                         'status' => $v['status'],
                         'name' => $v['name'],
                         'code' => $v['code'],
-                        'nfc' => $itm['nfc'],
+                        'nfc' => $v['nfc'],
                         'studentName' => $studentName,
                     ];
                 } else {

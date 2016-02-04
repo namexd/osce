@@ -137,12 +137,14 @@ class AuthController extends BaseController
             }
         }
 
+        $name=SysRoles::where('id',$id)->select('name')->first()->name;
 
         $data = [
             'PermissionIdArr'=>$PermissionIdArr,
             'MenusList'=>$MenusList,
             'FunctionsList'=>$FunctionsList,
-            'role_id'=>$id
+            'role_id'=>$id,
+            'name'=>$name
         ];
         return  view('usermanage.rolemanage_detail',$data);
     }

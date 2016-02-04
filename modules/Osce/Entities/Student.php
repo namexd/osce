@@ -22,7 +22,7 @@ class Student extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id', 'description'];
+    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id', 'description','exam_sequence'];
 
     public function userInfo(){
         return $this->hasOne('\App\Entities\User','id','user_id');
@@ -161,6 +161,9 @@ class Student extends CommonModel
 
     /**
      * 单个添加考生
+     * @param $exam_id
+     * @param $examineeData
+     * @param string $key
      * @return mixed
      * @throws \Exception
      */
@@ -291,7 +294,8 @@ class Student extends CommonModel
                 'student.mobile as mobile',
                 'student.avator as avator',
                 'exam_queue.status as status',
-                'student.id as student_id'
+                'student.id as student_id',
+                'student.exam_sequence as exam_sequence',
             ])
             ->first();
     }
@@ -313,6 +317,7 @@ class Student extends CommonModel
             'student.idcard as idCard',
             'student.mobile as mobile',
             'student.user_id as user_id',
+            'student.id as id',
         ]);
 
         $builder->orderBy('exam.begin_dt');
@@ -353,7 +358,7 @@ class Student extends CommonModel
                 'student.mobile as mobile',
                 'exam_order.status as status',
                 'exam_order.exam_screening_id as exam_screening_id',
-            ])->paginate($num);
+            ])->orderBy('exam_order.begin_dt')->paginate($num);
         return $builder;
     }
 

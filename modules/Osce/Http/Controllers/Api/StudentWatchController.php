@@ -54,7 +54,7 @@ class StudentWatchController extends CommonController
     public function   getStudentExamReminder(Request $request)
     {
         $this->validate($request, [
-            'code' => 'required'
+            'nfc_code' => 'required'
         ]);
         $data = [
             'title' => '',
@@ -67,13 +67,25 @@ class StudentWatchController extends CommonController
             'score' => '',
             ];
         $code =0;
-        $watchCode = $request->input('code');
+        $watchNfcCode = $request->input('nfc_code');
+//        dd($watchCode);
 
         //根据设备编号找到设备id
-        $watchId= Watch::where('code','=',$watchCode)->select('id')->first();
+        $watchId= Watch::where('code','=',$watchNfcCode)->select('id')->first();
+
+        if(!$watchId){
+            $code=-1;
+            $data['title'] = '没有找到到腕表信息';
+            return response()->json(
+                $this->success_data($data ,$code)
+            );
+        }
+
         //  根据腕表id找到对应的考试场次和学生
 
-        $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->select('student_id','exam_screening_id')->first();
+        $watchStudent = ExamScreeningStudent::where('watch_id','=',$watchId->id)->where('is_end','=',0)->select('student_id','exam_screening_id')->first();
+
+
         if (!$watchStudent) {
             $data['title'] = '没有找到学生的腕表信息';
             return response()->json(
@@ -84,12 +96,16 @@ class StudentWatchController extends CommonController
 //        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
         $studentId = $watchStudent->student_id;
+
        // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
+
         $examId = $examInfo->exam_id;
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
+
+
 //        dump($examQueueCollect);
          //判断考试的状态
         $nowNextQueue = $ExamQueueModel->nowQueue($examQueueCollect);
@@ -121,15 +137,17 @@ class StudentWatchController extends CommonController
                     $code=6;
                 } else {
 
+                    $code=-2;
+                    $data['title'] = '成绩推送失败';
                     return response()->json(
-                        $this->fail(new \Exception('成绩推送失败'))
+                        $this->success_data($data ,$code)
                     );
                 }
             }
 
         } else {
             if ($nowQueue->status == 1) {
-                if (strtotime($nowQueue->begin_dt) - $nowTime <= 120 && strtotime($nowQueue->begin_dt) - $nowTime > 0) {
+                if ((strtotime($nowQueue->begin_dt)+config('osce.begin_dt_buffer')*60) - $nowTime <= 120 && strtotime($nowQueue->begin_dt) - $nowTime > 0) {
                     $examRoomName = $nowQueue->room_name;
                     $data['roomName'] = $examRoomName;
                     $data['title'] = '考生开考通知';
@@ -139,17 +157,21 @@ class StudentWatchController extends CommonController
                     $willStudents = ExamQueue::where('room_id', '=', $nowQueue['room_id'])
                         ->whereBetween('status', [1, 2])
                         ->count();
-                    $examtimes = strtotime($nowQueue->begin_dt);
+
+                    $examtimes = date('H:i:s',(strtotime($nowQueue->begin_dt)+config('osce.begin_dt_buffer')*60));
                     $examRoomName = $nowQueue->room_name;
                     $data['title'] = '考生等待信息';
                     $data['willStudents'] = $willStudents;
-                    $data['estTime'] = $examtimes;
+                    $data['estTime'] =$examtimes;
                     $data['willRoomName'] = $examRoomName;
                     $code = 1;
                 }
 
             } else {
-                $surplus = ((strtotime($nowQueue['begin_dt']) + ($nowQueue->mins * 60)) - $nowTime);
+//                date_default_timezone_set('UTC');
+                 $surplus = (strtotime($nowQueue['end_dt']) -(strtotime($nowQueue['begin_dt'])));
+
+//                date_default_timezone_set('Asia/Shanghai');
                 if ($surplus <= 0) {
                     if (!empty($nextQueue)) {
                         $nextExamName = $nextQueue ['room_name'];
@@ -158,9 +180,10 @@ class StudentWatchController extends CommonController
                         $code=5;
                     } else {
                         $data['title'] = '目前没有下一场，请等待下一步通知';
+                        $code=5;
                     }
                 } else {
-                    $surplus = floor($surplus / 60) . ':' . $surplus % 60;
+//                    $surplus = floor($surplus / 60) . ':' . $surplus % 60;
                     $data['surplus'] = $surplus;
                     $data['title'] = '当前考站剩余时间';
                     $code =4;
@@ -171,6 +194,46 @@ class StudentWatchController extends CommonController
             $this->success_data($data ,$code)
         );
     }
+    /**
+     * 根据腕表code得到nfc_code
+     * @method GET
+     * @url /osce/api/student-watch/watch-nfc
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     code       (必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+     public  function getWatchNfc(Request $request){
+         $this->validate($request,[
+             'code'=>'required',
+         ]);
+         $code = $request->get('code');
+          $watchNfc = Watch::where('nfc_code','=',$code)->first();
+         if($watchNfc){
+             $data=[
+                 'nfc_code'=>$watchNfc->code,
+             ];
+             return response()->json(
+                 $this->success_data($data,1)
+             );
+         }else{
+             $data=[
+                 'nfc_code'=>'',
+             ];
+             return response()->json(
+                 $this->success_data($data,-2,'没有找到对应的nfc_code')
+             );
+         }
 
+
+     }
 
 }

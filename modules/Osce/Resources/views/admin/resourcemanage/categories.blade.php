@@ -25,7 +25,7 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
+<script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 @stop
@@ -99,7 +99,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <input class="btn btn-primary" id="submit-btn" type="submit" value="保存">
-                                <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
+                                <a class="btn btn-white" href="{{route("osce.admin.topic.getList")}}">取消</a>
                             </div>
                         </div>
                     </form>
