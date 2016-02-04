@@ -56,6 +56,10 @@ class Station extends CommonModel
         return $this->belongsToMany('Modules\Osce\Entities\Vcr', 'station_vcr', 'station_id', 'vcr_id');
     }
 
+    public function subject()
+    {
+        return $this->hasOne('Modules\Osce\Entities\Subject' , 'id' , 'subject_id');
+    }
     /**
      * 获得station列表
      * @param array $order

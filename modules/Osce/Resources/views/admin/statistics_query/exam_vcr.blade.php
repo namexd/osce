@@ -26,7 +26,7 @@
 @stop
 
 @section('content')
-
+    <input type="hidden" id="parameter" value="{'ip':'','port':'','username':'','password':'','channel':''}" />
     <div class="wrapper-content">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
