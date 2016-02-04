@@ -105,6 +105,7 @@ class StudentWatchController extends CommonController
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
 
+
 //        dump($examQueueCollect);
          //判断考试的状态
         $nowNextQueue = $ExamQueueModel->nowQueue($examQueueCollect);
@@ -146,7 +147,7 @@ class StudentWatchController extends CommonController
 
         } else {
             if ($nowQueue->status == 1) {
-                if (strtotime($nowQueue->begin_dt) - $nowTime <= 120 && strtotime($nowQueue->begin_dt) - $nowTime > 0) {
+                if ((strtotime($nowQueue->begin_dt)+config('osce.begin_dt_buffer')*60) - $nowTime <= 120 && strtotime($nowQueue->begin_dt) - $nowTime > 0) {
                     $examRoomName = $nowQueue->room_name;
                     $data['roomName'] = $examRoomName;
                     $data['title'] = '考生开考通知';
