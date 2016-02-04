@@ -39,11 +39,10 @@ class RoomController extends CommonController
     {
         //验证规则，暂时留空
         $this->validate($request,[
-            'id'        => 'sometimes|integer',
-            'type'      => 'sometimes|integer',
+            'id'        => 'sometimes',
+            'type'      => 'sometimes',
             'keyword'   => 'sometimes'
         ]);
-
         //获取各字段
         $keyword = e($request->input('keyword', ""));
         $type    = $request ->input('type', '0');
@@ -55,16 +54,21 @@ class RoomController extends CommonController
             //获取当前的标签
             $area = config('osce.room_cate');
             //展示页面
-
-            if ($type === "0") {
-                return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            } else if ($type == 1){
-                return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            }else if ($type == 2){
-                return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            }else{
-                return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            }
+            $cateList   =   Area::groupBy('cate')->get();
+//            if ($type === "0") {
+                return view('osce::admin.resourcemanage.examroom', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+//            }
+//            else
+//            {
+//
+//            }
+//            else if ($type == 1){
+//                return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+//            }else if ($type == 2){
+//                return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+//            }else{
+//                return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+//            }
         } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -182,8 +186,8 @@ class RoomController extends CommonController
         $vcr = Vcr::where('used',0)
             ->select(['id', 'name'])->get();     //关联摄像机
 
-
-        return view('osce::admin.resourcemanage.examroom_add',['vcr' =>$vcr, 'type' => $type]);
+        $cateList   =   Area::groupBy('cate')->get();
+        return view('osce::admin.resourcemanage.examroom_add',['vcr' =>$vcr,'cateList'=>$cateList, 'type' => $type]);
     }
 
     /**
@@ -210,29 +214,29 @@ class RoomController extends CommonController
                 'address'       => 'required',
                 'code'          => 'sometimes',
                 'description'   => 'required',
-                'type'          => 'required',
+                'cate'          => 'required',
             ],[
                 'name.unique'   =>  '名称必须唯一',
             ]);
             //TODO   表单内容变化没有提交nfc字段
             $formData = $request->only('name', 'address', 'code', 'description');
-            $type   = $request->input('type');
+            $cate   = $request->input('cate',0);
             $vcrId  = $request->get('vcr_id');
             if (!$user = Auth::user()) {
                 throw new \Exception('当前操作者没有登陆');
             }
             $userId = $user->id;
             $formData['created_user_id'] = $userId;
-            $formData['cate']            = $type;
+            $formData['cate']            = $cate;
 
-            if ($type === '0') {
+            if ($cate === '0') {
                 $room->createRoom($formData,$vcrId,$userId);
             } else {
                 $area = new Area();
                 $area->createRoom($formData,$vcrId,$userId);
             }
 
-            return redirect()->route('osce.admin.room.getRoomList',['type'=>$type]);
+            return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
