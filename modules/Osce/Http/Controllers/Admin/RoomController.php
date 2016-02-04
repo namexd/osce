@@ -39,11 +39,10 @@ class RoomController extends CommonController
     {
         //验证规则，暂时留空
         $this->validate($request,[
-            'id'        => 'sometimes|integer',
-            'type'      => 'sometimes|integer',
+            'id'        => 'sometimes',
+            'type'      => 'sometimes',
             'keyword'   => 'sometimes'
         ]);
-
         //获取各字段
         $keyword = e($request->input('keyword', ""));
         $type    = $request ->input('type', '0');
@@ -55,16 +54,8 @@ class RoomController extends CommonController
             //获取当前的标签
             $area = config('osce.room_cate');
             //展示页面
-
-            if ($type === "0") {
-                return view('osce::admin.resourcemanage.examroom', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            } else if ($type == 1){
-                return view('osce::admin.resourcemanage.central_control', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            }else if ($type == 2){
-                return view('osce::admin.resourcemanage.corridor', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            }else{
-                return view('osce::admin.resourcemanage.waiting', ['area' => $area, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
-            }
+            $cateList   =   Area::groupBy('cate')->get();
+            return view('osce::admin.resourcemanage.examroom', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -92,7 +83,7 @@ class RoomController extends CommonController
         //验证ID
         $this->validate($request, [
             'id' => 'required|integer',
-            'type' => 'required|integer',
+            'type' => 'required',
         ]);
 
         //取出id的值
@@ -100,6 +91,8 @@ class RoomController extends CommonController
         $type = $request->input('type');
         $data = $model->showRoomList("", $type, $id);
 
+
+        $cateList   =   Area::groupBy('cate')->get();
         //TODO:zhoufuxiang，查询没被其他考场关联的摄像机
         $model = new Vcr();
         list($vcr,$modelVcr) = $model->selectVcr($id, $type);
@@ -110,7 +103,7 @@ class RoomController extends CommonController
             $data->vcr_id = 0;
         }
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data, 'vcr'=>$vcr, 'type'=>$type]);
+        return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data,'cateList'=>$cateList, 'vcr'=>$vcr, 'type'=>$type]);
     }
 
     /**
@@ -138,15 +131,16 @@ class RoomController extends CommonController
 
         $id         = $request->input('id');
         $vcr_id     = $request->get('vcr_id');
-        $formData   = $request->only('name', 'description', 'address', 'code');
-        $type = $request->input('type','0');
+        $formData   = $request->only('name', 'description', 'address', 'code','cate');
+        $type       = empty($formData['cate'])? 0:$formData['cate'];
+
         $user = Auth::user();
         if(!$user){
             throw new \Exception('操作人不存在，请先登录');
         }
 
         try {
-            if ($type === '0') {
+            if ($type === 0) {
                 $room = new Room();
                 $room->editRoomData($id, $vcr_id, $formData);
             } else {
@@ -183,8 +177,8 @@ class RoomController extends CommonController
             ->whereNotIn('status',[2,3])
             ->select(['id', 'name'])->get();     //关联摄像机
 
-
-        return view('osce::admin.resourcemanage.examroom_add',['vcr' =>$vcr, 'type' => $type]);
+        $cateList   =   Area::groupBy('cate')->get();
+        return view('osce::admin.resourcemanage.examroom_add',['vcr' =>$vcr,'cateList'=>$cateList, 'type' => $type]);
     }
 
     /**
@@ -211,30 +205,30 @@ class RoomController extends CommonController
                 'address'       => 'required',
                 'code'          => 'sometimes',
                 'description'   => 'required',
-                'type'          => 'required',
+                'cate'          => 'required',
             ],[
                 'name.unique'   =>  '名称必须唯一',
                 'vcr_id.required'=> '摄像头id必须输入'
             ]);
             //TODO   表单内容变化没有提交nfc字段
             $formData = $request->only('name', 'address', 'code', 'description');
-            $type   = $request->input('type');
+            $cate   = $request->input('cate',0);
             $vcrId  = $request->get('vcr_id');
             if (!$user = Auth::user()) {
                 throw new \Exception('当前操作者没有登陆');
             }
             $userId = $user->id;
             $formData['created_user_id'] = $userId;
-            $formData['cate']            = $type;
+            $formData['cate']            = $cate;
 
-            if ($type === '0') {
+            if ($cate === '0') {
                 $room->createRoom($formData,$vcrId,$userId);
             } else {
                 $area = new Area();
                 $area->createRoom($formData,$vcrId,$userId);
             }
 
-            return redirect()->route('osce.admin.room.getRoomList',['type'=>$type]);
+            return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

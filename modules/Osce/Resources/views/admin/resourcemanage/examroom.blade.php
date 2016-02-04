@@ -34,9 +34,12 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
+                        <li class="{{$type === '0'?'active':''}}">
+                            <a href="{{route('osce.admin.room.getRoomList',['type'=>0])}}">考场</a>
+                        </li>
                         @foreach($area as $key => $item)
-                            <li class="{{($key === 0)?'active':''}}">
-                                <a href="{{route('osce.admin.room.getRoomList',['type'=>$key])}}">{{$item}}</a>
+                            <li class="{{($item['cate'] === $type)?'active':''}}">
+                                <a href="{{route('osce.admin.room.getRoomList',['type'=>$item->cate])}}">{{$item->cate}}</a>
                             </li>
                         @endforeach
                     </ul>
@@ -44,7 +47,7 @@
             </div>
             <div class="input-group" style="width: 290px;margin:20px 0;">
                 <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="keyword" value="{{(isset($keyword)?$keyword:'')}}">
-                <input type="hidden" name="type" value="0">
+                <input type="hidden" name="type" value="{{$type}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-sm btn-primary">搜索</button>
                 </span>

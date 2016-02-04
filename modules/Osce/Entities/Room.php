@@ -48,9 +48,6 @@ class Room extends CommonModel
      * @param string $id
      * @return array
      * @throws \Exception
-     * @internal param $formData
-     * @internal param int $pid
-     * @internal param null $id
      */
     public function showRoomList($keyword = '', $type = '0', $id = '')
     {
@@ -69,7 +66,6 @@ class Room extends CommonModel
             } else {
                 //通过传入的$type来展示响应的数据
                 if ($type === "0") {
-//                    dd($keyword);
                     $builder = Room::select([
                         'id',
                         'name',
@@ -90,7 +86,7 @@ class Room extends CommonModel
                         'description'
                     ]);
                     if ($keyword !== "") {
-                        $builder = $builder->where('name','like',$keyword);
+                        $builder = $builder->where('name','like','%'.$keyword.'%');
                     }
                     return $builder->where('cate',$type)->paginate(config('osce.page_size'));
                 }
