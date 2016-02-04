@@ -138,14 +138,15 @@ class NoticeController extends CommonController
 
         $id = $request->get('id');
         $notice = InformInfo::find($id);
-        if($notice->attachments){
-            $notice->attachments = explode(',', $notice->attachments);
-        }
-
         if (is_null($notice)) {
             //消息不存在
             abort(404, '你要查看的通知不存在');
         }
+        if($notice->attachments){
+            $notice->attachments = explode(',', $notice->attachments);
+        }
+
+
 
         return view('osce::wechat.exammanage.exam_notice_detail', ['notice' => $notice]);
     }
@@ -163,6 +164,10 @@ class NoticeController extends CommonController
             $id     =   $request->get('id');
             $key    =   $request->get('attch_index');
             $info  =   InformInfo::find($id);
+            if (is_null($info)) {
+                //消息不存在
+                abort(404, '你要下载的东西不存在');
+            }
             if($info->attachments){
                 $attchments = explode(',', $info->attachments);
             }else{

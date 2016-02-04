@@ -238,7 +238,10 @@ class NoticeController extends CommonController
         try {
             if ($notice) {
                 if ($notice->delete()) {
-                    return redirect()->route('osce.admin.notice.getList');
+                    //return redirect()->route('osce.admin.notice.getList');
+                    return response()->json(
+                        $this->success_data(['result'=>true],1,'删除成功')
+                    );
                 } else {
                     throw new \Exception('删除失败');
                 }
@@ -246,17 +249,11 @@ class NoticeController extends CommonController
                 throw new \Exception('没有找到相应的通知');
             }
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return response()->json(
+                $this->fail($ex)
+            );
         }
     }
-
-
-
-
-
-    public  function   getMsg($id){
-
-}
 }
 
 

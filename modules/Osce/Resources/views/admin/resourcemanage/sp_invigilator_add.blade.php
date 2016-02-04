@@ -49,6 +49,8 @@
                                 type: 'POST',//请求方式
                                 /*自定义提交数据，默认值提交当前input value*/
                                 data: function(validator) {
+                                    $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
                                     return {
                                         code: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }

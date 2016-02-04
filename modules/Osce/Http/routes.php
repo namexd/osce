@@ -165,7 +165,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 //		Route::get('exam/unwrap-watch',	['uses'=>'ExamController@getUnwrapWatch','as'=>'osce.admin.exam.getUnwrapWatch']); //解绑腕表
 //		Route::get('exam/student-details', 	['uses'=>'ExamController@getStudentDetails','as'=>'osce.admin.machine.getStudentDetails']);
 		Route::get('exam/check-student', 	['uses'=>'ExamController@getCheckStudent','as'=>'osce.admin.machine.getCheckStudent']);
-		Route::post('exam/exam-sequence-unique', 	['uses'=>'ExamController@postExamSequenceUnique','as'=>'osce.admin.machine.postExamSequenceUnique']);
+		Route::post('exam/exam-sequence-unique', 	['uses'=>'ExamController@postExamSequenceUnique','as'=>'osce.admin.exam.postExamSequenceUnique']);
 
 		Route::get('exam/edit-exam', 	['uses'=>'ExamController@getEditExam','as'=>'osce.admin.exam.getEditExam']);	//考试基本信息编辑
 		Route::post('exam/edit-exam', 	['uses'=>'ExamController@postEditExam','as'=>'osce.admin.exam.postEditExam']);

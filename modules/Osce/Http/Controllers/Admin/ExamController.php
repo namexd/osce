@@ -1767,19 +1767,38 @@ class ExamController extends CommonController
 
     /**
      * 判断准考证号是否已经存在
-     * @url POST /osce/admin/exam/postExamSequenceUnique
+     * @url POST /osce/admin/exam/exam-sequence-unique
      * @author zhouchong <zhouchong@misrobot.com>     *
      */
     public function postExamSequenceUnique(Request $request){
        $this->validate($request,[
-           'exam_id' => 'required'
+           'exam_id' => 'required',
+           'exam_sequence' => 'required',
+           'id' => 'sometimes',
        ]);
-       $examId=$request->get('exam_id');
-       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
-        if($examSequence){
-            return json_encode(['valid' =>false]);
+       $examId=$request->input('exam_id');
+       $exam_sequence=$request->input('exam_sequence');
+       $studentId=$request->input('id');
+//       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
+       $id=Student::where('exam_id',$examId)->where('exam_sequence',$exam_sequence)->select('id')->first();
+        if(empty($studentId)){
+            if($id){
+                return json_encode(['valid' =>false]);
+            }else{
+                return json_encode(['valid' =>true]);
+            }
         }else{
-            return json_encode(['valid' =>true]);
+            if($id){
+                if($id->id!=$studentId){
+                    return json_encode(['valid' =>false]);
+                }else{
+                    return json_encode(['valid' =>true]);
+                }
+            }else{
+                return json_encode(['valid' =>true]);
+            }
+
         }
+
     }
 }
