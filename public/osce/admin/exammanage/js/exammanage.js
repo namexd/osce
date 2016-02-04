@@ -1110,6 +1110,9 @@ function examroom_assignment(){
                     layer.alert(res.message);
                 }
 
+            },
+            error:function(){
+                layer.alert('通讯失败！');
             }
         });
         //location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
@@ -2766,6 +2769,9 @@ function station_assignment(){
                     layer.alert(res.message);
                 }
 
+            },
+            error:function(){
+                layer.alert('通讯失败！');
             }
         });
         //location.href = pars.spteacher_invitition+'?exam_id&teacher_id='+ids;
