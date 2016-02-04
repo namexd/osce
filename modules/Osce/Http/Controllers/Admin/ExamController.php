@@ -1776,9 +1776,9 @@ class ExamController extends CommonController
            'exam_sequence' => 'required',
            'id' => 'sometimes',
        ]);
-       $examId=$request->get('exam_id');
-       $exam_sequence=$request->get('exam_sequence');
-       $studentId=$request->get('id');
+       $examId=$request->input('exam_id');
+       $exam_sequence=$request->input('exam_sequence');
+       $studentId=$request->input('id');
 //       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
        $id=Student::where('exam_id',$examId)->where('exam_sequence',$exam_sequence)->select('id')->id;
         if(empty($studentId)){
