@@ -16,7 +16,24 @@
     $(function(){
         $('.fa-trash-o').click(function(){
             var thisElement = $(this)
-            $.ajax({
+            layer.confirm('确认删除？', {
+            btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type:'get',
+                    url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
+                    data:{id:thisElement.parent().parent().attr('value')},
+                    success:function(res){
+                        if(res.code!=1){
+                            layer.alert(res.message);
+                        }else{
+                            location.href = '{{route("osce.admin.notice.getList")}}';
+                        }
+                    }
+                });
+            });
+
+            /*$.ajax({
                 type:'get',
                 url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
                 data:{id:thisElement.parent().parent().attr('value')},
@@ -26,11 +43,10 @@
                     }else{
                         layer.alert('删除成功！',function(its){
                             location.href = '{{route("osce.admin.notice.getList")}}';
-                            layer.close(its);
                         });
                     }
                 }
-            });
+            });*/
         });
     })
 </script>
