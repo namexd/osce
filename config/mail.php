@@ -52,7 +52,7 @@
 |
 */
 
-'from' => ['address' => 'qingshuruyonghuming', 'name' => null],
+'from' => ['address' => 'j511002@163.com', 'name' => null],
 
 /*
 |--------------------------------------------------------------------------
@@ -78,7 +78,7 @@
 |
 */
 
-'username' => env('MAIL_USERNAME','qingshuruyonghuming'),
+'username' => env('MAIL_USERNAME','j511002@163.com'),
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +91,7 @@
 |
 */
 
-'password' => env('MAIL_PASSWORD','qingshurumima'),
+'password' => env('MAIL_PASSWORD','5110021'),
 
 /*
 |--------------------------------------------------------------------------
