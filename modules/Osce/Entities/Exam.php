@@ -98,7 +98,8 @@ class Exam extends CommonModel
                 'begin_dt',
                 'end_dt',
                 'description',
-                'total'
+                'total',
+                'status'
             ])->orderBy('begin_dt', 'desc');
 
             return $builder->paginate(10);
