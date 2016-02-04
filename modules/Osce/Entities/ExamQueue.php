@@ -251,6 +251,8 @@ class ExamQueue extends CommonModel
 
     {
         //根据学生id查出学生的所有开始和结束时间
+        $studentTimes= ExamQueue::where('student_id','=',$studentId)->get();
+        dd($studentTimes);
 
         $nowTime = date('Y-m-d H:i:s', $nowTime);
         $startExam = ExamQueue::where('student_id', '=', $studentId)
