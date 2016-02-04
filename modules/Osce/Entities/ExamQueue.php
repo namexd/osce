@@ -334,11 +334,15 @@ class ExamQueue extends CommonModel
                 //将当前的时间与计划表的时间减去缓冲时间做对比，如果是比计划的时间小，就直接用计划的时间。
                 //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
                 //config('osce.begin_dt_buffer')为缓冲时间
-                foreach ($objs as $item) {
-                    if ($time > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
-                        $item->begin_dt = date('Y-m-d H:i:s', $time + (config('osce.begin_dt_buffer') * 60));
-                    }
+                //获得当前时间比计划时间晚了多少
+                $difference = (strtotime($objs[0]->begin_dt) - (config('osce.begin_dt_buffer') * 60)) - $time;
 
+                foreach ($objs as $item) {
+                    if ($difference < 0) {
+                        $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
+                        $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $difference);
+                    }
+                    
                     $item->status = 0;
 
                     //将数据插入数据库
