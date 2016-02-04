@@ -132,7 +132,7 @@ class StudentWatchController extends CommonController
         }
         if(in_array(3,$statusArray))
         {
-            //return $this->getStatusThree
+            return $this->getStatusThree($examQueueCollect);
         }
         //return $this->
 
@@ -163,7 +163,7 @@ class StudentWatchController extends CommonController
 
     //判断腕表提醒状态为2时
 
-   private function getStatusTwo($examQueueCollect){
+    private function getStatusTwo($examQueueCollect){
         $items   =   array_where($examQueueCollect,function($key,$value){
             if($value ->status  ==  2)
             {
@@ -174,37 +174,52 @@ class StudentWatchController extends CommonController
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
-        $surplus = strtotime($items->end_dt) - strtotime($items->begin_dt);
-            $data=[
-            'code'=>4,
-            'title'=>'当前考站剩余时间',
-            'surplus'=>$surplus,
-           ];
+        $surplus = strtotime($item->end_dt) - strtotime($item->begin_dt);
+        $data=[
+            'code'      =>  4,
+            'title'     =>  '当前考站剩余时间',
+            'surplus'   =>  $surplus,
+        ];
 
            return $data;
 
     }
 
     private function getStatusThree($examQueueCollect){
-
-        $items   =   array_where($examQueueCollect,function($key,$value){
-            if($value ->status  ==  3)
+        $nextExamQueue  =   '';
+        foreach($examQueueCollect as $examQueue)
+        {
+            if($examQueue->status!=3)
             {
-                return $value;
+                if(empty($nextExamQueue))
+                {
+                    $nextExamQueue  =   $examQueue;
+                    $time           =   strtotime($examQueue->begin_dt);
+                }
+                else
+                {
+                    if($time>=strtotime($examQueue->begin_dt))
+                    {
+                        $nextExamQueue=$examQueue;
+                        $time   =   strtotime($examQueue->begin_dt);
+                    }
+                }
             }
-        });
-        $item   =   array_pop($items);
-        if(is_null($item)){
-            throw new \Exception('队列异常');
         }
-        $data=[
-            'code'=>4,
-            'title'=>'当前考站剩余时间',
-        ];
 
+        if(empty($nextExamQueue))
+        {
+            //return $this->kaowanle();
+        }
+        else
+        {
+            $data = [
+                'code'=> 5,
+                'title' => '进入考试教室',
+                'roomName' =>$nextExamQueue->room->name ,
+            ];
+        }
         return $data;
-
-
     }
 
 
