@@ -8,6 +8,8 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use App\Entities\SysRoles;
+use App\Entities\SysUserRole;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Staff;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -182,5 +184,89 @@ class UserController extends CommonController
             }
         }
         return redirect()->route('osce.admin.postIndex')->with('message','你现在已经退出登录了!');
+    }
+
+    /**
+     *用户权限选择
+     * @method GET
+     * @url user/change-users-role
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        id        用户id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getChangeUsersRole(Request $request){
+        $this->validate($request,[
+            'id'  =>  'required'
+        ]);
+         $id=$request->get('id');
+         $roleId=SysUserRole::where('user_id',$id)->select()->first();
+         $roles=SysRoles::select()->get();
+         $data=[];
+         foreach($roles as $role){
+             if($roleId){
+                   $user_role_id=$roleId->role_id;
+                 if($role->id!=1 && $role->id!=2 && $role->id!=5 && $role->id!=4 && $role->id!=$user_role_id){
+                     $data[]=[
+                         'role_id'=>$role->id,
+                         'role_name'=>$role->name,
+                     ];
+                 }
+             }else{
+                 if($role->id!=1 && $role->id!=2 && $role->id!=5 && $role->id!=4 ){
+                     $data[]=[
+                         'role_id'=>$role->id,
+                         'role_name'=>$role->name,
+                     ];
+                 }
+             }
+
+         }
+
+         return view('osce::admin.sysmanage.usermanage_change_role')->with(['role_id'=>$roleId,'data'=>$data,'user_id'=>$id]);
+    }
+
+    /**
+     *更改修改用户的权限
+     * @method POST
+     * @url user/edit-users-role
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        role_id        角色id(必须的)
+     * * int        user_id        用户id(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postEditUserRole(Request $request){
+              $this->validate($request,[
+                  'role_id'  => 'required',
+                  'user_id'  => 'required'
+              ]);
+               $user_id=$request->input('user_id');
+               $role_id=$request->input('role_id');
+               $result=SysUserRole::where('user_id','=',$user_id)->update([
+                      'role_id' =>  $role_id
+                  ]);
+
+               if($result){
+                    return redirect()->route('osce.admin.user.getStaffList')->with('message','修改成功!');
+               }
+                    return redirect()->back()->withErrors('修改权限失败!');
+
     }
 }

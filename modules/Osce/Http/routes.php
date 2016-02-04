@@ -140,6 +140,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('user/del-user', 	['uses'=>'UserController@postDelUser','as'=>'osce.admin.user.postDelUser']);	//删除用户
 		Route::post('user/add-user', 	['uses'=>'UserController@postAddUser','as'=>'osce.admin.user.postAddUser']);
 		Route::post('user/edit-user', 	['uses'=>'UserController@postEditUser','as'=>'osce.admin.user.postEditUser']);
+		Route::get('user/change-users-role', 	['uses'=>'UserController@getChangeUsersRole','as'=>'osce.admin.user.getChangeUsersRole']);
+		Route::post('user/edit-user-role', 	['uses'=>'UserController@postEditUserRole','as'=>'osce.admin.user.postEditUserRole']);
 
 		//考试
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
