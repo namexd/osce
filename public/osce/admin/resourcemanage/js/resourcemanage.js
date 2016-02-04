@@ -297,6 +297,7 @@ function categories(){
                 $(elem).attr('child',key);
                 $(elem).attr('class','pid-'+update_P);
                 $(elem).find('td').eq(0).text(update_P+'-'+key);
+                $(elem).find('td').eq(2).find('select').attr('name','score['+update_P+']['+key+']');
             }else{
                 update_P = $(elem).attr('parent');
                 $(elem).attr('class','pid-'+update_P);
