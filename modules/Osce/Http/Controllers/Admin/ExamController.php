@@ -1724,4 +1724,35 @@ class ExamController extends CommonController
             throw $ex;
         }
     }
+
+    /**
+     *考生查询详情页
+     * @method GET
+     * @url /exam/check-student
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouchong <zhouchong@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getCheckStudent(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+        ]);
+
+        $id =   $request    ->  get('id');
+        $student    =   Student::find($id);
+
+        return view('', ['item' => $student]);
+    }
 }
