@@ -4,6 +4,8 @@ namespace  App\Repositories\Message;
 
 use App\Repositories\Message\Contracts\Message;
 use Mail;
+use Modules\Osce\Entities\Exam;
+
 class EmailSender implements Message{
 
     protected $config;

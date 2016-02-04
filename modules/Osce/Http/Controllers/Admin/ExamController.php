@@ -491,13 +491,14 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'code'          =>  'required',
             'images_path'   =>  'required',
-
+            'exam_sequence' =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'code.required'         =>  '学号必填',
             'images_path.required'  =>  '请上传照片',
+            'exam_sequence.required'=>  '准考证号必填'
         ]);
 
         //考试id
@@ -512,6 +513,7 @@ class ExamController extends CommonController
             'avator'        => $request  ->  get('images_path')[0],//照片
             'email'         => $request  ->  get('email'),         //邮箱
             'description'   => $request  ->  get('description'),   //备注
+            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
         ];
 
         try{
@@ -532,7 +534,7 @@ class ExamController extends CommonController
         ]);
 
         $id =   $request    ->  get('id');
-        $student    =   Student::find($id);
+        $student    =   Student::findOrFail($id);
 
         return view('osce::admin.exammanage.examinee_edit', ['item' => $student]);
     }
@@ -547,11 +549,13 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'description'   =>  'sometimes',
             'images_path'   =>  'required',
+            'exam_sequence' =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'images_path.required'  =>  '请上传照片',
+            'exam_sequence.required'=>  '准考证号必填'
         ]);
         $id =   $request->get('id');
         $student    =   Student::find($id);
@@ -563,6 +567,7 @@ class ExamController extends CommonController
             'code'          =>  $request->get('code'),
             'avator'        =>  $images[0],
             'description'   =>  $request->get('description'),
+            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
         ];
 
         try{
