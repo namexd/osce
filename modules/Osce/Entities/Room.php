@@ -235,13 +235,13 @@ class Room extends CommonModel
             ];
 
             if (!RoomVcr::create($data)) {
-                throw new \Exception('新建房间失败');
+                throw new \Exception('摄像机与房间关联失败');
             }
 
             $vcr = Vcr::findOrFail($vcrId);
             $vcr->used = 1;
             if (!$vcr->save()) {
-                throw new \Exception('新建房间失败');
+                throw new \Exception('修改摄像机状态失败');
             }
 
             $connection->commit();

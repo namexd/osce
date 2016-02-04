@@ -21,6 +21,12 @@ class Exam extends CommonModel
     protected $hidden = [];
     protected $fillable = ['code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id', 'description', 'sequence_cate', 'sequence_mode', 'rules', 'address'];
 
+
+    protected $statuValues  =   [
+        0   =>  '未开考',
+        1   =>  '正在考试',
+        2   =>  '考试结束',
+    ];
     /**
      * 考试与考站的关联
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -411,7 +417,7 @@ class Exam extends CommonModel
         return $builder->paginate(config('msc.page_size'));
     }
 //查询今日考试
-    public function getTodayList(){
+    public function getTodayList($status=''){
           $time=time();
           $builder=$this->select(DB::raw(
               implode(',',[
@@ -420,6 +426,7 @@ class Exam extends CommonModel
                   $this->table.'.begin_dt as begin_dt',
                   $this->table.'.end_dt as end_dt',
                   $this->table.'.description as description',
+                  $this->table.'.status as status',
               ])
             )
           );
@@ -435,6 +442,9 @@ class Exam extends CommonModel
                  $time
              ]
          );
+        if($status){
+          $builder=$builder->where('status','=',1)->take(1);
+        }
         $data=$builder->get();
 
         return $data;
@@ -536,10 +546,6 @@ class Exam extends CommonModel
                 })
             ->Join('subject','subject.id','=','station.subject_id');
 
-//        $builder = ExamResult::Join('station','station.id','=','exam_result.station_id')
-//            ->Join('subject','subject.id','=','station.subject_id')
-//            ->Join('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-//            ->Join('exam','exam_screening.exam_id','=','exam.id');
 
         if ($examId != "") {
             $builder = $builder->where('exam.id','=',$examId);

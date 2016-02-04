@@ -247,7 +247,7 @@ class TopicController extends CommonController
                 }
                 else
                 {
-                    $optionNum[$item->pid]=0;
+                    $optionNum[$item->pid]=1;
                 }
             }
         }
