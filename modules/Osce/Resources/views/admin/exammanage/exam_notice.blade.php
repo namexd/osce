@@ -25,7 +25,7 @@
                         layer.alert(res.message);
                     }else{
                         layer.alert('删除成功！',function(its){
-                            location.href = '{{route("osce.admin.notice.getDelNotice")}}';
+                            location.href = '{{route("osce.admin.notice.getList")}}';
                             layer.close(its);
                         });
                     }
