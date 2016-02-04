@@ -255,21 +255,20 @@ class DrawlotsController extends CommonController
             //获取当前登陆者id
             $id = $request->input('id');
 
+            //获取正在考试中的考试
+            $exam = Exam::where('status',1)->first();
+            if (is_null($exam)) {
+                throw new \Exception('当前没有考试！', 4100);
+            }
+
             //根据id获取考站信息
-            $stationTeacher = StationTeacher::where('user_id',$id)->first();
+            $stationTeacher = StationTeacher::where('user_id',$id)->where('exam_id',$exam->id)->first();
 
             if (is_null($stationTeacher)) {
                 throw new \Exception('当前老师没有考试！', 4000);
             }
 
             $station = $stationTeacher->station;
-
-            //获取正在考试中的考试
-            $exam = Exam::where('status',1)->first();
-
-            if (is_null($exam)) {
-                throw new \Exception('当前没有考试！', 4100);
-            }
 
             //拿到房间
             $room = $this->getRoomId($id,$exam->id);
