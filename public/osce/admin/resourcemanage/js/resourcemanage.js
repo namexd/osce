@@ -326,12 +326,14 @@ function categories(){
                     $(elem).attr('parent',parent);
                     $(elem).find('td').eq(0).text(parent);
                     $(elem).attr('class','pid-'+parent);
+                    $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
                     parent += 1;
                 }else{
                     var child = $(elem).attr('child'),
                             parent_p = parent - 1;
                     $(elem).find('td').eq(0).text(parent_p+'-'+child);
                     $(elem).attr('class','pid-'+parent_p);
+                    $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
                     child += 1;
                 }
             });
