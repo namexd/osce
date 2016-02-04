@@ -206,8 +206,10 @@ class TrainController extends  CommonController{
 
         $user=Auth::user();
         $userId=$user->id;
+        $connection	=	\DB::connection('sys_mis');
+        $userRole	=	$connection	->	table('sys_user_role')	->	where('user_id','=',$user->id)->first();
         $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
-        if($userId==$createId || in_array($userId,config('osce.manager'))){
+        if($userId==$createId || $userRole->role_id==config('config.superRoleId')){
             $data['attachments']=serialize($request->input('file'));
             $result=InformTrain::where('id',$data['id'])->update($data);
             if($result){

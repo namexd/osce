@@ -12,7 +12,44 @@
 @stop
 
 @section('only_js')
+<script>
+    $(function(){
+        $('.fa-trash-o').click(function(){
+            var thisElement = $(this)
+            layer.confirm('确认删除？', {
+            btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type:'get',
+                    url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
+                    data:{id:thisElement.parent().parent().attr('value')},
+                    success:function(res){
+                        if(res.code!=1){
+                            layer.alert(res.message);
+                        }else{
+                            location.href = '{{route("osce.admin.notice.getList")}}';
+                        }
+                    }
+                });
+            });
 
+            /*$.ajax({
+                type:'get',
+                url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
+                data:{id:thisElement.parent().parent().attr('value')},
+                success:function(res){
+                    if(res.code!=1){
+                        layer.alert(res.message);
+                    }else{
+                        layer.alert('删除成功！',function(its){
+                            location.href = '{{route("osce.admin.notice.getList")}}';
+                        });
+                    }
+                }
+            });*/
+        });
+    })
+</script>
 @stop
 
 
@@ -43,7 +80,7 @@
                         <td>{{$item['created_at']}}</td>
                         <td>
                             <a href="{{route('osce.admin.notice.getEditNotice',['id'=>$item['id']])}}"><span class="read  state1"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                            <a href="{{route('osce.admin.notice.getDelNotice',['id'=>$item['id']])}}" onclick="return confirm('确认删除？')"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)" value="{{$item['id']}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
                     @empty

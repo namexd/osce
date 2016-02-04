@@ -140,6 +140,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('user/del-user', 	['uses'=>'UserController@postDelUser','as'=>'osce.admin.user.postDelUser']);	//删除用户
 		Route::post('user/add-user', 	['uses'=>'UserController@postAddUser','as'=>'osce.admin.user.postAddUser']);
 		Route::post('user/edit-user', 	['uses'=>'UserController@postEditUser','as'=>'osce.admin.user.postEditUser']);
+		Route::get('user/change-users-role', 	['uses'=>'UserController@getChangeUsersRole','as'=>'osce.admin.user.getChangeUsersRole']);
+		Route::post('user/edit-user-role', 	['uses'=>'UserController@postEditUserRole','as'=>'osce.admin.user.postEditUserRole']);
 
 		//考试
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
@@ -165,6 +167,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 //		Route::get('exam/unwrap-watch',	['uses'=>'ExamController@getUnwrapWatch','as'=>'osce.admin.exam.getUnwrapWatch']); //解绑腕表
 //		Route::get('exam/student-details', 	['uses'=>'ExamController@getStudentDetails','as'=>'osce.admin.machine.getStudentDetails']);
 		Route::get('exam/check-student', 	['uses'=>'ExamController@getCheckStudent','as'=>'osce.admin.machine.getCheckStudent']);
+		Route::post('exam/exam-sequence-unique', 	['uses'=>'ExamController@postExamSequenceUnique','as'=>'osce.admin.exam.postExamSequenceUnique']);
 
 		Route::get('exam/edit-exam', 	['uses'=>'ExamController@getEditExam','as'=>'osce.admin.exam.getEditExam']);	//考试基本信息编辑
 		Route::post('exam/edit-exam', 	['uses'=>'ExamController@postEditExam','as'=>'osce.admin.exam.postEditExam']);

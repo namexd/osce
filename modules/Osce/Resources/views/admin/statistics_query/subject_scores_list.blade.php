@@ -35,10 +35,10 @@ $(function(){
                 if(res.code!=1){
                     layer.alert(res.message);
                 }else{
-                    var data = res.data.data;
+                    var data = res.data;
                     var html = '<option value="">全部科目</option>';
                     for(var i in data){
-                        html += '<option value="'+data[i].exam_id+'">'+data[i].exam_name+'</option>';
+                        html += '<option value="'+data[i].id+'">'+data[i].title+'</option>';
                     }
 
                     $('#subject-id').html(html);

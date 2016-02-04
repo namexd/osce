@@ -76,7 +76,15 @@
                                 url: '{{route('osce.admin.invigilator.postSelectTeacher')}}',//验证地址
                                 delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                                 type: 'POST',//请求方式
-                                message: '号码已经存在'//提示消息
+                                message: '号码已经存在',//提示消息
+                                /*自定义提交数据，默认值提交当前input value*/
+                                data: function(validator) {
+                                    $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                                    return {
+                                        code: $('[name="whateverNameAttributeInYourForm"]').val()
+                                    }
+                                }
                             }
                         }
                     },

@@ -393,8 +393,9 @@ class ExamController extends CommonController
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
 
+            $status=Exam::where('id','=',$exam_id)->select()->first()->status;
             //展示页面
-            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword]);
+            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withError($ex);
@@ -637,7 +638,12 @@ class ExamController extends CommonController
         try {
             //获得上传的数据
             $exam_id= $id;
-            $data = Common::getExclData($request, 'student');
+            $data   = Common::getExclData($request, 'student');
+            $exam   =   Exam::find($exam_id);
+            if($exam->status!=0)
+            {
+                throw new \Exception('此考试当前状态下不允许新增');
+            }
             //去掉sheet
             $studentList = array_shift($data);
             //将中文表头转为英文
@@ -780,9 +786,11 @@ class ExamController extends CommonController
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
 
+        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
 
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,
+            'status'                => $status,
             'examRoomData'      => $serialnumberGroup,
             'examStationData'   => $examStationData,
             'getSelect'         => $this->getSelect()
@@ -1368,11 +1376,12 @@ class ExamController extends CommonController
 
 
         }
-
+       $status=Exam::where('id',$exam_id)->select('status')->first()->status;
         return view('osce::admin.exammanage.station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
             'stationData' => $stationData,
+            'status'      => $status,
             'getSelect'   => $this->getSelect()
         ]);
     }
@@ -1754,5 +1763,42 @@ class ExamController extends CommonController
         $student    =   Student::find($id);
 
         return view('osce::admin.exammanage.examinee_query_detail', ['item' => $student]);
+    }
+
+    /**
+     * 判断准考证号是否已经存在
+     * @url POST /osce/admin/exam/exam-sequence-unique
+     * @author zhouchong <zhouchong@misrobot.com>     *
+     */
+    public function postExamSequenceUnique(Request $request){
+       $this->validate($request,[
+           'exam_id' => 'required',
+           'exam_sequence' => 'required',
+           'id' => 'sometimes',
+       ]);
+       $examId=$request->input('exam_id');
+       $exam_sequence=$request->input('exam_sequence');
+       $studentId=$request->input('id');
+//       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
+       $id=Student::where('exam_id',$examId)->where('exam_sequence',$exam_sequence)->select('id')->first();
+        if(empty($studentId)){
+            if($id){
+                return json_encode(['valid' =>false]);
+            }else{
+                return json_encode(['valid' =>true]);
+            }
+        }else{
+            if($id){
+                if($id->id!=$studentId){
+                    return json_encode(['valid' =>false]);
+                }else{
+                    return json_encode(['valid' =>true]);
+                }
+            }else{
+                return json_encode(['valid' =>true]);
+            }
+
+        }
+
     }
 }

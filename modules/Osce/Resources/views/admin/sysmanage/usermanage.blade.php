@@ -53,6 +53,7 @@
                         <a href="{{route('osce.admin.user.getEditStaff',['id'=>$item->id])}}">
                             <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                         </a>
+                        <a class="state1 modal-control" href="{{ route('osce.admin.user.getChangeUsersRole',array('id'=>$item->id)) }}"><i class="fa  fa-cog fa-2x"></i></a>
                         <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x" uid="{{$item->id}}"></i></span></a>
                     </td>
                 </tr>
