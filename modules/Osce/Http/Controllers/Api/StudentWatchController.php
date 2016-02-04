@@ -169,7 +169,8 @@ class StudentWatchController extends CommonController
 
             } else {
 //                date_default_timezone_set('UTC');
-                 $surplus = strtotime($nowQueue['end_dt'] -(strtotime($nowQueue['begin_dt'])));
+                 $surplus = (strtotime($nowQueue['end_dt']) -(strtotime($nowQueue['begin_dt'])));
+
 //                date_default_timezone_set('Asia/Shanghai');
                 if ($surplus <= 0) {
                     if (!empty($nextQueue)) {
@@ -179,6 +180,7 @@ class StudentWatchController extends CommonController
                         $code=5;
                     } else {
                         $data['title'] = '目前没有下一场，请等待下一步通知';
+                        $code=5;
                     }
                 } else {
 //                    $surplus = floor($surplus / 60) . ':' . $surplus % 60;

@@ -339,7 +339,7 @@ var courseObserveDetail = (function(mod){
 
 })(courseObserveDetail||{})
 $(function(){
-            //courseObserveDetail.chart({xAxis:["1","2","3","4","5","6"],yAxis:[5, 20, 40, 10, 10, 20]});
+    pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     //进度条板块变量
     var timer=null;
     var allTime=3600;//结束时间减去开始时间
@@ -347,11 +347,11 @@ $(function(){
     //初始化
     courseObserveDetail.initVideo(600,300,1,"divPlugin",'');
     //登录
-    courseObserveDetail.Login({ip:'192.168.1.250',ports:'80',user:'admin',passwd:'123456mis'});
+    courseObserveDetail.Login({ip:pars.ip,ports:pars.port,user:pars.username,passwd:pars.password});
     //切换视频
     //courseObserveDetail.changeVideo(2);
     //开始回放
-    courseObserveDetail.StartPlayback(0,'192.168.1.250',"2016-01-30 10:33:23","2016-01-30 11:33:23");
+    courseObserveDetail.StartPlayback(0,pars.ip,"2016-01-30 10:33:23","2016-01-30 11:33:23");
     //进度条
     progressMove();
     //暂停
