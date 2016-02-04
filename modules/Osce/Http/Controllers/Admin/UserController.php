@@ -108,10 +108,11 @@ class UserController extends CommonController
             'gender'    =>  $gender,
         ];
         try{
-            if(User::where('mobile','=',$mobile)->count())
+            $user   =   User::where('mobile','=',$mobile)->first();
+            if(!is_null($user))
             {
                 //throw new \Exception('该手机已经被注册了');
-                $user   =   User::where('mobile','=',$mobile)->first();
+
                 $common ->  relativeAdminUser($user);
             }
             else
