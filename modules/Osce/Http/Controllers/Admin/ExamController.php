@@ -1774,7 +1774,7 @@ class ExamController extends CommonController
        $this->validate($request,[
            'exam_id' => 'required',
            'exam_sequence' => 'required',
-           'id' => 'required',
+           'id' => 'sometimes',
        ]);
        $examId=$request->get('exam_id');
        $exam_sequence=$request->get('exam_sequence');
