@@ -152,7 +152,7 @@ class Notice extends CommonModel
                     }
                     catch(\Exception $ex)
                     {
-                        \Log::alert('通知发送失败');
+                        \Log::info('通知发送失败');
                     }
                 }
             }
