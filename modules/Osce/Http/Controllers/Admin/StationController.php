@@ -288,6 +288,7 @@ class StationController extends CommonController
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         if ($id == "") {
             $vcr = Vcr::where('used', 0)
+                ->whereNotIn('status',[2,3])
                 ->select(['id', 'name'])
                 ->get();     //关联摄像机
         } else {
