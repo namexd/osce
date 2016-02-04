@@ -148,6 +148,11 @@ class Exam extends CommonModel
                 }
             }
 
+            if($examObj->students()->delete()===false)
+            {
+                throw new \Exception('删除考试学生表失败，请重试！');
+            }
+
             //删除考试考场关联表
             $examScreenings = $examScreening-> get();
             if (!$examScreenings->isEmpty()) {
