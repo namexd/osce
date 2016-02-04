@@ -81,8 +81,8 @@ $(function(){
                             <div  class="pull-left examinee-list">
                                 <select name="subject_id" id="subject-id" class="form-control" style="width: 250px;">
                                     <option value="">全部科目</option>
-                                    @forelse($data as $value)
-                                        <option value="{{$value['subject_id']}}" @if($subject_id==$value['subject_id'])selected="selected"  @else @endif>{{$value['subject_name']}}</option>
+                                    @forelse($subjectDownlist as $value)
+                                        <option value="{{$value['id']}}" @if($subject_id==$value['id'])selected="selected"  @else @endif>{{$value['title']}}</option>
                                     @empty
                                     @endforelse
                                 </select>

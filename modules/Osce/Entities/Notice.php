@@ -152,7 +152,7 @@ class Notice extends CommonModel
                     }
                     catch(\Exception $ex)
                     {
-                        \Log::alert('通知发送失败');
+                        \Log::alert('应该是邮件问题');
                     }
                 }
             }
@@ -358,12 +358,16 @@ class Notice extends CommonModel
 
 
     public function sendEmail($notice,$to,$url){
-        $sender =   \App::make('messages.email');
-        $content=   [];
-        $content[]  =   '亲爱的osce考试系统用户:\n';
-        $content[]  =   $notice->exam->name. ' ' .$notice->title.'<br/>';
-        $content[]  =   '<a href="'.$url.'">查看详情</a>\n';
-        $sender ->  send(array_pluck($to,'email'),implode('',$content));
+        try {
+            $sender =   \App::make('messages.email');
+            $content=   [];
+            $content[]  =   '亲爱的osce考试系统用户:\n';
+            $content[]  =   $notice->exam->name. ' ' .$notice->title.'<br/>';
+            $content[]  =   '<a href="'.$url.'">查看详情</a>\n';
+            $sender ->  send($to,implode('',$content));
+        } catch (\Exception $ex) {
+            \Log::info($ex->getMessage());
+        }
     }
 
 

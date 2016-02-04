@@ -47,8 +47,10 @@
                                 <input class="btn btn-primary" type="button" value="开始考试"/>
                                 {{--<span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span>--}}
                             </a>
-                        @else
+                        @elseif($item->status==1)
                             已经开考
+                        @else
+                            考试已结束   
                         @endif
                     </td>
                 </tr>

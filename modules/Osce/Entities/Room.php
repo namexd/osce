@@ -48,9 +48,6 @@ class Room extends CommonModel
      * @param string $id
      * @return array
      * @throws \Exception
-     * @internal param $formData
-     * @internal param int $pid
-     * @internal param null $id
      */
     public function showRoomList($keyword = '', $type = '0', $id = '')
     {
@@ -69,7 +66,6 @@ class Room extends CommonModel
             } else {
                 //通过传入的$type来展示响应的数据
                 if ($type === "0") {
-//                    dd($keyword);
                     $builder = Room::select([
                         'id',
                         'name',
@@ -90,7 +86,7 @@ class Room extends CommonModel
                         'description'
                     ]);
                     if ($keyword !== "") {
-                        $builder = $builder->where('name','like',$keyword);
+                        $builder = $builder->where('name','like','%'.$keyword.'%');
                     }
                     return $builder->where('cate',$type)->paginate(config('osce.page_size'));
                 }
@@ -239,13 +235,13 @@ class Room extends CommonModel
             ];
 
             if (!RoomVcr::create($data)) {
-                throw new \Exception('新建房间失败');
+                throw new \Exception('摄像机与房间关联失败');
             }
 
             $vcr = Vcr::findOrFail($vcrId);
             $vcr->used = 1;
             if (!$vcr->save()) {
-                throw new \Exception('新建房间失败');
+                throw new \Exception('修改摄像机状态失败');
             }
 
             $connection->commit();

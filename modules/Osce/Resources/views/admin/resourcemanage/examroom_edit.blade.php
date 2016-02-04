@@ -1,6 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    
+    <link href="{{asset('/osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
 @stop
 
 @section('only_js')
@@ -90,7 +90,18 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed" style="display:none"></div>
-
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">场所类别</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="cate">
+                                    <option value="0" {{0==$type? 'selected="selected"':''}}>考场</option>
+                                    @forelse($cateList as $cate)
+                                        <option value="{{$cate->cate}}"  {{$cate->cate==$type? 'selected="selected"':''}} >{{$cate->cate}}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">关联摄像机</label>
                             <div class="col-sm-10">
@@ -139,3 +150,22 @@
 </div>
 
 @stop{{-- 内容主体区域 --}}
+@section('footer_js')
+    @parent
+    <script src="{{asset('/osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
+    <script>
+        $(function(){
+            $('[name=cate]').select2({
+                tags: true,
+                tokenSeparators: [',', ' ']
+            }).change(function(){
+                var val =   $(this).val();
+                val     =   val.toString();
+                var info=   val.split(',');
+                var choose  =   info.pop();
+                $(this).val([choose, choose]).trigger("change");
+                $(this).select2("close");
+            });
+        })
+    </script>
+@stop

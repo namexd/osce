@@ -250,16 +250,24 @@ class ExamQueue extends CommonModel
     public function AlterTimeStatus($studentId, $stationId, $nowTime)
 
     {
+
         //根据学生id查出学生的所有开始和结束时间
         $studentTimes= ExamQueue::where('student_id','=',$studentId)->get();
-        dd($studentTimes);
-
-        $nowTime = date('Y-m-d H:i:s', $nowTime);
-        $startExam = ExamQueue::where('student_id', '=', $studentId)
-            ->where('station_id', '=', $stationId)
-            ->update(['begin_dt' => $nowTime, 'status' => 2]);
-
-        return $startExam;
+        $status= ExamQueue::where('student_id','=',$studentId)->where('station_id', '=', $stationId)->update(['status'=>2]);
+        if($status){
+            foreach ($studentTimes as $item) {
+                if ($nowTime > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
+                    $item->begin_dt = date('Y-m-d H:i:s', $nowTime + (config('osce.begin_dt_buffer') * 60));
+                }
+                $nowTime = $item->begin_dt;
+                $startExam = ExamQueue::where('student_id', '=', $studentId)
+                    ->update(['begin_dt' => $nowTime]);
+                if (!$startExam) {
+                    throw new \Exception('该名学生的时间顺推失败！');
+                };
+            }
+            return $status;
+        }
 
     }
 

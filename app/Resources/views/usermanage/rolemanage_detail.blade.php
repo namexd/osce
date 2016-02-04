@@ -77,8 +77,8 @@
                 {{--<div class="hr-line-dashed"></div>--}}
                 <div class="tabs-container">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> Web端</a></li>
-                        {{--<li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">微信端</a></li>
+                        {{--<li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> Web端</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">微信端</a></li>
                         <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">Pad端</a></li>--}}
                     </ul>
                     <div class="tab-content">
@@ -87,9 +87,9 @@
                                 <input type="hidden" value="{{ $role_id }}" name="role_id">
                                 <table class="table table-striped" id="table-striped" style="border: 1px">
                                     <thead>
-                                    <tr>
-                                        <th style="width: 30%;padding-bottom: 28px">一级</th>
-                                    </tr>
+                                    <!-- <tr>
+                                        <th style="width: 30%;padding-bottom: 28px">&nbsp;</th>
+                                    </tr> -->
                                     </thead>
                                     <tbody>
                                         <tr>

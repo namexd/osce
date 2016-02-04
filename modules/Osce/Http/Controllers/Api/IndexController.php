@@ -156,11 +156,11 @@ class IndexController extends CommonController
             );
             $watchModel = new WatchLog();
             $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);
-            $id=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
-            if($id){
+            $ExamScreeingStudentId=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
+            if($ExamScreeingStudentId){
                 ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
             }else{
-                ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
+                ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'signin_dt'=>$updated_at,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);
 
             }
             ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
@@ -557,8 +557,15 @@ class IndexController extends CommonController
      */
     public function getExamList(){
         $exam=new Exam();
-        $examList=$exam->getTodayList();
+        $status=0;
+        $examList=$exam->getTodayList($status);
         if(count($examList)){
+            foreach($examList as $item){
+                 if($item->status==1){
+                     $status=1;
+                     $examList=$exam->getTodayList($status);
+                 }
+            }
             return response()->json(
                 $this->success_rows(1,'success',count($examList),$pagesize=1,count($examList),$examList)
             );
