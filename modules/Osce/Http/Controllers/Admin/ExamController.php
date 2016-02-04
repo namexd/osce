@@ -1753,6 +1753,6 @@ class ExamController extends CommonController
         $id =   $request    ->  get('id');
         $student    =   Student::find($id);
 
-        return view('', ['item' => $student]);
+        return view('osce::admin.exammanage.examinee_query_detail', ['item' => $student]);
     }
 }
