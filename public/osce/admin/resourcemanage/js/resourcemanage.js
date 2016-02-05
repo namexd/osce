@@ -53,7 +53,7 @@ function clinicalcase(){
  */
 function examroom(){
     $(".delete").click(function(){
-        deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+        deleteArea("post",pars.deletes,$(this).attr("value"),$(this).data('type'),pars.firstpage)
     })
 }
 
@@ -74,7 +74,7 @@ function deleteItem(url){
                 type:'post',
                 async:true,
                 url:url,
-                data:{id:thisElement.parent().parent().parent().attr('value')},
+                data:{id:thisElement.parent().parent().parent().attr('value'),type:thisElement.parent().parent().parent().data('type')},
                 success:function(data){
                     console.log(data);
                     if(data.code==1){
@@ -816,6 +816,28 @@ function deleteItems(type,url,id,firstpage){
             async:false,
             url:url,
             data:{id:id},
+            success:function(data){
+                console.log(data.code);
+                if(data.code == 1){
+                    location.href=firstpage;
+                }else {
+                    layer.msg(data.message);
+                }
+            }
+        })
+    });
+}
+//删除场所
+function deleteArea(type,url,id,areaType,firstpage){
+    layer.alert('确认删除',{btn:['确认','取消']},function(){
+        $.ajax({
+            type:type,
+            async:false,
+            url:url,
+            data:{
+                id:id,
+                type:areaType
+            },
             success:function(data){
                 console.log(data.code);
                 if(data.code == 1){

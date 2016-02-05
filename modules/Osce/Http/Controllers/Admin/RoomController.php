@@ -92,7 +92,7 @@ class RoomController extends CommonController
         $data = $model->showRoomList("", $type, $id);
 
 
-        $cateList   =   Area::groupBy('cate')->get();
+        $cateList   =   Area::groupBy('cate')->select('cate')->get();
         //TODO:zhoufuxiang，查询没被其他考场关联的摄像机
         $model = new Vcr();
         list($vcr,$modelVcr) = $model->selectVcr($id, $type);
@@ -254,7 +254,7 @@ class RoomController extends CommonController
             //验证略
             $this->validate($request, [
                 'id' => 'required|integer',
-                'type' => 'sometimes|integer'
+                'type' => 'sometimes'
             ]);
 
             $id = $request->input('id');

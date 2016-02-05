@@ -351,6 +351,14 @@ class Exam extends CommonModel
                 {
                     throw new \Exception('重置作废数据失败');
                 }
+                if(ExamRoom::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
+                if(ExamStation::where('exam_id','=',$exam_id)->delete()===false)
+                {
+                    throw new \Exception('重置作废数据失败');
+                }
             }
             foreach($examData as $field=>$item)
             {
