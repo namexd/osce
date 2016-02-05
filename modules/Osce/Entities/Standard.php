@@ -47,7 +47,14 @@ class Standard extends CommonModel
         {
             $prointData =   $proint;
             //$prointData['test_point']['test_term']    =   $data[$proint->id];
-            $prointData['test_term']    =   $data[$proint->id];
+            if(array_key_exists($proint->id,$data))
+            {
+                $prointData['test_term']    =   $data[$proint->id];
+            }
+            else
+            {
+                $prointData['test_term']    =   [];
+            }
             $return[]=$prointData;
         }
         return $return;
