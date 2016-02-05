@@ -207,7 +207,7 @@ class RoomController extends CommonController
                 'cate'          => 'required',
             ],[
                 'name.unique'   =>  '名称必须唯一',
-                'vcr_id.required'=> '摄像头id必须输入'
+                'vcr_id.required'=> '摄像头不能为空'
             ]
         );
         try {
