@@ -256,7 +256,7 @@ class ExamQueue extends CommonModel
                 ->update(['status' => 2]);
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
-                    ->whereIn('exam_queue.status', [1, 2])
+                    ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
                 foreach ($studentTimes as  $item) {
@@ -271,13 +271,11 @@ class ExamQueue extends CommonModel
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败');
                         }else{
-
                             return true;
                         }
                     }
                 }
             }else{
-
                 return false;
             }
         } catch (\Exception $ex) {
