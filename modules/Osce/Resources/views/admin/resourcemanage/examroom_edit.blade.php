@@ -154,11 +154,13 @@
 @section('footer_js')
     @parent
     <script src="{{asset('/osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
+    <script src="{{asset('/osce/common/select2-4.0.0/js/i18n/zh-CN.js')}}"></script>
     <script>
         $(function(){
             $('[name=cate]').select2({
                 tags: true,
-                tokenSeparators: [',', ' ']
+                tokenSeparators: [',', ' '],
+                maximumInputLength: 12
             }).change(function(){
                 var val =   $(this).val();
                 val     =   val.toString();
