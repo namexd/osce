@@ -139,10 +139,10 @@ class TrainController extends  CommonController{
             return \Response::json(array('code'=>2));
         }
         $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-        $manager=config('osce.manager');
+
         if($createId!=$userId){
             $url=1;
-        }elseif($userId==$manager[0]){
+        }elseif($userId==config('config.superRoleId')){
             $url=2;
         }else{
             $url=2;
