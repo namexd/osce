@@ -21,6 +21,24 @@ class ExamQueue extends CommonModel
     protected $fillable = ['exam_id', 'exam_screening_id', 'student_id', 'station_id', 'room_id', 'begin_dt', 'end_dt', 'status', 'created_user_id'];
     public $search = [];
 
+    public function station(){
+        return $this->hasOne('\Modules\Osce\Entities\Station','id','station_id');
+    }
+
+    public function room(){
+        return $this->hasOne('\Modules\Osce\Entities\Room','id','room_id');
+    }
+
+
+    public function examScreening(){
+        return $this->hasOne('\Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
+    }
+
+    public function exam(){
+        return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
+    }
+
+
     protected $statuValues = [
         1 => '候考',
         2 => '正在考试',
@@ -98,36 +116,37 @@ class ExamQueue extends CommonModel
      */
     public function StudentExamQueue($studentId)
     {
-        $todayStart = date('Y-m-d 00:00:00');
-        $todayEnd = date('Y-m-d 23:59:59');
-        return ExamQueue::leftJoin('room', function ($join) {
-            $join->on('room.id', '=', 'exam_queue.room_id');
-
-        })->leftJoin('station', function ($join) {
-
-            $join->on('station.id', '=', 'exam_queue.station_id');
-
-        })->leftJoin('student', function ($join) {
-
-            $join->on('student.id', '=', 'exam_queue.student_id');
-        })
-            ->where($this->table . '.student_id', '=', $studentId)
-            ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
-         AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
-            ->whereIn('exam_queue.status', [1, 2])
-            ->orderBy('begin_dt', 'asc')
-            ->select([
-                'room.name as room_name',
-                'student.name as name',
-                'exam_queue.begin_dt as begin_dt',
-                'exam_queue.end_dt as end_dt',
-                'exam_queue.room_id as room_id',
-                'exam_queue.station_id as station_id',
-                'exam_queue.status as status',
-                'exam_queue.id as id',
-                'station.mins as mins',
-                'exam_queue.exam_id as exam_id'
-            ])->get();
+//        $todayStart = date('Y-m-d 00:00:00');
+//        $todayEnd = date('Y-m-d 23:59:59');
+//        return ExamQueue::leftJoin('room', function ($join) {
+//            $join->on('room.id', '=', 'exam_queue.room_id');
+//
+//        })->leftJoin('station', function ($join) {
+//
+//            $join->on('station.id', '=', 'exam_queue.station_id');
+//
+//        })->leftJoin('student', function ($join) {
+//
+//            $join->on('student.id', '=', 'exam_queue.student_id');
+//        })
+//            ->where($this->table . '.student_id', '=', $studentId)
+//            ->whereRaw("UNIX_TIMESTAMP(exam_queue.begin_dt) > UNIX_TIMESTAMP('$todayStart')
+//         AND UNIX_TIMESTAMP(exam_queue.end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+////            ->whereIn('exam_queue.status', [1, 2])
+//            ->orderBy('begin_dt', 'asc')
+//            ->select([
+//                'room.name as room_name',
+//                'student.name as name',
+//                'exam_queue.begin_dt as begin_dt',
+//                'exam_queue.end_dt as end_dt',
+//                'exam_queue.room_id as room_id',
+//                'exam_queue.station_id as station_id',
+//                'exam_queue.status as status',
+//                'exam_queue.id as id',
+//                'station.mins as mins',
+//                'exam_queue.exam_id as exam_id'
+//            ])->get();
+        return $this->where('student_id','=',$studentId)->get();
     }
 
 
@@ -200,25 +219,6 @@ class ExamQueue extends CommonModel
     }
 
     /**
-     * 学生腕表信息 考试信息判断
-     * @param $examQueueCollect
-     * @return array
-     * @internal param $room_id
-     * @author zhouqiang
-     */
-    public function nowQueue($examQueueCollect)
-    {
-        foreach ($examQueueCollect as $key => $nowQueue) {
-            $nextKey = $key + 1;
-            $nextQueue = isset($examQueueCollect[$nextKey]) ? $examQueueCollect[$nextKey] : [];
-            if ($nowQueue->status == 1 || $nowQueue->status == 2) {
-                return [$nowQueue, $nextQueue];
-            }
-            return [];
-        }
-    }
-
-    /**
      * 学生腕表信息 下一场考试信息判断
      * @param $room_id
      * @return
@@ -273,12 +273,13 @@ class ExamQueue extends CommonModel
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败');
                         }else{
+                            $connection->commit();
                             return true;
                         }
                     }
                 }
             }else{
-                $connection->commit();
+
                 return false;
             }
         } catch (\Exception $ex) {

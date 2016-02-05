@@ -661,7 +661,7 @@ class InvigilatePadController extends CommonController
             );
         }
         return response()->json(
-            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
+            $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
         );
     }
 

@@ -29,51 +29,36 @@
         <select  id="examination" class="form-control normal_select select_indent invigilation" name="student_type" required>
         	<option value="">请选择考试</option>
         	@foreach($ExamList as $list)
-            	<option value="{{$list->exam_id}}" data="{{$list->station_id}}">{{$list->exam_name}}</option>
+            	<option value="{{$list->exam_id}}" data-id="{{$list->station_id}}">{{$list->exam_name}}</option>
 	        @endforeach
         </select>
     </div>
     <div class="examination_msg">
 		<div class="form-group">
             <label for="">考试时间</label>
-            <div class="txt">1</div>
+            <div class="txt" id="time">1</div>
         </div>
         <div class="form-group">
             <label for="">科目</label>
-            <div class="txt">肠胃炎</div>
+            <div class="txt" id="subject">肠胃炎</div>
         </div>
         <div class="form-group">
             <label for="">考试人数</label>
-            <div class="txt">80人</div>
+            <div class="txt" id="number">80人</div>
         </div>
         <div class="form-group">
             <label for="">平均用时</label>
-            <div class="txt">08：23</div>
+            <div class="txt" id="time2">08：23</div>
         </div>
         <div class="form-group" style="border:none;">
             <label for="">平均成绩</label>
-            <div class="txt">86</div>
+            <div class="txt" id="vgn">86</div>
         </div>
         <table class="table cj_tab">
 	  		<tr>
 	  			<th>考生姓名</th>
 	  			<th>总分</th>
 	  			<th>操作</th>
-			</tr>
-	  		<tr class="even">
-	  			<td>张三</td>
-	  			<td>256</td>
-	  			<td><a href="#"><i class="fa fa-search font16 see"></i></a></td>
-			</tr>
-			<tr class="obb">
-	  			<td>李四</td>
-	  			<td>256</td>
-	  			<td><a href="#"><i class="fa fa-search font16 see"></i></a></td>
-			</tr>
-			<tr class="even">
-	  			<td>王五</td>
-	  			<td>256</td>
-	  			<td><a href="#"><i class="fa fa-search font16 see"></i></a></td>
 			</tr>
 	  	</table>
   	</div>
