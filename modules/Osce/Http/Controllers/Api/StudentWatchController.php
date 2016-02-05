@@ -307,12 +307,10 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc');
           foreach($willStudents as $key=>$willStudent){
-              if($willStudent->student_id = $item->student_id){
-                  $key =key($willStudent);
+              if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
               }
           }
-
         return $studentNum;
     }
 
