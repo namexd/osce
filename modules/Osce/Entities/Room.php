@@ -126,7 +126,7 @@ class Room extends CommonModel
                 if  (!RoomStation::where('room_id',$id)->delete()) {
                     throw new \Exception('房间考站关联删除失败');
                 }
-            };
+            }
 
             $roomVcrs = RoomVcr::where('room_id','=',$id)->get();
             if (!$roomVcrs->isEmpty()) {
@@ -140,11 +140,10 @@ class Room extends CommonModel
                         throw new \Exception('更新摄像机状态失败！');
                     }
                 }
-
             }
 
 
-            $room = $this->where('id','=',$id)->first();
+            $room = $this->where('id','=',$id)->firstOrFail();
             if (!$result = $room->delete()) {
                 throw new \Exception('房间删除失败');
             }
