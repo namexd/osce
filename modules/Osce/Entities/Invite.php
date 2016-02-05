@@ -43,7 +43,7 @@ class Invite extends CommonModel
 //                $teacherName    = Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
                 $teacherName = Teacher::find($inviteDat['user_id']);
                 if ($examScreening) {
-                    throw new \Exception('在该场考试中已经已邀请过' . $teacherName->name . '老师了！！！');
+                    throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
                 }
                 $notice = $this->Create($inviteDat);
                 if ($notice) {
