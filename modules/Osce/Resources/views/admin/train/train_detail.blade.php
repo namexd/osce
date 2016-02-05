@@ -54,14 +54,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10">
-                        	<p class="form-control-static">{{ $data['begin_dt']  }}</p>
+                        	<p class="form-control-static">{{ date('Y-m-d H:i',strtotime($data['begin_dt'])) }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">结束时间:</label>
                         <div class="col-sm-10">
-                        	<p class="form-control-static">{{ $data['end_dt']  }}</p>
+                        	<p class="form-control-static">{{ date('Y-m-d H:i',strtotime($data['end_dt'])) }}</p>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

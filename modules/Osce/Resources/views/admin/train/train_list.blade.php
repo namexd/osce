@@ -59,7 +59,7 @@
                 <tr>
                     <td>{{$key+1}}</td>
                     <td><a href="{{route('osce.admin.getTrainDetail',array('id'=>$data->id))}}">{{ $data->name }}</a></td>
-                    <td>{{ $data->begin_dt }}~{{ $data->end_dt }}</td>
+                    <td>{{date('Y-m-d H:i',strtotime($data->begin_dt))}}~{{date('Y-m-d H:i',strtotime($data->end_dt))}}</td>
                     <td value="{{$data->id}}">
                     <!--<td value="1">-->
                         <a href="{{ route('osce.admin.getEditTrain',array('id'=>$data->id)) }}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
