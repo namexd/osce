@@ -127,16 +127,15 @@ class StudentExamQueryController extends CommonController
 //            }
 
         foreach ($stationList as $stationType) {
-//            if($stationType->type == 2){
-            //获取到sp老师信息
-            $teacherModel = new Teacher();
-            $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
+            if ($stationType->type == 2) {
+                //获取到sp老师信息
+                $teacherModel = new Teacher();
+                $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
 
-            if (!$spteacher) {
-                throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
+                if (!$spteacher) {
+                    throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
+                }
             }
-
-//            }
 
             $stationData[] = [
                 'exam_result_id' => $stationType->exam_result_id,
@@ -336,8 +335,6 @@ class StudentExamQueryController extends CommonController
                     $item['avg_total'] = $avg->count();
                 }
             }
-
-
             //获取该考试科目所有的学生
             $studentData = $studentModel->getStudentByExamAndSubject($examId, $subjectId);
             $subjectData = [];
@@ -355,7 +352,6 @@ class StudentExamQueryController extends CommonController
 
                 ];
             }
-
 //            dd($item,$subjectData);
             return response()->json(
                 $this->success_data(['subjectData' => $subjectData, 'item' => $item], 1, '科目数据传送成功')
