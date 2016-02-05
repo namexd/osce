@@ -21,12 +21,12 @@ class Standard extends CommonModel
     protected $fillable = ['subject_id', 'content', 'sort', 'score', 'created_user_id','pid','level','answer'];
     public $search = [];
 
-    //创建人
+
     public function user(){
         return $this->hasOne('App\Entities\User','created_user_id','id');
     }
 
-    //获取考核点
+    //获取考核项
     public function parent(){
         return $this->hasOne('Modules\Osce\Entities\Standard','id','pid');
     }
@@ -46,13 +46,14 @@ class Standard extends CommonModel
         foreach($data[0] as $proint)
         {
             $prointData =   $proint;
+            //$prointData['test_point']['test_term']    =   $data[$proint->id];
             if(array_key_exists($proint->id,$data))
             {
-                $prointData['test_point']['test_term']    =   $data[$proint->id];
+                $prointData['test_term']    =   $data[$proint->id];
             }
             else
             {
-                $prointData['options']    =   [];
+                $prointData['test_term']    =   [];
             }
             $return[]=$prointData;
         }
