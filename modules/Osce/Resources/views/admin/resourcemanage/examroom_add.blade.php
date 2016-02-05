@@ -89,7 +89,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">场所类别</label>
+                            <label class="col-sm-2 control-label">场所类型</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="cate">
                                     <option value="0" {{0==$type? 'selected="selected"':''}}>考场</option>
@@ -154,7 +154,8 @@
         $(function(){
             $('[name=cate]').select2({
                 tags: true,
-                tokenSeparators: [',', ' ']
+                tokenSeparators: [',', ' '],
+                maximumInputLength: 12
             }).change(function(){
                 var val =   $(this).val();
                 val     =   val.toString();
