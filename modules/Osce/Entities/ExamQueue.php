@@ -250,8 +250,6 @@ class ExamQueue extends CommonModel
     public function AlterTimeStatus($studentId, $stationId, $nowTime)
 
     {
-        $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
         try {
 
             $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
@@ -273,7 +271,7 @@ class ExamQueue extends CommonModel
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败');
                         }else{
-                            $connection->commit();
+
                             return true;
                         }
                     }
@@ -283,7 +281,7 @@ class ExamQueue extends CommonModel
                 return false;
             }
         } catch (\Exception $ex) {
-            $connection->rollBack();
+
             throw $ex;
         }
 

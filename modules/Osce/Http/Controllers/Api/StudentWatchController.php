@@ -257,10 +257,16 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
         //判断前面还有多少人在等待考试
-        $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
+        $willStudents = 0;
+        $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
-
             ->count();
+          if($examStudent == 0){
+              //判断前面考生等待人数
+              $this->getwillStudent($item);
+          }else{
+
+          }
 
         //判断预计考试时间
         $examtimes = date('H:i:s', (strtotime($item->begin_dt)));
@@ -291,7 +297,17 @@ class StudentWatchController extends CommonController
    }
 
 
+    private function getWillStudent($item){
 
+        $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
+            ->where('status','=',0)
+            ->orderBy('begin_dt', 'asc');
+          foreach($willStudents as $key=>$willStudent){
+
+
+          }
+
+    }
 
 
 
