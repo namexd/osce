@@ -254,7 +254,7 @@ class RoomController extends CommonController
             //验证略
             $this->validate($request, [
                 'id' => 'required|integer',
-                'type' => 'sometimes|integer'
+                'type' => 'sometimes'
             ]);
 
             $id = $request->input('id');
