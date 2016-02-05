@@ -289,17 +289,18 @@ class StationController extends CommonController
         if ($id == "") {
             $vcr = Vcr::where('used', 0)
                 ->whereNotIn('status',[2,3])
-                ->select(['id', 'name'])
+                ->select('id', 'name')
                 ->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
             $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
 
             $vcr  = Vcr::where('used', 0)
+                    ->whereNotIn('status',[2,3])
                     ->orWhere(function($query) use($vcrId){
                         $query->where('id','=',$vcrId);
                     })
-                    ->select(['id', 'name'])
+                    ->select('id', 'name')
                     ->get();     //关联摄像机
         }
         $case   = CaseModel::all(['id', 'name']);
