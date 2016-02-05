@@ -252,7 +252,7 @@ class TrainController extends  CommonController{
 //            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
 
-        if($userId==$createId || in_array($userId,config('osce.manager'))){
+        if($userId==$createId || $userId==config('config.superRoleId')){
             $result=InformTrain::where('id',$id)->delete();
             if($result){
                 return redirect('/osce/admin/train/train-list')->with('success','删除成功');
