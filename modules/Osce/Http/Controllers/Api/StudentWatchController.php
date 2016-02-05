@@ -258,6 +258,7 @@ class StudentWatchController extends CommonController
         $item   =   array_shift($items);
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
+
         //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
@@ -265,7 +266,6 @@ class StudentWatchController extends CommonController
 
           if($examStudent == 0){
               //判断前面考生等待人数
-
               $willStudents =$studentnum;
           }else{
 
@@ -305,7 +305,8 @@ class StudentWatchController extends CommonController
         $studentNum=0;
         $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
             ->where('status','=',0)
-            ->orderBy('begin_dt', 'asc');
+            ->orderBy('begin_dt', 'asc')
+            ->get();
           foreach($willStudents as $key=>$willStudent){
               if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
