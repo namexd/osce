@@ -37,14 +37,14 @@
             clear: both;
             height: 0;
         }
-        .time-list{
+        /*.time-list{
             width: 200px;
             margin-top: 5px;
             text-align: center;
         }
         .time-list li{
             border: 1px solid #ccc;
-        }
+        }*/
         .assign-box>div{
             float: left;
         }
@@ -106,6 +106,12 @@
         }
         .table>li{
             width: 250px;
+        }
+        .screening_box>ul{
+            float: left;
+        }
+        .screening_box>ul:first-child{
+            width: 200px;
         }
     </style>
 @stop
