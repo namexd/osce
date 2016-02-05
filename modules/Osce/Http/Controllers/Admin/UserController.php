@@ -257,6 +257,9 @@ class UserController extends CommonController
               $this->validate($request,[
                   'role_id'  => 'required',
                   'user_id'  => 'required'
+              ],[
+                  'role_id'  => '请选择角色',
+                  'user_id'  => '该用户不存在',
               ]);
                $user_id=$request->input('user_id');
                $role_id=$request->input('role_id');
