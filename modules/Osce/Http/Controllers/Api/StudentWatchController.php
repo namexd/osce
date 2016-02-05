@@ -154,9 +154,9 @@ class StudentWatchController extends CommonController
         $station=$item->station;
         $room =$item->room;
         $data   =   [
-            'code'=>2,
+            'code'=>3,
             'title'=>'将要考试进入考站',
-            'roomName'=>$station->name.'-'.$room->name,
+            'roomName'=>$room->name.'-'.$station->name,
         ];
         return $data;
     }
@@ -256,16 +256,20 @@ class StudentWatchController extends CommonController
             }
         });
         $item   =   array_shift($items);
-        //判断前面还有多少人在等待考试
-        $willStudents = 0;
+        //判断前面等待人数
+        $studentnum = $this->getwillStudent($item);
+        //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
+
           if($examStudent == 0){
               //判断前面考生等待人数
-              $this->getwillStudent($item);
+
+              $willStudents =$studentnum;
           }else{
 
+              $willStudents = $studentnum+1;
           }
 
         //判断预计考试时间
@@ -298,15 +302,18 @@ class StudentWatchController extends CommonController
 
 
     private function getWillStudent($item){
-
+        $studentNum=0;
         $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc');
           foreach($willStudents as $key=>$willStudent){
-
-
+              if($willStudent->student_id = $item->student_id){
+                  $key =key($willStudent);
+                  $studentNum=$key;
+              }
           }
 
+        return $studentNum;
     }
 
 
