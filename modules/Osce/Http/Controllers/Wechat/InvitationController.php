@@ -51,9 +51,9 @@ class InvitationController extends CommonController
             'exam_id' => 'required|integer',
             'station_id' => 'required|integer',
         ], [
-            'teacher_id.required' => '邀请编号必须',
-            'exam_id.required' => '考试编号必须',
-            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '请确认老师信息是否正确',
+            'exam_id.required' => '请确认考试信息是否正确',
+            'station_id.required' => '请选请确认考站是否正确',
         ]);
 
         $teacher_id = $request->get('teacher_id');

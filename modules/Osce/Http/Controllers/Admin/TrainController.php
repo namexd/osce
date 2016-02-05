@@ -139,10 +139,10 @@ class TrainController extends  CommonController{
             return \Response::json(array('code'=>2));
         }
         $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
-        $manager=config('osce.manager');
+
         if($createId!=$userId){
             $url=1;
-        }elseif($userId==$manager[0]){
+        }elseif($userId==config('config.superRoleId')){
             $url=2;
         }else{
             $url=2;
@@ -252,7 +252,7 @@ class TrainController extends  CommonController{
 //            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
 
-        if($userId==$createId || in_array($userId,config('osce.manager'))){
+        if($userId==$createId || $userId==config('config.superRoleId')){
             $result=InformTrain::where('id',$id)->delete();
             if($result){
                 return redirect('/osce/admin/train/train-list')->with('success','删除成功');

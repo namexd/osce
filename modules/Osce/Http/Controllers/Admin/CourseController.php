@@ -108,7 +108,7 @@ class CourseController extends CommonController
             'avg_score' => 'required',
             'avg_time' => 'required'
         ]);
-
+        
         //获得参数
         $examId = $request->input('exam_id');
         $subjectId = $request->input('subject_id');

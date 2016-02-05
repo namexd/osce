@@ -132,15 +132,15 @@ function examination_list_teacher(){
 					var str="",strs="";
 					if(i%2==0){
 						 str='<tr class="new even">'+
-							'<td>张三</td>'+
-							'<td>256</td>'+
+							'<td>'+res.data['subjectData'][i].student_name+'</td>'+
+							'<td>'+res.data['subjectData'][i].scoer+'</td>'+
 							'<td><a href="'+pars.detailUrl+'?student_id='+res.data['subjectData'][i].student_id+'&exam_id='+res.data['subjectData'][i].exam_id+'"><i class="fa fa-search font16 see"></i></a></td>'+
 							'</tr>';
 
 					}else{
 						var str='<tr class="new obb">'+
-							'<td>张三</td>'+
-							'<td>256</td>'+
+							'<td>'+res.data['subjectData'][i].student_name+'</td>'+
+							'<td>'+res.data['subjectData'][i].scoer+'</td>'+
 							'<td><a href="#"><i class="fa fa-search font16 see"></i></a></td>'+
 							'</tr>';
 					}
