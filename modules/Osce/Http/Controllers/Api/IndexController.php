@@ -307,15 +307,22 @@ class IndexController extends CommonController
 
         $data=array('code'=>$student_id->student_id);
 
-        $action=WatchLog::where('student_id',$student_id->student_id)->select('action')->orderBy('id','DESC')->first();
-        if($action=='绑定') {
-            return response()->json(
-                $this->success_data($data, 1, '已绑定腕表'));
-        }else{
+        $action=WatchLog::where('student_id',$student_id->id)->select('action')->orderBy('id','DESC')->first();
+        if($action){
+            if($action->action=='绑定') {
+                return response()->json(
+                    $this->success_data($data, 1, '已绑定腕表'));
+            }else{
                 return response()->json(
                     $this->success_data($data,0,'未绑定腕表')
                 );
             }
+        }else{
+            return response()->json(
+                $this->success_data($data,0,'未绑定腕表')
+            );
+        }
+
     }
 
     /**
