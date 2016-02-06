@@ -41,7 +41,7 @@ Route::group(['prefix' => "commom"],function(){
  * password作用域
  * cors 为测试时 跨域js提交专用，发布时去除
  */
-Route::group(['prefix' => "api/1.0/private", 'namespace' => 'V1','middleware' => [],], function()
+Route::group(['prefix' => "api/1.0/private", 'namespace' => 'V1','middleware' => ['oauth','cors'],], function()
 {
     Route::group(['prefix'=>'user', 'namespace' => 'Sys'],function() {
         //Route::post('getuser', 'UserController@getUserById');
