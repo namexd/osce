@@ -388,6 +388,10 @@ class ExamQueue extends CommonModel
                 ->where('status', 2)
                 ->first();
 
+            if (is_null($queue)) {
+                throw new \Exception('没有找到符合要求的学生');
+            }
+
             return $queue;
         } catch (\Exception $ex) {
             throw $ex;
