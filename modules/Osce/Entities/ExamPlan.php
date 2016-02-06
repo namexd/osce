@@ -888,4 +888,12 @@ class ExamPlan extends CommonModel
             throw $ex;
         }
     }
+
+    public function getexampianStudent($ExamScreeningId){
+        return $this->where('exam_screening_id','=',$ExamScreeningId)
+                    ->groupBy('student_id','asc')
+                    ->get();
+
+
+   }
 }
