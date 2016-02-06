@@ -143,10 +143,6 @@ class ExamScreening extends CommonModel
         $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
             ->where('exam_screening_id','=',$ExamScreening->id)
             ->count();
-        dump($examAbsentStudent);
-        dump($examFinishStudent);
-        dump($exampianStudent);
-        dd(123);
         if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
             $ExamScreening->status = 2;
             if(!$ExamScreening->save()){
