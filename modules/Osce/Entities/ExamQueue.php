@@ -183,6 +183,7 @@ class ExamQueue extends CommonModel
                 )
                 ->take($stationNum)
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->groupBy('student.id')
                 ->get();
         } catch (\Exception $ex) {
             throw $ex;
@@ -207,11 +208,12 @@ class ExamQueue extends CommonModel
                 ->skip($stationNum)
                 ->take($stationNum)
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->select([
+                ->select(
                     'student.id as student_id',
                     'student.name as student_name',
                     'student.code as student_code'
-                ])
+                )
+                ->groupBy('student.id')
                 ->get();
         } catch (\Exception $ex) {
             throw $ex;
