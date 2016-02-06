@@ -43,6 +43,14 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             $TestResultData = [];
+            $examResult = $this->where('student_id','=',$data['student_id'])
+                            ->where('exam_screening_id','=',$data['exam_screening_id'])
+                            ->where('station_id','=',$data['station_id'])
+                            ->count();
+            if($examResult>0){
+                throw new \Exception('该成绩已提交过',-7);
+            }
+
             if ($testResult = $this->create($data)) {
                 $TestResultData = [
                     'item_id' => $testResult->id,

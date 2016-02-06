@@ -329,7 +329,9 @@ class InvigilatePadController extends CommonController
                 }
             }
 
+
             $TestResultModel = new TestResult();
+
             $result = $TestResultModel->addTestResult($data);
 
             if ($result) {
