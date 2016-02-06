@@ -144,6 +144,9 @@ class ExamScreening extends CommonModel
             ->where('exam_screening_id','=',$ExamScreening->id)
             ->groupBy('student_id')
             ->count();
+        dump($examAbsentStudent);
+        dump($examFinishStudent);
+        dump($exampianStudent);
         if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
             $ExamScreening->status = 2;
             if(!$ExamScreening->save()){

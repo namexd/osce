@@ -209,6 +209,8 @@ class IndexController extends CommonController
             'code' =>'required',
             'exam_id' =>'required'
         ]);
+        $connection =   \DB::connection('osce_mis');
+        $connection ->beginTransaction();
         try{
             $code=$request->get('code');
             $exam_id=$request->get('exam_id');
@@ -286,6 +288,8 @@ class IndexController extends CommonController
                     $examScreening   =   new ExamScreening();
                     //检查考试是否可以结束
                     $examScreening  ->getExamCheck();
+                    dd(123);
+                    $connection->commit();
                 }
                 return \Response::json(array('code'=>1));
             }else{
@@ -294,6 +298,7 @@ class IndexController extends CommonController
         }
         catch(\Exception $ex)
         {
+            $connection->rollBack();
             return \Response::json(array('code'=>0));
         }
     }
