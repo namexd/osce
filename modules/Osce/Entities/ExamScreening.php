@@ -89,4 +89,17 @@ class ExamScreening extends CommonModel
 
     }
 
+    public function getNearestScreening($exam_id){
+        return  $this   ->  where('exam_id','=',$exam_id)
+                ->  where('status','=',0)
+                ->  OrderBy('begin_dt','asc')
+                ->  first();
+    }
+
+    public function getExamingScreening($exam_id){
+        return  $this   ->  where('exam_id','=',$exam_id)
+            ->  where('status','=',1)
+            ->  OrderBy('begin_dt','asc')
+            ->  first();
+    }
 }

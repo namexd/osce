@@ -94,7 +94,7 @@ class DrawlotsController extends CommonController
 
             //将学生照片的地址换成绝对路径
             foreach ($examQueue as &$item) {
-                $item->student_avator = url('public' . $item->student_avator);
+                $item->student_avator = url($item->student_avator);
             }
 
 //            $examQueue = [
