@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomStation;
@@ -280,6 +281,7 @@ class DrawlotsController extends CommonController
                 return Station::findOrFail($temp->station_id);
             }
 
+
             //从ExamQueue表中将房间和状态对应的列表查出
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('exam_id',$examId)
@@ -324,7 +326,6 @@ class DrawlotsController extends CommonController
                 //如果是以考站分组，直接按计划好的顺序给出
                 //查询该学生当前应该在哪个考站考试
                 $examQueue = ExamQueue::where('student_id',$student->id)
-                    ->where('room_id',$roomId)
                     ->where('exam_id',$examId)
                     ->where('status',0)
                     ->orderBy('begin_dt','asc')
@@ -337,6 +338,29 @@ class DrawlotsController extends CommonController
                 //获得他应该要去的考站id
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
+
+                //获得plan表中应该要去哪些考站
+                $examPlanStationIds = ExamPlan::where('student_id',$student->id)
+                    ->where('exam_id',$examId)
+                    ->orderBy('begin_dt','asc')
+                    ->get()->pluck('station_id');
+
+                //判断当前考站在计划表中的顺序
+                $stationIdKey = $examPlanStationIds->search($stationId);
+
+                if (!$stationIdKey) {
+                    throw new \Exception('该名考生不在计划中！',3800);
+                }
+
+                $tempExamQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('exam_id',$examId)
+                    ->orderBy('begin_dt','asc')
+                    ->get();
+
+                $tempStationIdKey = $stationIdKey-1;
+                if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
+                    throw new \Exception('当前考生走错了考场！',3400);
+                }
 
                 //将队列状态变更为1
                 $tempObj->status = 1;
@@ -369,9 +393,17 @@ class DrawlotsController extends CommonController
             //获得考场的id
             $room_id = $room->id;
             //获得当前考场考站的个数
-            $stationNum = StationTeacher::where('exam_id',$exam->id)->groupBy('station_id')->get()->count();
+            $stations = StationTeacher::where('exam_id',$exam->id)->groupBy('station_id')->get();
 
-            return array($room_id, $stationNum);
+            $roomStations = [];
+
+            foreach ($stations as $station) {
+                $thisStationRoomdId =   $station->station->roomStation->room_id;
+                $roomStations[$thisStationRoomdId][]  =   $station;
+            }
+
+
+            return array($room_id, count($roomStations[$room_id]));
         } catch (\Exception $ex) {
             throw $ex;
         }
