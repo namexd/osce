@@ -263,12 +263,13 @@ class ExamQueue extends CommonModel
                     ->get();
                 foreach ($studentTimes as  $item) {
                     if ($nowTime > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
+                        $lateTime    =   time()-strtotime($item->begin_dt);
                         if ($item->status == 2) {
-                            $item->begin_dt = date('Y-m-d H:i:s', $nowTime + (config('osce.begin_dt_buffer') * 60));
-                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + (config('osce.begin_dt_buffer') * 60));
+                            $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt)+$lateTime);
                         } else {
-                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60));
-                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + (config('osce.begin_dt_buffer') * 60));
+                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) +$lateTime);
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) +$lateTime);
                         }
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败');
