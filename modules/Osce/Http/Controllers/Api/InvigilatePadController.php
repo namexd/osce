@@ -703,12 +703,12 @@ class InvigilatePadController extends CommonController
          //获取考试场次迟到的人数
          $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
                             ->groupBy('student_id')
-                            ->get();
+                            ->count();
         //获取考试场次已考试完成的人数
         $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
                     ->where('exam_screening_id','=',$ExamScreening->id)
                     ->groupBy('student_id')
-                    ->get();
+                    ->count();
         if($examAbsentStudent+$examFinishStudent == $exampianStudent){
             $ExamScreening->status = 2;
             if(!$ExamScreening->save()){
