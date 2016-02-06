@@ -195,7 +195,7 @@ class DrawlotsController extends CommonController
 
             //如果考生走错了房间
             if (ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->get()->isEmpty()) {
-                throw new \Exception('当前考生走错了考场！',3400);
+                throw new \Exception('当前考生走错了考场！1',3400);
             }
 
             //使用抽签的方法进行抽签操作
