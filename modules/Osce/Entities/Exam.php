@@ -288,7 +288,8 @@ class Exam extends CommonModel
 
             //将考试对应的考次关联数据写入考试场次表中
             foreach($examScreeningData as $key => $value){
-                $value['exam_id']    =   $result->id;
+                $value['exam_id']   =   $result->id;
+                $value['status']    =   0;
                 if(!$examScreening = ExamScreening::create($value))
                 {
                     throw new \Exception('创建考试场次信息失败');

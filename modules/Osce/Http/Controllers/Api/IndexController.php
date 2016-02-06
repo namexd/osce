@@ -137,6 +137,21 @@ class IndexController extends CommonController
             return \Response::json(array('code'=>5));
         }
         $examStatus=Exam::where('status','=',1)->select()->first();
+
+
+        //修改场次状态
+        $examScreeningModel =   new ExamScreening();
+        $examScreening  =   $examScreeningModel ->  getExamingScreening($exam_id);
+        if(is_null($examScreening))
+        {
+            $examScreening      =   $examScreeningModel  ->  getNearestScreening($exam_id);
+            $examScreening      ->  status  =   1;
+            if(!$examScreening      ->  save())
+            {
+                throw new \Exception('场次开考失败！');
+            }
+        }
+
         if($examStatus){
             if($examStatus->id!=$exam_id){
                 return \Response::json(array('code'=>6));

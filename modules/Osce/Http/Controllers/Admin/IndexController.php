@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Http\Controllers\CommonController;
 
 
@@ -64,6 +65,13 @@ class IndexController extends CommonController
             $exam->status = 1;
 
             if($exam->save()){
+                $examScreeningModel =   new ExamScreening();
+                $examScreening      =   $examScreeningModel  ->  getNearestScreening($exam->id);
+                $examScreening      ->  status  =   1;
+                if(!$examScreening      ->  save())
+                {
+                    throw new \Exception('场次开考失败！');
+                }
                 return redirect()->route('osce.admin.index.dashboard');
             }else{
                 throw new \Exception('开考失败！');
