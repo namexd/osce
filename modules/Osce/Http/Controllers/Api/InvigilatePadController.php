@@ -200,7 +200,7 @@ class InvigilatePadController extends CommonController
     }
 
     /**
-     *   * 提交评价
+     * 提交评价
      * @method GET
      * @url /osce/api/invigilatepad/save-exam-evaluate
      * @access public
@@ -286,10 +286,10 @@ class InvigilatePadController extends CommonController
         //得到用时
 
         $times = Input::get('end_dt') - Input::get('begin_dt');
-        $time =   date('i',$times);
+        $time = date('i', $times);
 
         //得到总成绩
-         $scores =0;
+        $scores = 0;
         $json = json_decode(Input::get('score'));
         //得到考试评分详情
         $data = [
@@ -326,9 +326,7 @@ class InvigilatePadController extends CommonController
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
             }
-
             $TestResultModel = new TestResult();
-
             $result = $TestResultModel->addTestResult($data);
 
             if ($result) {
