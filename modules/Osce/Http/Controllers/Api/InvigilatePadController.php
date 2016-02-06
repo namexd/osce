@@ -289,7 +289,8 @@ class InvigilatePadController extends CommonController
         $time =   date('i',$times);
 
         //得到总成绩
-
+         $scores =0;
+         json_decode(Input::get('score'));
         //得到考试评分详情
         $data = [
             'station_id' => Input::get('station_id'),
@@ -310,14 +311,11 @@ class InvigilatePadController extends CommonController
 
         //根据考生id获取到考试id
         $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
-
         //根据考试获取到考试流程
         $ExamFlowModel = new  ExamFlow();
         $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
         //查询出学生当前已完成的考试
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $ExamId)->count();
-
-
         try {
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
@@ -329,7 +327,6 @@ class InvigilatePadController extends CommonController
                 }
             }
 
-
             $TestResultModel = new TestResult();
 
             $result = $TestResultModel->addTestResult($data);
@@ -340,12 +337,10 @@ class InvigilatePadController extends CommonController
                 //根据考试附件结果id修改表里的考试结果id
                 // todo 待最后确定。。。。。。。。
 
-                //存入考试 评分详情表
 
+                //存入考试 评分详情表
                 $SaveEvaluate = $this->postSaveExamEvaluate($request, $testResultId);
                 //todo 调用考试结束方法
-                 $this->getExamCheck();
-
                 if (!$SaveEvaluate) {
                     return response()->json(
                         $this->fail(new \Exception('成绩推送失败'))
@@ -671,87 +666,5 @@ class InvigilatePadController extends CommonController
             $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
         );
     }
-
-    /**
-     *  结束考试
-     * @method GET
-     * @url /osce/api/invigilatepad/end-exam
-     * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string     student_id    学生id   (必须的)
-     *
-     * @return json
-     *
-     * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-
-    public function getExamCheck()
-    {
-        //取得考试实例
-        $exam = Exam::where('status','=',1)->orderBy('begin_dt','desc')->first();
-        //获取到当考试场次id
-        $ExamScreeningModel = new ExamScreening();
-        $ExamScreening = $ExamScreeningModel-> getExamingScreening($exam->id);
-        if(is_null($ExamScreening)){
-            $ExamScreening = $ExamScreeningModel->getNearestScreening($exam->id);
-        }
-        //根据考试场次id查询计划表所有考试学生
-         $examPianModel = new ExamPlan();
-         $exampianStudent =  $examPianModel->getexampianStudent($ExamScreening->id);
-         //获取考试场次迟到的人数
-         $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
-                            ->groupBy('student_id')
-                            ->count();
-        //获取考试场次已考试完成的人数
-        $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
-                    ->where('exam_screening_id','=',$ExamScreening->id)
-                    ->groupBy('student_id')
-                    ->count();
-        if($examAbsentStudent+$examFinishStudent == $exampianStudent){
-            $ExamScreening->status = 2;
-            if(!$ExamScreening->save()){
-                throw new \Exception('场次结束失败',-5);
-            }
-            if($exam->examScreening()->where('status','=',0)->count()==0)
-            {
-                $exam->status=2;
-                if(!$exam->save()){
-                    throw new \Exception('考试结束失败',-6);
-                }
-            }
-        }
-
-
-
-
-//        $this->validate($request, [
-//            'student_id' => 'required|integer',
-//            'station_id' => 'required|integer',
-//
-//        ], [
-//            'student_id.required' => '考生编号信息必须',
-//            'station_id.required' => '考站编号信息必须'
-//        ]);
-//        $studentId = Input::get('student_id');
-//        $stationId = Input::get('station_id');
-//        $nowTime = time();
-//        $ExamQueueModel = new ExamQueue();
-//        $EndResult = $ExamQueueModel->EndExamAlterStatus($studentId, $stationId, $nowTime);
-//        if ($EndResult) {
-//            return response()->json(
-//                $this->success_data($nowTime, 1, '结束考试成功')
-//            );
-//        }
-//        return response()->json(
-//            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
-//        );
-//
-    }
-
-
 
 }
