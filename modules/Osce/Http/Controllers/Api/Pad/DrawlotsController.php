@@ -326,7 +326,6 @@ class DrawlotsController extends CommonController
                 //如果是以考站分组，直接按计划好的顺序给出
                 //查询该学生当前应该在哪个考站考试
                 $examQueue = ExamQueue::where('student_id',$student->id)
-                    ->where('room_id',$roomId)
                     ->where('exam_id',$examId)
                     ->where('status',0)
                     ->orderBy('begin_dt','asc')
@@ -342,7 +341,6 @@ class DrawlotsController extends CommonController
 
                 //获得plan表中应该要去哪些考站
                 $examPlanStationIds = ExamPlan::where('student_id',$student->id)
-                    ->where('room_id',$roomId)
                     ->where('exam_id',$examId)
                     ->orderBy('begin_dt','asc')
                     ->get()->pluck('station_id');
