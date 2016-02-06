@@ -215,14 +215,14 @@ class UserController extends CommonController
          foreach($roles as $role){
              if($roleId){
                    $user_role_id=$roleId->role_id;
-                 if($role->id!=1 && $role->id!=2 && $role->id!=5 && $role->id!=4 && $role->id!=$user_role_id){
+                 if($role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=$user_role_id){
                      $data[]=[
                          'role_id'=>$role->id,
                          'role_name'=>$role->name,
                      ];
                  }
              }else{
-                 if($role->id!=1 && $role->id!=2 && $role->id!=5 && $role->id!=4 ){
+                 if($role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') ){
                      $data[]=[
                          'role_id'=>$role->id,
                          'role_name'=>$role->name,
