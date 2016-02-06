@@ -74,7 +74,7 @@ function deleteItem(url){
                 type:'post',
                 async:true,
                 url:url,
-                data:{id:thisElement.parent().parent().parent().attr('value')},
+                data:{id:thisElement.parent().parent().parent().attr('value'),type:thisElement.parent().parent().parent().data('type')},
                 success:function(data){
                     console.log(data);
                     if(data.code==1){

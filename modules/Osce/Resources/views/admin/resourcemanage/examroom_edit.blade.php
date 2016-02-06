@@ -93,9 +93,10 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">场所类别</label>
+
                             <div class="col-sm-10">
                                 <select class="form-control" name="cate">
-                                    @if($type==0)
+                                    @if($type==='0')
                                         <option value="0" {{0==$type? 'selected="selected"':''}}>考场</option>
                                     @else
                                         @forelse($cateList as $cate)

@@ -314,6 +314,8 @@ class StationController extends CommonController
      * 判断名称是否已经存在
      * @url POST /osce/admin/resources-manager/postNameUnique
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     * @param Request $request
+     * @return string
      */
     public function postNameUnique(Request $request)
     {
