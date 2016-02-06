@@ -241,10 +241,9 @@ class IndexController extends CommonController
                     $watchModel->unwrapRecord($data);
                     return \Response::json(array('code'=>2));
                 }else{
-                    return \Response::json(array('code'=>0));
+                    throw new \Exception('解绑失败');
                 }
             }
-            dd(3333);
             $exam_screen_id=$screen_id->exam_screening_id;
             $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
             $ExamFlowModel = new  ExamFlow();
@@ -264,11 +263,20 @@ class IndexController extends CommonController
                     );
                     $watchModel=new WatchLog();
                     $watchModel->unwrapRecord($data);
+
+
+                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                    $examScreening   =   new ExamScreening();
+                    $examScreening  ->getExamCheck();
+                    $connection->commit();
+
                     return \Response::json(array('code'=>1));
                 }else{
-                    return \Response::json(array('code'=>0));
+                    throw new \Exception('解绑失败');
                 }
             }
+
+
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
                 $action='解绑';
@@ -287,9 +295,8 @@ class IndexController extends CommonController
 
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening   =   new ExamScreening();
-                    //检查考试是否可以结束
                     $examScreening  ->getExamCheck();
-                    dd(123);
+                    //检查考试是否可以结束
                     $connection->commit();
                 }
                 return \Response::json(array('code'=>1));
