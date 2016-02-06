@@ -492,13 +492,16 @@ class Teacher extends CommonModel
      *  @author   zhouqiang
      */
 
-    public function getSpTeacher($station){
+    public function getSpTeacher($station,$examId){
+
 
           $spTeacher =  Teacher::leftJoin('station_teacher', function($join){
             $join -> on('teacher.id', '=', 'station_teacher.user_id');
-        })->where('station_teacher.station_id','=',$station)
-
+        })
+              ->where('station_teacher.station_id','=',$station)
+              ->where('station_teacher.exam_id','=',$examId)
             ->first();
+
 
         return   $spTeacher;
     }

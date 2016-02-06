@@ -53,7 +53,6 @@ class StudentExamQueryController extends CommonController
                 // 根据老师id找到老师所监考得考试考站
                 $examModel = new Exam();
                 $ExamList = $examModel->getInvigilateTeacher($user->id);
-
                 return view('osce::wechat.resultquery.examination_list_teacher', ['ExamList' => $ExamList]);
             }
 
@@ -101,59 +100,74 @@ class StudentExamQueryController extends CommonController
         $examId = Input::get('exam_id');
         $studentId = Input::get('student_id');
         //获取到考试的时间
-        try {
-            //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
-            $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
+//        try {
+        //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
+        $studentInfo = Student::find($studentId);
 
 
-            //根据考试id找到对应的考试场次
-            $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
-            $examScreening = [];
-            foreach ($examScreeningId as $data) {
-                $examScreening[] = [
-                    'id' => $data->id,
-                ];
-            }
+        $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
 
-            $examScreeningIds = array_column($examScreening, 'id');
-            //根据场次id查询出考站的相关考试结果
-            $ExamResultModel = new ExamResult();
-            $stationList = $ExamResultModel->stationInfo($examScreeningIds);
-            $stationData = [];
+
+        //根据考试id找到对应的考试场次
+        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
+        $examScreening = [];
+        foreach ($examScreeningId as $data) {
+            $examScreening[] = [
+                'id' => $data->id,
+            ];
+        }
+
+        $examScreeningIds = array_column($examScreening, 'id');
+        //根据场次id查询出考站的相关考试结果
+        $ExamResultModel = new ExamResult();
+        $stationList = $ExamResultModel->stationInfo($examScreeningIds);
+        $stationData = [];
 //            if(!empty($studentId)){
 //                $studentInfo= Student::where('id',$studentId)->find();
 //            }
 
-            foreach ($stationList as $stationType) {
-//            if($stationType->type == 2){
+        foreach ($stationList as $stationType) {
+            if ($stationType->type == 2) {
                 //获取到sp老师信息
                 $teacherModel = new Teacher();
-                $spteacher = $teacherModel->getSpTeacher($stationType->station_id);
+                $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
 
-//            }
+                if (!$spteacher) {
+                    throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
+                }
+            }
 
-                $stationData[] = [
-                    'exam_result_id' => $stationType->exam_result_id,
-                    'station_id' => $stationType->id,
-                    'score' => $stationType->score,
-                    'time' => $stationType->time,
-                    'grade_teacher' => $stationType->grade_teacher,
-                    'type' => $stationType->type,
-                    'station_name' => $stationType->station_name,
-                    'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
-                    'begin_dt' => $examTime->begin_dt,
-                    'end_dt' => $examTime->end_dt,
-                    'exam_screening_id' => $stationType->exam_screening_id,
+            $stationData[] = [
+                'exam_result_id' => $stationType->exam_result_id,
+                'station_id' => $stationType->id,
+                'score' => $stationType->score,
+                'time' => $stationType->time,
+                'grade_teacher' => $stationType->grade_teacher,
+                'type' => $stationType->type,
+                'station_name' => $stationType->station_name,
+                'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
+                'begin_dt' => $examTime->begin_dt,
+                'end_dt' => $examTime->end_dt,
+                'exam_screening_id' => $stationType->exam_screening_id,
 //                    'student_name' =>$studentInfo->name,
 //                    'student_mobile' =>$studentInfo->mobile,
-                ];
-            }
+            ];
+        }
+
+
+        //如果是监考老师掉用这个方法
+        if ($studentId) {
+
+            return view('osce::wechat.resultquery.examination_teacher', ['studentInfo' => $studentInfo, 'stationData' => $stationData, 'examName' => $examTime]);
+        } else {
             return response()->json(
                 $this->success_data($stationData, 1, '数据传送成功')
             );
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
         }
+
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
@@ -173,6 +187,7 @@ class StudentExamQueryController extends CommonController
 
     public function  getExamDetails(Request $request)
     {
+
 
         $this->validate($request, [
             'exam_screening_id' => 'required|integer'
@@ -320,28 +335,26 @@ class StudentExamQueryController extends CommonController
                     $item['avg_total'] = $avg->count();
                 }
             }
-
             //获取该考试科目所有的学生
             $studentData = $studentModel->getStudentByExamAndSubject($examId, $subjectId);
             $subjectData = [];
             //根据考生id查出该考试在本考试的总成绩
-            foreach ($studentData as $studentId) {
+            foreach ($studentData as $student) {
                 //调用查看总成绩的方法
                 $tesresultModel = new TestResult();
-                $StudentScores = $tesresultModel->AcquireExam($studentId->student_id);
+                $StudentScores = $tesresultModel->AcquireExam($student->student_id);
 //                $item[$studentId->student_name] = $StudentScores;
                 $subjectData[] = [
-                    'student_name' => $studentId->student_name,
-                    'student_id' => $studentId->student_id,
+                    'student_name' => $student->student_name,
+                    'student_id' => $student->student_id,
                     'exam_id' => $examId,
                     'Scores' => $StudentScores,
 
                 ];
             }
-
 //            dd($item,$subjectData);
             return response()->json(
-                $this->success_data(['subjectData'=>$subjectData,'item'=>$item], 1, '科目数据传送成功')
+                $this->success_data(['subjectData' => $subjectData, 'item' => $item], 1, '科目数据传送成功')
             );
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
