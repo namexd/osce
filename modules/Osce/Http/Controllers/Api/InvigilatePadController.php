@@ -692,6 +692,8 @@ class InvigilatePadController extends CommonController
 
     public function getEndExam(Request $request)
     {
+        //获取到当考试场次id
+        //根据考试场次id查询计划表所有考试学生
 
 
 
