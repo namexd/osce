@@ -352,9 +352,13 @@ class DrawlotsController extends CommonController
                     throw new \Exception('该名考生不在计划中！',3800);
                 }
 
+                $tempExamQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('exam_id',$examId)
+                    ->orderBy('begin_dt','asc')
+                    ->get();
+
                 $tempStationIdKey = $stationIdKey-1;
-                dd($tempStationIdKey);
-                if ($tempStationIdKey >= 0 && $examQueue[$tempStationIdKey]->status != 3) {
+                if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
 
