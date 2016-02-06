@@ -110,14 +110,10 @@ class ExamScreening extends CommonModel
     /**
      *  结束考试
      * @method GET
-     * @url /osce/api/invigilatepad/end-exam
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     student_id    学生id   (必须的)
-     *
      * @return json
-     *
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date

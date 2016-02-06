@@ -290,7 +290,7 @@ class InvigilatePadController extends CommonController
 
         //得到总成绩
          $scores =0;
-         json_decode(Input::get('score'));
+        $json = json_decode(Input::get('score'));
         //得到考试评分详情
         $data = [
             'station_id' => Input::get('station_id'),
