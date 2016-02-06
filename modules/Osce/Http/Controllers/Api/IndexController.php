@@ -209,7 +209,6 @@ class IndexController extends CommonController
             'code' =>'required',
             'exam_id' =>'required'
         ]);
-        dd(123);
         $connection =   \DB::connection('osce_mis');
         $connection ->beginTransaction();
         try{
@@ -245,6 +244,7 @@ class IndexController extends CommonController
                     return \Response::json(array('code'=>0));
                 }
             }
+            dd(3333);
             $exam_screen_id=$screen_id->exam_screening_id;
             $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
             $ExamFlowModel = new  ExamFlow();
