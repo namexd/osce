@@ -367,17 +367,19 @@ class ExamPlan extends CommonModel
                         if($time<=$perEnd)
                         {
                             $roomdData['child'][]=[
-                                'start' =>  $perEnd,
-                                'end'   =>  $time,
-                                'items' =>  []
+                                'start'     =>  $perEnd,
+                                'end'       =>  $time,
+                                'screening' =>  $screeningId,
+                                'items'     =>  []
                             ];
                         }
                     }
                     $end    =   $time+$this->cellTime*60;
                     $item   =   [
-                        'start' =>  $time,
-                        'end'   =>  $end,
-                        'items' =>  $student
+                        'start'     =>  $time,
+                        'end'       =>  $end,
+                        'screening' =>  $screeningId,
+                        'items'     =>  $student
                     ];
                     $roomdData['child'][]=$item;
                 }
@@ -788,6 +790,12 @@ class ExamPlan extends CommonModel
                         [$screeningId]
                         [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
                         ['child'][$bacthIndex]
+                        ['screening'] =  $screeningId;
+
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
+                        ['child'][$bacthIndex]
                         ['end'] =  strtotime($examPlan->end_dt);
 
 
@@ -818,6 +826,11 @@ class ExamPlan extends CommonModel
                         [$roomStaionInfo[0]]
                         ['child'][$bacthIndex]
                         ['items'][] =   $examPlan->student;
+                        $examPlanData
+                        [$screeningId]
+                        [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
+                        ['child'][$bacthIndex]
+                        ['screening'] =  $screeningId;
                     }
                 }
             }

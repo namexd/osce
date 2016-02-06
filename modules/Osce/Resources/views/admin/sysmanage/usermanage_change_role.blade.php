@@ -36,7 +36,7 @@
 								<div class="col-sm-10">
 									<select class="form-control" name="role_id" style="width: 500px;">
 										    @if($role_id)
-											<option value="{{ $role_id->id }}" selected="selected">{{ $role_id->role->name }}</option>
+											<option value="{{ $role_id->role_id }}" selected="selected">{{ $role_id->role->name }}</option>
 										    @endif
 										    @foreach($data as $item)
 											<option value="{{ $item['role_id'] }}">{{ $item['role_name'] }}</option>
