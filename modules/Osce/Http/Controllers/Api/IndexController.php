@@ -209,6 +209,7 @@ class IndexController extends CommonController
             'code' =>'required',
             'exam_id' =>'required'
         ]);
+        dd(123);
         $connection =   \DB::connection('osce_mis');
         $connection ->beginTransaction();
         try{
