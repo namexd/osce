@@ -272,8 +272,8 @@ class InvigilatePadController extends CommonController
 
 
         $this->validate($request, [
-            'student_id' => 'required|integer',
-            'station_id' => 'required|integer',
+            'student_id' => 'required',
+            'station_id' => 'required',
             'exam_screening_id' => 'required',
             'begin_dt' => 'required',
             'end_dt' => 'required',
@@ -288,8 +288,9 @@ class InvigilatePadController extends CommonController
         $times = Input::get('end_dt') - Input::get('begin_dt');
         $time =   date('i',$times);
 
+        //得到总成绩
 
-
+        //得到考试评分详情
         $data = [
             'station_id' => Input::get('station_id'),
             'student_id' => Input::get('student_id'),
@@ -309,7 +310,6 @@ class InvigilatePadController extends CommonController
 
         //根据考生id获取到考试id
         $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
-
 
         //根据考试获取到考试流程
         $ExamFlowModel = new  ExamFlow();
@@ -337,7 +337,7 @@ class InvigilatePadController extends CommonController
                 $testResultId = $result->id;
                 //根据考试附件结果id修改表里的考试结果id
                 // todo 待最后确定。。。。。。。。
-                
+
                 //存入考试 评分详情表
 
                 $SaveEvaluate = $this->postSaveExamEvaluate($request, $testResultId);
@@ -687,7 +687,7 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getExamCheck(Request $request)
+    public function getExamCheck()
     {
         //取得考试实例
         $exam = Exam::where('status','=',1)->orderBy('begin_dt','desc')->first();
