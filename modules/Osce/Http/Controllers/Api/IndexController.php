@@ -742,11 +742,18 @@ class IndexController extends CommonController
             'exam_id' => 'required|integer'
         ]);
         $exam_id = $request->get('exam_id');
-        $screen_id = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->orderBy('begin_dt')->first();
-        if (!$screen_id) {
+        //$screen_id = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->orderBy('begin_dt')->first();
+        $examScreeningModel =   new ExamScreening();
+        $examScreening      =   $examScreeningModel ->  getExamingScreening($exam_id);
+        if(is_null($examScreening))
+        {
+            $examScreening  =   $examScreeningModel->getNearestScreening($exam_id);
+        }
+
+        if (!$examScreening) {
             return \Response::json(array('code' => 2));
         }
-        $screen_id = $screen_id->id;
+        $screen_id = $examScreening->id;
         $studentModel = new Student();
         try {
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
