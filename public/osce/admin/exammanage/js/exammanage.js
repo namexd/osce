@@ -2801,9 +2801,9 @@ function station_assignment(){
             layer.alert('请选择sp老师！');
             return;
         };
-
         //考站id
-        var stationId = $(".station_id").val();
+        var stationId = $(this).attr('value');//考站id
+
         $.ajax({
             type:'get',
             //url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,

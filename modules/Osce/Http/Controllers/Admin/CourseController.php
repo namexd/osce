@@ -112,10 +112,6 @@ class CourseController extends CommonController
         //获得参数
         $examId = $request->input('exam_id');
         $subjectId = $request->input('subject_id');
-        $exam = $request->input('exam');
-        $subject = $request->input('subject');
-        $avgScore = $request->input('avg_score');
-        $avgTime = $request->input('avg_time');
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
         //将排名的数组循环插入表中
         foreach ($data as $key => &$item) {
@@ -124,10 +120,10 @@ class CourseController extends CommonController
 
         return view('osce::admin.statistics_query.subject_student_list', [
             'data' => $data,
-            'exam' => $exam,
-            'subject' => $subject,
-            'avgScore' => $avgScore,
-            'avgTime' => $avgTime
+            'exam' => $request->input('exam'),
+            'subject' => $request->input('subject'),
+            'avgScore' => $request->input('avg_score'),
+            'avgTime' => $request->input('avg_time')
         ]);
     }
 
