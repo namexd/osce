@@ -381,7 +381,7 @@ class ExamQueue extends CommonModel
 
             //拿到$examScreeningId和$studentId
             $examScreeningId = $examScreening->id;
-
+            dd($studentId,$examScreeningId);
             //得到queue实例
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
