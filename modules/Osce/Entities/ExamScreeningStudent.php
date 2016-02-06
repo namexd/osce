@@ -68,7 +68,6 @@ class ExamScreeningStudent extends CommonModel
             if(!$result && !$student = Student::create($examineeData)){
                 throw new \Exception('');
             }
-            dd($result);
 
             $connection->commit();
             return $result;

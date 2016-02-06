@@ -96,9 +96,9 @@ class InvigilatePadController extends CommonController
             //将内容插入数据库
             if (!$result = TestAttach::create($data)) {
                 if (!Storage::delete($attachUrl)) {
-                    throw new \Exception('未能成功保存文件！',-140);
+                    throw new \Exception('未能成功保存文件！', -140);
                 }
-                throw new \Exception('附件数据保存失败',-150);
+                throw new \Exception('附件数据保存失败', -150);
             }
             return $result;
 
@@ -140,7 +140,7 @@ class InvigilatePadController extends CommonController
             );
         } else {
             return response()->json(
-                $this->fail(new \Exception('学生信息查询失败',2))
+                $this->fail(new \Exception('学生信息查询失败', 2))
             );
         }
 
@@ -229,9 +229,16 @@ class InvigilatePadController extends CommonController
             'score.required' => '请检查评分标准分值',
         ]);
 
-            $standard = Input::get('standard_id');
+//        $standard = Input::get('standard_id');
+//        $standardId = [];
+//        foreach ($standard as $list) {
+//            $standardId=[
+//                'id'=>$list[''],
+//            ];
+//
+//        }
 
-          $data = [
+        $data = [
             'subject_id' => Input::get('subject_id'),
             'standard_id' => Input::get('standard_id'),
             'score' => Input::get('score'),
@@ -274,8 +281,10 @@ class InvigilatePadController extends CommonController
             'evaluate' => 'required'
         ]);
         //得到用时
+
         $times = Input::get('end_dt') - Input::get('begin_dt');
-        $time = $times / 60;
+        $time =   date('i',$times);
+
 
 
         $data = [
@@ -324,15 +333,15 @@ class InvigilatePadController extends CommonController
             if ($result) {
                 //得到考试结果id
                 $testResultId = $result->id;
-                //考站id
-                $stationId = $result->station_id;
-                //学生id
-                $studentId = $result->student_id;
-                //考试场次id
-                $examScreenId = $result->exam_screening_id;
+//                //考站id
+//                $stationId = $result->station_id;
+//                //学生id
+//                $studentId = $result->student_id;
+//                //考试场次id
+//                $examScreenId = $result->exam_screening_id;
                 //根据考试附件结果id修改表里的考试结果id
                 // todo 待最后确定。。。。。。。。
-
+                //todo 调用考试结束方法
 
 
                 //存入考试 评分详情表
@@ -409,12 +418,12 @@ class InvigilatePadController extends CommonController
 
             //获取上传的文件,验证文件是否成功上传
             if (!$request->hasFile('photo')) {
-                throw new \Exception('上传的照片不存在',-100);
+                throw new \Exception('上传的照片不存在', -100);
             } else {
                 $photos = $request->file('photo');
                 //判断照片上传中是否有出错
                 if (!$photos->isValid()) {
-                    throw new \Exception('上传的照片出错',-110);
+                    throw new \Exception('上传的照片出错', -110);
                 }
 
                 //拼装文件名,并插入数据库
@@ -477,12 +486,12 @@ class InvigilatePadController extends CommonController
             $date = date('Y-m-d');
 
             if (!$request->hasFile('radio')) {
-                throw new \Exception('上传的音频不存在',-120);
+                throw new \Exception('上传的音频不存在', -120);
             } else {
                 $radios = $request->file('radio');
 
                 if (!$radios->isValid()) {
-                    throw new \Exception('上传的音频出错',-130);
+                    throw new \Exception('上传的音频出错', -130);
                 }
 
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
@@ -505,7 +514,7 @@ class InvigilatePadController extends CommonController
     {
         try {
             //验证
-            $this->validate($request,[
+            $this->validate($request, [
                 'station_id' => 'required|integer',
                 'student_id' => 'required|integer',
                 'exam_screen_id' => 'required|integer',
@@ -542,7 +551,7 @@ class InvigilatePadController extends CommonController
             //获得站点摄像机关联表
             $stationVcr = StationVcr::where('station_id', $stationId)->first();
             if (empty($stationVcr)) {
-                throw new \Exception('该考站未关联摄像机',-200);
+                throw new \Exception('该考站未关联摄像机', -200);
             }
 
             //获取考试
@@ -561,7 +570,7 @@ class InvigilatePadController extends CommonController
 
                 //将数据插入库
                 if (!StationVideo::create($data)) {
-                    throw new \Exception('保存失败！请重试！',-210);
+                    throw new \Exception('保存失败！请重试！', -210);
                 }
             }
 
@@ -649,7 +658,6 @@ class InvigilatePadController extends CommonController
         $nowTime = time();
 
 
-
         $studentId = $request->get('student_id');
         $stationId = $request->get('station_id');
         $ExamQueueModel = new ExamQueue();
@@ -684,15 +692,17 @@ class InvigilatePadController extends CommonController
 
     public function getEndExam(Request $request)
     {
+
+
+
         $this->validate($request, [
             'student_id' => 'required|integer',
-            'station_id' => 'required|integer'
+            'station_id' => 'required|integer',
 
         ], [
             'student_id.required' => '考生编号信息必须',
             'station_id.required' => '考站编号信息必须'
         ]);
-
         $studentId = Input::get('student_id');
         $stationId = Input::get('station_id');
         $nowTime = time();

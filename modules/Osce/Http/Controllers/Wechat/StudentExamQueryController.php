@@ -153,8 +153,6 @@ class StudentExamQueryController extends CommonController
 //                    'student_mobile' =>$studentInfo->mobile,
             ];
         }
-
-
         //如果是监考老师掉用这个方法
         if ($studentId) {
 
