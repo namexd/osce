@@ -452,7 +452,7 @@ class Exam extends CommonModel
              ]
          );
         $builder=$builder->whereRaw(
-             'unix_timestamp('.$this->table.'.end_dt) > ?',
+             'unix_timestamp(date('.$this->table.'.end_dt))+86399 > ?',
              [
                  $time
              ]
