@@ -376,7 +376,7 @@ class ExamQueue extends CommonModel
             $examScreening = ExamScreeningStudent::where('student_id', $studentId)->first();
 
             if (is_null($examScreening)) {
-                throw new \Exception('没找到对应的学生编号');
+                throw new \Exception('没找到对应的学生编号',2100);
             }
 
             //拿到$examScreeningId和$studentId
@@ -388,7 +388,7 @@ class ExamQueue extends CommonModel
                 ->first();
 
             if (is_null($queue)) {
-                throw new \Exception('没有找到符合要求的学生');
+                throw new \Exception('没有找到符合要求的学生',2200);
             }
 
             return $queue;

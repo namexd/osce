@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\RoomStation;
@@ -280,6 +281,7 @@ class DrawlotsController extends CommonController
                 return Station::findOrFail($temp->station_id);
             }
 
+
             //从ExamQueue表中将房间和状态对应的列表查出
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('exam_id',$examId)
@@ -337,6 +339,26 @@ class DrawlotsController extends CommonController
                 //获得他应该要去的考站id
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
+
+                //获得plan表中应该要去哪些考站
+                $examPlanStationIds = ExamPlan::where('student_id',$student->id)
+                    ->where('room_id',$roomId)
+                    ->where('exam_id',$examId)
+                    ->orderBy('begin_dt','asc')
+                    ->get()->pluck('station_id');
+
+                //判断当前考站在计划表中的顺序
+                $stationIdKey = $examPlanStationIds->search($stationId);
+
+                if (!$stationIdKey) {
+                    throw new \Exception('该名考生不在计划中！',3800);
+                }
+
+                $tempStationIdKey = $stationIdKey-1;
+
+                if ($tempStationIdKey >= 0 && $examQueue[$tempStationIdKey]->status != 3) {
+                    throw new \Exception('当前考生走错了考场！',3400);
+                }
 
                 //将队列状态变更为1
                 $tempObj->status = 1;
