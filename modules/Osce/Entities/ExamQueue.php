@@ -203,7 +203,7 @@ class ExamQueue extends CommonModel
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
-                ->where('exam_queue.status', 0)
+                ->where('exam_queue.status', '<' ,3)
                 ->where('exam_queue.exam_id', $examId)
                 ->skip($stationNum)
                 ->take($stationNum)
