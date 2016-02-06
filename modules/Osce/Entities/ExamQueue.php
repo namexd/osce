@@ -372,7 +372,11 @@ class ExamQueue extends CommonModel
     {
         try {
             //通过腕表id找到$examScreening和$student的实例
-            $examScreening = ExamScreeningStudent::where('watch_id', $studentId)->first();
+            $examScreening = ExamScreeningStudent::where('student_id', $studentId)->first();
+
+            if (is_null($examScreening)) {
+                throw new \Exception('没找到对应的学生编号');
+            }
 
             //拿到$examScreeningId和$studentId
             $examScreeningId = $examScreening->id;
