@@ -37,17 +37,14 @@
             clear: both;
             height: 0;
         }
-        .time-list{
+        /*.time-list{
             width: 200px;
             margin-top: 5px;
             text-align: center;
         }
         .time-list li{
             border: 1px solid #ccc;
-        }
-        .assign-box>div{
-            float: left;
-        }
+        }*/
         ul,dl{
             padding: 0;
             margin: 0;
@@ -69,14 +66,15 @@
         }*/
         dl{
             border: 1px solid #ccc;
-
         }
         .title{
             border: 1px solid #ccc;
             background-color: #eee;
-
             padding: 5px;
             font-weight: 700;
+        }
+        .time>li{
+            border: 1px solid #ccc;
         }
         .dd-active{
             background-color:#ccc;
@@ -95,17 +93,25 @@
             min-height: 500px;
             text-align: center;
         }
-        .room_inner_col{
-            margin: 5px 0px;
-        }
+
         .clicked{
             background-color: #0a6aa1;
         }
         p{
             margin: 0;
         }
-        .table>li{
+        .tables>li{
             width: 250px;
+            float: left;
+        }
+        .screening_box>ul{
+            float: left;
+        }
+        .screening_box{
+            margin-top: 10px;
+        }
+        .screening_box>ul:first-child{
+            width: 200px;
         }
     </style>
 @stop
@@ -139,12 +145,7 @@
                 </div>
             </div>
             <div class="assign-box clearfloat">
-                <div class="time-list">
-                   <ul>
 
-
-                   </ul>
-                </div>
                 <div class="classroom-box">
 
                 </div>

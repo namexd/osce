@@ -1922,9 +1922,9 @@ function smart_assignment(){
         var everyHeight=data.end-data.start;
         everyHeight=everyHeight/6;
 
-        if(timesGroup[data.scring]!=undefined)
+        if(timesGroup[data.screening]!=undefined)
         {
-            var times   =   timesGroup[data.scring];
+            var times   =   timesGroup[data.screening];
         }
         else
         {
@@ -1932,15 +1932,14 @@ function smart_assignment(){
         }
 
         times.push(data.start);
-
-        timesGroup[data.scring] =   times;
-        var endTimeData =   endtime[data.scring];
+        timesGroup[data.screening] =   times;
+        var endTimeData =   endtime[data.screening];
         if(endTimeData==undefined)
         {
             endTimeData=0;
         }
         endTimeData =   data.end>endTimeData? data.end:endTimeData;
-        endtime[data.scring]    =   endTimeData;
+        endtime[data.screening]    =   endTimeData;
         dl.css("height",everyHeight+"px");
         for(var i in items)
         {
@@ -2034,7 +2033,7 @@ function smart_assignment(){
         return ul;
     }
     function makeAll(data){
-        var ul =    $('<ul class="clearfloat table">');
+        var ul =    $('<ul class="clearfloat tables">');
         for(var i in data)
         {
             var colData     =   data[i];
@@ -2082,15 +2081,16 @@ function smart_assignment(){
     $('#makePlan').click(function(){
         makePlan();
     })
-    //$('#makePlan').one('click',makePlan);
 
 //生成时间轴
     function makeTime(){
+        console.log(timesGroup);
         for(var i in timesGroup ){
             timesGroup[i]=unique(timesGroup[i]);
             timesGroup[i]=timesGroup[i].sort(function(a,b){return a>b?1:-1});
             /* times=unique(times);
              times=times.sort(function(a,b){return a>b?1:-1});*/
+            console.log(timesGroup[i]);
             var endtimeData=endtime[i];
             //endtime=endtime.sort(function(a,b){return a>b?1:-1});
             var lastHeight=endtimeData-timesGroup[i][timesGroup[i].length-1];
@@ -2098,8 +2098,9 @@ function smart_assignment(){
 
             var ul=$('<ul>');
             var timeTitle=$('<li class="title">时间</li>');
+            ul.addClass("time");
             ul.append(timeTitle);
-            $(".screening_box").prepend(ul);
+            $(".screening_"+i).before(ul);
             for(var j in timesGroup[i]){
                 var li=$('<li>');
                 var span1=$('<span>');
@@ -2116,19 +2117,19 @@ function smart_assignment(){
                 minutes<10?minutes='0'+minutes:minutes=minutes;
                 span1.html(month+"/"+date1);
                 span2.html(hour+":"+minutes);
-                $(".screening_box>ul:eq(0)").append(li);
+                ul.append(li);
 
                 //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
                 //var every=timeHeight/(times.length-1);//每段时间高度
-                if(i>=times.length-1)
+                if(j>=timesGroup[i].length-1)
                 {
                     li.css({"height":lastHeight+"px","line-height":lastHeight+"px"});
                     continue;
                 }
                 else
                 {
-                    var next    =   times[parseInt(i)+parseInt(1)];
-                    var every   =   next-times[i];
+                    var next    =   timesGroup[i][parseInt(j)+parseInt(1)];
+                    var every   =   next-timesGroup[i][j];
                     every=every/6;
                     li.css({"height":every+"px","line-height":every+"px"});//时间段的高度
                 }
@@ -2801,9 +2802,9 @@ function station_assignment(){
             layer.alert('请选择sp老师！');
             return;
         };
-        //考站id
-        var stationId = $(this).attr('value');//考站id
 
+        //考站id
+        var stationId = $(".station_id").val();
         $.ajax({
             type:'get',
             //url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
