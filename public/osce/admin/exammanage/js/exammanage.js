@@ -2120,15 +2120,15 @@ function smart_assignment(){
 
                 //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
                 //var every=timeHeight/(times.length-1);//每段时间高度
-                if(i>=times.length-1)
+                if(j>=timesGroup[i].length-1)
                 {
                     li.css({"height":lastHeight+"px","line-height":lastHeight+"px"});
                     continue;
                 }
                 else
                 {
-                    var next    =   times[parseInt(i)+parseInt(1)];
-                    var every   =   next-times[i];
+                    var next    =   timesGroup[i][parseInt(j)+parseInt(1)];
+                    var every   =   next-timesGroup[i][j];
                     every=every/6;
                     li.css({"height":every+"px","line-height":every+"px"});//时间段的高度
                 }
