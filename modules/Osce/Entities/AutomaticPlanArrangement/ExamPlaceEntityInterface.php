@@ -11,7 +11,7 @@ namespace modules\Osce\Entities\AutomaticPlanArrangement;
 
 interface ExamPlaceEntityInterface
 {
-    //准备考试，发通知告诉考生
+    //准备考试，(发通知告诉考生)//todo:你确定计划 需要发通知？
     //进入 准备工作 倒计时
     function prepareTest();
 
@@ -27,4 +27,19 @@ interface ExamPlaceEntityInterface
 
     //获取当前考站或考场状态
     function getStatus();
+
+    /*
+     * 时间递增
+     */
+    function setTimeIncrease();
+
+    /*
+     * 获取实体正在考试的学生
+     */
+    function getEntityHavingStudents();
+
+    /*
+     * 获取实体需要的学生
+     */
+    function getEntityNeedStudents();
 }
