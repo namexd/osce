@@ -133,15 +133,19 @@ function examination_list_teacher(){
 					if(i%2==0){
 						 str='<tr class="new even">'+
 							'<td>'+res.data['subjectData'][i].student_name+'</td>'+
-							'<td>'+res.data['subjectData'][i].scoer+'</td>'+
-							'<td><a href="'+pars.detailUrl+'?student_id='+res.data['subjectData'][i].student_id+'&exam_id='+res.data['subjectData'][i].exam_id+'"><i class="fa fa-search font16 see"></i></a></td>'+
+							'<td>'+res.data['subjectData'][i].Scores+'</td>'+
+							'<td>' +
+							 '<a href="'+pars.detailUrl+'?student_id='+res.data['subjectData'][i].student_id+'&exam_id='+res.data['subjectData'][i].exam_id+'"><i class="fa fa-search font16 see"></i></a>' +
+							 '</td>'+
 							'</tr>';
 
 					}else{
 						var str='<tr class="new obb">'+
 							'<td>'+res.data['subjectData'][i].student_name+'</td>'+
-							'<td>'+res.data['subjectData'][i].scoer+'</td>'+
-							'<td><a href="#"><i class="fa fa-search font16 see"></i></a></td>'+
+							'<td>'+res.data['subjectData'][i].Scores+'</td>'+
+							'<td>' +
+							'<a href="'+pars.detailUrl+'?student_id='+res.data['subjectData'][i].student_id+'&exam_id='+res.data['subjectData'][i].exam_id+'"><i class="fa fa-search font16 see"></i></a>' +
+							'</td>'+
 							'</tr>';
 					}
 
@@ -153,3 +157,5 @@ function examination_list_teacher(){
 		});
 	})
 }
+
+

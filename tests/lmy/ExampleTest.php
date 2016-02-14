@@ -7,18 +7,110 @@ use App\Jobs\SendReminderSms;
 use App\Repositories\Common;
 
 
-
-class Std{
+//学生
+class S{
 
     //姓名
     public $name='';
 
-    //编号（顺序号）
-    public $order=0;
+    // 编号（学号）
+    public $code='';
+
+    //考生状态 1=考试中  0=空闲  2=考试已安排（准备中）
+    protected $status=0;
+
+    //考试进度
+    protected $exam_progress=[];
+
+    function __construct($name,$code){
+        $this->code=$code;
+        $this->name=$name;
+    }
+
+    //获取学生状态
+    function getStatus(){
+        return $this->status;
+    }
+
+    //设置学生状态
+    function setStatus($status){
+        return $this->status=$status;
+    }
+
+    //获取学生考试进度
+    function getProgress(){
+        return $this->exam_progress;
+    }
+
+    //设置学生考试初始科目
+    function setIniProgress($progress){
+        $this->exam_progress=$progress;
+    }
+
+    //设置学生考试开始
+    function setExamStart($sequence){
+
+
+        $this->exam_progress[$sequence]['station']='';
+        $this->exam_progress[$sequence]['status']='';
+
+        //更新考生考试进度
+    }
+
+    //设置学生考试结束
+    function setExamEnd($sequence){
+        //更新考生考试进度
+    }
+}
+
+//房间1
+class R1{
+
+    //编号
+    public $code='';
+
+    //考站组合
+    public $ts=[];
+
+    //初始化房间
+    function __construct(array $t){
+
+        $t1=new T('A',20);
+        $t2=new T('B',20);
+        $t3=new T('C',5);
+        $t4=new T('D',10);
+
+        //t1，t2为选考
+        $ts=[[$t1,$t2],$t3,$t4];
+    }
+}
+
+//房间2
+class R{
+
+    //编号
+    public $code='';
+
+    //考站组合
+    public $ts=[];
+
+    //添加考站
+    function addT(T $t){
+        array_add($this->ts,$t->code,$t);
+        return $this;
+    }
+
 
 }
 
-class Station{
+//考站
+class T{
+
+    //编号
+    public $code='';
+
+    //考站序号，必须为大于等于0的整数，所有的考站序号是连续的，且必须从0开始
+    public $sequence=0;
 
     //病例
     public $case='';
@@ -28,28 +120,186 @@ class Station{
 
     //准备时长
     public $ready=5;
-}
 
-class Room{
+    //正在考试的考生
+    public $currentUser         =   null;
+    //当前考生开始考试时间
+    public $currentBeginTime    =   null;
+    //当前考生结束考试时间
+    public $currentEndTime      =   null;
 
-    public $name='';
+    //考站状态  1=考试中  0=空闲  2=考试已安排（准备中）
+    protected $status=0;
 
-    public $stations=[];
-}
-
-class ExamQueue{
-
-    protected $q=[];
-
-    public $name='';
-
-    public function add($order,$std,$station){
-        $this->q=array_add($this->q,$order,[
-            'std'=>$std,
-            'station'=>$station
-        ]);
+    //初始化考站
+    function __construct($code,$time){
+        $this->code=$code;
+        $this->time=$time;
     }
 
+    //准备考试，发通知告诉考生
+    //进入 准备工作 倒计时
+    function prepareTest($user){
+        $this->currentUser=$user;
+        $this->status=2;
+    }
+
+    //开始考试
+    //进入 考试 倒计时
+    //1个考站一个队列
+    function beginTest($user,$sequence){
+        $this->currentUser=$user;
+        $user->setStatus(1);
+        $user->setExamStart($sequence);
+        $this->currentBeginTime=time();
+        $this->currentEndTime=$this->currentBeginTime+$this->time;
+        $this->status=1;
+
+        //触发考试结束事件（结束时间，考试人）
+        $this->endTest($user,$sequence);
+    }
+
+    //考试结束
+    //关闭考试，设置考站为空闲
+    function endTest($user,$sequence){
+
+        $user->setStatus(0);
+        $user->setExamEnd($sequence);
+
+        $this->currentUser=null;
+        $this->currentBeginTime=null;
+        $this->currentEndTime=null;
+        $this->status=0;
+    }
+
+    //获取当前考站状态
+    function getStatus(){
+        return $this->status;
+    }
+}
+
+
+
+class Exam{
+
+    //考试学生数量
+    protected $_S_Count=0;
+
+    //考站数量
+    protected $_T_Count=0;
+
+    //考站数组
+    protected $_T=[];
+
+    //考生数组
+    protected $_S=[];
+
+    //考试顺序规则
+    protected $_TS=[];
+
+    //已考过1科目或以上的学生，优先从这个队列获取数据
+    protected $_S_ING=[];
+
+    //考站队列
+    protected $_Q_STA=[];
+
+
+    protected $ExamBeginTime='2015-01-01 08:00';
+
+    function __construct(){
+
+        $this->_S_Count=100;
+        $this->_T_Count=4;
+        //考试最短时长，
+        $this->_Min_Time=5;
+
+        //初始化考站信息
+        $t1=new T('A',20);  //11020800,11020820,11020840
+        $t2=new T('B',20);  //11020800,11020820,11020840
+        $t3=new T('C',5);   //11020800,11020805,11020810
+        $t4=new T('D',10);  //11020800,11020810,11020820
+        $this->_T=[$t1,$t2,$t3,$t4];
+
+
+        //初始化考站顺序信息
+        $this->_TS=[
+            1=>[$t1,$t2],
+            2=>$t3,
+            3=>$t4
+        ];
+
+        //初始化待考学生信息
+        for($i=0;$i<99;$i++){
+
+            $std=new S('Std_'.$i,str_pad($i,5,0));
+            $ini_std_sta=[];
+
+            for($j=0;$j<count($this->_T);$j++){
+                $ini_std_sta[$j]=[
+                    'station'   =>  0, //考站编号
+                    'status'    =>  0   ]; //考试状态 0=未考、1=已考
+            }
+
+            $std->setIniProgress($ini_std_sta);
+            $this->_S[$i]=$std;
+        }
+
+        //一个考站一个队列，队列初始化
+        foreach($this->_T as $t){
+            $this->_Q_STA[$t->code]=[];
+        }
+
+    }
+
+    //智能排考
+    function testQ(){
+
+        //已考>0科目学生（正在考试学生）
+        //$_Q_STD_TEST=[];
+
+
+        //转换为unix时间戳
+        $timer=strtotime($this->ExamBeginTime);
+
+        //考试位置不重复 a(考站)
+        //考试时间不重复 t（11021000-11021030）
+
+        //初始化考站队列，开始考试
+        foreach($this->_Q_STA as $v){
+
+            $s=array_pop($this->_S);
+
+            //加入正在考试队列
+            array_push($this->_S_ING,$s->code);
+
+            //加入考站队列
+            array_push($this->_Q_STA[$v->code],
+                [
+                    'stdCode'   =>  $s->code,
+                    'beginDt'   =>  $timer,
+                    'endDt'     =>  $timer+($v->time*60),
+                ]);
+        }
+
+
+
+        while($this->_S && $this->_S_ING){ // 没有待考试的学生结束
+
+            //1分钟为计算粒度
+            $timer=$timer+60;
+
+            //考试时间结束处理
+            foreach($this->_Q_STA as $sta){//遍历考站队列
+
+                $t1=strtotime($sta['endDt']);
+                $t2=strtotime($timer);
+
+                if(($t1-$t2)>0){//考试时间到,更新队列学生状态
+                    $std_code=$sta['stdCode'];
+                }
+            }
+        }
+    }
 }
 
 
@@ -57,10 +307,8 @@ class ExamQueue{
 class ExampleTest extends TestCase
 {
 
+    //单站（多站选考扩展）
     public function testQueue(){
-
-
-
 
         $s1=new Station();
         $s1->case='病1';
@@ -96,9 +344,9 @@ class ExampleTest extends TestCase
         $r3->stations=[$s3];
 
         $plan=[
-            1=>$r1,
-            2=>$r2,
-            3=>$r3,
+            1=>$r1,  //s1,s2，2选1考试
+            2=>$r2,     //s3
+            3=>$r3,     //s4
         ];
 
         $std1=new Std();
@@ -126,53 +374,6 @@ class ExampleTest extends TestCase
 
 
 
-        //按考站排序
-
-        //1、获取所有考站
-        $stations=[$s1,$s4,$s2,$s3,];
-
-        //学生总数量 5人
-        $students_total=count($students);
-
-        //考站总数量 4个
-        $stations_total=count($stations);
-
-        //忽略时长
-        //每次参加考试的人数量=考站数量=4
-        for($i=0,$j=1;$i<$students_total-1;$i+=4,$j++){
-
-            //当前批次的学生
-            $current_std=[];
-            for($index=$i,$_index=0;$index<4;$index++,$_index++){
-                $current_std[$_index]=$students[$index];
-            }
-
-            //dd($current_std);
-
-
-            //1个考站1个队列
-            $result=[];
-            for($_sta=0;$_sta<4;$_sta++){ //4个考站
-
-                $q=new ExamQueue();
-                for($_std=0;$_std<4;$_std++){
-                    $q->add($_std,$current_std[($_sta+$_std)%4],$stations[$_sta]);
-                }
-
-
-                $result[$_sta]=$q;
-            }
-
-            Log::info($result);
-            dd($result);
-
-
-
-
-        }
-
-
-        $queue=new ExamQueue();
 
 
 
@@ -237,37 +438,37 @@ class ExampleTest extends TestCase
     }*/
 
     public function testApi(){
-/*        $response = $this->call('POST',
-            'http://192.168.1.205/api/1.0/public/oauth/access_token',
-        [
-            'username'=>'13699456588',
-            'password'=>'123456',
-            'grant_type'=>'password',
-            'client_id'=>'ios',
-            'client_secret'=>'111'
-        ],
-            [],
-            [],
-            [],
-            null);
+        /*        $response = $this->call('POST',
+                    'http://192.168.1.205/api/1.0/public/oauth/access_token',
+                [
+                    'username'=>'13699456588',
+                    'password'=>'123456',
+                    'grant_type'=>'password',
+                    'client_id'=>'ios',
+                    'client_secret'=>'111'
+                ],
+                    [],
+                    [],
+                    [],
+                    null);
 
-        $result=json_decode($response->content());
-        dd($result);
-        $token=$result->access_token;*/
+                $result=json_decode($response->content());
+                dd($result);
+                $token=$result->access_token;*/
         //dd($token);
 
 
-/*        $response = $this->call('GET',
-            'http://192.168.1.205/api/1.0/private/osce/winapp/test',
-            [
-                'access_token'=>$token,
-            ],
-            [],
-            [],
-            [],
-            null);
+        /*        $response = $this->call('GET',
+                    'http://192.168.1.205/api/1.0/private/osce/winapp/test',
+                    [
+                        'access_token'=>$token,
+                    ],
+                    [],
+                    [],
+                    [],
+                    null);
 
-        dd($response);*/
+                dd($response);*/
 
 
         /**
@@ -296,12 +497,12 @@ class ExampleTest extends TestCase
          *      * id int 设备id
          * user_id int 操作用户编号
          */
- /*       $url='http://192.168.1.205/api/1.0/private/osce/winapp/delete-watch';
+        /*       $url='http://192.168.1.205/api/1.0/private/osce/winapp/delete-watch';
 
-        $url='http://192.168.1.205/api/1.0/private/osce/winapp/watch-status';
-        $url='http://192.168.1.205/api/1.0/private/osce/winapp/bound-watch';
-        $url='http://192.168.1.205/api/1.0/private/osce/winapp/unwrap-watch';
-        $url='http://192.168.1.205/api/1.0/private/osce/winapp/student-details';*/
+               $url='http://192.168.1.205/api/1.0/private/osce/winapp/watch-status';
+               $url='http://192.168.1.205/api/1.0/private/osce/winapp/bound-watch';
+               $url='http://192.168.1.205/api/1.0/private/osce/winapp/unwrap-watch';
+               $url='http://192.168.1.205/api/1.0/private/osce/winapp/student-details';*/
 
 
 

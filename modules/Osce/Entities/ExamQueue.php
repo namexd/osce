@@ -169,7 +169,7 @@ class ExamQueue extends CommonModel
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
-                ->where('exam_queue.status', 0)
+                ->where('exam_queue.status', '<' , 3)
                 ->where('student.exam_id', $examId)
                 ->select(
                     'student.id as student_id',
@@ -183,6 +183,7 @@ class ExamQueue extends CommonModel
                 )
                 ->take($stationNum)
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->groupBy('student.id')
                 ->get();
         } catch (\Exception $ex) {
             throw $ex;
@@ -202,16 +203,17 @@ class ExamQueue extends CommonModel
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
-                ->where('exam_queue.status', 0)
+                ->where('exam_queue.status', '<' ,3)
                 ->where('exam_queue.exam_id', $examId)
                 ->skip($stationNum)
                 ->take($stationNum)
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->select([
+                ->select(
                     'student.id as student_id',
                     'student.name as student_name',
                     'student.code as student_code'
-                ])
+                )
+                ->groupBy('student.id')
                 ->get();
         } catch (\Exception $ex) {
             throw $ex;
@@ -261,12 +263,13 @@ class ExamQueue extends CommonModel
                     ->get();
                 foreach ($studentTimes as  $item) {
                     if ($nowTime > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
+                        $lateTime    =   time()-strtotime($item->begin_dt);
                         if ($item->status == 2) {
-                            $item->begin_dt = date('Y-m-d H:i:s', $nowTime + (config('osce.begin_dt_buffer') * 60));
-                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + (config('osce.begin_dt_buffer') * 60));
+                            $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt)+$lateTime);
                         } else {
-                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60));
-                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + (config('osce.begin_dt_buffer') * 60));
+                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) +$lateTime);
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) +$lateTime);
                         }
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败');
@@ -370,16 +373,23 @@ class ExamQueue extends CommonModel
     {
         try {
             //通过腕表id找到$examScreening和$student的实例
-            $examScreening = ExamScreeningStudent::where('watch_id', $studentId)->first();
+            $examScreening = ExamScreeningStudent::where('student_id', $studentId)->first();
+
+            if (is_null($examScreening)) {
+                throw new \Exception('没找到对应的学生编号',2100);
+            }
 
             //拿到$examScreeningId和$studentId
-            $examScreeningId = $examScreening->id;
-
+            $examScreeningId = $examScreening->exam_screening_id;
             //得到queue实例
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
                 ->where('status', 2)
                 ->first();
+
+            if (is_null($queue)) {
+                throw new \Exception('没有找到符合要求的学生',2200);
+            }
 
             return $queue;
         } catch (\Exception $ex) {

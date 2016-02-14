@@ -8,6 +8,10 @@
 
 namespace Modules\Osce\Entities;
 
+use Modules\Osce\Entities\ExamPlan;
+use Modules\Osce\Entities\ExamAbsent;
+use Modules\Osce\Entities\ExamScreeningStudent;
+
 class ExamScreening extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -88,5 +92,99 @@ class ExamScreening extends CommonModel
     public function closeExam($exam_id){
 
     }
+
+    public function getNearestScreening($exam_id){
+        return  $this   ->  where('exam_id','=',$exam_id)
+                ->  where('status','=',0)
+                ->  OrderBy('begin_dt','asc')
+                ->  first();
+    }
+
+    public function getExamingScreening($exam_id){
+        return  $this   ->  where('exam_id','=',$exam_id)
+            ->  where('status','=',1)
+            ->  OrderBy('begin_dt','asc')
+            ->  first();
+    }
+
+    /**
+     *  结束考试
+     * @method GET
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return json
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+     public function getExamCheck()
+    {
+        //取得考试实例
+        $exam = Exam::where('status','=',1)->orderBy('begin_dt','desc')->first();
+        if(is_null($exam)){
+            throw new \Exception('没有找到考试');
+        }
+        //获取到当考试场次id
+        $ExamScreening = $this-> getExamingScreening($exam->id);
+        if(is_null($ExamScreening)){
+            $ExamScreening = $this->getNearestScreening($exam->id);
+        }
+        //根据考试场次id查询计划表所有考试学生
+        $examPianModel = new ExamPlan();
+        $exampianStudent =  $examPianModel->getexampianStudent($ExamScreening->id);
+        //获取考试场次迟到的人数
+        $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
+            ->groupBy('student_id')
+            ->count();
+        //获取考试场次已考试完成的人数
+        $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
+            ->where('exam_screening_id','=',$ExamScreening->id)
+            ->count();
+        if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
+            $ExamScreening->status = 2;
+            if(!$ExamScreening->save()){
+                throw new \Exception('场次结束失败',-5);
+            }
+            if($exam->examScreening()->where('status','=',0)->count()==0)
+            {
+                $exam->status=2;
+                if(!$exam->save()){
+                    throw new \Exception('考试结束失败',-6);
+                }
+            }
+        }
+
+
+
+
+//        $this->validate($request, [
+//            'student_id' => 'required|integer',
+//            'station_id' => 'required|integer',
+//
+//        ], [
+//            'student_id.required' => '考生编号信息必须',
+//            'station_id.required' => '考站编号信息必须'
+//        ]);
+//        $studentId = Input::get('student_id');
+//        $stationId = Input::get('station_id');
+//        $nowTime = time();
+//        $ExamQueueModel = new ExamQueue();
+//        $EndResult = $ExamQueueModel->EndExamAlterStatus($studentId, $stationId, $nowTime);
+//        if ($EndResult) {
+//            return response()->json(
+//                $this->success_data($nowTime, 1, '结束考试成功')
+//            );
+//        }
+//        return response()->json(
+//            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
+//        );
+//
+    }
+
+
+
 
 }

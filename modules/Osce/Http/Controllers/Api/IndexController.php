@@ -137,6 +137,21 @@ class IndexController extends CommonController
             return \Response::json(array('code'=>5));
         }
         $examStatus=Exam::where('status','=',1)->select()->first();
+
+
+        //修改场次状态
+        $examScreeningModel =   new ExamScreening();
+        $examScreening  =   $examScreeningModel ->  getExamingScreening($exam_id);
+        if(is_null($examScreening))
+        {
+            $examScreening      =   $examScreeningModel  ->  getNearestScreening($exam_id);
+            $examScreening      ->  status  =   1;
+            if(!$examScreening      ->  save())
+            {
+                throw new \Exception('场次开考失败！');
+            }
+        }
+
         if($examStatus){
             if($examStatus->id!=$exam_id){
                 return \Response::json(array('code'=>6));
@@ -194,80 +209,104 @@ class IndexController extends CommonController
             'code' =>'required',
             'exam_id' =>'required'
         ]);
-        $code=$request->get('code');
-        $exam_id=$request->get('exam_id');
-        $id=Watch::where('code',$code)->select('id')->first()->id;
-        $student_id=WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
-        if(!$student_id){
-            $result=Watch::where('id',$id)->update(['status'=>0]);
-            if($result){
-                return \Response::json(array('code'=>2));
-            }else{
-                return \Response::json(array('code'=>0));
+        $connection =   \DB::connection('osce_mis');
+        $connection ->beginTransaction();
+        try{
+            $code=$request->get('code');
+            $exam_id=$request->get('exam_id');
+            $id=Watch::where('code',$code)->select('id')->first()->id;
+            $student_id=WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
+            if(!$student_id){
+                $result=Watch::where('id',$id)->update(['status'=>0]);
+                if($result){
+                    return \Response::json(array('code'=>2));
+                }else{
+                    return \Response::json(array('code'=>0));
+                }
             }
-        }
-        $student_id=$student_id->student_id;
-        $screen_id=ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();
-        if(!$screen_id){
+            $student_id=$student_id->student_id;
+            $screen_id=ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();
+            if(!$screen_id){
+                $result=Watch::where('id',$id)->update(['status'=>0]);
+                if($result){
+                    $action='解绑';
+                    $updated_at =date('Y-m-d H:i:s',time());
+                    $data=array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    $watchModel=new WatchLog();
+                    $watchModel->unwrapRecord($data);
+                    return \Response::json(array('code'=>2));
+                }else{
+                    throw new \Exception('解绑失败');
+                }
+            }
+            $exam_screen_id=$screen_id->exam_screening_id;
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
+            $ExamFlowModel = new  ExamFlow();
+            $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
+            if($ExamFinishStatus==$studentExamSum){
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);
+                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
+                $result=Watch::where('id',$id)->update(['status'=>0]);
+                if($result){
+                    $action='解绑';
+                    $updated_at =date('Y-m-d H:i:s',time());
+                    $data=array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    $watchModel=new WatchLog();
+                    $watchModel->unwrapRecord($data);
+
+
+                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                    $examScreening   =   new ExamScreening();
+                    $examScreening  ->getExamCheck();
+                    $connection->commit();
+
+                    return \Response::json(array('code'=>1));
+                }else{
+                    throw new \Exception('解绑失败');
+                }
+            }
+
+
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
                 $action='解绑';
-                $updated_at =date('Y-m-d H:i:s',time());
-                $data=array(
-                    'watch_id'       =>$id,
-                    'action'         =>$action,
-                    'context'        =>array('time'=>$updated_at,'status'=>0),
-                    'student_id'     =>$student_id,
-                );
-                $watchModel=new WatchLog();
-                $watchModel->unwrapRecord($data);
-                return \Response::json(array('code'=>2));
-            }else{
-                return \Response::json(array('code'=>0));
-            }
-        }
-        $exam_screen_id=$screen_id->exam_screening_id;
-        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
-        $ExamFlowModel = new  ExamFlow();
-        $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
-        if($ExamFinishStatus==$studentExamSum){
-            ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);
-            ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
-            $result=Watch::where('id',$id)->update(['status'=>0]);
-            if($result){
-                $action='解绑';
-                $updated_at =date('Y-m-d H:i:s',time());
-                $data=array(
-                    'watch_id'       =>$id,
-                    'action'         =>$action,
-                    'context'        =>array('time'=>$updated_at,'status'=>0),
-                    'student_id'     =>$student_id,
-                );
-                $watchModel=new WatchLog();
-                $watchModel->unwrapRecord($data);
+                $result=ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
+                if($result){
+                    $updated_at =date('Y-m-d H:i:s',time());
+                    $data=array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    $watchModel=new WatchLog();
+                    $watchModel->unwrapRecord($data);
+                    ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
+
+                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                    $examScreening   =   new ExamScreening();
+                    $examScreening  ->getExamCheck();
+                    //检查考试是否可以结束
+                    $connection->commit();
+                }
                 return \Response::json(array('code'=>1));
             }else{
-                return \Response::json(array('code'=>0));
+                throw new \Exception('解绑失败');
             }
         }
-        $result=Watch::where('id',$id)->update(['status'=>0]);
-        if($result){
-            $action='解绑';
-            $result=ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
-            if($result){
-                $updated_at =date('Y-m-d H:i:s',time());
-                $data=array(
-                    'watch_id'       =>$id,
-                    'action'         =>$action,
-                    'context'        =>array('time'=>$updated_at,'status'=>0),
-                    'student_id'     =>$student_id,
-                );
-                $watchModel=new WatchLog();
-                $watchModel->unwrapRecord($data);
-                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
-            }
-            return \Response::json(array('code'=>1));
-        }else{
+        catch(\Exception $ex)
+        {
+            $connection->rollBack();
             return \Response::json(array('code'=>0));
         }
     }
@@ -716,11 +755,18 @@ class IndexController extends CommonController
             'exam_id' => 'required|integer'
         ]);
         $exam_id = $request->get('exam_id');
-        $screen_id = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->orderBy('begin_dt')->first();
-        if (!$screen_id) {
+        //$screen_id = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->orderBy('begin_dt')->first();
+        $examScreeningModel =   new ExamScreening();
+        $examScreening      =   $examScreeningModel ->  getExamingScreening($exam_id);
+        if(is_null($examScreening))
+        {
+            $examScreening  =   $examScreeningModel->getNearestScreening($exam_id);
+        }
+
+        if (!$examScreening) {
             return \Response::json(array('code' => 2));
         }
-        $screen_id = $screen_id->id;
+        $screen_id = $examScreening->id;
         $studentModel = new Student();
         try {
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
