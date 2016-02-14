@@ -1922,9 +1922,9 @@ function smart_assignment(){
         var everyHeight=data.end-data.start;
         everyHeight=everyHeight/6;
 
-        if(timesGroup[data.scring]!=undefined)
+        if(timesGroup[data.screening]!=undefined)
         {
-            var times   =   timesGroup[data.scring];
+            var times   =   timesGroup[data.screening];
         }
         else
         {
@@ -1932,15 +1932,14 @@ function smart_assignment(){
         }
 
         times.push(data.start);
-
-        timesGroup[data.scring] =   times;
-        var endTimeData =   endtime[data.scring];
+        timesGroup[data.screening] =   times;
+        var endTimeData =   endtime[data.screening];
         if(endTimeData==undefined)
         {
             endTimeData=0;
         }
         endTimeData =   data.end>endTimeData? data.end:endTimeData;
-        endtime[data.scring]    =   endTimeData;
+        endtime[data.screening]    =   endTimeData;
         dl.css("height",everyHeight+"px");
         for(var i in items)
         {
@@ -2091,7 +2090,7 @@ function smart_assignment(){
             timesGroup[i]=timesGroup[i].sort(function(a,b){return a>b?1:-1});
             /* times=unique(times);
              times=times.sort(function(a,b){return a>b?1:-1});*/
-
+            console.log(timesGroup[i]);
             var endtimeData=endtime[i];
             //endtime=endtime.sort(function(a,b){return a>b?1:-1});
             var lastHeight=endtimeData-timesGroup[i][timesGroup[i].length-1];
@@ -2101,7 +2100,7 @@ function smart_assignment(){
             var timeTitle=$('<li class="title">时间</li>');
             ul.addClass("time");
             ul.append(timeTitle);
-            $(".screening_box").prepend(ul);
+            $(".screening_"+i).before(ul);
             for(var j in timesGroup[i]){
                 var li=$('<li>');
                 var span1=$('<span>');
@@ -2118,7 +2117,7 @@ function smart_assignment(){
                 minutes<10?minutes='0'+minutes:minutes=minutes;
                 span1.html(month+"/"+date1);
                 span2.html(hour+":"+minutes);
-                $(".screening_box>ul:eq(0)").append(li);
+                ul.append(li);
 
                 //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
                 //var every=timeHeight/(times.length-1);//每段时间高度

@@ -66,7 +66,6 @@
         }*/
         dl{
             border: 1px solid #ccc;
-
         }
         .title{
             border: 1px solid #ccc;
@@ -107,6 +106,9 @@
         }
         .screening_box>ul{
             float: left;
+        }
+        .screening_box{
+            margin-top: 10px;
         }
         .screening_box>ul:first-child{
             width: 200px;
