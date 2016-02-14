@@ -2034,7 +2034,7 @@ function smart_assignment(){
         return ul;
     }
     function makeAll(data){
-        var ul =    $('<ul class="clearfloat table">');
+        var ul =    $('<ul class="clearfloat tables">');
         for(var i in data)
         {
             var colData     =   data[i];
@@ -2082,15 +2082,16 @@ function smart_assignment(){
     $('#makePlan').click(function(){
         makePlan();
     })
-    //$('#makePlan').one('click',makePlan);
 
 //生成时间轴
     function makeTime(){
+        console.log(timesGroup);
         for(var i in timesGroup ){
             timesGroup[i]=unique(timesGroup[i]);
             timesGroup[i]=timesGroup[i].sort(function(a,b){return a>b?1:-1});
             /* times=unique(times);
              times=times.sort(function(a,b){return a>b?1:-1});*/
+
             var endtimeData=endtime[i];
             //endtime=endtime.sort(function(a,b){return a>b?1:-1});
             var lastHeight=endtimeData-timesGroup[i][timesGroup[i].length-1];
@@ -2098,6 +2099,7 @@ function smart_assignment(){
 
             var ul=$('<ul>');
             var timeTitle=$('<li class="title">时间</li>');
+            ul.addClass("time");
             ul.append(timeTitle);
             $(".screening_box").prepend(ul);
             for(var j in timesGroup[i]){

@@ -45,9 +45,6 @@
         .time-list li{
             border: 1px solid #ccc;
         }*/
-        .assign-box>div{
-            float: left;
-        }
         ul,dl{
             padding: 0;
             margin: 0;
@@ -74,9 +71,11 @@
         .title{
             border: 1px solid #ccc;
             background-color: #eee;
-
             padding: 5px;
             font-weight: 700;
+        }
+        .time>li{
+            border: 1px solid #ccc;
         }
         .dd-active{
             background-color:#ccc;
@@ -95,17 +94,16 @@
             min-height: 500px;
             text-align: center;
         }
-        .room_inner_col{
-            margin: 5px 0px;
-        }
+
         .clicked{
             background-color: #0a6aa1;
         }
         p{
             margin: 0;
         }
-        .table>li{
+        .tables>li{
             width: 250px;
+            float: left;
         }
         .screening_box>ul{
             float: left;
@@ -145,12 +143,7 @@
                 </div>
             </div>
             <div class="assign-box clearfloat">
-                <div class="time-list">
-                   <ul>
 
-
-                   </ul>
-                </div>
                 <div class="classroom-box">
 
                 </div>
