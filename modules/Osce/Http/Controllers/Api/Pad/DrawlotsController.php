@@ -349,7 +349,7 @@ class DrawlotsController extends CommonController
                 //判断当前考站在计划表中的顺序
 //                $stationIdKey = $examPlanStationIds->search($stationId);
                 $stationIdKey = $examPlanStationIds->search($roomId);
-
+                dd($stationIdKey);
                 if (!$stationIdKey) {
                     throw new \Exception('该名考生不在计划中！',3800);
                 }
