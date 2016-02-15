@@ -6,7 +6,7 @@
  * Time: 16:33
  */
 
-namespace modules\Osce\Entities\AutomaticPlanArrangement;
+namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 /**
  * 学生类的接口，所有和只能排考中学生相关的类都要实现此接口
