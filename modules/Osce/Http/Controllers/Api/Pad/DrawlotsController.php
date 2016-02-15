@@ -344,7 +344,7 @@ class DrawlotsController extends CommonController
                     ->where('exam_id','=',$examId)
                     ->orderBy('begin_dt','asc')
                     ->get()->pluck('station_id');
-
+                dd($examPlanStationIds);
                 //判断当前考站在计划表中的顺序
                 $stationIdKey = $examPlanStationIds->search($stationId);
 
