@@ -336,21 +336,21 @@ class IndexController extends CommonController
         $idCard=$request->get('id_card');
 
 
-        $student_id=Student::where('idcard',$idCard)->select(['id','idcard','code','exam_sequence'])->first();
+        $studentInfo=Student::where('idcard',$idCard)->select(['id','idcard','code','exam_sequence'])->first();
 
-        if(!$student_id){
+        if(!$studentInfo){
             return response()->json(
                 $this->success_rows(2,'未找到学生相关信息')
             );
         }
         //返回的数据
         $data = [
-            'code'          => $student_id->code,           //学号
-            'idcard'        => $student_id->idcard,         //身份证
-            'exam_sequence' => $student_id->exam_sequence,  //准考证
+            'code'          => $studentInfo->code,           //学号
+            'idcard'        => $studentInfo->idcard,         //身份证
+            'exam_sequence' => $studentInfo->exam_sequence,  //准考证
         ];
 
-        $action=WatchLog::where('student_id',$student_id->id)->select('action')->orderBy('id','DESC')->first();
+        $action=WatchLog::where('student_id',$studentInfo->id)->select('action')->orderBy('id','DESC')->first();
         if($action){
             if($action->action=='绑定') {
                 return response()->json(
