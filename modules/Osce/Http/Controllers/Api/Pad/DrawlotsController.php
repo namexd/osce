@@ -339,10 +339,9 @@ class DrawlotsController extends CommonController
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
 
-                dd($examId);
                 //获得plan表中应该要去哪些考站
-                $examPlanStationIds = ExamPlan::where('student_id',$student->id)
-                    ->where('exam_id',$examId)
+                $examPlanStationIds = ExamPlan::where('student_id','=',$student->id)
+                    ->where('exam_id','=',$examId)
                     ->orderBy('begin_dt','asc')
                     ->get()->pluck('station_id');
 
