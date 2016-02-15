@@ -332,13 +332,14 @@ class DrawlotsController extends CommonController
                     ->get();
 
                 if ($examQueue->isEmpty()) {
-                    throw new \Exception('该名考生不在计划中！',3800);
+                    throw new \Exception('该名考生不在计划中！',3801);
                 }
 
                 //获得他应该要去的考站id
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
 
+                dd($examId);
                 //获得plan表中应该要去哪些考站
                 $examPlanStationIds = ExamPlan::where('student_id',$student->id)
                     ->where('exam_id',$examId)
