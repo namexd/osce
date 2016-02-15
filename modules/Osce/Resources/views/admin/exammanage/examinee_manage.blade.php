@@ -34,8 +34,16 @@
             cursor: pointer;
         }
         #file1{
-            margin-left: -110px;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+        #file1 input{
+            position: absolute;
+            right: 0;
+            top: 0;
             opacity: 0;
+            font-size: 100px;
         }
     </style>
 @stop
@@ -80,8 +88,7 @@
                     <div class="operate pull-right">
                         <a href="{{route('osce.admin.exam.getAddExaminee',['id'=>$id])}}" {{$status==0?'':'style=display:none;'}} class="btn btn-outline btn-default">新增考生</a>
                         <a href="{{route('osce.admin.exam.getdownloadStudentImprotTpl')}}" class="btn btn-outline btn-default">下载模板</a>
-                        <a href="javascript:void(0)" class="btn btn-outline btn-default insert" {{$status==0?'':'style=display:none;'}}>导入考生</a>
-                        <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="{{$id}}" style="height:34px;padding:5px;width:98px;">
+                        <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" examId="{{$id}}" {{$status==0?'':'style=display:none;'}}>导入考生
                             <input type="file" name="student" id="file0" multiple="multiple" />
                         </a>
                     </div>
