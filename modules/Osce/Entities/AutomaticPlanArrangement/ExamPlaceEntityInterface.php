@@ -6,7 +6,7 @@
  * Time: 16:56
  */
 
-namespace modules\Osce\Entities\AutomaticPlanArrangement;
+namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
 interface ExamPlaceEntityInterface

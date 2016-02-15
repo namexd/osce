@@ -606,4 +606,59 @@ class Exam extends CommonModel
               ])
               ->get();
       }
+
+    /**
+     * 查询当前正在进行的考试 TODO 此为智能排考所用
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time
+     */
+    static public function doingExam()
+    {
+        return Exam::where('status',1)->first();
+    }
+
+    /**
+     * 开始一场考试 TODO 此为智能排考所用
+     * @param $examId
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time
+     */
+    public function beginExam($examId)
+    {
+        try {
+            $exam = $this->findOrFail($examId);
+            if ($exam->status != 0) {
+                throw new \Exception('当前的考试已经开始或已经结束！',-1);
+            }
+            $exam->status = 1;
+            return $exam->save();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 结束一场考试 TODO 此为智能排考所用
+     * @param $examId
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time
+     */
+    public function endExam($examId)
+    {
+        try {
+            $exam = $this->findOrFail($examId);
+            if ($exam->status != 1) {
+                throw new \Exception('当前的考试未开始或已经结束！',-2);
+            }
+            $exam->status = 2;
+            return $exam->save();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }

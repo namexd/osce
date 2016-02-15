@@ -6,30 +6,25 @@
  * Time: 17:13
  */
 
-namespace modules\Osce\Entities\AutomaticPlanArrangement;
+namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
 interface ExamScreeningInterface
 {
     /*
-     * 获取场次列表
-     */
-    function screenList();
-
-    /*
      * 获取当前正在进行场次
      */
-    function screening();
+    function screening($examId);
 
     /*
      * 开始场次
      * 修改状态
      */
-    function beginScreen();
+    function beginScreen($examId);
 
     /*
      * 结束场次
      * 修改状态
      */
-    function endScreen();
+    function endScreen($examId);
 }

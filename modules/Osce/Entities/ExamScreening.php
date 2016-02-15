@@ -38,6 +38,50 @@ class ExamScreening extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamRoom','exam_id','exam_id');
     }
 
+    /**
+     * todo 智能排考所用，请勿删除或修改 开始场次
+     * @param $examId
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-02-16 15:30:11
+     */
+    public function beginScreen($examId)
+    {
+        try {
+            //获得当前需要开始的screen的实例
+            $screen = $this->getNearestScreening($examId);
+            //修改其状态值
+            $screen->status = 1;
+            //save it
+            return $screen->save();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * todo 智能排考所用，请勿删除或修改 结束场次
+     * @param $examId
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-02-16 15:30:54
+     */
+    public function endScreen($examId)
+    {
+        try {
+            //获得当前正在进行的screen的实例
+            $screen = $this->getExamingScreening($examId);
+            //修改其状态
+            $screen->status = 2;
+            //save it
+            return $screen->save();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
 
     //根据考试id获得考站和老师数据
     public function getStationList($examId){
@@ -91,6 +135,20 @@ class ExamScreening extends CommonModel
 
     public function closeExam($exam_id){
 
+    }
+
+    /**
+     * 获取考试对应的场次列表 TODO 不一定会使用
+     * @param $examId
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time
+     */
+    public function screeningList($examId)
+    {
+        return $this->where('exam_id',$examId)
+            ->orderBy('begin_dt','asc')
+            ->get();
     }
 
     public function getNearestScreening($exam_id){
@@ -156,6 +214,8 @@ class ExamScreening extends CommonModel
                 }
             }
         }
+
+
 
 
 
