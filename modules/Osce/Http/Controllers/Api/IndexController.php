@@ -330,13 +330,14 @@ class IndexController extends CommonController
      */
     public function getStudentDetails(Request $request){
         $this->validate($request,[
-            'id_card' => 'required'
+            'id_card' => 'required',
+            'exam_id' => 'required'
         ]);
 
         $idCard=$request->get('id_card');
+        $examId=$request->get('exam_id');
 
-
-        $studentInfo=Student::where('idcard',$idCard)->select(['id','idcard','code','exam_sequence'])->first();
+        $studentInfo=Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence'])->first();
 
         if(!$studentInfo){
             return response()->json(
