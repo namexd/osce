@@ -23,7 +23,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">考场管理</h5>
+                <h5 class="title-label">场所管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
                 <a  href="{{route('osce.admin.room.getAddRoom',['type'=>$type])}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
