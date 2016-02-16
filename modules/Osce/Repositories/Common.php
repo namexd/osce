@@ -76,15 +76,18 @@ class Common
     public function getUserList(){
         $noAdminRole    =   [
             config('config.teacherRoleId'),
-            config('config.superRoleId'),
+            config('config.examineeRoleId'),
             config('config.spRoleId'),
-            config('config.examineeRoleId')
+            config('config.superRoleId')
         ];
-        return User::leftJoin('sys_user_role',function($join){
-            $join->on('users.id','=','sys_user_role.user_id');
-        })  ->  select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile', 'users.lastlogindate')
-            //->  where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
-            ->whereNotIn('sys_user_role.role_id',$noAdminRole)->  paginate(config('osce.page_size'));
+
+        return User::select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile', 'users.lastlogindate')
+            -> leftJoin('sys_user_role',function($join){
+                $join->on('users.id','=','sys_user_role.user_id');
+            })
+//            -> where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
+            -> whereNotIn('sys_user_role.role_id', $noAdminRole)
+            -> paginate(config('osce.page_size'));
     }
 
     public function createAdminUser($data)
