@@ -94,7 +94,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2 time-modify">
-                                    <a class="btn btn-white" href="javascript:history.back(-1)">返回</a>
+                                    <a class="btn btn-outline btn-default" href="javascript:history.back(-1)">返回</a>
                                 </div>
                             </div>
                         </div>
