@@ -89,7 +89,7 @@ class Invite extends CommonModel
                 $msgData = [
                     [
                         'title' => '邀请通知',
-                        'desc' => $openIdList['exam_name'] . '邀请',
+                        'desc' => '邀请您参加'.$openIdList['exam_name'] . '考试',
                         'url' => $url,
                     ],
                 ];
