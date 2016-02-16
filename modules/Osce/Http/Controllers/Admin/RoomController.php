@@ -142,6 +142,7 @@ class RoomController extends CommonController
         try {
             if ($type === 0) {
                 $room = new Room();
+                unset($formData['cate']);
                 $room->editRoomData($id, $vcr_id, $formData);
             } else {
                 $area = new Area();
