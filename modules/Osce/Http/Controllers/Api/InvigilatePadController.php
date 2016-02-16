@@ -45,6 +45,10 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
+        //得到总成绩
+        $scores = 0;
+        $json = json_decode(Input::get('score'));
+
         return view('osce::test.test');
     }
 
@@ -284,10 +288,7 @@ class InvigilatePadController extends CommonController
             'evaluate' => 'required'
         ]);
         //得到用时
-
         $times = Input::get('end_dt') - Input::get('begin_dt');
-        $time = date('i', $times);
-
         //得到总成绩
         $scores = 0;
         $json = json_decode(Input::get('score'));
@@ -298,7 +299,7 @@ class InvigilatePadController extends CommonController
             'exam_screening_id' => Input::get('exam_screening_id'),
             'begin_dt' => Input::get('begin_dt'),//考试开始时间
             'end_dt' => Input::get('end_dt'),//考试实际结束时间
-            'time' => $time,//考试用时
+//            'time' => $time,//考试用时
             'score_dt' => Input::get('score_dt'),//评分时间
             'teacher_id' => Input::get('teacher_id'),
             'evaluate' => Input::get('evaluate'),//评价内容
