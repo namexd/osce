@@ -176,7 +176,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/room-list-data', ['uses'=>'ExamController@getRoomListData','as'=>'osce.admin.exam.getRoomListData']);			//获取考场列表
 		Route::get('exam/station-data', ['uses'=>'ExamController@getStationData','as'=>'osce.admin.exam.getStationData']);				//获取考场对应的考站列表
 		Route::get('exam/teacher-list-data', ['uses'=>'ExamController@getTeacherListData','as'=>'osce.admin.exam.getTeacherListData']);	//获取监考老师列表
-		Route::get('exam/import-student', ['uses'=>'ExamController@getImportStudent','as'=>'osce.admin.exam.getImportStudent']);		//excel导入考生
 		Route::post('exam/import-student/{id?}', ['uses'=>'ExamController@postImportStudent','as'=>'osce.admin.exam.postImportStudent']);		//excel导入考生
 
 		Route::post('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);

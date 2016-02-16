@@ -155,7 +155,6 @@ class StudentExamQueryController extends CommonController
         }
         //如果是监考老师掉用这个方法
         if ($studentId) {
-
             return view('osce::wechat.resultquery.examination_teacher', ['studentInfo' => $studentInfo, 'stationData' => $stationData, 'examName' => $examTime]);
         } else {
             return response()->json(

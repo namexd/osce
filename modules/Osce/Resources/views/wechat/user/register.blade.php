@@ -38,7 +38,6 @@
     <script src="{{asset('osce/wechat/user/js/commons.js')}}"></script>
     <script src="{{asset('osce/wechat/user/js/register.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
-
 @stop
     
 @section('content')
@@ -54,13 +53,11 @@
 <div class="container" id="container">
     <div >
         {{-- RegTeacherOp --}}
-        <form name="form" method="post" id="sourceForm" action="{{route('osce.wechat.user.postRegister')}}" id="frmTeacher">
+        <form name="form" style="padding-top: 15px" method="post" id="sourceForm" action="{{route('osce.wechat.user.postRegister')}}" id="frmTeacher">
             <div class="form-group">
-                <label for="name">昵 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称<span class="must"></span></label>
-                <input  type="text" name="nickname" class="form-control" id="name" placeholder="昵称"/>
+                <input type="text" name="nickname" class="form-control" id="name" placeholder="昵称"/>
             </div>
             <div class="form-group">
-                <label for="name">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<span class="must"></span></label>
                 <input  type="text" name="name" class="form-control" id="name" placeholder="姓名"/>
             </div>
             <div class="form-group">
@@ -70,7 +67,7 @@
                         <b class="left">男</b>
                         <input type="radio" id="radio_1" name="gender" value="1"/>
                     </label>
-                    <label class="left radio_label" for="radio_2" style="margin-left:50px">
+                    <label class="left radio_label" for="radio_2">
                         <div class="left radio_icon"></div>
                         <b class="left">女</b>
                         <input type="radio" id="radio_2" name="gender" value="2"/>
@@ -78,8 +75,8 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="form-group card-list" style="width:35%;float: left;">
-               <select name="type" id="card-list" style="height:34px;">
+            <div class="form-group card-list" style="width:35%;height:36px;float: left;">
+               <select class="form-control normal_select select_indent" name="type" id="card-list" style="height:36px;">
                    <option value="0">角色类型</option>
                    <option value="1">学生</option>
                    <option value="2">老师</option>
@@ -87,25 +84,24 @@
                <label for="ipt_zjh"><span class="must"></span></label>
            </div>
 
-            <div class="form-group card-list no_zjh" style="width:65%;float:right;" >
+            <div class="form-group card-list no_zjh" style="width:63%;float:right;" >
                 <input type="text" class="form-control" style="padding-left:2px;" disabled="disabled"  placeholder="请选择角色类型" />
             </div>
-            <div class="form-group card-list ipt_zjh" style="width:65%;float:right;display: none">
+            <div class="form-group card-list ipt_zjh" style="width:63%;float:right;display: none">
                 <input style="padding-left:2px;"  class="form-control " name="idcard"   placeholder="请输入身份证号码" />
             </div>
-            <div class="form-group card-list hz_zjh" style="width:65%;float:right;display: none">
+            <div class="form-group card-list hz_zjh" style="width:63%;float:right;display: none">
                 <input style="padding-left:2px;"  class="form-control " disabled="disabled" name="idcard2"/>
             </div>
             <div class="clear"></div>
             <div class="form-group">
-                <label for="mobile">手机号码<span class="must"></span></label>
                 <input type="number" class="form-control" id="mobile" name="mobile" placeholder="请输入手机号"/>
             </div>
             <div class="clear"></div>
 
             <div class="form-group">
-                <input type="button" class="btn" value="点击发送验证码" id="send_code" style="width:34%;float:right;">
-                <input type="text" name="code" class="form-control ipt_txt" placeholder="请输入验证码" style="width:65%;float:left;"/>
+                <input type="button" class="btn" value="点击发送验证码" id="send_code" style="width:40%;height:36px;color:#fff;text-align:center;padding:0;float:right;">
+                <input type="text" name="code" class="form-control ipt_txt" placeholder="请输入验证码" style="width:59%;float:left;"/>
                 <div class="clear"></div>
             </div>
             <div class="clear"></div>
@@ -118,7 +114,7 @@
             </div>
             <!--<span class="error" ng-show="form.$dirty && form.name.$invalid">填写格式错误</span>-->
             <input type="hidden"  name="url" value="{{@$url}}">
-            <input class="btn" type="submit" id="register" value="提交审核" />
+            <input class="btn" style="width:100%;color:#fff;margin-bottom:20px;" type="submit" id="register" value="提交审核" />
         </form>
 
     </div>

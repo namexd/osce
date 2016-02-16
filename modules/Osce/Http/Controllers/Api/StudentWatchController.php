@@ -273,7 +273,7 @@ class StudentWatchController extends CommonController
           }
 
         //判断预计考试时间
-        $examtimes = date('H:i:s', (strtotime($item->begin_dt)));
+        $examtimes = date('H:i', (strtotime($item->begin_dt)));
         //判断进入如的考场教室名字
         $examRoomName = $item->room->name;
         if($willStudents>0){
@@ -304,6 +304,7 @@ class StudentWatchController extends CommonController
     private function getWillStudent($item){
         $studentNum=0;
         $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
+            ->where('exam_screening_id','=',$item->exam_screening_id)
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
