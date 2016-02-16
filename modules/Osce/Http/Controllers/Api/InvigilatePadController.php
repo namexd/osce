@@ -45,11 +45,47 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-        //得到总成绩
-        $scores = 0;
-        $json = json_decode();
+       $score = [
+           "code"=> 1,
+           "message"=> "模拟评价",
+           "timeAnchors"=>[],
+           $data = array(
+               array(
+                   "id"=>"301",
+                   "subject_id"=> "52",
+                   "sort"=> "1",
+                   "score"=> "2",
+                   "pid"=> "0",
+                   'test_term' => array(
+                       array(
+                           "id"=> "304",
+                           "subject_id"=>"52",
+                           "sort"=> "1",
+                           "score"=> "1",
+                           "pid"=> "303",
+                       ),
+                       array(
+                           "id"=> "305",
+                           "subject_id"=>"52",
+                           "sort"=> "1",
+                           "score"=> "4",
+                           "pid"=> "303",
+                       )
+                   )
+               ),
+           )
+       ];
 
-        return view('osce::test.test');
+        $json = json_encode($data);
+        $data = json_decode($json);
+
+        $arr = (array) $data;
+                foreach($arr['test_term'] as $item){
+        }
+        print_r($arr);
+
+
+//        return view('osce::test.test');
     }
 
 
@@ -330,7 +366,6 @@ class InvigilatePadController extends CommonController
             }
             $TestResultModel = new TestResult();
             $result = $TestResultModel->addTestResult($data);
-
             if ($result) {
                 //得到考试结果id
                 $testResultId = $result->id;
