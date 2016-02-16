@@ -51,7 +51,8 @@
                     <div class="input-group col-md-6 col-sm-6 col-xs-6">
                         <div  class="pull-left examinee-list">
                             <form action="">
-                                <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;" value="">
+                                <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;"
+                                       value="{{$message}}">
                                 <span class="input-group-btn pull-left">
                                     <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                                 </span>
