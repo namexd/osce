@@ -39,13 +39,12 @@
                 <tr>
                     <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
-                    <td>{{$item->begin_dt}}~{{$item->end_dt}}</td>
+                    <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}} ~~ {{date('Y-m-d H:i', strtotime($item->end_dt))}}</td>
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
                         @if($item->status ==0)
                             <a href="{{route('osce.admin.index.getSetExam',['id'=>$item->id])}}">
                                 <input class="btn btn-primary" type="button" value="开始考试"/>
-                                {{--<span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span>--}}
                             </a>
                         @elseif($item->status==1)
                             已经开考
