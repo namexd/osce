@@ -256,6 +256,7 @@ class ExamQueue extends CommonModel
 
             $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                 ->update(['status' => 2]);
+
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -266,7 +267,7 @@ class ExamQueue extends CommonModel
                         $lateTime    =   time()-strtotime($item->begin_dt);
                         if ($item->status == 2) {
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
-                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt)+$lateTime);
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($nowTime+$item->station->mins*60));
                         } else {
                             $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) +$lateTime);
                             $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) +$lateTime);
@@ -278,7 +279,7 @@ class ExamQueue extends CommonModel
                         }
                     }else{
                           $ExamTime= ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime )]);
+                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime ),'end_dt' => date('Y-m-d H:i:s', strtotime($nowTime+$item->station->mins*60))]);
                         if($ExamTime){
                             return true;
                         }
