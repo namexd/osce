@@ -279,7 +279,7 @@ class ExamQueue extends CommonModel
                         }
                     }else{
                           $ExamTime= ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime )]);
+                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime ),'end_dt' => date('Y-m-d H:i:s', strtotime($nowTime+$item->station->mins*60))]);
                         if($ExamTime){
                             return true;
                         }
