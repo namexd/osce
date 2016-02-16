@@ -47,7 +47,7 @@ class InvigilatePadController extends CommonController
     {
         //得到总成绩
         $scores = 0;
-        $json = json_decode(Input::get('score'));
+        $json = json_decode();
 
         return view('osce::test.test');
     }
@@ -196,6 +196,7 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->success_data($standardList, 1, '数据传送成功')
             );
+
         } else {
             return response()->json(
                 $this->fail(new \Exception('数据查询失败'))
@@ -339,7 +340,6 @@ class InvigilatePadController extends CommonController
 
                 //存入考试 评分详情表
                 $SaveEvaluate = $this->postSaveExamEvaluate($request, $testResultId);
-                //todo 调用考试结束方法
                 if (!$SaveEvaluate) {
                     return response()->json(
                         $this->fail(new \Exception('成绩推送失败'))

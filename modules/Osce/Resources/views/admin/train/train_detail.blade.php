@@ -33,7 +33,6 @@
     <div class="ibox float-e-margins">
         <div class="ibox-title" style="position: relative;">
             <h5>查看考前培训</h5>
-            <a href="javascript:history.back(-1)" class="btn btn-default" style="position: absolute;right:10px;top:4px;">&nbsp;返回&nbsp;</a>
         </div>
         <div class="ibox-content">
             <form method="post" id="form1" class="form-horizontal" action="#">
@@ -79,7 +78,7 @@
                     <div class="hr-line-dashed"></div>
                 @if($data['attachments'])
                 @foreach($data['attachments'] as $key=>$list)
-                <div class="form-group">
+                	<div class="form-group">
                         <label class="col-sm-2 control-label">附件:</label>
                         <div class="col-sm-10">
 							<div class="upload_list upload_list_doc">
@@ -92,8 +91,13 @@
 							</div>
                         </div>
                     </div>
+                    <div class="hr-line-dashed"></div>
                 @endforeach
-                 @endif
+                @endif
+             	<div class="form-group">
+                    <label class="col-sm-2 control-label" ></label>
+                    <div class="txt col-sm-10"><a href="javascript:history.back(-1)" class="btn btn-default">&nbsp;返回&nbsp;</a></div>
+                </div>
             </form>
         </div>
     </div>
