@@ -37,12 +37,14 @@ class Invite extends CommonModel
                     'station_id' => $list['station_id'],
                     'status' => 0,
                 ];
+
                 //查询出数据库是否有该老师在这场考试邀请过
                 $examScreening = Invite::where('exam_screening_id', '=', $inviteDat['exam_screening_id'])
                     ->where('user_id','=',$inviteDat['user_id'])
                     ->where('station_id','=',$inviteDat['station_id'])
-                    ->whereIn('status','=',[0,1])
+                    ->whereIn('status',[0, 1])
                     ->first();
+
                 //查询出老师名字
 //                $teacherName    = Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
                 $teacherName = Teacher::find($inviteDat['user_id']);
