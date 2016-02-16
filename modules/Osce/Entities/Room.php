@@ -168,8 +168,12 @@ class Room extends CommonModel
                 throw new \Exception('操作人不存在，请先登录');
             }
             //更新考场数据
-            $result = $this->updateData($id, $formData);
-            if(!$result){
+            $room    =$this->find($id);
+            foreach($formData as $field=>$value)
+            {
+                $room->$field   =   $value;
+            }
+            if(!$room->save()){
                 throw new \Exception('数据修改失败！请重试');
             }
 
