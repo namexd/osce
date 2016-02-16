@@ -973,8 +973,15 @@ class MachineController extends CommonController
 
         $watchLogModel=new WatchLog();
         $list=$watchLogModel->getList(trim($code),trim($studentName),$beginDt,$endDt);
+
         foreach($list as $item){
-           $item->context=unserialize($item->context);
+            //TODO zhoufuxiang 反序列化出错
+            try{
+                $item->context = unserialize($item->context);
+            } catch(\Exception $ex){
+                $item->context = '';
+                continue;
+            }
         }
 
         return view('osce::admin.resourcemanage.equ_manage_watch_list')->with(['list'=>$list,'code'=>$code,'student_name'=>$studentName,'begin_dt'=>$beginDt,'end_dt'=>$endDt]);

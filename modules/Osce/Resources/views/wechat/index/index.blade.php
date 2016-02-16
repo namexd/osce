@@ -28,7 +28,7 @@
 .manageindex .icon3{ background-position:0 -123px;}
 .manageindex .icon4{ background-position:0 -182px;}
 .manageindex .icon5{ background-position:0 -243px;}
-.manageindex .icon6{ background-position:0 -350px;}
+.manageindex .icon6{ background-position:0 -355px;}
 .manageindex .icon7{ background-position:0 -420px;}
 
 
@@ -70,7 +70,7 @@
                 <div class="col-xs-6 column">
                     <a href="{{route('osce.wechat.student-exam-query.getResultsQueryIndex')}}">
                         <div class="normal_background">
-                            <span class="manageindex_icon icon3"></span>
+                            <span class="manageindex_icon icon2"></span>
                             <p>成绩查询</p>
                         </div>
                     </a>
@@ -102,7 +102,7 @@
                 <div class="col-xs-6 column">
                     <a href="{{route('osce.wechat.notice-list.getSystemList')}}">
                         <div class="normal_background">
-                            <span class="manageindex_icon icon5"></span>
+                            <span class="manageindex_icon icon6"></span>
                             <p>系统消息</p>
                         </div>
                     </a>

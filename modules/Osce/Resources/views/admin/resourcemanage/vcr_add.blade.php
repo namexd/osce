@@ -286,7 +286,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary save" type="submit">保存</button>
-                                    <a class="btn btn-white" href="{{route("osce.admin.topic.getList")}}">取消</a>
+                                    <a class="btn btn-white" href="{{route("osce.admin.machine.getMachineList")}}">取消</a>
                                 </div>
                             </div>
                         </form>

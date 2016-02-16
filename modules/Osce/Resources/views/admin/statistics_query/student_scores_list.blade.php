@@ -41,9 +41,8 @@
                         <label class="pull-left exam-name">考试:</label>
                         <div class="pull-left exam-list">
                             <select name="" id="" class="form-control" style="width: 250px;">
-                                <option value="">全部考试</option>
                                 @forelse($examDownlist as $exam)
-                                    <option value="{{$exam->id}}">{{$exam->name}}</option>
+                                    <option value="{{$exam->id}}" @if($exam_id == $exam->id) selected="selected" @endif>{{$exam->name}}</option>
                                 @empty
                                 @endforelse
                             </select>
