@@ -215,8 +215,29 @@ a.btn:hover {text-decoration: none;}
 
 .images_upload{display:inline-block;height:180px;border:1px dashed #ccc;cursor:pointer;background:url(../images/add_img.png) no-repeat center;text-align: center;}
 .images_upload input{width:100%;height:100%;opacity:0;cursor:pointer;}
-.img_box{overflow:hidden;padding:0;}
-.img_box li{float:left;width:280px;margin:0 10px 10px 0;position: relative;}
+/*上传图片按钮样式*/
+.images_upload1{
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor:pointer;
+}
+.images_upload1 input{
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+.img_box{overflow:hidden;padding:0;text-align: center}
+.img_box img{
+    height: inherit;
+}
+.img_box li{width:100%;margin:0 10px 10px 0;position: relative;}
 .img_box li .del_img{background:rgba(255,255,255,.5);position:absolute;right:10px;top:10px;width:20px;cursor:pointer;height:20px;line-height:18px;text-align:center;border-radius:50%;}
 .img_box li .del_img:hover{background:rgba(255,255,255,1);}
 /*当前路径*/
