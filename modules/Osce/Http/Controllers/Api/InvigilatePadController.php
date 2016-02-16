@@ -76,12 +76,12 @@ class InvigilatePadController extends CommonController
            )
        ];
 
-        $json = json_encode($data);
+        $json = json_encode($score);
         $data = json_decode($json);
 
         $arr = (array) $data;
-                foreach($arr['test_term'] as $item){
-        }
+//                foreach($arr['test_term'] as $item){
+//        }
         print_r($arr);
 
 
