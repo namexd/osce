@@ -41,6 +41,7 @@ class Invite extends CommonModel
                 $examScreening = Invite::where('exam_screening_id', '=', $inviteDat['exam_screening_id'])
                     ->where('user_id','=',$inviteDat['user_id'])
                     ->where('station_id','=',$inviteDat['station_id'])
+                    ->whereIn('status','=',[0,1])
                     ->first();
                 //查询出老师名字
 //                $teacherName    = Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
