@@ -144,6 +144,10 @@ class Student extends CommonModel
                 if(!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/',$studentData['mobile'])){
                     throw new \Exception('第'.($key+2).'行手机号不符规格，请修改后重试！');
                 }
+                //准考证号不能为空
+                if(empty($studentData['exam_sequence'])){
+                    throw new \Exception('第'.($key+2).'行准考证号不能为空，请修改后重试！');
+                }
                 //添加考生
                 if(!$this->addExaminee($exam_id, $studentData, $key+2))
                 {
@@ -217,17 +221,8 @@ class Student extends CommonModel
             //存在考生信息,则更新数据, 否则新增
             if($student){
                 throw new \Exception((empty($key)?'':('第'.$key.'行')).'该考生已经存在，不能再次添加！');
-//                //跟新考生数据
-//                $student->name    = $examineeData['name'];
-//                $student->exam_id = $exam_id;
-//                $student->idcard  = $examineeData['idcard'];
-//                $student->mobile  = $examineeData['mobile'];
-//                $student->code    = $examineeData['code'];
-//                $student->avator  = $examineeData['avator'];
-//                if (!($student->save())) {
-//                    throw new \Exception('新增考生失败！');
-//                }
-            }else{
+
+            } else{
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
                 $examineeData['create_user_id'] = $operator->id;
