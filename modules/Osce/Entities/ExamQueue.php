@@ -40,6 +40,7 @@ class ExamQueue extends CommonModel
 
 
     protected $statuValues = [
+        0 => '抽完签',
         1 => '候考',
         2 => '正在考试',
         3 => '结束考试',
@@ -256,7 +257,6 @@ class ExamQueue extends CommonModel
 
             $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                 ->update(['status' => 2]);
-
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -446,6 +446,20 @@ class ExamQueue extends CommonModel
                 'student.id as student_id',
             ])->distinct()->take(4)->get();
         return $builder;
+    }
+
+
+    /**
+     * 结束学生队列考试
+     * @param $room_id $exam_id
+     * @return
+     * @throws \Exception
+     * @author zhouqiang
+     */
+
+    public function getEndStudentQueueExam(){
+
+
     }
 
 }
