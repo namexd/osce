@@ -46,7 +46,7 @@
                     <td>{{$item->username}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->gender}}</td>
-                    <td>-</td>
+                    <td>{{$item->roles[0]->name}}</td>
                     <td>{{$item->mobile}}</td>
                     <td>{{$item->lastlogindate}}</td>
                     <td>
