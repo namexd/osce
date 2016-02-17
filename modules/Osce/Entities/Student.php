@@ -342,11 +342,18 @@ class Student extends CommonModel
           return array();
         }
         $builder= $this->leftjoin('exam_order',function($join){
-            $join ->on('student.id','=','exam_order.student_id');
-        })->where('exam_order.exam_id','=',$exam_id)->where('exam_order.exam_screening_id','=',$screen_id);
+                    $join ->on('student.id','=','exam_order.student_id');
+                })->where('exam_order.exam_id','=',$exam_id)->where('exam_order.exam_screening_id','=',$screen_id);
+
+        //剔除本场考试中 已考试过的 学生 //TODO zhoufuxiang
+        $builder= $builder->leftjoin('exam_screening_student',function($join){
+                    $join ->on('exam_order.student_id', '=', 'exam_screening_student.student_id');
+                    $join ->on('exam_order.exam_screening_id', '=', 'exam_screening_student.exam_screening_id');
+                })->where('exam_screening_student.is_end', '<>', 1);
+
         $builder=$builder->where(function($query){
-            $query->where('exam_order.status','=',0)->orWhere('exam_order.status','=',4);
-        });
+                    $query->where('exam_order.status','=',0)->orWhere('exam_order.status','=',4);
+                });
         $builder=$builder->select([
                 'student.name as name',
                 'student.idcard as idcard',
