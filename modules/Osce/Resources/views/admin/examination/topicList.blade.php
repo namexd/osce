@@ -33,7 +33,7 @@
         <div class="panel blank-panel">
           <form method="get" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control" value="{{(isset($name)?$name:'')}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </span>
