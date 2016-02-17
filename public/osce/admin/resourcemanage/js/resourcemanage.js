@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2015/12/15 0015.
  */
+
 var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
@@ -810,14 +811,13 @@ function sp_invigilator(){
 
 //删除方法封装,其中id为当前dom的value值
 function deleteItems(type,url,id,firstpage){
-    layer.alert('确认删除',{btn:['确认','取消']},function(){
+    layer.alert('是否确认删除?',{btn:['确认','取消']},function(){
         $.ajax({
             type:type,
             async:false,
             url:url,
             data:{id:id},
             success:function(data){
-                console.log(data.code);
                 if(data.code == 1){
                     location.href=firstpage;
                 }else {
@@ -829,7 +829,7 @@ function deleteItems(type,url,id,firstpage){
 }
 //删除场所
 function deleteArea(type,url,id,areaType,firstpage){
-    layer.alert('确认删除',{btn:['确认','取消']},function(){
+    layer.alert('是否确认删除?',{btn:['确认','取消']},function(){
         $.ajax({
             type:type,
             async:false,
@@ -839,7 +839,6 @@ function deleteArea(type,url,id,areaType,firstpage){
                 type:areaType
             },
             success:function(data){
-                console.log(data.code);
                 if(data.code == 1){
                     location.href=firstpage;
                 }else {
