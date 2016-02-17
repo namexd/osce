@@ -43,7 +43,7 @@ class TopicController extends CommonController
         $name   =   e($request->get('name'));
         $Subject    =   new Subject;
         $list       =   $Subject    ->  getList($name);
-        return view('osce::admin.examination.topicList',['list'=>$list]);
+        return view('osce::admin.examination.topicList',['list'=>$list, 'name'=>$name]);
     }
 
     /**
