@@ -11,10 +11,17 @@ namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlowStation;
+use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\StationTeacher;
 
 class ExamPlaceEntity implements ExamPlaceEntityInterface
 {
+    /*
+     * 考试实体的开关门状态
+     * false为关门，true为开门
+     */
+    static public $status = true;
+
     //进入 准备工作 倒计时
     function prepareTest()
     {
@@ -38,10 +45,29 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
     }
 
     //获取当前考站或考场状态
-    function getStatus()
+    static function getStatus($examId, $screenId, $entityId, $entityType)
     {
+        if ($entityType == 2) {
+            $builder = ExamPlanRecord::where('exam_id', $examId)
+                ->where('exam_screening_id', $screenId)
+                ->where('station_id', $entityId);
+        } elseif ($entityType == 1) {
+            $builder = ExamPlanRecord::where('exam_id', $examId)
+                ->where('exam_screening_id', $screenId)
+                ->where('room_id', $entityId);
+        } else {
+            throw new \Exception('系统错误，请重试', -9);
+        }
 
+        //如果该实体是否有开始而没有结束的,就说明当前是关门状态，设置静态属性为false
+        if (is_null($builder->whereNull('end_dt')->first())) {
+            return false;
+            //反之，就说明是开门状态，设置其属性为true
+        } else {
+            return true;
+        }
     }
+
 
     /*
      * 时间递增
@@ -80,19 +106,22 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
             $stations = [];
             if ($sequenceMode == 2) {
                 //获取该考试下的所有考站
-                $examFlowStations = ExamFlowStation::where('exam_id', '=' ,$examId)->get();
+                $examFlowStations = ExamFlowStation::where('exam_id', '=', $examId)->get();
 
                 if ($examFlowStations->isEmpty()) {
-                    throw new \Exception('该场考试没有关联考站或考场！',-2);
+                    throw new \Exception('该场考试没有关联考站或考场！', -2);
                 }
                 //通过关联找到对应的考站信息
                 foreach ($examFlowStations as $examFlowStation) {
+                    //根据考站id找到对应的考场id
+                    $roomId = $examFlowStation->room->first()->id;
                     $temp = $examFlowStation->station;
                     if (is_null($temp)) {
-                        throw new \Exception('该场考试没有关联考站或考场！',-2);
+                        throw new \Exception('该场考试没有关联考站或考场！', -2);
                     }
-                    //将serialnumber放入$temp对象
+                    //将serialnumber和room_id放入$temp对象
                     $temp->serialnumber = $examFlowStation->serialnumber;
+                    $temp->room_id = $roomId;
                     $stations[] = $temp;
                 }
             } elseif ($sequenceMode == 1) {
@@ -100,14 +129,14 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                 $examFlowRooms = ExamFlowRoom::where('exam_id', $examId)->get();
 
                 if ($examFlowRooms->isEmpty()) {
-                    throw new \Exception('该场考试没有关联考站或考场！',-2);
+                    throw new \Exception('该场考试没有关联考站或考场！', -2);
                 }
 
                 //通过关联找到对应的考场信息
                 foreach ($examFlowRooms as $examFlowRoom) {
                     $temp = $examFlowRoom->room;
                     if (is_null($temp)) {
-                        throw new \Exception('该场考试没有关联考站或考场！',-2);
+                        throw new \Exception('该场考试没有关联考站或考场！', -2);
                     }
                     /*
                      * 得到该考场下考站的最大的考试时间
@@ -128,7 +157,7 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                     $stations[] = $temp;
                 }
             } else {
-                throw new \Exception('非法操作！请重试',-1);
+                throw new \Exception('非法操作！请重试', -1);
             }
 
             return $stations;
