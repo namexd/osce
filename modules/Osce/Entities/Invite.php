@@ -113,18 +113,16 @@ class Invite extends CommonModel
     }
 
     //邀请状态
-    public function status($examId)
+    static public function status($examId)
     {
-        $examScreeningId = ExamScreening::where('exam_id', $examId)->select('id')->first()->id;
+        $examScreeningIds = ExamScreening::where('exam_id', $examId)->select('id')->get()->pluck('id');
 
-        return Invite::leftJoin('exam_screening',
-            function ($join) use ($examScreeningId) {
-                $join->on('exam_screening.id', '=', 'invite.exam_screening_id')
-                    ->where('invite.exam_screening_id', '=', $examScreeningId);
-            })->select(
-            'invite.status as invite_status',
-            'invite.user_id as invite_user_id'
-        )->get();
+        return Invite::whereIn('invite.exam_screening_id', $examScreeningIds)
+          ->select(
+            'status as invite_status',
+            'user_id as invite_user_id'
+          )
+         ->get();
     }
 
 }
