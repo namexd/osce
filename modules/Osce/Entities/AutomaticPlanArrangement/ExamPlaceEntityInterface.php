@@ -26,7 +26,7 @@ interface ExamPlaceEntityInterface
     function endTest();
 
     //获取当前考站或考场状态
-    function getStatus();
+    static function getStatus($examId, $screenId, $entityId, $entityType);
 
     /*
      * 时间递增

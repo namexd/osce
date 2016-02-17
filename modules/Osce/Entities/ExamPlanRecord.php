@@ -20,5 +20,4 @@ class ExamPlanRecord extends CommonModel
     protected $hidden = [];
     protected $fillable = ['room_id','student_id','station_id','exam_id','exam_screening_id','end_dt'];
 
-
 }
