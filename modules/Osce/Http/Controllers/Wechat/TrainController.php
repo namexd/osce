@@ -54,6 +54,7 @@ class TrainController extends  CommonController{
         $pagination=$trainModel->getPaginate();
         $page=$request->get('pagesize',1);
         $list=InformTrain::select()->orderBy('begin_dt','desc')->get();
+
         $data=[];
         foreach($list as $item){
             $time=time()-strtotime($item->created_at);
