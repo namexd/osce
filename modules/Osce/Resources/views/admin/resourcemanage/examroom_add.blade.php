@@ -91,7 +91,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">场所类型</label>
                             <div class="col-sm-10">
-                                <select class="form-control" name="cate">
+                                <select class="form-control" name="cate" id="cate">
                                     <option value="0" {{0==$type? 'selected="selected"':''}}>考场</option>
                                     @forelse($cateList as $cate)
                                         <option value="{{$cate->cate}}"  {{$cate->cate==$type? 'selected="selected"':''}} >{{$cate->cate}}</option>
@@ -154,7 +154,7 @@
     <script src="{{asset('/osce/common/select2-4.0.0/js/i18n/zh-CN.js')}}"></script>
     <script>
         $(function(){
-            $('[name=cate]').select2({
+           /* $('[name=cate]').select2({
                 tags: true,
                 tokenSeparators: [',', ' '],
                 maximumInputLength: 12
@@ -165,7 +165,13 @@
                 var choose  =   info.pop();
                 $(this).val([choose, choose]).trigger("change");
                 $(this).select2("close");
-            });
+            });*/
+            $('#cate').select2({
+                tags: true,
+                tokenSeparators: [',', ' '],
+                maximumInputLength: 12
+            })
+
         })
     </script>
 @stop

@@ -200,7 +200,8 @@ class InvitationController extends CommonController
             'begin_dt' => $inviteModel->begin_dt,
             'end_dt' => $inviteModel->end_dt,
             'case_name' => $caseModel,
-            'status' => $inviteModel->status
+            'status' => $inviteModel->status,
+//            'teacher_name' =>
         ];
 //          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [

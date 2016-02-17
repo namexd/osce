@@ -2084,13 +2084,11 @@ function smart_assignment(){
 
 //生成时间轴
     function makeTime(){
-        console.log(timesGroup);
         for(var i in timesGroup ){
             timesGroup[i]=unique(timesGroup[i]);
             timesGroup[i]=timesGroup[i].sort(function(a,b){return a>b?1:-1});
             /* times=unique(times);
              times=times.sort(function(a,b){return a>b?1:-1});*/
-            console.log(timesGroup[i]);
             var endtimeData=endtime[i];
             //endtime=endtime.sort(function(a,b){return a>b?1:-1});
             var lastHeight=endtimeData-timesGroup[i][timesGroup[i].length-1];

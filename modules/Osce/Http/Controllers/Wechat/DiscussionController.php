@@ -47,6 +47,7 @@ class DiscussionController extends  CommonController{
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getDiscussionPagination();
           $row=Discussion::where('pid',0)->select()->orderBy('created_at','desc')->get();
+
           $list=[];
           foreach($row as $item){
               $countReply=Discussion::where('pid',$item->id)->count();
