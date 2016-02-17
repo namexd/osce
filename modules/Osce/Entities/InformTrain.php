@@ -37,7 +37,7 @@ class InformTrain extends CommonModel{
                 $this->table.'.content as content',
                 $this->table.'.attachments as attachments',
                 $this->table.'.status as status',
-            ])->orderBy($this->table.'.begin_dt','DESC')->paginate(config('osce.page_size'));
+            ])->orderBy($this->table.'.begin_dt','desc')->paginate(config('osce.page_size'));
             return $builder;
         }
 

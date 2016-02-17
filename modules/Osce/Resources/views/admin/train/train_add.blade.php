@@ -36,9 +36,9 @@
  		var start={
 			elem: '#start',
 		   	event: 'click',
-			format: 'YYYY/MM/DD hh:mm:ss',
+			format: 'YYYY/MM/DD hh:mm',
 			min: laydate.now(),
-		    max: '2099-06-16 23:59:59',
+		    max: '2099-06-16 23:59',
 		    istime: true,
 		    istoday:false,
 		    choose: function(datas){
@@ -48,9 +48,9 @@
 		var end={
 			elem: '#end',
 		   	event: 'click',
-			format: 'YYYY/MM/DD hh:mm:ss',
+			format: 'YYYY/MM/DD hh:mm',
 			min: laydate.now(),
-		    max: '2099-06-16 23:59:59',
+		    max: '2099-06-16 23:59',
 		    istime: true,
 		    istoday:false,
 		    choose: function(datas){
@@ -182,14 +182,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">开始时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" type="text" name="begin_dt" id="start" readonly="readonly" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" type="text" name="begin_dt" id="start" readonly="readonly" placeholder="YYYY/MM/DD hh:mm">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">结束时间:</label>
                         <div class="col-sm-10">
-                        	<input class="laydate-icon" type="text" name="end_dt" id="end" readonly="readonly" placeholder="YYYY/MM/DD hh:mm:ss">
+                        	<input class="laydate-icon" type="text" name="end_dt" id="end" readonly="readonly" placeholder="YYYY/MM/DD hh:mm">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
