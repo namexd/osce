@@ -775,54 +775,61 @@ class IndexController extends CommonController
         $studentModel = new Student();
         try {
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
+            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
             if($mode==1){
-             $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
-             $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
-             $countStation=[];
-             foreach($stations as $item){
-              $countStation[]=$item->station_id;
-             }
-                $countStation=array_unique($countStation);
-                $batch=config('osce.batch_num');//默认为2
-                $countStation=count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
-                $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);//获取考生队列
-                $data=[];
-                foreach($list as $itm){
-                    $data[]=[
-                        'name' => $itm->name,
-                        'idcard' => $itm->idcard,
-                        'code' => $itm->code,
-                        'exam_screening_id' => $itm->exam_screening_id,
-                    ];
-                }
-                $count = count($list);
-                return response()->json(
-                    $this->success_data($data, 1, 'count:'.$count)
-                );
-            }elseif($mode==2){
-                $stations=ExamFlowStation::where('exam_id',$exam_id)->select('station_id')->get();
-                $countStation=[];
-                foreach($stations as $item){
-                    $countStation[]=$item->station_id;
-                }
-                $countStation=array_unique($countStation);
-                $batch=config('osce.batch_num');
-                $countStation=count($countStation)*$batch;
-                $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
-                $data=[];
-                foreach($list as $itm){
-                    $data[]=[
-                        'name' => $itm->name,
-                        'idcard' => $itm->idcard,
-                        'code' => $itm->code,
-                        'exam_screening_id' => $itm->exam_screening_id,
-                    ];
-                }
-                $count = count($list);
-                return response()->json(
-                    $this->success_data($data, 1, 'count:'.$count)
-                );
+                $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
+                $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
+
+            } else{
+                $stations = ExamFlowStation::where('exam_id', $exam_id)->select('station_id')->get();
             }
+            $countStation=[];
+            foreach($stations as $item){
+                $countStation[]=$item->station_id;
+            }
+            $countStation=array_unique($countStation);
+            $batch=config('osce.batch_num');//默认为2
+            $countStation=count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);//获取考生队列
+            $data=[];
+            foreach($list as $itm){
+                $data[]=[
+                    'name' => $itm->name,
+                    'idcard' => $itm->idcard,
+                    'code' => $itm->code,
+                    'exam_screening_id' => $itm->exam_screening_id,
+                ];
+            }
+            $count = count($list);
+            return response()->json(
+                $this->success_data($data, 1, 'count:'.$count)
+            );
+
+//            }elseif($mode==2){
+//                $stations=ExamFlowStation::where('exam_id',$exam_id)->select('station_id')->get();
+//                $countStation=[];
+//                foreach($stations as $item){
+//                    $countStation[]=$item->station_id;
+//                }
+//                $countStation=array_unique($countStation);
+//                $batch=config('osce.batch_num');
+//                $countStation=count($countStation)*$batch;
+//                $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
+//                $data=[];
+//                foreach($list as $itm){
+//                    $data[]=[
+//                        'name' => $itm->name,
+//                        'idcard' => $itm->idcard,
+//                        'code' => $itm->code,
+//                        'exam_screening_id' => $itm->exam_screening_id,
+//                    ];
+//                }
+//                $count = count($list);
+//                return response()->json(
+//                    $this->success_data($data, 1, 'count:'.$count)
+//                );
+//            }
+
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
