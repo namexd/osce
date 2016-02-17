@@ -156,7 +156,7 @@
             <button class="btn1 pull-left agree" type="button" value="1"  data={{$id}}>同意</button>
             <button class="btn1 pull-right rejected" type="button" value="2" data={{$id}} >拒绝</button>
             @elseif($list['status']==1)
-                
+
             @elseif($list['status']==2)
                 @endif
 
