@@ -68,11 +68,9 @@ class StudentWatchController extends CommonController
         ];
         $code = 0;
         $watchNfcCode = $request->input('nfc_code');
-
-        dd($watchNfcCode);
-        
         //根据设备编号找到设备id
         $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
+
         if (!$watchId) {
             $code = -1;
             $data['title'] = '没有找到到腕表信息';
