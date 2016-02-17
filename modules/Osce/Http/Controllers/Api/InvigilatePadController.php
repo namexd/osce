@@ -674,7 +674,6 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-
         $this->validate($request, [
             'student_id' => 'required|integer',
             'station_id' => 'required|integer'
