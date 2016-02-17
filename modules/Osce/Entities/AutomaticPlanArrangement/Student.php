@@ -10,18 +10,14 @@ namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\Student as StudentModel;
 
 class Student implements StudentInterface
 {
     /*
-     * 姓名
+     * 保存的学生实例
      */
-    public $name = '';
-
-    /*
-     * 编号
-     */
-    public $code = '';
+    protected $student = '';
 
     /*
      * 考生状态 1=考试中  0=空闲  2=考试已安排（准备中）
@@ -41,14 +37,14 @@ class Student implements StudentInterface
     /**
      * 构造函数，初始化某个学生的基本信息
      * Student constructor.
-     * @param $name
-     * @param $code
+     * @param StudentModel $student
      * @param ExamPlanRecord $examPlanRecord
+     * @internal param $name
+     * @internal param $code
      */
-    function __construct($name, $code, ExamPlanRecord $examPlanRecord)
+    function __construct(StudentModel $student, ExamPlanRecord $examPlanRecord)
     {
-        $this->code = $code;
-        $this->name = $name;
+        $this->student = $student;
         $this->examPlanRecord = $examPlanRecord;
     }
 

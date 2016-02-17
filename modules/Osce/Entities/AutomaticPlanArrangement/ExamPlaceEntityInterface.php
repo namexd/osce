@@ -42,4 +42,9 @@ interface ExamPlaceEntityInterface
      * 获取实体需要的学生
      */
     function getEntityNeedStudents();
+
+    /*
+     * 考站的实例，以数组的方式返回
+     */
+    function stationTotal($examId);
 }

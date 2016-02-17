@@ -433,7 +433,11 @@ class Student extends CommonModel
     public function getExamStudent($examId){
         $students= $this->where('exam_id','=',$examId)->get();
         return   $students;
+    }
 
+    static public function examStudent($examId)
+    {
+       return Student::where('exam_id','=',$examId)->get();
     }
 
 }

@@ -240,8 +240,8 @@ class Exam{
                     'status'    =>  0   ]; //考试状态 0=未考、1=已考
             }
 
-            $std->setIniProgress($ini_std_sta);
-            $this->_S[$i]=$std;
+            $std->setIniProgress($ini_std_sta);  //设置学生的考试科目
+            $this->_S[$i]=$std;  //将考生信息放入考生的数组
         }
 
         //一个考站一个队列，队列初始化
