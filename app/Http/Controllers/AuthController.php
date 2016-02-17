@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 use App\Entities\SysRoles;
+use App\Entities\SysUserRole;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
@@ -210,14 +211,19 @@ class AuthController extends BaseController
     public function deleteRole(){
         $id = Input::get('id');
         if($id){
+            $result = SysUserRole::where('role_id', $id)->first();
+            if(!empty($result)){
+                return  redirect()->back()->withErrors(['chargeError'=>'该角色已绑定用户，请先去用户管理中解绑用户！']);
+            }
+
             $deleteRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>$id])->delete();
             if($deleteRole){
                 return redirect()->intended('/auth/auth-manage');
             }else{
-                return  redirect()->back()->withErrors(['系统繁忙']);
+                return  redirect()->back()->withErrors(['chargeError'=>'系统繁忙']);
             }
         }else{
-            return  redirect()->back()->withErrors(['系统繁忙']);
+            return  redirect()->back()->withErrors(['chargeError'=>'系统繁忙']);
         }
     }
 

@@ -118,7 +118,7 @@
                 }
             });
 
-            $(".images_upload").change(function(){
+            $("#images_upload").change(function(){
                 $.ajaxFileUpload
                 ({
 
@@ -131,7 +131,7 @@
                         if(data.code){
                             var href=data.data.path;
                             $('.img_box').find('li').remove();
-                            $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/></li>');
+                            $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/></li>');
                         }
                     },
                     error: function (data, status, e)
@@ -174,8 +174,8 @@
                                 <img src="{{$item->userInfo->avatar}}"/>
                                 <input type="hidden" value="{{$item->userInfo->avatar}}" name="images_path[]">
                             </li>
-                            <span class="images_upload">
-                                <input type="file" name="images" id="file0"/>图片大小为280X180
+                            <span class="images_upload1" id="images_upload">
+                                <input type="file" name="images" id="file0"/>选择图片
                             </span>
                         </ul>
                     </div>

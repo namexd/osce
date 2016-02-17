@@ -610,29 +610,23 @@ class ExamController extends CommonController
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
+
     /**
      * Excel导入考生
-     * @url GET /osce/admin/exam/getImportStudent
+     * @url POST /osce/admin/exam/import-student
      * @access public
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        exam_id        考试id(必须的)
+     * * string        id        考试id(必须的)
      *
-     * @return view
+     * @return object
      *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getImportStudent(Request $request){
-
-        $exam_id = $request->get('id');
-        return view('osce::admin.exammanage.import',['id' => $exam_id]);
-    }
-
-
     public function postImportStudent($id,Request $request, Student $student)
     {
         try {
@@ -790,10 +784,11 @@ class ExamController extends CommonController
 
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,
-            'status'                => $status,
+            'status'            => $status,
             'examRoomData'      => $serialnumberGroup,
             'examStationData'   => $examStationData,
-            'getSelect'         => $this->getSelect()
+            'getSelect'         => $this->getSelect(),
+            'succ'              => $request->get('succ')
         ]);
     }
 
@@ -838,7 +833,7 @@ class ExamController extends CommonController
                     throw new \Exception('考场安排保存失败，请重试！');
                 }
             }
-            return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id]);
+            return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id,'succ'=>1]);
 
         } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
@@ -1382,7 +1377,8 @@ class ExamController extends CommonController
             'roomData'    => $roomData,
             'stationData' => $stationData,
             'status'      => $status,
-            'getSelect'   => $this->getSelect()
+            'getSelect'   => $this->getSelect(),
+            'succ'        => $request->get('succ')
         ]);
     }
 
@@ -1431,7 +1427,7 @@ class ExamController extends CommonController
                 $examFlowStation -> updateExamAssignment($examId, $room, $formData);
             }
 
-            return redirect()->route('osce.admin.exam.getStationAssignment',['id'=>$examId]);
+            return redirect()->route('osce.admin.exam.getStationAssignment',['id'=>$examId, 'succ'=>1]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

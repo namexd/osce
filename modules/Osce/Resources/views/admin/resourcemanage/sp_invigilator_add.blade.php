@@ -116,7 +116,7 @@
                     }
                 }
             });
-            $(".images_upload").change(function(){
+            $("#images_upload").change(function(){
                 $.ajaxFileUpload
                 ({
 
@@ -129,7 +129,8 @@
                         if(data.code){
                             var href=data.data.path;
                             $('.img_box').find('li').remove();
-                            $('.images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                            $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                            $('#images_upload').attr("class","images_upload1");
                         }
                     },
                     error: function (data, status, e)
@@ -153,6 +154,7 @@
             }
             $(".img_box").delegate(".del_img","click",function(){
                 $(this).parent("li").remove();
+                $('#images_upload').attr("class","images_upload");
             });
             $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
         })
@@ -172,9 +174,9 @@
 
                     <div class="col-md-3 col-sm-3 image-box">
                         <ul class="img_box">
-                            <span class="images_upload">
+                            <span class="images_upload" id="images_upload">
                                 <input type="file" name="images" id="file0"/>
-                                图片大小为280X180
+                               选择图片
                             </span>
                         </ul>
                     </div>

@@ -262,4 +262,11 @@
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
 
+<script>
+    $(function(){
+        @if(isset($_GET['succ']) && $_GET['succ'] ==1)
+            layer.alert('保存成功！');
+        @endif
+    })
+</script>
 @stop

@@ -74,7 +74,7 @@ class TopicController extends CommonController
             'description'   =>  'required',
         ],[
             'title.required'        =>  '名称必填',
-            'title.unique'          =>  '名称必须唯一',
+            'title.unique'          =>  '该科目已存在',
             'content.required'      =>  '必须新增评分点',
             'score.required'        =>  '分数必填',
             'description.required'  =>  '必须新增考核项',

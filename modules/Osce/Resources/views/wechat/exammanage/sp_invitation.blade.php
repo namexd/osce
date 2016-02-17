@@ -32,7 +32,7 @@
     <script type="text/javascript">
         $.(function(){
             $('.check').click(function(){
-                alert(1111);
+//                alert(1111);
             })
 
 

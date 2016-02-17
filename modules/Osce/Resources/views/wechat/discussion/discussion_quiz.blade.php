@@ -3,8 +3,11 @@
 @section('only_head_css')
 <link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <style>
-.btn2{background: #1ab394}
+.btn2{background: #1ab394;width: 96%;}
 .has-feedback label~.form-control-feedback {top: 26px;}
+.tijiao{
+        text-align: center;
+    }
 </style>
 @stop
 @section('only_head_js')
@@ -60,7 +63,7 @@ $(function(){
 	      <label class="" for="name">内容：</label>
 	      <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
 	    </div>
-	    <div class="form-group">
+	    <div class="form-group tijiao">
     		<input class="btn btn2" type="submit" value="提交"/>
     	</div>
     </form>

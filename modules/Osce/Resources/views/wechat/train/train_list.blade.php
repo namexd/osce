@@ -76,7 +76,9 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        	考前培训
-       	<a class="right header_btn nou clof header_a" href="#"></a>
+        <a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
+            <i class="fa fa-home clof font26 icon_return"></i>
+        </a>
     </div>
     <ul id="discussion_ul">
     </ul>

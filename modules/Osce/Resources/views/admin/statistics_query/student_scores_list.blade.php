@@ -41,9 +41,8 @@
                         <label class="pull-left exam-name">考试:</label>
                         <div class="pull-left exam-list">
                             <select name="" id="" class="form-control" style="width: 250px;">
-                                <option value="">全部考试</option>
                                 @forelse($examDownlist as $exam)
-                                    <option value="{{$exam->id}}">{{$exam->name}}</option>
+                                    <option value="{{$exam->id}}" @if($exam_id == $exam->id) selected="selected" @endif>{{$exam->name}}</option>
                                 @empty
                                 @endforelse
                             </select>
@@ -52,7 +51,8 @@
                     <div class="input-group col-md-6 col-sm-6 col-xs-6">
                         <div  class="pull-left examinee-list">
                             <form action="">
-                                <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;" value="">
+                                <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;"
+                                       value="{{$message}}">
                                 <span class="input-group-btn pull-left">
                                     <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                                 </span>

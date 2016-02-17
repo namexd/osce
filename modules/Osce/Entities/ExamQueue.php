@@ -40,6 +40,7 @@ class ExamQueue extends CommonModel
 
 
     protected $statuValues = [
+        0 => '抽完签',
         1 => '候考',
         2 => '正在考试',
         3 => '结束考试',
@@ -266,7 +267,7 @@ class ExamQueue extends CommonModel
                         $lateTime    =   time()-strtotime($item->begin_dt);
                         if ($item->status == 2) {
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
-                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt)+$lateTime);
+                            $item->end_dt = date('Y-m-d H:i:s', $nowTime+$item->station->mins*60);
                         } else {
                             $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) +$lateTime);
                             $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) +$lateTime);
@@ -278,7 +279,7 @@ class ExamQueue extends CommonModel
                         }
                     }else{
                           $ExamTime= ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime )]);
+                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime ),'end_dt' => date('Y-m-d H:i:s', $nowTime+$item->station->mins*60)]);
                         if($ExamTime){
                             return true;
                         }
@@ -445,6 +446,20 @@ class ExamQueue extends CommonModel
                 'student.id as student_id',
             ])->distinct()->take(4)->get();
         return $builder;
+    }
+
+
+    /**
+     * 结束学生队列考试
+     * @param $room_id $exam_id
+     * @return
+     * @throws \Exception
+     * @author zhouqiang
+     */
+
+    public function getEndStudentQueueExam(){
+
+
     }
 
 }

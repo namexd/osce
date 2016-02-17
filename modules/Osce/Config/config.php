@@ -57,11 +57,11 @@ return [
 	'manager'=>[
 		0
 	],
-	'prepare'	=>	10,
-	'spRoleId'		=>	4,
+	'prepare'			=>	10,
+	'spRoleId'			=>	4,
 	'invigilatorRoleId'	=>	1,
 	'studentRoleId'		=>	2,
-	'adminRoleId'	=>	3,
+	'adminRoleId'		=>	3,
 
 	//场所类型的管理
 	'room_cate' => [

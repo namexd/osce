@@ -50,14 +50,19 @@ class CaseModel extends CommonModel
     public function deleteData($id)
     {
         try {
-            //判断在关联表中是否有数据
-            $result = StationCase::where('station_case.case_id', '=', $id)->select('id')->first();
-            if($result) {
-                throw new \Exception('不能删除此病例，因为与考站条目相关联');
+            $caseName = $this->where('id', $id)->select(['name'])->first();
+            if(empty($caseName)){
+                throw new \Exception('未查询到此病例！');
             }
-
-            if (Teacher::where('case_id',$id)->first()) {
-                throw new \Exception('不能删除此病例，因为与SP教师条目相关联');
+            //判断在关联表中是否有数据
+            $stationCase = StationCase::where('station_case.case_id', '=', $id)->select(['station_id'])->first();
+            if($stationCase) {
+                $stationName = Station::where('id', $stationCase->station_id)->select(['name'])->first();
+                throw new \Exception($caseName->name.'病例 已与 '.$stationName->name.'考站 相关联，不能被删除！');
+            }
+            $teacher = Teacher::where('case_id',$id)->select(['name'])->first();
+            if ($teacher) {
+                throw new \Exception($caseName->name.'病例 已与 '.$teacher->name.'SP教师 相关联，不能被删除！');
             }
 
             return $this->where($this->table.'.id', '=', $id)->delete();

@@ -64,7 +64,7 @@
     }
     .sp-teacher .pull-right{width:20%;}
     .teacher-warn{background-color: #ebccd1;}
-    .teacher-primary{background-color: #dff0d8;}
+    .teacher-primary{background-color: #a7d495;}
     .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
     button.btn.btn-default.dropdown-toggle {
         height: 34px;
@@ -185,7 +185,6 @@
                                                 <td>{{$item[0]->station_name}}</td>
                                                 <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
-
                                                     <select class="form-control teacher-teach js-example-basic-multiple" {{$status==0?'':'disabled'}}  name="station[{{$k2++}}][teacher_id]">
                                                         @foreach($item as $value)
                                                             @if($value->type == 1)
@@ -201,37 +200,34 @@
                                                         @foreach($item as $b => $value)
                                                             @if($value->type == 2)
                                                                 @if($value->status == 0)
-                                                                <div class="input-group teacher pull-left" value="{{$value->id}}">
+                                                                    <div class="input-group teacher pull-left" value="{{$value->id}}">
                                                                 @elseif($value->status == 1)
-                                                                <div class="input-group teacher pull-left teacher-primary" value="{{$value->id}}">
+                                                                    <div class="input-group teacher pull-left teacher-primary" value="{{$value->id}}">
                                                                 @else
-                                                                <div class="input-group teacher pull-left teacher-warn" value="{{$value->id}}">
+                                                                    <div class="input-group teacher pull-left teacher-warn" value="{{$value->id}}">
                                                                 @endif
-                                                                    <input type="hidden" name="station[{{$k3}}][spteacher_id][]" value="{{$value->id}}">
-                                                                    <div class="pull-left">{{$value->name}}</div>
-                                                                    <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                                </div>
+                                                                        <input type="hidden" name="station[{{$k3}}][spteacher_id][]" value="{{$value->id}}">
+                                                                        <div class="pull-left">{{$value->name}}</div>
+                                                                        <div class="pull-left"><i class="fa fa-times"></i></div>
+                                                                    </div>
                                                             @endif
                                                         @endforeach
-
                                                     </div>
                                                     <div class="pull-right" value="{{$k4++}}">
                                                         @if($item[0]->station_type == 2)
-                                                        <div class="btn-group">
-                                                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                          <span class="caret"></span>
-                                                          </button>
-                                                          <ul class="dropdown-menu">
-                                                          </ul>
-                                                        </div>
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu"></ul>
+                                                            </div>
                                                         @else
-                                                        <div class="btn-group">
-                                                          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                          <span class="caret"></span>
-                                                          </button>
-                                                          <ul class="dropdown-menu">
-                                                          </ul>
-                                                        </div>
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu"></ul>
+                                                            </div>
                                                         @endif
                                                     </div>
                                                 </td>
@@ -273,4 +269,11 @@
 <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
 <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
 
+<script>
+    $(function(){
+        @if(isset($_GET['succ']) && $_GET['succ'] ==1)
+            layer.alert('保存成功！');
+        @endif
+    })
+</script>
 @stop
