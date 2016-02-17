@@ -113,7 +113,7 @@ class Invite extends CommonModel
     }
 
     //邀请状态
-    public function status($examId)
+    static public function status($examId)
     {
         $examScreeningIds = ExamScreening::where('exam_id', $examId)->select('id')->get()->pluck('id');
 

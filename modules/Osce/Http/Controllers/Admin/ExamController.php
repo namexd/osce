@@ -1354,8 +1354,8 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
-        $invite = new Invite();
-        $inviteData = $invite->status($exam_id);
+//        $invite = new Invite();
+        $inviteData = Invite::status($exam_id);
 
         //将邀请状态插入$stationData
         foreach ($stationData as &$items) {
