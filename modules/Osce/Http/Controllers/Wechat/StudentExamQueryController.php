@@ -186,6 +186,7 @@ class StudentExamQueryController extends CommonController
     {
 
 
+
         $this->validate($request, [
             'exam_screening_id' => 'required|integer'
         ]);
@@ -201,6 +202,7 @@ class StudentExamQueryController extends CommonController
         $examscoreModel = new ExamScore();
         $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
 
+
         $groupData = [];
         foreach ($examScoreList as $examScore) {
             $groupData[$examScore->standard->pid][] = $examScore;
@@ -212,10 +214,21 @@ class StudentExamQueryController extends CommonController
         }
         foreach ($groupData[0] as $group) {
             $groupInfo = $group;
-            $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
+            try
+            {
+                $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
+            }catch (\Exception $ex)
+            {
+                dd($group->standard->id,$groupData);
+            }
+
+
             $indexData[] = $groupInfo;
+
+
         }
         $list = [];
+
 
         foreach ($indexData as $goupData) {
             $childrens = is_null($goupData['child']) ? [] : $goupData['child'];
@@ -295,6 +308,7 @@ class StudentExamQueryController extends CommonController
 
     public function getTeacherCheckScore(Request $request)
     {
+
         $this->validate($request, [
             'exam_id' => 'required|integer',
             'station_id' => 'required|integer'
@@ -304,6 +318,7 @@ class StudentExamQueryController extends CommonController
         try {
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
 
+
             //根据考站找到对应的科目
             $subjectId = Station::find($stationId)->subject_id;
             $subjectName = Subject::find($subjectId)->title;
@@ -312,6 +327,7 @@ class StudentExamQueryController extends CommonController
             $studentModel = new Student();
             //找到按科目为基础的所有分数还有总人数
             $avg = $subjectModel->CourseControllerAvg($examId, $subjectId);
+
             //如果avg不为空
             $item = [
                 'exam_begin_dt' => $examTime->begin_dt,

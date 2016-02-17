@@ -286,7 +286,7 @@ class DiscussionController extends  CommonController{
          $id    =   intval($request   ->  get('id'));
          $list=Discussion::where('id',$id)->select()->get();
 
-         return view('osce::wechat.discussion.discussion_response')->with('list',$list);
+         return view('osce::wechat.discussion.discussion_response',['list'=>$list],['id'=>$id]);
      }
 
     /**
@@ -423,7 +423,7 @@ class DiscussionController extends  CommonController{
          ]);
          $id=$request->get('id');
          $list=Discussion::where('id',$id)->select()->get();
-         return view('osce::wechat.discussion.discussion_edit')->with('list',$list);
+         return view('osce::wechat.discussion.discussion_edit')->with('list',$list)->with('id',$id);
      }
 
     /**

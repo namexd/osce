@@ -72,7 +72,7 @@
 
 @section('content')
     <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
+        <a class="left header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        	考前培训
