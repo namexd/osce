@@ -141,7 +141,7 @@ $(function(){
         <li><a href="">删除</a></li>
     </ul>
     <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
+        <a class="left header_btn" href="{{route('osce.wechat.getCheckQuestion',['id'=>$id])}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        回复
