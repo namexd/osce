@@ -38,9 +38,9 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getTrainList(Request $request){
-        $this->validate($request,[
-            'pagesize'  => 'required|integer'
-        ]);
+//        $this->validate($request,[
+//            'pagesize'  => 'required|integer'
+//        ]);
 //      $user=Auth::user();
 //      $userId=$user->id;
 //
