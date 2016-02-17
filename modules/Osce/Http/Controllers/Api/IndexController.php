@@ -606,15 +606,16 @@ class IndexController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamList(){
-        $exam=new Exam();
-        $status=0;
-        $examList=$exam->getTodayList($status);
+    public function getExamList()
+    {
+        $exam = new Exam();
+        $status = 0;
+        $examList = $exam->getTodayList($status);
         if(count($examList)){
             foreach($examList as $item){
-                 if($item->status==1){
-                     $status=1;
-                     $examList=$exam->getTodayList($status);
+                 if($item->status == 1){
+                     $status = 1;
+                     $examList = $exam->getTodayList($status);
                  }
             }
             return response()->json(
@@ -622,7 +623,6 @@ class IndexController extends CommonController
             );
         }
         return \Response::json(array('code' => 4));
-
     }
 
 

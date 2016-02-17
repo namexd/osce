@@ -409,8 +409,8 @@ class Exam extends CommonModel
     }
 
     //考生查询
-
-    public function getList($formData=''){
+    public function getList($formData='')
+    {
          $builder=$this->Join('student','student.exam_id','=','exam.id');
         if($formData['exam_name']){
             $builder=$builder->where('exam.name','like','%'.$formData['exam_name'].'');
@@ -431,8 +431,12 @@ class Exam extends CommonModel
         $builder->orderBy('exam.begin_dt','DESC');
         return $builder->paginate(config('msc.page_size'));
     }
-//查询今日考试
-    public function getTodayList($status=''){
+
+    /**
+     * 查询今日考试
+     */
+    public function getTodayList($status='')
+    {
           $time=time();
           $builder=$this->select(DB::raw(
               implode(',',[
@@ -445,22 +449,15 @@ class Exam extends CommonModel
               ])
             )
           );
-        $builder=$builder->whereRaw(
-             'unix_timestamp(date(exam.begin_dt)) < ?',
-             [
-                 $time
-             ]
-         );
-        $builder=$builder->whereRaw(
-             'unix_timestamp(date('.$this->table.'.end_dt))+86399 > ?',
-             [
-                 $time
-             ]
-         );
+        $builder = $builder->whereRaw('unix_timestamp(date(begin_dt)) < ?', [$time]);
+        $builder = $builder->whereRaw('unix_timestamp(date(end_dt))+86399 > ?', [$time]);
+
         if($status){
-          $builder=$builder->where('status','=',1)->take(1);
+            $builder = $builder->where('status', '=', 1)->take(1);
+        } else{
+            $builder = $builder->where('status', '<>', 2);
         }
-        $data=$builder->get();
+        $data = $builder->get();
 
         return $data;
     }
