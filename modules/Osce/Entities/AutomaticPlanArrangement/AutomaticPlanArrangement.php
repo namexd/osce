@@ -171,10 +171,11 @@ class AutomaticPlanArrangement
 
             //找到未考完的考生
             $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
-            $undoneStudents = $examPlanEntity->pluck('student_id');
+
+            $undoneStudentsId = $examPlanEntity->pluck('student_id');
 
             //删除未考完学生记录
-            if (!ExamPlanRecord::whereIn('student_id',$undoneStudents)->delete()) {
+            if (!ExamPlanRecord::whereIn('student_id',$undoneStudentsId)->delete()) {
                 throw new \Exception('删除未考完考生记录失败！');
             }
 
