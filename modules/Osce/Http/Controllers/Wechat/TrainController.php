@@ -44,6 +44,7 @@ class TrainController extends  CommonController{
 //      $user=Auth::user();
 //      $userId=$user->id;
 //
+
 //      if(!$userId){
 //          return response()->json(
 //              $this->success_rows(0,'false')
@@ -52,7 +53,8 @@ class TrainController extends  CommonController{
         $trainModel=new InformTrain();
         $pagination=$trainModel->getPaginate();
         $page=$request->get('pagesize',1);
-        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
+        $list=InformTrain::select()->orderBy('begin_dt','desc')->get();
+
         $data=[];
         foreach($list as $item){
             $time=time()-strtotime($item->created_at);

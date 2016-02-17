@@ -606,15 +606,16 @@ class IndexController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamList(){
-        $exam=new Exam();
-        $status=0;
-        $examList=$exam->getTodayList($status);
+    public function getExamList()
+    {
+        $exam = new Exam();
+        $status = 0;
+        $examList = $exam->getTodayList($status);
         if(count($examList)){
             foreach($examList as $item){
-                 if($item->status==1){
-                     $status=1;
-                     $examList=$exam->getTodayList($status);
+                 if($item->status == 1){
+                     $status = 1;
+                     $examList = $exam->getTodayList($status);
                  }
             }
             return response()->json(
@@ -622,7 +623,6 @@ class IndexController extends CommonController
             );
         }
         return \Response::json(array('code' => 4));
-
     }
 
 
@@ -861,6 +861,15 @@ class IndexController extends CommonController
                        'exam_screening_id'  => $screen_id,
                    ]);
                    if($result){
+                       //TODO zhoufuxiang
+                       //获取该考试最后一位学生（按开始考试时间排序）, 若此学生与当前缺考学生是同一个，则将考试标为已结束
+                       $examOrder = ExamOrder::where('exam_id', $examId)->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
+                       if($examOrder->student_id == $studentId){
+                           //检查考试是否可以结束
+                           $examScreening   =   new ExamScreening();
+                           $examScreening  ->getExamCheck();
+                       }
+
                        return \Response::json(array('code'=>1));//缺考记录插入成功
                    }
                    return \Response::json(array('code'=>0));//缺考记录插入失败
