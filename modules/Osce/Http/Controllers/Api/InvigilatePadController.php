@@ -357,6 +357,7 @@ class InvigilatePadController extends CommonController
         $list =[];
         $scores =0;
         $arr=  json_decode($score,true);
+        dd($arr);
         foreach($arr as  $item){
             foreach($item['test_term'] as $str){
 //                $scores += $str['score'];
