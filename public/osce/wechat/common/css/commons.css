@@ -273,4 +273,4 @@ small.help-block{border-color: #ed5565!important;}
 .radio_label input{position:absolute;left:-999px;top:0;opacity:0}
 
 /*提示框*/
-.pop{width:100%;margin:10px 0;padding:6px 12px;line-height:1.5em;background:#FDF9E3;border:1px solid #FCEED0;border-radius:3px;text-align: center;font-size:16px;}
+.pop{width:100%;margin:10px 0;padding:6px 12px;line-height:1.5em;background:#FDF9E3;border:1px solid #FCEED0;border-radius:3px;text-align: center;font-size:14px;}
