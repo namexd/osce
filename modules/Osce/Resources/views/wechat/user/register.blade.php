@@ -124,22 +124,18 @@
         //点击发送验证码
         $("#send_code").click(function(){
             var phone = $('#mobile').val();
-            var status = false;
             var req=/^1[3|5|7|8]{1}[0-9]{9}$/;
             if(phone==''){
 	            layer.alert('请输入手机号！',function(its){
-	                status = true;
 	                layer.close(its);
 	            })
+	            return false;
             }
             if(!(req.test(phone))){
 	            layer.alert('手机号错误！',function(its){
-	                status = true;
 	                layer.close(its);
 	            })
-            }
-            if(status){
-            	return false;
+	            return false;
             }
             $.ajax({
                 type:'post',
