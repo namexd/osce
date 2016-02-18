@@ -41,7 +41,7 @@
             <h5 class="title-label">考前培训</h5>
         </div>
         <div class="col-xs-6 col-md-2" style="float: right;">
-            <a  href="{{ route('osce.admin.getAddTrain')  }}" class="btn btn-outline btn-default" style="float: right;">&nbsp;新增&nbsp;</a>
+            <a  href="{{ route('osce.admin.getAddTrain')  }}" class="btn btn-primary" style="float: right;">&nbsp;新增&nbsp;</a>
         </div>
     </div>
     <form class="container-fluid ibox-content" id="list_form">

@@ -30,7 +30,7 @@
                 <h5 class="title-label">场所管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-outline btn-default" style="float: right;">新增</a>
+                <a  href="{{route('osce.admin.Place.getAddPlace')}}" class="btn btn-primary" style="float: right;">新增</a>
             </div>
         </div>
     <form class="container-fluid ibox-content" id="list_form">
