@@ -122,7 +122,7 @@ class TestResult extends CommonModel
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
 //                $scores += $str['score'];
-                $list['scores'] = $scores;
+//                $list['scores'] = $scores;
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],
