@@ -355,7 +355,8 @@ class UserController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postResetPassword(UserRepository $user,Request $request){
+    public function postResetPassword(UserRepository $user,Request $request)
+    {
         $this   ->  validate($request,[
             'mobile'    =>  'required',
             'verify'    =>  'required',
@@ -366,7 +367,7 @@ class UserController  extends CommonController
             'verify.required'       =>  '请输入验证码',
             'password.required'     =>  '请输入密码',
             'password_confirmation.required'=>  '请输入确认密码',
-            'password.confirmed'    =>  '两次密码',
+            'password.confirmed'    =>  '您输入的两次密码信息不一致，请重新输入',
         ]);
 
         //dd($referer);
@@ -381,28 +382,23 @@ class UserController  extends CommonController
                 $password  =   bcrypt($password);
                 $user   =   User::where('mobile','=',$data['mobile'])->first();
 
-                if(empty($user))
-                {
+                if(empty($user)){
                     throw new \Exception('用户不存在');
                 }
-                $user       ->   password   =   $password;
-                if($user    ->  save())
-                {
+                $user   -> password = $password;
+                if($user-> save()){
                     $referer    =   session('referer');
                     return  redirect()      ->  intended($referer);
-                }
-                else
-                {
+
+                } else{
                     throw new \Exception('修改密码失败');
                 }
-            }
-            else
-            {
+
+            } else{
                 throw new \Exception('验证码错误');
             }
-        }
-        catch(\Exception $ex)
-        {
+
+        } catch(\Exception $ex){
             return  redirect()  ->  back()  ->  withErrors($ex->getMessage());
         }
     }

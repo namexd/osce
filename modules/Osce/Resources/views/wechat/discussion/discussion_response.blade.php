@@ -109,10 +109,16 @@ $(function(){
                     }
                 }
             });
-
+    //回复
     $('.btn2').click(function(){
 
         var content = $('#context').val();
+        if(content==''){
+            layer.alert('回复内容不能为空！',function(it){
+                layer.close(it);
+            });
+            return;
+        }
 
         $.ajax({
             type:'post',
