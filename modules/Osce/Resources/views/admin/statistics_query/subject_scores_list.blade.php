@@ -53,7 +53,6 @@ $(function(){
 </script>
 @stop
 
-
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">

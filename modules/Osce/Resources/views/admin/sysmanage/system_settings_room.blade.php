@@ -41,7 +41,7 @@
                     <ul class="nav nav-tabs">
                         <li><a href="{{route('osce.admin.config.getIndex')}}">媒体设置</a></li>
                         <li class="active"><a href="#">场所类型</a></li>
-                        <a href="{{route('osce.admin.config.getAreaStore')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                        <a href="{{route('osce.admin.config.getAreaStore')}}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                     </ul>
                     
                 </div>

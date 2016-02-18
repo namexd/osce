@@ -64,7 +64,7 @@ class TestResult extends CommonModel
                 throw new \Exception('û���ҵ�������������');
             }
 
-            $connection->commit();
+            //$connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();

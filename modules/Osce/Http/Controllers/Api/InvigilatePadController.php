@@ -244,20 +244,8 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function  postSaveExamEvaluate(Request $request, $ExamResultId)
+    private function  postSaveExamEvaluate($scoreData, $ExamResultId)
     {
-
-
-        $this->validate($request, [
-            'subject_id' => 'required|integer',
-            'standard_id' => 'required|integer',
-            'score' => 'required',
-        ], [
-            'subject_id.required' => '请检查考试项目',
-            'standard_id.required' => '请检查评分标准',
-            'score.required' => '请检查评分标准分值',
-        ]);
-
 //        $standard = Input::get('standard_id');
 //        $standardId = [];
 //        foreach ($standard as $list) {
@@ -267,11 +255,11 @@ class InvigilatePadController extends CommonController
 //
 //        }
 
-        $data = [
-            'subject_id' => Input::get('subject_id'),
-            'standard_id' => Input::get('standard_id'),
-            'score' => Input::get('score'),
-        ];
+//        $data = [
+//            'subject_id' => Input::get('subject_id'),
+//            'standard_id' => Input::get('standard_id'),
+//            'score' => Input::get('score'),
+//        ];
 
         $data['exam_result_id'] = $ExamResultId;
         $Save = ExamScore::create($data);
@@ -283,7 +271,7 @@ class InvigilatePadController extends CommonController
      * @method post
      * @url /osce/api/invigilatepad/save-exam-result
      * @access public
-     * @param Request $request get请求<br><br>
+     * @param Request $request post请求<br><br>
      * <b>get请求字段：</b>
      * * string     station_id    考站id   (必须的)
      * @return view
@@ -295,9 +283,8 @@ class InvigilatePadController extends CommonController
 
     public function postSaveExamResult(Request $request)
     {
-
-
         $this->validate($request, [
+            'score' => 'required',
             'student_id' => 'required',
             'station_id' => 'required',
             'exam_screening_id' => 'required',
@@ -305,13 +292,13 @@ class InvigilatePadController extends CommonController
             'end_dt' => 'required',
             'teacher_id' => 'required|integer',
             'evaluate' => 'required'
+        ],[
+            'score.required' => '请检查评分标准分值',
         ]);
+
         //拿到各评分详情
-
         //得到用时
-        $times = Input::get('end_dt') - Input::get('begin_dt');
         //得到总成绩
-
         //得到考试评分详情
         $data = [
             'station_id' => Input::get('station_id'),
@@ -319,7 +306,8 @@ class InvigilatePadController extends CommonController
             'exam_screening_id' => Input::get('exam_screening_id'),
             'begin_dt' => Input::get('begin_dt'),//考试开始时间
             'end_dt' => Input::get('end_dt'),//考试实际结束时间
-//            'time' => $time,//考试用时
+//          'time' => $time,//考试用时
+//          'score'=>        考试分数
             'score_dt' => Input::get('score_dt'),//评分时间
             'teacher_id' => Input::get('teacher_id'),
             'evaluate' => Input::get('evaluate'),//评价内容
@@ -353,11 +341,19 @@ class InvigilatePadController extends CommonController
                 //得到考试结果id
                 $testResultId = $result->id;
                 //根据考试附件结果id修改表里的考试结果id
-                // todo 待最后确定。。。。。。。。
+                // todo 待最后确定。。。。。。。
+                $score =Input::get('score');
+                $data   =   $this-> getExamResult($score);
+                dd($data);
 
+               $scoreData = [
+                'subject_id' => Input::get('subject_id'),
+                'standard_id' => Input::get('standard_id'),
+                'score' => Input::get('score'),
+            ];
 
                 //存入考试 评分详情表
-                $SaveEvaluate = $this->postSaveExamEvaluate($request, $testResultId);
+                $SaveEvaluate = $this->postSaveExamEvaluate($scoreData, $testResultId);
                 if (!$SaveEvaluate) {
                     return response()->json(
                         $this->fail(new \Exception('成绩推送失败'))
@@ -379,6 +375,29 @@ class InvigilatePadController extends CommonController
             throw $ex;
         }
     }
+
+    private  function  getExamResult($score){
+        $list =[];
+        $scores =0;
+        $arr=  json_decode($score,true);
+        foreach($arr as  $item){
+
+
+            foreach($item['test_term'] as $str){
+                $scores += $str['score'];
+                $list['scores']=$scores;
+                $list []=[
+                    'subject_id'=>$str['subject_id'],
+                    'standard_id'=>$str['id'],
+                    'score'=>$str['score'],
+                ];
+            }
+        }
+        return $list;
+
+    }
+
+
 
     /**
      * 照片附件的上传
