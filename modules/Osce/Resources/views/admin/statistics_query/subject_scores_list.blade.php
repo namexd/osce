@@ -67,7 +67,7 @@ $(function(){
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <label class="pull-left exam-name">考试:</label>
                             <div class="pull-left exam-list">
-                                <select name="exam_id" id="exam-id" class="form-control" style="width: 250px;">
+                                <select name="exam_id" id="exam-id" class="form-control" style="width: 250px;height: 36px;">
                                     @forelse($examDownlist as $exam)
                                         <option value="{{$exam->id}}" {{$exam_id==$exam->id?'selected':''}}>{{$exam->name}}</option>
                                     @empty
