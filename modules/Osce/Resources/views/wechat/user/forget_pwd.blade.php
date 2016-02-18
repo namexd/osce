@@ -21,9 +21,9 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         忘记密码
-        <a class="right header_btn" href="javascript:;">
-            <i class="fa fa-home clof font26 icon_return"></i>
-        </a>
+        {{--<a class="right header_btn" href="javascript:;">--}}
+            {{--<i class="fa fa-home clof font26 icon_return"></i>--}}
+        {{--</a>--}}
     </div>
     <div class="text-box">
         <form action="{{route('osce.wechat.user.postResetPassword')}}" method="post" >
