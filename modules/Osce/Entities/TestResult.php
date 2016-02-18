@@ -62,9 +62,6 @@ class TestResult extends CommonModel
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                if(!$scoreConserve){
-                    throw new \Exception('成绩提交失败');
-                }
             } else {
                 throw new \Exception('成绩提交失败');
             }
