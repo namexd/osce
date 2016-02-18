@@ -83,8 +83,8 @@ class TestResult extends CommonModel
         dump($scoreData);
         $connection=\DB::connection('osce_mis');
         foreach ($scoreData as $data) {
-//            $data['exam_result_id'] = $ExamResultId;
-            $result=$connection->table('exam_score')->create($data);;
+//      $data['exam_result_id'] = $ExamResultId;
+            $result=$connection->table('exam_score')->insert($data);;
 
             return $result;
         }
@@ -119,7 +119,6 @@ class TestResult extends CommonModel
         $list = [];
         $scores = 0;
         $arr = json_decode($score, true);
-
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
 //                $scores += $str['score'];
