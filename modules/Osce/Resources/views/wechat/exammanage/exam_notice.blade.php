@@ -1,7 +1,7 @@
 @extends('osce::wechat.layouts.admin')
 
 @section('only_head_css')
-    <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/documentation.css')}}" type="text/css" />
+    <!-- <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/documentation.css')}}" type="text/css" /> -->
     <!-- <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/jalendar.css')}}" type="text/css" /> -->
     <style type="text/css">
         .title{
