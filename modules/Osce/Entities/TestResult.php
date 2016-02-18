@@ -61,6 +61,7 @@ class TestResult extends CommonModel
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
+                dump($ExamResultId);
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
                 dd($scoreConserve);
                 if(!$scoreConserve){
@@ -69,7 +70,7 @@ class TestResult extends CommonModel
             } else {
                 throw new \Exception('成绩提交失败');
             }
-            //$connection->commit();
+//            $connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
@@ -81,10 +82,15 @@ class TestResult extends CommonModel
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
         dump($scoreData);
+        $data=[];
         $connection=\DB::connection('osce_mis');
-        foreach ($scoreData as $data) {
-//            $data['exam_result_id'] = $ExamResultId;
-            $result=$connection->table('exam_score')->create($data);;
+        foreach ($scoreData as $item) {
+            $data[]=[
+              'exam_result_id'=>$ExamResultId
+            ];
+            $data=$item;
+
+            $result=$connection->table('exam_score')->insert($data);;
 
             return $result;
         }
@@ -119,11 +125,10 @@ class TestResult extends CommonModel
         $list = [];
         $scores = 0;
         $arr = json_decode($score, true);
-
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
 //                $scores += $str['score'];
-                $list['scores'] = $scores;
+//                $list['scores'] = $scores;
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],
