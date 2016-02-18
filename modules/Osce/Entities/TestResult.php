@@ -61,9 +61,7 @@ class TestResult extends CommonModel
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
-                dump($ExamResultId);
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                dd($scoreConserve);
                 if(!$scoreConserve){
                     throw new \Exception('成绩提交失败');
                 }
@@ -81,20 +79,15 @@ class TestResult extends CommonModel
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
-        dump($scoreData);
-        $data=[];
-        $connection=\DB::connection('osce_mis');
         foreach ($scoreData as $item) {
-            $data[]=[
-              'exam_result_id'=>$ExamResultId
-            ];
-            $data=$item;
-            dump($data);
-
-            $result=$connection->table('exam_score')->insert($data);;
-            return $result;
+            $item['exam_result_id']=$ExamResultId;
+            //$result=$connection->table('exam_score')->insert($data);;
+            $examScore=ExamScore::create($item);
+            if(!$examScore)
+            {
+                throw new \Exception('保存分数详情失败');
+            }
         }
-
     }
 
     /**
