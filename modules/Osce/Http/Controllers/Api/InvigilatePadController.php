@@ -45,44 +45,27 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-       $score = [
-           "code"=> 1,
-           "message"=> "模拟评价",
-           "timeAnchors"=>[],
-           $data = array(
-               array(
-                   "id"=>"301",
-                   "subject_id"=> "52",
-                   "sort"=> "1",
-                   "score"=> "2",
-                   "pid"=> "0",
-                   'test_term' => array(
-                       array(
-                           "id"=> "304",
-                           "subject_id"=>"52",
-                           "sort"=> "1",
-                           "score"=> "1",
-                           "pid"=> "303",
-                       ),
-                       array(
-                           "id"=> "305",
-                           "subject_id"=>"52",
-                           "sort"=> "1",
-                           "score"=> "4",
-                           "pid"=> "303",
-                       )
-                   )
-               ),
-           )
-       ];
+       $list =[];
+        $scores =0;
+         $data=$this->getExamGrade();
+         $arr=  json_decode($data,true);
+         foreach($arr as  $item){
+             dump($arr);
 
-        $json = json_encode($score);
-        $data = json_decode($json);
+            foreach($item['test_term'] as $str){
+                $scores += $str['score'];
+                $list['scores']=$scores;
+                $list []=[
+                    'subject_id'=>$str['subject_id'],
+                    'standard_id'=>$str['id'],
+                    'score'=>$str['score'],
+                ];
+            }
+        }
+       dd($list);
 
-        $arr = (array) $data;
 //                foreach($arr['test_term'] as $item){
 //        }
-        print_r($arr);
 
 
 //        return view('osce::test.test');
@@ -209,7 +192,7 @@ class InvigilatePadController extends CommonController
      */
 
 
-    public function getExamGrade(Request $request, Collection $collection)
+    public function getExamGrade(Request $request)
     {
         $this->validate($request, [
             'station_id' => 'required|integer',
@@ -218,8 +201,9 @@ class InvigilatePadController extends CommonController
             'station_id.required' => '没有获取到当前考站',
             'exam_id.required' => '没有获取到当前考试'
         ]);
-
+//
         $stationId = $request->get('station_id');
+//        $stationId=8;
         $examId = $request->get('exam_id');
         //根据考站id查询出下面所有的考试项目
         $station = Station::find($stationId);
@@ -228,6 +212,7 @@ class InvigilatePadController extends CommonController
         $exam = Exam::find($examId);
         $StandardModel = new Standard();
         $standardList = $StandardModel->ItmeList($station->subject_id);
+//        return json_encode($standardList);
         if (count($standardList) != 0) {
             return response()->json(
                 $this->success_data($standardList, 1, '数据传送成功')
@@ -318,17 +303,15 @@ class InvigilatePadController extends CommonController
             'exam_screening_id' => 'required',
             'begin_dt' => 'required',
             'end_dt' => 'required',
-//              'time'=>'required',
-//            'scores' => 'required|integer',
-//            'score_dt' => 'required',
             'teacher_id' => 'required|integer',
             'evaluate' => 'required'
         ]);
+        //拿到各评分详情
+
         //得到用时
         $times = Input::get('end_dt') - Input::get('begin_dt');
         //得到总成绩
-        $scores = 0;
-        $json = json_decode(Input::get('score'));
+
         //得到考试评分详情
         $data = [
             'station_id' => Input::get('station_id'),
