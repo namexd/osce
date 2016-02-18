@@ -283,7 +283,7 @@ class InvigilatePadController extends CommonController
      * @method post
      * @url /osce/api/invigilatepad/save-exam-result
      * @access public
-     * @param Request $request get请求<br><br>
+     * @param Request $request post请求<br><br>
      * <b>get请求字段：</b>
      * * string     station_id    考站id   (必须的)
      * @return view
@@ -296,7 +296,6 @@ class InvigilatePadController extends CommonController
     public function postSaveExamResult(Request $request)
     {
 
-
         $this->validate($request, [
             'student_id' => 'required',
             'station_id' => 'required',
@@ -306,12 +305,10 @@ class InvigilatePadController extends CommonController
             'teacher_id' => 'required|integer',
             'evaluate' => 'required'
         ]);
+
         //拿到各评分详情
-
         //得到用时
-        $times = Input::get('end_dt') - Input::get('begin_dt');
         //得到总成绩
-
         //得到考试评分详情
         $data = [
             'station_id' => Input::get('station_id'),
@@ -319,7 +316,8 @@ class InvigilatePadController extends CommonController
             'exam_screening_id' => Input::get('exam_screening_id'),
             'begin_dt' => Input::get('begin_dt'),//考试开始时间
             'end_dt' => Input::get('end_dt'),//考试实际结束时间
-//            'time' => $time,//考试用时
+//          'time' => $time,//考试用时
+//          'score'=>        考试分数
             'score_dt' => Input::get('score_dt'),//评分时间
             'teacher_id' => Input::get('teacher_id'),
             'evaluate' => Input::get('evaluate'),//评价内容
