@@ -25,7 +25,7 @@
             <input type="hidden" name="client_id"  id="client_id" value="ios">
             <input type="hidden" name="client_secret" id="client_secret" value="111">--}}
             <input class="btn submit_btn" type="submit" id="LoginButton"  value="登录" />
-            <a class="btn register" href="{{route('osce.wechat.user.postRegister')}}">注册</a>
+            <a class="btn right register" style="margin-right:1%;" href="{{route('osce.wechat.user.postRegister')}}">注册</a>
 
         </form>
         <div  class="forget-psw">

@@ -840,7 +840,7 @@ function deleteArea(type,url,id,areaType,firstpage){
             },
             success:function(data){
                 if(data.code == 1){
-                    location.href=firstpage;
+                    location.href= $('.nav-tabs').find('.active').find('a').attr('href');
                 }else {
                     layer.msg(data.message);
                 }
