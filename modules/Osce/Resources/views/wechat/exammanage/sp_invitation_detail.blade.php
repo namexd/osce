@@ -136,6 +136,19 @@
         </a>
     </div>
     <div class="detail-list">
+
+        @if($list['status']==0)
+
+        @elseif($list['status']==1)
+
+            <p class="pop">{{$list['teacher_name']}}老师您已同意参加{{$list['exam_name']}}考试</p>
+
+        @elseif($list['status']==2)
+
+            <p class="pop">{{$list['teacher_name']}}老师您已拒绝参加{{$list['exam_name']}}考试</p>
+
+        @endif
+
         <ul>
             @if(!empty($list))
 
@@ -155,11 +168,6 @@
             @if($list['status']==0)
             <button class="btn1 pull-left agree" type="button" value="1"  data={{$id}}>同意</button>
             <button class="btn1 pull-right rejected" type="button" value="2" data={{$id}} >拒绝</button>
-            @elseif($list['status']==1)
-
-
-            @elseif($list['status']==2)
-
                 @endif
 
         </div>
