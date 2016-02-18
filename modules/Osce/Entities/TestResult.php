@@ -89,9 +89,9 @@ class TestResult extends CommonModel
               'exam_result_id'=>$ExamResultId
             ];
             $data=$item;
+            dump($data);
 
             $result=$connection->table('exam_score')->insert($data);;
-
             return $result;
         }
 
