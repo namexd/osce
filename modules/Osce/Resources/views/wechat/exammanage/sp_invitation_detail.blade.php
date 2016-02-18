@@ -1,8 +1,6 @@
 @extends('osce::wechat.layouts.admin')
 
 @section('only_head_css')
-    <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/documentation.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/jalendar.css')}}" type="text/css" />
     <style type="text/css">
         .detail-list{
            margin:30px;
@@ -33,7 +31,6 @@
 
 @stop
 @section('only_head_js')
-    <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
 
         $(function(){
