@@ -210,13 +210,15 @@ class AuthController extends BaseController
 
     public function deleteRole(){
         $id = Input::get('id');
+
         if($id){
             $result = SysUserRole::where('role_id', $id)->first();
             if(!empty($result)){
                 return  redirect()->back()->withErrors(['chargeError'=>'该角色已绑定用户，请先去用户管理中解绑用户！']);
             }
 
-            $deleteRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>$id])->delete();
+            $deleteRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>$id])->whereNotBetween('id',[1 ,5])->delete();
+
             if($deleteRole){
                 return redirect()->intended('/auth/auth-manage');
             }else{
