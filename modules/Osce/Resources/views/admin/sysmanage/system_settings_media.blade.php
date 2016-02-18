@@ -363,7 +363,7 @@
 			                	<label class="col-sm-2 control-label"></label>
                                 <div class="col-sm-9">
                                 	<input class="btn btn-primary" style="margin-left:10px;"  type="submit" name="" id="" value="保 存" />
-									<a class="btn btn-white" href="{{url('osce/admin/config/index')}}">取消</a>
+									<!-- <a class="btn btn-white" href="{{url('osce/admin/config/index')}}">取消</a> -->
                                 </div>
                             </div>
 			            </div>
