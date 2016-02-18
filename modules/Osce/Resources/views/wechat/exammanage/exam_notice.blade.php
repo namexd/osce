@@ -96,16 +96,7 @@
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>
-
-    <div class="user_header">
-        <a class="left header_btn" href="">
-            <i class="fa fa-angle-left clof font26 icon_return"></i>
-        </a>
-       回复
-        <a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
-            <i class="fa fa-home clof font26 icon_return"></i>
-        </a>
-    </div>
+    
     <div class="history-box">
         <ul id="discussion_ul" class="history-list">
 
