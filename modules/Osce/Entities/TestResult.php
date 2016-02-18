@@ -61,6 +61,7 @@ class TestResult extends CommonModel
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
+                dump($ExamResultId);
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
                 dd($scoreConserve);
                 if(!$scoreConserve){
@@ -69,7 +70,7 @@ class TestResult extends CommonModel
             } else {
                 throw new \Exception('成绩提交失败');
             }
-            //$connection->commit();
+//            $connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
