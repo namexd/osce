@@ -57,7 +57,9 @@ class TestResult extends CommonModel
             }
             $scoreData = $this->getExamResult($score);
             //拿到总成绩
-
+            $total  =   array_pluck($scoreData,'score');
+            $total  =   array_sum($total);
+            $data['score']  =   $total;
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
