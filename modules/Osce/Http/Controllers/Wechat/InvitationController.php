@@ -190,7 +190,7 @@ class InvitationController extends CommonController
                 throw new \Exception('没有找到相关病例');
             } else {
                 $caseModel = CaseModel:: where('id', '=', $caseId->case_id)->select('name')->first()->name;
-
+                $teacher =Teacher:: find($inviteModel->user_id);
             }
         } else {
             throw new \Exception('请检查登陆稍后再试!');
@@ -201,7 +201,7 @@ class InvitationController extends CommonController
             'end_dt' => $inviteModel->end_dt,
             'case_name' => $caseModel,
             'status' => $inviteModel->status,
-//            'teacher_name' =>
+            'teacher_name' =>$teacher->name,
         ];
 //          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [

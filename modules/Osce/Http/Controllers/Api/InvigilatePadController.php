@@ -674,7 +674,7 @@ class InvigilatePadController extends CommonController
         $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
         if ($AlterResult) {
             return response()->json(
-                $this->success_data([$date],'开始考试成功')
+                $this->success_data([$date],1,'开始考试成功')
             );
         }
         return response()->json(
