@@ -246,24 +246,13 @@ class InvigilatePadController extends CommonController
      */
     private function  postSaveExamEvaluate($scoreData, $ExamResultId)
     {
-//        $standard = Input::get('standard_id');
-//        $standardId = [];
-//        foreach ($standard as $list) {
-//            $standardId=[
-//                'id'=>$list[''],
-//            ];
-//
-//        }
+        $data=[];
+        foreach($scoreData as $data){
+//            $data['exam_result_id'] = $ExamResultId;
+            $Save = ExamScore::create($data);
+            return $Save;
+        }
 
-//        $data = [
-//            'subject_id' => Input::get('subject_id'),
-//            'standard_id' => Input::get('standard_id'),
-//            'score' => Input::get('score'),
-//        ];
-
-        $data['exam_result_id'] = $ExamResultId;
-        $Save = ExamScore::create($data);
-        return $Save;
     }
 
     /**
@@ -295,11 +284,6 @@ class InvigilatePadController extends CommonController
         ],[
             'score.required' => '请检查评分标准分值',
         ]);
-
-        //拿到各评分详情
-        //得到用时
-        //得到总成绩
-        //得到考试评分详情
         $data = [
             'station_id' => Input::get('station_id'),
             'student_id' => Input::get('student_id'),
@@ -343,15 +327,8 @@ class InvigilatePadController extends CommonController
                 //根据考试附件结果id修改表里的考试结果id
                 // todo 待最后确定。。。。。。。
                 $score =Input::get('score');
-                $data   =   $this-> getExamResult($score);
-                dd($data);
-
-               $scoreData = [
-                'subject_id' => Input::get('subject_id'),
-                'standard_id' => Input::get('standard_id'),
-                'score' => Input::get('score'),
-            ];
-
+                $scoreData   =   $this-> getExamResult($score);
+                dd($scoreData);
                 //存入考试 评分详情表
                 $SaveEvaluate = $this->postSaveExamEvaluate($scoreData, $testResultId);
                 if (!$SaveEvaluate) {
@@ -381,10 +358,8 @@ class InvigilatePadController extends CommonController
         $scores =0;
         $arr=  json_decode($score,true);
         foreach($arr as  $item){
-
-
             foreach($item['test_term'] as $str){
-                $scores += $str['score'];
+//                $scores += $str['score'];
                 $list['scores']=$scores;
                 $list []=[
                     'subject_id'=>$str['subject_id'],
