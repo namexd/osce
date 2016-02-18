@@ -28,7 +28,6 @@
 
 @stop
 @section('only_head_js')
-    <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
         $(function(){
             $(window).scroll(function(e){
@@ -96,7 +95,6 @@
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>
-    
     <div class="history-box">
         <ul id="discussion_ul" class="history-list">
 

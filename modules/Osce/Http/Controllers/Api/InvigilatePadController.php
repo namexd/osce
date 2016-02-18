@@ -284,6 +284,7 @@ class InvigilatePadController extends CommonController
         ],[
             'score.required' => '请检查评分标准分值',
         ]);
+        $score =Input::get('score');
         $data = [
             'station_id' => Input::get('station_id'),
             'student_id' => Input::get('student_id'),
@@ -291,7 +292,7 @@ class InvigilatePadController extends CommonController
             'begin_dt' => Input::get('begin_dt'),//考试开始时间
             'end_dt' => Input::get('end_dt'),//考试实际结束时间
 //          'time' => $time,//考试用时
-//          'score'=>        考试分数
+//            'score'=> Input::get('score'),       //考试分数
             'score_dt' => Input::get('score_dt'),//评分时间
             'teacher_id' => Input::get('teacher_id'),
             'evaluate' => Input::get('evaluate'),//评价内容
@@ -320,31 +321,14 @@ class InvigilatePadController extends CommonController
                 }
             }
             $TestResultModel = new TestResult();
-            $result = $TestResultModel->addTestResult($data);
+            $result = $TestResultModel->addTestResult($data,$score);
             if ($result) {
-                //得到考试结果id
-                $testResultId = $result->id;
                 //根据考试附件结果id修改表里的考试结果id
                 // todo 待最后确定。。。。。。。
-                $score =Input::get('score');
-                $scoreData   =   $this-> getExamResult($score);
-                dd($scoreData);
                 //存入考试 评分详情表
-                $SaveEvaluate = $this->postSaveExamEvaluate($scoreData, $testResultId);
-                if (!$SaveEvaluate) {
-                    return response()->json(
-                        $this->fail(new \Exception('成绩推送失败'))
-                    );
-                } else {
-                    return response()->json(
-                        $this->success_data('', 1, '成绩保存成功')
-                    );
-
-                }
-
             } else {
                 return response()->json(
-                    $this->fail(new \Exception('成绩推送失败'))
+                    $this->fail(new \Exception('成绩提交失败'))
                 );
 
             }
@@ -353,25 +337,7 @@ class InvigilatePadController extends CommonController
         }
     }
 
-    private  function  getExamResult($score){
-        $list =[];
-        $scores =0;
-        $arr=  json_decode($score,true);
-        dd($arr);
-        foreach($arr as  $item){
-            foreach($item['test_term'] as $str){
-//                $scores += $str['score'];
-                $list['scores']=$scores;
-                $list []=[
-                    'subject_id'=>$str['subject_id'],
-                    'standard_id'=>$str['id'],
-                    'score'=>$str['score'],
-                ];
-            }
-        }
-        return $list;
 
-    }
 
 
 
