@@ -328,6 +328,7 @@ class InvigilatePadController extends CommonController
                 // todo 待最后确定。。。。。。。
                 $score =Input::get('score');
                 $scoreData   =   $this-> getExamResult($score);
+                dd($scoreData);
                 //存入考试 评分详情表
                 $SaveEvaluate = $this->postSaveExamEvaluate($scoreData, $testResultId);
                 if (!$SaveEvaluate) {
