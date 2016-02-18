@@ -102,7 +102,7 @@
                 <div class="col-xs-6 column">
                     <a href="{{route('osce.wechat.notice-list.getSystemList')}}">
                         <div class="normal_background">
-                            <span class="manageindex_icon icon6"></span>
+                            <span class="manageindex_icon icon1"></span>
                             <p>系统消息</p>
                         </div>
                     </a>
