@@ -10,6 +10,9 @@
     #start,#end{width: 160px;}
     .input-group input{height: 34px;}
     .panel>.panel-collapse>.table, .panel>.table, .panel>.table-responsive>.table {margin-bottom: 20px;}
+    .panel-options .nav.nav-tabs{
+        margin-left: 20px!important;
+    }
     </style>
 @stop
 
