@@ -462,23 +462,24 @@ class IndexController extends CommonController
      * @date 2016-01-12
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getDeleteWatch(Request $request){
-
+    public function getDeleteWatch(Request $request)
+    {
         $this->validate($request,[
-            'code'                    =>  'required',
-            'create_user_id'          =>  'required|integer'
+            'code'              =>  'required',
+            'create_user_id'    =>  'required|integer'
         ]);
-        $code=$request->get('code');
-        $id=Watch::where('code',$code)->select()->first()->id;
-        $Log_id=WatchLog::where('watch_id',$id)->select()->get();//查询使用记录
-        $screen_watch=ExamScreeningStudent::where('watch_id',$id)->select()->get();
+        $code   = $request->get('code');
+        $id     = Watch::where('code',$code)->select()->first()->id;
+        $Log_id = WatchLog::where('watch_id',$id)->select()->get();//查询使用记录
+        $screen_watch = ExamScreeningStudent::where('watch_id',$id)->select()->get();
         if(count($Log_id)>0 || count($screen_watch)>0 ){
             return \Response::json(array('code'=>10));
         }
-        $result=Watch::where('id',$id)->delete();
+        $result = Watch::where('id',$id)->delete();
         if($result){
             return \Response::json(array('code'=>1));
         }
+
         return response()->json(
             $this->fail(new \Exception('删除腕表失败'))
         );

@@ -9,7 +9,7 @@ return array (
       'cnname' => '1',
       'url' => 'http://mb345.com/ws/BatchSend.aspx?',
       'username' => 'LKSDK0004929',
-      'password' => 'jkwqm',
+      'password' => 'gogo@misrobot123',
     ),
     'wechat' => 
     array (
