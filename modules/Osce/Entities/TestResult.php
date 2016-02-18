@@ -81,9 +81,8 @@ class TestResult extends CommonModel
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
         dump($scoreData);
-
+        $connection=\DB::connection('osce_mis');
         foreach ($scoreData as $data) {
-            $connection=\DB::connection('osce_mis');
 //            $data['exam_result_id'] = $ExamResultId;
             $result=$connection->table('exam_score')->create($data);;
 
