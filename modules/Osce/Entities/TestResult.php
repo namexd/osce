@@ -80,12 +80,14 @@ class TestResult extends CommonModel
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
-        dd($scoreData);
-        foreach ($scoreData as $data) {
+        dump($scoreData);
 
+        foreach ($scoreData as $data) {
+            $connection=\DB::connection('osce_mis');
 //            $data['exam_result_id'] = $ExamResultId;
-            $Save = ExamScore::create($data);
-            return $Save;
+            $result=$connection->table('exam_score')->create($data);;
+
+            return $result;
         }
 
     }
