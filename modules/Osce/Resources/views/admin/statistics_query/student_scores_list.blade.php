@@ -30,7 +30,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">学生成绩统计</h5>
+                <h5 class="title-label">考生成绩统计</h5>
             </div>
         </div>
         <div class="panel blank-panel">

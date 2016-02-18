@@ -110,7 +110,6 @@ $(function(){
             });
     //回复
     $('.btn2').click(function(){
-
         var content = $('#context').val();
         if(content==''){
             $.alert({
