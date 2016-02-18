@@ -53,7 +53,7 @@
         <a class="left header_btn" href="javascript:history.back(-1)">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-        OSCE考试——OSCE
+        OSCE考试
     </div>
 
     <div>

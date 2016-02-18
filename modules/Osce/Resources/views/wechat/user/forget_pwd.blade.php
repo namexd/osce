@@ -1,6 +1,7 @@
 @extends('osce::wechat.layouts.admin')
 @section('only_head_css')
     <link href="{{asset('msc/wechat/user/css/commons.css')}}"  rel="stylesheet"/>
+    <link rel="stylesheet" href="{{asset('osce/common/css/bootstrapValidator.css')}}">
     <style>
 		    .user_header{width:100%;height:45px;line-height:45px;text-align: center;background:#1ab394;color:#fff; font-size: 16px;}
 		.user_header .header_btn{display:inline-block;width:45px;height:45px;text-align: center}
@@ -15,44 +16,37 @@
         .text-box{width:94%;margin:0 3%;}
     </style>
 @stop
+
 @section('content')
     <div class="user_header">
         <a class="left header_btn" href="{{route('osce.wechat.user.getWebLogin')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-        忘记密码
-        {{--<a class="right header_btn" href="javascript:;">--}}
-            {{--<i class="fa fa-home clof font26 icon_return"></i>--}}
-        {{--</a>--}}
+              忘记密码
     </div>
     <div class="text-box">
-        <form action="{{route('osce.wechat.user.postResetPassword')}}" method="post" >
-        <div class="form-group mobile-box">
-            <label for="mobile">手机号码<span>*</span></label>
-            <input type="number" class="form-control" id="mobile" name="mobile" />
-        </div>
-        <div>
-            <div class="pull-left left" style="display: none;">
-                <input type="text" class="form-control">
-            </div>
-            <div class="pull-left right">
-                <input type="button" class="btn btn-default" style="font-size:14px;margin-left: 3%;background:#1ab394;" id="btn" value="发送手机验证码" />
-            </div>
-        </div>
-        <div class="form-group">
-            <input type="text" name="verify" class="form-control ipt_txt" placeholder="请输入验证码"/>
-        </div>
-        <div class="form-group">
-            <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入新密码"/>
-        </div>
-        <div class="form-group">
-            <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请重复新密码"/>
-        </div>
+        <form id="forget" action="{{route('osce.wechat.user.postResetPassword')}}" method="post" >
+	        <div class="form-group mobile-box">
+	            <input type="text" class="form-control" style="padding-left:3%;" placeholder="手机号码" id="mobile" name="mobile" value=""/>
+	        </div>
+	        <div  class="form-group">
+	        	<input style="float:left;width:60%;" type="text" name="verify" class="form-control ipt_txt" placeholder="请输入验证码"/>
+	            <div class="pull-left right" style="width:38%;">
+	                <input type="button" class="btn btn-default" style="font-size:14px;margin-left: 3%;padding:0;text-align:center;background:#1ab394;" id="btn" value="发送手机验证码" />
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入新密码"/>
+	        </div>
+	        <div class="form-group">
+	            <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请重复新密码"/>
+	        </div>
             <input class="btn" type="submit" style="background:#1ab394;" value="提交审核" />
         </form>
     </div>
 @stop
 @section('footer_js')
+	<script type="text/javascript" src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script >
         function getRegPasswordVerfiy(){
             var mobile  =   $('#mobile').val();
@@ -73,6 +67,33 @@
         }
         $(function(){
             $('#btn').one('click',getRegPasswordVerfiy);
+            
+            $('#forget').bootstrapValidator({
+		        message: 'This value is not valid',
+		        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        },
+		        fields: {/*验证*/
+		            mobile: {
+		                validators: {
+		                    notEmpty: {/*非空提示*/
+		                        message: '手机号码不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 11,
+		                        max: 11,
+		                        message: '请输入11位手机号码'
+		                    },
+		                    regexp: {
+		                        regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+		                        message: '请输入正确的手机号码'
+		                    }
+		                }
+		            }
+		        }
+		    });
         })
     </script>
 @stop
