@@ -95,7 +95,7 @@
             </div>
             <div class="clear"></div>
             <div class="form-group">
-                <input type="number" class="form-control" id="mobile" name="mobile" placeholder="请输入手机号"/>
+                <input type="text" class="form-control" id="mobile" name="mobile" placeholder="请输入手机号"/>
             </div>
             <div class="clear"></div>
 
@@ -125,11 +125,22 @@
         $("#send_code").click(function(){
             var phone = $('#mobile').val();
             var status = false;
-            if(phone=='')layer.alert('请输入手机号！',function(its){
-                status = true;
-                layer.close(its);
-            })
-            if(status)return;
+            var req=/^1[3|5|7|8]{1}[0-9]{9}$/;
+            if(phone==''){
+	            layer.alert('请输入手机号！',function(its){
+	                status = true;
+	                layer.close(its);
+	            })
+            }
+            if(!(req.test(phone))){
+	            layer.alert('手机号错误！',function(its){
+	                status = true;
+	                layer.close(its);
+	            })
+            }
+            if(status){
+            	return false;
+            }
             $.ajax({
                 type:'post',
                 url:'{{route("osce.wechat.user.postRevertCode")}}',
@@ -244,7 +255,7 @@
             gender: {
                 validators: {
                     notEmpty: {
-                        message: '性别不能为空'
+                        message: '请选择性别'
                     }
                 }
             },
