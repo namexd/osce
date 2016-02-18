@@ -16,7 +16,6 @@
         .history-list{margin-top: 10px}
         .history-list li{
             background-color: #fff;
-            padding: 15px;
             border-bottom: 1px solid #eee;
         }
         .history-list li textarea{
