@@ -60,6 +60,7 @@
                                  content: '操作成功!',
                                  confirmButton: '确定',
                                  confirm: function(){
+                                     window.location.reload();
                                  }
                              });
 
@@ -100,11 +101,10 @@
                                 content: '操作成功!',
                                 confirmButton: '确定',
                                 confirm: function(){
+                                    window.location.reload();
                                 }
                             });
-
                         }
-
                     },
                     error:function() {
                         $.alert({
@@ -137,9 +137,7 @@
     </div>
     <div class="detail-list">
 
-        @if($list['status']==0)
-
-        @elseif($list['status']==1)
+        @if($list['status']==1)
 
             <p class="pop">{{$list['teacher_name']}}老师您已同意参加{{$list['exam_name']}}考试</p>
 
