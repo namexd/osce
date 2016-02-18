@@ -160,7 +160,7 @@ class InvitationController extends CommonController
             );
         } else {
             return response()->json(
-                $this->success_data(0, '操作失败')
+                $this->success_data([],0, '操作失败')
             );
         }
     }
