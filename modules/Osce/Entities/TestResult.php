@@ -80,8 +80,9 @@ class TestResult extends CommonModel
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
-        dd(1111);
+        dd($scoreData);
         foreach ($scoreData as $data) {
+
 //            $data['exam_result_id'] = $ExamResultId;
             $Save = ExamScore::create($data);
             return $Save;
