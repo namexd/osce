@@ -36,7 +36,7 @@
                            <span>OSCE管理系统</span>
                            
                         </div>
-                        <div class="logo-element">
+                        <div class="logo-element">OSCE
                         </div>
                     </li>
                     <li class="person-info" style="display:none;">
