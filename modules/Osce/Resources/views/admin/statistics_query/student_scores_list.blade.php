@@ -42,7 +42,7 @@
                         <div class="pull-left exam-list">
                             <select name="" id="" class="form-control" style="width: 250px;">
                                 @forelse($examDownlist as $exam)
-                                    <option value="{{$exam->id}}" @if($exam_id == $exam->id) selected="selected" @endif>{{$exam->name}}</option>
+                                    <option value="{{$exam->id}}" {{$exam_id==$exam->id?'selected':''}}>{{$exam->name}}</option>
                                 @empty
                                 @endforelse
                             </select>
