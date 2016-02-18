@@ -666,8 +666,7 @@ class InvigilatePadController extends CommonController
             'station_id.required' => '考站编号信息必须'
         ]);
         $nowTime = time();
-
-
+        $date = date('Y-m-d H:i:s',$nowTime);
         $studentId = $request->get('student_id');
         $stationId = $request->get('station_id');
         $ExamQueueModel = new ExamQueue();
@@ -675,7 +674,7 @@ class InvigilatePadController extends CommonController
         $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
         if ($AlterResult) {
             return response()->json(
-                $this->success_data($nowTime, 1, '开始考试成功')
+                $this->success_data([$date],'开始考试成功')
             );
         }
         return response()->json(
