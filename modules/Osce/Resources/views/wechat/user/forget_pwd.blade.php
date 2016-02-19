@@ -31,9 +31,7 @@
 	        </div>
 	        <div  class="form-group">
 	        	<input style="float:left;width:60%;" type="text" name="verify" class="form-control ipt_txt" placeholder="请输入验证码"/>
-	            <div class="pull-left right" style="width:38%;">
-	                <input type="button" class="btn btn-default" style="font-size:14px;margin-left: 3%;padding:0;text-align:center;background:#1ab394;" id="btn" value="发送手机验证码" />
-	            </div>
+                <input type="button"class="right btn btn-default" style="width:38%;font-size:14px;padding:0;text-align:center;background:#1ab394;" id="btn" value="发送手机验证码" />
 	        </div>
 	        <div class="form-group">
 	            <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入新密码"/>
@@ -81,14 +79,9 @@
 		                    notEmpty: {/*非空提示*/
 		                        message: '手机号码不能为空'
 		                    },
-		                    stringLength: {
-		                        min: 11,
-		                        max: 11,
-		                        message: '请输入11位手机号码'
-		                    },
 		                    regexp: {
 		                        regexp: /^1[3|5|8]{1}[0-9]{9}$/,
-		                        message: '请输入正确的手机号码'
+		                        message: '请输入11位正确的手机号码'
 		                    }
 		                }
 		            }
