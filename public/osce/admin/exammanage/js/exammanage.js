@@ -2239,8 +2239,9 @@ function examinee_manage(){
             success: function (data, status)
             {
                 if(data.code == 1){
-                    layer.alert('导入成功！');
-                    location.reload();
+                    layer.msg('导入成功！',function(){
+                        location.reload();
+                    });
                 }else{
                     layer.alert(data.message);
                 }
