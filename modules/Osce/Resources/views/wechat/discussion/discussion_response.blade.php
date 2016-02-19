@@ -168,8 +168,7 @@ $(function(){
             <h2 class="title">{{  $list->title }}</h2>
             <div class="title-footer">
                 <div class="item-l">{{  $list->getAuthor->name }}</div>
-                <div class="item-c">{{  $list->created_at }}</div>
-                <div class="item-r">&nbsp;</div>
+                <div class="item-c" style="width: 50%;text-align: right;">{{  $list->created_at }}</div>
                 <div class="clearfix"></div>
             </div>
             <div class="title-con">
@@ -185,9 +184,9 @@ $(function(){
 
                 <div class="form-group">
                   <label class="" for="name">&nbsp;</label>
-                  <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
+                  <textarea style="width:96%;margin:0 2%;height:100px;resize: none;" class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
                 </div>
-                <input type="button" value="提交" class="btn2" />
+                <input  style="width:96%;margin:0 2%;" type="button" value="提交" class="btn2" />
             </form>
         </li>
     </ul>

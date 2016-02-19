@@ -54,12 +54,13 @@
             top: 45px;
             right: 0;
             display: none;
+            padding:10 0;
         }
         .option li{
             margin: 0;
-            height: 30px;
-            width: 60px;
-            line-height: 30px;
+            height: 36px;
+            width: 70px;
+            line-height: 36px;
             text-align: center;
         }
         .btn.btn-default{
@@ -233,8 +234,7 @@
             <h2 class="title">{{  $row['question']['title'] }}</h2>
             <div class="title-footer">
                 <div class="item-l">{{  $row['question']['name']->name }}</div>
-                <div class="item-c">{{  $row['question']['create_at'] }}</div>
-                <div class="item-r">&nbsp;</div>
+                <div class="item-c" style="width:50%;text-align: right;">{{  $row['question']['create_at'] }}</div>
                 <div class="clearfix"></div>
             </div>
             <div class="title-con">
