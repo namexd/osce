@@ -74,14 +74,11 @@ function rolemanage_detail(){
                 }
             }
         });
+        
         //保存提交
         $("#saveForm").click(function(){
             $("#authForm").submit();
         });
-
-
-
-
     })
 }
 
