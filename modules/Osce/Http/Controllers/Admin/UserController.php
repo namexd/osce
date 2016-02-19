@@ -178,8 +178,17 @@ class UserController extends CommonController
 
         if(Auth::check())
         {
+            $nowTime =time();
             try{
                 Auth::logout();
+                //修改用户最后登录时间
+                $user =Auth::user();
+                if($user){
+                    throw new \Exception('未找到当前用户信息');
+                }else{
+                    $connection=\DB::connection('sys_mis');
+                    $connection->table('users')->where('id',$user->id)->update(['lastlogindate'=>$nowTime]);
+                }
             } catch (\Exception $ex){
                 return redirect()->route('osce.admin.postIndex')->with('message','你现在已经退出登录了!');
             }
