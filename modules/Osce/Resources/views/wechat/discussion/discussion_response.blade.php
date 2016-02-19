@@ -178,17 +178,18 @@ $(function(){
         </div>
     </div>
     @endforeach
-    <ul class="history-list">
-        <li>
-            <form id="list_form">
+
+    <form id="list_form">
+        <ul class="history-list">
+            <li>
                 <input type="hidden" name="id" value="{{ $list->id }}">
 
                 <div class="form-group">
                   <label class="" for="name">&nbsp;</label>
                   <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
                 </div>
-                <input type="button" value="提交" class="btn2" />
-            </form>
-        </li>
-    </ul>
+            </li>
+        </ul>
+        <input type="button" value="提交" class="btn2" />
+    </form>
 @stop
