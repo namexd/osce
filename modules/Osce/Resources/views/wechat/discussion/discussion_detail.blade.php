@@ -6,6 +6,7 @@
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 10px;
+            word-wrap: break-word;
         }
         .content-box{
             padding: 20px;
@@ -18,6 +19,7 @@
             padding: 15px;
             border-bottom: 1px solid #eee;
         }
+        .title-con p{word-wrap: break-word;}
         /*header*/
         .item-l,.item-c,.item-r{
             float: left;
