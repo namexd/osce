@@ -391,12 +391,14 @@ $(function(){
         }
         return i;
     }
+
     function pause(){
         var iRet = WebVideoCtrl.I_Pause();
         if (0 != iRet) {
             setTimeout(pause,1000);
         }
     }
+    //进度条重回
     function endToStartPause(){
         var starTime    =   clickGetOSDTime(0);
         if(starTime==undefined||starTime<0)
@@ -448,6 +450,7 @@ $(function(){
         })
     }
 
+    //获取视频时间
     function clickGetOSDTime(g_iWndIndex) {
         var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
 
