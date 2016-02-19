@@ -67,7 +67,7 @@ class TestResult extends CommonModel
             } else {
                 throw new \Exception('成绩提交失败');
             }
-            $connection->commit();
+//            $connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
@@ -115,12 +115,9 @@ class TestResult extends CommonModel
     private function  getExamResult($score)
     {
         $list = [];
-        $scores = 0;
         $arr = json_decode($score, true);
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
-//                $scores += $str['score'];
-//                $list['scores'] = $scores;
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],

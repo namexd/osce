@@ -285,15 +285,15 @@ class InvigilatePadController extends CommonController
             'score.required' => '请检查评分标准分值',
         ]);
         $score =Input::get('score');
+        $time =strtotime(Input::get('end_dt'))-strtotime(Input::get('begin_dt'));
         $data = [
             'station_id' => Input::get('station_id'),
             'student_id' => Input::get('student_id'),
             'exam_screening_id' => Input::get('exam_screening_id'),
             'begin_dt' => Input::get('begin_dt'),//考试开始时间
             'end_dt' => Input::get('end_dt'),//考试实际结束时间
-//          'time' => $time,//考试用时
-//            'score'=> Input::get('score'),       //考试分数
-            'score_dt' => Input::get('score_dt'),//评分时间
+            'time' => $time,//考试用时
+            'score_dt' => Input::get('end_dt'),//评分时间
             'teacher_id' => Input::get('teacher_id'),
             'evaluate' => Input::get('evaluate'),//评价内容
             'operation' => Input::get('operation'),//操作的连贯性
