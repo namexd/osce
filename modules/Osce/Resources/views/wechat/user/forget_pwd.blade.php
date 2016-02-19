@@ -14,6 +14,7 @@
             margin-top: 10px;
         }
         .text-box{width:94%;margin:0 3%;}
+        .jconfirm.white .jconfirm-box .buttons button.btn-default {background: #1ab394;}
     </style>
 @stop
 
@@ -50,17 +51,19 @@
             var mobile  =   $('#mobile').val();
             //判断手机号为空
             if(mobile==''){
-
+                $.alert({
+                    title: '提示：',
+                    content: '手机号不能为空！',
+                    confirmButton: '确定',
+                    confirm: function(){
+                    }
+                });
+                return false;
             }
             var url     =   '{{route('osce.wechat.user.getResetPasswordVerify')}}?mobile='+mobile;
 
-
-            
-            
-            
             SetTime();
-            setTimeout(bindClick,60000);
-            /*$.get(url,function(data){
+            $.get(url,function(data){
                 if(data.code==1)
                 {
                     setTimeout(bindClick,60000);
@@ -69,12 +72,12 @@
                 {
                     bindClick();
                 }
-            });*/
+            });
         }
         //时间计数
         var tim;
         function SetTime(){
-            tim = 6;
+            tim = 60;
             var self = setInterval(function(){
                tim -= 1;
                $('#btn').val(tim+'s后再次发送');
