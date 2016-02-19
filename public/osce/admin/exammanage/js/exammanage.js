@@ -1113,7 +1113,7 @@ function examroom_assignment(){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');
                 }else{
-                    layer.alert(res.message);
+                    layer.alert((res.message).split(':')[1],{title: '温馨提示'});
                 }
 
             },
@@ -2817,7 +2817,7 @@ function station_assignment(){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');
                 }else{
-                    layer.alert(res.message);
+                    layer.alert((res.message).split(':')[1],{title: '温馨提示'});
                 }
 
             },

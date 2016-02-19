@@ -14,7 +14,7 @@
 @stop
 
 @section('only_js')
-    
+
 @stop
 
 

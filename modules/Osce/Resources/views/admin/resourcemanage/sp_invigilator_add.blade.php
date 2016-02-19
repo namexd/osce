@@ -1,6 +1,16 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    
+    <style>
+        .img_box{
+            width:197px;
+            height:251px;
+            margin: auto;
+        }
+        .img_box li img{
+            width: 197px;
+            height: 251px;
+        }
+    </style>
 @stop
 
 @section('only_js')
