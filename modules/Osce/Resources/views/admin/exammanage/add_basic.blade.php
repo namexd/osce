@@ -28,6 +28,9 @@
     .panel-options .nav.nav-tabs{
         margin-left: 20px!important;
     }
+    .msg-success{
+        background-color: #ddd;
+    }
     </style>
 @stop
 
