@@ -49,7 +49,7 @@
                                 <div  class="pull-left examinee-list">
                                     <input type="text" placeholder="请输入姓名" name="student_name" class="input-md form-control" style="width: 250px;" value="{{(empty($student_name))?'':$student_name}}">
                                  <span class="input-group-btn pull-left">
-                                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                                    <button type="submit" style="height: 34px;" class="btn btn-sm btn-primary" id="search">搜索</button>
                                 </span>
                                 </div>
                             </div>

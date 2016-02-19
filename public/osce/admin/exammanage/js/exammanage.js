@@ -1921,11 +1921,12 @@ function smart_assignment(){
     $('.classroom-box').html('');//清空排考
     maketotal(testData);//页面加载执行排考
     makeTime();
+    //最里面dom数据遍历，节点dd
     function makeItem(data){
 
         var dl  =   $('<dl class="clearfloat">');
         var items   =   data.items;
-        var everyHeight=data.end-data.start;
+        var everyHeight=data.end-data.start;//每个单元格的高度
         everyHeight=everyHeight/6;
 
         if(timesGroup[data.screening]!=undefined)
@@ -1938,13 +1939,14 @@ function smart_assignment(){
         }
 
         times.push(data.start);
+        //时间数组，data.screening代表是哪场考试的时间戳
         timesGroup[data.screening] =   times;
         var endTimeData =   endtime[data.screening];
         if(endTimeData==undefined)
         {
             endTimeData=0;
         }
-        endTimeData =   data.end>endTimeData? data.end:endTimeData;
+        endTimeData =   data.end>endTimeData? data.end:endTimeData;//取最大的结束时间
         endtime[data.screening]    =   endTimeData;
         dl.css("height",everyHeight+"px");
         for(var i in items)
@@ -1962,6 +1964,7 @@ function smart_assignment(){
         }
         return dl;
     }
+    //交换考生
     function changeStudent(){
         if($(this).hasClass('clicked'))
         {
@@ -2017,6 +2020,7 @@ function smart_assignment(){
             }
         }
     }
+    //一列表格数据遍历，li
     function makeCols(data){
         var ul  =   $('<ul>');
         var child   =   data.child;
@@ -2038,6 +2042,7 @@ function smart_assignment(){
 
         return ul;
     }
+    //生成一整行数据,ul
     function makeAll(data){
         var ul =    $('<ul class="clearfloat tables">');
         for(var i in data)

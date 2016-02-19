@@ -14,6 +14,7 @@
             margin-top: 10px;
         }
         .text-box{width:94%;margin:0 3%;}
+        .jconfirm.white .jconfirm-box .buttons button.btn-default {background: #1ab394;}
     </style>
 @stop
 
@@ -48,7 +49,20 @@
     <script >
         function getRegPasswordVerfiy(){
             var mobile  =   $('#mobile').val();
+            //判断手机号为空
+            if(mobile==''){
+                $.alert({
+                    title: '提示：',
+                    content: '手机号不能为空！',
+                    confirmButton: '确定',
+                    confirm: function(){
+                    }
+                });
+                return false;
+            }
             var url     =   '{{route('osce.wechat.user.getResetPasswordVerify')}}?mobile='+mobile;
+
+            SetTime();
             $.get(url,function(data){
                 if(data.code==1)
                 {
@@ -60,6 +74,23 @@
                 }
             });
         }
+        //时间计数
+        var tim;
+        function SetTime(){
+            tim = 60;
+            var self = setInterval(function(){
+               tim -= 1;
+               $('#btn').val(tim+'s后再次发送');
+               $('#btn').css('background','#ddd'); 
+               if(tim == 0){
+                    $('#btn').val('发送手机验证码');
+                    $('#btn').css('background','#1ab394');
+                    clearInterval(self);
+                }
+            },1000); 
+        }
+
+
         function bindClick(){
             $('#btn').one('click',getRegPasswordVerfiy);
         }

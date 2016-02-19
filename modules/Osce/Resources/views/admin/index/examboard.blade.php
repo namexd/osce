@@ -39,7 +39,7 @@
                 <tr>
                     <td>{{$key+1}}</td>
                     <td>{{$item->name}}</td>
-                    <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}} ~~ {{date('Y-m-d H:i', strtotime($item->end_dt))}}</td>
+                    <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i', strtotime($item->end_dt))}}</td>
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
                         @if($item->status ==0)
