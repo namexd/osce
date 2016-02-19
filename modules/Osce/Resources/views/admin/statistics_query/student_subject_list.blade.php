@@ -27,7 +27,10 @@
         <div class="container-fluid ibox-content">
             <div class="row tabs">
                 <div class="col-sm-2 col-md-3">考试：{{$studentList[0]->exam_name}}<span></span></div>
-                <div class="col-sm-2 col-md-4">考试时间：{{$studentList[0]->begin_dt}} ~ {{$studentList[0]->end_dt}}<span></span></div>
+                <div class="col-sm-2 col-md-4">
+                    考试时间：{{date('Y-m-d H:i', strtotime($studentList[0]->begin_dt))}} ~ {{date('Y-m-d H:i', strtotime($studentList[0]->end_dt))}}
+                    <span></span>
+                </div>
                 <div class="col-sm-2 col-md-2">姓名：{{$studentList[0]->student_name}}<span></span></div>
                 <div class="col-sm-2 col-md-3">学号：{{$studentList[0]->student_code}}<span></span></div>
             </div>
@@ -48,7 +51,7 @@
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
-                        <td>{{$item->begin_dt}}</td>
+                        <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}}</td>
                         <td>{{$item->end_dt - $item->begin_dt}}</td>
                         <td>{{$item->score}}</td>
                         <td>{{$item->grade_teacher}}</td>
