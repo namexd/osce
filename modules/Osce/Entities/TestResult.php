@@ -112,6 +112,7 @@ class TestResult extends CommonModel
 
     }
 
+    //获取考试成绩打分详情
     private function  getExamResult($score)
     {
         $list = [];
