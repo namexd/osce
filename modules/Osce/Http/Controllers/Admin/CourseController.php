@@ -143,10 +143,13 @@ class CourseController extends CommonController
         $examId =   '';
         $message=   '';
         $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
+
         //获得最近的考试的id
         $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
+
         if (is_null($lastExam)) {
             $list = [];
+            $backMes = '目前没有已结束的考试';
         } else {
 
             $lastExamId = $lastExam->id;
@@ -160,12 +163,16 @@ class CourseController extends CommonController
             foreach ($list as $key => &$item) {
                 $item->ranking = $key+1;
             }
+            if(!count($list)){
+                $backMes = '该考试还未出成绩';
+            }
         }
         return view('osce::admin.statistics_query.student_scores_list',[
-            'data'=>$list,
-            'examDownlist'=>$examDownlist,
-            'exam_id'=>$examId,
-            'message'=>$message
+            'data'          => $list,
+            'examDownlist'  => $examDownlist,
+            'exam_id'       => $examId,
+            'message'       => $message,
+            'backMes'       => isset($backMes)?$backMes:''
         ]);
     }
 
