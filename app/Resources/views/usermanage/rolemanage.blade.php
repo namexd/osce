@@ -1,7 +1,7 @@
 @extends('layouts.usermanage')
 
 @section('only_css')
-    <link href="{{asset('')}}" rel="stylesheet">
+	<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/css/common.css')}}" rel="stylesheet">
     <style>
     .btn-success{
@@ -18,13 +18,72 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('msc/admin/usermanage/rolemanage.js')}}"></script>
-    <script>
+
+    <script type="text/javascript">
+    	$(function(){
+	    	$('#Form1').bootstrapValidator({
+	              message: 'This value is not valid',
+	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+	                  valid: 'glyphicon glyphicon-ok',
+	                  invalid: 'glyphicon glyphicon-remove',
+	                  validating: 'glyphicon glyphicon-refresh'
+	              },
+	              fields: {/*验证*/
+	                  name: {/*键名username和input name值对应*/
+	                      message: 'The username is not valid',
+	                      validators: {
+	                          notEmpty: {/*非空提示*/
+	                              message: '用户名不能为空'
+	                          }
+	                      }
+	                  },
+	                  description: {
+	                      validators: {
+	                          notEmpty: {
+	                              /*非空提示*/
+	                              message: '角色描述不能为空'
+	                          }
+	                      }
+	                  }
+	              }
+	        });
+	        $('#Form2').bootstrapValidator({
+	              message: 'This value is not valid',
+	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+	                  valid: 'glyphicon glyphicon-ok',
+	                  invalid: 'glyphicon glyphicon-remove',
+	                  validating: 'glyphicon glyphicon-refresh'
+	              },
+	              fields: {/*验证*/
+	                  name: {/*键名username和input name值对应*/
+	                      message: 'The username is not valid',
+	                      validators: {
+	                          notEmpty: {/*非空提示*/
+	                              message: '用户名不能为空'
+	                          }
+	                      }
+	                  },
+	                  description: {
+	                      validators: {
+	                          notEmpty: {
+	                              /*非空提示*/
+	                              message: '角色描述不能为空'
+	                          }
+	                      }
+	                  }
+	              }
+	        });
+        })
+
+        //点击关闭错误提示条
         $(function(){
             $('.closeNotice').click(function(){
                 $(this).parents('.pnotice').remove();
             });
         })
+
     </script>
 @stop
 

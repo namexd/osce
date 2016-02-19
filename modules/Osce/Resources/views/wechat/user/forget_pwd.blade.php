@@ -48,8 +48,19 @@
     <script >
         function getRegPasswordVerfiy(){
             var mobile  =   $('#mobile').val();
+            //判断手机号为空
+            if(mobile==''){
+
+            }
             var url     =   '{{route('osce.wechat.user.getResetPasswordVerify')}}?mobile='+mobile;
-            $.get(url,function(data){
+
+
+            
+            
+            
+            SetTime();
+            setTimeout(bindClick,60000);
+            /*$.get(url,function(data){
                 if(data.code==1)
                 {
                     setTimeout(bindClick,60000);
@@ -58,8 +69,25 @@
                 {
                     bindClick();
                 }
-            });
+            });*/
         }
+        //时间计数
+        var tim;
+        function SetTime(){
+            tim = 6;
+            var self = setInterval(function(){
+               tim -= 1;
+               $('#btn').val(tim+'s后再次发送');
+               $('#btn').css('background','#ddd'); 
+               if(tim == 0){
+                    $('#btn').val('发送手机验证码');
+                    $('#btn').css('background','#1ab394');
+                    clearInterval(self);
+                }
+            },1000); 
+        }
+
+
         function bindClick(){
             $('#btn').one('click',getRegPasswordVerfiy);
         }
