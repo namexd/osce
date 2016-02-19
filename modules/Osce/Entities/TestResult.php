@@ -57,16 +57,13 @@ class TestResult extends CommonModel
             }
             $scoreData = $this->getExamResult($score);
             //拿到总成绩
-
+            $total  =   array_pluck($scoreData,'score');
+            $total  =   array_sum($total);
+            $data['score']  =   $total;
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
-                dump($ExamResultId);
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                dd($scoreConserve);
-                if(!$scoreConserve){
-                    throw new \Exception('成绩提交失败');
-                }
             } else {
                 throw new \Exception('成绩提交失败');
             }
@@ -81,20 +78,15 @@ class TestResult extends CommonModel
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
-        dump($scoreData);
-        $data=[];
-        $connection=\DB::connection('osce_mis');
         foreach ($scoreData as $item) {
-            $data[]=[
-              'exam_result_id'=>$ExamResultId
-            ];
-            $data=$item;
-
-            $result=$connection->table('exam_score')->insert($data);;
-
-            return $result;
+            $item['exam_result_id']=$ExamResultId;
+            //$result=$connection->table('exam_score')->insert($data);;
+            $examScore=ExamScore::create($item);
+            if(!$examScore)
+            {
+                throw new \Exception('保存分数详情失败');
+            }
         }
-
     }
 
     /**
@@ -120,15 +112,13 @@ class TestResult extends CommonModel
 
     }
 
+    //获取考试成绩打分详情
     private function  getExamResult($score)
     {
         $list = [];
-        $scores = 0;
         $arr = json_decode($score, true);
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
-//                $scores += $str['score'];
-//                $list['scores'] = $scores;
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],

@@ -95,7 +95,7 @@ input.laydate-icon{
                         </div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2 time-modify">
-                                <button class="btn btn-primary" type="submit">创建考试</button>
+                                <button class="btn btn-primary" id="save" type="submit">创建考试</button>
                                 <a class="btn btn-white" href="{{route("osce.admin.exam.getExamList")}}">取消</a>
 
                             </div>
