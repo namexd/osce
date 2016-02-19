@@ -114,16 +114,16 @@
                 <table class="table table-striped" id="table-striped">
                     <thead>
                     <tr>
-                        <th>#</th>
+                        <th>序号</th>
                         <th>角色名称</th>
                         <th>描述</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                @foreach($roleList as $role)
+                @foreach($roleList as $key => $role)
                     <tr>
-                        <td class="open-id">{{@$role->id}}</td>
+                        <td class="open-id">{{$key+1}}</td>
                         <td class="role_name">{{@$role->name}}</td>
                         <td class="role_descrip">{{@$role->description}}</td>
 
