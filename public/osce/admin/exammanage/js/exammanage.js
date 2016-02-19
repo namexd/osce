@@ -102,7 +102,7 @@ function exam_add(){
         }
     });
 
-    $('.btn.btn-primary').click(function(){
+    $('#save').click(function(){
         var flag = null;
         $('tbody').find('.laydate').each(function(key,elem){
             flag = true;
@@ -257,7 +257,13 @@ function add_basic(){
         }
     });
 
-    $('.btn.btn-primary').click(function(){
+    /**
+     * 验证不能为空
+     * @author mao
+     * @version 1.0
+     * @date    2016-02-19
+     */
+    $('#save').click(function(){
         var flag = null;
         $('tbody').find('.laydate').each(function(key,elem){
             flag = true;
@@ -1541,7 +1547,7 @@ function examroom_assignment(){
      * @version 1.0
      * @date    2016-01-27
      */
-    $('.btn-primary').click(function(){
+    $('#save').click(function(){
 
         var status_select = false;
         var status = true;
@@ -3249,7 +3255,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-27
      */
-    $('.btn-primary').click(function(){
+    $('#save').click(function(){
         var status_select = false;
         var status = true;
         $('#examroom tbody').find('select').each(function(key,elem){

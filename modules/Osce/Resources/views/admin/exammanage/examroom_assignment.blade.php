@@ -74,6 +74,9 @@
         margin: 0;
     }
     #exam-place tbody tr td:last-child>a{color: #1ab394;}
+    .panel-options .nav.nav-tabs{
+        margin-left: 20px!important;
+    }
     </style>
 @stop
 
@@ -246,7 +249,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit" {{$status==0?'':'style=display:none;'}}>保存</button>
+                                    <button class="btn btn-primary" id="save" type="submit" {{$status==0?'':'style=display:none;'}}>保存</button>
                                     <a class="btn btn-white" href="{{route("osce.admin.exam.getExamList")}}">取消</a>
 
                                 </div>

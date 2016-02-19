@@ -998,6 +998,7 @@ class ExamController extends CommonController
                 );
                 $watchModel=new WatchLog();
                 $watchModel->historyRecord($data);
+
                 return response()->json(
                     $this->success_rows(1,'绑定成功')
                 );
