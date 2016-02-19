@@ -140,12 +140,12 @@ class CourseController extends CommonController
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
         ]);
-        $examId =   '';
-        $message=   '';
-        $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
+        $examId = '';
+        $message = '';
+        $examDownlist = Exam::select('id', 'name')->where('exam.status', '<>', 0)->orderBy('begin_dt', 'desc')->get();
 
         //获得最近的考试的id
-        $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
+        $lastExam = Exam::orderBy('begin_dt', 'desc')->where('exam.status', '<>', 0)->first();
 
         if (is_null($lastExam)) {
             $list = [];
@@ -154,16 +154,16 @@ class CourseController extends CommonController
 
             $lastExamId = $lastExam->id;
             //获得参数
-            $examId = $request->input('exam_id',$lastExamId);
-            $message = $request->input('message',"");
+            $examId = $request->input('exam_id', $lastExamId);
+            $message = $request->input('message', "");
 
             //获得学生的列表在该考试的列表
             $list = Student::getStudentScoreList($examId, $message);
             //为每一条数据插入统计值
             foreach ($list as $key => &$item) {
-                $item->ranking = $key+1;
+                $item->ranking = $key + 1;
             }
-            if(!count($list)){
+            if (!count($list)) {
                 $backMes = '该考试还未出成绩';
             }
         }
