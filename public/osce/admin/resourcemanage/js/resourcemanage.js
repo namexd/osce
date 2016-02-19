@@ -97,30 +97,7 @@ function deleteItem(url){
 
 function categories(){
 
-    $('#sourceForm').bootstrapValidator({
-        message: 'This value is not valid',
-        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {/*验证*/
-            title: {/*键名username和input name值对应*/
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '名称不能为空'
-                    }
-                }
-            },
-            desc: {
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '描述不能为空'
-                    }
-                }
-            }
-        }
-    });
+    
 
     $('#submit-btn').click(function(){
         var flag = null;
