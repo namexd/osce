@@ -144,23 +144,34 @@ class CourseController extends CommonController
         $message=   '';
         $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
         //获得最近的考试的id
-        $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
-        if (is_null($lastExam)) {
-            $list = [];
-        } else {
+        if(is_null($examId)){
 
-            $lastExamId = $lastExam->id;
-            //获得参数
-            $examId = $request->input('exam_id',$lastExamId);
-            $message = $request->input('message',"");
+            $lastExam = Exam::orderBy('begin_dt', 'desc')->where('exam.status', '<>', 0)->first();
+        }else{
 
-            //获得学生的列表在该考试的列表
-            $list = Student::getStudentScoreList($examId, $message);
-            //为每一条数据插入统计值
-            foreach ($list as $key => &$item) {
-                $item->ranking = $key+1;
-            }
+            $lastExam = Exam::where('exam.id', '=', $examId)->first();
+
+
         }
+            if (is_null($lastExam)) {
+                $list = [];
+            } else {
+
+                $lastExamId = $lastExam->id;
+//                获得参数
+                $examId = $request->input('exam_id', $lastExamId);
+
+
+                $message = $request->input('message', "");
+
+                //获得学生的列表在该考试的列表
+                $list = Student::getStudentScoreList($examId, $message);
+
+                //为每一条数据插入统计值
+                foreach ($list as $key => &$item) {
+                    $item->ranking = $key + 1;
+                }
+            }
         return view('osce::admin.statistics_query.student_scores_list',[
             'data'=>$list,
             'examDownlist'=>$examDownlist,

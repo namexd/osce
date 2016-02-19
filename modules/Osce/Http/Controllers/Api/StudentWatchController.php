@@ -241,12 +241,15 @@ class StudentWatchController extends CommonController
 
 
     private function  getExamComplete($examQueue){
+
+
+
         $testresultModel = new TestResult();
 
         $score =  $testresultModel->AcquireExam($examQueue->student_id);
         $data = [
             'code'  =>  6,
-            'title' =>'考试完成，最总成绩',
+            'title' =>'考试完成，最终总成绩',
             'score' => $score,
         ];
 
