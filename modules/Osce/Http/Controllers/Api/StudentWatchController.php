@@ -241,19 +241,24 @@ class StudentWatchController extends CommonController
 
 
     private function  getExamComplete($examQueue){
+        //根据考试获取到考试流程
+        $ExamFlowModel = new  ExamFlow();
+        $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
+        //查询出学生当前已完成的考试
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $examQueue->student_id)->count();
+        if ($ExamFinishStatus >= $studentExamSum){
+            $testresultModel = new TestResult();
 
+            $score =  $testresultModel->AcquireExam($examQueue->student_id);
+            $data = [
+                'code'  =>  6,
+                'title' =>'考试完成，最终总成绩',
+                'score' => $score,
+            ];
 
+            return $data;
+        }
 
-        $testresultModel = new TestResult();
-
-        $score =  $testresultModel->AcquireExam($examQueue->student_id);
-        $data = [
-            'code'  =>  6,
-            'title' =>'考试完成，最终总成绩',
-            'score' => $score,
-        ];
-
-        return $data;
     }
 
     //判断腕表提醒状态为0时
