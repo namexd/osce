@@ -44,8 +44,9 @@ class CourseController extends CommonController
             $examObj = Exam::where('status','<>',0)->first();
             if (is_null($examObj)) {
                 $subjectData = [];
-                $examId = '';
-                $subjectId = '';
+                $examId      = '';
+                $subjectId   = '';
+                $subjectList = [];
             } else {
                 $examId = $request->input('exam_id',$examObj->id);
                 $subjectId = $request->input('subject_id');
@@ -76,18 +77,18 @@ class CourseController extends CommonController
                 }
 
                 $subjectList = $this->subjectDownlist($examId);
-
             }
-            return view('osce::admin.statistics_query.subject_scores_list',
-                ['data'=>$subjectData,
-                    'examDownlist'=>$examDownlist,
-                    'subjectDownlist'=>$subjectList,
-                    'exam_id'=>$examId,
-                    'subject_id'=>$subjectId
+
+            return view('osce::admin.statistics_query.subject_scores_list', [
+                    'data'            => $subjectData,
+                    'examDownlist'    => $examDownlist,
+                    'subjectDownlist' => $subjectList,
+                    'exam_id'         => $examId,
+                    'subject_id'      => $subjectId
                 ]);
+
         } catch (\Exception $ex) {
-            dd($ex->getMessage());
-//            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

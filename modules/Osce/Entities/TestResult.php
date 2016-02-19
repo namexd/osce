@@ -57,19 +57,17 @@ class TestResult extends CommonModel
             }
             $scoreData = $this->getExamResult($score);
             //拿到总成绩
-
+            $total  =   array_pluck($scoreData,'score');
+            $total  =   array_sum($total);
+            $data['score']  =   $total;
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                dd($scoreConserve);
-                if(!$scoreConserve){
-                    throw new \Exception('成绩提交失败');
-                }
             } else {
                 throw new \Exception('成绩提交失败');
             }
-            //$connection->commit();
+//            $connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
@@ -80,12 +78,15 @@ class TestResult extends CommonModel
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
-        foreach ($scoreData as $data) {
-//            $data['exam_result_id'] = $ExamResultId;
-            $Save = ExamScore::create($data);
-            return $Save;
+        foreach ($scoreData as $item) {
+            $item['exam_result_id']=$ExamResultId;
+            //$result=$connection->table('exam_score')->insert($data);;
+            $examScore=ExamScore::create($item);
+            if(!$examScore)
+            {
+                throw new \Exception('保存分数详情失败');
+            }
         }
-
     }
 
     /**
@@ -114,13 +115,9 @@ class TestResult extends CommonModel
     private function  getExamResult($score)
     {
         $list = [];
-        $scores = 0;
         $arr = json_decode($score, true);
-
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
-//                $scores += $str['score'];
-                $list['scores'] = $scores;
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],

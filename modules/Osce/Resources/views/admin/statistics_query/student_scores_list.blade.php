@@ -30,7 +30,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">学生成绩统计</h5>
+                <h5 class="title-label">考生成绩统计</h5>
             </div>
         </div>
         <div class="panel blank-panel">
@@ -42,7 +42,7 @@
                         <div class="pull-left exam-list">
                             <select name="" id="" class="form-control" style="width: 250px;">
                                 @forelse($examDownlist as $exam)
-                                    <option value="{{$exam->id}}" {{$exam_id==$exam->id?'selected':''}}>{{$exam->name}}</option>
+                                    <option value="{{$exam->id}}" {{$exam_id == $exam->id?'selected':''}}>{{$exam->name}}</option>
                                 @empty
                                 @endforelse
                             </select>

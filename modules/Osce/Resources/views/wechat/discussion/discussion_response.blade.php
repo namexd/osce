@@ -110,11 +110,14 @@ $(function(){
             });
     //回复
     $('.btn2').click(function(){
-
         var content = $('#context').val();
         if(content==''){
-            layer.alert('回复内容不能为空！',function(it){
-                layer.close(it);
+            $.alert({
+                title: '提示：',
+                content: '回复内容不能为空!',
+                confirmButton: '确定',
+                confirm: function(){
+                }
             });
             return;
         }
@@ -127,9 +130,14 @@ $(function(){
                 if(res.code!=1){
                     layer.alert(res.message);
                 }else{
-                    layer.alert('回复成功！',function(its){
-                        location.href = '{{route("osce.wechat.getCheckQuestion")}}?id='+$('input[name=id]').val();
-                    });
+                	$.alert({
+		                title: '提示：',
+		                content: '回复成功!',
+		                confirmButton: '确定',
+		                confirm: function(){
+		                	location.href = '{{route("osce.wechat.getCheckQuestion")}}?id='+$('input[name=id]').val();
+		                }
+		            });
                 }
             }
         });
