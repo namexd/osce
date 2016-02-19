@@ -52,26 +52,15 @@
 
                      success:function(data){
                          if(data.code==1){
-                             $.alert({
-                                 title: '提示：',
-                                 content: '操作成功!',
-                                 confirmButton: '确定',
-                                 confirm: function(){
-                                     window.location.reload();
-                                 }
-                             });
+                            layer.msg('操作成功!',function(){
+                             	window.location.reload();
+							});    
 
                          }
 
                      },
                      error:function() {
-                         $.alert({
-                             title: '提示：',
-                             content: '操作失败!',
-                             confirmButton: '确定',
-                             confirm: function(){
-                             }
-                         });
+                        layer.msg('操作失败!'); 
                      }
                  })
              })
@@ -93,24 +82,13 @@
 
                     success:function(data){
                         if(data.code==1){
-                            $.alert({
-                                title: '提示：',
-                                content: '操作成功!',
-                                confirmButton: '确定',
-                                confirm: function(){
-                                    window.location.reload();
-                                }
-                            });
+                            layer.msg('操作成功!',function(){
+                             	window.location.reload();
+							});
                         }
                     },
                     error:function() {
-                        $.alert({
-                            title: '提示：',
-                            content: '操作失败!',
-                            confirmButton: '确定',
-                            confirm: function(){
-                            }
-                        });
+                        layer.msg('操作失败!'); 
                     }
                 })
             })
