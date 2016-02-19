@@ -32,4 +32,5 @@
             <a href="{{route('osce.wechat.user.getForgetPassword')}}">忘记密码?</a>
         </div>
     </div>
+    <script>
 @stop

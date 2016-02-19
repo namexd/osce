@@ -26,7 +26,6 @@
         .agree{
             background-color: #16beb0;
         }
-        .tisi{display:inline-block;width:50%;text-align:center;line-height:1.5em;background:rgba(0,0,0,.6);color:#fff;}
     </style>
 
 
@@ -53,7 +52,7 @@
 
                      success:function(data){
                          if(data.code==1){
-                            layer.msg('操作成功!',{time: 3000,skin: 'tisi',icon: 1},function(){
+                            layer.msg('操作成功!',{icon: 1,time:2000},function(){
                              	window.location.reload();
 							});    
 
@@ -83,7 +82,7 @@
 
                     success:function(data){
                         if(data.code==1){
-                            layer.msg('操作成功!',{time: 3000, skin:'tisi',icon: 1},function(){
+                            layer.msg('操作成功!',{time: 2000,icon: 1},function(){
                              	window.location.reload();
 							});
                         }
