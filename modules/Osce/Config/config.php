@@ -62,6 +62,7 @@ return [
 	'invigilatorRoleId'	=>	1,
 	'studentRoleId'		=>	2,
 	'adminRoleId'		=>	3,
+	'superRoleId'		=>	5,
 
 	//场所类型的管理
 	'room_cate' => [

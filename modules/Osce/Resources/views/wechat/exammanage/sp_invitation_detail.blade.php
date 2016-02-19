@@ -52,7 +52,7 @@
 
                      success:function(data){
                          if(data.code==1){
-                            layer.msg('操作成功!',function(){
+                            layer.msg('操作成功!',{icon: 1,time:2000},function(){
                              	window.location.reload();
 							});    
 
@@ -82,7 +82,7 @@
 
                     success:function(data){
                         if(data.code==1){
-                            layer.msg('操作成功!',function(){
+                            layer.msg('操作成功!',{time: 2000,icon: 1},function(){
                              	window.location.reload();
 							});
                         }
