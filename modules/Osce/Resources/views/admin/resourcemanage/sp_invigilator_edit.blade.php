@@ -1,6 +1,16 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-    
+  <style>
+        .img_box{
+            width:197px;
+            height:251px;
+            margin: auto;
+        }
+        .img_box li img{
+            width: 197px;
+            height: 251px;
+        }
+    </style>  
 @stop
 
 @section('only_js')
@@ -131,7 +141,7 @@
                         if(data.code){
                             var href=data.data.path;
                             $('.img_box').find('li').remove();
-                            $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/></li>');
+                            $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
                         }
                     },
                     error: function (data, status, e)
@@ -153,6 +163,18 @@
                 }
                 return url;
             }
+
+            /**
+             * 删除
+             * @author mao
+             * @version 1.0
+             * @date    2016-02-19
+             */
+            $(".img_box").delegate(".del_img","click",function(){
+                $(this).parent("li").remove();
+                $('#images_upload').attr("class","images_upload");
+            });
+            
         })
 
     </script>
@@ -173,6 +195,7 @@
                             <li>
                                 <img src="{{$item->userInfo->avatar}}"/>
                                 <input type="hidden" value="{{$item->userInfo->avatar}}" name="images_path[]">
+                                <i class="fa fa-remove font16 del_img"></i>
                             </li>
                             <span class="images_upload1" id="images_upload">
                                 <input type="file" name="images" id="file0"/>选择图片

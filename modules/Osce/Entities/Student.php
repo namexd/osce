@@ -414,8 +414,9 @@ class Student extends CommonModel
      */
     static public function getStudentScoreList($examId,$message) {
         $builder = Student::leftJoin('exam_result','exam_result.student_id','=','student.id')
-            ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-            ->leftJoin('exam','exam.id','=','exam_screening.exam_id');
+                    ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
+                    ->leftJoin('exam','exam.id','=','exam_screening.exam_id');
+
         if ($examId != "") {
             $builder = $builder->where('exam.id','=',$examId);
 
@@ -434,8 +435,8 @@ class Student extends CommonModel
                     'count(*) as station_total'
                 ]))
             )->where('exam.status','<>',0);
-            $builder = $builder->groupBy('exam_result.student_id')
-                ->orderBy('score_total','desc');
+
+            $builder = $builder->groupBy('exam_result.student_id')->orderBy('score_total','desc');
 
             return $builder->paginate(config('osce.page_size'));
         }
