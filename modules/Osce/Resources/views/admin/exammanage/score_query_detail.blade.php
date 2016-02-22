@@ -339,7 +339,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th width="200">考核点</th>
+                    <th width="200">考核内容</th>
                     <th>总分</th>
                     <th>成绩</th>
                     <th>操作</th>
