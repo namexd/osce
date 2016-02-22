@@ -67,7 +67,7 @@ $(function(){
 	      <textarea class="form-control" style="height: 100px;resize:none;" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
 	    </div>
 	    <div class="form-group tijiao">
-    		<input class="btn btn2" type="submit" value="提交"/>
+    		<input style="width:96%;margin:0 2%;" class="btn btn2" type="submit" value="提交"/>
     	</div>
     </form>
 @stop

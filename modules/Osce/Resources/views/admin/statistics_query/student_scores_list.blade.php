@@ -47,20 +47,18 @@
                                     @endforelse
                                 </select>
                             </div>
-
                         </div>
-                    </div>
-                    <div class="input-group col-md-6 col-sm-6 col-xs-6">
-                        <div  class="pull-left examinee-list">
-                            <form action="">
+                        <div class="input-group col-md-6 col-sm-6 col-xs-6">
+                            <div  class="pull-left examinee-list">
                                 <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;margin-right:10px;"
                                        value="{{$message}}">
                                 <span class="input-group-btn pull-left">
                                     <button type="submit" class="btn btn-sm btn-primary" style="height:34px;border-radius:3px" id="search">搜索</button>
                                 </span>
-                            </form>
+                            </div>
                         </div>
                     </form>
+                </div>
                 </div>
 
                 <table class="table table-striped" id="table-striped" style="background:#fff">

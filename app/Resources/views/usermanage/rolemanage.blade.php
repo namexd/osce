@@ -136,9 +136,11 @@
                 @endforeach
                     </tbody>
                 </table>
-                <div class="pull-right">
-
-
+                <div class="pull-left">
+                    共{{$roleList->total()}}条
+                </div>
+                <div class="btn-group pull-right">
+                   {!! $roleList->appends($_GET)->render() !!}
                 </div>
             </div>
 

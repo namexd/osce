@@ -1067,7 +1067,7 @@ function examroom_assignment(){
                         station_count = key + 1;
                         $(elem).find('td').eq(0).text(station_count);
                     });*/
-                    $('#exam-place').find('tbody').attr('index',station_count);
+                    $('#exam-place').find('tbody').attr('index',station_count-1);
                     continue;
                 }
             }else{
@@ -1247,7 +1247,7 @@ function examroom_assignment(){
                                 });
 
                             });
-                            $('#exam-place').find('tbody').attr('index',station_count);
+                            $('#exam-place').find('tbody').attr('index',station_count-1);
                             continue;
                         }
                     }else{
@@ -2250,7 +2250,9 @@ function examinee_manage(){
                         location.reload();
                     });
                 }else{
-                    layer.alert(data.message);
+                    layer.alert(data.message,function(){
+                        location.reload();
+                    });
                 }
             },
             error: function (data, status, e)
@@ -2782,7 +2784,7 @@ function station_assignment(){
                         station_count = key + 1;
                         $(elem).find('td').eq(0).text(station_count);
                     });*/
-                    $('#exam-place').find('tbody').attr('index',station_count);
+                    $('#exam-place').find('tbody').attr('index',station_count-1);
                     continue;
                 }
             }else{
@@ -2969,7 +2971,7 @@ function station_assignment(){
 
 
                             });
-                            $('#exam-place').find('tbody').attr('index',station_count);
+                            $('#exam-place').find('tbody').attr('index',station_count-1);
                             continue;
                         }
                     }else{
