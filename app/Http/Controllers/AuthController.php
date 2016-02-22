@@ -95,7 +95,7 @@ class AuthController extends BaseController
         if($addNewRole){
             return redirect()->intended('/auth/auth-manage');
         }else{
-            return  redirect()->back()->withErrors(['chargeError'=>'系统繁忙']);
+            return  redirect()->back()->withErrors(['系统繁忙']);
         }
     }
 
