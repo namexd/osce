@@ -46,11 +46,12 @@ class Standard extends CommonModel
         foreach($data[0] as $proint)
         {
             $prointData =   $proint;
+
+//            $prointData['test_term']=0;
             //$prointData['test_point']['test_term']    =   $data[$proint->id];
             if(array_key_exists($proint->id,$data))
             {
                 $prointData['test_term']    =   $data[$proint->id];
-                $prointData['test_term']['real']    = 0;
 
             }
             else
@@ -58,7 +59,15 @@ class Standard extends CommonModel
                 $prointData['test_term']    =   [];
             }
             $return[]=$prointData;
+            foreach($return as $itep){
+                foreach($itep['test_term'] as $str){
+                    $str['real']= '0' ;
+                }
+
+            }
+
         }
+
         return $return;
     }
 
