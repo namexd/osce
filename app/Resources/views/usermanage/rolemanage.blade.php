@@ -14,6 +14,10 @@
         font-family: 微软雅黑;
         font-size: 14px;
     }
+    .msg-error.layui-layer{
+        background: #f2dede!important;
+        color: #ed5565;
+    }
     </style>
 @stop
 
@@ -82,6 +86,15 @@
             $('.closeNotice').click(function(){
                 $(this).parents('.pnotice').remove();
             });
+
+            //错误提示
+            var msg = $('.pnotice').find('div').find('div').eq(0).text();
+            if(msg==''){
+                return;
+            }else{
+               layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{icon: 2,time:1000000000});
+            }
+
         })
 
     </script>

@@ -371,11 +371,8 @@ class Exam extends CommonModel
                         }
                         Invite::where('exam_screening_id','=',$item->id)->delete();
                     }
-
                     //                        $item->invite()->examSpTeacher()->delete();
 //                        $item->invite()->delete();
-
-
 
                 }
             }
