@@ -24,7 +24,9 @@ class Invite extends CommonModel
     protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id', 'station_id', 'status', 'user_id'];
 
 
-
+    public function examSpTeacher(){
+        return $this->hasOne('\Modules\Osce\Entities\ExamSpTeacher','invite_id','id');
+    }
 
     //保存并发送邀请
     public function addInvite(array $data)

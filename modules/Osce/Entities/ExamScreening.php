@@ -38,6 +38,10 @@ class ExamScreening extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamRoom','exam_id','exam_id');
     }
 
+    public function invites(){
+        return $this->hasMany('\Modules\Osce\Entities\Invite','exam_screening_id','id');
+    }
+
     /**
      * todo 智能排考所用，请勿删除或修改 开始场次
      * @param $examId

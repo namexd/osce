@@ -779,8 +779,9 @@ class ExamController extends CommonController
         }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
-
+//        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
+
 
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,

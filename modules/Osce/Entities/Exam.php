@@ -360,6 +360,13 @@ class Exam extends CommonModel
                 {
                     throw new \Exception('重置作废数据失败');
                 }
+//                $examScreeningList  =   $exam->examScreening;
+
+//                if(!empty($examScreeningList))
+//                {
+//                    $examScreeningList->invites()->examSpTeacher()->delete();
+//                    $examScreeningList->invites()->delete();
+//                }
             }
             foreach($examData as $field=>$item)
             {
