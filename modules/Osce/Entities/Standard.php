@@ -59,13 +59,11 @@ class Standard extends CommonModel
                 $prointData['test_term']    =   [];
             }
             $return[]=$prointData;
-            foreach($return as $itep){
-                foreach($itep['test_term'] as $str){
+            foreach($return as $proint){
+                foreach($proint['test_term'] as $str){
                     $str['real']= '0' ;
                 }
-
             }
-
         }
 
         return $return;

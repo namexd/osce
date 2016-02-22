@@ -122,7 +122,7 @@ class TestResult extends CommonModel
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],
-                    'score' => $str['score'],
+                    'score' => $str['real'],
                 ];
             }
         }
