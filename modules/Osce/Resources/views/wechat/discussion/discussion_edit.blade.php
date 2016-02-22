@@ -5,6 +5,10 @@
 <style>
 .btn2{background: #1ab394}
 .has-feedback label~.form-control-feedback {top: 26px;}
+.form-group{
+    width:96%;
+    margin:10px 2%;
+}
 </style>
 @stop
 @section('only_head_js')
@@ -59,11 +63,11 @@ $(function(){
 	    </div>
 	    <div class="form-group">
 	      <label class="" for="name">内容：</label>
-	      <textarea class="form-control" style="width:96%;margin:0 2%;height:100px;resize: none;" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5">{{  $list->content  }}</textarea>
+	      <textarea class="form-control" style="height:100px;resize: none;" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5">{{  $list->content  }}</textarea>
 	    </div>
 	    <div class="form-group">
 			<input type="hidden" name="id" value="{{ $list->id }}">
-    		<input style="width:96%;margin:0 2%;" class="btn btn2" type="submit" value="提交"/>
+    		<input class="btn btn2" type="submit" value="提交"/>
     	</div>
 			@endforeach
     </form>
