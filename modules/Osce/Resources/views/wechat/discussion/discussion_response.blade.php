@@ -17,6 +17,7 @@
         .history-list li{
             background-color: #fff;
             border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
         }
         .history-list li textarea{
             width: 100%;
