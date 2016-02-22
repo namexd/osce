@@ -149,7 +149,7 @@ class ExamRoom extends CommonModel
                     'station.type as station_type',
                     'room_station.room_id as room_id',
                 ])
-                ->distinct();
+                ->distinct()->get();
 //            if(!empty($builder))
 //            {
 //                $string =   implode(',',$examScreeningIdList->toArray());
@@ -160,7 +160,9 @@ class ExamRoom extends CommonModel
 //                    ]
 //                );
 //            }
-            return  $builder->get();
+            return  $builder;
+
+
         } catch(\Exception $ex){
             throw $ex;
         }
