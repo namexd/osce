@@ -13,6 +13,11 @@
         border-top: 0;
         padding-left: 0;
     }
+    .form-horizontal tbody .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: center;
+    }
 </style>
 @stop
 
@@ -119,7 +124,7 @@
                                                 <tr>
                                                     <th>序号</th>
                                                     <th>考核内容</th>
-                                                    <th width="80">分数</th>
+                                                    <th width="120">分数</th>
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
