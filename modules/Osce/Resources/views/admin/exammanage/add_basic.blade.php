@@ -25,6 +25,12 @@
         margin-top: 25px!important;
         margin-bottom: 30px!important;
     }
+    .panel-options .nav.nav-tabs{
+        margin-left: 20px!important;
+    }
+    .msg-success{
+        background-color: #ddd;
+    }
     </style>
 @stop
 
@@ -99,7 +105,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试时间</label>
                                 <div class="col-sm-10">
-                                    <a  href="javascript:void(0)"  class="btn btn-outline btn-default" id="add-new" style="float: right; {{$examData['status']==0?'':'display:none'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    <a  href="javascript:void(0)"  class="btn btn-primary" id="add-new" style="float: right; {{$examData['status']==0?'':'display:none'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                                     <table class="table table-bordered" id="add-basic">
                                         <thead>
                                         <tr>
@@ -147,7 +153,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2 time-modify">
-                                    <button class="btn btn-primary" type="submit" {{$examData['status']==0?'':'style=display:none;'}}>保存</button>
+                                    <button id="save" class="btn btn-primary" type="submit" {{$examData['status']==0?'':'style=display:none;'}}>保存</button>
                                     <a class="btn btn-white" href="{{route("osce.admin.exam.getExamList")}}">取消</a>
                                 </div>
                             </div>

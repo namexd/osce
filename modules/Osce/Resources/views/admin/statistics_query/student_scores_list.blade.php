@@ -30,35 +30,37 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">学生成绩统计</h5>
+                <h5 class="title-label">考生成绩统计</h5>
             </div>
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content">
                 <div  class="row" style="margin:20px 0;">
+                    <form action="{{route('osce.admin.course.getStudentScore')}}" method="get">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <label class="pull-left exam-name">考试:</label>
+                            <div class="pull-left exam-list">
+                                <select name="exam_id" id="exam_id" class="form-control" style="width: 250px;">
+                                    @forelse($examDownlist as $exam)
+                                        <option value="{{$exam->id}}" {{$exam_id == $exam->id?'selected':''}}>{{$exam->name}}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
+                            </div>
 
-                    <div class="col-md-6 col-sm-6 col-xs-6">
-                        <label class="pull-left exam-name">考试:</label>
-                        <div class="pull-left exam-list">
-                            <select name="" id="" class="form-control" style="width: 250px;">
-                                @forelse($examDownlist as $exam)
-                                    <option value="{{$exam->id}}" @if($exam_id == $exam->id) selected="selected" @endif>{{$exam->name}}</option>
-                                @empty
-                                @endforelse
-                            </select>
                         </div>
                     </div>
                     <div class="input-group col-md-6 col-sm-6 col-xs-6">
                         <div  class="pull-left examinee-list">
                             <form action="">
-                                <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;"
+                                <input type="text" placeholder="请输入姓名、考号、身份证号" name="message" class="input-md form-control" style="width: 250px;margin-right:10px;"
                                        value="{{$message}}">
                                 <span class="input-group-btn pull-left">
-                                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                                    <button type="submit" class="btn btn-sm btn-primary" style="height:34px;border-radius:3px" id="search">搜索</button>
                                 </span>
                             </form>
                         </div>
-                    </div>
+                    </form>
                 </div>
 
                 <table class="table table-striped" id="table-striped" style="background:#fff">
@@ -89,7 +91,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7">目前没有已结束的考试</td></tr>
+                        <tr><td colspan="7">{{$backMes}}</td></tr>
                     @endforelse
                     </tbody>
                 </table>

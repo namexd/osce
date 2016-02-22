@@ -81,6 +81,7 @@ class InvigilatorController extends CommonController
 
         $isSpValues =   $Invigilator    ->  getIsSpValues();
 
+
         return view('osce::admin.resourcemanage.invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
     /**

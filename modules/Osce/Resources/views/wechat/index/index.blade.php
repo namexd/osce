@@ -28,7 +28,7 @@
 .manageindex .icon3{ background-position:0 -123px;}
 .manageindex .icon4{ background-position:0 -182px;}
 .manageindex .icon5{ background-position:0 -243px;}
-.manageindex .icon6{ background-position:0 -355px;}
+.manageindex .icon6{ background-position:0 -302px;}
 .manageindex .icon7{ background-position:0 -420px;}
 
 

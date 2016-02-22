@@ -14,7 +14,7 @@
 @stop
 
 @section('only_js')
-    
+
 @stop
 
 
@@ -26,14 +26,14 @@
                 <h5 class="title-label">科目管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.topic.getAddTopic')}}" class="btn btn-outline btn-default" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                <a  href="{{route('osce.admin.topic.getAddTopic')}}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
             </div>
         </div>
     <div class="container-fluid ibox-content" id="list_form">
         <div class="panel blank-panel">
           <form method="get" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
-                <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control">
+                <input type="text" name="name" placeholder="请输入关键字" class="input-sm form-control" value="{{(isset($name)?$name:'')}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </span>

@@ -1,8 +1,6 @@
 @extends('osce::wechat.layouts.admin')
 
 @section('only_head_css')
-    <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/documentation.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/jalendar.css')}}" type="text/css" />
     <style type="text/css">
         .detail-list{
            margin:30px;
@@ -33,7 +31,6 @@
 
 @stop
 @section('only_head_js')
-    <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
 
         $(function(){
@@ -55,25 +52,15 @@
 
                      success:function(data){
                          if(data.code==1){
-                             $.alert({
-                                 title: '提示：',
-                                 content: '操作成功!',
-                                 confirmButton: '确定',
-                                 confirm: function(){
-                                 }
-                             });
+                            layer.msg('操作成功!',{icon: 1,time:2000},function(){
+                             	window.location.reload();
+							});    
 
                          }
 
                      },
                      error:function() {
-                         $.alert({
-                             title: '提示：',
-                             content: '操作失败!',
-                             confirmButton: '确定',
-                             confirm: function(){
-                             }
-                         });
+                        layer.msg('操作失败!'); 
                      }
                  })
              })
@@ -95,25 +82,13 @@
 
                     success:function(data){
                         if(data.code==1){
-                            $.alert({
-                                title: '提示：',
-                                content: '操作成功!',
-                                confirmButton: '确定',
-                                confirm: function(){
-                                }
-                            });
-
+                            layer.msg('操作成功!',{time: 2000,icon: 1},function(){
+                             	window.location.reload();
+							});
                         }
-
                     },
                     error:function() {
-                        $.alert({
-                            title: '提示：',
-                            content: '操作失败!',
-                            confirmButton: '确定',
-                            confirm: function(){
-                            }
-                        });
+                        layer.msg('操作失败!'); 
                     }
                 })
             })
@@ -127,7 +102,7 @@
 
 @section('content')
     <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
+        <a class="left header_btn" href="{{route('osce.wechat.invitation.getList')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         考试邀请详情
@@ -136,6 +111,17 @@
         </a>
     </div>
     <div class="detail-list">
+
+        @if($list['status']==1)
+
+            <p class="pop">{{$list['teacher_name']}}老师您已同意参加{{$list['exam_name']}}考试</p>
+
+        @elseif($list['status']==2)
+
+            <p class="pop">{{$list['teacher_name']}}老师您已拒绝参加{{$list['exam_name']}}考试</p>
+
+        @endif
+
         <ul>
             @if(!empty($list))
 
@@ -155,11 +141,6 @@
             @if($list['status']==0)
             <button class="btn1 pull-left agree" type="button" value="1"  data={{$id}}>同意</button>
             <button class="btn1 pull-right rejected" type="button" value="2" data={{$id}} >拒绝</button>
-            @elseif($list['status']==1)
-
-
-            @elseif($list['status']==2)
-
                 @endif
 
         </div>

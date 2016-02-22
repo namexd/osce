@@ -177,7 +177,7 @@
         <div class="panel blank-panel">
             <div class="panel-heading">
                 <div class="panel-options">
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-tabs" style="margin-left: 0">
 						<li class="active"><a href="{{route('osce.admin.config.getIndex')}}">媒体设置</a></li>
                         {{--<li class=""><a href="{{route('osce.admin.config.getArea')}}">场所类型</a></li>--}}
                     </ul>
@@ -363,7 +363,7 @@
 			                	<label class="col-sm-2 control-label"></label>
                                 <div class="col-sm-9">
                                 	<input class="btn btn-primary" style="margin-left:10px;"  type="submit" name="" id="" value="保 存" />
-									<a class="btn btn-white" href="{{url('osce/admin/config/index')}}">取消</a>
+									<!-- <a class="btn btn-white" href="{{url('osce/admin/config/index')}}">取消</a> -->
                                 </div>
                             </div>
 			            </div>

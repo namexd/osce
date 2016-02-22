@@ -16,7 +16,6 @@
         .history-list{margin-top: 10px}
         .history-list li{
             background-color: #fff;
-            padding: 15px;
             border-bottom: 1px solid #eee;
         }
         .history-list li textarea{
@@ -109,10 +108,19 @@ $(function(){
                     }
                 }
             });
-
+    //回复
     $('.btn2').click(function(){
-
         var content = $('#context').val();
+        if(content==''){
+            $.alert({
+                title: '提示：',
+                content: '回复内容不能为空!',
+                confirmButton: '确定',
+                confirm: function(){
+                }
+            });
+            return;
+        }
 
         $.ajax({
             type:'post',
@@ -122,9 +130,14 @@ $(function(){
                 if(res.code!=1){
                     layer.alert(res.message);
                 }else{
-                    layer.alert('回复成功！',function(its){
-                        location.href = '{{route("osce.wechat.getCheckQuestion")}}?id='+$('input[name=id]').val();
-                    });
+                	$.alert({
+		                title: '提示：',
+		                content: '回复成功!',
+		                confirmButton: '确定',
+		                confirm: function(){
+		                	location.href = '{{route("osce.wechat.getCheckQuestion")}}?id='+$('input[name=id]').val();
+		                }
+		            });
                 }
             }
         });
@@ -141,7 +154,7 @@ $(function(){
         <li><a href="">删除</a></li>
     </ul>
     <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
+        <a class="left header_btn" href="{{route('osce.wechat.getCheckQuestion',['id'=>$id])}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        回复
@@ -155,8 +168,7 @@ $(function(){
             <h2 class="title">{{  $list->title }}</h2>
             <div class="title-footer">
                 <div class="item-l">{{  $list->getAuthor->name }}</div>
-                <div class="item-c">{{  $list->created_at }}</div>
-                <div class="item-r">&nbsp;</div>
+                <div class="item-c" style="width: 50%;text-align: right;">{{  $list->created_at }}</div>
                 <div class="clearfix"></div>
             </div>
             <div class="title-con">
@@ -172,9 +184,9 @@ $(function(){
 
                 <div class="form-group">
                   <label class="" for="name">&nbsp;</label>
-                  <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
+                  <textarea style="width:96%;margin:0 2%;height:100px;resize: none;" class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
                 </div>
-                <input type="button" value="提交" class="btn2" />
+                <input  style="width:96%;margin:0 2%;" type="button" value="提交" class="btn2" />
             </form>
         </li>
     </ul>

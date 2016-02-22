@@ -74,6 +74,9 @@
         margin: 0;
     }
     #exam-place tbody tr td:last-child>a{color: #1ab394;}
+    .panel-options .nav.nav-tabs{
+        margin-left: 20px!important;
+    }
     </style>
 @stop
 
@@ -122,7 +125,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考场安排</label>
                                 <div class="col-sm-10">
-                                    <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="add-new" style="float: right;{{$status==0?'':'display:none;'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    <a  href="javascript:void(0)" class="btn btn-primary" id="add-new" style="float: right;{{$status==0?'':'display:none;'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
                                     <table class="table table-bordered" id="examroom">
                                         <thead>
                                         <tr>
@@ -181,7 +184,7 @@
                                         <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1  ?>
                                         @forelse($examStationData as $k => $item)
                                             <tr class="parent-id-{{$item[0]->room_id}}">
-                                                <td>{{$key++}}<input type="hidden" name="station[{{$k1++}}][id]" value="{{$item[0]->station_id}}"/></td>
+                                                <td>{{$key++}}<input type="hidden" name="station[{{$k1++}}][id]" class="station_id" value="{{$item[0]->station_id}}"/></td>
                                                 <td>{{$item[0]->station_name}}</td>
                                                 <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
                                                 <td>
@@ -246,7 +249,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit" {{$status==0?'':'style=display:none;'}}>保存</button>
+                                    <button class="btn btn-primary" id="save" type="submit" {{$status==0?'':'style=display:none;'}}>保存</button>
                                     <a class="btn btn-white" href="{{route("osce.admin.exam.getExamList")}}">取消</a>
 
                                 </div>

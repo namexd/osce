@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Entities;
+
 use DB;
 
 class TestResult extends CommonModel
@@ -18,52 +19,54 @@ class TestResult extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'begin_dt', 'end_dt','time','score','score_dt','teacher_id','create_user_id','evaluate','operation','skilled','patient','affinity'];
+    protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'begin_dt', 'end_dt', 'time', 'score', 'score_dt', 'teacher_id', 'create_user_id', 'evaluate', 'operation', 'skilled', 'patient', 'affinity'];
 
-   //������ѧ����
-    public function student(){
-        return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
+    //������ѧ����
+    public function student()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Student', 'id', 'student_id');
     }
 
     //��������վ��
-    public  function  station(){
+    public function  station()
+    {
 
-        return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
+        return $this->hasOne('Modules\Osce\Entities\Station', 'id', 'station_id');
 
     }
+
     //���������Գ��α�
-    public  function  examScreening(){
-         return $this->hasOne('Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
+    public function  examScreening()
+    {
+        return $this->hasOne('Modules\Osce\Entities\ExamScreening', 'id', 'exam_screening_id');
     }
 
 
-    public function addTestResult($data)
+    public function addTestResult($data,$score)
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
-            $TestResultData = [];
             //判断成绩是否已提交过
-            $examResult = $this->where('student_id','=',$data['student_id'])
-                            ->where('exam_screening_id','=',$data['exam_screening_id'])
-                            ->where('station_id','=',$data['station_id'])
-                            ->count();
-            if($examResult>0){
-                throw new \Exception('该成绩已提交过',-7);
+            $examResult = $this->where('student_id', '=', $data['student_id'])
+                ->where('exam_screening_id', '=', $data['exam_screening_id'])
+                ->where('station_id', '=', $data['station_id'])
+                ->count();
+            if ($examResult > 0) {
+                throw new \Exception('该成绩已提交过', -7);
             }
-
+            $scoreData = $this->getExamResult($score);
+            //拿到总成绩
+            $total  =   array_pluck($scoreData,'score');
+            $total  =   array_sum($total);
+            $data['score']  =   $total;
             if ($testResult = $this->create($data)) {
-                $TestResultData = [
-                    'item_id' => $testResult->id,
-                    'type' => 1,
-                ];
+                //保存成绩评分
+                $ExamResultId = $testResult->id;
+                $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
             } else {
-                throw new \Exception('��������ʧ��');
+                throw new \Exception('成绩提交失败');
             }
-            if (empty($TestResultData)) {
-                throw new \Exception('û���ҵ�������������');
-            }
-
             $connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
@@ -73,6 +76,18 @@ class TestResult extends CommonModel
 
     }
 
+    private function  getSaveExamEvaluate($scoreData, $ExamResultId)
+    {
+        foreach ($scoreData as $item) {
+            $item['exam_result_id']=$ExamResultId;
+            //$result=$connection->table('exam_score')->insert($data);;
+            $examScore=ExamScore::create($item);
+            if(!$examScore)
+            {
+                throw new \Exception('保存分数详情失败');
+            }
+        }
+    }
 
     /**
      *获取学生考试最终成绩
@@ -81,22 +96,39 @@ class TestResult extends CommonModel
      * @throws \Exception
      * @author zhouqiang
      */
-     public function AcquireExam($studentId){
-        if(empty($studentId)){
-              return NULL;
-        }else{
+    public function AcquireExam($studentId)
+    {
+        if (empty($studentId)) {
+            return NULL;
+        } else {
 
-          $studentExamScore = TestResult::where('student_id','=',$studentId)->select('score')->get()->toArray();
-            $StudentScores=0;
-            foreach( $studentExamScore as $val){
-                $StudentScores +=$val['score'];
+            $studentExamScore = TestResult::where('student_id', '=', $studentId)->select('score')->get()->toArray();
+            $StudentScores = 0;
+            foreach ($studentExamScore as $val) {
+                $StudentScores += $val['score'];
             }
-            return   $StudentScores;
+            return $StudentScores;
         }
 
-     }
+    }
 
+    //获取考试成绩打分详情
+    private function  getExamResult($score)
+    {
+        $list = [];
+        $arr = json_decode($score, true);
+        foreach ($arr as $item) {
+            foreach ($item['test_term'] as $str) {
+                $list [] = [
+                    'subject_id' => $str['subject_id'],
+                    'standard_id' => $str['id'],
+                    'score' => $str['score'],
+                ];
+            }
+        }
+        return $list;
 
+    }
 
 
 }

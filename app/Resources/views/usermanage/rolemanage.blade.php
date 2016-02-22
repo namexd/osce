@@ -1,7 +1,7 @@
 @extends('layouts.usermanage')
 
 @section('only_css')
-    <link href="{{asset('')}}" rel="stylesheet">
+	<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/css/common.css')}}" rel="stylesheet">
     <style>
     .btn-success{
@@ -18,16 +18,88 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('msc/admin/usermanage/rolemanage.js')}}"></script>
+
+    <script type="text/javascript">
+    	$(function(){
+	    	$('#Form1').bootstrapValidator({
+	              message: 'This value is not valid',
+	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+	                  valid: 'glyphicon glyphicon-ok',
+	                  invalid: 'glyphicon glyphicon-remove',
+	                  validating: 'glyphicon glyphicon-refresh'
+	              },
+	              fields: {/*验证*/
+	                  name: {/*键名username和input name值对应*/
+	                      message: 'The username is not valid',
+	                      validators: {
+	                          notEmpty: {/*非空提示*/
+	                              message: '用户名不能为空'
+	                          }
+	                      }
+	                  },
+	                  description: {
+	                      validators: {
+	                          notEmpty: {
+	                              /*非空提示*/
+	                              message: '角色描述不能为空'
+	                          }
+	                      }
+	                  }
+	              }
+	        });
+	        $('#Form2').bootstrapValidator({
+	              message: 'This value is not valid',
+	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+	                  valid: 'glyphicon glyphicon-ok',
+	                  invalid: 'glyphicon glyphicon-remove',
+	                  validating: 'glyphicon glyphicon-refresh'
+	              },
+	              fields: {/*验证*/
+	                  name: {/*键名username和input name值对应*/
+	                      message: 'The username is not valid',
+	                      validators: {
+	                          notEmpty: {/*非空提示*/
+	                              message: '用户名不能为空'
+	                          }
+	                      }
+	                  },
+	                  description: {
+	                      validators: {
+	                          notEmpty: {
+	                              /*非空提示*/
+	                              message: '角色描述不能为空'
+	                          }
+	                      }
+	                  }
+	              }
+	        });
+        })
+
+        //点击关闭错误提示条
+        $(function(){
+            $('.closeNotice').click(function(){
+                $(this).parents('.pnotice').remove();
+            });
+        })
+
+    </script>
 @stop
 
 @section('content')
     @if($errors->first('chargeError'))
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4> <i class="icon fa fa-check"></i> 提示！</h4>
-            {{$errors->first('chargeError')}}
+        <div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;">
+            <div class="" style="background-color: #f2dede;">
+                <div style="float: left;" style="color: #a94442;">{{$errors->first('chargeError')}}</div>
+                <div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice">&nbsp;X&nbsp;</div>
+                <div style="clear: both;"></div>
+            </div>
         </div>
+        {{--<div class="alert alert-success alert-dismissable">--}}
+            {{--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>--}}
+            {{--{{$errors->first('chargeError')}}--}}
+        {{--</div>--}}
     @endif
 
     <input type="hidden" id="parameter" value="{'pagename':'rolemanage'}" />
@@ -36,22 +108,22 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>角色权限管理</h5>
-                <button type="button" class="btn btn-outline btn-default" id="add_role" style="margin:0;float:right;margin-top:-10px;" data-toggle="modal" data-target="#myModal">新增角色</button>
+                <button type="button" class="btn btn-primary" id="add_role" style="background:#16BEB0;border:1px solid #16BEB0;margin:0;float:right;margin-top:-10px;" data-toggle="modal" data-target="#myModal">新增角色</button>
             </div>
             <div class="container-fluid ibox-content">
                 <table class="table table-striped" id="table-striped">
                     <thead>
                     <tr>
-                        <th>#</th>
+                        <th>序号</th>
                         <th>角色名称</th>
                         <th>描述</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                @foreach($roleList as $role)
+                @foreach($roleList as $key => $role)
                     <tr>
-                        <td class="open-id">{{@$role->id}}</td>
+                        <td class="open-id">{{$key+1}}</td>
                         <td class="role_name">{{@$role->name}}</td>
                         <td class="role_descrip">{{@$role->description}}</td>
 

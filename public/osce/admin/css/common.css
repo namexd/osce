@@ -269,7 +269,7 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .ibox.float-e-margins>.ibox-content{padding-top: 18px!important;}
 
 .panel-options .nav.nav-tabs{
-    margin-left: 20px;
+    margin-left: 0;
 }
 /*输入框左侧文字*/
 .control-label{

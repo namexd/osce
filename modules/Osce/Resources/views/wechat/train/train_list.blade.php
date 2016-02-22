@@ -42,9 +42,10 @@
                         if(num==""){
                             num=0;
                         }
-                        if(author==null)
-                        {
-                            continue;
+                        if(author==null){
+                            author_name = '未知人';
+                        }else {
+                            author_name = data[i].author.name;
                         }
                         html += '<li>'+
 						        	'<a class="nou" href="{{route('osce.wechat.getTrainDetail')}}?id='+data[i].id+'">'+
@@ -52,7 +53,7 @@
 						        		'<p class="font12 clo9 main_txt">'+data[i].address+'</p>'+
 						        		'<p class="font12 clo9 main_txt">'+data[i].begin_dt+'~'+data[i].end_dt+'</p>'+
 						        		'<p class="font12 p_bottom">'+
-						        			'<span class="font14 student_name">'+data[i].author.name+'</span>'+
+						        			'<span class="font14 student_name">'+author_name+'</span>'+
 						        			'<span class="clo9">&nbsp;'+data[i].time+'</span>'+
 						        			'<span class="right comment">已读&nbsp;'+num+'</span>'+
 						        		'</p>'+
@@ -73,7 +74,7 @@
 
 @section('content')
     <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
+        <a class="left header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        	考前培训

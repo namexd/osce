@@ -102,7 +102,7 @@ function exam_add(){
         }
     });
 
-    $('.btn.btn-primary').click(function(){
+    $('#save').click(function(){
         var flag = null;
         $('tbody').find('.laydate').each(function(key,elem){
             flag = true;
@@ -257,7 +257,13 @@ function add_basic(){
         }
     });
 
-    $('.btn.btn-primary').click(function(){
+    /**
+     * 验证不能为空
+     * @author mao
+     * @version 1.0
+     * @date    2016-02-19
+     */
+    $('#save').click(function(){
         var flag = null;
         $('tbody').find('.laydate').each(function(key,elem){
             flag = true;
@@ -1100,14 +1106,21 @@ function examroom_assignment(){
             return;
         };
 
+        //考站id
+        var stationId = $(".station_id").val();
+        if(stationId==undefined){
+            layer.alert('请先保存数据！');
+            return;
+        }
+
         $.ajax({
             type:'get',
-            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
+            url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids+'&station_id='+stationId,
             success:function(res){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');
                 }else{
-                    layer.alert(res.message);
+                    layer.alert((res.message).split(':')[1],{title: '温馨提示'});
                 }
 
             },
@@ -1541,7 +1554,7 @@ function examroom_assignment(){
      * @version 1.0
      * @date    2016-01-27
      */
-    $('.btn-primary').click(function(){
+    $('#save').click(function(){
 
         var status_select = false;
         var status = true;
@@ -1915,11 +1928,12 @@ function smart_assignment(){
     $('.classroom-box').html('');//清空排考
     maketotal(testData);//页面加载执行排考
     makeTime();
+    //最里面dom数据遍历，节点dd
     function makeItem(data){
 
         var dl  =   $('<dl class="clearfloat">');
         var items   =   data.items;
-        var everyHeight=data.end-data.start;
+        var everyHeight=data.end-data.start;//每个单元格的高度
         everyHeight=everyHeight/6;
 
         if(timesGroup[data.screening]!=undefined)
@@ -1932,13 +1946,14 @@ function smart_assignment(){
         }
 
         times.push(data.start);
+        //时间数组，data.screening代表是哪场考试的时间戳
         timesGroup[data.screening] =   times;
         var endTimeData =   endtime[data.screening];
         if(endTimeData==undefined)
         {
             endTimeData=0;
         }
-        endTimeData =   data.end>endTimeData? data.end:endTimeData;
+        endTimeData =   data.end>endTimeData? data.end:endTimeData;//取最大的结束时间
         endtime[data.screening]    =   endTimeData;
         dl.css("height",everyHeight+"px");
         for(var i in items)
@@ -1956,6 +1971,7 @@ function smart_assignment(){
         }
         return dl;
     }
+    //交换考生
     function changeStudent(){
         if($(this).hasClass('clicked'))
         {
@@ -2011,6 +2027,7 @@ function smart_assignment(){
             }
         }
     }
+    //一列表格数据遍历，li
     function makeCols(data){
         var ul  =   $('<ul>');
         var child   =   data.child;
@@ -2032,6 +2049,7 @@ function smart_assignment(){
 
         return ul;
     }
+    //生成一整行数据,ul
     function makeAll(data){
         var ul =    $('<ul class="clearfloat tables">');
         for(var i in data)
@@ -2228,8 +2246,9 @@ function examinee_manage(){
             success: function (data, status)
             {
                 if(data.code == 1){
-                    layer.alert('导入成功！');
-                    location.reload();
+                    layer.msg('导入成功！',function(){
+                        location.reload();
+                    });
                 }else{
                     layer.alert(data.message);
                 }
@@ -2803,6 +2822,11 @@ function station_assignment(){
 
         //考站id
         var stationId = $(".station_id").val();
+        if(stationId==undefined){
+            layer.alert('请先保存数据！');
+            return;
+        }
+
         $.ajax({
             type:'get',
             //url:pars.spteacher_invitition+'?exam_id='+($('.active').find('a').attr('href')).split('=')[1]+'&teacher_id='+ids,
@@ -2811,7 +2835,7 @@ function station_assignment(){
                 if(res.code==1){
                     layer.alert('发起邀请成功！');
                 }else{
-                    layer.alert(res.message);
+                    layer.alert((res.message).split(':')[1],{title: '温馨提示'});
                 }
 
             },
@@ -3249,7 +3273,7 @@ function station_assignment(){
      * @version 1.0
      * @date    2016-01-27
      */
-    $('.btn-primary').click(function(){
+    $('#save').click(function(){
         var status_select = false;
         var status = true;
         $('#examroom tbody').find('select').each(function(key,elem){

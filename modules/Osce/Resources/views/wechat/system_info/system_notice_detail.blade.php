@@ -1,8 +1,6 @@
 @extends('osce::wechat.layouts.admin')
 
 @section('only_head_css')
-    <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/documentation.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{asset('osce/wechat/personalcenter/css/jalendar.css')}}" type="text/css" />
     <style type="text/css">
         .title{
             font-size: 16px;
@@ -36,7 +34,6 @@
 
 @stop
 @section('only_head_js')
-    <script type="text/javascript" src="{{asset('osce/wechat/personalcenter/js/jalendar.js')}}"></script>
     <script type="text/javascript">
 
     </script>
@@ -46,7 +43,7 @@
 
 @section('content')
     <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
+        <a class="left header_btn" href="{{route('osce.wechat.notice-list.getSystemList')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
         系统消息

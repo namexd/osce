@@ -44,8 +44,9 @@ class CourseController extends CommonController
             $examObj = Exam::where('status','<>',0)->first();
             if (is_null($examObj)) {
                 $subjectData = [];
-                $examId = '';
-                $subjectId = '';
+                $examId      = '';
+                $subjectId   = '';
+                $subjectList = [];
             } else {
                 $examId = $request->input('exam_id',$examObj->id);
                 $subjectId = $request->input('subject_id');
@@ -76,18 +77,18 @@ class CourseController extends CommonController
                 }
 
                 $subjectList = $this->subjectDownlist($examId);
-
             }
-            return view('osce::admin.statistics_query.subject_scores_list',
-                ['data'=>$subjectData,
-                    'examDownlist'=>$examDownlist,
-                    'subjectDownlist'=>$subjectList,
-                    'exam_id'=>$examId,
-                    'subject_id'=>$subjectId
+
+            return view('osce::admin.statistics_query.subject_scores_list', [
+                    'data'            => $subjectData,
+                    'examDownlist'    => $examDownlist,
+                    'subjectDownlist' => $subjectList,
+                    'exam_id'         => $examId,
+                    'subject_id'      => $subjectId
                 ]);
+
         } catch (\Exception $ex) {
-            dd($ex->getMessage());
-//            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -139,32 +140,39 @@ class CourseController extends CommonController
             'exam_id' => 'sometimes|integer',
             'message' => 'sometimes'
         ]);
-        $examId =   '';
-        $message=   '';
-        $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
+        $examId = '';
+        $message = '';
+        $examDownlist = Exam::select('id', 'name')->where('exam.status', '<>', 0)->orderBy('begin_dt', 'desc')->get();
+
         //获得最近的考试的id
-        $lastExam = Exam::orderBy('begin_dt','desc')->where('exam.status','<>',0)->first();
+        $lastExam = Exam::orderBy('begin_dt', 'desc')->where('exam.status', '<>', 0)->first();
+
         if (is_null($lastExam)) {
             $list = [];
+            $backMes = '目前没有已结束的考试';
         } else {
 
             $lastExamId = $lastExam->id;
             //获得参数
-            $examId = $request->input('exam_id',$lastExamId);
-            $message = $request->input('message',"");
+            $examId = $request->input('exam_id', $lastExamId);
+            $message = $request->input('message', "");
 
             //获得学生的列表在该考试的列表
             $list = Student::getStudentScoreList($examId, $message);
             //为每一条数据插入统计值
             foreach ($list as $key => &$item) {
-                $item->ranking = $key+1;
+                $item->ranking = $key + 1;
+            }
+            if (!count($list)) {
+                $backMes = '该考试还未出成绩';
             }
         }
         return view('osce::admin.statistics_query.student_scores_list',[
-            'data'=>$list,
-            'examDownlist'=>$examDownlist,
-            'exam_id'=>$examId,
-            'message'=>$message
+            'data'          => $list,
+            'examDownlist'  => $examDownlist,
+            'exam_id'       => $examId,
+            'message'       => $message,
+            'backMes'       => isset($backMes)?$backMes:''
         ]);
     }
 

@@ -17,7 +17,7 @@
 @section('content')
 	<input type="hidden" id="parameter" value="{'pagename':'examination_list_teacher','ajaxurl':'{{route('osce.wechat.student-exam-query.getTeacherCheckScore')}}','detailUrl':'{{route('osce.wechat.student-exam-query.getEveryExamList')}}'}" />
     <div class="user_header">
-        <a class="left header_btn" href="javascript:history.back(-1)">
+        <a class="left header_btn" href="{{route('osce.wechat.student-exam-query.getResultsQueryIndex')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        	成绩查询

@@ -241,16 +241,24 @@ class StudentWatchController extends CommonController
 
 
     private function  getExamComplete($examQueue){
-        $testresultModel = new TestResult();
+        //根据考试获取到考试流程
+        $ExamFlowModel = new  ExamFlow();
+        $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
+        //查询出学生当前已完成的考试
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $examQueue->student_id)->count();
+        if ($ExamFinishStatus >= $studentExamSum){
+            $testresultModel = new TestResult();
 
-        $score =  $testresultModel->AcquireExam($examQueue->student_id);
-        $data = [
-            'code'  =>  6,
-            'title' =>'考试完成，最总成绩',
-            'score' => $score,
-        ];
+            $score =  $testresultModel->AcquireExam($examQueue->student_id);
+            $data = [
+                'code'  =>  6,
+                'title' =>'考试完成，最终总成绩',
+                'score' => $score,
+            ];
 
-        return $data;
+            return $data;
+        }
+
     }
 
     //判断腕表提醒状态为0时
@@ -262,20 +270,21 @@ class StudentWatchController extends CommonController
             }
         });
         $item   =   array_shift($items);
-        //判断前面等待人数
-        $studentnum = $this->getwillStudent($item);
+
 
         //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
 
+        //判断前面等待人数
+        $studentnum = $this->getwillStudent($item);
+
           if($examStudent == 0){
-              //判断前面考生等待人数
+
               $willStudents =$studentnum;
           }else{
-
-              $willStudents = $studentnum+1;
+                $willStudents = $studentnum+1;
           }
 
         //判断预计考试时间
@@ -314,9 +323,11 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
+
           foreach($willStudents as $key=>$willStudent){
               if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
+                  continue;
               }
           }
         return $studentNum;

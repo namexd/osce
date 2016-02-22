@@ -23,6 +23,11 @@ class Invite extends CommonModel
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id', 'station_id', 'status', 'user_id'];
 
+
+    public function examSpTeacher(){
+        return $this->hasOne('\Modules\Osce\Entities\ExamSpTeacher','invite_id','id');
+    }
+
     //保存并发送邀请
     public function addInvite(array $data)
     {
@@ -100,7 +105,7 @@ class Invite extends CommonModel
                     Common::sendWeiXin($openIdList['openid'],$message);//单发
                 } catch (\Exception $ex_msg) {
 
-                    throw new \Exception($openIdList['teacher_name'] . '没有关联微信号');
+                    throw new \Exception('温馨提示'.$openIdList['teacher_name'] . '目前还没有登录过微信号');
                 }
 
 //            $message    =   Common::CreateWeiXinMessage($msgData);

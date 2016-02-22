@@ -297,10 +297,11 @@ class PadController extends  CommonController{
             //修改状态
             $queue->status = 3;
             $queue->end_dt = $date;
+
             if (!$queue->save()) {
                 throw new \Exception('状态修改失败！请重试',2000);
             }
-            return response()->json($this->success_data([$date]));
+            return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }

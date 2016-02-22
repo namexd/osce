@@ -38,6 +38,10 @@ class ExamScreening extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamRoom','exam_id','exam_id');
     }
 
+    public function invites(){
+        return $this->hasMany('\Modules\Osce\Entities\Invite','exam_screening_id','id');
+    }
+
     /**
      * todo 智能排考所用，请勿删除或修改 开始场次
      * @param $examId
@@ -182,11 +186,13 @@ class ExamScreening extends CommonModel
     {
         //取得考试实例
         $exam = Exam::where('status','=',1)->orderBy('begin_dt','desc')->first();
+
         if(is_null($exam)){
             throw new \Exception('没有找到考试');
         }
         //获取到当考试场次id
         $ExamScreening = $this-> getExamingScreening($exam->id);
+
         if(is_null($ExamScreening)){
             $ExamScreening = $this->getNearestScreening($exam->id);
         }
@@ -201,6 +207,7 @@ class ExamScreening extends CommonModel
         $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
             ->where('exam_screening_id','=',$ExamScreening->id)
             ->count();
+
         if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
             $ExamScreening->status = 2;
             if(!$ExamScreening->save()){

@@ -6,15 +6,22 @@
         .has-error .form-control {
             border-color: #ed5565 !important;
         }
-
         .code_add, .code_del {
             position: absolute;
             right: 15px;
             top: 0;
         }
-
         .add_box .glyphicon-remove, .add_box .glyphicon-ok {
             display: none !important;
+        }
+        .img_box{
+            width:197px;
+            height:251px;
+            margin: auto;
+        }
+        .img_box li img{
+            width: 197px;
+            height: 251px;
         }
     </style>
 @stop
@@ -131,7 +138,7 @@
                         if (data.code) {
                             var href = data.data.path;
                             $('.img_box').find('li').remove();
-                            $('#images_upload').before('<li><img src="' + href + '"/><input type="hidden" name="images_path[]" value="' + href + '"/></li>');
+                            $('#images_upload').before('<li><img src="' + href + '"/><input type="hidden" name="images_path[]" value="' + href + '"/><i class="fa fa-remove font16 del_img"></i></li>');
                         }
                     },
                     error: function (data, status, e) {
@@ -145,6 +152,18 @@
                     }
                 });
             });
+
+            /**
+             * 删除
+             * @author mao
+             * @version 1.0
+             * @date    2016-02-19
+             */
+            $(".img_box").delegate(".del_img","click",function(){
+                $(this).parent("li").remove();
+                $('#images_upload').attr("class","images_upload");
+            });
+
         });
         //建立一個可存取到該file的url
         var url = '';
@@ -181,6 +200,7 @@
                                 <li>
                                     <img src="{{$item->avator}}"/>
                                     <input type="hidden" value="{{$item->avator}}" name="images_path[]">
+                                    <i class="fa fa-remove font16 del_img"></i>
                                 </li>
                                <span class="images_upload1" id="images_upload"><input type="file" name="images" id="file0"/>选择图片</span>
                             </ul>

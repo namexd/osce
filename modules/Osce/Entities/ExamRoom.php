@@ -125,26 +125,42 @@ class ExamRoom extends CommonModel
      */
     public function getExamStation($exam_id)
     {
+//        //TODO: 罗海华 2016-02-19 解决 sp 邀请 状错误问题
+//        $examScreeningList  =   ExamScreening::where('exam_id','=',$exam_id)->get();
+//        $examScreeningIdList    =   $examScreeningList  ->  pluck('id');
+
         try{
-            return  $this->leftJoin('room_station',$this->table . '.room_id','=','room_station.room_id')
+            $builder  =   StationTeacher::leftJoin('room_station','station_teacher.station_id','=','room_station.station_id')
                 ->leftJoin('station','station.id','=','room_station.station_id')
-                ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
+                //                ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
                 ->leftJoin('teacher','teacher.id','=','station_teacher.user_id')
-                ->where('exam_room.exam_id' , '=' , $exam_id)
-                ->orWhere('station_teacher.exam_id','=',$exam_id)
+                ->leftJoin('invite', 'station_teacher.user_id','=','teacher.id')
+                //                ->where('exam_room.exam_id' , '=' , $exam_id)
+                ->Where('station_teacher.exam_id','=',$exam_id)
                 ->select([
                     'teacher.id as id',
                     'teacher.name as name',
                     'teacher.code as code',
                     'teacher.type as type',
                     'teacher.case_id as case_id',
-                    'teacher.status as status',
+                    'invite.status as status',
                     'station.name as station_name',
                     'station.id as station_id',
                     'station.type as station_type',
                     'room_station.room_id as room_id',
                 ])
-                ->distinct()->get();
+                ->distinct();
+//            if(!empty($builder))
+//            {
+//                $string =   implode(',',$examScreeningIdList->toArray());
+//                $builder=$builder->whereRaw(
+//                    '(invite.exam_screening_id in (?) or invite.exam_screening_id is NUll)',
+//                    [
+//                        $string
+//                    ]
+//                );
+//            }
+            return  $builder->get();
         } catch(\Exception $ex){
             throw $ex;
         }
