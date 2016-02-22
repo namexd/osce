@@ -119,8 +119,8 @@ class Student extends CommonModel
      */
     public function importStudent($exam_id, $examineeData)
     {
-        $connection = DB::connection($this->connection);
-        $connection ->beginTransaction();
+        $backArr = [];
+
         try{
             //将数组导入到模型中的addInvigilator方法
             foreach($examineeData as $key => $studentData)
@@ -133,8 +133,12 @@ class Student extends CommonModel
                     $studentData['gender'] = 0;
                 }
                 //姓名不能为空
-                if(empty($studentData['name'])){
-                    throw new \Exception('第'.($key+2).'行姓名不能为空，请修改后重试！');
+                if(empty(trim($studentData['name']))){
+                    if(!empty($studentData['idcard']) && !empty($studentData['mobile'])){
+                        $backArr[] = ['key'=> $key+2, 'title'=>'name'];
+                    }
+                    continue;
+//                    throw new \Exception('第'.($key+2).'行姓名不能为空，请修改后重试！');
                 }
                 //验证身份证号
                 if(!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/',$studentData['idcard'])){
@@ -145,8 +149,19 @@ class Student extends CommonModel
                     throw new \Exception('第'.($key+2).'行手机号不符规格，请修改后重试！');
                 }
                 //准考证号不能为空
-                if(empty($studentData['exam_sequence'])){
+                if(empty(trim($studentData['exam_sequence']))){
                     throw new \Exception('第'.($key+2).'行准考证号不能为空，请修改后重试！');
+                }
+
+                //根据条件：查找用户是否有账号和密码
+                $user = User::where(['username' => $studentData['mobile']])->select(['id'])->first();
+                //根据用户ID和考试号查找考生
+                $student = $this->where('user_id', '=', $user->id)
+                    ->where('exam_id', '=', $exam_id)->first();
+                //考生存在,则 跳过
+                if($student){
+                    $backArr[] = ['key'=> $key+2, 'title'=>'exist'];
+                    continue;
                 }
                 //添加考生
                 if(!$this->addExaminee($exam_id, $studentData, $key+2))
@@ -154,11 +169,31 @@ class Student extends CommonModel
                     throw new \Exception('学生导入数据失败，请修改后重试');
                 }
             }
-            $connection->commit();
+
+            //返回信息数组不为空
+            if(!empty($backArr)){
+                $message = '第';
+                $mes1 = '';     $mes2 = '';
+                foreach ($backArr as $item) {
+                    if($item['title']=='name'){
+                        $mes1 .= $item['key'].'、';
+                    }elseif($item['title']=='exist'){
+                        $mes2 .= $item['key'].'、';
+                    }
+                }
+                if($mes1 != '' && $mes2 != ''){
+                    $message .= rtrim($mes1,'、').'行姓名不能为空，第'.rtrim($mes2,'、').'行考生已存在，请修改后重试！';
+                }elseif($mes1 != ''){
+                    $message .= rtrim($mes1,'、').'行姓名不能为空，请修改后重试！';
+                }else{
+                    $message .= rtrim($mes2,'、').'行考生已存在，请修改后重试！';
+                }
+                throw new \Exception($message);
+            }
+
             return true;
 
         } catch(\Exception $ex) {
-            $connection->rollBack();
             throw $ex;
         }
     }

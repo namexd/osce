@@ -365,9 +365,18 @@ class Exam extends CommonModel
 
                 if(!empty($examScreeningList))
                 {
-//                    dd($examScreeningList);
-                    $examScreeningList->invite()->examSpTeacher()->delete();
-                    $examScreeningList->invite()->delete();
+                    foreach($examScreeningList as $item){
+                        if(ExamSpTeacher::where('exam_screening_id','=',$item->id)->delete()===false){
+                            throw new \Exception('重置作废数据失败');
+                        }
+                        Invite::where('exam_screening_id','=',$item->id)->delete();
+                    }
+
+                    //                        $item->invite()->examSpTeacher()->delete();
+//                        $item->invite()->delete();
+
+
+
                 }
             }
             foreach($examData as $field=>$item)
