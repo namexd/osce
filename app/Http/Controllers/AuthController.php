@@ -244,7 +244,11 @@ class AuthController extends BaseController
         //dd(Input::get());
         $this->validate($Request,[
             'name' => 'required|min:2|max:10',
-            ]);
+        ],[
+            'name.required' => '角色名必填',
+            'name.min'      => '角色名长度至少为2个',
+            'name.max'      => '角色名长度最多为10个'
+        ]);
         $data = [
             'name' => Input::get('name'),
             'description'=>Input::get('description')
@@ -253,7 +257,7 @@ class AuthController extends BaseController
         if($addNewRole){
             return redirect()->intended('/auth/auth-manage');
         }else{
-            return  redirect()->back()->withErrors(['系统繁忙']);
+            return  redirect()->back()->withErrors(['修改失败']);
         }
     }
 
