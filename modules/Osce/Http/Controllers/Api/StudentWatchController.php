@@ -83,6 +83,7 @@ class StudentWatchController extends CommonController
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (!$watchStudent) {
+//            $code = -2;
             $data['title'] = '没有找到学生的腕表信息';
             return response()->json(
                 $this->success_data($data, $code)

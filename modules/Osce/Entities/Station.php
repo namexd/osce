@@ -235,6 +235,10 @@ class Station extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
 
+            $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
+            if(!empty($examFlowStation)){
+                throw new \Exception('不能删除此考站，因为与其他条目相关联');
+            }
             list($stationData, $vcrId, $caseId,$roomId) = $formData;
             //将原来的摄像机的状态回位
             //通过传入的考站的id找到原来的摄像机
