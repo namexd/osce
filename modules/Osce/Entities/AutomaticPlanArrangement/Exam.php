@@ -22,10 +22,10 @@ class Exam implements ExamInterface
      * Exam constructor.
      * @param ExamModel $exam
      */
-    function __construct(ExamModel $exam)
-    {
-        $this->exam = $exam;
-    }
+//    function __construct(ExamModel $exam)
+//    {
+//        $this->exam = $exam;
+//    }
 
     /**
      * 获取场次列表
@@ -36,7 +36,7 @@ class Exam implements ExamInterface
      */
     function screenList($examId)
     {
-        return $this->exam->findOrFail($examId)->examScreening;
+        return \Modules\Osce\Entities\Exam::findOrFail($examId)->examScreening;
     }
 
     /**
