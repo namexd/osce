@@ -2250,7 +2250,9 @@ function examinee_manage(){
                         location.reload();
                     });
                 }else{
-                    layer.alert(data.message);
+                    layer.alert(data.message,function(){
+                        location.reload();
+                    });
                 }
             },
             error: function (data, status, e)
