@@ -779,10 +779,28 @@ class ExamController extends CommonController
         }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
+
+        $inviteData = Invite::status($exam_id);
+
+
+
+
+        //将邀请状态插入$stationData
+
+        $examRoomData111=  [];
+        foreach ($examStationData as $key=>&$items) {
+            foreach ($items as &$item) {
+                foreach ($inviteData as $key1=>$value) {
+                    if ($item->id == $value->invite_user_id) {
+                        $item->invite_status = $value->invite_status;
+                    } else {
+                        $item->invite_status = 0;
+                    }
+                }
+            }
+        }
 //        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
-
-
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,
             'status'            => $status,
@@ -1356,6 +1374,7 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
+
 //        $invite = new Invite();
         $inviteData = Invite::status($exam_id);
 
@@ -1370,8 +1389,6 @@ class ExamController extends CommonController
                     }
                 }
             }
-
-
         }
        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
         return view('osce::admin.exammanage.station_assignment', [
