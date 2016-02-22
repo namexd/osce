@@ -5,27 +5,121 @@
         .has-error .form-control{border-color: #ed5565!important;}
         .code_add,.code_del{position:absolute;right:15px;top:0;}
         .add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
-        .table .not{
-            color:#ccc;
-            cursor: none;
-        }
     </style>
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/labmanage/labmanage.js')}}"></script>
+    <script>
+        $(function(){
+//            删除
+            $(".delete").click(function(){
+                var this_id = $(this).attr('data');
+                var url = "/msc/admin/floor/delete-floor?id="+this_id;
+                //询问框
+                layer.confirm('您确定要删除该楼栋？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    window.location.href=url;
+                });
+            });
+//            停用
+            $(".stop").click(function(){
+                var this_id = $(this).attr('data');
+                var url = "/msc/admin/floor/stop-floor?id="+this_id;
+                //询问框
+                layer.confirm('您确定要停用该楼栋？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    window.location.href=url;
+                });
+            });
+//            编辑
+            $('#add_from').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    name: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '楼栋名称不能为空'
+                            }
+                        }
+                    },
+                    up: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '地上层数不能为空'
+                            }
+                        }
+                    },
+                    down: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '地下层数不能为空'
+                            }
+                        }
+                    },
+                    type: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择状态'
+                            }
+
+                        }
+                    }
+
+                }
+            });
+
+            $('.edit').click(function () {
+                $('input[name=name]').val($(this).parent().parent().find('.name').html());
+                $('input[name=floor_top]').val($(this).parent().parent().find('.floor').attr('data'));
+                $('input[name=floor_buttom]').val($(this).parent().parent().find('.floor').attr('data-b'));
+                $('input[name=address]').val($(this).parent().parent().find('.address').html());
+                var sname = $(this).parent().parent().find('.sname').html();
+                var status = '';
+                if($(this).parent().parent().find('.status').html() == '正常'){
+                    status = 1;
+                }else{
+                    status = 0;
+                }
+                $('.school option').each(function(){
+                    if($(this).html() == sname){
+                        $(this).attr('selected','selected');
+                    }
+                });
+
+                $('.state option').each(function(){
+                    if($(this).val() == status){
+                        $(this).attr('selected','selected');
+                    }
+                });
+                $('#add_from').attr('action','{{route("msc.admin.floor.getEditFloorInsert")}}');
+                var id = $(this).attr("data");
+                $('#add_from').append('<input type="hidden" name="id" value="'+id+'">');
+            });
+
+        })
+    </script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'ban_maintain'}" />
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row table-head-style1">
+	<input type="hidden" id="parameter" value="" />
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
                         <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{$keyword}}">
                         <input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">
-                        <input type="hidden" name="schools" class="input-sm form-control" value="{{@$schools}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -33,13 +127,13 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button class="btn btn_pl btn-success right">
-                    <a href=""  class="state1 editadd" data-toggle="modal" data-target="#myModal" style="text-decoration: none" id="add_ban">
+                <button class="btn btn-w-m btn_pl btn-success right">
+                    <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
                         <span style="color: #fff;">新增楼栋</span>
                     </a>
                 </button>
             </div>
-        </div>
+		</div>
         <div class="ibox float-e-margins">
             <div class="container-fluid ibox-content">
                 <form action="" class="container-fluid" id="list_form">
@@ -56,13 +150,10 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="/msc/admin/floor/index?keyword={{$keyword}}&status={{@$status}}">全部</a>
-                                        </li>
                                         @if(!empty($school))
                                             @foreach($school as $sch)
                                                 <li>
-                                                    <a href="/msc/admin/floor/index?keyword={{$keyword}}&status={{@$status}}&schools={{$sch->id}}">{{@$sch->name}}</a>
+                                                    <a href="/msc/admin/floor/index?keyword={{$keyword}}&status={{@$status}}">{{@$sch->name}}</a>
                                                 </li>
                                             @endforeach
                                         @endif
@@ -78,13 +169,13 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=&schools={{@$schools}}">全部</a>
+                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}">全部</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=1&schools={{@$schools}}">正常</a>
+                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=1">正常</a>
                                         </li>
                                         <li>
-                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=0&schools={{@$schools}}">停用</a>
+                                            <a href="/msc/admin/floor/index?keyword={{@$keyword}}&status=0">停用</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -95,26 +186,22 @@
                         <tbody>
                         @if(!empty($data))
                             @foreach($data as $k=>$v)
-                                <tr>
-                                    <td>{{@$k+1}}</td>
-                                    <td class="name">{{@$v->name}}</td>
-                                    <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_bottom}}">{{intval(@$v->floor_top) + intval(@$v->floor_bottom)}}</td>
-                                    <td class="sname" data="{{@$v->school_id}}">{{@$v->sname}}</td>
-                                    <td class="address">{{@$v->address}}</td>
-                                    <td class="status" data="{{@$v->status}}">@if($v->status)正常@else<span class="state2">停用</span>@endif</td>
-                                    <td>
-                                        <a href=""  data="{{$v->id}}"  class="state1 edit edit_ban" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
-                                            <span>编辑</span>
-                                        </a>
-                                        @if($v->status == 1)
-                                            <a  data="{{$v['id']}}" data-type="0" class="state2 modal-control stop">停用</a>
-                                        @else
-                                            <a  data="{{$v['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
-                                        @endif
-                                        <a data="{{$v->id}}" class=" edit_role modal-control delete state2">删除</a>
-                                        <input type="hidden" class="setid" value="1"/>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>{{@$k}}</td>
+                                <td class="name">{{@$v->name}}</td>
+                                <td  class="floor" data="{{@$v->floor_top}}" data-b="{{@$v->floor_buttom}}">{{intval(@$v->floor_top) + intval(@$v->floor_buttom)}}</td>
+                                <td class="sname">{{@$v->sname}}</td>
+                                <td class="address">{{@$v->address}}</td>
+                                <td class="status" data="{{@$v->status}}">@if($v->status)正常@else停用@endif</td>
+                                <td>
+                                    <a href=""  data="{{$v->id}}"  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none">
+                                        <span>编辑</span>
+                                    </a>
+                                    <a  data="{{$v->id}}" class="state2 modal-control stop">停用</a>
+                                    <a data="{{$v->id}}" class="state2 edit_role modal-control delete">删除</a>
+                                    <input type="hidden" class="setid" value="1"/>
+                                </td>
+                            </tr>
                             @endforeach
                         @endif
 
@@ -123,144 +210,77 @@
                 </form>
 
             </div>
-
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
             <?php echo $data->render();?>
         </div>
-    </div>
+	</div>
 @stop
 
 @section('layer_content')
-    <div id="form_box">
-        {{--编辑--}}
-        <input type="hidden" value="{{route('msc.admin.floor.postEditFloorInsert')}}" id="editUrl">
-        <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.floor.postEditFloorInsert')}}" method="post">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">编辑楼栋</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼栋名称</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control name add-name lname" name="name" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地上)</label>
-                    <div class="col-sm-9">
-                        <input type="number" class="form-control name add-name floor_top" name="floor_top" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
-                    <div class="col-sm-9">
-                        <input type="number" class="form-control name add-name floor_bottom" name="floor_bottom" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">地址</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control describe add-describe address" name="address" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">所属分院</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category" class="form-control m-b school edit_select" name="school_id">
-                            @if(!empty($school))
-                                @foreach($school as $ss)
-                                    <option value="{{$ss->id}}">{{$ss->name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category"   class="form-control m-b state" name="status">
-                            <option value="-1">请选择状态</option>
-                            <option value="1">正常</option>
-                            <option value="0">停用</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-2 right">
-                        <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                    </div>
+{{--编辑--}}
+    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="{{route('msc.admin.floor.getAddFloorInsert')}}" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">新增楼栋/编辑楼栋</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼栋名称</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="name" value="" />
                 </div>
             </div>
-        </form>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地上)</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control name add-name" name="floor_top" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control name add-name" name="floor_buttom" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">地址</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control describe add-describe" name="address" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">所属分院</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b school" name="school_id">
 
-        {{--新增--}}
-        <input type="hidden" value="{{route('msc.admin.floor.postAddFloorInsert')}}" id="addUrl">
-        <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route('msc.admin.floor.postAddFloorInsert')}}" method="post">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">新增楼栋</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼栋名称</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control name add-name" name="name" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地上)</label>
-                    <div class="col-sm-9">
-                        <input type="number" class="form-control name add-name" name="floor_top" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>楼层数(地下)</label>
-                    <div class="col-sm-9">
-                        <input type="number" class="form-control name add-name" name="floor_bottom" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">地址</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control describe add-describe" name="address" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">所属分院</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category"   class="form-control m-b add_select" name="school_id">
-                            <option value="-1">请选择所属分院</option>
-                            @if(!empty($school))
-                                @foreach($school as $ss)
-                                    <option value="{{$ss->id}}">{{$ss->name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category"   class="form-control m-b " name="status">
-                            <option value="-1">请选择状态</option>
-                            <option value="1">正常</option>
-                            <option value="0">停用</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-2 right">
-                        <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                    </div>
+                        @if(!empty($school))
+                            @foreach($school as $ss)
+                                <option value={{$ss->id}}">{{$ss->name}}</option>
+                            @endforeach
+                        @endif
+                    </select>
                 </div>
             </div>
-        </form>
-    </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b state" name="status">
+                        <option value="-1">请选择状态</option>
+                        <option value="1">正常</option>
+                        <option value="0">停用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2 right">
+                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
 @stop
