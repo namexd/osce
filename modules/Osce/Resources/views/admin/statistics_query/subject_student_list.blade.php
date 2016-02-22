@@ -26,10 +26,10 @@
         </div>
         <div class="container-fluid ibox-content">
             <div class="row tabs">
-                <div class="col-sm-2 col-md-2">考试：{{$exam}}<span></span></div>
-                <div class="col-sm-2 col-md-2">科目：{{$subject}}<span></span></div>
-                <div class="col-sm-2 col-md-2">平均成绩：{{$avgScore}}<span></span></div>
-                <div class="col-sm-2 col-md-2">平均用时：{{$avgTime}}<span></span></div>
+                <div class="col-sm-3 col-md-3">考试：{{$exam}}<span></span></div>
+                <div class="col-sm-3 col-md-3">科目：{{$subject}}<span></span></div>
+                <div class="col-sm-3 col-md-3">平均成绩：{{$avgScore}}<span></span></div>
+                <div class="col-sm-3 col-md-3">平均用时：{{$avgTime}}<span></span></div>
             </div>
             <table class="table table-bordered">
                 <thead>
