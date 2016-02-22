@@ -88,19 +88,24 @@
 @stop
 
 @section('content')
-    @if($errors->first('chargeError'))
+    <?php
+        $errorsInfo =(array)$errors->getMessages();
+
+        if(!empty($errorsInfo))
+        {
+            $errorsInfo = array_shift($errorsInfo);
+        }
+    ?>
+    @forelse($errorsInfo as $errorItem)
         <div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;">
             <div class="" style="background-color: #f2dede;">
-                <div style="float: left;" style="color: #a94442;">{{$errors->first('chargeError')}}</div>
+                <div style="float: left;" style="color: #a94442;">{{$errorItem}}</div>
                 <div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice">&nbsp;X&nbsp;</div>
                 <div style="clear: both;"></div>
             </div>
         </div>
-        {{--<div class="alert alert-success alert-dismissable">--}}
-            {{--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>--}}
-            {{--{{$errors->first('chargeError')}}--}}
-        {{--</div>--}}
-    @endif
+    @empty
+    @endforelse
 
     <input type="hidden" id="parameter" value="{'pagename':'rolemanage'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
