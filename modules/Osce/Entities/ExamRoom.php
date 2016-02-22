@@ -125,9 +125,9 @@ class ExamRoom extends CommonModel
      */
     public function getExamStation($exam_id)
     {
-        //TODO: 罗海华 2016-02-19 解决 sp 邀请 状错误问题
-        $examScreeningList  =   ExamScreening::where('exam_id','=',$exam_id)->get();
-        $examScreeningIdList    =   $examScreeningList  ->  pluck('id');
+//        //TODO: 罗海华 2016-02-19 解决 sp 邀请 状错误问题
+//        $examScreeningList  =   ExamScreening::where('exam_id','=',$exam_id)->get();
+//        $examScreeningIdList    =   $examScreeningList  ->  pluck('id');
 
         try{
             $builder  =   StationTeacher::leftJoin('room_station','station_teacher.station_id','=','room_station.station_id')
@@ -149,18 +149,20 @@ class ExamRoom extends CommonModel
                     'station.type as station_type',
                     'room_station.room_id as room_id',
                 ])
-                ->distinct();
-            if(!empty($builder))
-            {
-                $string =   implode(',',$examScreeningIdList->toArray());
-                $builder=$builder->whereRaw(
-                    '(invite.exam_screening_id in (?) or invite.exam_screening_id is NUll)',
-                    [
-                        $string
-                    ]
-                );
-            }
-            return  $builder->get();
+                ->distinct()->get();
+//            if(!empty($builder))
+//            {
+//                $string =   implode(',',$examScreeningIdList->toArray());
+//                $builder=$builder->whereRaw(
+//                    '(invite.exam_screening_id in (?) or invite.exam_screening_id is NUll)',
+//                    [
+//                        $string
+//                    ]
+//                );
+//            }
+            return  $builder;
+
+
         } catch(\Exception $ex){
             throw $ex;
         }

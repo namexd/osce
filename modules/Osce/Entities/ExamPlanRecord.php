@@ -12,12 +12,12 @@ namespace Modules\Osce\Entities;
 class ExamPlanRecord extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'exam_queue';
+    protected $table = 'exam_plan_record';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['room_id','student_id','station_id','exam_id','exam_screening_id','end_dt'];
+    protected $fillable = ['room_id','student_id','station_id','exam_id','exam_screening_id','end_dt','begin_dt','serialnumber'];
 
 }

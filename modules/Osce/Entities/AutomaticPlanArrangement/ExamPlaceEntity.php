@@ -120,8 +120,10 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                         throw new \Exception('该场考试没有关联考站或考场！', -2);
                     }
                     //将serialnumber和room_id放入$temp对象
+                    $temp->sequence_mode = $sequenceMode;
                     $temp->serialnumber = $examFlowStation->serialnumber;
                     $temp->room_id = $roomId;
+                    $temp->needNum = 1;
                     $stations[] = $temp;
                 }
             } elseif ($sequenceMode == 1) {
@@ -141,11 +143,15 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                     /*
                      * 得到该考场下考站的最大的考试时间
                      */
-                    $stations = $temp->station;
+                    $tempStations = $temp->station;
+                    if ($tempStations->isEmpty()) {
+                        throw new \Exception('该考场没有关联考站！', -3);
+                    }
                     $mins = 0;
+
                     //循环数组，找到mins最大的值
-                    foreach ($stations as $v) {
-                        if ($v->mins - $mins > 0) {
+                    foreach ($tempStations as $v) {
+                        if (strtotime($v->mins) - $mins > 0) {
                             $mins = $v->mins;
                         }
                     }
@@ -154,6 +160,8 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                     $temp->mins = $mins;
                     //将serialnumber写进room
                     $temp->serialnumber = $examFlowRoom->serialnumber;
+                    $temp->sequence_mode = $sequenceMode;
+                    $temp->needNum = $tempStations->count();
                     $stations[] = $temp;
                 }
             } else {
