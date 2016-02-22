@@ -12,7 +12,6 @@ use Modules\Msc\Entities\TeacherDept;
 use Illuminate\Http\Request;
 use Modules\Msc\Http\Controllers\MscController;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Auth;
 /**
  * Class DeptController
  * @package Modules\Msc\Http\Controllers\Admin
@@ -27,96 +26,47 @@ class DeptController extends MscController
         $this->TeacherDept = new TeacherDept;
     }
 
-    /**
-     * @method get
-     * @url /msc/admin/dept/dept-list
-     * @access public
-     * @return
-     * @author tangjun <tangjun@misrobot.com>
-     * @date 2015年12月30日18:09:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function DeptList(){
-        return view('msc::admin.systemtable.departments_table');
-    }
 
     /**
      * @method POST
      * @url /msc/admin/dept/add-dept
      * @access public
-     * @param $request
-     * name     科室名称
-     * pid      父级id
-     * level    等级
-     * description  介绍
+     * @param $data
      * @return json
      * @author tangjun <tangjun@misrobot.com>
      * @date 2015年12月29日14:58:24
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function AddDept(Request $request){
-
-        $this->validate($request,[
-            'name'   => 'required|max:50',
-            'pid'   => 'required|integer',
-            'level'  => 'required|integer'
-        ]);
-        $user = Auth::user();
-        $requests = $request->all();
+        $this->validate($request,[]);
         $data = [
-            'name'   =>  $requests['name'],
-            'pid'   => $requests['pid'],
-            'level'  => $requests['level'],
-            'description' => $requests['description'],
-            'created_user_id' => empty($user->id)?1:$user->id
+
         ];
         $DeptInfo = $this->TeacherDept->AddDept($data);
-        if($DeptInfo){
-            return response()->json(
-                $this->success_rows(1,'添加成功',$DeptInfo)
-            );
-        }else{
-            return response()->json(
-                $this->success_rows(2,'添加失败')
-            );
-        }
-
+        return response()->json(
+            $this->success_rows(1,'添加成功',$DeptInfo)
+        );
     }
 
     /**
      * @method POST
-     * @url /msc/admin/dept/update-dept
+     * @url /msc/admin/dept/add-dept
      * @access public
-     * @param $request
-     * name     科室名称
-     * description  介绍
+     * @param $data
      * @return json
      * @author tangjun <tangjun@misrobot.com>
      * @date 2015年12月29日14:58:24
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function UpdateDept(Request $request){
-        $this->validate($request,[
-            'id'   => 'required|integer',
-            'name'   => 'required|max:50',
-        ]);
-        $requests = $request->all();
+        $this->validate($request,[]);
         $data = [
-            'name'   =>  $requests['name'],
-            'description' => $requests['description'],
-            'updated_at'=>date('Y-m-d H:i:s')
-        ];
-        $DeptInfo = $this->TeacherDept->UpdateDept($requests['id'],$data);
-        if($DeptInfo){
-            return response()->json(
-                $this->success_rows(1,'更新成功',$DeptInfo)
-            );
-        }else{
-            return response()->json(
-                $this->success_rows(2,'更新失败')
-            );
-        }
 
+        ];
+        $DeptInfo = $this->TeacherDept->AddDept($data);
+        return response()->json(
+            $this->success_rows(1,'添加成功',$DeptInfo)
+        );
     }
 
     /**
@@ -130,27 +80,14 @@ class DeptController extends MscController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function DelDept(Request $request){
-        $this->validate($request,[
-            'id'   => 'required|integer',
-        ]);
+        $this->validate($request,[]);
+        $data = [
 
-        $requests = $request->all();
-        $DeptIdArr[] = intval($requests['id']);
-        //递归找出所有子级
-        $IdArr = $this->TeacherDept->GetChildIdArr($requests['id']);
-
-        $IdArr = array_merge($DeptIdArr,$IdArr);
-        $DeptInfo = $this->TeacherDept->DelDept($IdArr);
-        if($DeptInfo){
-            return response()->json(
-                $this->success_rows(1,'删除成功',count($IdArr),10,0,$IdArr)
-            );
-        }else{
-            return response()->json(
-                $this->success_rows(2,'删除失败')
-            );
-        }
-
+        ];
+        $DeptInfo = $this->TeacherDept->AddDept($data);
+        return response()->json(
+            $this->success_rows(1,'添加成功',$DeptInfo)
+        );
     }
 
     /**
