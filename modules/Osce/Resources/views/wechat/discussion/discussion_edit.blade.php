@@ -49,7 +49,7 @@ $(function(){
         <a class="left header_btn" href="{{route('osce.wechat.getCheckQuestion',['id'=>$id])}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-       	提问
+       	编辑
     </div>
     <form class="quiz_form" action="{{  route('osce.wechat.postEditQuestion') }}" method="post" id="list_form">
 		@foreach($list as $list)
@@ -59,11 +59,11 @@ $(function(){
 	    </div>
 	    <div class="form-group">
 	      <label class="" for="name">内容：</label>
-	      <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5">{{  $list->content  }}</textarea>
+	      <textarea class="form-control" style="width:96%;margin:0 2%;height:100px;resize: none;" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5">{{  $list->content  }}</textarea>
 	    </div>
 	    <div class="form-group">
 			<input type="hidden" name="id" value="{{ $list->id }}">
-    		<input class="btn btn2" type="submit" value="提交"/>
+    		<input style="width:96%;margin:0 2%;" class="btn btn2" type="submit" value="提交"/>
     	</div>
 			@endforeach
     </form>
