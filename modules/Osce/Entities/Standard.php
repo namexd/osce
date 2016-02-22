@@ -50,6 +50,8 @@ class Standard extends CommonModel
             if(array_key_exists($proint->id,$data))
             {
                 $prointData['test_term']    =   $data[$proint->id];
+                $prointData['test_term']['real']    = 0;
+
             }
             else
             {
