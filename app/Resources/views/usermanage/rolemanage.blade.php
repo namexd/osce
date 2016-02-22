@@ -87,12 +87,13 @@
                 $(this).parents('.pnotice').remove();
             });
 
+            $('.pnotice').css('display','none');
             //错误提示
             var msg = $('.pnotice').find('div').find('div').eq(0).text();
             if(msg==''){
                 return;
             }else{
-               layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{icon: 2,time:1000000000});
+               layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{icon: 2});
             }
 
         })
