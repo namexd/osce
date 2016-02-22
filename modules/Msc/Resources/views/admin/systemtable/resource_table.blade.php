@@ -9,18 +9,79 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('msc/admin/systemtable/systemtable.js')}}"></script>
+    <script>
+        $(function(){
+//            删除
+            $(".delete").click(function(){
+                var this_id = $(this).siblings(".setid").val();
+                //询问框
+                layer.confirm('您确定要删除该资源？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    layer.msg('删除成功', {icon: 1,time: 1000});
+                });
+            });
+//            停用
+            $(".stop").click(function(){
+                var this_id = $(this).siblings(".setid").val();
+
+                //询问框
+                layer.confirm('您确定要停用该资源？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    layer.msg('停用成功', {icon: 1,time: 1000});
+                });
+            });
+//            编辑
+            $('#add_from').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    kinds: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '资源类型不能为空'
+                            }
+                        }
+                    },
+                    name: {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '资源名称不能为空'
+                            }
+                        }
+                    },
+                    type: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!-1).*$/,
+                                message: '请选择状态'
+                            }
+
+                        }
+                    },
+
+                }
+            });
+        })
+    </script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'resource_table'}" />
+	<input type="hidden" id="parameter" value="" />
 	<div class="wrapper wrapper-content animated fadeInRight">
 		<div class="row table-head-style1">
             <div class="col-xs-6 col-md-3">
                 <form action="" method="get">
                     <div class="input-group">
-                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="{{@$keyword}}">
-                        <input type="hidden" name="status" class="input-sm form-control" value="{{@$status}}">
+                        <input type="text" id="keyword" name="keyword" placeholder="搜索" class="input-sm form-control" value="">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-primary" id="search"><i class="fa fa-search"></i></button>
                         </span>
@@ -28,7 +89,11 @@
                 </form>
             </div>
             <div class="col-xs-6 col-md-9 user_btn">
-                <button href="" id="addResources" class="right btn btn-success" data-toggle="modal" data-target="#myModal">新增资源</button>
+                <button class="btn btn_pl btn-success right">
+                    <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none;">
+                        <span style="color: #fff">添加资源</span>
+                    </a>
+                </button>
             </div>
 		</div>
         <div class="ibox float-e-margins">
@@ -46,15 +111,17 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>''])}}">全部</a>
+                                        <a href="#">耗材</a>
                                     </li>
-                                    @if(!empty($devicetype))
-                                        @foreach($devicetype as $type)
-                                            <li>
-                                                <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'devices_cate_id'=>@$type->id])}}">{{$type->name}}</a>
-                                            </li>
-                                        @endforeach
-                                    @endif
+                                    <li>
+                                        <a href="#">设备</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">模型</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">虚拟设备</a>
+                                    </li>
                                 </ul>
                             </div>
                         </th>
@@ -67,14 +134,13 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        
-                                        <a href="{{ route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'3','devices_cate_id'=>$devices_cate_id])}}">全部</a>
+                                        <a href="#">全部</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'2','devices_cate_id'=>$devices_cate_id])}}">正常</a>
+                                        <a href="#">正常</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('msc.admin.resources.ResourcesIndex',['keyword'=>@$keyword,'status'=>'1','devices_cate_id'=>$devices_cate_id])}}">停用</a>
+                                        <a href="#">停用</a>
                                     </li>
                                 </ul>
                             </div>
@@ -83,147 +149,121 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($list))
-                        @foreach($list as $k => $val)
                     <tr>
-                        <td>{{($number+$k)}}</td>
-                        <td class="name">{{$val['name']}}</td>
-
-                        <td class="catename"   data="{{$val['devices_cate_id']}}">{{$val['catename']}}</td>
-
-                        <td class="detail">{{$val['detail']}}</td>
-
-                        <td class="status" data="{{$val['status']}}">@if($val['status']==1)正常@else<span class="state2">停用</span>@endif</td>
+                        <td>1</td>
+                        <td>听诊器</td>
+                        <td>耗材</td>
+                        <td></td>
+                        <td>正常</td>
                         <td>
-                            <a href=""   data="{{$val['id']}}" class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
-
-                            @if($val['status']==1)
-                                <a   data="{{$val['id']}}"  data-type="0"  class="state2 modal-control stop">停用</a>
-                            @else
-                                <a   data="{{$val['id']}}" data-type="1" class="state2 modal-control stop">启用</a>
-                            @endif
-                            <a   data="{{$val['id']}}" class="state2 edit_role modal-control delete">删除</a>
+                            <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
+                            <a class="state2 modal-control stop">停用</a>
+                            <a class="state2 edit_role modal-control delete">删除</a>
                             <input type="hidden" class="setid" value="1"/>
                         </td>
                     </tr>
-                    @endforeach
-                    @endif
+                    <tr>
+                        <td>2</td>
+                        <td>听诊器</td>
+                        <td>耗材</td>
+                        <td></td>
+                        <td class="state2">停用</td>
+                        <td>
+                            <a href=""  class="state1 edit" data-toggle="modal" data-target="#myModal" style="text-decoration: none"><span>编辑</span> </a>
+                            <a class="state2 modal-control stop">停用</a>
+                            <a class="state2 edit_role modal-control delete">删除</a>
+                            <input type="hidden" class="setid" value="1"/>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </form>
         </div>
         {{--分页--}}
         <div class="btn-group pull-right">
-            <?php  echo $pagination->appends(['keyword'=>$keyword,'status'=>$status,'devices_cate_id'=>$devices_cate_id])->render()?>
+            <ul class="pagination">
+                <li>
+                    <span>«</span>
+                </li>
+                <li class="active">
+                    <span>1</span>
+                </li>
+                <li>
+                    <a>2</a>
+                </li>
+                <li>
+                    <a>3</a>
+                </li>
+                <li>
+                    <a>4</a>
+                </li>
+                <li>
+                    <a>5</a>
+                </li><li>
+                    <a>6</a>
+                </li>
+                <li>
+                    <a>7</a>
+                </li>
+                <li>
+                    <a>»</a>
+                </li>
+
+            </ul>
         </div>
 	</div>
 @stop
 
 @section('layer_content')
-    <input type="hidden" value="" id="">
-    <div id="form_box">
-        {{--新增--}}
-        <input type="hidden" value="{{ route('msc.admin.resources.ResourcesAdd') }}" id="addUrl">
-        <form class="form-horizontal" id="add_from" novalidate="novalidate"  action="{{ route('msc.admin.resources.ResourcesAdd') }}" method="post">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    {{--编辑--}}
+    <form class="form-horizontal" id="add_from" novalidate="novalidate" action="/msc/admin/user/student-add" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">新增资源/编辑资源</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="name" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b" name="kinds">
+                        <option value="-1">请选择类型</option>
+                        <option value="0">模型</option>
+                        <option value="1">设备</option>
+                        <option value="2">耗材</option>
+                        <option value="3">虚拟设备</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">说明</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control name add-name" name="explain" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
+                <div class="col-sm-9">
+                    <select id="select_Category"   class="form-control m-b" name="type">
+                        <option value="-1">请选择状态</option>
+                        <option value="0">正常</option>
+                        <option value="1">停用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2 right">
+                    <button class="btn btn-primary"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                    <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+                </div>
+            </div>
+        </div>
+    </form>
 
-                <h4 class="modal-title" id="myModalLabel">新增资源</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control name add-name" name="name" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category" class="form-control m-b cate add_select" name="devices_cate_id">
-                            <option value="-1">请选择类型</option>
-                            @if(!empty($devicetype))
-                                @foreach($devicetype as $type)
-                                    <option value="{{$type->id}}">{{$type->name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">说明</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control add-name detail" name="detail" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category"   class="form-control m-b state" name="status">
-                            <option value="-1">请选择状态</option>
-                            <option value="1">正常</option>
-                            <option value="0">禁用</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-2 right">
-                        <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-        {{--编辑--}}
-        <input type="hidden" value="{{route("msc.admin.resources.ResourcesSave")}}" id="editUrl">
-        <form class="form-horizontal" id="edit_from" novalidate="novalidate" action="{{route("msc.admin.resources.ResourcesSave")}}" method="post">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">编辑资源</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源名称</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control name add-name" name="name" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>资源类型</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category" class="form-control m-b cate edit_select" name="devices_cate_id">
-                            @if(!empty($devicetype))
-                                @foreach($devicetype as $type)
-                                    <option value="{{$type->id}}">{{$type->name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">说明</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control name add-name" name="detail" value="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"><span class="dot">*</span>状态</label>
-                    <div class="col-sm-9">
-                        <select id="select_Category"   class="form-control m-b state" name="status">
-                            <option value="1">正常</option>
-                            <option value="0">禁用</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-2 right">
-                        <button class="btn btn-primary sure_btn"  type="submit" >确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
-                        <button class="btn btn-white2 right" type="button" data-dismiss="modal">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
 @stop

@@ -30,9 +30,9 @@
         </div>
         <div class="col-xs-9 col-md-6">
             <div class="pull-right">
-                <button type="button" class="btn btn_pl btn-white btn_margin">导出excel</button>
-                <button type="button" class="btn btn_pl btn-white btn_margin">教务处导入</button>
-                <button type="button" class="btn btn_pl btn-white btn_margin">其他导入</button>
+                <button type="button" class="btn btn_pl btn-white">导出excel</button>
+                <button type="button" class="btn btn_pl btn-white">教务处导入</button>
+                <button type="button" class="btn btn_pl btn-white">其他导入</button>
                 <button type="button" class="btn btn_pl btn-success">上传校验</button>
             </div>
         </div>
@@ -58,7 +58,7 @@
                 <th>证件号码</th>
                 <th>
                     <div class="btn-group Examine">
-                        <button data-toggle="dropdown" class="btn btn-white3 dropdown-toggle" type="button">审核状态<span class="caret"></span>
+                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">审核状态 <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
