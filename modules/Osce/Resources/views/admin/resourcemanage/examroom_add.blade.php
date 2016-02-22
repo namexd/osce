@@ -21,6 +21,11 @@
                             notEmpty: {/*非空提示*/
                                 message: '名称不能为空'
                             },
+                            stringLength: {/*长度提示*/
+                                min: 2,
+                                max: 20,
+                                message: '名称长度请在2到20之间'
+                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route('osce.admin.room.postNameUnique')}}',//验证地址
@@ -43,6 +48,11 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '功能描述不能为空'
+                            },
+                            stringLength: {/*长度提示*/
+                                min: 0,
+                                max: 50,
+                                message: '描述长度请在0到50之间'
                             }
                         }
                     },
@@ -52,6 +62,11 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '地址不能为空'
+                            },
+                            stringLength: {/*长度提示*/
+                                min: 0,
+                                max: 50,
+                                message: '地址长度请在0到50之间'
                             }
                         }
                     }
