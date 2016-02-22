@@ -115,9 +115,12 @@ class CourseController extends CommonController
         $subjectId = $request->input('subject_id');
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
         //将排名的数组循环插入表中
+        date_default_timezone_set("UTC");
         foreach ($data as $key => &$item) {
+            $item->exam_result_time = date('H:i:s',$item->exam_result_time);
             $item->ranking = $key + 1;
         }
+        date_default_timezone_set("PRC");
 
         return view('osce::admin.statistics_query.subject_student_list', [
             'data' => $data,
