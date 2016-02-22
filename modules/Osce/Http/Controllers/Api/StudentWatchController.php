@@ -238,8 +238,6 @@ class StudentWatchController extends CommonController
         return $data;
     }
 
-
-
     private function  getExamComplete($examQueue){
         //根据考试获取到考试流程
         $ExamFlowModel = new  ExamFlow();

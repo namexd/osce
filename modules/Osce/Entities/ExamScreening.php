@@ -38,7 +38,7 @@ class ExamScreening extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamRoom','exam_id','exam_id');
     }
 
-    public function invites(){
+    public function invite(){
         return $this->hasMany('\Modules\Osce\Entities\Invite','exam_screening_id','id');
     }
 
