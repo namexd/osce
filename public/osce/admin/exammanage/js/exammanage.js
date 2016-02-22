@@ -463,6 +463,9 @@ function timePicker(background){
      */
     $('table').on('click','.end',function(){
 
+        var timeTop = ($(this).offset().top)+50;
+        $(document).scrollTop(timeTop);
+
         //限制时间选择
         var thisElement = $(this).parent();
         if(!thisElement.prev().prev().length){
