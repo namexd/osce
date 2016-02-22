@@ -80,6 +80,17 @@ class StudentWatchController extends CommonController
                 $this->success_data($data, $code)
             );
         }
+        //判定腕表是否解绑
+        $watch =WatchLog::where('watch_id',$watchId->id)->where('action','=','解绑')->orderBy('created_at','desc')->first();
+        if($watch){
+            $code = -1;
+            $data['title'] = '该腕表已解绑';
+            return response()->json(
+                $this->success_data($data, $code)
+            );
+        }
+
+
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (!$watchStudent) {
@@ -89,6 +100,8 @@ class StudentWatchController extends CommonController
                 $this->success_data($data, $code)
             );
         }
+
+
         //得到场次id
 //        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
