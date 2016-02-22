@@ -13,6 +13,11 @@
         border-top: 0;
         padding-left: 0;
     }
+    .form-horizontal tbody .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: center;
+    }
 </style>
 @stop
 
