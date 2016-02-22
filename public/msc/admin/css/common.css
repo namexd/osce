@@ -42,11 +42,8 @@ a{-webkit-touch-callout:none;}
 .txta_l{text-align: left;}
 .txta_r{text-align: right;}
 .overflow{overflow: hidden;}
-.weight{font-weight: 700;}
 
 /*width*/
-.w_40{width: 40%;}
-.w_60{width: 60%;}
 .w_90{width:90%;margin:0 auto; }
 .w_92{width:92%;margin:0 auto; }
 .w_94{width:94%;margin:0 auto; }
@@ -65,7 +62,7 @@ a{-webkit-touch-callout:none;}
 .marb_15{margin-bottom:1.5em}
 .marb_25{margin-bottom: 25px}
 .marr_5{margin-right:0.5em}
-.marr_10{margin-right:1em}
+.marl_10{margin-right:1em}
 .marl_5{margin-left:0.5em}
 .marl_10{margin-left:1em}
 .marr_15{margin-right: 15px}
@@ -81,7 +78,6 @@ a{-webkit-touch-callout:none;}
 .padb_8{padding-bottom:0.8em}
 .padb_10{padding-bottom:1em}
 .padt_7{padding-top: 7px;}
-.padl_20{padding-left: 20px;}
 
 /*�����������*/
 .clearfix{zoom:1}
@@ -102,23 +98,6 @@ a{-webkit-touch-callout:none;}
 .check_icon.check{background-position:-32px 0}
 .check_label:hover .check_icon.check{background-position:-32px 0}
 .check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
-.display_inline{display: inline-block;}
-.check_name{font-weight: normal;float: right;text-indent: 6px;}
-
-/*验证*/
-.has-error .form-control{border-color: #ed5565!important;}
-.code_add,.code_del{position:absolute;right:15px;top:0;}
-.add_box .glyphicon-remove,.add_box .glyphicon-ok{display:none!important;}
-
-/*选项框样式*/
-.treeview .checked {background-color: #408aff; color: #fff;}
-.list-group-item{cursor:pointer;}
-.select{width: 100%;border-color: #ccc;padding: 5px;}
-.lab_num{display: none;}
-.fa-angle-right{font-size: 30px;margin-top: -8px}
-.deg{transform:rotate(90deg);}
-.border-bottom{border-bottom:none!important;}
-
 
 /*�����޸�buttonĬ����ɫЧ��*/
 .btn-primary{
@@ -132,21 +111,23 @@ a{-webkit-touch-callout:none;}
 .btn-default{background-color: #fff;border-color: #ccc;color: #333;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
 
-.btn-white3{font-weight: 700;background-color: #fff;margin-bottom: 0!important;}
-
-.btn_margin{margin-right: 10px}
-
+/*覆盖.btn-white*/
+.btn-white3{background: #fff;}
+.btn-white3:focus, .btn-white3:hover,.btn-white3, .open .dropdown-toggle.btn-white3 {border: none;font-weight: 700;}
+.float-e-margins .btn{margin-bottom: 0;}
+.button_margin{margin-right: 10px;}
 
 
 
 .has-error .form-control{border-color: #ed5565!important;}
 
 .btn-primary[disabled]{background:#eee;color:#aaa;border:1px solid #aaa;}
-/*�����޸�layerЧ��*/
+/*覆盖޸layer 效果*/
 .modal-title{color: #408aff; font-size: 16px;}
 .btn-success{background-color: #408aff;}
 .modal-header .close { background-color: #9bc1fd; width: 20px;height: 20px; border-radius:10px;}
-
+body .layer-ext-moon .layui-layer-btn{background:inherit;border-top: none;}
+body .layer-ext-moon .layui-layer-btn .layui-layer-btn0{background:#408aff; border: 1px solid ##408aff; }
 /*�����޸�layer_dateЧ��*/
 
 .laydate-icon,
@@ -162,8 +143,8 @@ a{-webkit-touch-callout:none;}
 .input-group-btn{ height: 30px;}
 .test1{ background: #fff;color: #1b7a8b;}
 .table thead th{ font-size: 14px;}
-.btn-link{height:30px;min-width:80px;line-height: 16px; color: #fff;}
-
+.table .btn-link{height:30px;min-width:80px;line-height: 16px; color: #fff;}
+.table .describe{word-wrap: break-word;}
 .table a .state1{ color:#408aff;}
 .table a .state2{ color:#ed5565;}
 .table a .state3{ color:#21b9bb;}
@@ -173,10 +154,12 @@ a{-webkit-touch-callout:none;}
 .table .state3{ color:#21b9bb;}
 .table .state4{ color:#c2c2c2;}
 
-.control-label{ font-size: 14px;}
+.modal-body .control-label{ font-size: 14px;}
+.modal-body .control-label .dot{ color:#ed5565;}
+.modal-body .form-group:last-child{margin-bottom:0;}
 
 
-/*轮播图效果*/
+    /*轮播图效果*/
 .scroll_image{ width: 100%; position: relative;}
 .swiper-container{width:100%;height:100%;}
 .swiper-slide{text-align:center;font-size:18px;background:#fff;
@@ -202,9 +185,3 @@ a{-webkit-touch-callout:none;}
 .img_box li{float:left;width:240px;margin:0 10px 10px 0;position: relative;}
 .img_box li .del_img{background:rgba(255,255,255,.5);position:absolute;right:10px;top:10px;width:20px;cursor:pointer;height:20px;line-height:18px;text-align:center;border-radius:50%;}
 .img_box li .del_img:hover{background:rgba(255,255,255,1);}
-
-/*日期选择日历插件样式*/
-.laydate_div .laydate-icon{width: 100%;border-radius: 2px;padding-left: 5px;font-size: 14px;background-image: none;}
-/*必填选项颜色*/
-.dot{color: #ed5565;}
-

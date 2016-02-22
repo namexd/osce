@@ -46,10 +46,19 @@
                         {
                             var ThisName    =   data[i].user.name;
                         }
+                        //字数限制
+                        console.log((data[i].content).length);
+                        var content = '';
+                        if((data[i].content).length>45){
+                            content = (data[i].content).substring(0,45) + '...';
+                        }else{
+                            content = data[i].content;
+                        }
+
                         html += '<li>'+
 						        	'<a class="nou" href="{{route('osce.wechat.getCheckQuestion')}}?id='+data[i].id+'">'+
 						        		'<p class="font14 fontb clo3 p_title">'+data[i].title+'</p>'+
-						        		'<p class="font12 clo9 main_txt">'+data[i].content+'</p>'+
+						        		'<p class="font12 clo9 main_txt">'+content+'</p>'+
 						        		'<p class="font12 p_bottom">'+
 						        			'<span class="student_name">'+ThisName+'</span>'+
 						        			'<span class="clo0">&nbsp;·&nbsp;</span>'+
