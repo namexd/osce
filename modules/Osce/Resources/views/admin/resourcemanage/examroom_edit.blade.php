@@ -105,7 +105,6 @@
                                 <input type="text" ng-model="num" id="code" name="code" value="{{$data->code}}" class="form-control">
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">场所类别</label>
 
