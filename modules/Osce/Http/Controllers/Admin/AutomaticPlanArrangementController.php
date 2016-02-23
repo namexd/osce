@@ -17,17 +17,28 @@ use Illuminate\Http\Request;
 
 class AutomaticPlanArrangementController extends CommonController
 {
-
+    /**
+     * 智能排考的着陆页
+     * @param Request $request
+     * @author Jiangzhiheng
+     * @time 2016-02-22 18：01
+     * @return \Illuminate\Http\JsonResponse
+     */
     function getIndex(Request $request) {
-        //todo 着陆页，先不忙
+
         $this->validate($request,[
             'exam_id' => 'required|integer'
         ]);
 
         $examId = $request->input('exam_id');
+        try {
+            $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
+            /** @var 考试id $examId */
+            return response()->json($this->success_data($automaticPlanArrangement->output($examId)));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
 
-        $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
-        $automaticPlanArrangement->output($examId);
     }
 
     /**
@@ -35,6 +46,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @author Jiangzhiheng
      * @time 2016-02-19 09:34
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     function postBegin(Request $request) {
         $this->validate($request,[
@@ -43,7 +55,12 @@ class AutomaticPlanArrangementController extends CommonController
 
         $examId = $request->input('exam_id');
 
-        $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
-        $automaticPlanArrangement->plan($examId);
+        try {
+            $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
+//            dd($automaticPlanArrangement->plan($examId));
+            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 }
