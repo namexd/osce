@@ -21,10 +21,10 @@
 
 @section('content')
     <div class="user_header">
-        <a class="left header_btn" href="{{route('osce.wechat.user.getWebLogin')}}">
+        <a class="left header_btn" href="{{( is_null(session('referer'))? route('osce.wechat.user.getWebLogin'): session('referer') )}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-              忘记密码
+          忘记密码
     </div>
     <div class="text-box">
         <form id="forget" action="{{route('osce.wechat.user.postResetPassword')}}" method="post" >
