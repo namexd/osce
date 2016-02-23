@@ -59,7 +59,6 @@
                         </div>
                     </form>
                 </div>
-                </div>
 
                 <table class="table table-striped" id="table-striped" style="background:#fff">
                     <thead>
