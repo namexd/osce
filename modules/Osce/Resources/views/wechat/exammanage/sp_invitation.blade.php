@@ -56,7 +56,8 @@
             <li>
                 <a class="title check" href="{{route('osce.wechat.invitation.getMsg',['id'=>$data->id])}}"> 邀请您参加{{$data->name}}相关考试</a>
                 {{--<p class="title check">{{$data->name}}</p>--}}
-                <p class="clearfix time"><span class="year">{{date('Y-m-d',strtotime($data->created_at))}}</span><span>{{date('H-i-s',strtotime($data->created_at))}}</span>
+                <p class="clearfix time"><span class="year">{{date('Y-m-d H:i',strtotime($data->created_at))}}</span>
+                {{--<span>{{date('H:i',strtotime($data->created_at))}}</span>--}}
                     <span class="right clo6">@if($data->status == 0)还未处理 @elseif($data->status==1)已同意@elseif($data->status==2)已拒绝@endif</span></p>
             </li>
             @empty

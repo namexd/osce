@@ -1636,13 +1636,16 @@ class ExamController extends CommonController
         return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
     }
 
-    public function postExamRemind(Request $request){
-        try{
-            $this->validate($request,[
-                'content'  => 'required',
-                'id'       => 'required|integer'
-            ]);
+    public function postExamRemind(Request $request)
+    {
+        $this->validate($request,[
+            'content'  => 'required',
+            'id'       => 'required|integer'
+        ],[
+            'content.required'  => '说明内容必填'
+        ]);
 
+        try{
             $content = $request->get('content');
             $id      = $request->get('id');
             //保存代考区说明信息

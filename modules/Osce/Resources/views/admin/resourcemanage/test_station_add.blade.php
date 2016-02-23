@@ -80,7 +80,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
-                                    <select id="type" required  class="form-control m-b" name="type">
+                                    <select id="type" required  class="form-control" name="type">
                                         @foreach($placeCate as $key=>$item)
                                             <option value="{{$key}}">{{$item}}</option>
                                         @endforeach
@@ -99,7 +99,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">科目</label>
                                 <div class="col-sm-10">
-                                    <select id="subject_id"  class="form-control m-b" name="subject_id">
+                                    <select id="subject_id"  class="form-control" name="subject_id">
                                         @foreach($subject as $key=>$item)
                                             <option value="{{$item->id}}">{{$item->title}}</option>
                                         @endforeach
@@ -111,7 +111,7 @@
                             <div class="form-group noTheory">
                                 <label class="col-sm-2 control-label">病例</label>
                                 <div class="col-sm-10">
-                                    <select id=""  class="form-control m-b" name="case_id">
+                                    <select id=""  class="form-control" name="case_id">
                                         @foreach($case as $item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
@@ -123,7 +123,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">所属考场</label>
                                 <div class="col-sm-10">
-                                    <select id=""  class="form-control m-b" name="room_id">
+                                    <select id=""  class="form-control" name="room_id">
                                         @foreach($room as $item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
@@ -135,7 +135,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">关联摄像机</label>
                                 <div class="col-sm-10">
-                                    <select id=""  class="form-control m-b" name="vcr_id">
+                                    <select id=""  class="form-control" name="vcr_id">
                                         @foreach($vcr as $key=>$item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
