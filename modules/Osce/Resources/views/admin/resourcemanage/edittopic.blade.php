@@ -6,10 +6,18 @@
         margin-bottom: 0;
     }
     td input{margin: 5px 0;}
-    .btn-outline:hover{color: #fff!important;}
+    #file0{
+        height: 34px;
+        width: 70px;
+        opacity: 0;
+        position: relative;
+        top: -20px;
+        left: 0;
+    }
     .ibox-content{padding-top: 20px;}
-    .ibox-title{border-top: 0;}
-    .ibox-content{
+    .btn-outline:hover{color: #fff!important;}
+    .form-group .ibox-title{border-top: 0;}
+    .form-group .ibox-content{
         border-top: 0;
         padding-left: 0;
     }
@@ -102,7 +110,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="note" value="{{$item->description}}"/>
+                                <input id="select_Category" required  class="form-control" name="note" value="{{$item->description}}"/>
                             </div>
                         </div>
 
