@@ -337,11 +337,13 @@ class StudentWatchController extends CommonController
             ->get();
 
           foreach($willStudents as $key=>$willStudent){
+              dump($key);
               if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
                   continue;
               }
           }
+        dump($studentNum);
         return $studentNum;
     }
 
