@@ -95,14 +95,15 @@
                             <input class="form-control m-b" name="student_name" value="{{$student_name==null?'':$student_name }}"/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-3 col-xs-12">
+                    <div class="col-md-3 col-sm-3 col-xs-12" style="padding-right:0; ">
                         <label class="pull-left left-text">使用时间:</label>
                         <div class="pull-left right-list">
                             <input class="form-control" name="begin_dt"  id="starts" value="{{$begin_dt==null?'':$begin_dt }}"/>
                         </div>
+
+                        <label class="pull-left left-text" style="float: right!important;">到</label>
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-12">
-                        <label class="pull-left left-text">到</label>
                         <div class="pull-left right-list" style="margin-right:20px;" >
                             <input class="form-control" name="end_dt" id="ends" value="{{$end_dt==null?'':$end_dt }}"/>
                         </div>
