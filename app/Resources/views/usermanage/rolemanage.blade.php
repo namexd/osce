@@ -23,7 +23,7 @@
         display: inline-block;
         height: 32px!important;
         width: 32px!important;
-        background:url('{{asset("msc/admin/plugins/js/plugins/layer/skin/default/icon.png")}}') no-repeat -192px 0!important;
+        background:url('{{asset("osce/admin/plugins/js/plugins/layer/skin/default/icon.png")}}') no-repeat -192px 0!important;
     }
     </style>
 @stop
@@ -94,7 +94,6 @@
                 $(this).parents('.pnotice').remove();
             });
 
-            $('.pnotice').css('display','none');
             //错误提示
             var msg = $('.pnotice').find('div').find('div').eq(0).text();
             if(msg==''){
@@ -118,7 +117,7 @@
         }
     ?>
     @forelse($errorsInfo as $errorItem)
-        <div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;">
+        <div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;display: none;">
             <div class="" style="background-color: #f2dede;">
                 <div style="float: left;" style="color: #a94442;">{{$errorItem}}</div>
                 <div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice">&nbsp;X&nbsp;</div>
