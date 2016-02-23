@@ -84,7 +84,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
-                                    <select id="type" required  class="form-control m-b" name="type" >
+                                    <select id="type" required  class="form-control" name="type" >
                                         @foreach($placeCate as $key=>$item)
                                             <option value="{{$key}}"
                                                 @if($rollmsg['type'] == $key)
@@ -108,7 +108,7 @@
                             <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
                                 <label class="col-sm-2 control-label">科目</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="subject_id">
+                                    <select id="" required  class="form-control" name="subject_id">
                                         <option value="0">请选择</option>
                                         @foreach($subject as $key=>$item)
                                             <option value="{{$item['id']}}"
@@ -125,7 +125,7 @@
                             <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
                                 <label class="col-sm-2 control-label">病例</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="case_id">
+                                    <select id="" required  class="form-control" name="case_id">
                                         <option value="0">请选择</option>
                                         @foreach($case as $key=>$item)
                                             <option value="{{$item['id']}}"
@@ -142,7 +142,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" required>所属考场</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="room_id">
+                                    <select id="" required  class="form-control" name="room_id">
                                         <option value="0">请选择</option>
                                         @foreach($room as $key=>$item)
                                             <option value="{{$item['id']}}"
@@ -159,7 +159,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">关联摄像机</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control m-b" name="vcr_id">
+                                    <select id="" required  class="form-control" name="vcr_id">
                                         <option value="0">请选择</option>
                                         @foreach($vcr as $key=>$item)
                                             <option value="{{$item['id']}}"

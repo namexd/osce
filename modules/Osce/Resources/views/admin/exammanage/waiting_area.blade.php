@@ -12,8 +12,8 @@
 <script type="text/javascript" >
 	var ue = UE.getEditor('editor');
 	$(function(){
-		@if(isset($_GET['suc']) && $_GET['suc']==1)
-            layer.alert('保存成功！');
+		@if(isset($_GET['suc']) && $_GET['suc']==1 && empty($errors->getMessages()))
+            layer.msg('保存成功！');
 		@endif
     })
 </script>

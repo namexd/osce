@@ -49,11 +49,6 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '功能描述不能为空'
-                            },
-                            stringLength: {/*长度提示*/
-                                min: 0,
-                                max: 50,
-                                message: '描述长度请在0到50之间'
                             }
                         }
                     },
@@ -63,11 +58,6 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '地址不能为空'
-                            },
-                            stringLength: {/*长度提示*/
-                                min: 0,
-                                max: 50,
-                                message: '地址长度请在0到50之间'
                             }
                         }
                     }
@@ -105,7 +95,6 @@
                                 <input type="text" ng-model="num" id="code" name="code" value="{{$data->code}}" class="form-control">
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">场所类别</label>
 
@@ -122,6 +111,7 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">关联摄像机</label>
                             <div class="col-sm-10">

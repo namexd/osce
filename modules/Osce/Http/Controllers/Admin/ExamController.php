@@ -783,18 +783,23 @@ class ExamController extends CommonController
         $inviteData = Invite::status($exam_id);
 
         //将邀请状态插入$stationData
-        $examRoomData111=  [];
+        $examRoomData=  [];
         foreach ($examStationData as $key=>&$items) {
             foreach ($items as &$item) {
-                foreach ($inviteData as $key1=>$value) {
+                $item->invite_status = 0;
+                foreach ($inviteData as $value) {
                     if ($item->id == $value->invite_user_id) {
+
                         $item->invite_status = $value->invite_status;
-                    } else {
-                        $item->invite_status = 0;
+//
                     }
+//                    else {
+//                        $item->invite_status = 0;
+//                    }
                 }
             }
         }
+//        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,
@@ -1631,13 +1636,16 @@ class ExamController extends CommonController
         return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
     }
 
-    public function postExamRemind(Request $request){
-        try{
-            $this->validate($request,[
-                'content'  => 'required',
-                'id'       => 'required|integer'
-            ]);
+    public function postExamRemind(Request $request)
+    {
+        $this->validate($request,[
+            'content'  => 'required',
+            'id'       => 'required|integer'
+        ],[
+            'content.required'  => '说明内容必填'
+        ]);
 
+        try{
             $content = $request->get('content');
             $id      = $request->get('id');
             //保存代考区说明信息

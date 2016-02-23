@@ -76,25 +76,14 @@
 </div>
 <script>
     $(function(){
-        {{--$(".fa-trash-o").click(function(){--}}
-            {{--var thisElement=$(this);--}}
-
-            {{--layer.alert('确认删除？',function(){--}}
-                {{--$.ajax({--}}
-                    {{--type:'get',--}}
-                    {{--async:false,--}}
-                    {{--url:"{{route('osce.admin.user.getDelUser')}}?id="+thisElement.attr('uid'),--}}
-                    {{--success:function(data){--}}
-                        {{--location.reload();--}}
-                    {{--}--}}
-                {{--})--}}
-            {{--});--}}
-        {{--})--}}
         //删除用户
         $(".fa-trash-o").click(function(){
             var thisElement=$(this);
             var uid=thisElement.attr("uid");
-            layer.alert('确认删除？',function(){
+
+            layer.confirm('确认删除？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
                 $.ajax({
                     type:'post',
                     async:true,
@@ -109,7 +98,8 @@
                     }
                 })
             });
-        })
+    })
+
     })
 </script>
 @stop{{-- 内容主体区域 --}}

@@ -107,7 +107,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control m-b" name="desc"/>
+                                <input id="select_Category" required  class="form-control" name="desc"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

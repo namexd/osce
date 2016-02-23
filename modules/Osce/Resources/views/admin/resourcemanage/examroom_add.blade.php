@@ -48,11 +48,6 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '功能描述不能为空'
-                            },
-                            stringLength: {/*长度提示*/
-                                min: 0,
-                                max: 50,
-                                message: '描述长度请在0到50之间'
                             }
                         }
                     },
@@ -62,11 +57,6 @@
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '地址不能为空'
-                            },
-                            stringLength: {/*长度提示*/
-                                min: 0,
-                                max: 50,
-                                message: '地址长度请在0到50之间'
                             }
                         }
                     }

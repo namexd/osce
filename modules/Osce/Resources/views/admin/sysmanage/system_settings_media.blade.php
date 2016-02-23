@@ -189,7 +189,7 @@
 			        <div class="ibox-content">
 			            <div class="row">
 			                <div class="col-md-12">
-		                        <div class="clearfix form-group">
+		                        <div class="clearfix form-group" style="margin-bottom: 0;">
 		                            <label class="col-sm-2 control-label">通知方式：</label>
 		                            <div class="col-sm-10" id="checkbox_div">
 		                            	<label class="check_label checkbox_input">

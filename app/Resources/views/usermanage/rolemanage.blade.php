@@ -14,9 +14,16 @@
         font-family: 微软雅黑;
         font-size: 14px;
     }
-    .msg-error.layui-layer{
+    .msg-error{
         background: #f2dede!important;
-        color: #ed5565;
+        color: #a94442;
+        border-color: #ebccd1!important;
+    }
+    .msg-error i {
+        display: inline-block;
+        height: 32px!important;
+        width: 32px!important;
+        background:url('{{asset("osce/admin/plugins/js/plugins/layer/skin/default/icon.png")}}') no-repeat -192px 0!important;
     }
     </style>
 @stop
@@ -87,13 +94,12 @@
                 $(this).parents('.pnotice').remove();
             });
 
-            $('.pnotice').css('display','none');
             //错误提示
             var msg = $('.pnotice').find('div').find('div').eq(0).text();
             if(msg==''){
                 return;
             }else{
-               layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{icon: 2});
+               layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{skin:'msg-error',icon:1});
             }
 
         })
@@ -111,7 +117,7 @@
         }
     ?>
     @forelse($errorsInfo as $errorItem)
-        <div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;">
+        <div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;display: none;">
             <div class="" style="background-color: #f2dede;">
                 <div style="float: left;" style="color: #a94442;">{{$errorItem}}</div>
                 <div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice">&nbsp;X&nbsp;</div>
@@ -142,7 +148,8 @@
                     <tbody>
                 @foreach($roleList as $key => $role)
                     <tr>
-                        <td class="open-id">{{$key+1}}</td>
+                        <td >{{$key+1}}</td>
+                        <td class="open-id" style="display: none">{{$role->id}}</td>
                         <td class="role_name">{{@$role->name}}</td>
                         <td class="role_descrip">{{@$role->description}}</td>
 

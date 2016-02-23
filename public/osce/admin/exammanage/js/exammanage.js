@@ -2279,11 +2279,11 @@ function examinee_manage(){
             success: function (data, status)
             {
                 if(data.code == 1){
-                    layer.msg('导入成功！',function(){
+                    layer.msg('导入成功！',{skin:'msg-success',icon:1},function(){
                         location.reload();
                     });
                 }else{
-                    layer.alert(data.message,function(){
+                    ayer.msg(data.message,{skin:'msg-error',icon:1},function(){
                         location.reload();
                     });
                 }

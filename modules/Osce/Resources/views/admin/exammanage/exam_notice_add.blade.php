@@ -31,6 +31,7 @@
     .fa-remove{cursor:pointer;}
     .check_label + i.form-control-feedback.glyphicon.glyphicon-ok {top: -2px;}
     .check_label + i.form-control-feedback.glyphicon.glyphicon-remove {top: -2px;}
+    .checkbox_input{margin:0 10px 0 0;font-weight:100;cursor:pointer;}
     </style>
 @stop
 

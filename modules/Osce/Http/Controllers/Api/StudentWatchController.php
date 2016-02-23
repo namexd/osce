@@ -70,9 +70,9 @@ class StudentWatchController extends CommonController
         $watchNfcCode = $request->input('nfc_code');
 
 
+
         //根据设备编号找到设备id
         $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
-
         if (!$watchId) {
             $code = -1;
             $data['title'] = '没有找到到腕表信息';
@@ -81,10 +81,10 @@ class StudentWatchController extends CommonController
             );
         }
         //判定腕表是否解绑
-        $watch =WatchLog::where('watch_id',$watchId->id)->where('action','=','解绑')->orderBy('created_at','desc')->first();
-        if($watch){
+        $watch =Watch::where('id',$watchId->id)->first();
+        if($watch->status==0){
             $code = -1;
-            $data['title'] = '该腕表已解绑';
+            $data['title'] = '该腕表还没有学生绑定';
             return response()->json(
                 $this->success_data($data, $code)
             );
@@ -288,7 +288,6 @@ class StudentWatchController extends CommonController
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
-
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
 
@@ -298,6 +297,7 @@ class StudentWatchController extends CommonController
           }else{
                 $willStudents = $studentnum+1;
           }
+
 
         //判断预计考试时间
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
@@ -335,8 +335,8 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
-
           foreach($willStudents as $key=>$willStudent){
+//
               if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
                   continue;
