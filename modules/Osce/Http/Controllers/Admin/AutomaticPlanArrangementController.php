@@ -18,8 +18,16 @@ use Illuminate\Http\Request;
 class AutomaticPlanArrangementController extends CommonController
 {
 
-    function getIndex() {
+    function getIndex(Request $request) {
         //todo 着陆页，先不忙
+        $this->validate($request,[
+            'exam_id' => 'required|integer'
+        ]);
+
+        $examId = $request->input('exam_id');
+
+        $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
+        $automaticPlanArrangement->output($examId);
     }
 
     /**
