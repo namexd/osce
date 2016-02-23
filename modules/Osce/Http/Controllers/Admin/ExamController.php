@@ -783,18 +783,23 @@ class ExamController extends CommonController
         $inviteData = Invite::status($exam_id);
 
         //将邀请状态插入$stationData
-        $examRoomData111=  [];
+        $examRoomData=  [];
         foreach ($examStationData as $key=>&$items) {
             foreach ($items as &$item) {
-                foreach ($inviteData as $key1=>$value) {
+                $item->invite_status = 0;
+                foreach ($inviteData as $value) {
                     if ($item->id == $value->invite_user_id) {
+
                         $item->invite_status = $value->invite_status;
-                    } else {
-                        $item->invite_status = 0;
+//
                     }
+//                    else {
+//                        $item->invite_status = 0;
+//                    }
                 }
             }
         }
+//        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,

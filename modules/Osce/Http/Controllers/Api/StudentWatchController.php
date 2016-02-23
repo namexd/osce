@@ -81,8 +81,8 @@ class StudentWatchController extends CommonController
             );
         }
         //判定腕表是否解绑
-        $watch =WatchLog::where('watch_id',$watchId->id)->where('action','=','解绑')->orderBy('created_at','desc')->first();
-        if($watch){
+        $watch =WatchLog::where('watch_id',$watchId->id)->orderBy('created_at','desc')->first();
+        if($watch->action=='解绑'){
             $code = -1;
             $data['title'] = '该腕表已解绑';
             return response()->json(
