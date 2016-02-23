@@ -21,7 +21,7 @@
 
                 layer.confirm('确认删除？', {
                     btn: ['确定','取消'] //按钮
-                }, function(){
+                }, function(its){
                     $.ajax({
                         type:'get',
                         async:true,
@@ -34,6 +34,7 @@
                             }
                         },
                         error:function(data){
+                            layer.close(its)
                             layer.msg('没有权限！',{skin:'msg-error',type:1});
                         }
                     })
