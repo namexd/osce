@@ -299,6 +299,7 @@ class StudentWatchController extends CommonController
           }else{
                 $willStudents = $studentnum+1;
           }
+        dump($willStudents,66666);
 
         //判断预计考试时间
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
