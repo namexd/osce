@@ -14,9 +14,16 @@
         font-family: 微软雅黑;
         font-size: 14px;
     }
-    .msg-error.layui-layer{
+    .msg-error{
         background: #f2dede!important;
-        color: #ed5565;
+        color: #a94442;
+        border-color: #ebccd1!important;
+    }
+    .msg-error i {
+        display: inline-block;
+        height: 32px!important;
+        width: 32px!important;
+        background:url('{{asset("msc/admin/plugins/js/plugins/layer/skin/default/icon.png")}}') no-repeat -192px 0!important;
     }
     </style>
 @stop
@@ -93,7 +100,7 @@
             if(msg==''){
                 return;
             }else{
-               layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{icon: 2});
+               layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{skin:'msg-error',icon:1});
             }
 
         })
