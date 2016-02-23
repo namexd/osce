@@ -15,6 +15,7 @@
         .right-list{
             width: 60%;
         }
+        table tbody tr td:last-child{width: initial!important;}
     </style>
 @stop
 
@@ -101,13 +102,13 @@
                             <input class="form-control" name="begin_dt"  id="starts" value="{{$begin_dt==null?'':$begin_dt }}"/>
                         </div>
 
-                        <label class="pull-left left-text" style="float: right!important;">到</label>
+                        <label class="pull-left left-text" style="margin-left: 20px;">到</label>
                     </div>
-                    <div class="col-md-3 col-sm-3 col-xs-12">
+                    <div class="col-md-3 col-sm-3 col-xs-12" style="padding-left: 0;margin-left: -23px;">
                         <div class="pull-left right-list" style="margin-right:20px;" >
                             <input class="form-control" name="end_dt" id="ends" value="{{$end_dt==null?'':$end_dt }}"/>
                         </div>
-                        <button class="btn  btn-primary" type="submit"  style="float:left;" />搜索</button>
+                        <button class="btn  btn-primary" type="submit"  style="float:left;height: 34px;" />搜索</button>
                     </div>
                     <!-- <div class="col-md-2 col-sm-2 col-xs-12">
                         <div class="pull-left right-list">

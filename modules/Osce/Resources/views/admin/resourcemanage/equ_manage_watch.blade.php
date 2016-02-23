@@ -22,14 +22,11 @@
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-2">
+            <div class="col-xs-12 col-md-12">
                 <h5 class="title-label">设备管理</h5>
-            </div>
-            <div class="col-xs-6 col-md-1" style="float: right;">
-                <a  href="{{route('osce.admin.machine.getAddWatch')}}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-            </div>
-            <div class="col-xs-6 col-md-1" style="float: right;">
-                <a  href="{{route('osce.admin.machine.getWatchLogList')}}" class="btn btn-outline btn-default" style="float: right;">使用记录</a>
+                <a href="{{route('osce.admin.machine.getAddWatch')}}" class="btn btn-primary" style="float:right;margin:0 10px 0 0;">新增</a>
+                <a href="{{route('osce.admin.machine.getWatchLogList')}}" class="btn btn-outline btn-default" style="float:right;margin:0 10px 0 0!important;">使用记录</a>
+                <div class="clearfix"></div>
             </div>
         </div>
 
