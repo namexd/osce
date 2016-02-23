@@ -46,6 +46,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//智能排考
 		Route::post('arrangement/begin',['uses'=>'AutomaticPlanArrangementController@postBegin','as'=>'osce.admin.arrangement.postBegin']);
 		Route::get('arrangement/index',['uses'=>'AutomaticPlanArrangementController@getIndex','as'=>'osce.admin.arrangement.getIndex']);
+		Route::post('arrangement/store',['uses'=>'AutomaticPlanArrangementController@postStore','as'=>'osce.admin.arrangement.postStore']);
 	});
 
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){

@@ -12,8 +12,11 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Modules\Osce\Entities\AutomaticPlanArrangement\AutomaticPlanArrangement;
 use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\AutomaticPlanArrangement\Exam;
+use Modules\Osce\Entities\ExamPlan;
+use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
+use Auth;
 
 class AutomaticPlanArrangementController extends CommonController
 {
@@ -62,5 +65,43 @@ class AutomaticPlanArrangementController extends CommonController
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 智能排考的保存
+     * @param Request $request
+     * @return $this
+     * @author Jiangzhiheng
+     * @time 2016-02-23 17:30
+     */
+    function postStore(Request $request) {
+        $examId = $request->input('exam_id');
+        //通过id找到对应的数据
+        $data = ExamPlanRecord::where('exam_id',$examId)->get();
+        //获取操作者
+        $user = Auth::user();
+        ExamPlan::where('exam_id',$examId)->delete();
+        try {
+            foreach ($data as $item) {
+                $array = [
+                    'exam_id' => $examId,
+                    'exam_screening_id' => $item->exam_screening_id,
+                    'student_id' => $item->student_id,
+                    'station_id' => $item->station_id,
+                    'room_id' => $item->room_id,
+                    'begin_dt' => $item->begin_dt,
+                    'end_dt' => $item->end_dt,
+                    'status' => 0,
+                    'created_user_id' => $user->id,
+                ];
+                if (!$a = ExamPlan::create($array)) {
+                    throw new \Exception('保存失败！');
+                }
+            }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+
+
     }
 }
