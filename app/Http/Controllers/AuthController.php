@@ -249,12 +249,26 @@ class AuthController extends BaseController
             'name.min'      => '角色名长度至少为2个',
             'name.max'      => '角色名长度最多为10个'
         ]);
-        $data = [
-            'name' => Input::get('name'),
-            'description'=>Input::get('description')
-        ];
-        $addNewRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>Input::get('id')])->update($data);
-        if($addNewRole){
+//        $data = [
+//            'name' => Input::get('name'),
+//            'description'=>Input::get('description')
+//        ];
+//        $addNewRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>Input::get('id')])->update($data);
+//        if($addNewRole){
+//            return redirect()->intended('/auth/auth-manage');
+//        }else{
+//            return  redirect()->back()->withErrors(['修改失败']);
+//        }
+        //TODO: zhoufuxiang 2016-2-23
+        $name =  Input::get('name');
+        $des  =  Input::get('description');
+        $addNewRole = SysRoles::where(['id'=>Input::get('id')])->first();
+        if($addNewRole->name == $name && $addNewRole->description == $des){
+            return  redirect()->back()->withErrors(['未做修改']);
+        }
+        $addNewRole->name        = $name;
+        $addNewRole->description = $des;
+        if($addNewRole->save()){
             return redirect()->intended('/auth/auth-manage');
         }else{
             return  redirect()->back()->withErrors(['修改失败']);
