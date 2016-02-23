@@ -782,11 +782,7 @@ class ExamController extends CommonController
 
         $inviteData = Invite::status($exam_id);
 
-
-
-
         //将邀请状态插入$stationData
-
         $examRoomData111=  [];
         foreach ($examStationData as $key=>&$items) {
             foreach ($items as &$item) {
@@ -799,7 +795,6 @@ class ExamController extends CommonController
                 }
             }
         }
-//        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
         return view('osce::admin.exammanage.examroom_assignment', [
             'id'                => $exam_id,

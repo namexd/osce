@@ -35,7 +35,19 @@ class Invite extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
-            foreach ($data as $list) {
+            foreach ($data as &$list) {
+                //查询出数据库是否有该老师在这场考试邀请过
+                $examScreening = Invite::where('exam_screening_id', '=', $list['exam_screening_id'])
+                    ->where('user_id','=',$list['teacher_id'])
+                    ->where('station_id','=',$list['station_id'])
+                    ->whereIn('status',[0, 1])
+                    ->first();
+                //查询出老师名字
+//                $teacherName    = Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
+                $teacherName = Teacher::find($list['teacher_id']);
+                if ($examScreening) {
+                    throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
+                }
                 $inviteDat = [
                     'user_id' => $list['teacher_id'],
                     'name' => $list['exam_name'],
@@ -45,22 +57,9 @@ class Invite extends CommonModel
                     'station_id' => $list['station_id'],
                     'status' => 0,
                 ];
-
-                //查询出数据库是否有该老师在这场考试邀请过
-                $examScreening = Invite::where('exam_screening_id', '=', $inviteDat['exam_screening_id'])
-                    ->where('user_id','=',$inviteDat['user_id'])
-                    ->where('station_id','=',$inviteDat['station_id'])
-                    ->whereIn('status',[0, 1])
-                    ->first();
-
-                //查询出老师名字
-//                $teacherName    = Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
-                $teacherName = Teacher::find($inviteDat['user_id']);
-                if ($examScreening) {
-                    throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
-                }
                 $notice = $this->Create($inviteDat);
                 if ($notice) {
+                    $list['id']=$notice->id;
                     $ExamSpList = [
 //                           'id'=>$data[$k]['teacher_id'],
                         'invite_id' => $notice->id,
@@ -71,18 +70,15 @@ class Invite extends CommonModel
                     //关联到考试邀请sp老师表
                     $examspModel = new ExamSpTeacher();
                     $examspModel->addExamSp($ExamSpList);
-
-                    //邀请用户
-                    $this->sendMsg($data, $notice);
-                    $connection->commit();
-                    return $notice;
                 } else {
                     throw new \Exception('邀请保存失败');
                 }
-
             }
+            $connection->commit();
 
+            $this->sendMsg($data);
 
+            return $notice;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -92,12 +88,12 @@ class Invite extends CommonModel
 
     // 发送邀请
 
-    public function sendMsg($data, $notice)
+    public function sendMsg($data)
     {
 
         try {
             foreach ($data as $key => $openIdList) {
-                $url = route('osce.wechat.invitation.getMsg', ['id' => $notice->id]);
+                $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['id']]);
                 $msgData = [
                     [
                         'title' => '邀请通知',
