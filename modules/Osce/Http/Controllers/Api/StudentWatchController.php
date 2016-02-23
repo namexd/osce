@@ -72,7 +72,7 @@ class StudentWatchController extends CommonController
 
 
         //根据设备编号找到设备id
-        $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
+        $watchId = Watch::where('code', '=', $watchNfcCode)->first();
         dd($watchId);
 
         if (!$watchId) {
