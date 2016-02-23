@@ -144,6 +144,7 @@ class DiscussionController extends  CommonController{
            }
           $id    =   intval($request   ->  get('id'));
           $createId=Discussion::where('id',$id)->select()->first()->create_user_id;
+
           if($createId!=$userId){
              $url=1;
           }elseif($userId==$manager[0]){
@@ -154,6 +155,7 @@ class DiscussionController extends  CommonController{
           $list=Discussion::where('id',$id)->select()->get();
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getReplyPagination($id);
+
           foreach($list as $item){
               $question=[
                   'id' =>$item->id,
@@ -167,6 +169,7 @@ class DiscussionController extends  CommonController{
 
           //回复内容
            $replys=Discussion::where('pid',$id)->select()->get();
+          dd($replys);
            $data=[];
           foreach($replys as $itm){
               $time=time()-strtotime($item->created_at);
