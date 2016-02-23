@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -246,29 +247,33 @@ class StudentWatchController extends CommonController
             $data = [
                 'code'=> 5,
                 'title' => '当前考站考试完成，进入下一场考试考站名',
-                'roomName' =>$nextExamQueue->room->name ,
+                'nextExamName' =>$nextExamQueue->room->name ,
             ];
         }
         return $data;
     }
 
     private function  getExamComplete($examQueue){
+        //查询出考试结果
+        $examResult = ExamResult::where('student_id','=',$examQueue->student_id)->count();
         //根据考试获取到考试流程
         $ExamFlowModel = new  ExamFlow();
         $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
         //查询出学生当前已完成的考试
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $examQueue->student_id)->count();
         if ($ExamFinishStatus >= $studentExamSum){
-            $testresultModel = new TestResult();
+            if($examResult == $studentExamSum){
+                $testresultModel = new TestResult();
+                $score =  $testresultModel->AcquireExam($examQueue->student_id);
+                $data = [
+                    'code'  =>  6,
+                    'title' =>'考试完成，最终总成绩',
+                    'score' => $score,
+                ];
 
-            $score =  $testresultModel->AcquireExam($examQueue->student_id);
-            $data = [
-                'code'  =>  6,
-                'title' =>'考试完成，最终总成绩',
-                'score' => $score,
-            ];
+                return $data;
+            }
 
-            return $data;
         }
 
     }
