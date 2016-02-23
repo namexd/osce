@@ -68,6 +68,7 @@ class StudentWatchController extends CommonController
         ];
         $code = 0;
         $watchNfcCode = $request->input('nfc_code');
+        dd($watchNfcCode);
 
 
         //根据设备编号找到设备id
@@ -81,10 +82,10 @@ class StudentWatchController extends CommonController
             );
         }
         //判定腕表是否解绑
-        $watch =WatchLog::where('watch_id',$watchId->id)->where('action','=','解绑')->orderBy('created_at','desc')->first();
-        if($watch){
+        $watch =Watch::where('watch_id',$watchId->id)->first();
+        if($watch->status==0){
             $code = -1;
-            $data['title'] = '该腕表已解绑';
+            $data['title'] = '该腕表还没有学生绑定';
             return response()->json(
                 $this->success_data($data, $code)
             );

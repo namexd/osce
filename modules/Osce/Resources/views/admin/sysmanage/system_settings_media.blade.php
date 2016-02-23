@@ -8,7 +8,7 @@
 	.ibox-title h5{height:16px;line-height:16px;margin:0;margin-top:-4px;border:0;}
 	.control-label{text-align: right;height:34px;line-height:34px;font-weight: 100;}
 	.form-control-feedback{right:25px;}
-	.checkbox_input{margin:10px 0 0 0;font-weight:100;cursor:pointer;}
+	.checkbox_input{margin:10px 10px 0 0;font-weight:100;cursor:pointer;}
 	.check_name{padding:0;height:16px;position: relative;top:-3px;}
 	#checkbox_div .glyphicon{display:none!important;}
 </style>
