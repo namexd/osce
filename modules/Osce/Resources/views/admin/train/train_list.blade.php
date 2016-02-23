@@ -30,11 +30,12 @@
                             if(data.code == 1){
                                 location.href='{{route('osce.admin.getTrainList')}}?page=1';
                             }else {
+                                layer.close(its);
                                 layer.msg(data.message,{skin:'msg-error',type:1});
                             }
                         },
                         error:function(data){
-                            layer.close(its)
+                            layer.close(its);
                             layer.msg('没有权限！',{skin:'msg-error',type:1});
                         }
                     })
