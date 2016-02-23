@@ -15,7 +15,35 @@
     
     <script>
 		$(function(){
-		    $(".fa-trash-o").click(function(){
+
+            $(".fa-trash-o").click(function(){
+                var thisElement=$(this);
+
+                layer.confirm('确认删除？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(its){
+                    $.ajax({
+                        type:'get',
+                        async:true,
+                        url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
+                        success:function(data){
+                            if(data.code == 1){
+                                location.href='{{route('osce.admin.getTrainList')}}?page=1';
+                            }else {
+                                layer.msg(data.message,{skin:'msg-error',type:1});
+                            }
+                        },
+                        error:function(data){
+                            layer.close(its)
+                            layer.msg('没有权限！',{skin:'msg-error',type:1});
+                        }
+                    })
+                });
+            })
+
+
+
+		    /*$(".fa-trash-o").click(function(){
 		        var thisElement=$(this);
 		        layer.alert('确认删除？',function(){
 		            $.ajax({
@@ -27,7 +55,7 @@
 		                }
 		            })
 		        });
-		    })
+		    })*/
 		})
 	</script>
 @stop
