@@ -132,10 +132,10 @@ class ExamRoom extends CommonModel
         try{
             $builder  =   StationTeacher::leftJoin('room_station','station_teacher.station_id','=','room_station.station_id')
                 ->leftJoin('station','station.id','=','room_station.station_id')
-                //                ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
+//                                ->leftJoin('station_teacher','station_teacher.station_id','=','station.id')
                 ->leftJoin('teacher','teacher.id','=','station_teacher.user_id')
-                ->leftJoin('invite', 'station_teacher.user_id','=','teacher.id')
-                //                ->where('exam_room.exam_id' , '=' , $exam_id)
+//                ->leftJoin('invite', 'station_teacher.user_id','=','teacher.id')
+//                ->where('exam_room.exam_id' , '=' , $exam_id)
                 ->Where('station_teacher.exam_id','=',$exam_id)
                 ->select([
                     'teacher.id as id',
@@ -143,24 +143,14 @@ class ExamRoom extends CommonModel
                     'teacher.code as code',
                     'teacher.type as type',
                     'teacher.case_id as case_id',
-                    'invite.status as status',
+//                    'invite.status as status',
                     'station.name as station_name',
                     'station.id as station_id',
                     'station.type as station_type',
                     'room_station.room_id as room_id',
                 ])
-                ->distinct();
-//            if(!empty($builder))
-//            {
-//                $string =   implode(',',$examScreeningIdList->toArray());
-//                $builder=$builder->whereRaw(
-//                    '(invite.exam_screening_id in (?) or invite.exam_screening_id is NUll)',
-//                    [
-//                        $string
-//                    ]
-//                );
-//            }
-            return  $builder->get();
+                ->distinct()->get();
+            return  $builder;
         } catch(\Exception $ex){
             throw $ex;
         }

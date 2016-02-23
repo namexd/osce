@@ -61,7 +61,7 @@
         .option li{
             margin: 0;
             height: 36px;
-            width: 70px;
+            width: 90px;
             line-height: 36px;
             text-align: center;
         }

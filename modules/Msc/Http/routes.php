@@ -6,26 +6,16 @@ Route::group(['prefix' => 'msc', 'namespace' => 'Modules\Msc\Http\Controllers'],
 {
 	Route::get('/', 'MscController@index');
 
-
 });
-
 
 Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','middleware' => []], function()
 {
-
 
 	//http://www.mis.hx/msc/admin/resources-manager/user-register
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
 		//测试路由
 		Route::get('test/index', ['uses'=>'TestController@Index','as'=>'msc.Test.Index']);
 
-		//科室路由组
-		Route::post('dept/add-dept', ['uses'=>'DeptController@AddDept','as'=>'msc.Dept.AddDept']);
-		Route::post('dept/update-dept', ['uses'=>'DeptController@UpdateDept','as'=>'msc.Dept.UpdateDept']);
-		Route::post('dept/del-dept', ['uses'=>'DeptController@DelDept','as'=>'msc.Dept.DelDept']);
-		Route::get('dept/select-dept', ['uses'=>'DeptController@SelectDept','as'=>'msc.Dept.SelectDept']);
-		Route::get('dept/pid-get-dept', ['uses'=>'DeptController@PidGetDept','as'=>'msc.Dept.PidGetDept']);
-		Route::get('dept/dept-list', ['uses'=>'DeptController@DeptList','as'=>'msc.Dept.DeptList']);
 
 		Route::controller('verify', 'VerifyController');
 		Route::get('verify/student/{status?}', ['uses'=>'VerifyController@getStudent','as'=>'msc.verify.student']);
@@ -64,136 +54,59 @@ Route::group(['prefix' => "msc",'namespace' => 'Modules\Msc\Http\Controllers','m
 		Route::get('user/teacher-info', ['uses'=>'UserController@getTeacherInfo','as'=>'msc.admin.user.TeacherInfo']);
 		//楼栋路由
 		Route::get('floor/index', ['uses'=>'FloorController@index','as'=>'msc.admin.floor.index']);
-		Route::post('floor/add-floor-insert', ['uses'=>'FloorController@postAddFloorInsert','as'=>'msc.admin.floor.postAddFloorInsert']);
-
-		Route::post('floor/edit-floor-insert', ['uses'=>'FloorController@postEditFloorInsert','as'=>'msc.admin.floor.postEditFloorInsert']);
+		Route::post('floor/add-floor-insert', ['uses'=>'FloorController@getAddFloorInsert','as'=>'msc.admin.floor.getAddFloorInsert']);
+		Route::post('floor/edit-floor-insert', ['uses'=>'FloorController@getEditFloorInsert','as'=>'msc.admin.floor.getEditFloorInsert']);
 		Route::get('floor/stop-floor', ['uses'=>'FloorController@getStopFloor','as'=>'msc.admin.floor.getStopFloor']);
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
 		Route::get('floor/stop-floor', ['uses'=>'FloorController@getStopFloor','as'=>'msc.admin.floor.getStopFloor']);
 		Route::get('floor/delete-floor', ['uses'=>'FloorController@getDeleteFloor','as'=>'msc.admin.floor.getDeleteFloor']);
          //专业表路由
-		 //Route::controller('profession','ProfessionController');
+		 Route::controller('profession','ProfessionController');
 		 Route::get('profession/profession-list',['uses'=>'ProfessionController@getProfessionList','as'=>'msc.admin.profession.ProfessionList']);
-		 Route::post('profession/profession-add',['uses'=>'ProfessionController@postProfessionAdd','as'=>'msc.admin.profession.ProfessionAdd']);
-		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);
+		 Route::post('profession/profession-add',['uses'=>'ProfessionController@postProfessionAdd','as'=>'msc.admin.profession.ProfessionAdd']);		 Route::get('profession/profession-edit/{id}',['uses'=>'ProfessionController@getProfessionEdit','as'=>'msc.admin.profession.ProfessionEdit']);
 		 Route::post('profession/profession-save',['uses'=>'ProfessionController@postProfessionSave','as'=>'msc.admin.profession.ProfessionSave']);
-		 Route::get('profession/profession-status',['uses'=>'ProfessionController@getProfessionStatus','as'=>'msc.admin.profession.ProfessionStatus']);
-		 Route::get('profession/profession-deletion',['uses'=>'ProfessionController@getProfessionDeletion','as'=>'msc.admin.profession.ProfessionDeletion']);
+		 Route::get('profession/profession-status/{id}',['uses'=>'ProfessionController@getProfessionStatus','as'=>'msc.admin.profession.ProfessionStatus']);
+		 Route::get('profession/profession-deletion/{id}',['uses'=>'ProfessionController@getProfessionDeletion','as'=>'msc.admin.profession.ProfessionDeletion']);
 		 Route::post('profession/profession-import',['uses'=>'ProfessionController@postProfessionImport','as'=>'msc.admin.profession.ProfessionImport']);
 		//实验室路由
 		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
-		Route::post('laboratory/add-lab-insert', ['uses'=>'LaboratoryController@getAddLabInsert','as'=>'msc.admin.laboratory.getAddLabInsert']);
+		Route::get('laboratory/index', ['uses'=>'LaboratoryController@index','as'=>'msc.admin.laboratory.index']);
 		Route::post('laboratory/local', ['uses'=>'LaboratoryController@getLocal','as'=>'msc.admin.laboratory.getLocal']);
 		Route::post('laboratory/floor', ['uses'=>'LaboratoryController@getFloor','as'=>'msc.admin.laboratory.getFloor']);
-		Route::get('laboratory/delete-lab', ['uses'=>'LaboratoryController@getDeleteLab','as'=>'msc.admin.laboratory.getDeleteLab']);
-		Route::get('laboratory/stop-lab', ['uses'=>'LaboratoryController@getStopLab','as'=>'msc.admin.laboratory.getStopLab']);
-		Route::post('laboratory/edit-lab-insert', ['uses'=>'LaboratoryController@getEditLabInsert','as'=>'msc.admin.laboratory.getEditLabInsert']);
-		Route::get('laboratory/lab-clearnder', ['uses'=>'LaboratoryController@getLabClearnder','as'=>'msc.admin.laboratory.getLabClearnder']);
-		Route::get('laboratory/floor-lab', ['uses'=>'LaboratoryController@getFloorLab','as'=>'msc.admin.laboratory.getFloorLab']);
-		Route::post('laboratory/operating-lab-cleander', ['uses'=>'LaboratoryController@postOperatingLabCleander','as'=>'msc.admin.laboratory.postOperatingLabCleander']);
-		Route::get('laboratory/edit-lab-cleander', ['uses'=>'LaboratoryController@getEditLabCleander','as'=>'msc.admin.laboratory.getEditLabCleander']);
-		Route::get('laboratory/lab-order-list', ['uses'=>'LaboratoryController@getLabOrderList','as'=>'msc.admin.laboratory.getLabOrderList']);
-		Route::get('laboratory/lab-order-show', ['uses'=>'LaboratoryController@getLabOrderShow','as'=>'msc.admin.laboratory.getLabOrderShow']);
-		Route::get('laboratory/lab-order-check', ['uses'=>'LaboratoryController@getLabOrderCheck','as'=>'msc.admin.laboratory.getLabOrderCheck']);
-		Route::post('laboratory/lab-order-detail', ['uses'=>'LaboratoryController@getLabOrderdetail','as'=>'msc.admin.laboratory.getLabOrderdetail']);
-		Route::get('laboratory/lab-order-allcheck', ['uses'=>'LaboratoryController@postLabOrderallcheck','as'=>'msc.admin.laboratory.postLabOrderallcheck']);
-		Route::get('laboratory/lab-order-donot', ['uses'=>'LaboratoryController@getLabOrderDonot','as'=>'msc.admin.laboratory.getLabOrderDonot']);
-		Route::get('laboratory/_check', ['uses'=>'LaboratoryController@_check','as'=>'msc.admin.laboratory._check']);
-		Route::get('laboratory/lab-detail', ['uses'=>'LaboratoryController@getLabdetail','as'=>'msc.admin.laboratory.getLabdetail']);
-		Route::get('laboratory/student-lab-detail', ['uses'=>'LaboratoryController@getStudentLabDetail','as'=>'msc.admin.laboratory.getStudentLabDetail']);
-		//资源路由
-		Route::controller('resources','ResourcesController');
-		Route::get('resources/resources-index',['uses'=>'ResourcesController@getResourcesIndex','as'=>'msc.admin.resources.ResourcesIndex']);
-		Route::post('resources/resources-add',['uses'=>'ResourcesController@postResourcesAdd','as'=>'msc.admin.resources.ResourcesAdd']);
-		Route::get('resources/resources-edit/{id}',['uses'=>'ResourcesController@postResourcesEdit','as'=>'msc.admin.resources.ResourcesEdit']);
-		Route::post('resources/resources-save',['uses'=>'ResourcesController@postResourcesSave','as'=>'msc.admin.resources.ResourcesSave']);
-		Route::get('resources/resources-status/{id}',['uses'=>'ResourcesController@postResourcesStatus','as'=>'msc.admin.resources.ResourcesStatus']);
-		Route::get('resources/resources-remove/{id}',['uses'=>'ResourcesController@getResourcesRemove','as'=>'msc.admin.resources.ResourcesRemove']);
-
-		//职称路由
-		Route::controller('professionaltitle','ProfessionalTitleController');
-		Route::get('professionaltitle/job-title-index',['uses'=>'ProfessionalTitleController@getJobTitleIndex','as'=>'msc.admin.professionaltitle.JobTitleIndex']);
-		Route::post('professionaltitle/holder-add',['uses'=>'ProfessionalTitleController@postHolderAdd','as'=>'msc.admin.professionaltitle.HolderAdd']);
-		Route::get('professionaltitle/holder-edit/{id}',['uses'=>'ProfessionalTitleController@getHolderEdit','as'=>'msc.admin.professionaltitle.HolderEdit']);
-		Route::post('professionaltitle/holder-save',['uses'=>'ProfessionalTitleController@postHolderSave','as'=>'msc.admin.professionaltitle.HolderSave']);
-		Route::get('professionaltitle/holder-status/{id}',['uses'=>'ProfessionalTitleController@getHolderStatus','as'=>'msc.admin.professionaltitle.HolderStatus']);
-		Route::get('professionaltitle/holder-remove',['uses'=>'ProfessionalTitleController@getHolderRemove','as'=>'msc.admin.professionaltitle.HolderRemove']);
-
-		//实验室资源维护路由
-		//Route::controller('LadMaintain','LadMaintainController');
-		Route::get('ladMaintain/laboratory-list',['uses'=>'LadMaintainController@getLaboratoryList','as'=>'msc.admin.LadMaintain.LaboratoryList']);
-		Route::get('ladMaintain/laboratory-list-data',['uses'=>'LadMaintainController@getLaboratoryListData','as'=>'msc.admin.LadMaintain.LaboratoryListData']);
-		Route::get('/ladMaintain/laboratory-device-list',['uses'=>'LadMaintainController@getLaboratoryDeviceList','as'=>'msc.admin.LadMaintain.LaboratoryDeviceList']);
-		Route::post('ladMaintain/devices-add',['uses'=>'LadMaintainController@postDevicesAdd','as'=>'msc.admin.LadMaintain.DevicesAdd']);
-		Route::get('ladMaintain/devices-total-edit',['uses'=>'LadMaintainController@getDevicesTotalEdit','as'=>'msc.admin.LadMaintain.DevicesTotalEdit']);
-		Route::get('ladMaintain/floor-lab', ['uses'=>'LadMaintainController@getFloorLab','as'=>'msc.admin.ladMaintain.getFloorLab']);
-		Route::get('ladMaintain/lad-devices-deletion',['uses'=>'LadMaintainController@getLadDevicesDeletion','as'=>'msc.admin.LadMaintain.LadDevicesDeletion']);
 	});
 
 //	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
-	Route::group(['prefix'=>'wechat','namespace'=>'WeChat','middleware' => ['wechatauth']],function(){
+	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){
 
-
+		Route::controller('user', 'UserController');
 		Route::get('user/check-code-register',['uses'=>'UserController@getCheckCodeRegister','as'=>'msc.user.getCheckCodeRegister']);
-		//Route::controller('personal-center', 'PersonalCenterController');
-		Route::get('personal-center/index',['uses'=>'PersonalCenterController@getIndex','as'=>'msc.personalCenter.getIndex']);
-		//Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
-		//我的实验室预约
-		Route::get('/personal-center/my-laboratory-apply',['uses'=>'PersonalCenterController@MyLaboratoryApply','as'=>'msc.personalCenter.MyLaboratoryApply']);
-		//已完成的预约信息数据获取
-		Route::get('/personal-center/history-laboratory-apply-list',['uses'=>'PersonalCenterController@HistoryLaboratoryApplyList','as'=>'msc.personalCenter.HistoryLaboratoryApplyList']);
-		//预约数据详情
-		Route::get('/personal-center/get-apply-details',['uses'=>'PersonalCenterController@GetApplyDetails','as'=>'msc.personalCenter.GetApplyDetails']);
-		//取消实验室预约
-		Route::get('/personal-center/cancel-apply',['uses'=>'PersonalCenterController@CancelApply','as'=>'msc.personalCenter.CancelApply']);
+		Route::controller('personal-center', 'PersonalCenterController');
+		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
 		//开放设备当前预约
-		//Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.wechat.personalCenter.getMyApply']);
+		Route::get('personal-center/my-apply',['uses'=>'PersonalCenterController@getMyApply','as'=>'msc.wechat.personalCenter.getMyApply']);
 		//开放设备使用历史
-		//Route::get('personal-center/user-open-device-histroy-data',['uses'=>'PersonalCenterController@getUserOpenDeviceHistroyData','as'=>'msc.personalCenter.userOpenDeviceHistroyData']);
+		Route::get('personal-center/user-open-device-histroy-data',['uses'=>'PersonalCenterController@getUserOpenDeviceHistroyData','as'=>'msc.personalCenter.userOpenDeviceHistroyData']);
 		//开放设备取消预约
-		//Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
-		//Route::get('personal-center/info-manage',['uses'=>'PersonalCenterController@getInfoManage','as'=>'msc.personalCenter.infoManage']);
+		Route::get('personal-center/cancel-open-device-apply',['uses'=>'PersonalCenterController@getCancelOpenDeviceApply','as'=>'msc.personalCenter.cancelOpenDeviceApply']);
+		Route::get('personal-center/info-manage',['uses'=>'PersonalCenterController@getInfoManage','as'=>'msc.personalCenter.infoManage']);
 		//我的課程
-		//Route::get('personal-center/my-course',['uses'=>'PersonalCenterController@getMyCourse','as'=>'msc.personalCenter.MyCourse']);
+		Route::get('personal-center/my-course',['uses'=>'PersonalCenterController@getMyCourse','as'=>'msc.personalCenter.MyCourse']);
 
-		// /personal-center/history-laboratory-apply-list
 		//我的开放实验室预约
 		Route::get('/personal-center/my-opening-laboratory',['uses'=>'PersonalCenterController@getMyOpeningLaboratory','as'=>'msc.personalCenter.getMyOpeningLaboratory']);
 
 		//取消预约
 		Route::get('/personal-center/cancel-laboratory',['uses'=>'PersonalCenterController@getCancelLaboratory','as'=>'msc.personalCenter.getCancelLaboratory']);
 
-		//待预约列表
-		Route::get('/laboratory/laboratory-list',['uses'=>'LaboratoryCotroller@LaboratoryList','as'=>'msc.Laboratory.LaboratoryList']);
-		//获取实验室待预约列表数据
-		Route::get('/laboratory/laboratory-list-data',['uses'=>'LaboratoryCotroller@LaboratoryListData','as'=>'msc.Laboratory.LaboratoryListData']);
-		//获取开放实验室待预约列表数据
-		Route::get('/laboratory/open-laboratory-list-data',['uses'=>'LaboratoryCotroller@OpenLaboratoryListData','as'=>'msc.Laboratory.OpenLaboratoryListData']);
-		//根据实验室id与时间 进入实验室预约填写表单页面
-		Route::get('/laboratory/apply-laboratory',['uses'=>'LaboratoryCotroller@ApplyLaboratory','as'=>'msc.Laboratory.ApplyLaboratory']);
-		//根据实验室id与时间 进入开放实验室预约日历安排页面
-		Route::get('/laboratory/apply-open-laboratory',['uses'=>'LaboratoryCotroller@ApplyOpenLaboratory','as'=>'msc.Laboratory.ApplyOpenLaboratory']);
-		//开放实验填写预约表单页面
-		Route::post('/laboratory/open-laboratory-form',['uses'=>'LaboratoryCotroller@OpenLaboratoryForm','as'=>'msc.Laboratory.OpenLaboratoryForm']);
-		//处理开放实验预约表单
-		Route::post('/laboratory/open-laboratory-form-op',['uses'=>'LaboratoryCotroller@OpenLaboratoryFormOp','as'=>'msc.Laboratory.OpenLaboratoryFormOp']);
-		//老师的开放实验室和普通实验室页面
-		Route::get('/laboratory/laboratory-teacher-list',['uses'=>'LaboratoryCotroller@LaboratoryTeacherList','as'=>'msc.Laboratory.LaboratoryTeacherList']);
-		//老師預約開放實驗室數據處理
-		Route::post('/laboratory/open-laboratory-form-teacher-op',['uses'=>'LaboratoryCotroller@OpenLaboratoryFormTeacherOp','as'=>'msc.Laboratory.OpenLaboratoryFormTeacherOp']);
-		//普通实验室验证数据处理
-		Route::post('/laboratory/apply-laboratory-op',['uses'=>'LaboratoryCotroller@ApplyLaboratoryOp','as'=>'msc.Laboratory.ApplyLaboratoryOp']);
-		// /msc/wechat/personal-center/index
 
+
+		// /msc/wechat/personal-center/index
 	});
 	Route::group(['prefix'=>'wechat','namespace'=>'WeChat'],function(){
+
 		Route::controller('user', 'UserController');
-		Route::get('/user/user-login',['uses'=>'UserCotroller@getUserLogin','as'=>'msc.User.getUserLogin']);
 		// /msc/wechat/personal-center/index
-	});
-	Route::group(['prefix'=>'wechat'],function(){
-		Route::any('/token', 'WechatController@serve');
 	});
 });

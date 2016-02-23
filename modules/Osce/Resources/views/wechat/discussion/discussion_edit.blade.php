@@ -5,6 +5,10 @@
 <style>
 .btn2{background: #1ab394}
 .has-feedback label~.form-control-feedback {top: 26px;}
+.form-group{
+    width:96%;
+    margin:10px 2%;
+}
 </style>
 @stop
 @section('only_head_js')
@@ -49,7 +53,7 @@ $(function(){
         <a class="left header_btn" href="{{route('osce.wechat.getCheckQuestion',['id'=>$id])}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
-       	提问
+       	编辑
     </div>
     <form class="quiz_form" action="{{  route('osce.wechat.postEditQuestion') }}" method="post" id="list_form">
 		@foreach($list as $list)
@@ -59,7 +63,7 @@ $(function(){
 	    </div>
 	    <div class="form-group">
 	      <label class="" for="name">内容：</label>
-	      <textarea class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5">{{  $list->content  }}</textarea>
+	      <textarea class="form-control" style="height:100px;resize: none;" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5">{{  $list->content  }}</textarea>
 	    </div>
 	    <div class="form-group">
 			<input type="hidden" name="id" value="{{ $list->id }}">

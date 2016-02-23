@@ -15,6 +15,7 @@
         }
         .text-box{width:94%;margin:0 3%;}
         .jconfirm.white .jconfirm-box .buttons button.btn-default {background: #1ab394;}
+        input[type=text],input[type=password]{padding-left: 10px!important;}
     </style>
 @stop
 
@@ -28,7 +29,7 @@
     <div class="text-box">
         <form id="forget" action="{{route('osce.wechat.user.postResetPassword')}}" method="post" >
 	        <div class="form-group mobile-box">
-	            <input type="text" class="form-control" style="padding-left:3%;" placeholder="手机号码" id="mobile" name="mobile" value=""/>
+	            <input type="text" class="form-control" placeholder="手机号码" id="mobile" name="mobile" value=""/>
 	        </div>
 	        <div  class="form-group">
 	        	<input style="float:left;width:60%;" type="text" name="verify" class="form-control ipt_txt" placeholder="请输入验证码"/>

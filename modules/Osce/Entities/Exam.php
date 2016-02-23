@@ -360,13 +360,21 @@ class Exam extends CommonModel
                 {
                     throw new \Exception('重置作废数据失败');
                 }
-//                $examScreeningList  =   $exam->examScreening;
+                // 删除邀请表相关数据
+                $examScreeningList  =   $exam->examScreening;
 
-//                if(!empty($examScreeningList))
-//                {
-//                    $examScreeningList->invites()->examSpTeacher()->delete();
-//                    $examScreeningList->invites()->delete();
-//                }
+                if(!empty($examScreeningList))
+                {
+                    foreach($examScreeningList as $item){
+                        if(ExamSpTeacher::where('exam_screening_id','=',$item->id)->delete()===false){
+                            throw new \Exception('重置作废数据失败');
+                        }
+                        Invite::where('exam_screening_id','=',$item->id)->delete();
+                    }
+                    //                        $item->invite()->examSpTeacher()->delete();
+//                        $item->invite()->delete();
+
+                }
             }
             foreach($examData as $field=>$item)
             {

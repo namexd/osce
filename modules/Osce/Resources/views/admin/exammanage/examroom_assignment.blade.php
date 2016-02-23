@@ -202,9 +202,9 @@
                                                     <div class="teacher-box pull-left">
                                                         @foreach($item as $b => $value)
                                                             @if($value->type == 2)
-                                                                @if($value->status == 0)
+                                                                @if($value->invite_status == 0)
                                                                     <div class="input-group teacher pull-left" value="{{$value->id}}">
-                                                                @elseif($value->status == 1)
+                                                                @elseif($value->invite_status == 1)
                                                                     <div class="input-group teacher pull-left teacher-primary" value="{{$value->id}}">
                                                                 @else
                                                                     <div class="input-group teacher pull-left teacher-warn" value="{{$value->id}}">
@@ -275,7 +275,7 @@
 <script>
     $(function(){
         @if(isset($_GET['succ']) && $_GET['succ'] ==1)
-            layer.alert('保存成功！');
+            layer.msg('保存成功！');
         @endif
     })
 </script>

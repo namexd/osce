@@ -11,15 +11,13 @@ namespace Modules\Msc\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Modules\Msc\Entities\Laboratory;
 use Pingpong\Modules\Routing\Controller;
-use Modules\Msc\Http\Controllers\MscController;
 use Modules\Msc\Entities\Floor;
 use Modules\Msc\Entities\School;
 use Illuminate\Http\Request;
 use URL;
 use DB;
-class FloorController extends MscController {
+class FloorController extends Controller {
 
     /**
      * Created by PhpStorm.
@@ -30,37 +28,14 @@ class FloorController extends MscController {
      */
     public function index(Floor $Floor){
         $keyword = !empty(Input::get('keyword'))?Input::get('keyword'):'';
-        if(Input::get('status') >= 0){
-
-            $where['status'] = Input::get('status');
-        }
-        if(Input::get('schools') >= 0){
-            $where['schools'] = Input::get('schools');
-        }
+        $status = Input::get('status');
         $where['keyword'] = $keyword;
+        $where['status'] = $status;
         $datalist = $Floor->getFilteredPaginateList($where);
-        foreach($datalist as $v){
-            $lab = Laboratory::where(['location_id'=>$v->id,'status'=>1])->get();
-            //var_dump($lab);
-            $lab = $lab->toArray();
-            if(!empty($lab)){
-                $v->dtype = 1;
-            }
-        }
+        //dd($datalist);
         $school = DB::connection('msc_mis')->table('school')->get();
         $keyword = Input::get('keyword')?Input::get('keyword'):'';
-        return view('msc::admin.labmanage.ban_maintain',[
-            'data'=>$datalist,
-            'school'=>$school,
-            'keyword'=>$keyword,
-            'status'=>Input::get('status'),
-            'schools'=>Input::get('schools'),
-        ]);
-
-
-
-
-
+        return view('msc::admin.labmanage.ban_maintain',['data'=>$datalist,'school'=>$school,'keyword'=>$keyword,'status'=>Input::get('status')]);
     }
 
 
@@ -71,7 +46,7 @@ class FloorController extends MscController {
      * Time: 17:01
      * 新加楼栋操作
      */
-    public function postAddFloorInsert(Request $Request){
+    public function getAddFloorInsert(Request $Request){
         //dd(Input::get('name'));
         $this->validate($Request, [
             'name'      => 'required',
@@ -80,15 +55,6 @@ class FloorController extends MscController {
             'address' => 'required',
             'status'   => 'required|in:0,1',
             'school_id' =>'required',
-        ],[
-            "name.required" => "楼栋名称必填",
-            "floor_top.required" => "楼层数（地上）必填",
-            "floor_top.integer"  => "楼栋必须为数字",
-            "floor_buttom.required" => "楼层数（地下）必填",
-            "floor_buttom.integer"  => "楼栋必须为数字",
-            "address.required" => "地址必填",
-            "school_id.required" => "学院必选",
-            //"integer"      => ":attribute 长度必须在 :min 和 :max 之间"
         ]);
         $user = Auth::user();
         $data = [
@@ -99,10 +65,11 @@ class FloorController extends MscController {
             'status'=>Input::get('status'),
             'school_id'=>Input::get('school_id'),
             'created_user_id'=>$user->id,
+            'created_at'=>time(),
+            'updated_at'=>time(),
         ];
         //dd($data);
         $add = Floor::create($data);
-        //dd($add);
         if($add != false){
             return redirect()->back()->withInput()->withErrors('添加成功');
         }else{
@@ -118,7 +85,7 @@ class FloorController extends MscController {
      * Time: 17:01
      * 修改楼栋操作
      */
-    public function postEditFloorInsert(Request $Request){
+    public function getEditFloorInsert(Request $Request){
         $this->validate($Request, [
             'name'      => 'required',
             'floor_top'       => 'required|integer',
@@ -134,6 +101,7 @@ class FloorController extends MscController {
             'address'=>Input::get('address'),
             'status'=>Input::get('status'),
             'school_id'=>Input::get('school_id'),
+            'updated_at'=>time(),
         ];
         //dd(Input::get('id'));
         $add = DB::connection('msc_mis')->table('location')->where('id','=',urlencode(e(Input::get('id'))))->update($data);
@@ -155,18 +123,12 @@ class FloorController extends MscController {
         $id = urlencode(e(Input::get('id')));
         //dd($id);
         $data = [
-            'status'=>Input::get('type')
+            'status'=>0
         ];
         if($id){
             $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->update($data);
-
-            if(Input::get('type')){
-                $name = '启用成功';
-            }else{
-                $name = '停用成功';
-            }
             if($data != false){
-                return redirect()->back()->withInput()->withErrors($name);
+                return redirect()->back()->withInput()->withErrors('停用成功');
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
@@ -187,14 +149,7 @@ class FloorController extends MscController {
     public function getDeleteFloor(){
         $id = urlencode(e(Input::get('id')));
         if($id){
-            $lab = Laboratory::where(['location_id'=>$id,'status'=>1])->get();
-            $lab = $lab->toArray();
-            if(empty($lab)){
-                $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->delete();
-            }else{
-                return redirect()->back()->withInput()->withErrors('该楼栋下有实验室，不可删除');
-            }
-
+            $data = DB::connection('msc_mis')->table('location')->where('id','=',$id)->delete();
             if($data != false){
                 return redirect()->back()->withInput()->withErrors('删除成功');
             }else{

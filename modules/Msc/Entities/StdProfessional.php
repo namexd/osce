@@ -15,41 +15,52 @@ class StdProfessional extends Model
 {
     protected $connection	=	'msc_mis';
     protected $table 		= 	'student_professional';
-    protected $fillable 	=	["id","name","code","created_user_id","status"];
+    protected $fillable 	=	["id","name","code"];
     public $incrementing	=	true;
-    public $timestamps	=	true;
+    public $timestamps	=	false;
     protected $primaryKey	=	'id';
+    protected $guarded 		= 	[];
+    protected $hidden 		= 	[];
+
+
+
+
 
 //获得专业分页列表
 
    public  function getprofessionList($keyword='',$status=''){
 
-       $builder = $this;
+       $connection=\DB::connection('msc_mis');
 
-       if ($keyword)
-       {
-           $builder = $builder->where($this->table.'.name','like','%'.$keyword.'%');
+       $professionTable=$connection->table('student_professional');
+
+        if($keyword){
+            $professionTable=$professionTable->where('name','like'.'%',$keyword.'%');
+        }
+       if($status){
+           $professionTable =$professionTable->where('status','=',$status);
        }
-       if(in_array($status,[1,2])){
-           $builder = $builder->where($this->table.'.status',$status-1);
-       }
 
 
-       return $builder->select(['id','name','code','status'])->orderBy('status','desc')->orderBy('id','desc')->paginate(config('msc.page_size',10));
+       return $professionTable->select(['id','name','code','status'])->orderBy('id')->paginate(config('msc.page_size',10));
    }
 
 
-//    //新增专业
-//    public  function postAddProfession($data){
-//
-//        $item=array(
-//            'name'=>$data['name'],
-//            'code'=>$data['code'],
-//            'status'=>$data['status']
-//        );
-//        $result=$this->create($item);
-//        return $result;
-//    }
+    //新增专业
+    public  function postAddProfession($data){
+
+         $profession  = $this->where('name',$data['name']&&'code',$data['code'])->frist();
+        if($profession){
+            throw new \Exception('该专业已存在');
+        }
+        $item=array(
+            'name'=>$data['name'],
+            'code'=>$data['code'],
+            'status'=>$data['status']
+        );
+        $result=$this->create($item);
+        return $result;
+    }
 
 
 //提交编辑
@@ -59,8 +70,21 @@ class StdProfessional extends Model
             'code'=>$data['code'],
             'status'=>$data['status']
         ];
-        return $this->where('id','=',$data['id'])->update($input);
+        return $this->create($input);
     }
+
+//改变专业状态
+    public  function changeStatus($professionId){
+        $data=$this->where('id',$professionId)->select('status')->first();
+
+        foreach($data as $tmp){
+            $status=$tmp;
+        };
+
+        return $this->where('id',$professionId)->update(['status'=>3-$status]);
+
+    }
+
 
     //专业删除
      public  function  SoftTrashed($id){
@@ -81,15 +105,6 @@ class StdProfessional extends Model
          return $result;
     }
 
-    /**
-     * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年1月19日16:54:41
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getProfessionalList(){
-        return  $this->where('status','=',1)->get();
-    }
 
 
 }
