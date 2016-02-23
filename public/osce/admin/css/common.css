@@ -303,3 +303,15 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 
 /*操作居右*/
 table tbody tr td:last-child{width: 100px!important;}
+/*错误提示*/
+.msg-error{
+    background: #f2dede!important;
+    color: #a94442;
+    border-color: #ebccd1!important;
+}
+.msg-error i {
+    display: inline-block;
+    height: 32px!important;
+    width: 32px!important;
+    background:url('../plugins/js/plugins/layer/skin/default/icon.png') no-repeat -192px 0!important;
+}
