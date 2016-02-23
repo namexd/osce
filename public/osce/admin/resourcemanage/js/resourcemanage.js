@@ -602,7 +602,7 @@ function categories(){
                     data    =   eval('('+data+')');
 
                     if(data.code == 1){
-                        layer.alert('导入成功！');
+                        layer.msg('导入成功！',{skin:'msg-success',icon:1});
                         
                         /**
                          * 数据导入
@@ -693,7 +693,7 @@ function categories(){
                 },
                 error: function (data, status, e)
                 {
-                    layer.alert('导入失败！');
+                    layer.msg('导入失败！',{skin:'msg-error',icon:1});
                 }
             });
         }) ;
