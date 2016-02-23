@@ -72,8 +72,7 @@ class StudentWatchController extends CommonController
 
 
         //根据设备编号找到设备id
-        $watchId = Watch::where('code', '=', $watchNfcCode)->first();
-
+        $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
         if (!$watchId) {
             $code = -1;
             $data['title'] = '没有找到到腕表信息';
