@@ -288,18 +288,18 @@ class StudentWatchController extends CommonController
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
-        dump($examStudent,33333);
+//        dump($examStudent,33333);
 
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
-        dump($studentnum,1111);
+//        dump($studentnum,1111);
           if($examStudent == 0){
 
               $willStudents =$studentnum;
           }else{
                 $willStudents = $studentnum+1;
           }
-        dump($willStudents,66666);
+//        dump($willStudents,66666);
 
         //判断预计考试时间
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
@@ -337,15 +337,15 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
-                dump($willStudents);
+//                dump($willStudents);
           foreach($willStudents as $key=>$willStudent){
-              dump($key,2222);
+//              dump($key,2222);
               if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
                   continue;
               }
           }
-        dump($studentNum,44444);
+//        dump($studentNum,44444);
         return $studentNum;
     }
 
