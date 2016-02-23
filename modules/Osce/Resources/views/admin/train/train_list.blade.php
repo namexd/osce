@@ -24,15 +24,37 @@
                 }, function(){
                     $.ajax({
                         type:'get',
-                        async:false,
+                        async:true,
                         url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
                         success:function(data){
-                            location.href='{{route('osce.admin.getTrainList')}}?page=1';
+                            if(data.code == 1){
+                                location.href='{{route('osce.admin.getTrainList')}}?page=1';
+                            }else {
+                                layer.msg(data.message,{skin:'msg-error',type:1});
+                            }
+                        },
+                        error:function(data){
+                            layer.msg('没有权限！',{skin:'msg-error',type:1});
                         }
                     })
                 });
             })
 
+
+
+		    /*$(".fa-trash-o").click(function(){
+		        var thisElement=$(this);
+		        layer.alert('确认删除？',function(){
+		            $.ajax({
+		                type:'get',
+		                async:false,
+		                url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
+		                success:function(data){
+		                    location.href='{{route('osce.admin.getTrainList')}}?page=1';
+		                }
+		            })
+		        });
+		    })*/
 		})
 	</script>
 @stop
