@@ -174,6 +174,7 @@ class UserController  extends CommonController
     public function getLogin(){
         $getOpenid = env('OPENID',true);
         try{
+            $nowTime =time();
             if($getOpenid){
                 $openid = \Illuminate\Support\Facades\Session::get('openid','');
                 if(empty($openid)||$openid=='dfdsfds'){
@@ -184,6 +185,9 @@ class UserController  extends CommonController
                 if($user)
                 {
                     Auth::login($user);
+
+                    $connection=\DB::connection('sys_mis');
+                    $connection->table('users')->where('id',$user->id)->update(['lastlogindate'=>$nowTime]);
                     return redirect()   ->route('osce.wechat.index.getIndex');
                 }
             }else{

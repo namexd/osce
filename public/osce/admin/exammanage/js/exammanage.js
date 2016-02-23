@@ -2034,6 +2034,7 @@ function smart_assignment(){
         var title   =   $('<li class="title">').text(data.name);
         ul.append(title);
         ul.addClass('roomStatioin')
+        var perTime=0;
         for(var i in child)
         {
 
@@ -2042,14 +2043,46 @@ function smart_assignment(){
             li.addClass("rows"+i);
             li.addClass("batch_inner_row");
             li.attr('data-batchIndex',i);
+            if (perTime != 0) {
+                var tempPerTime = child[perTime];
+                var emptyTime   =   makeEmptyTime(tempPerTime,itemData);
+                li.append(emptyTime);
+            }
             var item    =   makeItem(itemData);
             ul.append(li);
             li.append(item);
+            perTime = i;
         }
 
         return ul;
     }
-    //生成一整行数据,ul
+
+    function makeEmptyTime(tempPerTime,itemData) {
+        var tempPerTimeBegin = tempPerTime.start;
+        var tempPerTimeEnd = tempPerTime.end;
+        var tempItemDataBegin = itemData.start;
+        var tempItemDataEnd = itemData.end;
+
+        var height = parseInt((parseInt(tempItemDataBegin) - parseInt(tempPerTimeEnd))/6);
+        var dt = $('<dt>').css({
+            height:height
+        }).addClass('emptyTime');
+        if(height<=14)
+        {
+            var span    =   $('<span>').css({
+                'fontSize':8
+            }).text('时间闲置');
+        }
+        else
+        {
+            var span    =   $('<span>').text('时间闲置');
+        }
+        span.attr('title','时间闲置');
+        dt.append(span);
+        return dt;
+    }
+
+    //生成一整行数据
     function makeAll(data){
         var ul =    $('<ul class="clearfloat tables">');
         for(var i in data)
@@ -2081,7 +2114,7 @@ function smart_assignment(){
 
     //智能排考
     function makePlan(){
-        $.get(pars.makePlanUrl,function(testData){
+        $.post(pars.makePlanUrl,function(testData){
             if(testData.code==-999)
             {
                 alert(testData.message);

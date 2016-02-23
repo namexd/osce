@@ -112,9 +112,12 @@ class AutomaticPlanArrangement
         /*
          * 排考的时候删除原先的所有数据
          */
-        if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
-            throw new \Exception('清空所有数据失败！');
-        };
+        if (ExamPlanRecord::where('exam_id', $examId)->count()) {
+            if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
+                throw new \Exception('清空所有数据失败！');
+            };
+        }
+
 
         /*
          * 依靠场次清单来遍历
@@ -160,7 +163,6 @@ class AutomaticPlanArrangement
         //开始计时器
         for ($i = $beginDt; $i <= $endDt; $i += 60) {
             foreach ($this->_T as &$station) {
-//                dump(1);
                 /*
                  * 考试实体状态判断,使用exam_plan_record来判断状态
                  * 如果为false，就说明是开门状态
@@ -168,7 +170,11 @@ class AutomaticPlanArrangement
                 $tempBool = $this->ckeckStatus($station, $screen);
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
-                    $students = $this->needStudents($station, $screen);
+                    $students = $this->needStudents($station, $screen, $examId);
+                    if (count($students) == 0) {
+//                        $station->timer += 60;
+                        continue;
+                    }
                     //变更学生的状态(写记录)
                     foreach ($students as &$student) {
                         //拼装数据
@@ -186,10 +192,10 @@ class AutomaticPlanArrangement
                 } else {
                     $tempValue = $this->examPlanRecordIsOpenDoor($station, $screen);
                     //判断是否要开门
-                    if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60 - 60) {
+                    if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60) {
                         $station->timer = 0;
                         //将结束时间写在表内
-                        $tempValue->end_dt = date('Y-m-d H:i:s', $i + 59);
+                        $tempValue->end_dt = date('Y-m-d H:i:s', $i - 1);
                         if (!$tempValue->save()) {
                             throw new \Exception('开门失败！', -10);
                         }
@@ -249,6 +255,7 @@ class AutomaticPlanArrangement
      */
     private function waitExamQueue()
     {
+        $temp = [];
         //依据考试实体数量乘上系数为总数，进行循环
         for ($i = 0; $i < ($this->_T_Count) * config('osce.wait_student_num'); ++$i) {
             //将最后的学生弹出，放入到侯考区属性里
@@ -306,11 +313,10 @@ class AutomaticPlanArrangement
      * @time
      * @return array|mixed
      */
-    private function needStudents($station, $screen)
+    private function needStudents($station, $screen, $examId)
     {
         //获取正在考的考生
         $testStudents = $this->testStudents($station, $screen);
-//        dump($testStudents);
         //申明数组
         $result = [];
         /*
@@ -318,11 +324,12 @@ class AutomaticPlanArrangement
          * 从正在考的学生里找到对应个数的考生
          * 如果该考生已经考过了这个流程，就忽略掉
          */
-        $result = $this->studentNum($station, $testStudents, $result);
+        $result = $this->studentNum($station, $testStudents, $result, $examId);
+
         /*
          * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
          * 再将人从学生池里抽人进入侯考区
-         * 直接使用shift函数
+         * 直接使用array_shift函数
          */
         if (count($result) < $station->needNum) {
             for ($i = 0; $i < $station->needNum - count($result); $i++) {
@@ -338,6 +345,8 @@ class AutomaticPlanArrangement
                 }
             }
         }
+//        dump($result);
+//        echo '=============================================================';
         return $result;
     }
 
@@ -346,7 +355,7 @@ class AutomaticPlanArrangement
      * @param $testStudents
      * @return mixed
      * @author Jiangzhiheng
-     * @time
+     * @time 2016-02-19 15：36
      */
     private function testingStudents($testStudents)
     {
@@ -361,32 +370,37 @@ class AutomaticPlanArrangement
         $testedStudents = [];
         $tempTestStudent = [];
         foreach ($testStudents as $key => $testingStudent) {
+            if (is_array($testStudents)) {
+                $student = array_pull($testStudents, $key);
+            }
+            else
+            {
+                $student = $testStudents->pull($key);  //就把这个值从学生数组里弹出来
+            }
+
+            if(is_null($student))
+            {
+                continue;
+            }
             if (count($serialnumber) == count($testingStudent)) { //如果流程数量等于考生已经考过的流程数
-                if (is_array($testStudents)) {
-                    $testedStudents[] = array_pull($testStudents, $key);
-                } else {
-                    $testedStudents[] = $testStudents->pull($key);  //就把这个值从学生数组里弹出来
-                }
-
+                $testedStudents[]   = $student;  //就把这个值从学生数组里弹出来
             } else {
-                if (is_array($testStudents)) {
-                    $tempTestStudent[] = array_pull($testStudents, $key);
-                } else {
-                    $tempTestStudent[] = $testStudents->pull($key);  //就把这个值从学生数组里弹出来
-                }
-
+                $tempTestStudent[]  = $student;  //就把这个值从学生数组里弹出来
             }
         }
 
         //写进属性
         $this->_S_END = $testedStudents;
         //返回数组
+//        dump($tempTestStudent);
         return $tempTestStudent;
+
     }
 
     /**
      * 拿到已经考过了的考生和正在考的考生
-     * @param $screen
+     * @param $station 考站实例
+     * @param $screen 考试场次实例
      * @return array 已经考过了的考生及其考试流程
      * @author Jiangzhiheng
      * @time
@@ -409,17 +423,17 @@ class AutomaticPlanArrangement
             $arrays[] = $item->student;
         }
 
-//        dump($arrays);
         if (count($tempArrays) == 0) {
             $arrays = $this->beginStudents($station);
         }
+
 
         return $this->testingStudents($arrays);
     }
 
     /**
      * 刚刚进入考试的时候，需要调用此方法返回学生
-     * @param $station
+     * @param $station 考站实例
      * @return array
      * @author Jiangzhiheng
      * @time 2016-02-18 17:18
@@ -443,21 +457,10 @@ class AutomaticPlanArrangement
     /**
      * 将结果展示在屏幕上
      * @author Jiangzhiheng
-     * @time
+     * @time 2016-02-22 17：52
+     * @param $examId 考试id
+     * @return array 拼装完成的数组
      */
-
-//
-//`room_id` int(11) DEFAULT NULL COMMENT '考场id',
-//`student_id` int(11) NOT NULL COMMENT '学生id',
-//`station_id` int(11) DEFAULT NULL COMMENT '考站id',
-//`exam_id` int(11) NOT NULL COMMENT '考试id',
-//`exam_screening_id` int(11) NOT NULL COMMENT '场次id',
-//`end_dt` datetime DEFAULT NULL COMMENT '结束时间',
-//`begin_dt` datetime NOT NULL COMMENT '开始时间',
-//`serialnumber` int(11) NOT NULL COMMENT '流程序号',
-//`created_at` datetime DEFAULT NULL,
-//`updated_at` datetime DEFAULT NULL,
-//`id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
     public function output($examId)
     {
         $result = ExamPlanRecord::where('exam_id', $examId)
@@ -475,41 +478,49 @@ class AutomaticPlanArrangement
             $screeningId    =   $record->exam_screening_id;
             if($exam->sequence_mode == 1) //考场模式
             {
-                $arrays[$screeningId][$record->room_id][]=$record;
+                $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][]=$record;
             }
             else //考站模式
             {
-                $arrays[$screeningId][$record->room_id . '-' . $record->station_id][]=$record;
+                $arrays[$screeningId][$record->room_id . '-' . $record->station_id][strtotime($record->begin_dt)][]=$record;
             }
         }
 
         $timeData   =   [];
         foreach($arrays as $screeningId=> $screening)
         {
-            foreach($screening as $entityId=>$recordList)
+            foreach($screening as $entityId=>$timeList)
             {
-                foreach($recordList as $record)
+                foreach($timeList as $batch => $recordList)
                 {
-                    if($exam->sequence_mode == 1) //考场模式
-                    {
-                        $name   =   $record->room->name;
-                    }
-                    else //考站模式
-                    {
-                        $name   =   $record->room->name . '-' . $record->station->name;
-                    }
+                    foreach ($recordList as $record) {
+                        if($exam->sequence_mode == 1) //考场模式
+                        {
+                            $name   =   $record->room->name;
+                        }
+                        else //考站模式
+                        {
+                            $name   =   $record->room->name . '-' . $record->station->name;
+                        }
 
-                    $student    =   $record->student;
-                    //$timeData[strtotime($record->begin_dt)][$student->id]=$student;
+                        $student    =   $record->student;
+                        //$timeData[strtotime($record->begin_dt)][$student->id]=$student;
+//                    $timeData[$screeningId][$entityId]['name']=$name;
+//                    $timeData[$screeningId][$entityId]['child']['start']    =   strtotime($record->begin_dt);
+//                    $timeData[$screeningId][$entityId]['child']['end']      =   strtotime($record->end_dt);
+//                    $timeData[$screeningId][$entityId]['child']['screening']=   $screeningId;
+//                    $timeData[$screeningId][$entityId]['child']['items'][$student->id]  =   $student;
                     $timeData[$screeningId][$entityId]['name']=$name;
-                    $timeData[$screeningId][$entityId]['child']['start']    =   strtotime($record->begin_dt);
-                    $timeData[$screeningId][$entityId]['child']['end']      =   strtotime($record->end_dt);
-                    $timeData[$screeningId][$entityId]['child']['screening']=   $screeningId;
-                    $timeData[$screeningId][$entityId]['child']['items'][$student->id]  =   $student;
+                    $timeData[$screeningId][$entityId]['child'][$batch]['start']    =   strtotime($record->begin_dt);
+                    $timeData[$screeningId][$entityId]['child'][$batch]['end']      =   strtotime($record->end_dt);
+                    $timeData[$screeningId][$entityId]['child'][$batch]['screening']=   $screeningId;
+                    $timeData[$screeningId][$entityId]['child'][$batch]['items'][$student->id]  =   $student;
+
+                    }
                 }
             }
         }
-        dd(json_encode($timeData));
+        return $timeData;
     }
 
     /**
@@ -520,12 +531,20 @@ class AutomaticPlanArrangement
      * @author Jiangzhiheng
      * @time
      */
-    private function studentNum($station, $testStudents, $result)
+    private function studentNum($station, $testStudents, $result, $examId)
     {
         foreach ($testStudents as $testStudent) {
-            if (!is_object($testStudent)) {
+            if (is_object($testStudent)) {
+//                dump($station->id);
+//                dump($testStudent->id);
+//                dump($station->serialnumber);
+//                dump($testStudent->serialnumber);
+//                echo '================================';
+                $serialnumber = ExamPlanRecord::where('student_id',$testStudent->id)
+                    ->where('exam_id',$examId)->get()
+                    ->pluck('serialnumber');
 
-                if (in_array($station->serialnumber, $testStudent->serialnumber)) {
+                if (in_array($station->serialnumber,$serialnumber->toArray())) {
                     continue;
                 }
             }

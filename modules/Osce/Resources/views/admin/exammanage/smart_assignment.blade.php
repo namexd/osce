@@ -119,7 +119,7 @@
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'smart_assignment','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'
-    ,'makePlanUrl':'{{route('osce.admin.exam.getIntelligenceEaxmPlan',['id'=>$_GET['id']])}}'}" />
+    ,'makePlanUrl':'{{route('osce.admin.arrangement.postBegin',['exam_id'=>$_GET['id']])}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
