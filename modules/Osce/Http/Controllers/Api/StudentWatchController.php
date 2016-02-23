@@ -288,7 +288,7 @@ class StudentWatchController extends CommonController
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
-
+            dump($examStudent,22222);
 
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
@@ -299,6 +299,7 @@ class StudentWatchController extends CommonController
           }else{
                 $willStudents = $studentnum+1;
           }
+
 
         //判断预计考试时间
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
