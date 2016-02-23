@@ -249,8 +249,8 @@ a.btn:hover {text-decoration: none;}
  * 弹出提示样式
  */
 body .layer-ext-moon .layui-layer-btn .layui-layer-btn0 {
-    background: #1ab394!important;
-    border: 1px solid #1ab394!important;
+    background: #ed5565!important;
+    border: 1px solid #ed5565!important;
 }
 body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .fa-2x{font-size: 16px;}
@@ -281,7 +281,7 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 /*layer alert*/
 .layui-layer-title{
     background: #fff!important;
-    color: #1ab394!important;
+    color: #ed5565!important;
     font-size: 16px!important;
 }
 .layui-layer-btn {
