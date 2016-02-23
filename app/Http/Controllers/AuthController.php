@@ -213,6 +213,8 @@ class AuthController extends BaseController
      */
 
     public function deleteRole(){
+//        dd(config('config.username'));
+
         $id = Input::get('id');
 
         if($id){
@@ -221,7 +223,13 @@ class AuthController extends BaseController
                 return  redirect()->back()->withErrors(['该角色已绑定用户，请先去用户管理中解绑用户！']);
             }
 
-            $deleteRole = DB::connection('sys_mis')->table('sys_roles')->where(['id'=>$id])->whereNotBetween('id',[1 ,5])->delete();
+            $deleteRole = DB::connection('sys_mis')->table('sys_roles')
+                        ->where(['id'=>$id])
+                        ->whereNotIn('name',config('config.username'))
+                        ->delete();
+//            ->whereNotBetween('name',config('config.username'))
+
+
 
             if($deleteRole){
                 return redirect()->intended('/auth/auth-manage');
