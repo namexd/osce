@@ -191,6 +191,27 @@ class ExamQueue extends CommonModel
         }
     }
 
+    static public function examineeByStationId($stationId, $examId)
+    {
+        return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+            ->where('exam_queue.station_id',$stationId)
+            ->where('exam_queue.status', '<' , 3)
+            ->where('student.exam_id', $examId)
+            ->select(
+                'student.id as student_id',
+                'student.name as student_name',
+                'student.user_id as student_user_id',
+                'student.idcard as student_idcard',
+                'student.mobile as student_mobile',
+                'student.code as student_code',
+                'student.avator as student_avator',
+                'student.description as student_description'
+            )
+            ->orderBy('exam_queue.begin_dt', 'asc')
+            ->take(1)
+            ->get();
+    }
+
     /**
      * 从队列里取出下一组考生的接口
      * @param $room_id
@@ -221,6 +242,27 @@ class ExamQueue extends CommonModel
         }
     }
 
+    static public function nextExamineeByStationId($stationId, $examId)
+    {
+        try {
+            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                ->where('exam_queue.station', $stationId)
+                ->where('exam_queue.status', '<' ,3)
+                ->where('exam_queue.exam_id', $examId)
+                ->skip(1)  //TODO 可能要改
+                ->take(1)
+                ->orderBy('exam_queue.begin_dt', 'asc')
+                ->select(
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.code as student_code'
+                )
+                ->groupBy('student.id')
+                ->get();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
     /**
      * 学生腕表信息 下一场考试信息判断
      * @param $room_id
