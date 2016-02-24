@@ -193,7 +193,9 @@ class ExamQueue extends CommonModel
 
     static public function examineeByStationId($stationId, $examId)
     {
-        echo ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+        $connection = \DB::connection($this->connection);
+        $connection->enableQueryLog();
+        ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->where('exam_queue.station_id',$stationId)
             ->where('exam_queue.status', '<' , 3)
             ->where('student.exam_id', $examId)
@@ -209,7 +211,10 @@ class ExamQueue extends CommonModel
             )
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->take(1)
-            ->get()->toSql();
+            ->get();
+
+        $c = $connection->getQueryLog();
+        dd($c);
         exit();
     }
 
