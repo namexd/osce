@@ -1232,7 +1232,7 @@ class ExamController extends CommonController
             throw new \Exception('没有找到该考试');
         }
         $ExamPlanModel  =   new ExamPlan();
-        $plan   =   $ExamPlanModel  ->  showPlan($exam);
+        $plan   =   $ExamPlanModel  ->  showPlans($exam);
 
         $plan   =   $this           ->  getEmptyTime($plan);
 
