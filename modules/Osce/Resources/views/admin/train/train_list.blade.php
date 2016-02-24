@@ -28,7 +28,11 @@
                         url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
                         success:function(data){
                             if(data.code == 1){
-                                location.href='{{route('osce.admin.getTrainList')}}?page=1';
+                                layer.msg('删除成功',{skin:'msg-success',icon:1});
+                                setTimeout(function () {
+                                    location.href='{{route('osce.admin.getTrainList')}}?page=1';
+                                },1000)
+
                             }else {
                                 layer.close(its);
                                 layer.msg(data.message,{skin:'msg-error',icon:1});
