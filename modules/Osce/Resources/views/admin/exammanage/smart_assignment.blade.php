@@ -129,7 +129,7 @@
 
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.exam.postSaveExamPlan')}}" method="post">
+        <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.arrangement.postStore')}}" method="post">
             <input type="hidden" name="exam_id" value="{{$_GET['id']}}">
             <div class="panel blank-panel">
                 <div class="panel-heading">

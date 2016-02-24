@@ -98,6 +98,8 @@ class AutomaticPlanArrangementController extends CommonController
                     throw new \Exception('保存失败！');
                 }
             }
+
+            return redirect()->route('osce.admin.arrangement.getIndex');
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
