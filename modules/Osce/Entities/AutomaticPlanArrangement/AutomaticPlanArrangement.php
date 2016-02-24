@@ -468,7 +468,6 @@ class AutomaticPlanArrangement
             ->get();
 
         $exam = Exam::findOrFail($examId);
-        //$result = $result->groupBy('exam_screening_id');
 
         $arrays = [];
         foreach ($result as $record) {
