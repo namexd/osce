@@ -126,12 +126,13 @@ class AutomaticPlanArrangement
          */
         foreach ($this->screen as $item) {
             $this->screenPlan($examId, $item);
+            //判断是否还有必要进行下场排考
+            if (count($this->_S_ING) == 0 && count($this->_S) == 0) {
+                return $this->output($examId);
+            }
         }
 
-        //判断是否还有必要进行下场排考
-        if (count($this->_S_ING) == 0 && count($this->_S) == 0) {
-            return $this->output($examId);
-        }
+
     }
 
     /**

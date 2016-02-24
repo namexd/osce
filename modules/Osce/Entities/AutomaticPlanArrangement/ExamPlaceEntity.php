@@ -115,7 +115,10 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                 //通过关联找到对应的考站信息
                 foreach ($examFlowStations as $examFlowStation) {
                     //根据考站id找到对应的考场id
-                    $roomId = $examFlowStation->roomStation->room->first()->id;
+                    if (is_null($examFlowStation->roomStation)) {
+                        throw new \Exception($examFlowStation->station->name . '并没有与考场关联，请检查！');
+                    }
+                    $roomId = $examFlowStation->roomStation->room_id;
                     $temp = $examFlowStation->station;
                     if (is_null($temp)) {
                         throw new \Exception('该场考试没有关联考站或考场！', -2);

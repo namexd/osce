@@ -225,7 +225,7 @@ class UserController  extends CommonController
         ]);
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
-        $nowTime= date('Y-m-d h:i:sa',time());
+        $nowTime= date('Y-m-d H:i:s',time());
         try{
             $openid = \Illuminate\Support\Facades\Session::get('openid','');
             if (Auth::attempt(['username' => $username, 'password' => $password]))
