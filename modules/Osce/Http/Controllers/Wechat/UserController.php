@@ -186,8 +186,6 @@ class UserController  extends CommonController
                 {
                     Auth::login($user);
 
-                    $connection=\DB::connection('sys_mis');
-                    $connection->table('users')->where('id',$user->id)->update(['lastlogindate'=>$nowTime]);
                     return redirect()   ->route('osce.wechat.index.getIndex');
                 }
             }else{
@@ -227,19 +225,25 @@ class UserController  extends CommonController
         ]);
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
+        $nowTime= date('Y-m-d h:i:sa',time());
         try{
             $openid = \Illuminate\Support\Facades\Session::get('openid','');
             if (Auth::attempt(['username' => $username, 'password' => $password]))
             {
+                $user   =   Auth::user();
+                $connection=\DB::connection('sys_mis');
+                $connection->table('users')->where('id',$user->id)->update(['lastlogindate'=>$nowTime]);
                 if(!empty($openid))
                 {
-                    $user   =   Auth::user();
                     $user   ->  openid  =   $openid;
+
                     if(!$user   ->  save())
                     {
                         throw new \Exception('微信登录失败');
                     }
                 }
+//                //修改登录时间
+
                 return redirect()->route('osce.wechat.index.getIndex');
             }
             else
