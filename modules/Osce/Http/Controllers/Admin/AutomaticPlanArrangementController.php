@@ -20,11 +20,6 @@ use Auth;
 
 class AutomaticPlanArrangementController extends CommonController
 {
-    function __construct(ExamPlan $examPlan)
-    {
-        $this->plan = $examPlan;
-    }
-
     /**
      * 智能排考的着陆页
      * @param Request $request
@@ -63,23 +58,24 @@ class AutomaticPlanArrangementController extends CommonController
 
         $examId = $request->input('exam_id');
 
-        try {
+//        try {
             $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
 //            dd($automaticPlanArrangement->plan($examId));
             return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
      * 智能排考的保存
-     * @param Request $request
+     * @param Request $request request的实例
+     * @param ExamPlan $examPlan examPlan的实例
      * @return $this
      * @author Jiangzhiheng
      * @time 2016-02-23 17:30
      */
-    function postStore(Request $request) {
+    function postStore(Request $request, ExamPlan $examPlan) {
         $this->validate($request,[
            'exam_id' => 'required|integer'
         ]);
@@ -89,7 +85,7 @@ class AutomaticPlanArrangementController extends CommonController
         $user = Auth::user();
         ExamPlan::where('exam_id',$examId)->delete();
         try {
-            $this->plan->storePlan($examId,$user);
+            $examPlan->storePlan($examId,$user);
 
             return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$examId]);
         } catch (\Exception $ex) {

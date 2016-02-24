@@ -243,13 +243,13 @@
 <div class="wrapper wrapper-content animated fadeInRight">
 <div style="display:none;">
     <ul id="standard">
-        @foreach($standard as $key=>$item)
-        <li value="{{$standard[$key]}}"></li>
+        @foreach($standard as $item)
+            <li value="{{$item}}"></li>
         @endforeach
     </ul>
     <ul id="avg">
-        @foreach($avg as $key=>$item)
-        <li value="{{$avg[$key]}}"></li>
+        @foreach($avg as $item)
+            <li value="{{$item}}"></li>
         @endforeach
     </ul>
 </div>
@@ -286,7 +286,7 @@
                     </tr>
                     <tr>
                         <td><b>评价</b></td>
-                        <td colspan="5">{{$result['evaluate']}}</td>
+                        <td colspan="5">{{($result['evaluate']=='null'?'':$result['evaluate'])}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -346,27 +346,41 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach($scores as $key=>$item)
-                    <tr>
-                        <td>
-                            {{$item['standard']->pid==0? $item['standard']->sort:$item['standard']->parent->sort.'-'.$item['standard']->sort}}
-                        </td>
-                        <td><div title="{{$item['standard']->content}}" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:600px;">{{$item['standard']->content}}</div></td>
-                        <td>{{$item['standard']->score}}</td>
-                        <td>{{$item['score']}}</td>
-                        <td>
-                            <a href="javascript:void(0)">
-                              <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
-                              <ul class="img" style="display:none;">
-                                  @foreach($item['image'] as $k=>$img)
-                                  <li value="{{$img->url}}" download="{{route('osce.admin.getDownloadImage',array('id'=>$img->id))}}"></li>
-                                  @endforeach
-                                 
-                              </ul>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
+                    @forelse($scores as $key => $value)
+                        <tr>
+                            <td>{{$value['sort']}}</td>
+                            <td><div title="{{$value['content']}}" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:600px;">
+                                    {{$value['content']}}
+                                </div>
+                            </td>
+                            <td>{{$value['tScore']}}</td>
+                            <td>{{$value['score']}}</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        @forelse($value['items'] as $k => $item)
+                            <tr>
+                                <td>{{$item['standard']->parent->sort.'-'.$item['standard']->sort}}</td>
+                                <td><div title="{{$item['standard']->content}}" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:600px;">
+                                        {{$item['standard']->content}}
+                                    </div>
+                                </td>
+                                <td>{{$item['standard']->score}}</td>
+                                <td>{{$item['score']}}</td>
+                                <td>
+                                    <a href="javascript:void(0)">
+                                        <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
+                                        <ul class="img" style="display:none;">
+                                            @foreach($item['image'] as $k=>$img)
+                                                <li value="{{$img->url}}" download="{{route('osce.admin.getDownloadImage',array('id'=>$img->id))}}"></li>
+                                            @endforeach
+                                        </ul>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                        @endforelse
+                    @empty
+                    @endforelse
                 </tbody>
             </table>
         </div>

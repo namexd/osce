@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\StationTeacher;
@@ -114,7 +115,7 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                 //通过关联找到对应的考站信息
                 foreach ($examFlowStations as $examFlowStation) {
                     //根据考站id找到对应的考场id
-                    $roomId = $examFlowStation->roomStation->room->first()->id;
+                    $roomId = $examFlowStation->roomStation->room_id;
                     $temp = $examFlowStation->station;
                     if (is_null($temp)) {
                         throw new \Exception('该场考试没有关联考站或考场！', -2);

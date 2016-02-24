@@ -129,76 +129,101 @@ class ExamResultController extends CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamResultDetail(Request $request){
+    public function getExamResultDetail(Request $request)
+    {
        $this->validate($request,[
            'id'   => 'required|integer'
        ]);
 
-        $id=$request->get('id');
-        $examResult=new ExamResult();
-        $examResult=$examResult->getResultDetail($id);
-        $result=[];
+        $id = $request->get('id');
+        $examResult = new ExamResult();
+        $examResult = $examResult->getResultDetail($id);
+        $result = [];
         foreach($examResult as $item){
-         $result=[
-             'id' =>$item->id,
-             'exam_name' =>$item->exam_name,
-             'student'   =>$item->student,
-             'teacher'   =>$item->teacher,
-             'begin_dt'  =>$item->begin_dt,
-             'time'      =>$item->time,
-             'score'     =>$item->score,
-             'evaluate'  =>$item->evaluate,
-             'operation' =>$item->operation,
-             'skilled'   =>$item->skilled,
-             'patient'   =>$item->patient,
-             'station_id'   =>$item->station_id,
-             'affinity'  =>$item->affinity,
-             'subject_title' =>$item->subject_title,
-             'subject_id' =>$item->subject_id,
-         ];
+            $result = [
+                'id' =>$item->id,
+                'exam_name' =>$item->exam_name,
+                'student'   =>$item->student,
+                'teacher'   =>$item->teacher,
+                'begin_dt'  =>$item->begin_dt,
+                'time'      =>$item->time,
+                'score'     =>$item->score,
+                'evaluate'  =>$item->evaluate,
+                'operation' =>$item->operation,
+                'skilled'   =>$item->skilled,
+                'patient'   =>$item->patient,
+                'station_id'   =>$item->station_id,
+                'affinity'  =>$item->affinity,
+                'subject_title' =>$item->subject_title,
+                'subject_id' =>$item->subject_id,
+            ];
         }
         date_default_timezone_set("UTC");
         $result['time'] = date('H:i:s',$result['time']);
         date_default_timezone_set("PRC");
-        $score=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->select()->get();
-        $image=[];
+        $score = ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->get();
+
+//        $image=[];
+//        foreach($score as $itm){
+//            $image[]=[
+//                'standard'=>$itm->standard,
+//                'score'=>$itm->score,
+//                'image'=>'',
+//            ];
+//        }
+//        $scores=[];
+//        foreach($image as $img){
+//            $scores[]=[
+//                'standard'=>$img['standard'],
+//                'score'=>$img['score'],
+//                'image'=>TestAttach::where('test_result_id',$result['id'])->where('standard_id',$img['standard']->id)->select()->get(),
+//            ];
+//        }
+//        $standard=[];
+//        foreach($scores as $standards){
+//            if($standards['standard']->pid==0){
+//                $standard[]=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->where('standard_id',$standards['standard']->id)->select()->first()->score;
+//            }
+//        }
+//        $standardModel=new Standard();
+//        $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
+//        if(is_null($totalScore)){
+//            $sort=$totalScore[0]->sort;
+//            $avg=[];
+//            for($i=1;$i<=$sort;$i++){
+//                $avg[]=$standardModel->getAvgScore($i,$result['station_id'],$result['subject_id']);
+//            }
+//        }else{
+//            $avg=[0];
+//        }
+
+
+        //TODO: zhoufuxiang
+        $scores = [];
+        $itemScore = [];
         foreach($score as $itm){
-            $image[]=[
-                'standard'=>$itm->standard,
-                'score'=>$itm->score,
-                'image'=>'',
+            $pid = $itm->standard->pid;
+            $scores[$pid]['items'][] = [
+                'standard'  => $itm->standard,
+                'score'     => $itm->score,
+                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_id',$itm->standard->id)->get(),
             ];
+            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
         }
 
-        $scores=[];
-        foreach($image as $img){
-            $scores[]=[
-                'standard'=>$img['standard'],
-                'score'=>$img['score'],
-                'image'=>TestAttach::where('test_result_id',$result['id'])->where('standard_id',$img['standard']->id)->select()->get(),
-            ];
-
-        }
-
-        $standard=[];
-        foreach($scores as $standards){
-            if($standards['standard']->pid==0){
-                $standard[]=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->where('standard_id',$standards['standard']->id)->select()->first()->score;
-            }
-        }
-
+        $standard = [];
+        $avg = [];
         $standardModel=new Standard();
-        $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
-        if(is_null($totalScore)){
-            $sort=$totalScore[0]->sort;
-            $avg=[];
-            for($i=1;$i<=$sort;$i++){
-                $avg[]=$standardModel->getAvgScore($i,$result['station_id'],$result['subject_id']);
-            }
-        }else{
-            $avg=[0];
+        foreach ($scores as $index => $item) {
+            //获取考核点信息
+            $standardM = Standard::where('id', $index)->first();
+            $scores[$index]['sort']     = $standardM->sort;
+            $scores[$index]['content']  = $standardM->content;
+            $scores[$index]['tScore']   = $standardM->score;
+            $scores[$index]['score']    = $itemScore[$index]['totalScore'];
+            $standard[$index] = $itemScore[$index]['totalScore'];
+            $avg[$index] = $standardModel->getCheckPointAvg($index, $result['subject_id']);
         }
-
 
         return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
 

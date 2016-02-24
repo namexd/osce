@@ -237,7 +237,7 @@ class Station extends CommonModel
 
             $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
             if(!empty($examFlowStation)){
-                throw new \Exception('此考站已关联到考试流程中，不能修改！');
+                throw new \Exception('此考站已关联到考试流程中，不能做修改、保存操作！请点取消键返回！');
             }
             list($stationData, $vcrId, $caseId,$roomId) = $formData;
             //将原来的摄像机的状态回位

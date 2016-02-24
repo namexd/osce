@@ -13,7 +13,7 @@
 	var ue = UE.getEditor('editor');
 	$(function(){
 		@if(isset($_GET['suc']) && $_GET['suc']==1 && empty($errors->getMessages()))
-            layer.msg('保存成功！');
+            layer.msg('保存成功！',{skin:'msg-success',icon:1});
 		@endif
     })
 </script>

@@ -178,14 +178,12 @@ class AutomaticPlanArrangement
                         continue;
                     }
 
-//                    dump($students);
-//                    echo '=============================================';
                     //变更学生的状态(写记录)
                     foreach ($students as &$student) {
                         //拼装数据
                         $data = $this->dataBuilder($examId, $screen, $student, $station, $i);
-
                         $result = ExamPlanRecord::create($data);
+
                         if (!$result) {
                             throw new \Exception('关门失败！', -11);
                         }
@@ -219,7 +217,6 @@ class AutomaticPlanArrangement
         foreach ($undoneStudentsIds as $undoneStudentsId) {
             $undoneStudents[] = Student::findOrFail($undoneStudentsId);
         }
-
         //删除未考完学生记录
         if (!$undoneStudentsIds->isEmpty()) {
             if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
@@ -351,8 +348,6 @@ class AutomaticPlanArrangement
             }
         }
 
-//        dump($result);
-//        echo '=============================================================';
         return $result;
     }
 
@@ -376,6 +371,9 @@ class AutomaticPlanArrangement
         $testedStudents = [];
         $tempTestStudent = [];
         foreach ($testStudents as $key => $testingStudent) {
+            if (is_null($testingStudent)) {
+                continue;
+            }
             //获取该考生已经考过的流程
             $studentSerialnumber = $this->getStudentSerialnumber($testingStudent);
 
@@ -401,7 +399,6 @@ class AutomaticPlanArrangement
         //写进属性
         $this->_S_END = $testedStudents;
         //返回数组
-//        dump($tempTestStudent);
         return $tempTestStudent;
 
     }
@@ -536,6 +533,7 @@ class AutomaticPlanArrangement
     }
 
     /**
+     *
      * @param $station
      * @param $testStudents
      * @param $result
@@ -575,7 +573,6 @@ class AutomaticPlanArrangement
     private function ckeckStatus($station, $screen)
     {
         $examPlanRecord = $this->examPlanRecordIsOpenDoor($station, $screen);
-
 
         //如果有，说明是关门状态
         if (is_null($examPlanRecord)) {
@@ -621,10 +618,18 @@ class AutomaticPlanArrangement
      */
     private function examPlanRecordIsOpenDoor($station, $screen)
     {
-        return ExamPlanRecord::where('station_id', '=', $station->id)
-            ->where('exam_screening_id', '=', $screen->id)
-            ->whereNull('end_dt')
-            ->first();
+        if ($this->sequenceMode == 2) {
+            return ExamPlanRecord::where('station_id', '=', $station->id)
+                ->where('exam_screening_id', '=', $screen->id)
+                ->whereNull('end_dt')
+                ->first();
+        } elseif ($this->sequenceMode == 1) {
+            return ExamPlanRecord::where('room_id', '=', $station->id)
+                ->where('exam_screening_id', '=', $screen->id)
+                ->whereNull('end_dt')
+                ->first();
+        }
+
     }
 
     /**
