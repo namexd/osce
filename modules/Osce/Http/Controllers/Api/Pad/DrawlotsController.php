@@ -170,7 +170,9 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！');
             }
-
+            if ($examQueue->station_id != $station->id) {
+                throw new \Exception('当前学生还有考试没有考，请先去其他考站进行考试');
+            }
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
