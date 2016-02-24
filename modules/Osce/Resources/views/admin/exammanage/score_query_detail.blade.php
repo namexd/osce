@@ -33,6 +33,7 @@
         text-align: center;
          text-shadow: none;
     }
+    table tbody tr td:last-child{width: initial!important;}
 </style>
 @stop
 

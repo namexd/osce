@@ -139,7 +139,7 @@
                             if(data.code == 1){
                                 location.href='{{route("osce.admin.machine.getMachineList",["cate_id"=>2])}}'
                             }else {
-                                layer.msg(data.message);
+                                layer.msg(data.message,{skin:'msg-error',icon:1});
                             }
                         }
                     })
