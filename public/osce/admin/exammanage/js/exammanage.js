@@ -2115,6 +2115,11 @@ function smart_assignment(){
     //智能排考
     function makePlan(){
         $.post(pars.makePlanUrl,function(testData){
+            //加载中
+            var index = layer.load(0, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+
             if(testData.code==-999)
             {
                 alert(testData.message);
@@ -2126,10 +2131,14 @@ function smart_assignment(){
                 maketotal(testData.data);
                 //$('#makePlan').one('click',makePlan);
                 makeTime();
+
+                //关闭加载
+                layer.close(index);
             }
         });
     }
     $('#makePlan').click(function(){
+
         makePlan();
     })
 
