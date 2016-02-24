@@ -97,7 +97,7 @@ class DrawlotsController extends CommonController
             $station = StationTeacher::where('exam_id','=',$exam->id)
                 ->where('user_id','=',$id)
                 ->first();
-            dd($station);
+
             if (is_null($station)) {
                 throw new \Exception('你没有参加此次考试');
             }
@@ -111,7 +111,7 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->id, $examId);
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
             }
 
             //将学生照片的地址换成绝对路径
@@ -166,7 +166,7 @@ class DrawlotsController extends CommonController
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::nextExamineeByStationId($station->id, $examId);
+                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $examId);
             } else {
                 throw new \Exception('考试模式不存在！');
             }
