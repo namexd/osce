@@ -89,7 +89,7 @@ class AutomaticPlanArrangementController extends CommonController
         $user = Auth::user();
         ExamPlan::where('exam_id',$examId)->delete();
         try {
-            $this->plan->savePlan($examId,$user);
+            $this->plan->storePlan($examId,$user);
 
             return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$examId]);
         } catch (\Exception $ex) {
