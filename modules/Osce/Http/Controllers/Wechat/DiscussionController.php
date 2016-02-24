@@ -155,7 +155,6 @@ class DiscussionController extends  CommonController{
           $list=Discussion::where('id',$id)->select()->get();
           $discussionModel	=	new Discussion();
           $pagination				=	$discussionModel	->	getReplyPagination($id);
-
           foreach($list as $item){
               $question=[
                   'id' =>$item->id,
@@ -165,6 +164,8 @@ class DiscussionController extends  CommonController{
                   'name'   =>$item->getAuthor,
               ];
           }
+
+
           $countReply=Discussion::where('pid',$id)->count();
 
           //回复内容
@@ -210,6 +211,7 @@ class DiscussionController extends  CommonController{
                 'question'   =>$question,
                 'countReply' =>$countReply,
             );
+//          dd($row);
      
 
           return view('osce::wechat.discussion.discussion_detail')->with(['data'=>$data,'row'=>$row,'url'=>$url]);
