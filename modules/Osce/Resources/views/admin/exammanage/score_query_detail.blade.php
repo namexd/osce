@@ -63,7 +63,12 @@
 
                 var option = {
                     title : {
-                        text: '图表分析'
+                        text: '图表分析',
+                        textStyle:{
+                            fontFamily:'Microsoft YaHei',
+                            fontSize:16,
+                            color:'#676a6c'
+                        }
                     },
                     tooltip : {
                         trigger: 'axis'
