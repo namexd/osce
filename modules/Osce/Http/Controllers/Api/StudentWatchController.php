@@ -254,14 +254,15 @@ class StudentWatchController extends CommonController
     }
 
     private function  getExamComplete($examQueue){
-        //查询出考试结果
-        $examResult = ExamResult::where('student_id','=',$examQueue->student_id)->count();
+
         //根据考试获取到考试流程
         $ExamFlowModel = new  ExamFlow();
         $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
         //查询出学生当前已完成的考试
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $examQueue->student_id)->count();
         if ($ExamFinishStatus >= $studentExamSum){
+            //查询出考试结果
+            $examResult = ExamResult::where('student_id','=',$examQueue->student_id)->count();
             if($examResult == $studentExamSum){
                 $testresultModel = new TestResult();
                 $score =  $testresultModel->AcquireExam($examQueue->student_id);
@@ -270,9 +271,24 @@ class StudentWatchController extends CommonController
                     'title' =>'考试完成，最终总成绩',
                     'score' => $score,
                 ];
+                return $data;
+            }else{
+                $data=[
+                    'code'      =>  4,
+                    'title'     =>  '当前考站考试已完成',
+                    'surplus'   =>  0,
+                ];
 
                 return $data;
             }
+
+        }else{
+            $data=[
+                'code'      =>  -1,
+                'title'     =>  '还有考试未完成',
+            ];
+
+            return $data;
 
         }
 
