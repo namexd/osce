@@ -56,7 +56,7 @@ class ExamResult extends CommonModel
             $builder=$builder->where('station.id',$stationId);
         }
         if($name){
-            $builder=$builder->where('student.name',$name);
+            $builder=$builder->where('student.name', 'like', '%'.$name.'%');
         }
 
         $builder=$builder->select([
