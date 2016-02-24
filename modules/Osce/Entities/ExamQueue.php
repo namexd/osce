@@ -193,7 +193,7 @@ class ExamQueue extends CommonModel
 
     static public function examineeByStationId($stationId, $examId)
     {
-        $connection = \DB::connection($this->connection);
+        $connection = \DB::connection('osce_mis');
         $connection->enableQueryLog();
         ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->where('exam_queue.station_id',$stationId)
