@@ -81,7 +81,7 @@ class AutomaticPlanArrangement
         $this->_T_Count = count($examPlaceEntity->stationTotal($examId));
         $this->_T = $examPlaceEntity->stationTotal($examId);
         $this->_S_Count = count(Student::examStudent($examId));
-        $this->_S = Student::examStudent($examId);
+        $this->_S = Student::examStudent($examId)->shuffle();
         $this->screen = $exam->screenList($examId);
         $this->sequenceMode = $this->_Exam->sequence_mode;
         $this->exam_id = $examId;
@@ -112,26 +112,32 @@ class AutomaticPlanArrangement
      */
     function plan($examId)
     {
-        /*
-         * 排考的时候删除原先的所有数据
-         */
-        if (ExamPlanRecord::where('exam_id', $examId)->count()) {
-            if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
-                throw new \Exception('清空所有数据失败！');
-            };
-        }
+        try {
+            /*
+             * 排考的时候删除原先的所有数据
+             */
+            if (ExamPlanRecord::where('exam_id', $examId)->count()) {
+                if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
+                    throw new \Exception('清空所有数据失败！');
+                };
+            }
 
-        /*
-         * 依靠场次清单来遍历
-         */
-        foreach ($this->screen as $item) {
-            $this->screenPlan($examId, $item);
-            //判断是否还有必要进行下场排考
+            /*
+             * 依靠场次清单来遍历
+             */
+            foreach ($this->screen as $item) {
+                $this->screenPlan($examId, $item);
+                //判断是否还有必要进行下场排考
+            }
+
             if (count($this->_S_ING) == 0 && count($this->_S) == 0) {
                 return $this->output($examId);
+            } else {
+                throw new \Exception('人数太多，所设时间无法完成考试');
             }
+        } catch (\Exception $ex) {
+            throw $ex;
         }
-
 
     }
 
@@ -476,7 +482,7 @@ class AutomaticPlanArrangement
     {
         $result = ExamPlanRecord::where('exam_id', $examId)
             ->get();
-
+        dd($result);
         $exam = Exam::findOrFail($examId);
 
         $arrays = [];
@@ -514,12 +520,7 @@ class AutomaticPlanArrangement
                         }
 
                         $student    =   $record->student;
-                        //$timeData[strtotime($record->begin_dt)][$student->id]=$student;
-//                    $timeData[$screeningId][$entityId]['name']=$name;
-//                    $timeData[$screeningId][$entityId]['child']['start']    =   strtotime($record->begin_dt);
-//                    $timeData[$screeningId][$entityId]['child']['end']      =   strtotime($record->end_dt);
-//                    $timeData[$screeningId][$entityId]['child']['screening']=   $screeningId;
-//                    $timeData[$screeningId][$entityId]['child']['items'][$student->id]  =   $student;
+
                     $timeData[$screeningId][$entityId]['name']=$name;
                     $timeData[$screeningId][$entityId]['child'][$batch]['start']    =   strtotime($record->begin_dt);
                     $timeData[$screeningId][$entityId]['child'][$batch]['end']      =   strtotime($record->end_dt);

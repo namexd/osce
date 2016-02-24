@@ -75,6 +75,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('config/area-store', ['uses'=>'ConfigController@postAreaStore','as'=>'osce.admin.config.postAreaStore']);
 		Route::post('config/del-area',	 ['uses'=>'ConfigController@postDelArea','as'=>'osce.admin.config.postDelArea']);
 		Route::post('config/name-unique', 	['uses'=>'ConfigController@postNameUnique','as'=>'osce.admin.config.postNameUnique']);	//判断名称是否存在
+		Route::get('config/weChat-help', 	['uses'=>'ConfigController@getWeChatHelp','as'=>'osce.admin.config.getWeChatHelp']);	//微信设置帮助
 
 
 		Route::post('invigilator/select-teacher',	['uses'=>'InvigilatorController@postSelectTeacher', 'as'=>'osce.admin.invigilator.postSelectTeacher']);

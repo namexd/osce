@@ -56,7 +56,7 @@
             <div class="ibox-content">
                 <div style="margin-top: 10px;display: none;">
                     <label class="check_label checkbox_input">
-                        <div class="check_icon" style="display: inline-block"></div>
+                        <div class="check_icon" style="display:inline-block"></div>
                         <input type="checkbox" value="">
                         <span style="float: right;text-indent: 6px">技能中心管理系统</span>
                     </label>
@@ -93,15 +93,15 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>
+                                            <td style="background:#fff;border:none;">
                                                 <ul class="clear_padding">
                                                     @foreach($MenusList as $val)
                                                         <li>
                                                             <div class="ibox float-e-margins clear_margin">
-                                                                <label class="check_label checkbox_input" hidevalue="{{ @$val['SysPermissionMenu']['permission_id'] }}">
-                                                                    <div  class="check_real check_icon display_inline @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>
+                                                                <label class="check_label checkbox_input clearfix" hidevalue="{{ @$val['SysPermissionMenu']['permission_id'] }}">
+                                                                    <div style="float:left;"  class="check_real check_icon display_inline @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr)) check @endif"></div>
                                                                     @if(!empty($val['SysPermissionMenu']['permission_id']) && in_array(@$val['SysPermissionMenu']['permission_id'],$PermissionIdArr))<input type="hidden"  name="permission_id[]" value="{{ @$val['SysPermissionMenu']['permission_id'] }}"> @endif
-                                                                    <span class="check_name">{{ @$val['name'] }}</span>
+                                                                    <span style="float:left;position: relative;top:-1px;" class="check_name">&nbsp;&nbsp;{{ @$val['name'] }}</span>
                                                                 </label>
                                                                 <div class="ibox-tools">
                                                                     <a class="collapse-link">

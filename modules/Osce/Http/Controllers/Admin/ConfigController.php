@@ -330,4 +330,24 @@ class ConfigController extends CommonController
             throw $ex;
         }
     }
+
+
+    /**
+     * 微信帮助设置
+     * @method GET
+     * @url /osce/admin/config/weChat-help
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return view
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWeChatHelp(Request $request){
+        $current_url    =   $_SERVER['HTTP_HOST'];
+        return view('osce::admin.sysmanage.system_help',['url'=>$current_url]);
+
+    }
 }
