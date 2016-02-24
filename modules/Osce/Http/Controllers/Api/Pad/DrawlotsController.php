@@ -97,6 +97,7 @@ class DrawlotsController extends CommonController
             $station = StationTeacher::where('exam_id','=',$exam->id)
                 ->where('user_id','=',$id)
                 ->first();
+            dd($station);
             if (is_null($station)) {
                 throw new \Exception('你没有参加此次考试');
             }
