@@ -298,9 +298,13 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
+//    //开启事务
+//$connection = DB::connection($this->connection);
+//$connection->beginTransaction();
     public function AlterTimeStatus($studentId, $stationId, $nowTime)
 
     {
+
         try {
 
             $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
