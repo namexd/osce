@@ -118,7 +118,6 @@ class AutomaticPlanArrangement
             };
         }
 
-
         /*
          * 依靠场次清单来遍历
          */
@@ -176,6 +175,8 @@ class AutomaticPlanArrangement
                         continue;
                     }
                     //变更学生的状态(写记录)
+//                    dump($students);
+//                    echo '=======================';
                     foreach ($students as &$student) {
                         //拼装数据
                         $data = $this->dataBuilder($examId, $screen, $student, $station, $i);
@@ -335,9 +336,8 @@ class AutomaticPlanArrangement
             for ($i = 0; $i < $station->needNum - count($result); $i++) {
                 if (count($this->_S_ING) > 0) {
                     $thisStudent = array_shift($this->_S_ING);
-
                     if (!is_null($thisStudent)) {
-                        $result[] = array_shift($this->_S_ING);
+                        $result[] = $thisStudent;
                     }
                     if (count($this->_S) > 0) {
                         $this->_S_ING[] = array_shift($this->_S);
@@ -345,6 +345,7 @@ class AutomaticPlanArrangement
                 }
             }
         }
+
 //        dump($result);
 //        echo '=============================================================';
         return $result;

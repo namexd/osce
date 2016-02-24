@@ -26,8 +26,8 @@ class ExamFlowStation extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamQueue','station_id','station_id');
     }
 
-    public function room() {
-       return $this->belongsToMany('\Modules\Osce\Entities\Room','room_station','station_id','room_id');
+    public function roomStation() {
+       return $this->belongsTo('\Modules\Osce\Entities\RoomStation','station_id','station_id');
     }
 
     public function station(){
