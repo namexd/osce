@@ -64,7 +64,11 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>1])}}">全部</a></li>
                                 @forelse($machineStatuValues as $status=>$machineStatuValue)
-                                    <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>1,'status'=>$status])}}">{{$machineStatuValue}}</a></li>
+                                    @if(array_key_exists('name',$_GET))
+                                        <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>1,'status'=>$status,'name'=>$_GET['name']])}}">{{$machineStatuValue}}</a></li>
+                                    @else
+                                        <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>1,'status'=>$status])}}">{{$machineStatuValue}}</a></li>
+                                    @endif
                                 @empty
                                 @endforelse
                             </ul>

@@ -30,7 +30,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.resourcemanage.equ_manage_watch_list');
+        return view('osce::admin.sysmanage.system_help');
     }
 
     /**

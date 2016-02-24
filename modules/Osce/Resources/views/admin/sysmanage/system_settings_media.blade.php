@@ -11,6 +11,13 @@
 	.checkbox_input{margin:10px 10px 0 0;font-weight:100;cursor:pointer;}
 	.check_name{padding:0;height:16px;position: relative;top:-3px;}
 	#checkbox_div .glyphicon{display:none!important;}
+	.fa-question-circle{
+		float: left;
+	    line-height: 10px;
+	    margin-left: 10px;
+	    font-size: 16px;
+	    color: #16beb0;
+	}
 </style>
 @stop
 
@@ -254,7 +261,7 @@
 			            </div>
 			        </div>
 			        <div class="ibox-title" style="border:none;">
-			            <h5>微信</h5>
+			            <h5>微信</h5><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a>
 			        </div>
 			        <div class="ibox-content">
 			            <div class="row">
