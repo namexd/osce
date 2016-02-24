@@ -261,7 +261,7 @@
 			            </div>
 			        </div>
 			        <div class="ibox-title" style="border:none;">
-			            <h5>微信</h5><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a>
+			            <h5>微信</h5><a href="{{route('osce.admin.config.getWeChatHelp')}}" target="_blank"><i class="fa fa-question-circle"></i></a>
 			        </div>
 			        <div class="ibox-content">
 			            <div class="row">
