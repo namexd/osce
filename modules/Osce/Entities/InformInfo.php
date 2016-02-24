@@ -149,7 +149,11 @@ class InformInfo extends CommonModel{
 
 
 
-    public function getList($accept){
+    /**
+     *  获取资讯列表
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     */
+    public function getList($accept, $exam_ids){
         switch($accept){
             case 1: $where = '1%';
                 break;
@@ -160,7 +164,8 @@ class InformInfo extends CommonModel{
             default: $where = '1,2,3';
         }
 
-        return $this->whereNotNUll('accept')->where('accept', 'like', "$where")->paginate(config('osce.page_size'));
+        return $this->whereNotNUll('accept')->where('accept', 'like', "$where")
+            ->whereIn('exam_id', $exam_ids)->paginate(config('osce.page_size'));
     }
 
     /**
