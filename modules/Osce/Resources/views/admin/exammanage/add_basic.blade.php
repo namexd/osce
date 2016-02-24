@@ -176,7 +176,7 @@
 <script>
     $(function(){
         @if(isset($_GET['succ']))
-            layer.msg('保存成功！');
+            layer.msg('保存成功！',{skin:'msg-success',icon:1});
         @endif
     })
 </script>
