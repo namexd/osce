@@ -18,7 +18,7 @@ class Discussion extends CommonModel{
     public      $search    =   [];
 
     public function getAuthor(){
-        return $this->belongsTo('App\Entities\User','create_user_id','id');
+        return $this->belongsTo('App\Entities\User','id','create_user_id');
     }
 
     public function getDiscussionPagination(){

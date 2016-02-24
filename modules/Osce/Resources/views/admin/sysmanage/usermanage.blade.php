@@ -93,12 +93,12 @@
                         if(data.code == 1){
                             location.reload();
                         }else {
-                            layer.alert(data.message);
+                            layer.msg(data.message,{skin:'msg-error',type:1});
                         }
                     }
                 })
             });
-    })
+        })
 
     })
 </script>

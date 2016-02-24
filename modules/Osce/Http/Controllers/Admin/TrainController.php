@@ -251,7 +251,10 @@ class TrainController extends  CommonController{
 //        if($userId!==$createId || $createId!==$manager[0]){
 //            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
-        
+
+        if($user->roles){
+            return redirect()->back()->withInput()->withErrors(['还没分配角色']);
+        }
         if($userId==$createId || $user->roles[0]->id == config('config.superRoleId')){
             $result=InformTrain::where('id',$id)->delete();
             if($result){
