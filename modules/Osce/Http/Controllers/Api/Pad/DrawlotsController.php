@@ -26,6 +26,18 @@ use DB;
 
 class DrawlotsController extends CommonController
 {
+    /*
+     * 考站id
+     */
+    protected $station_id = 0;
+
+//    protected $exam = '';
+//
+//    public function __construct(Exam $exam)
+//    {
+//        $this->exam = $exam;
+//    }
+
     /**
      *根据老师的id获取对应的考场(接口)
      * @method GET
@@ -91,8 +103,12 @@ class DrawlotsController extends CommonController
             }
 
             $examId = $exam->id;
-            //从队列表中通过考场ID得到对应的考生信息
-            $examQueue =  ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
+            if ($exam->sequence_mode == 1) {
+                //从队列表中通过考场ID得到对应的考生信息
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
+            } elseif ($exam->sequence_mode == 2) {
+                $examQueue = ExamQueue::examineeByStationId($this->station_id, $examId);
+            }
 
             //将学生照片的地址换成绝对路径
             foreach ($examQueue as &$item) {
@@ -135,7 +151,13 @@ class DrawlotsController extends CommonController
 
             list($room_id, $stationNum) = $this->getRoomIdAndStation($id,$exam);
 
-            $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
+            if ($exam->sequence_mode == 1) {
+                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
+            } elseif ($exam->sequence_mode == 2) {
+                $examQueue = ExamQueue::nextExamineeByStationId($this->station_id, $examId);
+            } else {
+                throw new \Exception('考试模式不存在！');
+            }
 
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
@@ -250,6 +272,8 @@ class DrawlotsController extends CommonController
             //将考试的id封装进去
             $station->exam_id = $exam->id;
 
+            //将考站的id写进属性
+            $this->station_id = $station->id;
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));

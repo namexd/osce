@@ -84,6 +84,7 @@ class AutomaticPlanArrangement
         $this->_S = Student::examStudent($examId)->shuffle();
         $this->screen = $exam->screenList($examId);
         $this->sequenceMode = $this->_Exam->sequence_mode;
+        $this->sequenceCate = $this->_Exam->sequence_cate;
         $this->exam_id = $examId;
 
         /*
@@ -420,15 +421,23 @@ class AutomaticPlanArrangement
      */
     private function testStudents($station, $screen)
     {
-        /*
-         * 找到当前场次的所有的记录
-         * 将其按考生id分组,拿到分组后的流程编号
-         */
-        $tempArrays = ExamPlanRecord::where('exam_screening_id', $screen->id)
-            ->whereNotNull('end_dt')
-            ->groupBy('student_id')
-            ->get();
+        switch ($this->sequenceCate) {
+            case 1; //这是随机
+                /*
+                 * 找到当前场次的所有的记录
+                 * 将其按考生id分组,拿到分组后的流程编号
+                 */
+                $tempArrays = ExamPlanRecord::randomBeginStudent($screen);
+                break;
+            case 2: //这是顺序
+                $tempArrays = ExamPlanRecord::pollBeginStudent($station,$screen);
+                break;
+            case 3: //这是轮询
 
+                break;
+            default:
+                throw new \Exception('没有对应的考试排序模式！');
+        }
         $num = $this->waitingStudentSql($screen);
 
         $arrays = [];
