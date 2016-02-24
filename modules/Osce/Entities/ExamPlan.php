@@ -829,7 +829,7 @@ class ExamPlan extends CommonModel
                         ['items'][] =   $examPlan->student;
                         $examPlanData
                         [$screeningId]
-                        [$roomStaionInfo[0].'-'.$roomStaionInfo[1]]
+                        [$roomStaionInfo[0]]
                         ['child'][$bacthIndex]
                         ['screening'] =  $screeningId;
                     }
@@ -837,6 +837,61 @@ class ExamPlan extends CommonModel
             }
         }
         return $examPlanData;
+    }
+
+    public function showPlans($exam)
+    {
+        $list   =   $this->where('exam_id','=',$exam->id)->get();
+
+        $arrays = [];
+        foreach ($list as $record) {
+            //$arrays = $screen->groupBy('station_id');
+            $screeningId    =   $record->exam_screening_id;
+            $station_id     =   $record->station_id;
+            //$station        =   $record->station;
+            $screeningId    =   $record->exam_screening_id;
+            if($exam->sequence_mode == 1) //考场模式
+            {
+                $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][]=$record;
+            }
+            else //考站模式
+            {
+                $arrays[$screeningId][$record->room_id . '-' . $record->station_id][strtotime($record->begin_dt)][]=$record;
+            }
+        }
+
+        $timeData   =   [];
+        foreach($arrays as $screeningId=> $screening)
+        {
+            foreach($screening as $entityId=>$timeList)
+            {
+                foreach($timeList as $batch => $recordList)
+                {
+                    foreach ($recordList as $record) {
+                        if($exam->sequence_mode == 1) //考场模式
+                        {
+                            $name   =   $record->room->name;
+                        }
+                        else //考站模式
+                        {
+                            $name   =   $record->room->name . '-' . $record->station->name;
+                        }
+
+                        $student    =   $record->student;
+
+                        $timeData[$screeningId][$entityId]['name']=$name;
+                        $timeData[$screeningId][$entityId]['child'][$batch]['start']    =   strtotime($record->begin_dt);
+                        $timeData[$screeningId][$entityId]['child'][$batch]['end']      =   strtotime($record->end_dt);
+                        $timeData[$screeningId][$entityId]['child'][$batch]['screening']=   $screeningId;
+                        $timeData[$screeningId][$entityId]['child'][$batch]['items'][$student->id]  =   $student;
+
+                    }
+                }
+            }
+        }
+        return $timeData;
+
+
     }
 
     /**
