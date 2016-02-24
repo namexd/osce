@@ -476,7 +476,7 @@ class AutomaticPlanArrangement
     {
         $result = ExamPlanRecord::where('exam_id', $examId)
             ->get();
-
+        dd($result);
         $exam = Exam::findOrFail($examId);
 
         $arrays = [];

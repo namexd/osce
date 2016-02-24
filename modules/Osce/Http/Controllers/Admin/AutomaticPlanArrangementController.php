@@ -58,13 +58,13 @@ class AutomaticPlanArrangementController extends CommonController
 
         $examId = $request->input('exam_id');
 
-        try {
+//        try {
             $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
-            dd($automaticPlanArrangement->plan($examId));
-//            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//            dd($automaticPlanArrangement->plan($examId));
+            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
