@@ -110,6 +110,7 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
             } elseif ($exam->sequence_mode == 2) {
+                dd($exam->sequence_mode);
                 $examQueue = ExamQueue::examineeByStationId($station->id, $examId);
             }
 
