@@ -169,7 +169,6 @@ class DiscussionController extends  CommonController{
 
           //回复内容
            $replys=Discussion::where('pid',$id)->select()->get();
-          dd($replys);
            $data=[];
           foreach($replys as $itm){
               $time=time()-strtotime($item->created_at);
