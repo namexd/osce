@@ -320,7 +320,6 @@ class AutomaticPlanArrangement
      */
     private function needStudents($station, $screen, $examId)
     {
-//        dump($this->_S_ING);
         //获取正在考的考生
         $testStudents = $this->testStudents($station, $screen);
 
@@ -378,9 +377,7 @@ class AutomaticPlanArrangement
         $tempTestStudent = [];
         foreach ($testStudents as $key => $testingStudent) {
             //获取该考生已经考过的流程
-            $studentSerialnumber = ExamPlanRecord::where('student_id',$testingStudent->id)
-                ->where('exam_id',$this->exam_id)->get()
-                ->pluck('serialnumber');
+            $studentSerialnumber = $this->getStudentSerialnumber($testingStudent);
 
             if (is_array($testStudents)) {
                 $student = array_pull($testStudents, $key);
@@ -550,9 +547,7 @@ class AutomaticPlanArrangement
     {
         foreach ($testStudents as $testStudent) {
             if (is_object($testStudent)) {
-                $serialnumber = ExamPlanRecord::where('student_id',$testStudent->id)
-                    ->where('exam_id',$examId)->get()
-                    ->pluck('serialnumber');
+                $serialnumber = $this->getStudentSerialnumber($testStudent);
 
                 if (in_array($station->serialnumber,$serialnumber->toArray())) {
                     continue;
@@ -630,5 +625,19 @@ class AutomaticPlanArrangement
             ->where('exam_screening_id', '=', $screen->id)
             ->whereNull('end_dt')
             ->first();
+    }
+
+    /**
+     * @param $testingStudent
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time
+     */
+    private function getStudentSerialnumber($testingStudent)
+    {
+        $studentSerialnumber = ExamPlanRecord::where('student_id', $testingStudent->id)
+            ->where('exam_id', $this->exam_id)->get()
+            ->pluck('serialnumber');
+        return $studentSerialnumber;
     }
 }
