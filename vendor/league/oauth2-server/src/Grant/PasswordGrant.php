@@ -97,6 +97,7 @@ class PasswordGrant extends AbstractGrant
 
         $clientSecret = $this->server->getRequest()->request->get('client_secret',
             $this->server->getRequest()->getPassword());
+
         if (is_null($clientSecret)) {
             throw new Exception\InvalidRequestException('client_secret');
         }

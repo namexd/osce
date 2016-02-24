@@ -58,49 +58,34 @@ class AutomaticPlanArrangementController extends CommonController
 
         $examId = $request->input('exam_id');
 
-        try {
+//        try {
             $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
 //            dd($automaticPlanArrangement->plan($examId));
             return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
      * 智能排考的保存
-     * @param Request $request
+     * @param Request $request request的实例
+     * @param ExamPlan $examPlan examPlan的实例
      * @return $this
      * @author Jiangzhiheng
      * @time 2016-02-23 17:30
      */
-    function postStore(Request $request) {
+    function postStore(Request $request, ExamPlan $examPlan) {
         $this->validate($request,[
            'exam_id' => 'required|integer'
         ]);
         $examId = $request->input('exam_id');
-        //通过id找到对应的数据
-        $data = ExamPlanRecord::where('exam_id',$examId)->get();
+
         //获取操作者
         $user = Auth::user();
         ExamPlan::where('exam_id',$examId)->delete();
         try {
-            foreach ($data as $item) {
-                $array = [
-                    'exam_id' => $examId,
-                    'exam_screening_id' => $item->exam_screening_id,
-                    'student_id' => $item->student_id,
-                    'station_id' => $item->station_id,
-                    'room_id' => $item->room_id,
-                    'begin_dt' => $item->begin_dt,
-                    'end_dt' => $item->end_dt,
-                    'status' => 0,
-                    'created_user_id' => $user->id,
-                ];
-                if (!$a = ExamPlan::create($array)) {
-                    throw new \Exception('保存失败！');
-                }
-            }
+            $examPlan->storePlan($examId,$user);
 
             return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$examId]);
         } catch (\Exception $ex) {
