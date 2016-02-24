@@ -400,7 +400,6 @@ class DrawlotsController extends CommonController
                 }
 
                 //将队列状态变更为1
-                dd($tempObj);
                 $tempObj->status = 1;
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！',3900);
