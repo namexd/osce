@@ -355,7 +355,8 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditInvigilator(Request $request){
+    public function postEditInvigilator(Request $request)
+    {
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
@@ -366,6 +367,8 @@ class InvigilatorController extends CommonController
             'code'          =>  'required',
             'images_path'   =>  'required',
             'description'   =>  'sometimes',
+        ],[
+            'images_path.required'  => '请上传头像',
         ]);
         $id             =   (int)$request    ->  get('id');
         //用户数据
@@ -410,7 +413,8 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditSpInvigilator(Request $request){
+    public function postEditSpInvigilator(Request $request)
+    {
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
@@ -422,6 +426,8 @@ class InvigilatorController extends CommonController
             'images_path'   =>  'required',
             'case_id'       =>  'required',
             'description'   =>  'sometimes',
+        ],[
+            'images_path.required'  => '请上传头像',
         ]);
 
         $id                 =   (int)$request    ->  get('id');
