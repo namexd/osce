@@ -81,7 +81,7 @@ class AutomaticPlanArrangement
         $this->_T_Count = count($examPlaceEntity->stationTotal($examId));
         $this->_T = $examPlaceEntity->stationTotal($examId);
         $this->_S_Count = count(Student::examStudent($examId));
-        $this->_S = Student::examStudent($examId);
+        $this->_S = Student::examStudent($examId)->shuffle();
         $this->screen = $exam->screenList($examId);
         $this->sequenceMode = $this->_Exam->sequence_mode;
         $this->exam_id = $examId;
@@ -514,12 +514,7 @@ class AutomaticPlanArrangement
                         }
 
                         $student    =   $record->student;
-                        //$timeData[strtotime($record->begin_dt)][$student->id]=$student;
-//                    $timeData[$screeningId][$entityId]['name']=$name;
-//                    $timeData[$screeningId][$entityId]['child']['start']    =   strtotime($record->begin_dt);
-//                    $timeData[$screeningId][$entityId]['child']['end']      =   strtotime($record->end_dt);
-//                    $timeData[$screeningId][$entityId]['child']['screening']=   $screeningId;
-//                    $timeData[$screeningId][$entityId]['child']['items'][$student->id]  =   $student;
+
                     $timeData[$screeningId][$entityId]['name']=$name;
                     $timeData[$screeningId][$entityId]['child'][$batch]['start']    =   strtotime($record->begin_dt);
                     $timeData[$screeningId][$entityId]['child'][$batch]['end']      =   strtotime($record->end_dt);
