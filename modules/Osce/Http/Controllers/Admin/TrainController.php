@@ -238,31 +238,48 @@ class TrainController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getDelTrain(Request $request){
+    public function getDelTrain(Request $request)
+    {
         $this->validate($request,[
             'id'  =>'required|integer'
         ]);
 
-        $id=intval($request->get('id'));
-        $user=Auth::user();
-        $userId=$user->id;
-        $createId=InformTrain::where('id',$id)->select()->first()->create_user_id;
+        try{
+            $id = intval($request->get('id'));
+            $informTrain = InformTrain::where('id', $id)->first();
+            if($informTrain){
+                $createId = $informTrain->create_user_id;
+            }else{
+                throw new \Exception('没有找到当前信息');
+            }
+
 //        $manager=config('osce.manager');
 //        if($userId!==$createId || $createId!==$manager[0]){
 //            return redirect()->back()->withInput()->withErrors('权限不足');
 //        }
 
-        if($user->roles){
-            return redirect()->back()->withInput()->withErrors(['还没分配角色']);
-        }
-        if($userId==$createId || $user->roles[0]->id == config('config.superRoleId')){
-            $result=InformTrain::where('id',$id)->delete();
-            if($result){
-                return redirect('/osce/admin/train/train-list')->with('success','删除成功');
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
             }
-            return redirect()->back()->withInput()->withErrors(['删除失败']);
-        }else{
-            return redirect()->back()->withInput()->withErrors(['权限不足']);
+            if(!count($user->roles)){
+                throw new \Exception('还没分配角色');
+            }
+            $userId = $user->id;
+            if($userId == $createId || $user->roles[0]->id == config('config.superRoleId')){
+                $result = InformTrain::where('id',$id)->delete();
+                if($result){
+                    return $this->success_data(['删除成功']);
+//                    return redirect('/osce/admin/train/train-list')->with('success','删除成功');
+                }
+                throw new \Exception('删除失败');
+//                return redirect()->back()->withErrors(['删除失败']);
+            }else{
+                throw new \Exception('权限不足');
+//                return redirect()->back()->withErrors(['权限不足']);
+            }
+        } catch(\Exception $ex){
+            return $this->fail($ex);
         }
 
     }
