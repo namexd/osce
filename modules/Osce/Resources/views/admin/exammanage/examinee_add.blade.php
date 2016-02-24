@@ -146,10 +146,11 @@
                 });
             }) ;
 
-            $('#submit').click(function(){
-                if($('#file0').val()==''){
+            //图片检测
+            $('#save').click(function(){
+                if($('.img_box').find('img').attr('src')==undefined){
                     layer.msg('请上传图片！',{skin:'msg-error',icon:1});
-                    return;
+                    return false;
                 }
             });
 
@@ -253,7 +254,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit" id="submit">保存</button>
+                                    <button class="btn btn-primary" type="submit" id="save">保存</button>
                                     <button class="btn btn-white return-pre" type="button">取消</button>
                                 </div>
                             </div>
