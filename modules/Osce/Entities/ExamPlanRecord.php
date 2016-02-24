@@ -13,7 +13,7 @@ class ExamPlanRecord extends CommonModel
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_plan_record';
-    public $timestamps = true;
+    public $timestamps = false;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
