@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\StationTeacher;
