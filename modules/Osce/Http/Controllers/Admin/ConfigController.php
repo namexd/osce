@@ -347,8 +347,7 @@ class ConfigController extends CommonController
      */
     public function getWeChatHelp(Request $request){
         $current_url    =   $_SERVER['HTTP_HOST'];
-        dd($current_url);
-        return redirect()->route('osce.admin.config.getArea');
+        return view('osce::admin.sysmanage.system_help',['url'=>$current_url]);
 
     }
 }
