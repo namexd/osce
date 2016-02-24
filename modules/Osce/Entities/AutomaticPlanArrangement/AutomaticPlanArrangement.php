@@ -81,7 +81,7 @@ class AutomaticPlanArrangement
         $this->_T_Count = count($examPlaceEntity->stationTotal($examId));
         $this->_T = $examPlaceEntity->stationTotal($examId);
         $this->_S_Count = count(Student::examStudent($examId));
-        $this->_S = Student::examStudent($examId);
+        $this->_S = Student::examStudent($examId)->shuffle();
         $this->screen = $exam->screenList($examId);
         $this->sequenceMode = $this->_Exam->sequence_mode;
         $this->exam_id = $examId;
