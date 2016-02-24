@@ -26,10 +26,6 @@ use DB;
 
 class DrawlotsController extends CommonController
 {
-    /*
-     * 考站id
-     */
-    protected $station_id = 0;
 
 //    protected $exam = '';
 //
@@ -97,6 +93,13 @@ class DrawlotsController extends CommonController
 
             list($room_id, $stationNum) = $this->getRoomIdAndStation($id,$exam);
 
+            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id','=',$exam->id)
+                ->where('user_id','=',$id)
+                ->first();
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
+            }
 
             if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试',3000);
@@ -107,7 +110,7 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($this->station_id, $examId);
+                $examQueue = ExamQueue::examineeByStationId($station->id, $examId);
             }
 
             //将学生照片的地址换成绝对路径
@@ -149,12 +152,20 @@ class DrawlotsController extends CommonController
             }
             $examId = $exam->id;
 
+            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id','=',$exam->id)
+                ->where('user_id','=',$id)
+                ->first();
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
+            }
+
             list($room_id, $stationNum) = $this->getRoomIdAndStation($id,$exam);
 
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::nextExamineeByStationId($this->station_id, $examId);
+                $examQueue = ExamQueue::nextExamineeByStationId($station->id, $examId);
             } else {
                 throw new \Exception('考试模式不存在！');
             }
@@ -272,8 +283,6 @@ class DrawlotsController extends CommonController
             //将考试的id封装进去
             $station->exam_id = $exam->id;
 
-            //将考站的id写进属性
-            $this->station_id = $station->id;
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
