@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Osce\Entities\CommonModel;
 use Cache;
+use DB;
 
 
 class ExamPlan extends CommonModel
@@ -896,4 +897,37 @@ class ExamPlan extends CommonModel
 
 
    }
+
+    public function storePlan($examId,$user)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            //通过id找到对应的数据
+            $data = ExamPlanRecord::where('exam_id',$examId)->get();
+
+            foreach ($data as $item) {
+                $array = [
+                    'exam_id' => $examId,
+                    'exam_screening_id' => $item->exam_screening_id,
+                    'student_id' => $item->student_id,
+                    'station_id' => $item->station_id,
+                    'room_id' => $item->room_id,
+                    'begin_dt' => $item->begin_dt,
+                    'end_dt' => $item->end_dt,
+                    'status' => 0,
+                    'created_user_id' => $user->id,
+                ];
+                if (!$a = ExamPlan::create($array)) {
+                    throw new \Exception('保存失败！');
+                }
+            }
+
+            $this->saveStudentOrder($examId);
+            $connection->commit();
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
 }
