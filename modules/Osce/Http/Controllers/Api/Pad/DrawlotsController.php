@@ -170,9 +170,7 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！');
             }
-            if ($examQueue->station_id != $station->id) {
-                throw new \Exception('当前学生还有考试没有考，请先去其他考站进行考试');
-            }
+
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -375,6 +373,13 @@ class DrawlotsController extends CommonController
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
 
+                //获取当前老师的考站id
+
+
+//                if ($stationId != $nowstudentId) {
+//                    throw new \Exception('当前学生还有考试没有考，请先去其他考站进行考试');
+//                }
+
                 //获得plan表中应该要去哪些考站
                 $examPlanStationIds = ExamPlan::where('student_id','=',$student->id)
                     ->where('exam_id','=',$examId)
@@ -398,6 +403,8 @@ class DrawlotsController extends CommonController
                 if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
+
+
 
                 //将队列状态变更为1
                 $tempObj->status = 1;
