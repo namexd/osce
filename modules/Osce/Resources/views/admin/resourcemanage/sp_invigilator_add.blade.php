@@ -162,9 +162,9 @@
             
             //图片检测
             $('#save').click(function(){
-                if($('#file0').val()==''){
+                if($('.img_box').find('img').attr('src')==undefined){
                     layer.msg('请上传图片！',{skin:'msg-error',icon:1});
-                    return;
+                    return false;
                 }
             });
         })
