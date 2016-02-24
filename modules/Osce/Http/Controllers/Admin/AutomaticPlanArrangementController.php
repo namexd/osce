@@ -75,6 +75,9 @@ class AutomaticPlanArrangementController extends CommonController
      * @time 2016-02-23 17:30
      */
     function postStore(Request $request) {
+        $this->validate($request,[
+           'exam_id' => 'required|integer'
+        ]);
         $examId = $request->input('exam_id');
         //通过id找到对应的数据
         $data = ExamPlanRecord::where('exam_id',$examId)->get();
@@ -99,7 +102,7 @@ class AutomaticPlanArrangementController extends CommonController
                 }
             }
 
-            return redirect()->route('osce.admin.arrangement.getIndex');
+            return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$examId]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

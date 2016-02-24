@@ -116,13 +116,6 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
-                    },
-                    images: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '请上传图片'
-                            }
-                        }
                     }
                 }
             });
@@ -166,7 +159,14 @@
                 $(this).parent("li").remove();
                 $('#images_upload').attr("class","images_upload");
             });
-            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
+            
+            //图片检测
+            $('#save').click(function(){
+                if($('#file0').val()==''){
+                    layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+                    return;
+                }
+            });
         })
 
     </script>

@@ -798,7 +798,7 @@ function deleteItems(type,url,id,firstpage){
                 if(data.code == 1){
                     location.href=firstpage;
                 }else {
-                    layer.msg(data.message);
+                    layer.msg(data.message,{skin:'msg-error',icon:1});
                 }
             }
         })
@@ -819,7 +819,7 @@ function deleteArea(type,url,id,areaType,firstpage){
                 if(data.code == 1){
                     location.href= $('.nav-tabs').find('.active').find('a').attr('href');
                 }else {
-                    layer.msg(data.message);
+                    layer.msg(data.message,{skin:'msg-error',icon:1});
                 }
             }
         })

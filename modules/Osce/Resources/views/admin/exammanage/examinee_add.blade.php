@@ -118,13 +118,6 @@
                                 message: '请输入正确的邮箱'
                             }
                         }
-                    },
-                    images: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '请上传图片'
-                            }
-                        }
                     }
                 }
             });
@@ -152,7 +145,13 @@
                     }
                 });
             }) ;
-            $(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
+
+            $('#submit').click(function(){
+                if($('#file0').val()==''){
+                    layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+                    return;
+                }
+            });
 
         });
         //建立一個可存取到該file的url
@@ -254,7 +253,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-primary" type="submit" id="submit">保存</button>
                                     <button class="btn btn-white return-pre" type="button">取消</button>
                                 </div>
                             </div>
