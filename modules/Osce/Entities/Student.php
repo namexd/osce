@@ -149,6 +149,9 @@ class Student extends CommonModel
                     throw new \Exception('第'.($key+2).'行手机号不符规格，请修改后重试！');
                 }
                 //准考证号不能为空
+                if(!isset($studentData['exam_sequence'])){
+                    throw new \Exception('缺少准考证号列，请添加');
+                }
                 if(empty(trim($studentData['exam_sequence']))){
                     throw new \Exception('第'.($key+2).'行准考证号不能为空，请修改后重试！');
                 }
