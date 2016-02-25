@@ -10,9 +10,9 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Config;
-use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\InformInfo;
 use Modules\Osce\Entities\Notice;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -98,24 +98,21 @@ class NoticeController extends CommonController
         $exam_ids = [];
         if (!empty($student)) {
             $examIds = Student::where('user_id', $user->id)->select(['exam_id'])->get();
-            $accept = 1;       //接收着为学生
+            $accept = 1;       //接收者:1为学生
 
-        } elseif (!empty($spTeacher)) {
-            $examStation = new ExamStation();
-            $examIds = $examStation->getExamToUser($user->id);
-            $accept = 3;       //接收着为sp老师
-        } else {
-            $examStation = new ExamStation();
-            $examIds = $examStation->getExamToUser($user->id);
-            $accept = 2;
+        } else{
+            $stationTeacher = new StationTeacher();
+            $examIds = $stationTeacher->getExamToUser($user->id);
+            //接收者（3为sp老师，2为监、巡考老师）
+            $accept = empty($spTeacher)? 2:3;
         }
-
+        //取出考试ID
         if(isset($examIds) && count($examIds)){
             foreach($examIds as $value){
                 array_push($exam_ids,$value->exam_id);
             }
         }
-
+        //获取 资讯&通知 列表
         $informInfo = new  InformInfo();
         $pagination = $informInfo->getList($accept, $exam_ids);
         $list       = $informInfo->getList($accept, $exam_ids);
