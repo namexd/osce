@@ -186,14 +186,14 @@ class ExamScreening extends CommonModel
     {
         //取得考试实例
         $exam = Exam::where('status','=',1)->orderBy('begin_dt','desc')->first();
-
+        dump($exam,'获取到考试');
 
         if(is_null($exam)){
             throw new \Exception('没有找到考试');
         }
         //获取到当考试场次id
         $ExamScreening = $this-> getExamingScreening($exam->id);
-
+            dump($ExamScreening,'获取到考试场次id');
 
         if(is_null($ExamScreening)){
             $ExamScreening = $this->getNearestScreening($exam->id);
@@ -201,15 +201,18 @@ class ExamScreening extends CommonModel
         //根据考试场次id查询计划表所有考试学生
         $examPianModel = new ExamPlan();
         $exampianStudent =  $examPianModel->getexampianStudent($ExamScreening->id);
-
+        dump($exampianStudent,'计划学生');
         //获取考试场次迟到的人数
         $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
             ->groupBy('student_id')
             ->count();
+        dump($examAbsentStudent,'迟到学生');
         //获取考试场次已考试完成的人数
         $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
             ->where('exam_screening_id','=',$ExamScreening->id)
             ->count();
+        dump($examFinishStudent,'考试完成学生');
+
         if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
             $ExamScreening->status = 2;
             if(!$ExamScreening->save()){
