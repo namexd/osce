@@ -117,7 +117,7 @@
                         <th>开始时间</th>
                         <th>用时</th>
                         <th>成绩</th>
-                        <th>详情</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
