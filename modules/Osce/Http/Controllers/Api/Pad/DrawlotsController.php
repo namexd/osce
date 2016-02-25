@@ -246,7 +246,7 @@ class DrawlotsController extends CommonController
                 ->first();
 
             if (is_null($station)) {
-                throw new \Exception('你没有参加此次考试');
+                throw new \Exception('你没有参加此次考试',7100);
             }
 
             if ($exam->sequence_mode == 1) {
@@ -257,7 +257,7 @@ class DrawlotsController extends CommonController
             }
 
             if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
-                throw new \Exception('当前考生并非在当前地点考试');
+                throw new \Exception('当前考生并非在当前地点考试',7200);
             }
 
             //如果考生走错了房间
@@ -499,7 +499,7 @@ class DrawlotsController extends CommonController
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
         $studentObj = ExamQueue::where('student_id', $uid)->where('status', 1)->first();
         if (!$studentObj) {
-            throw new \Exception('当前没有符合条件的队列！');
+            throw new \Exception('当前没有符合条件的队列！',-1000);
         }
         $studentBeginTime = $studentObj->begin_dt;
         $studentEndTime = $studentObj->end_dt;
@@ -510,7 +510,7 @@ class DrawlotsController extends CommonController
                 $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentBeginTime) + $diff);
                 $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentEndTime) + $diff);
                 if (!$studentObj->save()) {
-                    throw new \Exception('抽签失败！');
+                    throw new \Exception('抽签失败！',-1001);
                 }
             }
         }
