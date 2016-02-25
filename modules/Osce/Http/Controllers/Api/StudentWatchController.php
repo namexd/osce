@@ -353,6 +353,7 @@ class StudentWatchController extends CommonController
         $studentNum=0;
         $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
             ->where('exam_screening_id','=',$item->exam_screening_id)
+            ->where('station_id','=',$item->station_id)
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
