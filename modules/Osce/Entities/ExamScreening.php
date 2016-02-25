@@ -201,14 +201,11 @@ class ExamScreening extends CommonModel
         $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
             ->groupBy('student_id')
               ->count();
-        dump($examAbsentStudent);
-
         //获取考试场次已考试完成的人数
         $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
             ->where('exam_screening_id','=',$ExamScreening->id)
-            ->groupBy('student_id')
             ->count();
-        dump($examFinishStudent);
+    
         if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
             $ExamScreening->status = 2;
             if(!$ExamScreening->save()){
