@@ -444,7 +444,6 @@ class DrawlotsController extends CommonController
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！',3900);
                 }
-                \Log::alert($roomId,$student);
                 //查出考站的信息
                 return Station::findOrFail($stationId);
             }
