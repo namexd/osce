@@ -70,7 +70,7 @@ function deleteItem(url){
 	$('table').on('click','.fa-trash-o',function(){
 
         var thisElement = $(this);
-        layer.alert('确认删除？',{btn:['确认','取消']},function(){
+        layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
             $.ajax({
                 type:'post',
                 async:true,
@@ -788,7 +788,7 @@ function sp_invigilator(){
 
 //删除方法封装,其中id为当前dom的value值
 function deleteItems(type,url,id,firstpage){
-    layer.alert('是否确认删除?',{btn:['确认','取消']},function(){
+    layer.alert('确认删除?',{title:"删除",btn:['确认','取消']},function(){
         $.ajax({
             type:type,
             async:false,
@@ -806,7 +806,7 @@ function deleteItems(type,url,id,firstpage){
 }
 //删除场所
 function deleteArea(type,url,id,areaType,firstpage){
-    layer.alert('是否确认删除?',{btn:['确认','取消']},function(){
+    layer.alert('确认删除?',{title:"删除",btn:['确认','取消']},function(){
         $.ajax({
             type:type,
             async:false,
