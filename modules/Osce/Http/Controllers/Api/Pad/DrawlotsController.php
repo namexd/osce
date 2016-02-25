@@ -200,7 +200,7 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -274,9 +274,9 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -335,7 +335,7 @@ class DrawlotsController extends CommonController
     private function drawlots($student, $roomId)
     {
 
-//        try {
+        try {
             //获取正在考试中的考试
             $examId = $student->exam_id;
 
@@ -444,14 +444,13 @@ class DrawlotsController extends CommonController
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！',3900);
                 }
-                \Log::alert($roomId,$student);
                 //查出考站的信息
                 return Station::findOrFail($stationId);
             }
 
-//        } catch (\Exception $ex) {
-//            throw $ex;
-//        }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**
