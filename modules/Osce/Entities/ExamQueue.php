@@ -193,7 +193,7 @@ class ExamQueue extends CommonModel
                     $data[] = $tempStudent;
                 }
             }
-            return $data;
+            return collect($data);
         } catch (\Exception $ex) {
             throw $ex;
         }

@@ -237,10 +237,26 @@ class DrawlotsController extends CommonController
             }
             $examId = $exam->id;
 
-            list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
+            list($room_id, $stations) = $this->getRoomIdAndStation($teacherId,$exam);
 
-            if () {
+            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id','=',$exam->id)
+                ->where('user_id','=',$teacherId)
+                ->first();
 
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
+            }
+
+            if ($exam->sequence_mode == 1) {
+                //从队列表中通过考场ID得到对应的考生信息
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations[$room_id]);
+            } elseif ($exam->sequence_mode == 2) {
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+            }
+
+            if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
+                throw new \Exception('当前考生并非在当前地点考试');
             }
 
             //如果考生走错了房间
