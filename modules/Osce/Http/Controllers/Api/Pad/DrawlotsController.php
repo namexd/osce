@@ -173,6 +173,7 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！');
             }
+            \Log::alert($id,$examQueue->toArray());
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -442,7 +443,6 @@ class DrawlotsController extends CommonController
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！',3900);
                 }
-
                 //查出考站的信息
                 return Station::findOrFail($stationId);
             }

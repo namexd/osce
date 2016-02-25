@@ -121,13 +121,13 @@
                                         @forelse($examScreeningData as $key => $item)
                                             <tr>
                                                 <td>{{$key+1}}</td>
-                                                <td class="laydate" {{$examData['status']==0?'':'disabled;'}}>
+                                                <td class="laydate">
                                                     <input type="hidden" name="time[{{$key+1}}][id]" value="{{$item->id}}">
                                                     <input type="hidden" name="time[{{$key+1}}][exam_id]" value="{{$id}}">
-                                                    <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
+                                                    <input type="text"  {{$examData['status']==0?'':'disabled'}} readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][begin_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->begin_dt))}}">
                                                 </td>
-                                                <td class="laydate" {{$examData['status']==0?'':'disabled;'}}>
-                                                    <input type="text" readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
+                                                <td class="laydate">
+                                                    <input type="text" {{$examData['status']==0?'':'disabled'}} readonly="readonly" class="laydate-icon end" name="time[{{$key+1}}][end_dt]" class="laydate-icon end" value="{{date('Y-m-d H:i',strtotime($item->end_dt))}}">
                                                 </td>
                                                 <?php
                                                     $one = strtotime($item->begin_dt);  //开始时间 时间戳
