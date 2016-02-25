@@ -113,6 +113,8 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+            } else {
+                throw new \Exception('当前没有这种考试模式');
             }
 
             //将学生照片的地址换成绝对路径
@@ -207,7 +209,7 @@ class DrawlotsController extends CommonController
 
             //获取uid和room_id
             $uid = $request->input('uid');
-            $roomId = $request->get('room_id');
+            $roomId = $request->input('room_id');
             //根据uid来查对应的考生
             //根据uid查到对应的watchid
             $watch = Watch::where('code',$uid)->first();
@@ -316,7 +318,6 @@ class DrawlotsController extends CommonController
                 return Station::findOrFail($temp->station_id);
             }
 
-
             //从ExamQueue表中将房间和状态对应的列表查出
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('exam_id',$examId)
@@ -380,10 +381,6 @@ class DrawlotsController extends CommonController
                 if ($shouldRoomId != $roomId) {
                     throw new \Exception('当前考生走错了考场！请去' . Room::findOrFail($shouldRoomId)->name,7000);
                 }
-
-//                if ($stationId != $nowstudentId) {
-//                    throw new \Exception('当前学生还有考试没有考，请先去其他考站进行考试');
-//                }
 
                 //获得plan表中应该要去哪些考站
                 $examPlanStationIds = ExamPlan::where('student_id','=',$student->id)
