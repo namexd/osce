@@ -1707,10 +1707,15 @@ function exam_notice_add(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.alert('确认为删除？',function(index){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        }, function(index){
+
             thisElement.parent("p").remove();
             layer.close(index);
-        })
+        }); 
+
     });
 
 
@@ -1885,10 +1890,15 @@ function exam_notice_edit(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.alert('确认为删除？',function(index){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        }, function(index){
+
             thisElement.parent("p").remove();
             layer.close(index);
-        })
+        }); 
+
     });
 
 

@@ -16,7 +16,7 @@
 	        margin:0!important;
 	    }
 	    #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
-	    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+	    .upload_list{line-height:1em;color:#4f9fcf;}
 	    .fa-remove{cursor:pointer;}
 	    .laydate-icon{width:200px;}
 		.file-msg{
@@ -151,9 +151,9 @@
 	            }
 	        });
 	    }) ;
-	    $(".upload_list").on("click",".fa-remove",function(){
+	    /*$(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
-	    });
+	    });*/
 	    $(".fabu_btn").click(function(){
 	    	var start=$("#start").val();
 	    	var end=$("#end").val();
