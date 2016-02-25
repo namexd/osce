@@ -63,6 +63,12 @@
                     }
                 }
             });
+
+            //ie11下兼容问题
+            $(window).resize(function(){
+                $('.select2').css('width','100%');
+            });
+            
         })
     </script>
 @stop
