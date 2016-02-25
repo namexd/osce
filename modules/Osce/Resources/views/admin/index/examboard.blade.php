@@ -27,17 +27,20 @@
         <table class="table table-striped" id="table-striped">
             <thead>
             <tr>
+                <th>序号</th>
                 <th>考试编号</th>
                 <th>考试名称</th>
                 <th>时间</th>
                 <th>考试人数</th>
                 <th>开考</th>
+                <th>大屏</th>
             </tr>
             </thead>
             <tbody>
                 @foreach($data as $key=>$item)
                 <tr>
                     <td>{{$key+1}}</td>
+                    <td>{{$item->id}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i', strtotime($item->end_dt))}}</td>
                     <td>{{$item->total}}</td>
@@ -50,6 +53,15 @@
                             已经开考
                         @else
                             考试已结束   
+                        @endif
+                    </td>
+                    <td>
+                        @if($item->status==1)
+                            <a href="{{route('osce.admin.getWaitDetail',['exam_id'=>$item->id])}}" target="_blank">
+                                <input class="btn btn-primary" type="button" value="大屏"/>
+                            </a>
+                        @else
+                            #
                         @endif
                     </td>
                 </tr>
