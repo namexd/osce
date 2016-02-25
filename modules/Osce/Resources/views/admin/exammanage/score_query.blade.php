@@ -108,7 +108,7 @@
                         </span>
                     </div>
                 </div>
-                <table class="table table-striped" id="table-striped">
+                <table class="table table-striped" id="table-striped" style="margin-bottom: 20px;">
                     <thead>
                     <tr>
                         <th>考试名称</th>

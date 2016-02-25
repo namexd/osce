@@ -110,7 +110,8 @@ function rolemanage(){
         function  delete_user(){
             $('.delete').click(function(){
                 var id = $(this).attr('data');
-                layer.confirm('您确定删除吗？', {
+                layer.confirm('确认删除？', {
+                    title:'删除',
                     btn: ['是','否'] //��ť
                 }, function(){
                     window.location.href="/auth/delete-role?id="+id;

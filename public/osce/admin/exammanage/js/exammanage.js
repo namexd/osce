@@ -2331,14 +2331,10 @@ function examinee_manage(){
     $(".delete").click(function(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
-<<<<<<< HEAD
-        layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
-=======
         layer.confirm('确认为删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(){
->>>>>>> baad982e8343ff2af3569e9f4045e30f0292a66a
             $.ajax({
                 type:'post',
                 async:true,
