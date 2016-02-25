@@ -204,7 +204,6 @@ class ExamScreening extends CommonModel
         dump($exampianStudent,'计划学生');
         //获取考试场次迟到的人数
         $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
-            ->groupBy('student_id')
             ->count();
         dump($examAbsentStudent,'迟到学生');
         //获取考试场次已考试完成的人数
