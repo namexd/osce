@@ -21,7 +21,7 @@ class ExamScreening extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag'];
+    protected $fillable = ['exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag','real_start_dt'];
     protected $statuValues = [
         1 => '等候考试',
         2 => '正在考试',
