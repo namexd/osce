@@ -1943,6 +1943,7 @@ function smart_assignment(){
 
     var timesGroup  =   [];
     var timeHeight  =   20;
+    var eariestTime =   [];
     var endtime=[];
     var plan    =   $('#plan').html();
     var testData=eval('('+plan+')');
@@ -1967,6 +1968,9 @@ function smart_assignment(){
         }
 
         times.push(data.start);
+        var startTimeData =   parseInt(data.start)? parseInt(data.start):0;
+        var eariestTimeData =   parseInt(eariestTime[data.screening])? parseInt(eariestTime[data.screening]):startTimeData;
+        eariestTime[data.screening] =   eariestTimeData<startTimeData? eariestTimeData:startTimeData;
         //时间数组，data.screening代表是哪场考试的时间戳
         timesGroup[data.screening] =   times;
         var endTimeData =   endtime[data.screening];
@@ -2074,7 +2078,7 @@ function smart_assignment(){
             li.append(item);
             perTime = i;
         }
-
+        //ul.children().eq(2).addClass('first');
         return ul;
     }
 
@@ -2085,6 +2089,10 @@ function smart_assignment(){
         var tempItemDataEnd = itemData.end;
 
         var height = parseInt((parseInt(tempItemDataBegin) - parseInt(tempPerTimeEnd))/timeHeight);
+        return buildEmptyTime(height);
+    }
+
+    function buildEmptyTime(height){
         var dt = $('<dt>').css({
             height:height
         }).addClass('emptyTime');
@@ -2092,17 +2100,16 @@ function smart_assignment(){
         {
             var span    =   $('<span>').css({
                 'fontSize':8
-            }).text('时间闲置');
+            });
         }
         else
         {
-            var span    =   $('<span>').text('时间闲置');
+            var span    =   $('<span>');
         }
         span.attr('title','时间闲置');
         dt.append(span);
         return dt;
     }
-
     //生成一整行数据
     function makeAll(data){
         var ul =    $('<ul class="clearfloat tables">');
@@ -2126,6 +2133,7 @@ function smart_assignment(){
             var dom =   makeAll(groupData);
             dom.attr('data-screeningId',i);
             dom.addClass('screening_'+i);
+            addScreeningFirstEmptyTime(dom);
             var sql=$('<div>');
             sql.addClass('screening_box clearfloat');
             sql.append(dom);
@@ -2133,6 +2141,18 @@ function smart_assignment(){
         }
     }
 
+    function addScreeningFirstEmptyTime(dom){
+        //screening_
+        var screening_id    =   dom.data('screeningid');
+        dom.find('.title').each(function(){
+            var time    =   $(this).next().data('batchindex');
+            time    =   parseInt(time)? parseInt(time):0;
+            var eariestTimeData =   eariestTime[screening_id]? eariestTime[screening_id]:0;
+            time-=eariestTimeData;
+            var emptyDt =   buildEmptyTime(parseInt(time/timeHeight));
+            $(this).after(emptyDt);
+        });
+    }
     //智能排考
     function makePlan(){
         //加载中

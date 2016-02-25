@@ -420,7 +420,6 @@ class DrawlotsController extends CommonController
                     ->get()->pluck('room_id');
                 //dd($examPlanStationIds);
                 //判断当前考站在计划表中的顺序
-//                $stationIdKey = $examPlanStationIds->search($stationId);
                 $stationIdKey = $examPlanStationIds->search($roomId);
                 if ($stationIdKey===false) {
                     throw new \Exception('该名考生不在计划中！',3800);
