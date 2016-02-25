@@ -14,6 +14,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
@@ -373,8 +374,12 @@ class DrawlotsController extends CommonController
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
 
-                //获取当前老师的考站id
+                //获得他应该要去的考场id
+                $shouldRoomId = $tempObj->room_id;
 
+                if ($shouldRoomId != $roomId) {
+                    throw new \Exception('当前考生走错了考场！请去' . Room::findOrFail($shouldRoomId)->name);
+                }
 
 //                if ($stationId != $nowstudentId) {
 //                    throw new \Exception('当前学生还有考试没有考，请先去其他考站进行考试');
