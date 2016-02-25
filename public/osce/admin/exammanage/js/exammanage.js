@@ -2315,7 +2315,7 @@ function examinee_manage(){
                         location.reload();
                     });
                 }else{
-                    ayer.msg(data.message,{skin:'msg-error',icon:1},function(){
+                    layer.msg(data.message,{skin:'msg-error',icon:1},function(){
                         location.reload();
                     });
                 }
