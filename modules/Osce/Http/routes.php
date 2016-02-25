@@ -447,7 +447,6 @@ Route::get('test/test', function() {
 
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
-	$test = $request->only('test');
-	dd($test);
+
 });
 
