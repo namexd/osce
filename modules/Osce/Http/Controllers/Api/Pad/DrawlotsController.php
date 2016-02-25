@@ -14,6 +14,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
@@ -26,10 +27,6 @@ use DB;
 
 class DrawlotsController extends CommonController
 {
-    /*
-     * 考站id
-     */
-    protected $station_id = 0;
 
 //    protected $exam = '';
 //
@@ -97,6 +94,14 @@ class DrawlotsController extends CommonController
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
 
+            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id','=',$exam->id)
+                ->where('user_id','=',$id)
+                ->first();
+
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
+            }
 
             if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试',3000);
@@ -107,7 +112,7 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations[$room_id]);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($this->station_id, $examId);
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
             }
 
             //将学生照片的地址换成绝对路径
@@ -149,12 +154,20 @@ class DrawlotsController extends CommonController
             }
             $examId = $exam->id;
 
+            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id','=',$exam->id)
+                ->where('user_id','=',$id)
+                ->first();
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
+            }
+
             list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
 
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stations[$room_id]);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::nextExamineeByStationId($this->station_id, $examId);
+                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $examId);
             } else {
                 throw new \Exception('考试模式不存在！');
             }
@@ -287,8 +300,6 @@ class DrawlotsController extends CommonController
             //将考试的id封装进去
             $station->exam_id = $exam->id;
 
-            //将考站的id写进属性
-            $this->station_id = $station->id;
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -378,6 +389,17 @@ class DrawlotsController extends CommonController
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
 
+                //获得他应该要去的考场id
+                $shouldRoomId = $tempObj->room_id;
+
+                if ($shouldRoomId != $roomId) {
+                    throw new \Exception('当前考生走错了考场！请去' . Room::findOrFail($shouldRoomId)->name,7000);
+                }
+
+//                if ($stationId != $nowstudentId) {
+//                    throw new \Exception('当前学生还有考试没有考，请先去其他考站进行考试');
+//                }
+
                 //获得plan表中应该要去哪些考站
                 $examPlanStationIds = ExamPlan::where('student_id','=',$student->id)
                     ->where('exam_id','=',$examId)
@@ -401,6 +423,8 @@ class DrawlotsController extends CommonController
                 if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
+
+
 
                 //将队列状态变更为1
                 $tempObj->status = 1;

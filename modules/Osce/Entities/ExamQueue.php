@@ -201,6 +201,8 @@ class ExamQueue extends CommonModel
 
     static public function examineeByStationId($stationId, $examId)
     {
+//        $connection = \DB::connection('osce_mis');
+//        $connection->enableQueryLog();
         return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->where('exam_queue.station_id',$stationId)
             ->where('exam_queue.status', '<' , 3)
@@ -218,6 +220,10 @@ class ExamQueue extends CommonModel
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->take(1)
             ->get();
+
+//        $c = $connection->getQueryLog();
+//        dd($c);
+//        exit();
     }
 
     /**
@@ -300,9 +306,13 @@ class ExamQueue extends CommonModel
      * @throws  \Exception
      * @author  zhouqiang
      */
+//    //开启事务
+//$connection = DB::connection($this->connection);
+//$connection->beginTransaction();
     public function AlterTimeStatus($studentId, $stationId, $nowTime)
 
     {
+
         try {
 
             $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)

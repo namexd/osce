@@ -16,9 +16,15 @@
         margin:0!important;
     }
     #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
-    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .upload_list{line-height:1em;color:#4f9fcf;}
     .fa-remove{cursor:pointer;}
     .laydate-icon{width:200px;}
+    .file-msg{
+        position: relative;
+        top: -26px;
+        left: 109px;
+        color: #42b2b1;
+    }
     </style>
 @stop
 
@@ -120,25 +126,37 @@
 	            dataType: 'json',//
                 success: function (data, status)
                 {
-                    if(data.state=='SUCCESS'){
+                    if(data.code!=1){
+                        layer.msg('只能上传后缀为".xlsx"或".docx"的文件！',{skin:'msg-error',icon:1});
+                    }else{
                         str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" />'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
                         var ln=$(".upload_list").children("p").length;
                         if(ln<=1){
                             $(".upload_list").append(str);
                         }else{
-                        	layer.alert('最多上传2个文件！',function(index1){layer.close(index1);});
+                            layer.msg('最多上传2个文件！',{skin:'msg-error',icon:1});
                         }
                     }
+
+//                    if(data.state=='SUCCESS'){
+//                        str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" />'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+//                        var ln=$(".upload_list").children("p").length;
+//                        if(ln<=1){
+//                            $(".upload_list").append(str);
+//                        }else{
+//                        	layer.alert('最多上传2个文件！',function(index1){layer.close(index1);});
+//                        }
+//                    }
                 },
 	            error: function (data, status, e)
 	            {
-	                layer.alert('上传失败！',function(index2){layer.close(index2);});
+	                layer.alert('上传失败！',{skin:'msg-error',icon:1});
 	            }
 	        });
 	    }) ;
-	    $(".upload_list").on("click",".fa-remove",function(){
+	    /*$(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
-	    });
+	    });*/
 	    
 	    $(".fabu_btn").click(function(){
 	    	var start=$("#start").val();
@@ -215,6 +233,7 @@
                         		上传附件
 								<input type="file" name="file" id="file0"/>
 							</span>
+                            <span class="file-msg">(上传文件类型为docx, xlsx)</span>
 							<div class="upload_list">
 								@if($data['attachments'])
                                     @foreach($data['attachments'] as $data)

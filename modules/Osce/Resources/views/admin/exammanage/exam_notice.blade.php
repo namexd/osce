@@ -17,7 +17,8 @@
         $('.fa-trash-o').click(function(){
             var thisElement = $(this)
             layer.confirm('确认删除？', {
-            btn: ['确定','取消'] //按钮
+                title:'删除',
+                btn: ['确定','取消'] //按钮
             }, function(){
                 $.ajax({
                     type:'get',

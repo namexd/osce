@@ -358,7 +358,8 @@ class TrainController extends  CommonController{
                $file   =   $request->file('file');
                $file_ex=$file->getClientOriginalExtension();
                if (!in_array($file_ex, array('docx', 'xlsx'))){
-                   return back()->withErrors('上传文件类型失败');
+                   throw new \Exception('上传文件类型失败');
+//                   return back()->withErrors('上传文件类型失败');
                }
                $path   =   'osce/file/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                $destinationPath    =   public_path($path);
@@ -368,7 +369,7 @@ class TrainController extends  CommonController{
            }
            echo json_encode(
                array(
-                   "state" => 'SUCCESS',
+                   "code" => 1,
                    "url" => $pathReturn,
                    "title" => $fileName,
                    "original" => $file->getClientOriginalExtension(),
@@ -377,7 +378,8 @@ class TrainController extends  CommonController{
                )
            );
        }catch (\Exception $ex){
-           throw $ex;
+           return json_encode($this->fail($ex));
+//           throw $ex;
        }
     }
 
