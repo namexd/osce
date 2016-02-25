@@ -103,10 +103,10 @@
                 @endforeach
             </tbody>
         </table>
-<div style="float: left">
-    共{{$list->total()  }}条
-</div>
-        <div style="float: right">
+        <div class="pull-left">
+            共{{$list->total()}}条
+        </div>
+        <div class="pull-right">
             {!! $list->render() !!}
         </div>
     </form>

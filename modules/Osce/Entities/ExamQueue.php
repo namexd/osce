@@ -395,8 +395,23 @@ class ExamQueue extends CommonModel
                 //如果时间戳比计划表的时间大，就用当前的时间加上缓冲时间
                 //config('osce.begin_dt_buffer')为缓冲时间
                 //获得当前时间比计划时间晚了多少
-                $difference = $time - (strtotime($objs[0]->begin_dt) - (config('osce.begin_dt_buffer') * 60));
+                //$difference = $time - (strtotime($objs[0]->begin_dt) - (config('osce.begin_dt_buffer') * 60));
 
+
+                $examScreening = ExamScreening::find($examScreeningId);
+                if(!$examScreening->real_start_dt){
+                    $nowTime=$time;
+                    if(strtotime($examScreening->begin_dt)<=$nowTime){
+                        $examScreening->real_start_dt = date('Y-m-d H:i:s',$nowTime);
+                        if(!$examScreening->save()){
+                            throw new \Exception('开始考试失败');
+                        }
+                    }
+                }
+                $difference =  strtotime($examScreening->real_start_dt)-strtotime($examScreening->begin_dt);
+                if($difference<0){
+                    $difference =0;
+                }
                 foreach ($objs as $item) {
                     if ($difference > 0) {
                         $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
