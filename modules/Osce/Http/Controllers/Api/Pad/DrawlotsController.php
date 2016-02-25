@@ -378,7 +378,7 @@ class DrawlotsController extends CommonController
                 $shouldRoomId = $tempObj->room_id;
 
                 if ($shouldRoomId != $roomId) {
-                    throw new \Exception('当前考生走错了考场！请去' . Room::findOrFail($shouldRoomId)->name);
+                    throw new \Exception('当前考生走错了考场！请去' . Room::findOrFail($shouldRoomId)->name,7000);
                 }
 
 //                if ($stationId != $nowstudentId) {
