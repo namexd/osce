@@ -31,6 +31,7 @@ function exam_assignment(){
 
         var thisElement = $(this);
         layer.confirm('确认删除？', {
+        	title:"删除",
             btn: ['确定','取消'] //按钮
         }, function(){
             $.ajax({
@@ -2311,7 +2312,7 @@ function examinee_manage(){
     $(".delete").click(function(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
-        layer.alert('确认删除？',{btn:['确认','取消']},function(){
+        layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
             $.ajax({
                 type:'post',
                 async:true,
