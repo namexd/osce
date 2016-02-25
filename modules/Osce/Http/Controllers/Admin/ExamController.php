@@ -646,10 +646,10 @@ class ExamController extends CommonController
                 throw new \Exception('学生导入数据失败，请修改重试');
             }
 
-            echo json_encode($this->success_data(['code'=>1]));
+            return json_encode($this->success_data(['code'=>1]));
 
         } catch (\Exception $ex) {
-            echo json_encode($this->fail($ex));
+            return json_encode($this->fail($ex));
         }
     }
 

@@ -155,9 +155,14 @@ class Student extends CommonModel
 
                 //根据条件：查找用户是否有账号和密码
                 $user = User::where(['username' => $studentData['mobile']])->select(['id'])->first();
-                //根据用户ID和考试号查找考生
-                $student = $this->where('user_id', '=', $user->id)
-                    ->where('exam_id', '=', $exam_id)->first();
+                if($user){
+                    //根据用户ID和考试号查找考生
+                    $student = $this->where('user_id', '=', $user->id)
+                        ->where('exam_id', '=', $exam_id)->first();
+                }else{
+                    $student = false;
+                }
+
                 //考生存在,则 跳过
                 if($student){
                     $backArr[] = ['key'=> $key+2, 'title'=>'exist'];
