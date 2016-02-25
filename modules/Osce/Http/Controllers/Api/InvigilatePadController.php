@@ -45,30 +45,9 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-       $list =[];
-        $scores =0;
-         $data=$this->getExamGrade();
-         $arr=  json_decode($data,true);
-         foreach($arr as  $item){
-             dump($arr);
-
-            foreach($item['test_term'] as $str){
-                $scores += $str['score'];
-                $list['scores']=$scores;
-                $list []=[
-                    'subject_id'=>$str['subject_id'],
-                    'standard_id'=>$str['id'],
-                    'score'=>$str['score'],
-                ];
-            }
-        }
-       dd($list);
-
-//                foreach($arr['test_term'] as $item){
-//        }
-
-
-//        return view('osce::test.test');
+       $examScreeningModel = new ExamScreening();
+        $result =$examScreeningModel-> getExamCheck();
+        dd($result);
     }
 
 
