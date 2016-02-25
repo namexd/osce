@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Config;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\InformInfo;
 use Modules\Osce\Entities\Notice;
 use Modules\Osce\Entities\Student;
@@ -94,17 +95,30 @@ class NoticeController extends CommonController
 
         $student = Student::where('user_id', $user->id)->first();
         $spTeacher = Teacher::where('id', $user->id)->where('type', 2)->first();
+        $exam_ids = [];
         if (!empty($student)) {
+            $examIds = Student::where('user_id', $user->id)->select(['exam_id'])->get();
             $accept = 1;       //接收着为学生
+
         } elseif (!empty($spTeacher)) {
+            $examStation = new ExamStation();
+            $examIds = $examStation->getExamToUser($user->id);
             $accept = 3;       //接收着为sp老师
         } else {
+            $examStation = new ExamStation();
+            $examIds = $examStation->getExamToUser($user->id);
             $accept = 2;
         }
 
-        $informInfo = new  InformInfo ();
-        $pagination = $informInfo->getList($accept);
-        $list   =   $informInfo ->getList($accept);
+        if(isset($examIds) && count($examIds)){
+            foreach($examIds as $value){
+                array_push($exam_ids,$value->exam_id);
+            }
+        }
+
+        $informInfo = new  InformInfo();
+        $pagination = $informInfo->getList($accept, $exam_ids);
+        $list       = $informInfo->getList($accept, $exam_ids);
         //$list = InformInfo::select()->orderBy('created_at')->get()->toArray();
         $data   =   $list->toArray();
         return response()->json(

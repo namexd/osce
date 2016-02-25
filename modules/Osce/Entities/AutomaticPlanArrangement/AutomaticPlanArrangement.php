@@ -84,6 +84,7 @@ class AutomaticPlanArrangement
         $this->_S = Student::examStudent($examId)->shuffle();
         $this->screen = $exam->screenList($examId);
         $this->sequenceMode = $this->_Exam->sequence_mode;
+        $this->sequenceCate = $this->_Exam->sequence_cate;
         $this->exam_id = $examId;
 
         /*
@@ -112,26 +113,32 @@ class AutomaticPlanArrangement
      */
     function plan($examId)
     {
-        /*
-         * 排考的时候删除原先的所有数据
-         */
-        if (ExamPlanRecord::where('exam_id', $examId)->count()) {
-            if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
-                throw new \Exception('清空所有数据失败！');
-            };
-        }
+        try {
+            /*
+             * 排考的时候删除原先的所有数据
+             */
+            if (ExamPlanRecord::where('exam_id', $examId)->count()) {
+                if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
+                    throw new \Exception('清空所有数据失败！');
+                };
+            }
 
-        /*
-         * 依靠场次清单来遍历
-         */
-        foreach ($this->screen as $item) {
-            $this->screenPlan($examId, $item);
-            //判断是否还有必要进行下场排考
+            /*
+             * 依靠场次清单来遍历
+             */
+            foreach ($this->screen as $item) {
+                $this->screenPlan($examId, $item);
+                //判断是否还有必要进行下场排考
+            }
+
             if (count($this->_S_ING) == 0 && count($this->_S) == 0) {
                 return $this->output($examId);
+            } else {
+                throw new \Exception('人数太多，所设时间无法完成考试');
             }
+        } catch (\Exception $ex) {
+            throw $ex;
         }
-
 
     }
 
@@ -414,15 +421,23 @@ class AutomaticPlanArrangement
      */
     private function testStudents($station, $screen)
     {
-        /*
-         * 找到当前场次的所有的记录
-         * 将其按考生id分组,拿到分组后的流程编号
-         */
-        $tempArrays = ExamPlanRecord::where('exam_screening_id', $screen->id)
-            ->whereNotNull('end_dt')
-            ->groupBy('student_id')
-            ->get();
+        switch ($this->sequenceCate) {
+            case 1; //这是随机
+                /*
+                 * 找到当前场次的所有的记录
+                 * 将其按考生id分组,拿到分组后的流程编号
+                 */
+                $tempArrays = ExamPlanRecord::randomBeginStudent($screen);
+                break;
+            case 2: //这是顺序
+                $tempArrays = ExamPlanRecord::pollBeginStudent($station,$screen);
+                break;
+            case 3: //这是轮询
 
+                break;
+            default:
+                throw new \Exception('没有对应的考试排序模式！');
+        }
         $num = $this->waitingStudentSql($screen);
 
         $arrays = [];
@@ -476,7 +491,7 @@ class AutomaticPlanArrangement
     {
         $result = ExamPlanRecord::where('exam_id', $examId)
             ->get();
-
+//        dd($result);
         $exam = Exam::findOrFail($examId);
 
         $arrays = [];

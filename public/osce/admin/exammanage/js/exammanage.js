@@ -31,7 +31,7 @@ function exam_assignment(){
 
         var thisElement = $(this);
         layer.confirm('确认删除？', {
-        	title:"删除",
+            title:'删除',
             btn: ['确定','取消'] //按钮
         }, function(){
             $.ajax({
@@ -43,7 +43,7 @@ function exam_assignment(){
                     if(res.code==1){
                         location.href = (location.href).split('?')[0];
                     }else{
-                        layer.alert(res.message)
+                        layer.msg(res.message,{'skin':'msg-error',icon:1})
                     }
                 }
             })
@@ -164,7 +164,10 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        layer.alert('确认为删除？',function(thisID){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        },function(thisID){
             thisElement.remove();
 
             //计数器标志
@@ -326,7 +329,10 @@ function add_basic(){
     $('#add-basic').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
-        layer.alert('确认为删除？',function(thisID){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        },function(thisID){
             thisElement.remove();
 
             //计数器标志
@@ -1199,7 +1205,10 @@ function examroom_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        layer.alert('确认为删除？',function(its){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        },function(its){
             thisElement.remove();
 
             //计数器标志
@@ -1708,10 +1717,15 @@ function exam_notice_add(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.alert('确认为删除？',function(index){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        }, function(index){
+
             thisElement.parent("p").remove();
             layer.close(index);
-        })
+        }); 
+
     });
 
 
@@ -1886,10 +1900,15 @@ function exam_notice_edit(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.alert('确认为删除？',function(index){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        }, function(index){
+
             thisElement.parent("p").remove();
             layer.close(index);
-        })
+        }); 
+
     });
 
 
@@ -2312,7 +2331,14 @@ function examinee_manage(){
     $(".delete").click(function(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
+<<<<<<< HEAD
         layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
+=======
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        },function(){
+>>>>>>> baad982e8343ff2af3569e9f4045e30f0292a66a
             $.ajax({
                 type:'post',
                 async:true,
@@ -2320,10 +2346,10 @@ function examinee_manage(){
                 data:{id:sid,exam_id:examId},
                 success:function(data){
                     if(data.code ==1){
-                        layer.msg('删除成功！');
+                        layer.msg('删除成功！',{'skin':'msg-success','icon':1});
                         location.reload();
                     }else {
-                        layer.msg(data.message);
+                        layer.msg(data.message,{'skin':'msg-success','icon':1});
                     }
                 }
             })
@@ -2967,7 +2993,10 @@ function station_assignment(){
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
-        layer.alert('确认为删除？',function(its){
+        layer.confirm('确认为删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        },function(its){
             thisElement.remove();
 
             //计数器标志

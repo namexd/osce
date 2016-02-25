@@ -31,24 +31,30 @@
 			        <div class="ibox-content" style="border:none;">
 			            <div class="row">
 			                <div class="col-md-12 ">
+								<div class="clearfix form-group">
+									<label class="col-sm-2 control-label"><h5>第一步：</h5></label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="" name="email_server" >
+									</div>
+								</div>
 			                	<div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">use_alias：</label>
+		                            <label class="col-sm-2 control-label"><h5>第二步：</h5></label>
 		                            <div class="col-sm-4">
-		                            	<select class="form-control" name="email_protocol">
-		                            		
-	                            		</select>
+										<a href="http://www.cnblogs.com/A-Song/archive/2011/12/14/2288215.html" target="_blank">请先点击此处在微信中获取到（appID，appsecret）</a>
+
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">app_id：</label>
+		                            <label class="col-sm-2 control-label"><h5>第三步：</h5></label>
 		                            <div class="col-sm-9">
-		                                <p>dfsaf梵蒂冈sag大概豆腐干梵蒂冈大概豆腐干豆腐干梵蒂冈多个地方逛逛</p>
+		                                <p>请将获取到的appID放在系统设置->微信->app_id,</p>
+		                                <p>请将获取到的appsecret放在系统设置->微信->secret</p>
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">secret：</label>
+		                            <label class="col-sm-2 control-label"><h5>第四步：</h5></label>
 		                            <div class="col-sm-9">
-		                                <input type="text" class="form-control" id="" name="wechat_secret" >
+										<p>请将获取到的appID放在系统设置->微信->app_id,</p>
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
@@ -67,51 +73,47 @@
 			            </div>
 			        </div>
 			        <div class="ibox-title" style="border:none;">
-			            <h5>邮箱</h5>
+			            <h5>微信对应设置</h5>
 			        </div>
 			        <div class="ibox-content" style="border:none;">
 			            <div class="row">
 			                <div class="col-md-12 ">
 			                	<div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">服务器地址：</label>
+		                            <label class="col-sm-2 control-label">app_id：</label>
 		                            <div class="col-sm-9">
 		                                <input type="text" class="form-control" id="" name="email_server" >
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">服务器协议：</label>
-		                            <div class="col-sm-4">
-		                            	<select class="form-control" name="email_protocol">
-		                            		
-	                            		</select>
-		                            </div>
+		                            <label class="col-sm-2 control-label">secret：</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="" name="email_server" >
+									</div>
 		                        </div>
 		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">端口：</label>
+		                            <label class="col-sm-2 control-label">token：</label>
 		                            <div class="col-sm-9">
 		                                <input type="text" class="form-control" id="" name="email_port" >
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">SSL网关协议：</label>
-		                            <div class="col-sm-4">
-		                            	<select class="form-control" name="email_ssl">
-		                            		
-	                            		</select>
-		                            </div>
+		                            <label class="col-sm-2 control-label">encoding_key：</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="" name="email_server" >
+									</div>
 		                        </div>
-		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">用户名：</label>
-		                            <div class="col-sm-9">
-		                                <input type="text" class="form-control" id="" name="email_username" >
-		                            </div>
-		                        </div>
-		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">密码：</label>
-		                            <div class="col-sm-9">
-		                                <input type="text" class="form-control" id="" name="email_password" >
-		                            </div>
-		                        </div>
+		                        {{--<div class="clearfix form-group">--}}
+		                            {{--<label class="col-sm-2 control-label">用户名：</label>--}}
+		                            {{--<div class="col-sm-9">--}}
+		                                {{--<input type="text" class="form-control" id="" name="email_username" >--}}
+		                            {{--</div>--}}
+		                        {{--</div>--}}
+		                        {{--<div class="clearfix form-group">--}}
+		                            {{--<label class="col-sm-2 control-label">密码：</label>--}}
+		                            {{--<div class="col-sm-9">--}}
+		                                {{--<input type="text" class="form-control" id="" name="email_password" >--}}
+		                            {{--</div>--}}
+		                        {{--</div>--}}
 			                </div>
 			            </div>
 			        </div>
