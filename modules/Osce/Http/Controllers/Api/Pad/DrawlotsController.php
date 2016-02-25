@@ -92,7 +92,7 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
 
-            list($room_id, $stationNum) = $this->getRoomIdAndStation($id,$exam);
+            list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
 
             //获取当前老师对应的考站id
             $station = StationTeacher::where('exam_id','=',$exam->id)
@@ -110,7 +110,7 @@ class DrawlotsController extends CommonController
             $examId = $exam->id;
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的考生信息
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stationNum);
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations[$room_id]);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
             } else {
@@ -164,10 +164,10 @@ class DrawlotsController extends CommonController
                 throw new \Exception('你没有参加此次考试');
             }
 
-            list($room_id, $stationNum) = $this->getRoomIdAndStation($id,$exam);
+            list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
 
             if ($exam->sequence_mode == 1) {
-                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stationNum);
+                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stations[$room_id]);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $examId);
             } else {
@@ -204,12 +204,14 @@ class DrawlotsController extends CommonController
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
-                'room_id' => 'required|integer'
+                'room_id' => 'required|integer',
+                'teacher_id' => 'required|integer'
             ]);
 
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
+            $teacherId = $request->input('teacher_id');
             //根据uid来查对应的考生
             //根据uid查到对应的watchid
             $watch = Watch::where('code',$uid)->first();
@@ -229,6 +231,35 @@ class DrawlotsController extends CommonController
             }
 
             $studentId = $watchLog->student_id;
+
+            //判断当前学生是否在当前小组中
+            $exam = Exam::where('status',1)->first();
+            if (is_null($exam)) {
+                throw new \Exception('当前没有正在进行的考试',3000);
+            }
+            $examId = $exam->id;
+
+            list($room_id, $stations) = $this->getRoomIdAndStation($teacherId,$exam);
+
+            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id','=',$exam->id)
+                ->where('user_id','=',$teacherId)
+                ->first();
+
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
+            }
+
+            if ($exam->sequence_mode == 1) {
+                //从队列表中通过考场ID得到对应的考生信息
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations[$room_id]);
+            } elseif ($exam->sequence_mode == 2) {
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+            }
+
+            if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
+                throw new \Exception('当前考生并非在当前地点考试');
+            }
 
             //如果考生走错了房间
             if (ExamQueue::where('room_id',$roomId)->where('student_id',$studentId)->get()->isEmpty()) {
@@ -438,7 +469,7 @@ class DrawlotsController extends CommonController
 
             //获得考场的id
             $room_id = $room->id;
-            //获得当前考场考站的个数
+            //获得当前考场考站的实例列表
             $stations = StationTeacher::where('exam_id',$exam->id)->groupBy('station_id')->get();
 
             $roomStations = [];
@@ -449,7 +480,7 @@ class DrawlotsController extends CommonController
             }
 
 
-            return array($room_id, count($roomStations[$room_id]));
+            return array($room_id, $roomStations[$room_id]);
         } catch (\Exception $ex) {
             throw $ex;
         }

@@ -127,9 +127,11 @@ class Room extends CommonModel
 
             $roomStations = RoomStation::where('room_id','=',$id)->get();
             if (!$roomStations->isEmpty()) {
-                if  (!RoomStation::where('room_id',$id)->delete()) {
-                    throw new \Exception('房间考站关联删除失败');
-                }
+                //TODO:zhoufuxiang(修改bug#3599)
+                throw new \Exception('该考场下已关联了考站，请先去解除其关联关系。');
+//                if  (!RoomStation::where('room_id',$id)->delete()) {
+//                    throw new \Exception('房间考站关联删除失败');
+//                }
             }
 
             $roomVcrs = RoomVcr::where('room_id','=',$id)->get();

@@ -20,6 +20,7 @@
                 var thisElement=$(this);
 
                 layer.confirm('确认删除？', {
+                	title:"删除",
                     btn: ['确定','取消'] //按钮
                 }, function(its){
                     $.ajax({

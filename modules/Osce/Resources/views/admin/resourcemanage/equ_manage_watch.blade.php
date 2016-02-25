@@ -132,7 +132,7 @@
             $(".fa-trash-o").click(function(){
                 var thisElement=$(this);
                 var eid=thisElement.attr("eid");
-                layer.alert('确认删除？',{btn:['确认','取消']},function(){
+                layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
                     $.ajax({
                         type:'post',
                         async:true,

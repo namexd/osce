@@ -52,7 +52,7 @@
                         <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}}</td>
-                        <td>{{$item->end_dt - $item->begin_dt}}</td>
+                        <td>{{$item->time}}</td>
                         <td>{{$item->score}}</td>
                         <td>{{$item->grade_teacher}}</td>
                         <td>
@@ -91,7 +91,7 @@
             $(".fa-trash-o").click(function(){
                 var thisElement=$(this);
                 var eid=thisElement.attr("eid");
-                layer.alert('确认删除？',{btn:['确认','取消']},function(){
+                layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
                     $.ajax({
                         type:'post',
                         async:true,
