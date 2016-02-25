@@ -52,7 +52,7 @@
                         <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}}</td>
-                        <td>{{$item->end_dt - $item->begin_dt}}</td>
+                        <td>{{$item->time}}</td>
                         <td>{{$item->score}}</td>
                         <td>{{$item->grade_teacher}}</td>
                         <td>
