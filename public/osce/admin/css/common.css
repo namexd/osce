@@ -296,6 +296,7 @@ body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
 .pull-left{
     line-height: 34px;
 }
+
 /*教师下方间隔*/
 .teacher-tabs{
     margin-bottom: 20px;
@@ -327,3 +328,5 @@ table tbody tr td:last-child{width: 120px;}
     width: 32px!important;
     background:url('../plugins/js/plugins/layer/skin/default/icon.png') no-repeat -224px 0!important;
 }
+
+table + .pull-left,.pull-left + .pull-right{margin-top:12px!important;}
