@@ -10,6 +10,7 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 
 use Modules\Osce\Entities\CaseModel;
+use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\Room;
@@ -185,10 +186,16 @@ class StationController extends CommonController
         //获取编辑考场的数据
         $rollMsg = $model->rollmsg($id);
         list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList($id);
+
+        //判断在关联表中是否有数据
+        $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
+        $status = empty($examFlowStation)? 0 : 1;
+
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourcemanage.test_station_edit',
             [   'placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case,
-                'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg
+                'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg,
+                'status' => $status
             ]);
     }
 
