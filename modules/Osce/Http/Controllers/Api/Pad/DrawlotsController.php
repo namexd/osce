@@ -173,6 +173,7 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！');
             }
+            \Log::alert($id,$examQueue->toArray());
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
