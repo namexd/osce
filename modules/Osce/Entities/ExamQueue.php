@@ -400,10 +400,10 @@ class ExamQueue extends CommonModel
 
                 $examScreening = ExamScreening::find($examScreeningId);
                 if(!$examScreening->real_start_dt){
-                    $nowTime=time();
+                    $nowTime=$time;
                     if(strtotime($examScreening->begin_dt)<=$nowTime){
                         $examScreening->real_start_dt = date('Y-m-d H:i:s',$nowTime);
-                        if(!$examScreening->seva()){
+                        if(!$examScreening->save()){
                             throw new \Exception('开始考试失败');
                         }
                     }
