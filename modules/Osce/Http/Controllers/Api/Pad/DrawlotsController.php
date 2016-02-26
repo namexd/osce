@@ -198,7 +198,7 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -273,9 +273,9 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -293,7 +293,7 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
             if (is_null($exam)) {
-                throw new \Exception('当前没有考试！', 4100);
+                throw new \Exception('当前没有正在进行考试！', 4100);
             }
 
             //根据id获取考站信息

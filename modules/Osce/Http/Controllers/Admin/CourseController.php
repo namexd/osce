@@ -63,7 +63,7 @@ class CourseController extends CommonController
                     //如果avg不为空
                     if (!empty($avg)) {
                         if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                            $item->avg_score = $avg->pluck('score')->sum()/$avg->pluck('score')->count();
+                            $item->avg_score = number_format($avg->pluck('score')->sum()/$avg->pluck('score')->count(),2);
                             date_default_timezone_set("UTC");
                             $item->avg_time = date('H:i:s',$avg->pluck('time')->sum()/$avg->pluck('time')->count());
                             date_default_timezone_set("PRC");
