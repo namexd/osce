@@ -342,7 +342,7 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
-//        try {
+        try {
             //获取数据
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
@@ -385,9 +385,9 @@ class InvigilatePadController extends CommonController
             }
             return response()->json($this->success_data([$result->id]));
 
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
