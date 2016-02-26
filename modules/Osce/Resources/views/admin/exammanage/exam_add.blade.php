@@ -54,6 +54,7 @@ input.laydate-icon{
                                 <select class="form-control" style="width:200px;" name="sequence_cate" >
                                     <option value="1">随机</option>
                                     <option value="2">顺序</option>
+                                    <option value="3">轮询</option>
                                 </select>
                             </div>
                         </div>
