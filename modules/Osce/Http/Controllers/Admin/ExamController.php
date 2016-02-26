@@ -1632,7 +1632,7 @@ class ExamController extends CommonController
         //获得exam_id
         $id = $request->input('id');
         $suc= $request->get('suc');
-        $data = Exam::where('id',$id)->select(['rules'])->first();
+        $data = Exam::where('id',$id)->select(['rules','status'])->first();
         return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
     }
 
