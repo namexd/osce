@@ -114,7 +114,7 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('没有这种考试模式！',-702);
             }
-            
+
             //将学生照片的地址换成绝对路径
             foreach ($examQueue as &$item) {
                 $item->student_avator = url($item->student_avator);

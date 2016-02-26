@@ -357,6 +357,7 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('当前没有正在进行的考试！', -701);
             }
             $examName = $exam->name;
+            \Log::alert($studentId);
 
 
             //将参数拼装成一个数组
