@@ -1,0 +1,84 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * @author tangjun <tangjun@misrobot.com>
+ * @date 2016-02-23 14:00
+ * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ */
+
+namespace Modules\Osce\Repositories;
+use Modules\Osce\Repositories\BaseRepository;
+use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\SubjectItem;
+use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\Subject;
+use Modules\Osce\Entities\Student;
+/**
+ * Class StatisticsRepositories
+ * @package Modules\Osce\Repositories
+ */
+class TestScoreRepositories  extends BaseRepository
+{
+    /**
+     * 查找考试与场次表获取场次ID
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016年2月26日15:06:29
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getTester($ExamId){
+        $builder = new Exam();
+        $builder = $builder->where('exam.id','=',$ExamId)->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.exam_id', '=', 'exam.id');
+        })->leftJoin('exam_result', function($join){
+            $join -> on('exam_result.exam_screening_id', '=', 'exam_screening.id');
+        })->select('exam_result.student_id')->get();
+        $idarr = [];
+        foreach($builder as $v){
+            if($v->student_id){
+                $idarr[] = $v->student_id;
+            }
+        }
+        $tester = Student::whereIn('id',$idarr)->get();
+        return $tester;
+    }
+
+    /**
+     * 根据考试ID和学生ID对学生科目成绩分析
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016年2月26日15:06:29
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getTestSubject($examid,$student_id){
+        $DB = \DB::connection('osce_mis');
+        $builder = new ExamResult();
+        if($student_id){
+            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','station.mins','exam_result.time','exam_result.score','subject.id');
+        }else{
+            $builder = $builder->select(
+                $DB->raw('avg(exam_result.time) as timeAvg'),
+                $DB->raw('avg(exam_result.score) as scoreAvg'),
+                'subject.id'
+            );
+        }
+        $builder = $builder->where('exam_station.exam_id','=',$examid)->leftJoin('student', function($join){
+            $join -> on('student.id', '=', 'exam_result.student_id');
+        })->leftJoin('exam_station', function($join){
+            $join -> on('exam_station.station_id', '=', 'exam_result.station_id');
+        })->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=', 'station.subject_id');
+        })->groupBy('station.subject_id')->get();
+        return $builder;
+    }
+}

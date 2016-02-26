@@ -34,7 +34,7 @@
                     <li class="nav-header" style="background:#16beb0;">
                         <div class="profile-element">
                            <span>OSCE管理系统</span>
-                           
+
                         </div>
                         <div class="logo-element">OSCE
                         </div>
@@ -89,7 +89,14 @@
                                 </li>
                                 <li><a class="active J_menuItem" href="{{route('osce.admin.course.getStudentScore')}}">考生成绩统计</a>
                                 </li>
-
+                                <li><a class="active J_menuItem" href="">考试整体分析</a>
+                                </li>
+                                <li><a class="active J_menuItem" href="">科目成绩分析</a>
+                                </li>
+                                <li><a class="active J_menuItem" href="">考生成绩分析</a>
+                                </li>
+                                <li><a class="active J_menuItem" href="">教学成绩分析</a>
+                                </li>
                             </ul>
                         </li>
                         <li>
