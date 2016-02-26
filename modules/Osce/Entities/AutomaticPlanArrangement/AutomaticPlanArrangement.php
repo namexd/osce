@@ -173,7 +173,6 @@ class AutomaticPlanArrangement
         //开始计时器
         for ($i = $beginDt; $i <= $endDt; $i += 60) {
             foreach ($this->_T as &$station) {
-//                dump($this->_S_ING);
                 /*
                  * 考试实体状态判断,使用exam_plan_record来判断状态
                  * 如果为false，就说明是开门状态
@@ -182,6 +181,8 @@ class AutomaticPlanArrangement
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
+//                    dump($students);
+//                    echo '=======';
                     if (count($students) == 0) {
                         continue;
                     }
@@ -216,6 +217,8 @@ class AutomaticPlanArrangement
                     }
                 }
             }
+//            sleep(1);
+//            dd(123);
         }
 
         //找到未考完的考生
@@ -319,41 +322,102 @@ class AutomaticPlanArrangement
      * 将符合条件的学生从侯考区放入正在考试，从大的学生池里将学生进行补位
      * @param $station 考试实体
      * @param $screen 考试场次实例
+     * @param $examId
+     * @return array|mixed
+     * @throws \Exception
      * @author Jiangzhiheng
      * @time
-     * @return array|mixed
      */
     private function needStudents($station, $screen, $examId)
     {
         //获取正在考的考生
-        $testStudents = $this->testStudents($station, $screen);
+        switch ($this->sequenceCate) {
+            case 1:
+                $testStudents = $this->randomTestStudents($station, $screen);
+                //申明数组
+                $result = [];
+                /*
+                 * 获取当前实体需要几个考生 $station->needNum
+                 * 从正在考的学生里找到对应个数的考生
+                 * 如果该考生已经考过了这个流程，就忽略掉
+                 */
+                $result = $this->studentNum($station, $testStudents, $result, $examId);
 
-        //申明数组
-        $result = [];
-        /*
-         * 获取当前实体需要几个考生 $station->needNum
-         * 从正在考的学生里找到对应个数的考生
-         * 如果该考生已经考过了这个流程，就忽略掉
-         */
-        $result = $this->studentNum($station, $testStudents, $result, $examId);
+                /*
+                 * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
+                 * 再将人从学生池里抽人进入侯考区
+                 * 直接使用array_shift函数
+                 */
 
-        /*
-         * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
-         * 再将人从学生池里抽人进入侯考区
-         * 直接使用array_shift函数
-         */
-        if (count($result) < $station->needNum) {
-            for ($i = 0; $i < $station->needNum - count($result); $i++) {
-                if (count($this->_S_ING) > 0) {
-                    $thisStudent = array_shift($this->_S_ING);
-                    if (!is_null($thisStudent)) {
-                        $result[] = $thisStudent;
-                    }
-                    if (count($this->_S) > 0) {
-                        $this->_S_ING[] = array_shift($this->_S);
+                if (count($result) < $station->needNum) {
+                    for ($i = 0; $i < $station->needNum - count($result); $i++) {
+                        if (count($this->_S_ING) > 0) {
+                            $thisStudent = array_shift($this->_S_ING);
+                            if (!is_null($thisStudent)) {
+                                $result[] = $thisStudent;
+                            }
+                            if (count($this->_S) > 0) {
+                                $this->_S_ING[] = array_shift($this->_S);
+                            }
+                        }
                     }
                 }
-            }
+                break;
+            case 2:
+                $result = [];
+                $testStudents = $this->orderTestStudent($station, $screen);
+//                dump($testStudents);
+//                dump($result);
+                if ($station->serialnumber == 1) {
+                    for ($i = 0; $i < $station->needNum; $i++) {
+                        if (count($this->_S_ING) > 0) {
+                            $thisStudent = array_shift($this->_S_ING);
+                            if (!is_null($thisStudent)) {
+                                $result[] = $thisStudent;
+                            }
+                            if (count($this->_S) > 0) {
+                                $this->_S_ING[] = array_shift($this->_S);
+                            }
+                        }
+                    }
+                }
+                else{
+                    $result =  $testStudents;
+                }
+//                echo '===================================================';
+                break;
+            case 3:
+                $testStudents = $this->pollTestStudents($station, $screen);
+                //申明数组
+                $result = [];
+                /*
+                 * 获取当前实体需要几个考生 $station->needNum
+                 * 从正在考的学生里找到对应个数的考生
+                 * 如果该考生已经考过了这个流程，就忽略掉
+                 */
+                $result = $this->studentNum($station, $testStudents, $result, $examId);
+
+                /*
+                 * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
+                 * 再将人从学生池里抽人进入侯考区
+                 * 直接使用array_shift函数
+                 */
+                if (count($result) < $station->needNum) {
+                    for ($i = 0; $i < $station->needNum - count($result); $i++) {
+                        if (count($this->_S_ING) > 0) {
+                            $thisStudent = array_shift($this->_S_ING);
+                            if (!is_null($thisStudent)) {
+                                $result[] = $thisStudent;
+                            }
+                            if (count($this->_S) > 0) {
+                                $this->_S_ING[] = array_shift($this->_S);
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                throw new \Exception('没有对应的考试排序模式！');
         }
 
         return $result;
@@ -375,7 +439,7 @@ class AutomaticPlanArrangement
 
         $serialnumber = array_unique($serialnumber);
 
-        //将两个数组进行比对，把已经考完的考生提出队列
+        //将两个数组进行比对，把已经考完的考生踢出队列
         $testedStudents = [];
         $tempTestStudent = [];
         foreach ($testStudents as $key => $testingStudent) {
@@ -387,20 +451,17 @@ class AutomaticPlanArrangement
 
             if (is_array($testStudents)) {
                 $student = array_pull($testStudents, $key);
-            }
-            else
-            {
+            } else {
                 $student = $testStudents->pull($key);  //就把这个值从学生数组里弹出来
             }
 
-            if(is_null($student))
-            {
+            if (is_null($student)) {
                 continue;
             }
             if (count($serialnumber) == count($studentSerialnumber)) { //如果流程数量等于考生已经考过的流程数
-                $testedStudents[]   = $student;  //就把这个值从学生数组里弹出来
+                $testedStudents[] = $student;  //就把这个值从学生数组里弹出来
             } else {
-                $tempTestStudent[]  = $student;  //就把这个值从学生数组里弹出来
+                $tempTestStudent[] = $student;  //就把这个值从学生数组里弹出来
             }
         }
 
@@ -416,28 +477,18 @@ class AutomaticPlanArrangement
      * @param $station 考站实例
      * @param $screen 考试场次实例
      * @return array 已经考过了的考生及其考试流程
+     * @throws \Exception
      * @author Jiangzhiheng
      * @time
      */
-    private function testStudents($station, $screen)
+    private function randomTestStudents($station, $screen)
     {
-        switch ($this->sequenceCate) {
-            case 1; //这是随机
-                /*
-                 * 找到当前场次的所有的记录
-                 * 将其按考生id分组,拿到分组后的流程编号
-                 */
-                $tempArrays = ExamPlanRecord::randomBeginStudent($screen);
-                break;
-            case 2: //这是顺序
-                $tempArrays = ExamPlanRecord::pollBeginStudent($station,$screen);
-                break;
-            case 3: //这是轮询
+        /*
+         * 找到当前场次的所有的记录
+         * 将其按考生id分组,拿到分组后的流程编号
+         */
+        $tempArrays = ExamPlanRecord::randomBeginStudent($screen);
 
-                break;
-            default:
-                throw new \Exception('没有对应的考试排序模式！');
-        }
         $num = $this->waitingStudentSql($screen);
 
         $arrays = [];
@@ -451,6 +502,56 @@ class AutomaticPlanArrangement
         }
 
         return $this->testingStudents($arrays);
+    }
+
+    /**
+     * 排考方式：轮询的正在考试和已考完的学生
+     * @param $station
+     * @param $screen
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time
+     */
+    private function pollTestStudents($station, $screen){
+        $tempArrays = ExamPlanRecord::pollBeginStudent($station, $screen, $this->sequenceMode);
+
+        $num = $this->waitingStudentSql($screen);
+
+        $arrays = [];
+        foreach ($num as $item) {
+            $arrays[] = $item->student;
+        }
+
+
+        if (count($tempArrays) == 0) {
+            $arrays = $this->beginStudents($station);
+        }
+
+        return $this->testingStudents($arrays);
+    }
+
+    private function orderTestStudent($station,$screen) {
+        /**
+         * 需要查当前的实例是不是第一个
+         * 如果等于1，就说明是第一个，直接从侯考区取人
+         * 如果不是，就说明前面有流程了
+         */
+        $tempArrays = [];
+        if ($station->serialnumber != 1) {
+            $tempArrays = ExamPlanRecord::orderBeginStudent($screen, $station->serialnumber,
+                $this->sequenceMode);
+            if (count($tempArrays) != 0) {
+                $a = Student::whereIn('id',$tempArrays)->get();
+//                dump($a);
+                return $a;
+            } else {
+                return collect([]);
+            }
+
+        } else {
+            return [];
+        }
     }
 
     /**
@@ -497,44 +598,39 @@ class AutomaticPlanArrangement
         $arrays = [];
         foreach ($result as $record) {
             //$arrays = $screen->groupBy('station_id');
-            $screeningId    =   $record->exam_screening_id;
-            $station_id     =   $record->station_id;
+            $screeningId = $record->exam_screening_id;
+            $station_id = $record->station_id;
             //$station        =   $record->station;
-            $screeningId    =   $record->exam_screening_id;
-            if($exam->sequence_mode == 1) //考场模式
+            $screeningId = $record->exam_screening_id;
+            if ($exam->sequence_mode == 1) //考场模式
             {
-                $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][]=$record;
-            }
-            else //考站模式
+                $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][] = $record;
+            } else //考站模式
             {
-                $arrays[$screeningId][$record->room_id . '-' . $record->station_id][strtotime($record->begin_dt)][]=$record;
+                $arrays[$screeningId][$record->room_id . '-' . $record->station_id][strtotime($record->begin_dt)][] = $record;
             }
         }
 
-        $timeData   =   [];
-        foreach($arrays as $screeningId=> $screening)
-        {
-            foreach($screening as $entityId=>$timeList)
-            {
-                foreach($timeList as $batch => $recordList)
-                {
+        $timeData = [];
+        foreach ($arrays as $screeningId => $screening) {
+            foreach ($screening as $entityId => $timeList) {
+                foreach ($timeList as $batch => $recordList) {
                     foreach ($recordList as $record) {
-                        if($exam->sequence_mode == 1) //考场模式
+                        if ($exam->sequence_mode == 1) //考场模式
                         {
-                            $name   =   $record->room->name;
-                        }
-                        else //考站模式
+                            $name = $record->room->name;
+                        } else //考站模式
                         {
-                            $name   =   $record->room->name . '-' . $record->station->name;
+                            $name = $record->room->name . '-' . $record->station->name;
                         }
 
-                        $student    =   $record->student;
+                        $student = $record->student;
 
-                    $timeData[$screeningId][$entityId]['name']=$name;
-                    $timeData[$screeningId][$entityId]['child'][$batch]['start']    =   strtotime($record->begin_dt);
-                    $timeData[$screeningId][$entityId]['child'][$batch]['end']      =   strtotime($record->end_dt);
-                    $timeData[$screeningId][$entityId]['child'][$batch]['screening']=   $screeningId;
-                    $timeData[$screeningId][$entityId]['child'][$batch]['items'][$student->id]  =   $student;
+                        $timeData[$screeningId][$entityId]['name'] = $name;
+                        $timeData[$screeningId][$entityId]['child'][$batch]['start'] = strtotime($record->begin_dt);
+                        $timeData[$screeningId][$entityId]['child'][$batch]['end'] = strtotime($record->end_dt);
+                        $timeData[$screeningId][$entityId]['child'][$batch]['screening'] = $screeningId;
+                        $timeData[$screeningId][$entityId]['child'][$batch]['items'][$student->id] = $student;
 
                     }
                 }
@@ -558,7 +654,7 @@ class AutomaticPlanArrangement
             if (is_object($testStudent)) {
                 $serialnumber = $this->getStudentSerialnumber($testStudent);
 
-                if (in_array($station->serialnumber,$serialnumber->toArray())) {
+                if (in_array($station->serialnumber, $serialnumber->toArray())) {
                     continue;
                 }
             }
@@ -608,7 +704,13 @@ class AutomaticPlanArrangement
             ->get();
     }
 
-
+    /**
+     * 查询到等待的学生信息
+     * @param $screen
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-02-24 17:35
+     */
     private function waitingStudentSql($screen)
     {
         return ExamPlanRecord::where('exam_screening_id', $screen->id)

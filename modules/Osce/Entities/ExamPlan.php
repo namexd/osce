@@ -947,10 +947,9 @@ class ExamPlan extends CommonModel
 
     public function getexampianStudent($ExamScreeningId){
         return $this->where('exam_screening_id','=',$ExamScreeningId)
-//                    ->groupBy('student_id')
+                    ->groupBy('student_id')
+                    ->get()
                     ->count();
-
-
    }
 
     public function storePlan($examId,$user)

@@ -173,6 +173,7 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！');
             }
+            \Log::alert($id,$examQueue->toArray());
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -420,7 +421,6 @@ class DrawlotsController extends CommonController
                     ->get()->pluck('room_id');
                 //dd($examPlanStationIds);
                 //判断当前考站在计划表中的顺序
-//                $stationIdKey = $examPlanStationIds->search($stationId);
                 $stationIdKey = $examPlanStationIds->search($roomId);
                 if ($stationIdKey===false) {
                     throw new \Exception('该名考生不在计划中！',3800);
@@ -443,7 +443,6 @@ class DrawlotsController extends CommonController
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！',3900);
                 }
-
                 //查出考站的信息
                 return Station::findOrFail($stationId);
             }

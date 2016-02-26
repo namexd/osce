@@ -21,7 +21,7 @@ class ExamScreening extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag'];
+    protected $fillable = ['id','exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag','real_start_dt'];
     protected $statuValues = [
         1 => '等候考试',
         2 => '正在考试',
@@ -186,13 +186,11 @@ class ExamScreening extends CommonModel
     {
         //取得考试实例
         $exam = Exam::where('status','=',1)->orderBy('begin_dt','desc')->first();
-
         if(is_null($exam)){
             throw new \Exception('没有找到考试');
         }
         //获取到当考试场次id
         $ExamScreening = $this-> getExamingScreening($exam->id);
-
         if(is_null($ExamScreening)){
             $ExamScreening = $this->getNearestScreening($exam->id);
         }
@@ -202,10 +200,11 @@ class ExamScreening extends CommonModel
         //获取考试场次迟到的人数
         $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
             ->groupBy('student_id')
-            ->count();
+              ->count();
         //获取考试场次已考试完成的人数
         $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
             ->where('exam_screening_id','=',$ExamScreening->id)
+            ->get()
             ->count();
 
         if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
