@@ -280,7 +280,7 @@ class InvigilatePadController extends CommonController
 
         ];
 
-        \Log::alert($data,$score);
+        \Log::alert($data,json_decode($score));
 //        try {
             //根据考生id获取到考试id
             $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
