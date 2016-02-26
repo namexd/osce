@@ -53,7 +53,6 @@
     {{--'port':'8000','username':'admin',--}}
     {{--'password':'123456mis','channel':'1',--}}
     {{--'starttime':'2016-02-26 08:12:33','endtime':'2016-02-26 12:12:33'}" />--}}
-
     <div class="wrapper-content">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
