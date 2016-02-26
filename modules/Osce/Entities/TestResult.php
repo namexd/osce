@@ -46,7 +46,7 @@ class TestResult extends CommonModel
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-        try {
+//        try {
             //判断成绩是否已提交过
             $examResult = $this->where('student_id', '=', $data['student_id'])
                 ->where('exam_screening_id', '=', $data['exam_screening_id'])
@@ -63,17 +63,20 @@ class TestResult extends CommonModel
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
+
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
+
+
 
             } else {
                 throw new \Exception('成绩提交失败');
             }
-            $connection->commit();
+//            $connection->commit();
             return $scoreConserve;
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            throw $ex;
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            throw $ex;
+//        }
 
     }
 
