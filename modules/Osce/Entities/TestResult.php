@@ -73,7 +73,7 @@ class TestResult extends CommonModel
                 throw new \Exception('成绩提交失败');
             }
 //            $connection->commit();
-            return $scoreConserve;
+            return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
