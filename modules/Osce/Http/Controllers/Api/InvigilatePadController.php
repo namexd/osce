@@ -354,6 +354,9 @@ class InvigilatePadController extends CommonController
             $studentName = $student->name;
             $studentCode = $student->code;
             $stationName = Station::findOrFail($stationId)->first()->name;
+            if (is_null$exam) {
+                throw new \Exception('当前没有正在进行的考试！',-701);
+            }
             $examName = $exam->name;
 
 
