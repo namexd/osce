@@ -279,16 +279,15 @@ class InvigilatePadController extends CommonController
             'affinity' => Input::get('affinity'),//沟通亲和能力
 
         ];
-
-//        \Log::alert($data,json_decode($score));
+        //根据考生id获取到考试id
+        $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
+        //根据考试获取到考试流程
+        $ExamFlowModel = new  ExamFlow();
+        $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
+        //查询出学生当前已完成的考试
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
         try {
-            //根据考生id获取到考试id
-            $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
-            //根据考试获取到考试流程
-            $ExamFlowModel = new  ExamFlow();
-            $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
-            //查询出学生当前已完成的考试
-            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
+
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
                 try {
@@ -298,8 +297,8 @@ class InvigilatePadController extends CommonController
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
             }
-            $TestResultModel = new TestResult();
-           $result = $TestResultModel->addTestResult($data, $score);
+                $TestResultModel = new TestResult();
+                $result = $TestResultModel->addTestResult($data, $score);
                 \Log::alert(json_encode($result));
         if ($result) {
             //根据考试附件结果id修改表里的考试结果id
