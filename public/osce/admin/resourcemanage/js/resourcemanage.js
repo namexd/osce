@@ -656,24 +656,24 @@ function categories(){
                                    if((res[j].sort.indexOf('-') == 1) && (res[j].sort.substr(0,1) == res[i].sort)){
                         
                                        //处理子级dom
-                                       html += '<tr child="'+res[j].sort.substr(res[j].sort.indexOf('-')+1,1)+'" class="pid-'+index+'" >'+
+                                       html += '<tr child="'+res[j].sort.substr(res[j].sort.indexOf('-')+1)+'" class="pid-'+index+'" >'+
                                                '<td>'+res[j].sort+'</td>'+
                                                '<td>'+
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">考核项:</label>'+
                                                '<div class="col-sm-10">'+
-                                               '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+index+']['+res[j].sort+']"/>'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+index+']['+res[j].sort.substr(res[j].sort.indexOf('-')+1)+']"/>'+
                                                '</div>'+
                                                '</div>'+
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">评分标准:</label>'+
                                                '<div class="col-sm-10">'+
-                                               '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+index+']['+res[j].sort+']"/>'+
+                                               '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+index+']['+res[j].sort.substr(res[j].sort.indexOf('-')+1)+']"/>'+
                                                '</div>'+
                                                '</div>'+
                                                '</td>'+
                                                '<td>'+
-                                               '<select class="form-control" name="score['+index+']['+res[j].sort+']">';
+                                               '<select class="form-control" name="score['+index+']['+res[j].sort.substr(res[j].sort.indexOf('-')+1)+']">';
                                                 /*TODO: Zhoufuxiang 2016-2-26*/
                                                //'<option value="'+res[j].score+'">'+res[j].score+'</option>';
                                                for(var a=1; a<=10; a++){
