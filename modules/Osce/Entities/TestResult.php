@@ -83,7 +83,7 @@ class TestResult extends CommonModel
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
-        foreach ($scoreData as $item) {
+        foreach ($scoreData as &$item) {
             $item['exam_result_id']=$ExamResultId;
             //$result=$connection->table('exam_score')->insert($data);;
             $examScore=ExamScore::create($item);
