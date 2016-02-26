@@ -92,31 +92,29 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
 
-            list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
-
-            //获取当前老师对应的考站id
-            $station = StationTeacher::where('exam_id','=',$exam->id)
-                ->where('user_id','=',$id)
-                ->first();
-
-            if (is_null($station)) {
-                throw new \Exception('你没有参加此次考试');
-            }
-
             if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试',3000);
             }
 
             $examId = $exam->id;
-            if ($exam->sequence_mode == 1) {
-                //从队列表中通过考场ID得到对应的考生信息
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations[$room_id]);
-            } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
-            } else {
-                throw new \Exception('当前没有这种考试模式');
-            }
 
+            if ($exam->sequence_mode == 1) {
+                list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
+                //从队列表中通过考场ID得到对应的考生信息
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
+            } elseif ($exam->sequence_mode == 2) {
+                //获取当前老师对应的考站id
+                $station = StationTeacher::where('exam_id','=',$exam->id)
+                    ->where('user_id','=',$id)
+                    ->first();
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+                if (is_null($station)) {
+                    throw new \Exception('你没有参加此次考试');
+                }
+            } else {
+                throw new \Exception('没有这种考试模式！',-702);
+            }
+            
             //将学生照片的地址换成绝对路径
             foreach ($examQueue as &$item) {
                 $item->student_avator = url($item->student_avator);

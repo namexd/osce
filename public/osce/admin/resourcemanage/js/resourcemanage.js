@@ -190,12 +190,12 @@ function categories(){
                 '</div>'+
                 '</td>'+
                 '<td>'+
-                '<select class="form-control" name="score['+parent+']['+child+']">'+
-                '<option value="1">1</option>'+
-                '<option value="2">2</option>'+
-                '<option value="3">3</option>'+
-                '<option value="4">4</option>'+
-                '</select>'+
+                '<select class="form-control" name="score['+parent+']['+child+']">';
+                /*TODO: Zhoufuxiang 2016-2-26*/
+                for(var a=1; a<=10; a++){
+                    html += '<option value="'+a+'">'+a+'</option>';
+                }
+        html += '</select>'+
                 '</td>'+
                 '<td>'+
                 '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -612,7 +612,11 @@ function categories(){
                          */
                         var html = '';
                         var res = data.data;
-                        var index = parseInt($('tbody').attr('index'));
+                        //var index = parseInt($('tbody').attr('index'));
+
+                        /*序号置0，内容清空 TODO: Zhoufuxiang 2016-2-26*/
+                        var index = 0;
+                        $('tbody').html('');
 
                         for(var i in res){
                             /*TODO: Zhoufuxiang 2016-2-26*/
@@ -652,7 +656,7 @@ function categories(){
                                    if((res[j].sort.indexOf('-') == 1) && (res[j].sort.substr(0,1) == res[i].sort)){
                         
                                        //处理子级dom
-                                       html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
+                                       html += '<tr child="'+res[j].sort.substr(res[j].sort.indexOf('-')+1,1)+'" class="pid-'+index+'" >'+
                                                '<td>'+res[j].sort+'</td>'+
                                                '<td>'+
                                                '<div class="form-group">'+
