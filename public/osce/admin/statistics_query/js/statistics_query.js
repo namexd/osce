@@ -366,25 +366,7 @@ $(function(){
     //暂停
     clickPause(0);
     //恢复
-    //clickResume(0);
-    $(".pause").click(function(){console.log(time_count)
-        $(".pause").hide();
-        $(".resume").show();
-        var oWndInfo = WebVideoCtrl.I_GetWindowStatus(0),
-            szInfo = "";
-
-        if (oWndInfo != null) {
-            var iRet = WebVideoCtrl.I_Resume();
-            if (0 == iRet) {
-                szInfo = "恢复成功！";
-                progressMove(time_count);
-                //timer=setTimeout(progressMove,step*1000);
-            } else {
-                szInfo = "恢复失败！";
-            }
-            //alert(oWndInfo.szIP + " " + szInfo);
-        }
-    });
+    clickResume(0);
     //默认打开声音
     clickOpenSound();
     //停止
@@ -519,8 +501,8 @@ $(function(){
                 var iRet = WebVideoCtrl.I_Resume();
                 if (0 == iRet) {
                     szInfo = "恢复成功！";
-                    progressMove(time_count);
-                    console.log(time_count)
+                    time_count = $('.progress-bar').css('width');
+                    progressMove(time_count.split('p')[0]);
                     //timer=setTimeout(progressMove,step*1000);
                 } else {
                     szInfo = "恢复失败！";
