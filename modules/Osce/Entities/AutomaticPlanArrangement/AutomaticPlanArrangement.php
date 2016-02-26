@@ -110,10 +110,16 @@ class AutomaticPlanArrangement
      * 智能排考
      * @author Jiangzhiheng
      * @time
+     * @param $examId
+     * @return array
+     * @throws \Exception
      */
     function plan($examId)
     {
         try {
+            if (count($this->_S) == 0) {
+                throw new \Exception('当前考试没有安排学生！',-705);
+            }
             /*
              * 排考的时候删除原先的所有数据
              */
@@ -181,8 +187,6 @@ class AutomaticPlanArrangement
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
-//                    dump($students);
-//                    echo '=======';
                     if (count($students) == 0) {
                         continue;
                     }
@@ -217,8 +221,6 @@ class AutomaticPlanArrangement
                     }
                 }
             }
-//            sleep(1);
-//            dd(123);
         }
 
         //找到未考完的考生

@@ -434,7 +434,7 @@ function timePicker(background){
         event: 'click', //触发事件
         format: 'YYYY-MM-DD hh:mm', //日期格式
         istime: true, //是否开启时间选择
-        isclear: true, //是否显示清空
+        isclear: false, //是否显示清空
         istoday: false, //是否显示今天
         issure: true, //是否显示确认
         festival: true, //是否显示节日

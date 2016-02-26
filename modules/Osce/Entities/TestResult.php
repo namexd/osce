@@ -68,7 +68,7 @@ class TestResult extends CommonModel
                 throw new \Exception('成绩提交失败');
             }
             $connection->commit();
-            return $scoreConserve;
+            return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -78,7 +78,7 @@ class TestResult extends CommonModel
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
-        foreach ($scoreData as $item) {
+        foreach ($scoreData as &$item) {
             $item['exam_result_id']=$ExamResultId;
             //$result=$connection->table('exam_score')->insert($data);;
             $examScore=ExamScore::create($item);

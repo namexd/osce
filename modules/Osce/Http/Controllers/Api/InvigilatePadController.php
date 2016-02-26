@@ -257,8 +257,7 @@ class InvigilatePadController extends CommonController
             'exam_screening_id' => 'required',
             'begin_dt' => 'required',
             'end_dt' => 'required',
-            'teacher_id' => 'required|integer',
-            'evaluate' => 'required'
+            'teacher_id' => 'required',
         ], [
             'score.required' => '请检查评分标准分值',
         ]);
@@ -280,16 +279,15 @@ class InvigilatePadController extends CommonController
             'affinity' => Input::get('affinity'),//沟通亲和能力
 
         ];
-
-
+        //根据考生id获取到考试id
+        $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
+        //根据考试获取到考试流程
+        $ExamFlowModel = new  ExamFlow();
+        $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
+        //查询出学生当前已完成的考试
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
         try {
-            //根据考生id获取到考试id
-            $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
-            //根据考试获取到考试流程
-            $ExamFlowModel = new  ExamFlow();
-            $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
-            //查询出学生当前已完成的考试
-            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
+
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
                 try {
@@ -298,21 +296,22 @@ class InvigilatePadController extends CommonController
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
-        $TestResultModel = new TestResult();
-        $result = $TestResultModel->addTestResult($data, $score);
+            }
+                $TestResultModel = new TestResult();
+                $result = $TestResultModel->addTestResult($data, $score);
+//                \Log::alert(json_encode($result));
         if ($result) {
-            //根据考试附件结果id修改表里的考试结果id
-            // todo 待最后确定。。。。。。。
-            //存入考试 评分详情表
-
             return response()->json($this->success_data([], 1, '成绩提交成功'));
         } else {
             return response()->json(
                 $this->fail(new \Exception('成绩提交失败'))
-            );
+                 );
             }
-        }
+
         } catch (\Exception $ex) {
+
+            \Log::alert($ex->getMessage());
+
             throw $ex;
         }
 
@@ -341,23 +340,26 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
+        \Log::info(json_encode($_POST));
+        \Log::info(json_encode('======================='));
+        \Log::info(json_encode($request->all()));
         try {
             //获取数据
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
-            $exam = Exam::where('status', 1)->first();
             $standardId = $request->input('standard_id');
+            $exam = Exam::where('status', 1)->first();
+            if (is_null($exam)) {
+                throw new \Exception('当前没有正在进行的考试！', -701);
+            }
 
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
             $studentName = $student->name;
             $studentCode = $student->code;
             $stationName = Station::findOrFail($stationId)->first()->name;
-            if (is_null($exam)) {
-                throw new \Exception('当前没有正在进行的考试！', -701);
-            }
-            $examName = $exam->name;
 
+            $examName = $exam->name;
 
             //将参数拼装成一个数组
             $params = [
