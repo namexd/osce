@@ -101,63 +101,70 @@ class StudentExamQueryController extends CommonController
         $studentId = Input::get('student_id');
         //获取到考试的时间
         try {
-        //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
-        $studentInfo = Student::find($studentId);
-        $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
-        //根据考试id找到对应的考试场次
-        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
-        $examScreening = [];
-        foreach ($examScreeningId as $data) {
-            $examScreening[] = [
-                'id' => $data->id,
-            ];
-        }
-
-        $examScreeningIds = array_column($examScreening, 'id');
-        //根据场次id查询出考站的相关考试结果
-        $ExamResultModel = new ExamResult();
-        $stationList = $ExamResultModel->stationInfo($examScreeningIds);
-        $stationData = [];
-//            if(!empty($studentId)){
-//                $studentInfo= Student::where('id',$studentId)->find();
-//            }
-
-        foreach ($stationList as $stationType) {
-            if ($stationType->type == 2) {
-                //获取到sp老师信息
-                $teacherModel = new Teacher();
-                $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
-
-                if (!$spteacher) {
-                    throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
-                }
+            if (empty($studentId)) {
+                //如果是学生根据用户和考试拿到考试的学生id
+                $user = Auth::user();
+                $student = Student::where('user_id', '=', $user->id)->where('exam_id', '=', $examId)->first();
+                $studentId = $student->id;
             }
+            //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
+            $studentInfo = Student::find($studentId);
+            $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
 
-            $stationData[] = [
-                'exam_result_id' => $stationType->exam_result_id,
-                'station_id' => $stationType->id,
-                'score' => $stationType->score,
-                'time' => $stationType->time,
-                'grade_teacher' => $stationType->grade_teacher,
-                'type' => $stationType->type,
-                'station_name' => $stationType->station_name,
-                'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
-                'begin_dt' => $examTime->begin_dt,
-                'end_dt' => $examTime->end_dt,
-                'exam_screening_id' => $stationType->exam_screening_id,
+            //根据考试id找到对应的考试场次
+//        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
+
+//        $examScreening = [];
+//        foreach ($examScreeningId as $data) {
+//            $examScreening[] = [
+//                'id' => $data->id,
+//            ];
+//        }
+//        $examScreeningIds = array_column($examScreening, 'id');
+
+            //根据场次id查询出考站的相关考试结果
+            $ExamResultModel = new ExamResult();
+            $stationList = $ExamResultModel->stationInfo($studentId);
+            if (!$stationList) {
+                throw new \Exception('没有找到学生成绩信息');
+            }
+            $stationData = [];
+            foreach ($stationList as $stationType) {
+                if ($stationType->type == 2) {
+                    //获取到sp老师信息
+                    $teacherModel = new Teacher();
+                    $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
+
+                    if (!$spteacher) {
+                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
+                    }
+                }
+
+                $stationData[] = [
+                    'exam_result_id' => $stationType->exam_result_id,
+                    'station_id' => $stationType->id,
+                    'score' => $stationType->score,
+                    'time' => $stationType->time,
+                    'grade_teacher' => $stationType->grade_teacher,
+                    'type' => $stationType->type,
+                    'station_name' => $stationType->station_name,
+                    'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
+                    'begin_dt' => $examTime->begin_dt,
+                    'end_dt' => $examTime->end_dt,
+                    'exam_screening_id' => $stationType->exam_screening_id,
 //                    'student_name' =>$studentInfo->name,
 //                    'student_mobile' =>$studentInfo->mobile,
-            ];
-        }
+                ];
+            }
 
-        //如果是监考老师调用这个方法
-        if ($studentId) {
-            return view('osce::wechat.resultquery.examination_teacher', ['studentInfo' => $studentInfo, 'stationData' => $stationData, 'examName' => $examTime]);
-        } else {
-            return response()->json(
-                $this->success_data($stationData, 1, '数据传送成功')
-            );
-        }
+            //如果是监考老师调用这个方法
+            if (Input::get('student_id')) {
+                return view('osce::wechat.resultquery.examination_teacher', ['studentInfo' => $studentInfo, 'stationData' => $stationData, 'examName' => $examTime]);
+            } else {
+                return response()->json(
+                    $this->success_data($stationData, 1, '数据传送成功')
+                );
+            }
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -181,9 +188,6 @@ class StudentExamQueryController extends CommonController
 
     public function  getExamDetails(Request $request)
     {
-
-
-
         $this->validate($request, [
             'exam_screening_id' => 'required|integer'
         ]);
@@ -211,12 +215,10 @@ class StudentExamQueryController extends CommonController
         }
         foreach ($groupData[0] as $group) {
             $groupInfo = $group;
-            try
-            {
+            try {
                 $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
-            }catch (\Exception $ex)
-            {
-                dd($group->standard->id,$groupData);
+            } catch (\Exception $ex) {
+                dd($group->standard->id, $groupData);
             }
 
 
