@@ -34,7 +34,7 @@
                     <li class="nav-header" style="background:#16beb0;">
                         <div class="profile-element">
                            <span>OSCE管理系统</span>
-                           
+
                         </div>
                         <div class="logo-element">OSCE
                         </div>

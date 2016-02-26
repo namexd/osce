@@ -10,6 +10,11 @@ namespace Modules\Osce\Entities;
 
 use DB;
 use Auth;
+
+/**
+ * Class Exam
+ * @package Modules\Osce\Entities
+ */
 class Exam extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -424,6 +429,11 @@ class Exam extends CommonModel
     }
 
     //考生查询
+    /**
+     * @content：
+     * @author：
+     * @createDate：
+     */
     public function getList($formData='')
     {
          $builder=$this->Join('student','student.exam_id','=','exam.id');
@@ -673,4 +683,8 @@ class Exam extends CommonModel
             throw $ex;
         }
     }
+
+
+
+
 }

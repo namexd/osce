@@ -50,7 +50,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//TODO 唐俊
 		Route::get('subject-statistics/subject-grade-list',['uses'=>'SubjectStatisticsController@SubjectGradeList','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeList']);
-
+		//考生成绩统计
+		Route::get('testscores/test-score-list',['uses'=>'TestScoresController@TestScoreList','as'=>'osce.admin.TestScoresController.TestScoreList']);
 	});
 
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
@@ -260,6 +261,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.course.getStudentScore']);
 		Route::get('course/student-details',['uses'=>'CourseController@getStudentDetails','as'=>'osce.admin.course.getStudentDetails']);
 		Route::get('course/subject',['uses'=>'CourseController@getSubject','as'=>'osce.admin.course.getSubject']);
+
+
 		
 	});
 
