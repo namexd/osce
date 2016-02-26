@@ -352,7 +352,7 @@ $(function(){
     start=Date.parse(start)/1000;
     var allTime=end-start;//结束时间减去开始时间
     var step=allTime/600;//代表几秒向右前进1px;
-    var time_count = 0; //时间计数器
+    var time_count = -20; //时间计数器
     //初始化
     courseObserveDetail.initVideo(600,300,1,"divPlugin",'');
     //登录
@@ -376,32 +376,16 @@ $(function(){
     //下载
     courseObserveDetail.download('',{id:$('.active').parent().attr('value'),start:$('#start').val(),end:$('#end').val()});
 
-    /*function progressMove(){
-        var i= $(".progress-bar").css("width").split("p")[0];//获取进度条长度
-        i  ++;
-        $(".progress-bar").css("width",i+"px");
-        if(i>=600){
-            clearTimeout(timer);
-            i=0;
-            $(".progress-bar").css("width",0);
-            courseObserveDetail.StartPlayback(0,pars.ip,pars.starttime,pars.endtime,pars.channel);
-
-            var oWndInfo = WebVideoCtrl.I_GetWindowStatus(0),
-                szInfo   = "";
-            endToStartPause();
-        }else{
-            timer=setTimeout(progressMove,step*100);
-        }
-        return i;
-    }*/
     function progressMove(count/*传入时间参数*/){
         var i= count;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
         i  ++;
         $(".progress-bar").css("width",i+"px");
+
         if(i>=600){
             clearTimeout(timer);
             i=0;
             $(".progress-bar").css("width",0);
+            pause();
             courseObserveDetail.StartPlayback(0,pars.ip,pars.starttime,pars.endtime,pars.channel);
 
             var oWndInfo = WebVideoCtrl.I_GetWindowStatus(0),
@@ -540,12 +524,43 @@ $(function(){
             }
             //alert(szInfo);
     }
+
+    //进度条重回
+    function clickStart(left){
+        var starTime    =   clickGetOSDTime(0);
+        if(starTime==undefined||starTime<0)
+        {
+            setTimeout(clickStart);
+        }
+        else
+        {
+            //alert(starTime);
+            var starTimeInfo    =   starTime.split(' ');
+            var datInfo         =   starTimeInfo[0].split('-');
+            var timeInfo         =   starTimeInfo[1].split(':');
+
+            var nowDateTime=new Date(datInfo[0],parseInt(datInfo[1])-1,datInfo[2],timeInfo[0],timeInfo[1],timeInfo[2]);
+            var nowSeconds =   Date.parse(nowDateTime);
+            if(nowSeconds>1)
+            {
+                setTimeout(function(){
+                progressMove(Math.round(left));
+                },2000);
+                //clearTimeout(timer);
+            }
+            else
+            {
+                setTimeout(clickStart);
+            }
+        }
+    }
     //获取点击相对位置
     $("#progress").click(function(e){
+        clearTimeout(timer);
         var left=e.clientX-($("#progress").offset().left);
         console.log(left);
+        $(".progress-bar").css({"width":left+"px"});
         //var current=progressMove();
-        //$(".progress-bar").css("width",left+"px");
         //alert(left*step);
         var dateTime=new Date(pars.starttime.split(" ")[0].split("-")[0],pars.starttime.split(" ")[0].split("-")[1]-1,pars.starttime.split(" ")[0].split("-")[2],
             pars.starttime.split(" ")[1].split(":")[0], pars.starttime.split(" ")[1].split(":")[1], pars.starttime.split(" ")[1].split(":")[2]);
@@ -567,8 +582,9 @@ $(function(){
         s=times(s);
         var newstart=year+"-"+month+"-"+days+" "+hour+":"+min+":"+s;
         //初始化计时
-        clearTimeout(timer);
-        progressMove(Math.round(left));
+        clickStart(left);
+
+
         courseObserveDetail.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
     })
     //选择标记点跳转视频
