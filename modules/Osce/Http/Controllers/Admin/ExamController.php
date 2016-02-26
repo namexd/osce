@@ -1232,8 +1232,15 @@ class ExamController extends CommonController
             throw new \Exception('没有找到该考试');
         }
         $ExamPlanModel  =   new ExamPlan();
-        $plan   =   $ExamPlanModel  ->  showPlans($exam);
-
+        try {
+            $plan   =   $ExamPlanModel  ->  showPlans($exam);
+        } catch (\Exception $ex) {
+            if ($ex->getCode() == 9999) {
+                $user   =   Auth::user();
+                $plan = [];
+                return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
+            }
+        }
 //        $plan   =   $this           ->  getEmptyTime($plan);
         $user   =   Auth::user();
 

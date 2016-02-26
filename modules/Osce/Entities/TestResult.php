@@ -65,7 +65,7 @@ class TestResult extends CommonModel
                 $ExamResultId = $testResult->id;
                 $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
             } else {
-                throw new \Exception('成绩提交失败');
+                throw new \Exception('成绩提交失败',-6);
             }
             $connection->commit();
             return $testResult;
@@ -84,7 +84,7 @@ class TestResult extends CommonModel
             $examScore=ExamScore::create($item);
             if(!$examScore)
             {
-                throw new \Exception('保存分数详情失败');
+                throw new \Exception('保存分数详情失败',-5);
             }
         }
     }

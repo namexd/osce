@@ -293,7 +293,10 @@ class PadController extends  CommonController{
 
             //找到对应的方法找到queue实例
             $queue = ExamQueue::findQueueIdByStudentId($studentId);
-
+            //todo 判断学生考试是否结束了
+            if($queue->status==3){
+                throw new \Exception('该考生时间已到，考试已结束',2300);
+            }
             //修改状态
             $queue->status = 3;
             $queue->end_dt = $date;

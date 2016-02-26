@@ -878,6 +878,9 @@ class ExamPlan extends CommonModel
                         }
 
                         $student    =   $record->student;
+                        if (is_null($student)) {
+                            throw new \Exception('参加考试的学生已经被删除！',9999);
+                        }
 //                        dump($batch);
                         $timeData[$screeningId][$entityId]['name']=$name;
                         $timeData[$screeningId][$entityId]['child'][$batch]['start']    =   strtotime($record->begin_dt);

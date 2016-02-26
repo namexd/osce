@@ -198,7 +198,8 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
-//        try {
+        \DB::connection('osce_mis')->beginTransaction();
+        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -252,15 +253,15 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+//                dd($studentId,$examQueue->pluck('student_id')->toArray());
                 if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
                     throw new \Exception('当前考生并非在当前地点考试',7200);
                 }
             }
-
             //如果考生走错了房间
-            if (ExamQueue::where('room_id',$roomId)
-                ->where('student_id',$studentId)
-                ->where('exam_id',$examId)->get()
+            if (ExamQueue::where('room_id','=',$roomId)
+                ->where('student_id','=',$studentId)
+                ->where('exam_id','=',$examId)->get()
                 ->isEmpty()) {
                 throw new \Exception('当前考生走错了考场！',3400);
             }
@@ -270,12 +271,13 @@ class DrawlotsController extends CommonController
 
             //判断时间
             $this->judgeTime($studentId);
-
+            \DB::connection('osce_mis')->commit();
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            \DB::connection('osce_mis')->rollBack();
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -293,7 +295,7 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
             if (is_null($exam)) {
-                throw new \Exception('当前没有考试！', 4100);
+                throw new \Exception('当前没有正在进行考试！', 4100);
             }
 
             //根据id获取考站信息
@@ -419,7 +421,7 @@ class DrawlotsController extends CommonController
                     ->orderBy('begin_dt','asc')
                     //->get()->pluck('station_id');
                     ->get()->pluck('room_id');
-                //dd($examPlanStationIds);
+
                 //判断当前考站在计划表中的顺序
                 $stationIdKey = $examPlanStationIds->search($roomId);
                 if ($stationIdKey===false) {

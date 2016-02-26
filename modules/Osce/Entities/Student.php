@@ -96,6 +96,12 @@ class Student extends CommonModel
             if (!$result = $this->where('id', $student_id)->delete()){
                 throw new \Exception('该考生已绑定，无法删除！');
             }
+
+            if (ExamPlan::where('student_id',$student_id)->first()) {
+                if (!ExamOrder::where('student_id',$student_id)->delete()) {
+                    throw new \Exception('删除该学生失败');
+                }
+            }
             $examData   = [
                 'total' => count(Student::where('exam_id', $exam_id)->get())
             ];
