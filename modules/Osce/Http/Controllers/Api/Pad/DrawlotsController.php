@@ -198,6 +198,7 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
+        \DB::connection('osce_mis')->beginTransaction();
         try {
             //验证
             $this->validate($request, [
@@ -270,10 +271,11 @@ class DrawlotsController extends CommonController
 
             //判断时间
             $this->judgeTime($studentId);
-
+            \DB::connection('osce_mis')->commit();
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
+            \DB::connection('osce_mis')->rollBack();
             return response()->json($this->fail($ex));
         }
     }
@@ -419,7 +421,7 @@ class DrawlotsController extends CommonController
                     ->orderBy('begin_dt','asc')
                     //->get()->pluck('station_id');
                     ->get()->pluck('room_id');
-                //dd($examPlanStationIds);
+
                 //判断当前考站在计划表中的顺序
                 $stationIdKey = $examPlanStationIds->search($roomId);
                 if ($stationIdKey===false) {
@@ -432,7 +434,6 @@ class DrawlotsController extends CommonController
                     ->get();
 
                 $tempStationIdKey = $stationIdKey-1;
-                dd($tempStationIdKey, $tempExamQueue);
                 if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
