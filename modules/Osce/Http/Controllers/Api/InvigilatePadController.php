@@ -340,7 +340,7 @@ class InvigilatePadController extends CommonController
     {
         \Log::info(json_encode($_POST));
         \Log::info(json_encode('======================='));
-        \Log::info(json_encode($request->all()));
+        \Log::info(json_encode($request->file('photo')));
         try {
             //获取数据
             $studentId = $request->input('student_id');
