@@ -14,16 +14,6 @@ use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
-/*
- * exam_result
-
-exam_station
-
-standard
-
-station
-
-subject*/
 /**
  * Class StatisticsRepositories
  * @package Modules\Osce\Repositories
@@ -59,6 +49,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
     }
 
     /**
+     * 科目分析成绩使用
      * @access public
      * @param $ExamId
      * @param int $qualified
@@ -68,7 +59,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetSubjectStatisticsList($ExamId,$qualified = 0){
-        $DB = \DB::connection('osce_mis');
+       $DB = \DB::connection('osce_mis');
        $builder = $this->ExamResultModel->leftJoin('station', function($join){
            $join -> on('station.id', '=', 'exam_result.station_id');
        })->leftJoin('subject', function($join){
@@ -96,7 +87,146 @@ class SubjectStatisticsRepositories  extends BaseRepository
            ->get();
         return  $return;
     }
-    public function GetQualifiedNumber(){
 
+    /**
+     * 用于科目难度分析
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $SubjectId
+     * @param int $qualified
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年2月26日15:21:01
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetSubjectDifficultyStatisticsList($SubjectId,$qualified=0){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_station', function($join){
+            $join -> on('exam_station.station_id', '=','station.id');
+        })->leftJoin('exam', function($join){
+            $join -> on('exam.id', '=','exam_station.exam_id');
+        });
+        //TODO 加上该条件为统计合格人数
+        if($qualified){
+            $builder->where($DB->raw('exam_result.score/subject.score'),'>','0.6');
+        }
+        $builder = $builder->where('subject.id','=',$SubjectId)
+            ->groupBy('exam.id')
+            ->select(
+                'exam.id as ExamId',
+                'exam.name as ExamName',
+                'exam.begin_dt as ExamBeginTime',
+                'exam.end_dt as ExamEndTime',
+                $DB->raw('avg(exam_result.time) as timeAvg'),
+                $DB->raw('avg(exam_result.score) as scoreAvg'),
+                $DB->raw('count(exam_result.student_id) as studentQuantity'),
+                $DB->raw('exam_result.score/subject.score as a')
+            );
+        return  $builder->get();
     }
+
+    /**
+     * 用于考站成绩分析
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $ExamId
+     * @param $SubjectId
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年2月26日15:36:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetSubjectStationStatisticsList($ExamId,$SubjectId){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_station', function($join){
+            $join -> on('exam_station.station_id', '=','station.id');
+        })->leftJoin('teacher', function($join){
+            $join -> on('teacher.id', '=','exam_result.teacher_id');
+        });
+        $builder = $builder->where('subject.id','=',$SubjectId)
+            ->where('exam_station.exam_id','=',$ExamId)
+            ->groupBy('station.id')
+            ->select(
+                'station.id as stationId',
+                'station.name as stationName',
+                'teacher.name as teacherName',
+                'station.mins as examMins',
+                $DB->raw('avg(exam_result.time) as timeAvg'),
+                $DB->raw('avg(exam_result.score) as scoreAvg'),
+                $DB->raw('count(exam_result.student_id) as studentQuantity')
+            );
+        return  $builder->get();
+    }
+
+    /**
+     * 用于考核点分析
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $ExamId
+     * @param $SubjectId
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年2月26日15:36:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$qualified=0){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_station', function($join){
+            $join -> on('exam_station.station_id', '=','station.id');
+        })->leftJoin('exam_score', function($join){
+            $join -> on('exam_score.exam_result_id', '=','exam_result.id');
+        })->leftJoin('standard', function($join){
+            $join -> on('standard.id', '=','exam_score.standard_id');
+        });
+        //TODO 加上该条件为统计合格人数
+        if($qualified){
+            $builder->having($DB->raw('sum(exam_score.score)/sum(standard.score)'),'>','0.6');
+        }
+
+        $builder = $builder->where('subject.id','=',$SubjectId)
+            ->where('exam_station.exam_id','=',$ExamId)
+            ->groupBy('standard.pid')
+            ->select(
+                'standard.pid as pid',
+                $DB->raw('avg(exam_score.score) as scoreAvg'),
+                $DB->raw('count(exam_result.student_id) as studentQuantity')
+            );
+
+        return  $builder->get();
+    }
+
+    /**
+     * 去除pid 构建数组
+     * @method
+     * @url /osce/
+     * @access public
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2016年2月26日16:34:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetPidArr($StandardData){
+        $PidArr = [];
+        if(count($StandardData)>0){
+            foreach($StandardData as $v){
+                $PidArr[] = $v['pid'];
+            }
+        }
+        return  $PidArr;
+    }
+
 }

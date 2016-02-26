@@ -46,6 +46,6 @@ class SubjectStatisticsController  extends CommonController
                 }
             }
         }
-        dd($rew->toArray());
+        dd($subjectStatisticsRepositories->GetSubjectStandardStatisticsList(275,75,true));
     }
 }
