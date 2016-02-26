@@ -149,15 +149,23 @@ class Student extends CommonModel
                     throw new \Exception('第'.($key+2).'行手机号不符规格，请修改后重试！');
                 }
                 //准考证号不能为空
+                if(!isset($studentData['exam_sequence'])){
+                    throw new \Exception('缺少准考证号列，请添加');
+                }
                 if(empty(trim($studentData['exam_sequence']))){
                     throw new \Exception('第'.($key+2).'行准考证号不能为空，请修改后重试！');
                 }
 
                 //根据条件：查找用户是否有账号和密码
                 $user = User::where(['username' => $studentData['mobile']])->select(['id'])->first();
-                //根据用户ID和考试号查找考生
-                $student = $this->where('user_id', '=', $user->id)
-                    ->where('exam_id', '=', $exam_id)->first();
+                if($user){
+                    //根据用户ID和考试号查找考生
+                    $student = $this->where('user_id', '=', $user->id)
+                        ->where('exam_id', '=', $exam_id)->first();
+                }else{
+                    $student = false;
+                }
+
                 //考生存在,则 跳过
                 if($student){
                     $backArr[] = ['key'=> $key+2, 'title'=>'exist'];

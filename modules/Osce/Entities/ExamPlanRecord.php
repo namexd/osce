@@ -61,9 +61,11 @@ class ExamPlanRecord extends CommonModel
 
     /**
      * 轮询模式下看是否有人考试
-     * @param $station
+     * @param $entity
      * @param $screen
+     * @param $sequenceMode
      * @return mixed
+     * @throws \Exception
      * @author Jiangzhiheng
      * @time 2016-02-24 17:53
      */
@@ -81,12 +83,41 @@ class ExamPlanRecord extends CommonModel
             } elseif ($sequenceMode == 2) {
                 return ExamPlanRecord::where('exam_screening_id', $screen->id)
                     ->whereNotNull('end_dt')
-                    ->where('station', '=', $entity->id)
+                    ->where('station_id', '=', $entity->id)
                     ->groupBy('student_id')
                     ->get();
             } else {
-                throw new \Exception('未定义的考试模式！');
+                throw new \Exception('未定义的考试模式！',-1000);
             }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 顺序模式下是否有符合要求的学生
+     * @author Jiangzhiheng
+     * @time 2016-02-25 16:33
+     */
+    static public function orderBeginStudent($screen,$serialnumber,$sequenceMode)
+    {
+        try {
+            $prevSerial = ExamPlanRecord::where('exam_screening_id','=',$screen->id)
+                ->where('serialnumber', '=', $serialnumber)
+                ->whereNotNull('end_dt')
+                ->groupBy('student_id')
+                ->get()
+                ->pluck('student_id');
+
+            $thisSerial = ExamPlanRecord::where('exam_screening_id', $screen->id)
+                ->whereNotNull('end_dt')
+                ->where('serialnumber', '=', $serialnumber-1)
+                ->groupBy('student_id')
+                ->get()
+                ->pluck('student_id');
+
+            //求取差集
+            return array_diff($thisSerial->toArray(),$prevSerial->toArray());
         } catch (\Exception $ex) {
             throw $ex;
         }

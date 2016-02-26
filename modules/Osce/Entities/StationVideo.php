@@ -70,7 +70,9 @@ class StationVideo extends CommonModel
      */
     static public function label($examId, $studentId, $stationId)
     {
-        return StationVideo::Join('station_vcr','station_video.station_vcr_id','=','station_vcr.id')
+//        $connection = \DB::connection('osce_mis');
+//        $connection->enableQueryLog();
+            return StationVideo::Join('station_vcr','station_video.station_vcr_id','=','station_vcr.id')
             ->Join('vcr','vcr.id','=','station_vcr.vcr_id')
             ->Join('exam_result','exam_result.station_id','=','station_vcr.station_id')
             ->where('station_video.exam_id','=',$examId)
@@ -88,6 +90,9 @@ class StationVideo extends CommonModel
                 'exam_result.end_dt as end_dt'
             )
             ->get();
+
+//        $c = $connection->getQueryLog();
+//        dd($c);
     }
 
 }

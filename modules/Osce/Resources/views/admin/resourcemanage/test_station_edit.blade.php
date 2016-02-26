@@ -156,7 +156,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div>
+                            <div class="hr-line-dashed" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}></div>
 
                             <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
                                 <label class="col-sm-2 control-label">病例</label>
@@ -190,7 +190,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}></div>
+                            <div class="hr-line-dashed noTheory"></div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">关联摄像机</label>
@@ -226,7 +226,7 @@
 
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-primary" type="submit" style="display: {{($status?'none':'')}}">保存</button>
                                     <a class="btn btn-white" href="{{route("osce.admin.Station.getStationList")}}">取消</a>
 {{--                                    <a type="button" class="btn btn-white" href="{{route('osce.admin.Station.getStationList')}}" >取消</a>--}}
                                 </div>

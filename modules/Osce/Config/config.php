@@ -22,8 +22,6 @@ return [
 			'考核项'=>'check_item',
 			'评分标准'=>'answer',
 			'分数'=>'score',
-			'父级序号'=>'pid',
-			'层级'=>'level'
 		],
 		'teacher'=>[
 			//暂时空置

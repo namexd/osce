@@ -68,7 +68,7 @@ class TestResult extends CommonModel
                 throw new \Exception('成绩提交失败');
             }
             $connection->commit();
-            return $testResult;
+            return $scoreConserve;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -122,7 +122,7 @@ class TestResult extends CommonModel
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],
-                    'score' => $str['real'],
+                    'score' =>$str['real'],
                 ];
             }
         }

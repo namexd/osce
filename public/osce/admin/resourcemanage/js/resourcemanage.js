@@ -190,12 +190,12 @@ function categories(){
                 '</div>'+
                 '</td>'+
                 '<td>'+
-                '<select class="form-control" name="score['+parent+']['+child+']">'+
-                '<option value="1">1</option>'+
-                '<option value="2">2</option>'+
-                '<option value="3">3</option>'+
-                '<option value="4">4</option>'+
-                '</select>'+
+                '<select class="form-control" name="score['+parent+']['+child+']">';
+                /*TODO: Zhoufuxiang 2016-2-26*/
+                for(var a=1; a<=10; a++){
+                    html += '<option value="'+a+'">'+a+'</option>';
+                }
+        html += '</select>'+
                 '</td>'+
                 '<td>'+
                 '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -612,10 +612,15 @@ function categories(){
                          */
                         var html = '';
                         var res = data.data;
-                        var index = parseInt($('tbody').attr('index'));
+                        //var index = parseInt($('tbody').attr('index'));
+
+                        /*序号置0，内容清空 TODO: Zhoufuxiang 2016-2-26*/
+                        var index = 0;
+                        $('tbody').html('');
 
                         for(var i in res){
-                           if(res[i].level==1){
+                            /*TODO: Zhoufuxiang 2016-2-26*/
+                           if(res[i].sort.indexOf('-') == -1){
                                 index++;
                                //添加父级dom
                                html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
@@ -630,12 +635,12 @@ function categories(){
                                        '</td>'+
                                        '<td>'+
                                        '<select class="form-control" style="display:none;" name="score['+index+'][total]">'+
-                                       '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
-                                       '<option value="1">1</option>'+
-                                       '<option value="2">2</option>'+
-                                       '<option value="3">3</option>'+
-                                       '<option value="4">4</option>'+
-                                       '</select>'+
+                                       '<option value="'+res[i].score+'">'+res[i].score+'</option>';
+                                       /*TODO: Zhoufuxiang 2016-2-26*/
+                                       for(var a=1; a<=10; a++){
+                                           html += '<option value="'+a+'">'+a+'</option>';
+                                       }
+                               html += '</select>'+
                                        '<span>'+res[i].score+'</span>'+
                                        '</td>'+
                                        '<td>'+
@@ -647,11 +652,12 @@ function categories(){
                                        '</tr>';
                         
                                for(var j in res){
-                                   if(res[j].level==2&&res[j].pid==res[i].sort){
+                                   /*TODO: Zhoufuxiang 2016-2-26*/
+                                   if((res[j].sort.indexOf('-') == 1) && (res[j].sort.substr(0,1) == res[i].sort)){
                         
                                        //处理子级dom
-                                       html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
-                                               '<td>'+index+'-'+res[j].sort+'</td>'+
+                                       html += '<tr child="'+res[j].sort.substr(res[j].sort.indexOf('-')+1,1)+'" class="pid-'+index+'" >'+
+                                               '<td>'+res[j].sort+'</td>'+
                                                '<td>'+
                                                '<div class="form-group">'+
                                                '<label class="col-sm-2 control-label">考核项:</label>'+
@@ -667,13 +673,13 @@ function categories(){
                                                '</div>'+
                                                '</td>'+
                                                '<td>'+
-                                               '<select class="form-control" name="score['+index+']['+res[j].sort+']">'+
-                                               '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
-                                               '<option value="1">1</option>'+
-                                               '<option value="2">2</option>'+
-                                               '<option value="3">3</option>'+
-                                               '<option value="4">4</option>'+
-                                               '</select>'+
+                                               '<select class="form-control" name="score['+index+']['+res[j].sort+']">';
+                                                /*TODO: Zhoufuxiang 2016-2-26*/
+                                               //'<option value="'+res[j].score+'">'+res[j].score+'</option>';
+                                               for(var a=1; a<=10; a++){
+                                                   html += '<option value="'+a+'"'+((res[j].score==a)?" selected ":"")+'>'+a+'</option>';
+                                               }
+                                       html += '</select>'+
                                                '</td>'+
                                                '<td>'+
                                                '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+

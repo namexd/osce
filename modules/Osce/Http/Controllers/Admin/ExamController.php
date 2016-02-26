@@ -646,10 +646,10 @@ class ExamController extends CommonController
                 throw new \Exception('学生导入数据失败，请修改重试');
             }
 
-            echo json_encode($this->success_data(['code'=>1]));
+            return json_encode($this->success_data(['code'=>1]));
 
         } catch (\Exception $ex) {
-            echo json_encode($this->fail($ex));
+            return json_encode($this->fail($ex));
         }
     }
 
@@ -1632,7 +1632,7 @@ class ExamController extends CommonController
         //获得exam_id
         $id = $request->input('id');
         $suc= $request->get('suc');
-        $data = Exam::where('id',$id)->select(['rules'])->first();
+        $data = Exam::where('id',$id)->select(['rules','status'])->first();
         return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
     }
 

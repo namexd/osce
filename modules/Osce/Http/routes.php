@@ -443,8 +443,23 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 });
 
 //TODO:测试用
-Route::get('test/test', function() {
+Route::get('test/test', function(\Illuminate\Http\Request $request) {
+//	//验证规则
+//	$this -> validate($request,[
+//		'id'	=> 'required'
+//	]);
 
+	$exam_id = $request->get('id');
+	if(empty($exam_id)){
+		return '请传入id，id对应考试ID';
+	}
+
+	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
+	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
+	$result3 = \Modules\Osce\Entities\ExamQueue::where('exam_id', $exam_id)->delete();
+	$result4 = \Modules\Osce\Entities\ExamPlan::where('exam_id', $exam_id)->delete();
+
+	return '成功';
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 
