@@ -37,15 +37,10 @@
 @stop
 
 @section('content')
-    @if($data->count() != 0)
-    <input type="hidden" id="parameter" value="{'ip':'{{$data[0]['ip']}}',
-    'port':'{{$data[0]['port']}}','username':'{{$data[0]['username']}}',
-    'password':'{{$data[0]['password']}}','channel':'{{$data[0]['channel']}}',
-    'starttime':'{{$data[0]['begin_dt']}}','endtime':'{{$data[0]['end_dt']}}'}" />
-    @else
-    <input type="hidden" id="parameter" value="{'ip':'',
-    'port':'','username':'','password':'','channel':''}" />
-    @endif
+    <input type="hidden" id="parameter" value="{'ip':'192.168.1.250',
+    'port':'80','username':'admin',
+    'password':'123456mis','channel':'0',
+    'starttime':'2016-02-26 08:12:33','endtime':'2016-02-26 08:12:33'}" />
     <div class="wrapper-content">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

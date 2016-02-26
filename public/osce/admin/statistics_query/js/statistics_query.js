@@ -111,15 +111,15 @@ var courseObserveDetail = (function(mod){
 
         var iRet = WebVideoCtrl.I_Login(szIP, 1, szPort, szUsername, szPassword, {
             success: function (xmlDoc) {
-                //alert(szIP + " 登录成功！");
+                console.log(szIP + " 登录成功！");
             },
             error: function () {
-                //alert(szIP + " 登录失败！");
+                console.log(szIP + " 登录失败！");
             }
         });
 
         if (-1 == iRet) {
-            //alert(szIP + " 已登录过！");
+            console.log(szIP + " 已登录过！");
         }
     }
 
@@ -354,8 +354,8 @@ $(function(){
     courseObserveDetail.initVideo(600,300,1,"divPlugin",'');
     //登录
     courseObserveDetail.Login({ip:pars.ip,ports:pars.port,user:pars.username,passwd:pars.password});
-    //切换视频
-    //courseObserveDetail.changeVideo(2);
+    //播放
+    courseObserveDetail.changeVideo(1);
     //开始回放
     courseObserveDetail.StartPlayback(0,pars.ip,pars.starttime,pars.endtime,pars.channel);
     //进度条
