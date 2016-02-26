@@ -183,22 +183,19 @@ class Station extends CommonModel
      */
     public function rollMsg($id)
     {
-        $builder = $this->leftJoin(
-            'station_vcr',
+        $builder = $this->leftJoin('station_vcr',
             function ($join) use ($id){
                 $join->on('station_vcr.station_id', '=', $this->table . '.id');
 
             }
-        )->leftJoin(
-            'station_case',
+        )->leftJoin('station_case',
             function ($join) use ($id){
-                $join->on('station_case.station_id', '=',$this->table . '.id');
+                $join->on('station_case.station_id', '=', $this->table . '.id');
 
             }
-        )->leftJoin(
-            'room_station',
+        )->leftJoin('room_station',
             function ($join) use ($id) {
-                $join->on('room_station.station_id' , '=' , $this->table . '.id');
+                $join->on('room_station.station_id' , '=', $this->table . '.id');
 
             }
         )->where($this->table . '.id', '=' ,$id)->where($this->table . '.id', '=' ,$id)

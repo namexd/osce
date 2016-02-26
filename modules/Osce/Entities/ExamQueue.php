@@ -83,7 +83,6 @@ class ExamQueue extends CommonModel
                 }
             }
         }
-
         return $data;
     }
 
@@ -105,6 +104,7 @@ class ExamQueue extends CommonModel
                 }
             }
         }
+
         return $data;
     }
 
@@ -168,13 +168,10 @@ class ExamQueue extends CommonModel
     static public function examineeByRoomId($room_id, $examId, $stations)
     {
         try {
-            $data = [];
-            foreach ($stations as $station) {
-                $tempStudent = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->where('exam_queue.room_id', $room_id)
                     ->where('exam_queue.status', '<' , 3)
                     ->where('student.exam_id', $examId)
-                    ->where('station_id','=' ,$station)
                     ->select(
                         'student.id as student_id',
                         'student.name as student_name',
@@ -187,13 +184,8 @@ class ExamQueue extends CommonModel
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->first();
-
-                if (!is_null($tempStudent)) {
-                    $data[] = $tempStudent;
-                }
-            }
-            return collect($data);
+                    ->take(count($stations))
+                    ->get();
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -228,15 +220,15 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    static public function nextExamineeByRoomId($room_id, $examId, $stationNum)
+    static public function nextExamineeByRoomId($room_id, $examId, $station)
     {
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', '<' ,3)
                 ->where('exam_queue.exam_id', $examId)
-                ->skip($stationNum)
-                ->take($stationNum)
+                ->skip(count($station))
+                ->take(count($station))
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->select(
                     'student.id as student_id',
@@ -484,6 +476,7 @@ class ExamQueue extends CommonModel
             function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
             })->where('exam_queue.station_id', '=', $station_id)->where('exam_queue.exam_id', '=', $exam_id)->where('exam_queue.status', '=', 0)
+            ->orderBy('begin_dt', 'asc')
             ->select([
                 'student.name as name',
                 'student.id as student_id',
@@ -510,6 +503,7 @@ class ExamQueue extends CommonModel
             function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
             })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id', '=', $exam_id)->where('exam_queue.status', '=', 0)
+            ->orderBy('begin_dt', 'asc')
             ->select([
                 'student.name as name',
                 'student.id as student_id',
