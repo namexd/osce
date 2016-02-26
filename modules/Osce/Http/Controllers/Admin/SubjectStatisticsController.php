@@ -62,16 +62,42 @@ class SubjectStatisticsController  extends CommonController
        dd('科目详情');
    }
 
-    public function  SubjectGradeAnalyze(){
+    public function  SubjectGradeAnalyze(SubjectStatisticsRepositories $subjectStatisticsRepositories){
+
         //dd('科目难度分析');
+        //查询分析所需数据
+        $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74);
+       //dd($rew);
+
+        //主要用来统计合格的人数
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74,true);
+        //$queries = \DB::connection('osce_mis')->getQueryLog();
+        //统计合格率
+       // dd($rewTwo);
+        foreach($rew as $key => $val){
+            //dd($val);
+            $rew[$key]['qualifiedPass'] = '0%';
+            foreach($rewTwo as $v){
+                if($val['subjectId'] == $v['subjectId']){
+
+                    $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
+                }
+            }
+        }
+      //  dd($rew->toarray());
+
+
         $subject = new Subject();
-        $subjectlist= $subject->select('title')->get()->toarray();
+        $subjectlist= $subject->select('id','title')->get()->toarray();
         //把二维数组转换为一维数组
-        $list=array();
-        foreach ($subjectlist as $k=>$v) {
-            $list[] =$v['title'];
+        dd($subjectlist);
+       // $list[]=array();
+
+     /*        foreach ($subjectlist as $k=>$v) {
+            $list[]['id'] =$v['id'];
+            $list[]['title']=$v['title'];
        }
-        dd($list);
+        dd($list);*/
     }
 
 
