@@ -473,18 +473,18 @@ class InvigilatePadController extends CommonController
                 'station_id' => 'required|integer',
                 'student_id' => 'required|integer',
                 'exam_screen_id' => 'required|integer',
-                'teacher_id' => 'required|array',
+                'teacher_id' => 'required|integer',
                 'time_anchors' => 'required|integer',
             ]);
 
             //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
             $stationId = $request->input('station_id');
             $studentId = $request->input('student_id');
-            $examScreenId = $request->input('exam_screen_id');
-            $timeAnchors = $request->input('time_anchors');
+            $examId = $request->input('exam_id');
+            $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('teacher_id');
 
-            $this->storeAnchor($stationId, $studentId, $examScreenId, $teacherId, $timeAnchors);
+            $this->storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor);
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
@@ -500,7 +500,7 @@ class InvigilatePadController extends CommonController
      * @return bool
      * @throws \Exception
      */
-    private function storeAnchor($stationId, $studentId, $examScreenId, $teacherId, array $timeAnchors)
+    private function storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)
     {
         try {
             //获得站点摄像机关联表
@@ -510,24 +510,24 @@ class InvigilatePadController extends CommonController
             }
 
             //获取考试
-            $exam = ExamScreening::findOrFail($examScreenId);
+//            $exam = ExamScreening::findOrFail($examScreenId);
 
-            foreach ($timeAnchors as $timeAnchor) {
-                //拼凑数组
-                $data = [
-                    'station_vcr_id' => $stationVcr->id,
-                    'begin_dt' => $timeAnchor,
-                    'end_dt' => $timeAnchor,
-                    'created_user_id' => $teacherId,
-                    'exam_id' => $exam->id,
-                    'student_id' => $studentId,
-                ];
+//            foreach ($timeAnchors as $timeAnchor) {
+            //拼凑数组
+            $data = [
+                'station_vcr_id' => $stationVcr->id,
+                'begin_dt' => $timeAnchor,
+                'end_dt' => $timeAnchor,
+                'created_user_id' => $teacherId,
+                'exam_id' => $examId,
+                'student_id' => $studentId,
+            ];
 
-                //将数据插入库
-                if (!StationVideo::create($data)) {
-                    throw new \Exception('保存失败！请重试！', -210);
-                }
+            //将数据插入库
+            if (!StationVideo::create($data)) {
+                throw new \Exception('保存失败！请重试！', -210);
             }
+//            }
 
             return true;
         } catch (\Exception $ex) {
