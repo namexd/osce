@@ -257,8 +257,7 @@ class InvigilatePadController extends CommonController
             'exam_screening_id' => 'required',
             'begin_dt' => 'required',
             'end_dt' => 'required',
-            'teacher_id' => 'required|integer',
-            'evaluate' => 'required'
+            'teacher_id' => 'required',
         ], [
             'score.required' => '请检查评分标准分值',
         ]);
@@ -282,7 +281,7 @@ class InvigilatePadController extends CommonController
         ];
 
 
-        try {
+//        try {
             //根据考生id获取到考试id
             $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
             //根据考试获取到考试流程
@@ -298,8 +297,9 @@ class InvigilatePadController extends CommonController
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
-        $TestResultModel = new TestResult();
-        $result = $TestResultModel->addTestResult($data, $score);
+            $TestResultModel = new TestResult();
+           $result = $TestResultModel->addTestResult($data, $score);
+
         if ($result) {
             //根据考试附件结果id修改表里的考试结果id
             // todo 待最后确定。。。。。。。
@@ -312,9 +312,9 @@ class InvigilatePadController extends CommonController
             );
             }
         }
-        } catch (\Exception $ex) {
-            throw $ex;
-        }
+//        } catch (\Exception $ex) {
+//            throw $ex;
+//        }
 
     }
 

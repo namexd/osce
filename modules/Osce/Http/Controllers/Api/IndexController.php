@@ -109,6 +109,8 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getBoundWatch(Request $request){
+
+
         $this->validate($request,[
             'code'      =>'required',//腕表code
             'id_card'   =>'required',//身份证号

@@ -274,9 +274,9 @@ class StudentWatchController extends CommonController
                 return $data;
             }else{
                 $data=[
-                    'code'      =>  4,
+                    'code'      =>  -1,
                     'title'     =>  '当前考站考试已完成',
-                    'surplus'   => 0,
+//                    'surplus'   => 0,
                 ];
 
                 return $data;
