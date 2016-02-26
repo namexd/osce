@@ -73,7 +73,7 @@
                 <div class="col-sm-9 video">
                     <div id="divPlugin" class="plugin"></div>
                     <div id="progress" class="progress" style="width: 600px;">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+                        <div class="progress-bar" id="bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
 
                         </div>
                     </div>
