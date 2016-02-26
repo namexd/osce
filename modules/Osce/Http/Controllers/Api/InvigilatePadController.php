@@ -281,7 +281,7 @@ class InvigilatePadController extends CommonController
         ];
 
         \Log::alert($data,json_decode($score));
-//        try {
+        try {
             //根据考生id获取到考试id
             $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
             //根据考试获取到考试流程
@@ -311,9 +311,11 @@ class InvigilatePadController extends CommonController
             );
             }
         }
-//        } catch (\Exception $ex) {
-//            throw $ex;
-//        }
+        } catch (\Exception $ex) {
+            \Log::alert($ex->getMessage());
+
+            throw $ex;
+        }
 
     }
 
