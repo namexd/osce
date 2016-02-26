@@ -252,6 +252,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+//                dd($studentId,$examQueue->pluck('student_id')->toArray());
                 if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
                     throw new \Exception('当前考生并非在当前地点考试',7200);
                 }
