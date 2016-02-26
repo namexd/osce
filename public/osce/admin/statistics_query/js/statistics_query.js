@@ -352,7 +352,7 @@ $(function(){
     start=Date.parse(start)/1000;
     var allTime=end-start;//结束时间减去开始时间
     var step=allTime/600;//代表几秒向右前进1px;
-    var time_count = 0;
+    var time_count = 0; //时间计数器
     //初始化
     courseObserveDetail.initVideo(600,300,1,"divPlugin",'');
     //登录
@@ -394,7 +394,7 @@ $(function(){
         }
         return i;
     }*/
-    function progressMove(count){
+    function progressMove(count/*传入时间参数*/){
         var i= count;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
         i  ++;
         $(".progress-bar").css("width",i+"px");
@@ -448,7 +448,6 @@ $(function(){
     }
     // 暂停
     function clickPause(g_iWndIndex) {
-        clearTimeout(timer);
         $(".resume").click(function(){
             $(".pause").show();
             $(".resume").hide();
@@ -460,6 +459,7 @@ $(function(){
                 if (0 == iRet) {
                     szInfo = "暂停成功！";
                     console.log("成功");
+                    //关闭计时器
                     clearTimeout(timer);
                 } else {
                     szInfo = "暂停失败！";
@@ -490,7 +490,7 @@ $(function(){
     }
 // 恢复
     function clickResume(g_iWndIndex){
-        progressMove(time_count);
+        //progressMove(time_count);
         $(".pause").click(function(){
             $(".pause").hide();
             $(".resume").show();
@@ -501,7 +501,9 @@ $(function(){
                 var iRet = WebVideoCtrl.I_Resume();
                 if (0 == iRet) {
                     szInfo = "恢复成功！";
-                    timer=setTimeout(progressMove,step*1000);
+                    time_count = $('.progress-bar').css('width');
+                    progressMove(time_count.split('p')[0]);
+                    //timer=setTimeout(progressMove,step*1000);
                 } else {
                     szInfo = "恢复失败！";
                 }
@@ -551,8 +553,6 @@ $(function(){
         //alert(seconds+left*step*1000);
         seconds     =   seconds+left*step*1000;
         var time_count = seconds;
-        clearTimeout(timer);
-        progressMove(time_count);
         var dat=new Date(seconds);
         var year=dat.getFullYear();
         var month=dat.getMonth()+1;
@@ -566,6 +566,9 @@ $(function(){
         var s=dat.getSeconds();
         s=times(s);
         var newstart=year+"-"+month+"-"+days+" "+hour+":"+min+":"+s;
+        //初始化计时
+        clearTimeout(timer);
+        progressMove(Math.round(left));
         courseObserveDetail.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
     })
     //选择标记点跳转视频

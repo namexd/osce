@@ -338,9 +338,8 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
-        \Log::info(json_encode($_POST));
-        \Log::info(json_encode('======================='));
-        \Log::info(json_encode($request->all()));
+        \Log::info('test');
+        \Log::info(json_encode($request->file('photo')));
         try {
             //获取数据
             $studentId = $request->input('student_id');
