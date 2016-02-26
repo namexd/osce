@@ -341,6 +341,7 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
+        \Log::info('test',$request->all());
         try {
             //获取数据
             $studentId = $request->input('student_id');
@@ -357,7 +358,7 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('当前没有正在进行的考试！', -701);
             }
             $examName = $exam->name;
-            \Log::alert($studentId);
+            \Log::info($studentId);
 
 
             //将参数拼装成一个数组
