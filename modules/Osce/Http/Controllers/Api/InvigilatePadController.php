@@ -301,14 +301,11 @@ class InvigilatePadController extends CommonController
                 $result = $TestResultModel->addTestResult($data, $score);
 //                \Log::alert(json_encode($result));
         if ($result) {
-            //根据考试附件结果id修改表里的考试结果id
-            // todo 待最后确定。。。。。。。
-            //存入考试 评分详情表
             return response()->json($this->success_data([], 1, '成绩提交成功'));
         } else {
             return response()->json(
                 $this->fail(new \Exception('成绩提交失败'))
-            );
+                 );
             }
 
         } catch (\Exception $ex) {
