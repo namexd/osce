@@ -9,6 +9,9 @@
 namespace Modules\Osce\Http\Controllers\Admin;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
+use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\Subject;
+
 
 /**
  * Class SubjectStatisticsController
@@ -46,6 +49,30 @@ class SubjectStatisticsController  extends CommonController
                 }
             }
         }
+
         dd($rew->toArray());
+
+     /*    $exam =new Exam();
+          $examlist =$exam->select(['name'])->get();
+          dd($examlist);*/
+
     }
+
+    public function SubjectGradeInfo(){
+       dd('科目详情');
+   }
+
+    public function  SubjectGradeAnalyze(){
+        //dd('科目难度分析');
+        $subject = new Subject();
+        $subjectlist= $subject->select('title')->get()->toarray();
+        //把二维数组转换为一维数组
+        $list=array();
+        foreach ($subjectlist as $k=>$v) {
+            $list[] =$v['title'];
+       }
+        dd($list);
+    }
+
+
 }
