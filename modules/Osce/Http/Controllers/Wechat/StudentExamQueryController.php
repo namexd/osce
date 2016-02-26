@@ -100,11 +100,9 @@ class StudentExamQueryController extends CommonController
         $examId = Input::get('exam_id');
         $studentId = Input::get('student_id');
         //获取到考试的时间
-//        try {
+        try {
         //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
         $studentInfo = Student::find($studentId);
-
-
         $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
 
 
@@ -153,7 +151,7 @@ class StudentExamQueryController extends CommonController
 //                    'student_mobile' =>$studentInfo->mobile,
             ];
         }
-        //如果是监考老师掉用这个方法
+        //如果是监考老师调用这个方法
         if ($studentId) {
             return view('osce::wechat.resultquery.examination_teacher', ['studentInfo' => $studentInfo, 'stationData' => $stationData, 'examName' => $examTime]);
         } else {
@@ -162,9 +160,9 @@ class StudentExamQueryController extends CommonController
             );
         }
 
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -287,8 +285,6 @@ class StudentExamQueryController extends CommonController
                 $this->fail(new \Exception('科目数据传送成功'))
             );
         }
-
-
     }
 
 

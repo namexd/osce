@@ -192,9 +192,9 @@ class ExamResult extends CommonModel
          $join -> on('station.id', '=', 'exam_result.station_id');
      })-> leftJoin('teacher', function($join){
          $join -> on('teacher.id', '=', 'exam_result.teacher_id');
-     });
-     $builder=$builder->whereIn('exam_result.exam_screening_id',$examScreeningIds);
-     $builder=$builder->select([
+     })
+      ->whereIn('exam_result.exam_screening_id',$examScreeningIds)
+         ->select([
          'exam_result.id as exam_result_id ',
          'exam_result.station_id as id',
          'exam_result.score as score',

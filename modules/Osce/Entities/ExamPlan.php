@@ -878,7 +878,7 @@ class ExamPlan extends CommonModel
                         }
 
                         $student    =   $record->student;
-
+//                        dump($batch);
                         $timeData[$screeningId][$entityId]['name']=$name;
                         $timeData[$screeningId][$entityId]['child'][$batch]['start']    =   strtotime($record->begin_dt);
                         $timeData[$screeningId][$entityId]['child'][$batch]['end']      =   strtotime($record->end_dt);
