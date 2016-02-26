@@ -23,7 +23,7 @@ class SubjectStatisticsController  extends CommonController
      * @method  GET
      * @url /osce/admin/subject-statistics/subject-grade-list
      * @access public
-     * @param StatisticsRepositories $statisticsRepositories
+     * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
