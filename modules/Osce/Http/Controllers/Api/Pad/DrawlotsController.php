@@ -198,7 +198,7 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -252,7 +252,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
-                dd($studentId,$examQueue->pluck('student_id')->toArray());
+//                dd($studentId,$examQueue->pluck('student_id')->toArray());
                 if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
                     throw new \Exception('当前考生并非在当前地点考试',7200);
                 }
@@ -274,9 +274,9 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
