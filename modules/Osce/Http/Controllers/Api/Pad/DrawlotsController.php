@@ -85,12 +85,16 @@ class DrawlotsController extends CommonController
      */
     public function getExaminee(Request $request)
     {
-//        try {
+        try {
             //首先得到登陆者id
             $id = $request->input('id');
 
             //获取正在考试中的考试
             $exam = Exam::where('status',1)->first();
+
+            if (is_null($exam)) {
+                throw new \Exception('今天没有正在进行的考试',3000);
+            }
 
             $examId = $exam->id;
 
@@ -110,21 +114,16 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('没有这种考试模式！',-702);
             }
-
-            if (is_null($exam)) {
-                throw new \Exception('今天没有正在进行的考试',3000);
-            }
-
-
+            
             //将学生照片的地址换成绝对路径
             foreach ($examQueue as &$item) {
                 $item->student_avator = url($item->student_avator);
             }
 
             return response()->json($this->success_data($examQueue));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
