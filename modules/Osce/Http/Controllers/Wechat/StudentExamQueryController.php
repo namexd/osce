@@ -104,8 +104,6 @@ class StudentExamQueryController extends CommonController
         //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
         $studentInfo = Student::find($studentId);
         $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
-
-
         //根据考试id找到对应的考试场次
         $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
         $examScreening = [];
@@ -151,6 +149,7 @@ class StudentExamQueryController extends CommonController
 //                    'student_mobile' =>$studentInfo->mobile,
             ];
         }
+
         //如果是监考老师调用这个方法
         if ($studentId) {
             return view('osce::wechat.resultquery.examination_teacher', ['studentInfo' => $studentInfo, 'stationData' => $stationData, 'examName' => $examTime]);
