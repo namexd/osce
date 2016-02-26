@@ -422,7 +422,6 @@ class DrawlotsController extends CommonController
                 //dd($examPlanStationIds);
                 //判断当前考站在计划表中的顺序
                 $stationIdKey = $examPlanStationIds->search($roomId);
-                dd($stationIdKey);
                 if ($stationIdKey===false) {
                     throw new \Exception('该名考生不在计划中！',3800);
                 }
@@ -433,6 +432,7 @@ class DrawlotsController extends CommonController
                     ->get();
 
                 $tempStationIdKey = $stationIdKey-1;
+                dd($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3);
                 if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
