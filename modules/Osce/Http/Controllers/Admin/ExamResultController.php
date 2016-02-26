@@ -295,7 +295,7 @@ class ExamResultController extends CommonController{
 
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId);
-            dd($data);
+            //dd($data);
 
 //            dd($examId,$studentId,$stationId,$data->toArray());
             return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
