@@ -448,6 +448,7 @@ $(function(){
     }
     // 暂停
     function clickPause(g_iWndIndex) {
+        clearTimeout(timer);
         $(".resume").click(function(){
             $(".pause").show();
             $(".resume").hide();
@@ -489,6 +490,7 @@ $(function(){
     }
 // 恢复
     function clickResume(g_iWndIndex){
+        progressMove(time_count);
         $(".pause").click(function(){
             $(".pause").hide();
             $(".resume").show();
