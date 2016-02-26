@@ -52,6 +52,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('subject-statistics/subject-grade-list',['uses'=>'SubjectStatisticsController@SubjectGradeList','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeList']);
 		//考生成绩统计
 		Route::get('testscores/test-score-list',['uses'=>'TestScoresController@TestScoreList','as'=>'osce.admin.TestScoresController.TestScoreList']);
+		Route::get('testscores/ajax-get-subject',['uses'=>'TestScoresController@postAjaxGetSubject','as'=>'osce.admin.TestScoresController.postAjaxGetSubject']);
 	});
 
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
