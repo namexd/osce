@@ -110,10 +110,16 @@ class AutomaticPlanArrangement
      * 智能排考
      * @author Jiangzhiheng
      * @time
+     * @param $examId
+     * @return array
+     * @throws \Exception
      */
     function plan($examId)
     {
         try {
+            if (count($this->_S) == 0) {
+                throw new \Exception('当前考试没有安排学生！',-705);
+            }
             /*
              * 排考的时候删除原先的所有数据
              */
