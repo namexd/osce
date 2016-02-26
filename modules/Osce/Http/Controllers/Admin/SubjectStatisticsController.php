@@ -30,11 +30,13 @@ class SubjectStatisticsController  extends CommonController
      */
     public function SubjectGradeList(SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
-        \DB::connection('osce_mis')->enableQueryLog();
+        //\DB::connection('osce_mis')->enableQueryLog();
+        //查询统计所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList(274);
+        //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList(274,true);
-        $queries = \DB::connection('osce_mis')->getQueryLog();
-        echo '<pre>';
+        //$queries = \DB::connection('osce_mis')->getQueryLog();
+        //统计合格率
         foreach($rew as $key => $val){
             $rew[$key]['qualifiedPass'] = '0%';
             foreach($rewTwo as $v){
