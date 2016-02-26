@@ -280,7 +280,7 @@ class InvigilatePadController extends CommonController
 
         ];
 
-
+        \Log::alert($data);
 //        try {
             //根据考生id获取到考试id
             $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
@@ -304,7 +304,7 @@ class InvigilatePadController extends CommonController
             //根据考试附件结果id修改表里的考试结果id
             // todo 待最后确定。。。。。。。
             //存入考试 评分详情表
-
+             \Log::alert($data);
             return response()->json($this->success_data([], 1, '成绩提交成功'));
         } else {
             return response()->json(
