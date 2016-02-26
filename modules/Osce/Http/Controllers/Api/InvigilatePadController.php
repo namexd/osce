@@ -341,25 +341,26 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
+        \Log::info(json_encode($_POST));
+        \Log::info(json_encode('======================='));
         \Log::info(json_encode($request->all()));
         try {
             //获取数据
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
-            $exam = Exam::where('status', 1)->first();
             $standardId = $request->input('standard_id');
+            $exam = Exam::where('status', 1)->first();
+            if (is_null($exam)) {
+                throw new \Exception('当前没有正在进行的考试！', -701);
+            }
 
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
             $studentName = $student->name;
             $studentCode = $student->code;
             $stationName = Station::findOrFail($stationId)->first()->name;
-            if (is_null($exam)) {
-                throw new \Exception('当前没有正在进行的考试！', -701);
-            }
-            $examName = $exam->name;
-            \Log::info($studentId);
 
+            $examName = $exam->name;
 
             //将参数拼装成一个数组
             $params = [
