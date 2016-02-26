@@ -33,34 +33,34 @@
 	        @endforeach
         </select>
     </div>
-    <div class="examination_msg">
-		<div class="form-group">
-            <label for="">考试时间</label>
-            <div class="txt" id="time">1</div>
-        </div>
-        <div class="form-group">
-            <label for="">科目</label>
-            <div class="txt" id="subject">肠胃炎</div>
-        </div>
-        <div class="form-group">
-            <label for="">考试人数</label>
-            <div class="txt" id="number">80人</div>
-        </div>
-        <div class="form-group">
-            <label for="">平均用时</label>
-            <div class="txt" id="time2">08：23</div>
-        </div>
-        <div class="form-group" style="border:none;">
-            <label for="">平均成绩</label>
-            <div class="txt" id="vgn">86</div>
-        </div>
-        <table class="table cj_tab">
-	  		<tr>
-	  			<th>考生姓名</th>
-	  			<th>总分</th>
-	  			<th>操作</th>
-			</tr>
-	  	</table>
-  	</div>
+    {{--<div class="examination_msg">--}}
+		{{--<div class="form-group">--}}
+            {{--<label for="">考试时间</label>--}}
+            {{--<div class="txt" id="time">1</div>--}}
+        {{--</div>--}}
+        {{--<div class="form-group">--}}
+            {{--<label for="">科目</label>--}}
+            {{--<div class="txt" id="subject">肠胃炎</div>--}}
+        {{--</div>--}}
+        {{--<div class="form-group">--}}
+            {{--<label for="">考试人数</label>--}}
+            {{--<div class="txt" id="number">80人</div>--}}
+        {{--</div>--}}
+        {{--<div class="form-group">--}}
+            {{--<label for="">平均用时</label>--}}
+            {{--<div class="txt" id="time2">08：23</div>--}}
+        {{--</div>--}}
+        {{--<div class="form-group" style="border:none;">--}}
+            {{--<label for="">平均成绩</label>--}}
+            {{--<div class="txt" id="vgn">86</div>--}}
+        {{--</div>--}}
+        {{--<table class="table cj_tab">--}}
+	  		{{--<tr>--}}
+	  			{{--<th>考生姓名</th>--}}
+	  			{{--<th>总分</th>--}}
+	  			{{--<th>操作</th>--}}
+			{{--</tr>--}}
+	  	{{--</table>--}}
+  	{{--</div>--}}
   	
 @stop

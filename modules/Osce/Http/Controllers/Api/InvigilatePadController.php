@@ -309,9 +309,7 @@ class InvigilatePadController extends CommonController
             }
 
         } catch (\Exception $ex) {
-
             \Log::alert($ex->getMessage());
-
             throw $ex;
         }
 

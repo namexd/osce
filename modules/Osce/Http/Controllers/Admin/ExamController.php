@@ -1234,13 +1234,8 @@ class ExamController extends CommonController
         $ExamPlanModel  =   new ExamPlan();
         $plan   =   $ExamPlanModel  ->  showPlans($exam);
 
-        $plan   =   $this           ->  getEmptyTime($plan);
-
+//        $plan   =   $this           ->  getEmptyTime($plan);
         $user   =   Auth::user();
-        Cache::pull('plan_'.$exam->id.'_'.$user->id);
-        $plan   =   Cache::rememberForever('plan_'.$exam->id.'_'.$user->id,function() use ($plan){
-            return $plan;
-        });
 
         return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
