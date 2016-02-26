@@ -39,6 +39,9 @@ class SubjectStatisticsController  extends CommonController
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList(274,true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
+        $standardStr = '';
+        $timeAvgStr = '';
+        $scoreAvgStr = '';
         //统计合格率
         foreach($rew as $key => $val){
             $rew[$key]['qualifiedPass'] = '0%';
@@ -48,13 +51,23 @@ class SubjectStatisticsController  extends CommonController
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
                 }
             }
+            if($standardStr){
+                $standardStr .= ','.$val['title'];
+                $timeAvgStr .= ','.$val['timeAvg'];
+                $scoreAvgStr .= ','.$val['scoreAvg'];
+            }else{
+                $standardStr .= $val['title'];
+                $timeAvgStr .= $val['timeAvg'];
+                $scoreAvgStr .= $val['scoreAvg'];
+            }
+
         }
-
-        dd($rew->toArray());
-
-     /*    $exam =new Exam();
-          $examlist =$exam->select(['name'])->get();
-          dd($examlist);*/
+        $StrList = [
+            'standardStr' => $standardStr,
+            'timeAvgStr' => $timeAvgStr,
+            'scoreAvgStr' => $scoreAvgStr
+        ];
+        return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
 
     }
 
