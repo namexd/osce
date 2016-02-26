@@ -472,8 +472,8 @@ class InvigilatePadController extends CommonController
                 'station_id' => 'required|integer',
                 'student_id' => 'required|integer',
                 'exam_screen_id' => 'required|integer',
-                'teacher_id' => 'required|array',
-                'time_anchors' => 'required|integer',
+                'teacher_id' => 'required|integer',
+                'time_anchors' => 'required|array',
             ]);
 
             //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
