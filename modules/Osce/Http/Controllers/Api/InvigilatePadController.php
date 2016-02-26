@@ -288,7 +288,7 @@ class InvigilatePadController extends CommonController
         $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
         //查询出学生当前已完成的考试
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
-//        try {
+        try {
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
                 try {
@@ -312,9 +312,9 @@ class InvigilatePadController extends CommonController
                 );
 
             }
-//        } catch (\Exception $ex) {
-//            throw $ex;
-//        }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
 
