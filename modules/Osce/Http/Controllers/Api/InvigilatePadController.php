@@ -280,7 +280,7 @@ class InvigilatePadController extends CommonController
 
         ];
 
-        \Log::alert($data,json_decode($score));
+//        \Log::alert($data,json_decode($score));
         try {
             //根据考生id获取到考试id
             $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
@@ -297,9 +297,10 @@ class InvigilatePadController extends CommonController
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
+            }
             $TestResultModel = new TestResult();
            $result = $TestResultModel->addTestResult($data, $score);
-
+                \Log::alert(json_encode($result));
         if ($result) {
             //根据考试附件结果id修改表里的考试结果id
             // todo 待最后确定。。。。。。。
@@ -310,7 +311,7 @@ class InvigilatePadController extends CommonController
                 $this->fail(new \Exception('成绩提交失败'))
             );
             }
-        }
+
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage());
 
