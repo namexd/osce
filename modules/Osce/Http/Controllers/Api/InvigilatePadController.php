@@ -281,15 +281,15 @@ class InvigilatePadController extends CommonController
 
         ];
 
-        //根据考生id获取到考试id
-        $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
-        //根据考试获取到考试流程
-        $ExamFlowModel = new  ExamFlow();
-        $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
-        //查询出学生当前已完成的考试
-        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
 
         try {
+            //根据考生id获取到考试id
+            $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
+            //根据考试获取到考试流程
+            $ExamFlowModel = new  ExamFlow();
+            $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
+            //查询出学生当前已完成的考试
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
                 try {
@@ -300,11 +300,11 @@ class InvigilatePadController extends CommonController
                 }
         $TestResultModel = new TestResult();
         $result = $TestResultModel->addTestResult($data, $score);
-
         if ($result) {
             //根据考试附件结果id修改表里的考试结果id
             // todo 待最后确定。。。。。。。
             //存入考试 评分详情表
+
             return response()->json($this->success_data([], 1, '成绩提交成功'));
         } else {
             return response()->json(
