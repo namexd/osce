@@ -257,7 +257,6 @@ class DrawlotsController extends CommonController
                     throw new \Exception('当前考生并非在当前地点考试',7200);
                 }
             }
-            dd($roomId,$studentId,$examId);
             //如果考生走错了房间
             if (ExamQueue::where('room_id',$roomId)
                 ->where('student_id',$studentId)
