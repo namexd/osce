@@ -432,7 +432,7 @@ class DrawlotsController extends CommonController
                     ->get();
 
                 $tempStationIdKey = $stationIdKey-1;
-                dd($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3);
+                dd($tempStationIdKey, $tempExamQueue[$tempStationIdKey]->status);
                 if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
