@@ -252,15 +252,15 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+//                dd($studentId,$examQueue->pluck('student_id')->toArray());
                 if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
                     throw new \Exception('当前考生并非在当前地点考试',7200);
                 }
             }
-
             //如果考生走错了房间
-            if (ExamQueue::where('room_id',$roomId)
-                ->where('student_id',$studentId)
-                ->where('exam_id',$examId)->get()
+            if (ExamQueue::where('room_id','=',$roomId)
+                ->where('student_id','=',$studentId)
+                ->where('exam_id','=',$examId)->get()
                 ->isEmpty()) {
                 throw new \Exception('当前考生走错了考场！',3400);
             }
@@ -432,6 +432,7 @@ class DrawlotsController extends CommonController
                     ->get();
 
                 $tempStationIdKey = $stationIdKey-1;
+                dd($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3);
                 if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
