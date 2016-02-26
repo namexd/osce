@@ -312,14 +312,37 @@ class TopicController extends CommonController
             $topicList = array_shift($data);
             //将中文表头，按配置翻译成英文的字段名
             $data = Common::arrayChTOEn($topicList, 'osce.importForCnToEn.standard');
-            foreach ($data as &$items) {
+            $totalScore = -1;
+            foreach ($data as $key => &$items) {
                 foreach ($items as &$item) {
                     $item = e($item);
                 }
+
+                /*判断分数 TODO: Zhoufuxiang 2016-2-26*/
+                if(!strpos($items['sort'],'-')){
+                    if($key != 0 && $totalScore != 0){
+                        throw new \Exception('分数有误，请修改后重试');
+                    }
+                    $sort = intval($items['sort']);
+                    $totalScore = intval($items['score']);
+                }else{
+                    if(!isset($sort)){
+                        throw new \Exception('模板有误，请修改后重试');
+                    }
+                    $sonSort = intval(substr($items['sort'],0,strpos($items['sort'],'-')));
+
+                    if($sort == $sonSort){
+                        $totalScore = $totalScore-intval($items['score']);
+                        if($key+1 == count($data) && $totalScore != 0){
+                            throw new \Exception('分数有误，请修改后重试');
+                        }
+                    }
+                }
             }
-            echo json_encode($this->success_data($data));
+
+            return json_encode($this->success_data($data));
         } catch (\Exception $ex) {
-            echo json_encode($this->fail($ex));
+            return json_encode($this->fail($ex));
         }
     }
 
