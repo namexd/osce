@@ -64,7 +64,6 @@ class ExamQueue extends CommonModel
 
     }
 
-
     //获取候考教室
     protected function getWaitRoom($exam)
     {
