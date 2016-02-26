@@ -50,7 +50,7 @@
 
     @endif
     {{--<input type="hidden" id="parameter" value="{'ip':'192.168.1.250',--}}
-    {{--'port':'8000','username':'admin',--}}
+    {{--'port':'80','username':'admin',--}}
     {{--'password':'123456mis','channel':'1',--}}
     {{--'starttime':'2016-02-26 08:12:33','endtime':'2016-02-26 12:12:33'}" />--}}
     <div class="wrapper-content">

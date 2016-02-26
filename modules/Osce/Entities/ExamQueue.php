@@ -502,6 +502,7 @@ class ExamQueue extends CommonModel
             function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
             })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id', '=', $exam_id)->where('exam_queue.status', '=', 0)
+            ->orderBy('begin_dt', 'asc')
             ->select([
                 'student.name as name',
                 'student.id as student_id',

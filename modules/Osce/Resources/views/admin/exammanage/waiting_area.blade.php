@@ -53,7 +53,8 @@
 	            <div class="clearfix form-group">
 	                <label class="col-sm-1 control-label" ></label>
 	                <div class="col-sm-11">
-	                	<input class="btn btn-primary save" type="submit" name="" id="" value="保存" />
+	                	<input class="btn btn-primary save" type="submit"  value="保存"  style="display: {{$data['status']==0?'':'none;'}}"/>
+						<a class="btn btn-white" href="{{route("osce.admin.exam.getExamList")}}">取消</a>
 	                </div>
 	            </div>
 	        </form>

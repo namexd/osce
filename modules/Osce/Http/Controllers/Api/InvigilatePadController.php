@@ -281,40 +281,41 @@ class InvigilatePadController extends CommonController
 
         ];
 
-        //根据考生id获取到考试id
-        $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
-        //根据考试获取到考试流程
-        $ExamFlowModel = new  ExamFlow();
-        $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
-        //查询出学生当前已完成的考试
-        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
-//        try {
-        if ($ExamFinishStatus == $studentExamSum) {
-            //todo 调用zhoufuxiang接口......
-            try {
-                $examResultModel = new ExamResult();
-                $examResultModel->examResultPush($data['student_id']);
-            } catch (\Exception $mssge) {
-                \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
-            }
-        }
+
+        try {
+            //根据考生id获取到考试id
+            $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
+            //根据考试获取到考试流程
+            $ExamFlowModel = new  ExamFlow();
+            $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
+            //查询出学生当前已完成的考试
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
+            if ($ExamFinishStatus == $studentExamSum) {
+                //todo 调用zhoufuxiang接口......
+                try {
+                    $examResultModel = new ExamResult();
+                    $examResultModel->examResultPush($data['student_id']);
+                } catch (\Exception $mssge) {
+                    \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
+                }
         $TestResultModel = new TestResult();
         $result = $TestResultModel->addTestResult($data, $score);
-
         if ($result) {
             //根据考试附件结果id修改表里的考试结果id
             // todo 待最后确定。。。。。。。
             //存入考试 评分详情表
+
             return response()->json($this->success_data([], 1, '成绩提交成功'));
         } else {
             return response()->json(
                 $this->fail(new \Exception('成绩提交失败'))
             );
-
+            }
         }
-//        } catch (\Exception $ex) {
-//            throw $ex;
-//        }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+
     }
 
 
