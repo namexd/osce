@@ -258,10 +258,6 @@ class DrawlotsController extends CommonController
                 }
             }
             //如果考生走错了房间
-            dd(ExamQueue::where('room_id','=',$roomId)
-                ->where('student_id','=',$studentId)
-                ->where('exam_id','=',$examId)->get()
-                ->isEmpty());
             if (ExamQueue::where('room_id','=',$roomId)
                 ->where('student_id','=',$studentId)
                 ->where('exam_id','=',$examId)->get()
@@ -436,6 +432,7 @@ class DrawlotsController extends CommonController
                     ->get();
 
                 $tempStationIdKey = $stationIdKey-1;
+                dd($tempStationIdKey,$tempExamQueue[$tempStationIdKey]);
                 if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                     throw new \Exception('当前考生走错了考场！',3400);
                 }
