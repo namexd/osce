@@ -64,7 +64,7 @@ class TestResult extends CommonModel
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
 
-                $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
+//                $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
 
 
 

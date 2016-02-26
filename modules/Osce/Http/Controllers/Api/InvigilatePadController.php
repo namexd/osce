@@ -299,7 +299,7 @@ class InvigilatePadController extends CommonController
             }
                 $TestResultModel = new TestResult();
                 $result = $TestResultModel->addTestResult($data, $score);
-                \Log::alert(json_encode($result));
+//                \Log::alert(json_encode($result));
         if ($result) {
             //根据考试附件结果id修改表里的考试结果id
             // todo 待最后确定。。。。。。。
@@ -312,6 +312,7 @@ class InvigilatePadController extends CommonController
             }
 
         } catch (\Exception $ex) {
+
             \Log::alert($ex->getMessage());
 
             throw $ex;
