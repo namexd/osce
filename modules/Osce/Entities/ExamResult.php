@@ -205,10 +205,8 @@ class ExamResult extends CommonModel
          'station.name as station_name',
          'exam_result.exam_screening_id as exam_screening_id',
          'station.id as station_id'
-
      ])
          ->get();
-
      return $builder;
     }
 
