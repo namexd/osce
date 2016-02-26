@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\Student;
@@ -223,6 +224,8 @@ class AutomaticPlanArrangement
             }
         }
 
+
+
         //找到未考完的考生
         $undoneStudents = [];
         $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
@@ -236,8 +239,32 @@ class AutomaticPlanArrangement
                 throw new \Exception('删除未考完考生记录失败！');
             }
         }
-
-
+        //获取未走完流程的考生
+        $ExamFlowModel  =   new ExamFlow();
+        $flowsNum   =   $ExamFlowModel->studentExamSum($examId);
+        //SELECT count(`id`) as total,`student_id` FROM `exam_plan_record` where`exam_id` = 25 Group by `student_id` Having total <>2
+        $studentList    =   ExamPlanRecord  ::  where('exam_id','<>',$examId)
+                        ->  groupBy('student_id')
+                        ->  Having('flowsNum','<',$flowsNum)
+                        ->  select(\DB::raw(
+                            implode(
+                                [
+                                    'count(`id`) as flowsNum',
+                                    'id',
+                                    'student_id',
+                                ]
+                            )
+                        ))
+                        ->  get();
+        if(count($studentList))
+        {
+            $studentNotOver =   $studentList->pluck('student_id');
+            //删除未走完流程的考生
+            if(!ExamPlanRecord::whereIn('student_id',$studentNotOver->toArray())->delete())
+            {
+                throw new \Exception('考场未完成学生移动失败');
+            }
+        }
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_ING);
         $this->_S = $this->_S->merge($undoneStudents);
