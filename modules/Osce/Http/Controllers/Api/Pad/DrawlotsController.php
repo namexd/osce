@@ -356,7 +356,7 @@ class DrawlotsController extends CommonController
                 ->get();
 
             if ($station->isEmpty()) {
-                throw new \Exception('当前队列中找不到符合的考试！',3500);
+                $station = collect(['station_id'=>null]);
             }
 
             //判断如果是以考场分组，就抽签
