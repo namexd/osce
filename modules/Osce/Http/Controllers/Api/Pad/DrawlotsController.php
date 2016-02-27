@@ -379,7 +379,11 @@ class DrawlotsController extends CommonController
                 $ranStationId = $stationIds[array_rand($stationIds)];
 //                dd($student->id,$examId);
                 //将这个值保存在队列表中
-                if (!$examQueue = ExamQueue::where('student_id',$student->id)->where('exam_id',$examId)->first()) {
+                if (!$examQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('exam_id',$examId)
+                    ->where('status',0)
+                    ->orderBy('begin_dt','asc')
+                    ->first()) {
                     throw new \Exception('没有找到考生信息！',3600);
                 };
                 \Log::info('queue',$examQueue->toArray());
