@@ -379,14 +379,16 @@ class ExamQueue extends CommonModel
 
     private function getRoomStationMaxTime($roomdId){
         $tempStations   =   RoomStation::where('room_id','=',$roomdId)->get();
-        dd($tempStations);
         $mins = 0;
         //循环数组，找到mins最大的值
         foreach ($tempStations as $v) {
-            if ($v->mins - $mins > 0) {
-                $mins = $v->mins;
-            }
+//            if ($v->mins>$mins) {
+//                $mins = $v->mins;
+//            }
+            $mins   =   $v->mins>$mins? $v->mins:$mins;
+            dump($v->mins);
         }
+        dd($mins);
         return $mins;
     }
     /**
