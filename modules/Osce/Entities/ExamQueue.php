@@ -326,6 +326,7 @@ class ExamQueue extends CommonModel
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
+                dd($studentTimes);
                 foreach ($studentTimes as $item) {
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         $lateTime = time() - strtotime($item->begin_dt);
@@ -342,6 +343,7 @@ class ExamQueue extends CommonModel
                     } else {
                         //查询到考站的标准时间
 //                            $station = Station::find($stationId);
+
                         $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                             ->update(
                                 [
