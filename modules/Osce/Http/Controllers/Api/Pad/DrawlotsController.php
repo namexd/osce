@@ -122,6 +122,7 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
+            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -174,6 +175,7 @@ class DrawlotsController extends CommonController
             \Log::alert($id,$examQueue->toArray());
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
+            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -206,11 +208,12 @@ class DrawlotsController extends CommonController
                 'room_id' => 'required|integer',
                 'teacher_id' => 'required|integer'
             ]);
-
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
             $teacherId = $request->input('teacher_id');
+
+            \Log::info('params',[$uid,$roomId,$teacherId]);
             //根据uid来查对应的考生
             //根据uid查到对应的watchid
             $watch = Watch::where('code',$uid)->first();
@@ -253,7 +256,6 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
-//                dd($studentId,$examQueue->pluck('student_id')->toArray());
                 if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
                     throw new \Exception('当前考生并非在当前地点考试',7200);
                 }
@@ -275,6 +277,7 @@ class DrawlotsController extends CommonController
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
+            $this->errorLog($ex);
             \DB::connection('osce_mis')->rollBack();
             return response()->json($this->fail($ex));
         }
@@ -321,6 +324,7 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
+            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -379,9 +383,14 @@ class DrawlotsController extends CommonController
                 $ranStationId = $stationIds[array_rand($stationIds)];
 //                dd($student->id,$examId);
                 //将这个值保存在队列表中
-                if (!$examQueue = ExamQueue::where('student_id',$student->id)->where('exam_id',$examId)->first()) {
+                if (!$examQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('exam_id',$examId)
+                    ->where('status',0)
+                    ->orderBy('begin_dt','asc')
+                    ->first()) {
                     throw new \Exception('没有找到考生信息！',3600);
                 };
+                \Log::info('queue',$examQueue->toArray());
                 $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
                 if (!$examQueue -> save()) {

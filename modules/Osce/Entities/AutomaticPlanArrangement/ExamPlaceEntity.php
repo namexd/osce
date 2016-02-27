@@ -152,10 +152,9 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                         throw new \Exception('该考场没有关联考站！', -3);
                     }
                     $mins = 0;
-
                     //循环数组，找到mins最大的值
                     foreach ($tempStations as $v) {
-                        if (strtotime($v->mins) - $mins > 0) {
+                        if ($v->mins - $mins > 0) {
                             $mins = $v->mins;
                         }
                     }
