@@ -191,11 +191,13 @@ class StudentWatchController extends CommonController
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
+
         $surplus = strtotime($item->end_dt)-time();
         if($surplus<=0){
             //todo 调用jiangzhiheng接口
             $examQueueModel = new ExamQueue();
             $endStudentExam = $examQueueModel->getEndStudentQueueExam();
+
         };
         $data=[
             'code'      =>  4,
