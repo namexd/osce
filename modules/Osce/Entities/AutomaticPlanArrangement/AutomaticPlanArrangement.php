@@ -241,8 +241,8 @@ class AutomaticPlanArrangement
             ->  select(\DB::raw(
                 implode(
                     [
-                        'count(`id`) as flowsNum',
-                        'id',
+                        'count(`id`) as flowsNum,',
+                        'id,',
                         'student_id',
                     ]
                 )
