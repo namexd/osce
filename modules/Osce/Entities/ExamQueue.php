@@ -330,6 +330,8 @@ class ExamQueue extends CommonModel
                     {
                         //这是已考场安排的需拿到room_id
                         $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);
+                        dd($stationTime);
+
                     }
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         $lateTime = time() - strtotime($item->begin_dt);
@@ -366,7 +368,7 @@ class ExamQueue extends CommonModel
                 throw new \Exception('队列状态更新失败', -102);
 
             }
-            $connection->commit();
+//            $connection->commit();
             return true;
         } catch (\Exception $ex) {
             $connection->rollBack();
