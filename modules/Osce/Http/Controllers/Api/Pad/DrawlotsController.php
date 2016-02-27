@@ -206,11 +206,12 @@ class DrawlotsController extends CommonController
                 'room_id' => 'required|integer',
                 'teacher_id' => 'required|integer'
             ]);
-
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
             $teacherId = $request->input('teacher_id');
+
+            \Log::info('params',[$uid,$roomId,$teacherId]);
             //根据uid来查对应的考生
             //根据uid查到对应的watchid
             $watch = Watch::where('code',$uid)->first();
@@ -253,7 +254,6 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
-//                dd($studentId,$examQueue->pluck('student_id')->toArray());
                 if (!in_array($studentId,$examQueue->pluck('student_id')->toArray())) {
                     throw new \Exception('当前考生并非在当前地点考试',7200);
                 }
@@ -382,6 +382,7 @@ class DrawlotsController extends CommonController
                 if (!$examQueue = ExamQueue::where('student_id',$student->id)->where('exam_id',$examId)->first()) {
                     throw new \Exception('没有找到考生信息！',3600);
                 };
+                \Log::info('queue',$examQueue->toArray());
                 $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
                 if (!$examQueue -> save()) {
