@@ -246,8 +246,8 @@ class AutomaticPlanArrangement
                         'student_id',
                     ]
                 )
-            ->  Having('flowsNum','<',$flowsNum)
             ))
+            ->  Having('flowsNum','<',$flowsNum)
             ->  get();
         if(count($studentList))
         {
