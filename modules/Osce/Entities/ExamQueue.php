@@ -382,11 +382,13 @@ class ExamQueue extends CommonModel
         $mins = 0;
         //循环数组，找到mins最大的值
         foreach ($tempStations as $v) {
-//            if ($v->mins>$mins) {
-//                $mins = $v->mins;
-//            }
-            $mins   =   $v->mins>$mins? $v->mins:$mins;
-            dd($v);
+            $station   =  $v->station;
+            if(is_null($station))
+            {
+                continue;
+                //todo::暂时跳过不处理
+            }
+            $mins   =   $station->mins>$mins? $station->mins:$mins;
         }
         dd($mins);
         return $mins;
