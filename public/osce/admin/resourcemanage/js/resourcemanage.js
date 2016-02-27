@@ -694,7 +694,8 @@ function categories(){
                         $('tbody').attr('index',index);
                         $('tbody').append(html);
                     }else {
-                        layer.alert('文件导入错误，请参考下载模板！');
+                        layer.alert(data.message+'，请参考下载模板！');
+                        //layer.alert('文件导入错误，请参考下载模板！');
                     }
                 },
                 error: function (data, status, e)

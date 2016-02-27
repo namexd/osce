@@ -198,6 +198,7 @@ class StudentWatchController extends CommonController
             $examQueueModel = new ExamQueue();
             $endStudentExam = $examQueueModel->getEndStudentQueueExam();
 
+
         };
         $data=[
             'code'      =>  4,
@@ -246,11 +247,22 @@ class StudentWatchController extends CommonController
         }
         else
         {
-            $data = [
-                'code'=> 5,
-                'title' => '当前考站考试完成，进入下一场考试考站名',
-                'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
-            ];
+            if(!is_null($nextExamQueue->station))
+            {
+                $data = [
+                    'code'=> 5,
+                    'title' => '当前考站考试完成，进入下一场考试考站名',
+                    'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
+                ];
+            }
+            else
+            {
+                $data = [
+                    'code'=> 5,
+                    'title' => '当前考站考试完成，进入下一场考试考场名',
+                    'nextExamName' =>$nextExamQueue->room->name,
+                ];
+            }
         }
         return $data;
     }
