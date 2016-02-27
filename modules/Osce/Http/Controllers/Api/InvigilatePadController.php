@@ -601,31 +601,35 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-        $this->validate($request, [
-            'student_id' => 'required|integer',
-            'station_id' => 'required|integer'
+//        try {
+            $this->validate($request, [
+                'student_id' => 'required|integer',
+                'station_id' => 'required|integer'
 
-        ], [
-            'student_id.required' => '考生编号信息必须',
-            'station_id.required' => '考站编号信息必须'
-        ]);
-        $nowTime = time();
-        $date = date('Y-m-d H:i:s', $nowTime);
-        $studentId = $request->get('student_id');
-        $stationId = $request->get('station_id');
-        $ExamQueueModel = new ExamQueue();
+            ], [
+                'student_id.required' => '考生编号信息必须',
+                'station_id.required' => '考站编号信息必须'
+            ]);
+            $nowTime = time();
+            $date = date('Y-m-d H:i:s', $nowTime);
+            $studentId = $request->get('student_id');
+            $stationId = $request->get('station_id');
+            $ExamQueueModel = new ExamQueue();
 
-        $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
 
 
-        if ($AlterResult) {
+            if ($AlterResult) {
+                return response()->json(
+                    $this->success_data([$date], 1, '开始考试成功')
+                );
+            }
             return response()->json(
-                $this->success_data([$date], 1, '开始考试成功')
+                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-        }
-        return response()->json(
-            $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
-        );
+//        }catch (\Exception $ex){
+//            return response()->json($this->fail($ex));
+//        }
     }
 
 }
