@@ -350,6 +350,7 @@ class ExamQueue extends CommonModel
                             'begin_dt' => date('Y-m-d H:i:s', $nowTime),
                             'end_dt' => date('Y-m-d H:i:s', $nowTime + $stationTime * 60)
                         ];
+                        dd($ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->get());
                         $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                             ->update(
                                 $dataTemp
