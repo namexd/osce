@@ -122,7 +122,6 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -175,7 +174,6 @@ class DrawlotsController extends CommonController
             \Log::alert($id,$examQueue->toArray());
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -277,7 +275,6 @@ class DrawlotsController extends CommonController
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             \DB::connection('osce_mis')->rollBack();
             return response()->json($this->fail($ex));
         }
@@ -324,7 +321,6 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -356,7 +352,7 @@ class DrawlotsController extends CommonController
             //从ExamQueue表中将房间和状态对应的列表查出
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('exam_id',$examId)
-                ->where('status', '=', 0)
+                ->where('status', '=', 3)
                 ->get();
 
             if ($station->isEmpty()) {
