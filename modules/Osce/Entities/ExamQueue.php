@@ -330,8 +330,6 @@ class ExamQueue extends CommonModel
                     {
                         //这是已考场安排的需拿到room_id
                         $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);
-                        dd($stationTime);
-
                     }
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         $lateTime = time() - strtotime($item->begin_dt);
@@ -368,7 +366,7 @@ class ExamQueue extends CommonModel
                 throw new \Exception('队列状态更新失败', -102);
 
             }
-//            $connection->commit();
+            $connection->commit();
             return true;
         } catch (\Exception $ex) {
             $connection->rollBack();
@@ -382,13 +380,14 @@ class ExamQueue extends CommonModel
         $mins = 0;
         //循环数组，找到mins最大的值
         foreach ($tempStations as $v) {
-//            if ($v->mins>$mins) {
-//                $mins = $v->mins;
-//            }
-            $mins   =   $v->mins>$mins? $v->mins:$mins;
-            dump($v->mins);
+            $station   =  $v->station;
+            if(is_null($station))
+            {
+                continue;
+                //todo::暂时跳过不处理
+            }
+            $mins   =   $station->mins>$mins? $station->mins:$mins;
         }
-        dd($mins);
         return $mins;
     }
     /**
