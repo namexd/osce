@@ -165,7 +165,7 @@ class DrawlotsController extends CommonController
             list($room_id, $stations) = $this->getRoomIdAndStation($id,$exam);
 
             if ($exam->sequence_mode == 1) {
-                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stations[$room_id]);
+                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId,$stations);
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $examId);
             } else {
@@ -355,7 +355,6 @@ class DrawlotsController extends CommonController
                 ->where('status' , '=' , 0)
                 ->get();
 
-            //获得该场考试的exam_id
             if ($station->isEmpty()) {
                 throw new \Exception('当前队列中找不到符合的考试！',3500);
             }
@@ -443,7 +442,7 @@ class DrawlotsController extends CommonController
                 //将队列状态变更为1
                 $tempObj->status = 1;
                 if (!$tempObj->save()) {
-                    throw new \Exception('当前抽签失败！',3900);
+                    throw new \Exception('当前抽签失败！',3901);
                 }
                 //查出考站的信息
                 return Station::findOrFail($stationId);
