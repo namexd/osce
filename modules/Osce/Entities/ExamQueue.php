@@ -386,7 +386,7 @@ class ExamQueue extends CommonModel
 //                $mins = $v->mins;
 //            }
             $mins   =   $v->mins>$mins? $v->mins:$mins;
-            dump($v->mins);
+            dd($v);
         }
         dd($mins);
         return $mins;
