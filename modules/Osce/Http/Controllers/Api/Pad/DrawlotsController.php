@@ -368,7 +368,6 @@ class DrawlotsController extends CommonController
                     ->get();
 
                 if (!$station->isEmpty()) {
-                    //$station = collect([0 => collect(['station_id' => null])]);
                     $stationIds = $station->pluck('station_id');
                 } else {
                     $stationIds = collect([]);
