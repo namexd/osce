@@ -298,6 +298,9 @@ class ExamQueue extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
         try {
+                //查询学生是否已开开始考试
+//              $examQueue = ExamQueue::where('')->where('')->get();
+
 
             $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                 ->update(['status' => 2]);
