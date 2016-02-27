@@ -309,6 +309,7 @@ class ExamQueue extends CommonModel
 //                //这是已考场安排的需拿到room_id
 //
 //            }
+//            }
 
 //                查询学生是否已开始考试
             $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
@@ -342,7 +343,12 @@ class ExamQueue extends CommonModel
                         //查询到考站的标准时间
 //                            $station = Station::find($stationId);
                         $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime), 'end_dt' => date('Y-m-d H:i:s', $nowTime + $item->station->mins * 60)]);
+                            ->update(
+                                [
+                                    'begin_dt' => date('Y-m-d H:i:s', $nowTime),
+                                    'end_dt' => date('Y-m-d H:i:s',
+                                    $nowTime + $item->station->mins * 60)]
+                            );
                         if (!$ExamTime) {
                             throw new \Exception('队列时间更新失败', -101);
                         }
