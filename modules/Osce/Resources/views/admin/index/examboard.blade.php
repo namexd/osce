@@ -60,14 +60,12 @@
                         @endif
                     </td>
                     <td>
-                        @if($item->status==1)
+                        @if($item->status==2)
+                            考试已结束
+                        @else
                             <a href="{{route('osce.admin.getWaitDetail',['exam_id'=>$item->id])}}" target="_blank">
                                 <input class="btn btn-primary" type="button" value="大屏"/>
                             </a>
-                        @elseif($item->status==0)
-                            <input class="btn btn-primary" type="button" value="大屏" style="background-color: #CCC;border-color: #CCC;"/>
-                        @else
-                            考试已结束
                         @endif
                     </td>
                 </tr>
