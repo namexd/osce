@@ -239,10 +239,10 @@ class AutomaticPlanArrangement
         $studentList    =   ExamPlanRecord  ::  where('exam_id','<>',$examId)
             ->  groupBy('student_id')
             ->  select(\DB::raw(
-                implode(
+                implode(',',
                     [
-                        'count(`id`) as flowsNum,',
-                        'id,',
+                        'count(`id`) as flowsNum',
+                        'id',
                         'student_id',
                     ]
                 )
