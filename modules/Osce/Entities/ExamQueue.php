@@ -348,15 +348,14 @@ class ExamQueue extends CommonModel
 //                            $station = Station::find($stationId);
                         $dataTemp   =   [
                             'begin_dt' => date('Y-m-d H:i:s', $nowTime),
-                            'end_dt' => date('Y-m-d H:i:s',
-                                $nowTime + $stationTime * 60)
+                            'end_dt' => date('Y-m-d H:i:s', $nowTime + $stationTime * 60)
                         ];
                         $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                             ->update(
                                 $dataTemp
                             );
                         if (!$ExamTime) {
-                            dd($dataTemp);
+                            dd($dataTemp,$ExamTime);
                             throw new \Exception('队列时间更新失败', -101);
                         }
                     }
