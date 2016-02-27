@@ -238,7 +238,6 @@ class AutomaticPlanArrangement
         //SELECT count(`id`) as total,`student_id` FROM `exam_plan_record` where`exam_id` = 25 Group by `student_id` Having total <> 2
         $studentList    =   ExamPlanRecord  ::  where('exam_id','<>',$examId)
             ->  groupBy('student_id')
-            ->  Having('flowsNum','<',$flowsNum)
             ->  select(\DB::raw(
                 implode(
                     [
@@ -247,6 +246,7 @@ class AutomaticPlanArrangement
                         'student_id',
                     ]
                 )
+            ->  Having('flowsNum','<',$flowsNum)
             ))
             ->  get();
         if(count($studentList))
