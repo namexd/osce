@@ -299,7 +299,12 @@ class ExamQueue extends CommonModel
             $connection->beginTransaction();
         try {
                 //查询学生是否已开开始考试
-//              $examQueue = ExamQueue::where('')->where('')->get();
+//              $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
+//                if($examQueue->status==2){
+//  
+//
+//                }
+
 
 
             $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
@@ -310,7 +315,7 @@ class ExamQueue extends CommonModel
                     ->orderBy('begin_dt', 'asc')
                     ->get();
                 foreach ($studentTimes as  $item) {
-                    if ($nowTime > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
+                    if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         $lateTime    =   time()-strtotime($item->begin_dt);
                         if ($item->status == 2) {
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);

@@ -247,8 +247,10 @@ class StudentWatchController extends CommonController
         }
         else
         {
+
             if(!is_null($nextExamQueue->station))
             {
+
                 $data = [
                     'code'=> 5,
                     'title' => '当前考站考试完成，进入下一场考试考站名',
