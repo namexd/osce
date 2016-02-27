@@ -181,6 +181,12 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为2时
 
     private function getStatusTwoExam($examQueueCollect){
+//        foreach ($examQueueCollect as $items) {
+//            if ($items->status == 2) {
+//                return $items;
+//            }
+//        }
+
         $items   =   array_where($examQueueCollect,function($key,$value){
             if($value ->status  ==  2)
             {
