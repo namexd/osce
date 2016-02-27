@@ -346,15 +346,17 @@ class ExamQueue extends CommonModel
                     } else {
                         //查询到考站的标准时间
 //                            $station = Station::find($stationId);
-
+                        $dataTemp   =   [
+                            'begin_dt' => date('Y-m-d H:i:s', $nowTime),
+                            'end_dt' => date('Y-m-d H:i:s',
+                                $nowTime + $stationTime * 60)
+                        ];
                         $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                             ->update(
-                                [
-                                    'begin_dt' => date('Y-m-d H:i:s', $nowTime),
-                                    'end_dt' => date('Y-m-d H:i:s',
-                                    $nowTime + $stationTime * 60)]
+                                $dataTemp
                             );
                         if (!$ExamTime) {
+                            dd($dataTemp);
                             throw new \Exception('队列时间更新失败', -101);
                         }
                     }
