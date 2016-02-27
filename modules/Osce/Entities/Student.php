@@ -329,7 +329,7 @@ class Student extends CommonModel
         })->leftjoin('station_teacher',function($join){
             $join ->on('exam_queue.station_id','=','station_teacher.station_id');
         })->where('exam_queue.station_id','=',$stationId)
-            ->where('exam_queue.status','=',1)
+            ->whereIn('exam_queue.status',[1,2])
             -> orderBy('exam_queue.begin_dt','asc')
             ->select([
                 'student.name as name',
