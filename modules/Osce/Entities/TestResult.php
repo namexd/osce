@@ -48,7 +48,7 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             //判断成绩是否已提交过
-            $this->getRemoveScore($data['student_id'], $data['station_id'],$data['exam_screening_id']);
+            $this->getRemoveScore($data['station_id'],$data['student_id'],$data['exam_screening_id']);
 //            $examResult = $this->where('student_id', '=', $data['student_id'])
 //                ->where('exam_screening_id', '=', $data['exam_screening_id'])
 //                ->where('station_id', '=', $data['station_id'])
@@ -89,8 +89,9 @@ class TestResult extends CommonModel
             }
         }
     }
+
     //删除已提交过得成绩
-    public function getRemoveScore($stationId,$studentId,$examscreeningId){
+    private function getRemoveScore($stationId,$studentId,$examscreeningId){
         //判断成绩是否已提交过
         try{
         $examResult = $this->where('student_id', '=',$stationId )

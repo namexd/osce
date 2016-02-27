@@ -299,13 +299,17 @@ class ExamQueue extends CommonModel
             $connection->beginTransaction();
         try {
 
-//                查询学生是否已开开始考试
+//                查询学生是否已开始考试
               $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
                 if($examQueue->status==2){
                     return true;
+
                 }
-            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-                ->update(['status' => 2]);
+
+
+//            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
+                $status = $examQueue ->update(['status' => 2]);
+
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
