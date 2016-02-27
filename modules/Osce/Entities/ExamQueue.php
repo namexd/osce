@@ -319,13 +319,14 @@ class ExamQueue extends CommonModel
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败');
                         }else{
-                            $connection->commit();
+
                             return true;
                         }
                     }else{
                           $ExamTime= ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
                             ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime ),'end_dt' => date('Y-m-d H:i:s', $nowTime+$item->station->mins*60)]);
                         if($ExamTime){
+                            $connection->commit();
                             return true;
                         }
                     }
