@@ -418,6 +418,9 @@ class DrawlotsController extends CommonController
                 //获得他应该要去的考站id
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
+                if ($tempObj->status != 0) {
+                    throw new \Exception('该考生数据错误！',3650);
+                }
 
                 //获得他应该要去的考场id
                 $shouldRoomId = $tempObj->room_id;
