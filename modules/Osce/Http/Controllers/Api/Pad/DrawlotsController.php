@@ -122,7 +122,6 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -172,10 +171,8 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！');
             }
-            \Log::alert($id,$examQueue->toArray());
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -269,7 +266,7 @@ class DrawlotsController extends CommonController
             }
 
             //使用抽签的方法进行抽签操作
-            $result = $this->drawlots($student, $roomId);
+            $result = $this->drawlots($student, $roomId, $teacherId, $exam);
 
             //判断时间
             $this->judgeTime($studentId);
@@ -277,7 +274,6 @@ class DrawlotsController extends CommonController
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             \DB::connection('osce_mis')->rollBack();
             return response()->json($this->fail($ex));
         }
@@ -324,7 +320,6 @@ class DrawlotsController extends CommonController
 
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
-            $this->errorLog($ex);
             return response()->json($this->fail($ex));
         }
     }
@@ -337,7 +332,7 @@ class DrawlotsController extends CommonController
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    private function drawlots($student, $roomId)
+    private function drawlots($student, $roomId, $teacherId, $exam)
     {
 
         try {
@@ -353,18 +348,24 @@ class DrawlotsController extends CommonController
                 return Station::findOrFail($temp->station_id);
             }
 
-            //从ExamQueue表中将房间和状态对应的列表查出
-            $station = ExamQueue::where('room_id' , '=' , $roomId)
-                ->where('exam_id',$examId)
-                ->where('status', '=', 0)
-                ->get();
-
-            if ($station->isEmpty()) {
-                throw new \Exception('当前队列中找不到符合的考试！',3500);
-            }
-
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
+                //获取当前小组信息
+                list($room_id, $stations) = $this->getRoomIdAndStation($teacherId,$exam);
+                //从队列表中通过考场ID得到对应的考生信息
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
+                $studentids = $examQueue->pluck('student_id')->toArray();
+                //从ExamQueue表中将房间和状态对应的列表查出
+                $station = ExamQueue::where('room_id' , '=' , $roomId)
+                    ->where('exam_id',$examId)
+                    ->whereIn('student_id',$studentids)
+                    ->whereNotNull('station_id')
+                    ->get();
+
+                if ($station->isEmpty()) {
+                    $station = collect(['station_id'=>collect([])]);
+                }
+
                 //获得已经被选择的考站id对象
                 $stationIds = $station->pluck('station_id');
                 //将其变成一个一维数组
@@ -390,7 +391,10 @@ class DrawlotsController extends CommonController
                     ->first()) {
                     throw new \Exception('没有找到考生信息！',3600);
                 };
-                \Log::info('queue',$examQueue->toArray());
+                if ($examQueue->status != 0) {
+                    throw new \Exception('该考生数据错误！',3650);
+                }
+                \Log::info('obj',$examQueue->toArray());
                 $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
                 if (!$examQueue -> save()) {
@@ -415,6 +419,9 @@ class DrawlotsController extends CommonController
                 //获得他应该要去的考站id
                 $tempObj = $examQueue->first();
                 $stationId = $tempObj->station_id;
+                if ($tempObj->status != 0) {
+                    throw new \Exception('该考生数据错误！',3650);
+                }
 
                 //获得他应该要去的考场id
                 $shouldRoomId = $tempObj->room_id;
