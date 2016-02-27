@@ -247,7 +247,7 @@ class StudentWatchController extends CommonController
         }
         else
         {
-            if(is_null($nextExamQueue->station))
+            if(!is_null($nextExamQueue->station))
             {
                 $data = [
                     'code'=> 5,
