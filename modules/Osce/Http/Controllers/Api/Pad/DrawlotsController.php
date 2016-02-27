@@ -390,7 +390,10 @@ class DrawlotsController extends CommonController
                     ->first()) {
                     throw new \Exception('没有找到考生信息！',3600);
                 };
-                \Log::info('queue',$examQueue->toArray());
+                if ($examQueue->status != 0) {
+                    throw new \Exception('该考生数据错误！',3650);
+                }
+
                 $examQueue -> status = 1;
                 $examQueue -> station_id = $ranStationId;
                 if (!$examQueue -> save()) {
