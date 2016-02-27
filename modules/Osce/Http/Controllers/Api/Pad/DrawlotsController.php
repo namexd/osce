@@ -352,6 +352,7 @@ class DrawlotsController extends CommonController
             //从ExamQueue表中将房间和状态对应的列表查出
             $station = ExamQueue::where('room_id' , '=' , $roomId)
                 ->where('exam_id',$examId)
+                ->where('student_id',$student->id)
                 ->where('status', '=', 3)
                 ->get();
 
