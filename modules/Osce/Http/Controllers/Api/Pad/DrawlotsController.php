@@ -367,12 +367,15 @@ class DrawlotsController extends CommonController
                     ->whereNotNull('station_id')
                     ->get();
 
-                if ($station->isEmpty()) {
-                    $station = collect([0 => collect(['station_id' => null])]);
+                if (!$station->isEmpty()) {
+                    //$station = collect([0 => collect(['station_id' => null])]);
+                    $stationIds = $station->pluck('station_id');
+                } else {
+                    $stationIds = collect([]);
                 }
 
                 //获得已经被选择的考站id对象
-                $stationIds = $station->pluck('station_id');
+
                 //将其变成一个一维数组
                 $stationIdeds = $stationIds->all();
 
