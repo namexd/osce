@@ -326,9 +326,11 @@ class DrawlotsController extends CommonController
 
     /**
      * 抽签的方法
-     * @param $student
-     * @param $roomId
-     * @return array
+     * @param $student 学生实例
+     * @param $roomId 考试id
+     * @param $teacherId 老师id
+     * @param $exam 考试实例
+     * @return array 返回参数为一个数组
      * @throws \Exception
      * @author Jiangzhiheng
      */
@@ -385,12 +387,14 @@ class DrawlotsController extends CommonController
 //                dd($student->id,$examId);
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id',$student->id)
+                    ->where('room_id',$roomId)
                     ->where('exam_id',$examId)
                     ->where('status',0)
                     ->orderBy('begin_dt','asc')
                     ->first()) {
                     throw new \Exception('没有找到考生信息！',3600);
                 };
+                
                 if ($examQueue->status != 0) {
                     throw new \Exception('该考生数据错误！',3650);
                 }
