@@ -23,9 +23,9 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">科目成绩分析</a></li>
+                        <li><a href="#">科目成绩分析</a></li>
                         <li><a href="#">科目难度分析</a></li>
-                        <li><a href="#">考站成绩分析</a></li>
+                        <li class="active"><a href="#">考站成绩分析</a></li>
                         <li><a href="#">考核点分析</a></li>
                     </ul>
                 </div>
@@ -55,12 +55,12 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>科目</th>
+                            <th>考站</th>
+                            <th>评分老师</th>
                             <th>考试限时</th>
                             <th>平均耗时</th>
                             <th>平均成绩</th>
                             <th>考试人数</th>
-                            <th>合格率</th>
                             <th>操作</th>
                         </tr>
                         </thead>
