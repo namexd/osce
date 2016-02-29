@@ -103,12 +103,15 @@ function categories(){
         var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
             flag = true;
+           
             if($(elem).find('input').val()==''){
+            	console.log($(elem).find('input'));
                 flag = false;
+                return false;
             }
         });
         if(flag==false){
-            layer.alert('考核点或考核项不能为空！');
+            layer.alert('考核点/考核项/评分标准不能为空！');
             return false;
         }
         if(flag==null){
