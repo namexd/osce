@@ -60,13 +60,23 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function GetSubjectStatisticsList($ExamId,$qualified = 0){
        $DB = \DB::connection('osce_mis');
-       $builder = $this->ExamResultModel->leftJoin('station', function($join){
+
+/*    由于 exam_station 模型 数据缺失 暂时注释掉 改用exam_screening表链接
+      $builder = $this->ExamResultModel->leftJoin('station', function($join){
            $join -> on('station.id', '=', 'exam_result.station_id');
        })->leftJoin('subject', function($join){
            $join -> on('subject.id', '=','station.subject_id');
        })->leftJoin('exam_station', function($join){
            $join -> on('exam_station.station_id', '=','station.id');
-       })->where('exam_station.exam_id','=',$ExamId);
+       })->where('exam_station.exam_id','=',$ExamId);*/
+
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
+        })->where('exam_screening.exam_id','=',$ExamId);
 
         //TODO 加上该条件为统计合格人数
         if($qualified){
@@ -102,6 +112,8 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function GetSubjectDifficultyStatisticsList($SubjectId,$qualified=0){
         $DB = \DB::connection('osce_mis');
+
+/*      由于 exam_station 模型 数据缺失 暂时注释掉 改用exam_screening表链接
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
@@ -110,7 +122,18 @@ class SubjectStatisticsRepositories  extends BaseRepository
             $join -> on('exam_station.station_id', '=','station.id');
         })->leftJoin('exam', function($join){
             $join -> on('exam.id', '=','exam_station.exam_id');
+        });*/
+
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
+        })->leftJoin('exam', function($join){
+            $join -> on('exam.id', '=','exam_screening.exam_id');
         });
+
         //TODO 加上该条件为统计合格人数
         if($qualified){
             $builder->where($DB->raw('exam_result.score/subject.score'),'>','0.6');
@@ -144,6 +167,8 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function GetSubjectStationStatisticsList($ExamId,$SubjectId){
         $DB = \DB::connection('osce_mis');
+
+/*      由于 exam_station 模型 数据缺失 暂时注释掉 改用exam_screening表链接
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
@@ -152,9 +177,20 @@ class SubjectStatisticsRepositories  extends BaseRepository
             $join -> on('exam_station.station_id', '=','station.id');
         })->leftJoin('teacher', function($join){
             $join -> on('teacher.id', '=','exam_result.teacher_id');
+        });*/
+
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
+        })->leftJoin('teacher', function($join){
+            $join -> on('teacher.id', '=','exam_result.teacher_id');
         });
+
         $builder = $builder->where('subject.id','=',$SubjectId)
-            ->where('exam_station.exam_id','=',$ExamId)
+            ->where('exam_screening.exam_id','=',$ExamId)
             ->groupBy('station.id')
             ->select(
                 'station.id as stationId',
@@ -182,12 +218,24 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$qualified=0){
         $DB = \DB::connection('osce_mis');
-        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+/*        $builder = $this->ExamResultModel->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
             $join -> on('subject.id', '=','station.subject_id');
         })->leftJoin('exam_station', function($join){
             $join -> on('exam_station.station_id', '=','station.id');
+        })->leftJoin('exam_score', function($join){
+            $join -> on('exam_score.exam_result_id', '=','exam_result.id');
+        })->leftJoin('standard', function($join){
+            $join -> on('standard.id', '=','exam_score.standard_id');
+        });*/
+
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
         })->leftJoin('exam_score', function($join){
             $join -> on('exam_score.exam_result_id', '=','exam_result.id');
         })->leftJoin('standard', function($join){
@@ -199,7 +247,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
         }
 
         $builder = $builder->where('subject.id','=',$SubjectId)
-            ->where('exam_station.exam_id','=',$ExamId)
+            ->where('exam_screening.exam_id','=',$ExamId)
             ->groupBy('standard.pid')
             ->select(
                 'standard.pid as pid',
