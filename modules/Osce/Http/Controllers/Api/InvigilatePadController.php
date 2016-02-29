@@ -627,6 +627,7 @@ class InvigilatePadController extends CommonController
 
 
             if ($AlterResult) {
+                \Log::alert($AlterResult);
                 return response()->json(
                     $this->success_data([$date], 1, '开始考试成功')
                 );
@@ -635,7 +636,7 @@ class InvigilatePadController extends CommonController
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
         }catch (\Exception $ex){
-            \Log::alert($ex->getMessage());
+            \Log::alert($ex->getMessage().'');
             return response()->json($this->fail($ex));
         }
     }
