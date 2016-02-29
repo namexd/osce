@@ -200,7 +200,7 @@ class DrawlotsController extends CommonController
     public function getStation(Request $request)
     {
         \DB::connection('osce_mis')->beginTransaction();
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -280,10 +280,10 @@ class DrawlotsController extends CommonController
             \DB::connection('osce_mis')->commit();
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            \DB::connection('osce_mis')->rollBack();
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            \DB::connection('osce_mis')->rollBack();
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
