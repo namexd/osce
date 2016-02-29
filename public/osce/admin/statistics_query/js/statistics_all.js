@@ -46,7 +46,7 @@ function subject_statistics(){
     alert(url);
     $.ajax({
         url:url+'?id='+$subId,
-        type:'post',
+        type:'get',
         cache:false,
         success:function(res){
             console.log(res);
