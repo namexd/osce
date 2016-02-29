@@ -10,11 +10,11 @@
 <script>
 
     $(function(){
-                var standardStr= "{{ $StrList["standardStr"]  }}";
+                var standardStr= "{{ @$StrList["standardStr"]  }}";
                 standardStr=standardStr.split(",");
-                var timeAvgStr= "{{ $StrList["timeAvgStr"]  }}";
+                var timeAvgStr= "{{ @$StrList["timeAvgStr"]  }}";
                 timeAvgStr=timeAvgStr.split(",");
-                var scoreAvgStr= "{{ $StrList["scoreAvgStr"]  }}";
+                var scoreAvgStr= "{{ @$StrList["scoreAvgStr"]  }}";
                 scoreAvgStr=scoreAvgStr.split(",");
         var t = echarts.init(document.getElementById("echarts-bar-chart")),
                 n = {
@@ -94,24 +94,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @forelse($list as $item)
+                    @if(!empty(@$list))
+                    @foreach(@$list as $item)
                         <tr>
-                            <td>{{$item->subjectId}}</td>
-                            <td>{{$item->title}}</td>
-                            <td>{{$item->mins}}</td>
-                            <td>{{$item->mins}}</td>
-                            <td>{{$item->scoreAvg}}</td>
-                            <td>{{$item->studentQuantity}}</td>
-                            <td>{{$item->qualifiedPass}}</td>
+                            <td>{{@$item->subjectId}}</td>
+                            <td>{{@$item->title}}</td>
+                            <td>{{@$item->mins}}</td>
+                            <td>{{@$item->mins}}</td>
+                            <td>{{@$item->scoreAvg}}</td>
+                            <td>{{@$item->studentQuantity}}</td>
+                            <td>{{@$item->qualifiedPass}}</td>
                             <td>
-                                <a href="{{route('osce.admin.course.getStudentDetails',['student_id'=>$item->student_id])}}">
+                                <a href="{{route('osce.admin.course.getStudentDetails',['student_id'=>@$item->student_id])}}">
                                     <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                                 </a>
                             </td>
                         </tr>
-                    @empty
-
-                    @endforelse
+                    @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>

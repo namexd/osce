@@ -27,8 +27,7 @@ class TestScoresController  extends CommonController
     public function TestScoreList(Request $request){
         //查找所有考试信息
         $examlist = Exam::get();
-
-        dd($examlist);
+        return view('osce::admin.statistics_query.student_statistics');
     }
     /**
      * 根据考试ID查找当前考试下的所有学生ID
@@ -121,7 +120,9 @@ class TestScoresController  extends CommonController
      * @date    2016-2-29 09:45:15
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function ajaxGetStudentTestCount(){
-
+    public function ajaxGetStudentTestCount(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $student_id = $request->student_id;
+        $subid = $request->subject_id;
+        $data = $TestScoreRepositories->getStudentScoreCount($student_id,$subid);
     }
 }
