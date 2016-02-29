@@ -1074,13 +1074,18 @@ function examroom_assignment(){
                         station_count = key + 1;
                         $(elem).find('td').eq(0).text(station_count);
                     });*/
-                    $('#exam-place').find('tbody').attr('index',station_count-1);
+
+                    //if(station_count==1)station_count -= 1;
+                    $('#exam-place').find('tbody').attr('index',station_count);
                     continue;
                 }
             }else{
                 current.push({id:rooms[i].id,count:rooms[i].count});
             }
         }
+
+        //当数据清空时，让计数归零
+        if(current.length==0)$('#exam-place').find('tbody').attr('index',0);
 
         $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
@@ -1257,7 +1262,7 @@ function examroom_assignment(){
                                 });
 
                             });
-                            $('#exam-place').find('tbody').attr('index',station_count-1);
+                            $('#exam-place').find('tbody').attr('index',station_count);
                             continue;
                         }
                     }else{
@@ -1265,6 +1270,9 @@ function examroom_assignment(){
                     }
                 }
             }
+
+            //当数据清空时，让计数归零
+            if(current.length==0)$('#exam-place').find('tbody').attr('index',0);
 
             $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
@@ -2873,13 +2881,16 @@ function station_assignment(){
                         station_count = key + 1;
                         $(elem).find('td').eq(0).text(station_count);
                     });*/
-                    $('#exam-place').find('tbody').attr('index',station_count-1);
+                    $('#exam-place').find('tbody').attr('index',station_count);
                     continue;
                 }
             }else{
                 current.push({id:rooms[i].id,count:rooms[i].count});
             }
         }
+
+        //当数据清空时，让计数归零
+        if(current.length==0)$('#exam-place').find('tbody').attr('index',0);
 
         $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
@@ -3063,7 +3074,7 @@ function station_assignment(){
 
 
                             });
-                            $('#exam-place').find('tbody').attr('index',station_count-1);
+                            $('#exam-place').find('tbody').attr('index',station_count);
                             continue;
                         }
                     }else{
@@ -3071,6 +3082,10 @@ function station_assignment(){
                     }
                 }
             }
+
+            //当数据清空时，让计数归零
+            if(current.length==0)$('#exam-place').find('tbody').attr('index',0);
+            console.log(current)
 
             $('#examroom').find('tbody').attr('data',JSON.stringify(current));
 
