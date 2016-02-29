@@ -67,14 +67,13 @@ class SubjectStatisticsController  extends CommonController
             'timeAvgStr' => $timeAvgStr,
             'scoreAvgStr' => $scoreAvgStr
         ];
-
         $exam = new Exam();
         $examlist= $exam->where('status','=','2')->select('id','name')->orderBy('end_dt','asc')->get()->toarray();
         //dd($examlist);
 
         //dd($rew);
-        //dd($StrList);
-      // dd($examlist);
+        //dd($rew);
+       //dd($examlist);
 
        /*    $list[]=array();
         //dd($examlist);

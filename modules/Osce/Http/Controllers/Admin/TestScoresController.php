@@ -113,7 +113,7 @@ class TestScoresController  extends CommonController
     /**
      * ajax统计当前考生科目成绩
      * @method  POST
-     * @url ajax-get-subject
+     * @url ajax-get-student-test-count
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
      * @author weihuiguo <weihuiguo@misrobot.com>
@@ -125,4 +125,40 @@ class TestScoresController  extends CommonController
         $subid = $request->subject_id;
         $data = $TestScoreRepositories->getStudentScoreCount($student_id,$subid);
     }
+
+    /**
+     * 考生成绩和科目成绩详情
+     * @method  POST
+     * @url ajax-get-student-test-count
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 15:12:37
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getTesterScoreDetail(Request $request,TestScoreRepositories $TestScoreRepositories){
+        //根据传过来的ID和类型判断是成绩还是科目
+        $id = $request->id;
+        $type = $request->type;
+        $studentid = $request->student_id;
+        $datalist = $TestScoreRepositories->getStudentDataList($studentid,$id,$type);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
