@@ -103,12 +103,15 @@ function categories(){
         var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
             flag = true;
+           
             if($(elem).find('input').val()==''){
+            	console.log($(elem).find('input'));
                 flag = false;
+                return false;
             }
         });
         if(flag==false){
-            layer.alert('考核点或考核项不能为空！');
+            layer.alert('考核点/考核项/评分标准不能为空！');
             return false;
         }
         if(flag==null){
@@ -694,7 +697,8 @@ function categories(){
                         $('tbody').attr('index',index);
                         $('tbody').append(html);
                     }else {
-                        layer.alert('文件导入错误，请参考下载模板！');
+                        layer.alert(data.message+'，请参考下载模板！');
+                        //layer.alert('文件导入错误，请参考下载模板！');
                     }
                 },
                 error: function (data, status, e)

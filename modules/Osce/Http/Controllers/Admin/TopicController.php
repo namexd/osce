@@ -310,6 +310,10 @@ class TopicController extends CommonController
         try {
             $data = Common::getExclData($request, 'topic');
             $topicList = array_shift($data);
+
+            //判断模板表头是否有误
+            $this->judgeTemplet($topicList);
+
             //将中文表头，按配置翻译成英文的字段名
             $data = Common::arrayChTOEn($topicList, 'osce.importForCnToEn.standard');
             $totalScore = -1;
@@ -343,6 +347,30 @@ class TopicController extends CommonController
             return json_encode($this->success_data($data));
         } catch (\Exception $ex) {
             return json_encode($this->fail($ex));
+        }
+    }
+
+    /**
+     * 判断科目模板表头及列数 TODO: zhoufuxiang 2016-2-27
+     */
+    public function judgeTemplet($topicList)
+    {
+        try{
+            $standard = ['序号', '考核点', '考核项', '评分标准', '分数'];
+            foreach ($topicList as $key => $value) {
+                //模板列数
+                if(count($value) != 5){
+                    throw new \Exception('模板列数有误');
+                }
+                foreach ($value as $index => $item) {
+                    if(!in_array($index, $standard)){
+                        throw new \Exception('模板表头有误');
+                    }
+                }
+            }
+
+        } catch(\Exception $ex){
+            throw $ex;
         }
     }
 
