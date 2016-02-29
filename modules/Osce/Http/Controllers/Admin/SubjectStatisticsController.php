@@ -87,7 +87,7 @@ class SubjectStatisticsController  extends CommonController
         dd($list);*/
 
        // return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
-        return  view('osce::admin.statistics_query.subject_statistics',['examlist'=>$examlist]);
+        return  view('osce::admin.statistics_query.subject_statistics',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
 
     }
 
