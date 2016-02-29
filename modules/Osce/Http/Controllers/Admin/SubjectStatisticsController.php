@@ -31,23 +31,27 @@ class SubjectStatisticsController  extends CommonController
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function SubjectGradeList(SubjectStatisticsRepositories $subjectStatisticsRepositories){
+    public function SubjectGradeList(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
+         $examid=\Input::get('id');
         //\DB::connection('osce_mis')->enableQueryLog();
         //查询统计所需数据
-        $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList(326);
+        $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid);
         //主要用来统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList(326,true);
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid,true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
         $standardStr = '';
         $timeAvgStr = '';
         $scoreAvgStr = '';
+       // $count= 0;
         //统计合格率
         foreach($rew as $key => $val){
+
             $rew[$key]['qualifiedPass'] = '0%';
+            //给结果展示列表中序号列加入数据
+            $rew[$key]['number']=$key+1;
             foreach($rewTwo as $v){
                 if($val['subjectId'] == $v['subjectId']){
-
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
                 }
             }
@@ -60,33 +64,19 @@ class SubjectStatisticsController  extends CommonController
                 $timeAvgStr .= $val['timeAvg'];
                 $scoreAvgStr .= $val['scoreAvg'];
             }
-
         }
         $StrList = [
             'standardStr' => $standardStr,
             'timeAvgStr' => $timeAvgStr,
-            'scoreAvgStr' => $scoreAvgStr
-        ];
+            'scoreAvgStr' => $scoreAvgStr,
+                  ];
 
         $exam = new Exam();
-        $examlist= $exam->select('id','name')->get()->toarray();
+        $examlist= $exam->where('status','=','2')->select('id','name')->orderBy('end_dt','desc')->get()->toarray();
 
-        //dd($rew);
-        //dd($StrList);
-       // dd($examlist);
-
-       /*    $list[]=array();
-        //dd($examlist);
-        //dd($examlist[]['id']);
-
-      foreach ($examlist as $k=>$v) {
-           // $list[] =$v[$k]['name'];
-          $list[$k]=$v['id'];
-
+        if($request->ajax()){
+            return $this->success_data(['list'=>$rew,'StrList'=>$StrList],1,'成功');
         }
-        dd($list);*/
-
-       // return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
         return  view('osce::admin.statistics_query.subject_statistics',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
 
     }
@@ -95,12 +85,21 @@ class SubjectStatisticsController  extends CommonController
        dd('科目详情');
    }
 
-    public function  SubjectGradeAnalyze(SubjectStatisticsRepositories $subjectStatisticsRepositories){
-
-        //dd('科目难度分析');
+    /**
+     * 科目难度分析列表
+     * @method  GET
+     * @url /osce/admin/subject-statistics/subject-analyze
+     * @access public
+     * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
+     * @author yangshaolin <yangshaoliin@misrobot.com>
+     * @date    2016年2月29日14:20:34
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function  SubjectGradeAnalyze(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
+        $subid=\Input::get('id');
         //查询分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74);
-       //dd($rew);
+
 
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74,true);
@@ -112,47 +111,39 @@ class SubjectStatisticsController  extends CommonController
         $scoreAvgStr = '';
         foreach($rew as $key => $val){
             //dd($val);
+            //给结果展示列表中序号列加入数据
+            $rew[$key]['number']=$key+1;
             $rew[$key]['qualifiedPass'] = '0%';
             foreach($rewTwo as $v){
                 if($val['subjectId'] == $v['subjectId']){
-
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
                 }
             }
             if($standardStr){
-            $standardStr .= ','.$val['title'];
-            $timeAvgStr .= ','.$val['timeAvg'];
-            $scoreAvgStr .= ','.$val['scoreAvg'];
-        }else{
-            $standardStr .= $val['title'];
-            $timeAvgStr .= $val['timeAvg'];
-            $scoreAvgStr .= $val['scoreAvg'];
-        }
+                $standardStr .= ','.$val['ExamName'];
+                $timeAvgStr .= ','.$val['timeAvg'];
+                $scoreAvgStr .= ','.$val['scoreAvg'];
+            }else{
+                $standardStr .= $val['ExamName'];
+                $timeAvgStr .= $val['timeAvg'];
+                $scoreAvgStr .= $val['scoreAvg'];
+            }
 
     }
-      //  dd($rew->toarray());
-
-        $StrList = [
+           $StrList = [
             'standardStr' => $standardStr,
             'timeAvgStr' => $timeAvgStr,
             'scoreAvgStr' => $scoreAvgStr
         ];
         $subject = new Subject();
         $subjectlist= $subject->select('id','title')->get()->toarray();
-        //把二维数组转换为一维数组
-        dd($StrList);
-        //dd($subjectlist);
- //     dd($subjectlist[0]);
-
-        $list[]=array();
-
-            foreach ($subjectlist as $k=>$v) {
-            $list[$k] =$v['id'];
-
-       }
-        dd($list);
-
-      //  return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
+        // dd($StrList);
+        //dd($rew);
+        //ajax请求判断返回不同数据
+          if($request->ajax()){
+              return $this->success_data(['list'=>$rew,'StrList'=>$StrList]);
+          }
+              return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'subjectList'=>$subjectlist,'StrList'=>$StrList]);
     }
 
 

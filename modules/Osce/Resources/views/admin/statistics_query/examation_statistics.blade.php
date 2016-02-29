@@ -23,9 +23,9 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">科目成绩</a></li>
-                        <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}">科目难度分析</a></li>
-                        <li><a href="#">考站成绩分析</a></li>
+                        <li><a href="#">科目成绩分析</a></li>
+                        <li><a href="#">科目难度分析</a></li>
+                        <li class="active"><a href="#">考站成绩分析</a></li>
                         <li><a href="#">考核点分析</a></li>
                     </ul>
                 </div>
@@ -35,12 +35,18 @@
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="margin:20px 0;">
                     <label for="" class="pull-left exam-name">考试名称：</label>
-                    <select name="name" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
+                    <select name="name" class="input-sm form-control exam_select" style="width: 210px;height: 34px">
                         @foreach(@$examlist as $exam)
                         <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
+                    <label for="" class="pull-left exam-name" style="margin-left: 20px">科目名称：</label>
+                    <select name="name" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
+                        @foreach(@$examlist as $exam)
+                            <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                 </div>
                 <div class="list_all">
                     <div class="row">
@@ -54,12 +60,12 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>科目</th>
+                            <th>考站</th>
+                            <th>评分老师</th>
                             <th>考试限时</th>
                             <th>平均耗时</th>
                             <th>平均成绩</th>
                             <th>考试人数</th>
-                            <th>合格率</th>
                             <th>操作</th>
                         </tr>
                         </thead>

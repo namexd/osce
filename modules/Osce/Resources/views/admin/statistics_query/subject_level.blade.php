@@ -23,8 +23,8 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">科目成绩</a></li>
-                        <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}">科目难度分析</a></li>
+                        <li><a href="#">科目成绩分析</a></li>
+                        <li class="active"><a href="#">科目难度分析</a></li>
                         <li><a href="#">考站成绩分析</a></li>
                         <li><a href="#">考核点分析</a></li>
                     </ul>
@@ -33,8 +33,8 @@
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
+                <label for="" class="pull-left exam-name">科目名称：</label>
                 <div class="input-group" style="margin:20px 0;">
-                    <label for="" class="pull-left exam-name">考试名称：</label>
                     <select name="name" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
                         @foreach(@$examlist as $exam)
                         <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
@@ -54,8 +54,8 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>科目</th>
-                            <th>考试限时</th>
+                            <th>考试</th>
+                            <th>考试时间</th>
                             <th>平均耗时</th>
                             <th>平均成绩</th>
                             <th>考试人数</th>
