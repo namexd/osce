@@ -296,17 +296,24 @@ class ExamResultController extends CommonController{
             //根据考试id拿到场次id临时修改
             $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get();
             $examScreening = [];
-              foreach ($examScreeningId as $data) {
-            $examScreening[] = [
-                'id' => $data->id,
-            ];
-        }
-
-            
+            foreach ($examScreeningId as $data) {
+                $examScreening[] = [
+                    'id' => $data->id,
+                ];
+            }
             $examScreeningIds = array_column($examScreening, 'id');
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningIds);
-//            dd($examId,$studentId,$stationId,$data->toArray());
+            //查询出时间锚点追加到数组中
+            $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationId);
+            if($anchor){
+                foreach($data as $key=>&$item){
+                    foreach($anchor as $key1=>$list){
+                        $item['anchor'] = $list['begin_dt'];
+//                        $item['end_dt'] = $list['end_dt'];
+                    }
+                }
+            }
             return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
         } catch (\Exception $ex) {
             return response()->back()->withErrors($ex->getMessage());
