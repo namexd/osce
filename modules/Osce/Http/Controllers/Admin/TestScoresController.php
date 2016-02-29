@@ -27,8 +27,7 @@ class TestScoresController  extends CommonController
     public function TestScoreList(Request $request){
         //查找所有考试信息
         $examlist = Exam::get();
-
-        dd($examlist);
+        return view('osce::admin.statistics_query.student_statistics');
     }
     /**
      * 根据考试ID查找当前考试下的所有学生ID
@@ -78,5 +77,52 @@ class TestScoresController  extends CommonController
             }
         }
         dd($singledata);
+    }
+    /**
+     * 考生成绩分析
+     * @method  GET
+     * @url /osce/admin/testscores/student-subject-list
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016年2月26日14:56:58
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function studentSubjectList(TestScoreRepositories $TestScoreRepositories){
+        //获取已考过试的所有学生
+        $studentList = $TestScoreRepositories->getStudent();
+        return view('osce::admin.statistics_query.teach_statistics');
+    }
+
+    /**
+     * ajax获取当前考生所有已考科目
+     * @method  POST
+     * @url /osce/admin/testscores/test-score-list
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 09:45:15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ajaxGetSubject(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $stuid = $request->student_id;
+        $studentSublist = $TestScoreRepositories->getStudentSubject($stuid);
+        dd($studentSublist);
+    }
+
+    /**
+     * ajax统计当前考生科目成绩
+     * @method  POST
+     * @url ajax-get-subject
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 09:45:15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ajaxGetStudentTestCount(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $student_id = $request->student_id;
+        $subid = $request->subject_id;
+        $data = $TestScoreRepositories->getStudentScoreCount($student_id,$subid);
     }
 }
