@@ -675,7 +675,7 @@ class AutomaticPlanArrangement
     }
 
     /**
-     *
+     *获取实体需要的时间
      * @param $station
      * @param $testStudents
      * @param $result
