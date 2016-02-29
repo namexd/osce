@@ -18,15 +18,15 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">考生成绩分析</h5>
+                <h5 class="title-label">教学成绩分析</h5>
             </div>
         </div>
         <div class="container-fluid ibox-content">
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">考生成绩分析</a></li>
-                        <li><a href="#">考生科目分析</a></li>
+                        <li class="active"><a href="#">班级成绩分析</a></li>
+                        <li><a href="#">成绩提升分析</a></li>
                     </ul>
                 </div>
             </div>
@@ -44,12 +44,12 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>科目</th>
-                            <th>考试限时</th>
-                            <th>平均耗时</th>
+                            <th>老师</th>
+                            <th>班级</th>
+                            <th>人数</th>
                             <th>平均成绩</th>
-                            <th>用时</th>
-                            <th>成绩</th>
+                            <th>最高分</th>
+                            <th>最低分</th>
                             <th>操作</th>
                         </tr>
                     </thead>
