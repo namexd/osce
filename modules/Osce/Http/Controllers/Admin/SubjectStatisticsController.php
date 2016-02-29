@@ -67,7 +67,27 @@ class SubjectStatisticsController  extends CommonController
             'timeAvgStr' => $timeAvgStr,
             'scoreAvgStr' => $scoreAvgStr
         ];
-        return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
+
+        $exam = new Exam();
+        $examlist= $exam->select('id','name')->get()->toarray();
+
+        //dd($rew);
+        //dd($StrList);
+        //dd($examlist);
+
+       /*    $list[]=array();
+        //dd($examlist);
+        //dd($examlist[]['id']);
+
+      foreach ($examlist as $k=>$v) {
+           // $list[] =$v[$k]['name'];
+          $list[$k]=$v['id'];
+
+        }
+        dd($list);*/
+
+       // return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
+        return  view('osce::admin.statistics_query.subject_statistics',['examlist'=>$examlist]);
 
     }
 
@@ -87,6 +107,9 @@ class SubjectStatisticsController  extends CommonController
         //$queries = \DB::connection('osce_mis')->getQueryLog();
         //统计合格率
        // dd($rewTwo);
+        $standardStr = '';
+        $timeAvgStr = '';
+        $scoreAvgStr = '';
         foreach($rew as $key => $val){
             //dd($val);
             $rew[$key]['qualifiedPass'] = '0%';
@@ -96,21 +119,40 @@ class SubjectStatisticsController  extends CommonController
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
                 }
             }
+            if($standardStr){
+            $standardStr .= ','.$val['title'];
+            $timeAvgStr .= ','.$val['timeAvg'];
+            $scoreAvgStr .= ','.$val['scoreAvg'];
+        }else{
+            $standardStr .= $val['title'];
+            $timeAvgStr .= $val['timeAvg'];
+            $scoreAvgStr .= $val['scoreAvg'];
         }
+
+    }
       //  dd($rew->toarray());
 
-
+        $StrList = [
+            'standardStr' => $standardStr,
+            'timeAvgStr' => $timeAvgStr,
+            'scoreAvgStr' => $scoreAvgStr
+        ];
         $subject = new Subject();
         $subjectlist= $subject->select('id','title')->get()->toarray();
         //把二维数组转换为一维数组
-        dd($subjectlist);
-       // $list[]=array();
+        dd($StrList);
+        //dd($subjectlist);
+ //     dd($subjectlist[0]);
 
-     /*        foreach ($subjectlist as $k=>$v) {
-            $list[]['id'] =$v['id'];
-            $list[]['title']=$v['title'];
+        $list[]=array();
+
+            foreach ($subjectlist as $k=>$v) {
+            $list[$k] =$v['id'];
+
        }
-        dd($list);*/
+        dd($list);
+
+      //  return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
     }
 
 
