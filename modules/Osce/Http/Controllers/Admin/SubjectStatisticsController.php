@@ -37,7 +37,6 @@ class SubjectStatisticsController  extends CommonController
         //\DB::connection('osce_mis')->enableQueryLog();
         //查询统计所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid);
-       // dd($rew);
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid,true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
@@ -49,13 +48,11 @@ class SubjectStatisticsController  extends CommonController
         foreach($rew as $key => $val){
 
             $rew[$key]['qualifiedPass'] = '0%';
+            //给结果展示列表中序号列加入数据
             $rew[$key]['number']=$key+1;
             foreach($rewTwo as $v){
                 if($val['subjectId'] == $v['subjectId']){
-
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
-                    //给结果展示列表中序号列加入数据
-
                 }
             }
             if($standardStr){
@@ -67,33 +64,16 @@ class SubjectStatisticsController  extends CommonController
                 $timeAvgStr .= $val['timeAvg'];
                 $scoreAvgStr .= $val['scoreAvg'];
             }
-           // $count ++;
         }
-       // dd($count);
         $StrList = [
             'standardStr' => $standardStr,
             'timeAvgStr' => $timeAvgStr,
             'scoreAvgStr' => $scoreAvgStr,
                   ];
-       // dd($StrList);
+
         $exam = new Exam();
         $examlist= $exam->where('status','=','2')->select('id','name')->orderBy('end_dt','desc')->get()->toarray();
-        //dd($examlist);
-       // dd($StrList);
-        //dd($rew);
-       //dd($examlist);
 
-       /*    $list[]=array();
-        //dd($examlist);
-        //dd($examlist[]['id']);
-
-      foreach ($examlist as $k=>$v) {
-           // $list[] =$v[$k]['name'];
-          $list[$k]=$v['id'];
-
-        }
-        dd($list);*/
-       // return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
         if($request->ajax()){
             return $this->success_data(['list'=>$rew,'StrList'=>$StrList],1,'成功');
         }
@@ -105,9 +85,18 @@ class SubjectStatisticsController  extends CommonController
        dd('科目详情');
    }
 
+    /**
+     * 科目难度分析列表
+     * @method  GET
+     * @url /osce/admin/subject-statistics/subject-analyze
+     * @access public
+     * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
+     * @author yangshaolin <yangshaoliin@misrobot.com>
+     * @date    2016年2月29日14:20:34
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function  SubjectGradeAnalyze(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
-           $subid=\Input::get('id');
-        //dd('科目难度分析');
+        $subid=\Input::get('id');
         //查询分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74);
 
@@ -122,13 +111,12 @@ class SubjectStatisticsController  extends CommonController
         $scoreAvgStr = '';
         foreach($rew as $key => $val){
             //dd($val);
+            //给结果展示列表中序号列加入数据
+            $rew[$key]['number']=$key+1;
             $rew[$key]['qualifiedPass'] = '0%';
             foreach($rewTwo as $v){
                 if($val['subjectId'] == $v['subjectId']){
-
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
-                    //给结果展示列表中序号列加入数据
-                    $rew[$key]['number']=$key+1;
                 }
             }
             if($standardStr){
@@ -142,29 +130,16 @@ class SubjectStatisticsController  extends CommonController
             }
 
     }
-      //  dd($rew->toarray());
-
-        $StrList = [
+           $StrList = [
             'standardStr' => $standardStr,
             'timeAvgStr' => $timeAvgStr,
             'scoreAvgStr' => $scoreAvgStr
         ];
         $subject = new Subject();
-        $subjectlist= $subject->select('id','title')->oderby('')->get()->toarray();
-        dd($rew);
-        //dd($subjectlist);
-        //把二维数组转换为一维数组
-        dd($StrList);
-        //dd($subjectlist);
- //     dd($subjectlist[0]);
-/*
-        $list[]=array();
-
-            foreach ($subjectlist as $k=>$v) {
-            $list[$k] =$v['id'];
-
-       }
-        dd($list);*/
+        $subjectlist= $subject->select('id','title')->get()->toarray();
+         dd($StrList);
+        //dd($rew);
+        //ajax请求判断返回不同数据
           if($request->ajax()){
               return $this->success_data(['list'=>$rew,'StrList'=>$StrList]);
           }
