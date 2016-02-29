@@ -86,8 +86,8 @@
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate" >
                                         <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
+                                        <option value="3" {{($examData['sequence_cate']==3)?'selected=selected':''}}>轮循</option>
                                         <option value="2" {{($examData['sequence_cate']==2)?'selected=selected':''}}>顺序</option>
-                                        <option value="3" {{($examData['sequence_cate']==3)?'selected=selected':''}}>轮询</option>
                                     </select>
                                 </div>
                             </div>
