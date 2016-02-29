@@ -95,14 +95,22 @@ class StationVideo extends CommonModel
 ////        dd($c);
 //    }
 
-        // TODO 临时修改运用
+
+    static function  getTationVideo($examId, $studentId, $stationId){
+
+        return  StationVideo::where('exam_id','=',$examId)
+            ->where('student_id','=',$studentId)
+            ->get();
+    }
+
+    // TODO 临时修改运用
     static public function label($examId, $studentId, $stationId,$examScreeningIds)
     {
         return ExamResult::Join('station_vcr','exam_result.station_id','=','station_vcr.station_id')
             ->Join('vcr','vcr.id','=','station_vcr.vcr_id')
             ->where('exam_result.student_id',$studentId)
             ->where('exam_result.station_id',$stationId)
-//            ->whereIn('exam_result.exam_screening_id','=',$examScreeningIds)
+            ->whereIn('exam_result.exam_screening_id',$examScreeningIds)
             ->groupBy('exam_result.begin_dt')
             ->select(
                 'vcr.ip as ip',
