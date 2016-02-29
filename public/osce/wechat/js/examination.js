@@ -127,21 +127,19 @@ function examination_list_teacher(){
 				$("#time2").text(res.data['item'].avg_time);
 				$("#vgn").text(res.data['item'].avg_score);
 
-				console.log(res);
-
+				var str="",strs="";
 				for (var i=0;i<res.data['subjectData'].length;i++) {
-					var str="",strs="";
 					if(i%2==0){
-						 str='<tr class="new even">'+
+						str='<tr class="new even">'+
 							'<td>'+res.data['subjectData'][i].student_name+'</td>'+
 							'<td>'+res.data['subjectData'][i].Scores+'</td>'+
 							'<td>' +
-							 '<a href="'+pars.detailUrl+'?student_id='+res.data['subjectData'][i].student_id+'&exam_id='+res.data['subjectData'][i].exam_id+'"><i class="fa fa-search font16 see"></i></a>' +
-							 '</td>'+
+							'<a href="'+pars.detailUrl+'?student_id='+res.data['subjectData'][i].student_id+'&exam_id='+res.data['subjectData'][i].exam_id+'"><i class="fa fa-search font16 see"></i></a>' +
+							'</td>'+
 							'</tr>';
 
 					}else{
-						var str='<tr class="new obb">'+
+						str='<tr class="new obb">'+
 							'<td>'+res.data['subjectData'][i].student_name+'</td>'+
 							'<td>'+res.data['subjectData'][i].Scores+'</td>'+
 							'<td>' +
@@ -152,6 +150,7 @@ function examination_list_teacher(){
 
 					strs+=str;
 				}
+
 				$(".cj_tab tr.new").remove();
 				$(".cj_tab").append(strs);
 			}
