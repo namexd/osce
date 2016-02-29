@@ -92,13 +92,12 @@ class StudentExamQueryController extends CommonController
 
     public function getEveryExamList(Request $request)
     {
-
         $this->validate($request, [
             'exam_id' => 'required|integer',
             'student_id' => 'sometimes|integer'
         ]);
-        $examId = Input::get('exam_id');
-        $studentId = Input::get('student_id');
+        $examId     = Input::get('exam_id');
+        $studentId  = Input::get('student_id');
         //获取到考试的时间
         try {
             if (empty($studentId)) {
@@ -129,7 +128,7 @@ class StudentExamQueryController extends CommonController
                 throw new \Exception('没有找到学生成绩信息');
             }
             $stationData = [];
-            foreach ($stationList as $stationType) {
+            foreach ($stationList as $key => $stationType) {
                 if ($stationType->type == 2) {
                     //获取到sp老师信息
                     $teacherModel = new Teacher();
@@ -141,16 +140,16 @@ class StudentExamQueryController extends CommonController
                 }
 
                 $stationData[] = [
-                    'exam_result_id' => $stationType->exam_result_id,
-                    'station_id' => $stationType->id,
-                    'score' => $stationType->score,
-                    'time' => $stationType->time,
+                    'exam_result_id'=> $stationType->exam_result_id,
+                    'station_id'    => $stationType->id,
+                    'score'         => $stationType->score,
+                    'time'          => $stationType->time,
                     'grade_teacher' => $stationType->grade_teacher,
-                    'type' => $stationType->type,
-                    'station_name' => $stationType->station_name,
-                    'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
-                    'begin_dt' => $examTime->begin_dt,
-                    'end_dt' => $examTime->end_dt,
+                    'type'          => $stationType->type,
+                    'station_name'  => $stationType->station_name,
+                    'sp_name'       => isset($spteacher->name) ? $spteacher->name : '-',
+                    'begin_dt'      => $examTime->begin_dt,
+                    'end_dt'        => $examTime->end_dt,
                     'exam_screening_id' => $stationType->exam_screening_id,
 //                    'student_name' =>$studentInfo->name,
 //                    'student_mobile' =>$studentInfo->mobile,
