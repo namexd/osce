@@ -31,13 +31,15 @@ class SubjectStatisticsController  extends CommonController
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function SubjectGradeList(SubjectStatisticsRepositories $subjectStatisticsRepositories){
+    public function SubjectGradeList(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
+         $examid=\Input::get('id');
         //\DB::connection('osce_mis')->enableQueryLog();
         //查询统计所需数据
-        $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList(330);
+        $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid);
+       // dd($rew);
         //主要用来统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList(330,true);
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid,true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
         $standardStr = '';
         $timeAvgStr = '';
@@ -67,9 +69,8 @@ class SubjectStatisticsController  extends CommonController
             'timeAvgStr' => $timeAvgStr,
             'scoreAvgStr' => $scoreAvgStr
         ];
-
         $exam = new Exam();
-        $examlist= $exam->where('status','=','2')->select('id','name')->orderBy('end_dt','asc')->get()->toarray();
+        $examlist= $exam->where('status','=','2')->select('id','name')->orderBy('end_dt','desc')->get()->toarray();
         //dd($examlist);
 
         //dd($rew);
@@ -86,8 +87,10 @@ class SubjectStatisticsController  extends CommonController
 
         }
         dd($list);*/
-
        // return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
+        if($request->ajax()){
+            return $this->success_data(['list'=>$rew,'StrList'=>$StrList],1,'成功');
+        }
         return  view('osce::admin.statistics_query.subject_statistics',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
 
     }
@@ -96,8 +99,8 @@ class SubjectStatisticsController  extends CommonController
        dd('科目详情');
    }
 
-    public function  SubjectGradeAnalyze(SubjectStatisticsRepositories $subjectStatisticsRepositories){
-
+    public function  SubjectGradeAnalyze(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
+           $subid=\Input::get('id');
         //dd('科目难度分析');
         //查询分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74);
@@ -121,14 +124,14 @@ class SubjectStatisticsController  extends CommonController
                 }
             }
             if($standardStr){
-            $standardStr .= ','.$val['title'];
-            $timeAvgStr .= ','.$val['timeAvg'];
-            $scoreAvgStr .= ','.$val['scoreAvg'];
-        }else{
-            $standardStr .= $val['title'];
-            $timeAvgStr .= $val['timeAvg'];
-            $scoreAvgStr .= $val['scoreAvg'];
-        }
+                $standardStr .= ','.$val['ExamName'];
+                $timeAvgStr .= ','.$val['timeAvg'];
+                $scoreAvgStr .= ','.$val['scoreAvg'];
+            }else{
+                $standardStr .= $val['ExamName'];
+                $timeAvgStr .= $val['timeAvg'];
+                $scoreAvgStr .= $val['scoreAvg'];
+            }
 
     }
       //  dd($rew->toarray());
@@ -140,20 +143,23 @@ class SubjectStatisticsController  extends CommonController
         ];
         $subject = new Subject();
         $subjectlist= $subject->select('id','title')->get()->toarray();
+        //dd($subjectlist);
         //把二维数组转换为一维数组
         dd($StrList);
         //dd($subjectlist);
  //     dd($subjectlist[0]);
-
+/*
         $list[]=array();
 
             foreach ($subjectlist as $k=>$v) {
             $list[$k] =$v['id'];
 
        }
-        dd($list);
-
-      //  return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'StrList'=>$StrList]);
+        dd($list);*/
+          if($request->ajax()){
+              return $this->success_data(['list'=>$rew,'StrList'=>$StrList]);
+          }
+              return  view('osce::admin.statistics_query.subject_statistics',['list'=>$rew,'subjectList'=>$subjectlist,'StrList'=>$StrList]);
     }
 
     /**
