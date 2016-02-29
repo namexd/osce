@@ -589,7 +589,7 @@ $(function(){
     })
     //选择标记点跳转视频
     $(".points li").click(function(){
-        var point=$(this).find("span").text();
+        var point=($(this).find("span").text()).split('~')[0];
         var pointTime=new Date(point.split(" ")[0].split("-")[0],point.split(" ")[0].split("-")[1]-1,point.split(" ")[0].split("-")[2],
             point.split(" ")[1].split(":")[0], point.split(" ")[1].split(":")[1], point.split(" ")[1].split(":")[2]);
         pointTime=Date.parse(pointTime);
