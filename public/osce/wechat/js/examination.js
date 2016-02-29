@@ -84,6 +84,7 @@ function examination_list(){
 					$("#exmination_ul").append(str);
 				}
 			}
+
 		});
 	})
 }

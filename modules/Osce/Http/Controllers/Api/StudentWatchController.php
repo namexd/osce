@@ -181,6 +181,12 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为2时
 
     private function getStatusTwoExam($examQueueCollect){
+//        foreach ($examQueueCollect as $items) {
+//            if ($items->status == 2) {
+//                return $items;
+//            }
+//        }
+
         $items   =   array_where($examQueueCollect,function($key,$value){
             if($value ->status  ==  2)
             {
@@ -191,11 +197,14 @@ class StudentWatchController extends CommonController
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
+
         $surplus = strtotime($item->end_dt)-time();
         if($surplus<=0){
             //todo 调用jiangzhiheng接口
             $examQueueModel = new ExamQueue();
             $endStudentExam = $examQueueModel->getEndStudentQueueExam();
+
+
         };
         $data=[
             'code'      =>  4,
@@ -244,11 +253,24 @@ class StudentWatchController extends CommonController
         }
         else
         {
-            $data = [
-                'code'=> 5,
-                'title' => '当前考站考试完成，进入下一场考试考站名',
-                'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
-            ];
+
+            if(!is_null($nextExamQueue->station))
+            {
+
+                $data = [
+                    'code'=> 5,
+                    'title' => '当前考站考试完成，进入下一场考试考站名',
+                    'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
+                ];
+            }
+            else
+            {
+                $data = [
+                    'code'=> 5,
+                    'title' => '当前考站考试完成，进入下一场考试考场名',
+                    'nextExamName' =>$nextExamQueue->room->name,
+                ];
+            }
         }
         return $data;
     }

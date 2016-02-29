@@ -29,6 +29,10 @@ class ExamResult extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
     }
 
+    public function examScore(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamScore','exam_result_id','id');
+    }
+
     public function student(){
         return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
     }
@@ -186,15 +190,14 @@ class ExamResult extends CommonModel
      */
 
 
-    public function stationInfo($examScreeningIds){
+    public function stationInfo($studentId){
 
      $builder=$this->leftJoin('station', function($join){
          $join -> on('station.id', '=', 'exam_result.station_id');
      })-> leftJoin('teacher', function($join){
          $join -> on('teacher.id', '=', 'exam_result.teacher_id');
      })
-      ->whereIn('exam_result.exam_screening_id',$examScreeningIds)
-//         ->where('student_id','=',$userId)
+      ->where('exam_result.student_id',$studentId)
          ->select([
          'exam_result.id as exam_result_id ',
          'exam_result.station_id as id',
@@ -206,8 +209,9 @@ class ExamResult extends CommonModel
          'exam_result.exam_screening_id as exam_screening_id',
          'station.id as station_id'
      ])
+//        ->groupBy('exam_result.student_id','=',$studentId)
          ->get();
-     return $builder;
+         return $builder;
     }
 
     /**

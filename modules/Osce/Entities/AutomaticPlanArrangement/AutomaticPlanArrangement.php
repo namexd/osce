@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\Student;
@@ -206,16 +207,21 @@ class AutomaticPlanArrangement
                     $station->timer += 60;
                     //反之，则是关门状态
                 } else {
-                    $tempValue = $this->examPlanRecordIsOpenDoor($station, $screen);
+                    $tempValues = $this->examPlanRecordIsOpenDoor($station, $screen);
                     //判断是否要开门
+//                    dump($station->mins);
+//                    dump($station->id);
+//                    echo '===========================';
+
                     if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60) {
                         $station->timer = 0;
                         //将结束时间写在表内
-                        $tempValue->end_dt = date('Y-m-d H:i:s', $i - 1);
-                        if (!$tempValue->save()) {
-                            throw new \Exception('开门失败！', -10);
+                        foreach ($tempValues as $tempValue) {
+                            $tempValue->end_dt = date('Y-m-d H:i:s', $i - 1);
+                            if (!$tempValue->save()) {
+                                throw new \Exception('开门失败！', -10);
+                            }
                         }
-
                     } else {
                         $station->timer += 60;
                     }
@@ -230,10 +236,38 @@ class AutomaticPlanArrangement
         foreach ($undoneStudentsIds as $undoneStudentsId) {
             $undoneStudents[] = Student::findOrFail($undoneStudentsId);
         }
+
+        //获取未走完流程的考生
+        $ExamFlowModel  =   new ExamFlow();
+        $flowsNum   =   $ExamFlowModel->studentExamSum($examId);
+        //SELECT count(`id`) as total,`student_id` FROM `exam_plan_record` where`exam_id` = 25 Group by `student_id` Having total <> 2
+        $studentList    =   ExamPlanRecord  ::  where('exam_id','<>',$examId)
+            ->  groupBy('student_id')
+            ->  select(\DB::raw(
+                implode(',',
+                    [
+                        'count(`id`) as flowsNum',
+                        'id',
+                        'student_id',
+                    ]
+                )
+            ))
+            ->  Having('flowsNum','<',$flowsNum)
+            ->  get();
+        if(count($studentList))
+        {
+            $studentNotOver =   $studentList->pluck('student_id');
+            //删除未走完流程的考生
+            if(!ExamPlanRecord::whereIn('student_id',$studentNotOver->toArray())->delete())
+            {
+                throw new \Exception('考试未完成学生移动失败',-2100);
+            }
+        }
+
         //删除未考完学生记录
         if (!$undoneStudentsIds->isEmpty()) {
             if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
-                throw new \Exception('删除未考完考生记录失败！');
+                throw new \Exception('删除未考完考生记录失败！',-2101);
             }
         }
 
@@ -684,7 +718,7 @@ class AutomaticPlanArrangement
         $examPlanRecord = $this->examPlanRecordIsOpenDoor($station, $screen);
 
         //如果有，说明是关门状态
-        if (is_null($examPlanRecord)) {
+        if ($examPlanRecord->isEmpty()) {
             return false;
         } else {
             return true;
@@ -737,12 +771,12 @@ class AutomaticPlanArrangement
             return ExamPlanRecord::where('station_id', '=', $station->id)
                 ->where('exam_screening_id', '=', $screen->id)
                 ->whereNull('end_dt')
-                ->first();
+                ->get();
         } elseif ($this->sequenceMode == 1) {
             return ExamPlanRecord::where('room_id', '=', $station->id)
                 ->where('exam_screening_id', '=', $screen->id)
                 ->whereNull('end_dt')
-                ->first();
+                ->get();
         }
 
     }

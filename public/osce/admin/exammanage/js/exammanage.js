@@ -2148,6 +2148,7 @@ function smart_assignment(){
             var time    =   $(this).next().data('batchindex');
             time    =   parseInt(time)? parseInt(time):0;
             var eariestTimeData =   eariestTime[screening_id]? eariestTime[screening_id]:0;
+
             time-=eariestTimeData;
             var emptyDt =   buildEmptyTime(parseInt(time/timeHeight));
             $(this).after(emptyDt);

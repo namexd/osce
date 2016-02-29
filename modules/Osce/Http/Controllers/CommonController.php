@@ -89,6 +89,21 @@ abstract class CommonController extends Controller
         return [
             'code' => $code,
             'message' => '错误信息:' . $ex->getMessage(),
+            'errorLine' => '错误行数:' . $ex->getLine(),
         ];
+    }
+
+    /**
+     * 将错误代码和错误信息写进日志
+     * @param $ex
+     * @author Jiangzhiheng
+     * @time
+     */
+    protected function errorLog(\Exception $ex)
+    {
+       \Log::info('Error',[
+           'ErrorCode:' . $ex->getCode(),
+           'ErrorMessage:' . $ex->getMessage()
+       ]) ;
     }
 }
