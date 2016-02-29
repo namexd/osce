@@ -12,7 +12,6 @@ $(function(){
 
 
 function subject_statistics(){
-
     var standardStr=pars.standardStr.split(",");
     var scoreAvgStr=pars.scoreAvgStr.split(",");
     if(standardStr){echartsSubject();}//科目成绩分析。
@@ -28,7 +27,7 @@ function subject_statistics(){
                 calculable: !0,
                 xAxis: [{
                     type: "category",
-                    data: standardStr,
+                    data: standardStr
                 }],
                 yAxis: [{
                     type: "value"
@@ -37,11 +36,20 @@ function subject_statistics(){
                     {
                         name: "平均成绩",
                         type: "bar",
-                        data: scoreAvgStr,
-
+                        data: scoreAvgStr
                     }]
             };
         t.setOption(n);
     }
-
-}
+    var $subId = $(".subject_select").children().first().val();
+    var url = pars.ajaxUrl;
+    alert(url);
+    $.ajax({
+        url:url+'?id='+$subId,
+        type:'post',
+        cache:false,
+        success:function(res){
+            console.log(res);
+        }
+    })
+};

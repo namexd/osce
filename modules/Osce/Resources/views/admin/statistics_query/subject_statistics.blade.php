@@ -12,25 +12,41 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_statistics','standardStr':'{{ $StrList["standardStr"] }}','scoreAvgStr':'{{ $StrList["scoreAvgStr"] }}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_statistics','standardStr':'{{ $StrList["standardStr"] }}','scoreAvgStr':'{{ $StrList["scoreAvgStr"] }}','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.SubjectGradeList') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">科目成绩分析</h5>
             </div>
         </div>
+        <div class="container-fluid ibox-content">
+            <div class="panel-heading">
+                <div class="panel-options">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#">科目成绩分析</a></li>
+                        <li><a href="#">科目难度分析</a></li>
+                        <li><a href="#">考站成绩分析</a></li>
+                        <li><a href="#">考核点分析</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="panel blank-panel">
-            <div class="container-fluid ibox-content">
+            <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="width: 290px;margin:20px 0;">
-                    <input type="text" name="name" placeholder="请输入科目名称" class="input-sm form-control" value="">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
-                </span>
+                    <select name="name" class="input-sm form-control subject_select" style="height: 34px">
+                        @foreach(@$examlist as $exam)
+                        <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                    </span>
                 </div>
                 <div class="list_all">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="ibox-content">
+                            <div class="ibox-content" style="border: none;">
                                 <div class="echarts" id="echarts-Subject"></div>
                             </div>
                         </div>
@@ -49,7 +65,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @forelse($list as $item)
+                        @forelse(@$list as $item)
                             <tr>
                                 <td>{{$item->subjectId}}</td>
                                 <td>{{$item->title}}</td>
