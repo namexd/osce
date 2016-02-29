@@ -154,7 +154,7 @@ class MyController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardDetails(Request $request,MyRepositories $subjectStatisticsRepositories){
-        $standardId = urldecode(e($request->input('standardId')));
+        $standardPid = urldecode(e($request->input('standardPid')));
         //查询考核点分析所需数据
         $result = $subjectStatisticsRepositories->GetStandardDetails('540');
         //所点击的考核点的自考核点对应的数据
@@ -169,7 +169,6 @@ class MyController  extends CommonController
         //所点击的考核点对应的数据
         $datainfoPid = [];
         if($result['pidData']){
-            $datainfoPid['id'] = $result['pidData']->id;//评分标准编号
             $datainfoPid['pid'] = $result['pidData']->pid;//考核内容
             $datainfoPid['content'] = $result['pidData']->content;//考核内容
             $datainfoPid['totalScore'] = $result['pidData']->totalScore; //总分
@@ -177,6 +176,8 @@ class MyController  extends CommonController
                 $datainfoPid['totalGrade'] = $result['data'][0]->totalGrade; //总成绩
             }
         }
+        dd($datainfo);
+        dd($datainfoPid);
         //die(json_encode($datainfo));
     }
 }

@@ -155,20 +155,13 @@ class MyRepositories  extends BaseRepository
             )->get();
 
         $pid = $this->GetPidArr($data);
-//        dd($pid);
-//
-//        //获取考核点名称
-//        if(count($pid)>0){
-//            $standardModel = new Standard();
-//            $content = $standardModel->whereIn('id', [1, 2, 3])->select('content')->get();
-//        }
 
         //获取考核点名称
-        if(count($data)>0){
+        if(count($pid)>0){
             $standardModel = new Standard();
+            $content = $standardModel->whereIn('id', $pid)->select('content')->select('content')->get();
             foreach($data as $k=>$v){
-                $content = $standardModel->where('id','=',$v['pid'])->first()->content;
-                $data[$k]['standardContent'] = $content;
+                $data[$k]['standardContent'] = $content[$k]['content'];
             }
         }
         return  $data;
@@ -181,32 +174,30 @@ class MyRepositories  extends BaseRepository
      * @url /osce/
      * @access public
      * @param $ExamId
-     * @param $standardId 评分标准编号
+     * @param $standardPid 评分标准父编号
      * @return mixed
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年2月26日15:36:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetStandardDetails($standardId){
+    public function GetStandardDetails($standardPid){
         $DB = \DB::connection('osce_mis');
         $builder = $this->StandardModel->leftJoin('exam_score', function($join){
             $join -> on('exam_score.standard_id', '=','standard.id');
         });
         $data = $builder->select(
-            'standard.id',//评分标准编号
             'standard.pid',//评分标准父编号
             'standard.content',//考核内容
             'standard.score as standardScore', //总分
             'exam_score.score as grade',//成绩
             $DB->raw('sum(exam_score.score) as totalGrade') //总成绩
-        )->where('standard.pid','=',$standardId)->get();
+        )->where('standard.pid','=',$standardPid)->get();
 
         $pidData = $this->StandardModel->select(
-            'standard.id',//评分标准编号
             'standard.pid',//评分标准父编号
             'standard.content',//考核内容
             'standard.score as totalScore' //总分
-        )->where('standard.id','=',$standardId)->first();
+        )->where('standard.id','=',$standardPid)->first();
 
         return [
             'data'=>$data,
@@ -232,9 +223,4 @@ class MyRepositories  extends BaseRepository
         }
         return  $PidArr;
     }
-
-
-
-
-
 }
