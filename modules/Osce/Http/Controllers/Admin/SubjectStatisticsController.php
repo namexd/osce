@@ -44,13 +44,16 @@ class SubjectStatisticsController  extends CommonController
         $standardStr = '';
         $timeAvgStr = '';
         $scoreAvgStr = '';
+       // $count= 0;
         //统计合格率
         foreach($rew as $key => $val){
+
             $rew[$key]['qualifiedPass'] = '0%';
             foreach($rewTwo as $v){
                 if($val['subjectId'] == $v['subjectId']){
 
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
+                    $rew[$key]['number']=$key+1;
                 }
             }
             if($standardStr){
@@ -62,18 +65,21 @@ class SubjectStatisticsController  extends CommonController
                 $timeAvgStr .= $val['timeAvg'];
                 $scoreAvgStr .= $val['scoreAvg'];
             }
-
+           // $count ++;
         }
+       // dd($count);
         $StrList = [
             'standardStr' => $standardStr,
             'timeAvgStr' => $timeAvgStr,
-            'scoreAvgStr' => $scoreAvgStr
-        ];
+            'scoreAvgStr' => $scoreAvgStr,
+                  ];
+       // dd($StrList);
         $exam = new Exam();
         $examlist= $exam->where('status','=','2')->select('id','name')->orderBy('end_dt','desc')->get()->toarray();
         //dd($examlist);
+       // dd($StrList);
 
-        //dd($rew);
+       // dd($rew);
         //dd($rew);
        //dd($examlist);
 
@@ -104,7 +110,7 @@ class SubjectStatisticsController  extends CommonController
         //dd('科目难度分析');
         //查询分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74);
-       //dd($rew);
+       dd($rew);
 
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74,true);
