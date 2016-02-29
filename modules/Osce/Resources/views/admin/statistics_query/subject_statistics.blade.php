@@ -34,7 +34,7 @@
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="width: 290px;margin:20px 0;">
-                    <select name="name" class="input-sm form-control subject_select" style="height: 34px">
+                    <select name="name" class="input-sm form-control subject_select" style="width: 205px;height: 34px">
                         @foreach(@$examlist as $exam)
                         <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
                         @endforeach
@@ -64,25 +64,14 @@
                             <th>操作</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        @forelse(@$list as $item)
-                            <tr>
-                                <td>{{$item->subjectId}}</td>
-                                <td>{{$item->title}}</td>
-                                <td>{{$item->mins}}</td>
-                                <td>{{$item->mins}}</td>
-                                <td>{{$item->scoreAvg}}</td>
-                                <td>{{$item->studentQuantity}}</td>
-                                <td>{{$item->qualifiedPass}}</td>
-                                <td>
-                                    <a href="{{route('osce.admin.course.getStudentDetails',['student_id'=>$item->student_id])}}">
-                                        <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-
-                        @endforelse
+                        <tbody class="subjectBody">
+                            {{--<tr>--}}
+                                {{--<td>--}}
+                                    {{--<a href="{{route('osce.admin.course.getStudentDetails',['student_id'=>$item->student_id])}}">--}}
+                                        {{--<span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>--}}
+                                    {{--</a>--}}
+                                {{--</td>--}}
+                            {{--</tr>--}}
                         </tbody>
                     </table>
                 </div>
