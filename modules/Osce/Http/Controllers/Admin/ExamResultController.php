@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
@@ -292,11 +293,19 @@ class ExamResultController extends CommonController{
             $examId = $request->input('exam_id');
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
+            //根据考试id拿到场次id临时修改
+            $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get();
+            $examScreening = [];
+              foreach ($examScreeningId as $data) {
+            $examScreening[] = [
+                'id' => $data->id,
+            ];
+        }
 
+            
+            $examScreeningIds = array_column($examScreening, 'id');
             //查询到页面需要的数据
-            $data = StationVideo::label($examId,$studentId,$stationId);
-
-
+            $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningIds);
 //            dd($examId,$studentId,$stationId,$data->toArray());
             return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
         } catch (\Exception $ex) {

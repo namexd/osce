@@ -301,6 +301,8 @@ class InvigilatePadController extends CommonController
                 $result = $TestResultModel->addTestResult($data, $score);
 //                \Log::alert(json_encode($result));
         if ($result) {
+            //修改exam_attach表里的结果id
+
             return response()->json($this->success_data([], 1, '成绩提交成功'));
         } else {
             return response()->json(
