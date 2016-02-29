@@ -79,4 +79,49 @@ class TestScoresController  extends CommonController
         }
         dd($singledata);
     }
+    /**
+     * 考生成绩分析
+     * @method  GET
+     * @url /osce/admin/testscores/student-subject-list
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016年2月26日14:56:58
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function studentSubjectList(TestScoreRepositories $TestScoreRepositories){
+        //获取已考过试的所有学生
+        $studentList = $TestScoreRepositories->getStudent();
+        dd($studentList);
+    }
+
+    /**
+     * ajax获取当前考生所有已考科目
+     * @method  POST
+     * @url /osce/admin/testscores/test-score-list
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 09:45:15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ajaxGetSubject(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $stuid = $request->student_id;
+        $studentSublist = $TestScoreRepositories->getStudentSubject($stuid);
+        dd($studentSublist);
+    }
+
+    /**
+     * ajax统计当前考生科目成绩
+     * @method  POST
+     * @url ajax-get-subject
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 09:45:15
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ajaxGetStudentTestCount(){
+
+    }
 }

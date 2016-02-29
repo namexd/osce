@@ -81,4 +81,48 @@ class TestScoreRepositories  extends BaseRepository
         })->groupBy('station.subject_id')->get();
         return $builder;
     }
+
+    /**
+     * 考生成绩分析
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 09:29:59
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudent(){
+        $examResoult = new ExamResult();
+        //获取已考过试的所有学生
+        $studentList = $examResoult->leftjoin('student',function($join){
+            $join->on('student.id','=','exam_result.student_id');
+        })->select('student.*')->get();
+        return $studentList;
+    }
+
+    /**
+     * 获取考生已考过的科目
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 09:29:59
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentSubject($stuid){
+        $DB = \DB::connection('osce_mis');
+        $builder = new ExamResult();
+        $builder = $builder->where('exam_result.student_id','=',$stuid)->leftJoin('student', function($join){
+            $join -> on('student.id', '=', 'exam_result.student_id');
+        })->leftJoin('exam_station', function($join){
+            $join -> on('exam_station.station_id', '=', 'exam_result.station_id');
+        })->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=', 'station.subject_id');
+        })->select('subject.title','subject.id')->groupBy('station.subject_id')->get();
+        return $builder;
+    }
 }
