@@ -173,34 +173,39 @@ class InvigilatePadController extends CommonController
 
     public function getExamGrade(Request $request)
     {
-        $this->validate($request, [
-            'station_id' => 'required|integer',
+        try{
+            $this->validate($request, [
+                'station_id' => 'required|integer',
 //            'exam_id'  => 'required|integer'
-        ], [
-            'station_id.required' => '没有获取到当前考站',
-            'exam_id.required' => '没有获取到当前考试'
-        ]);
+            ], [
+                'station_id.required' => '没有获取到当前考站',
+                'exam_id.required' => '没有获取到当前考试'
+            ]);
 //
-        $stationId = $request->get('station_id');
+            $stationId = $request->get('station_id');
 //        $stationId=8;
-        $examId = $request->get('exam_id');
-        //根据考站id查询出下面所有的考试项目
-        $station = Station::find($stationId);
-        //考试标准时间
-        $mins = $station->mins;
-        $exam = Exam::find($examId);
-        $StandardModel = new Standard();
-        $standardList = $StandardModel->ItmeList($station->subject_id);
-        if (count($standardList) != 0) {
-            return response()->json(
-                $this->success_data($standardList, 1, '数据传送成功')
-            );
+            $examId = $request->get('exam_id');
+            //根据考站id查询出下面所有的考试项目
+            $station = Station::find($stationId);
+            //考试标准时间
+            $mins = $station->mins;
+            $exam = Exam::find($examId);
+            $StandardModel = new Standard();
+            $standardList = $StandardModel->ItmeList($station->subject_id);
+            if (count($standardList) != 0) {
+                return response()->json(
+                    $this->success_data($standardList, 1, '数据传送成功')
+                );
 
-        } else {
-            return response()->json(
-                $this->fail(new \Exception('数据查询失败'))
-            );
+            } else {
+                return response()->json(
+                    $this->fail(new \Exception('数据查询失败'))
+                );
+            }
+        }catch (\Exception $ex){
+            \Log::alert($ex->getMessage());
         }
+       
     }
 
     /**
