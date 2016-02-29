@@ -316,8 +316,6 @@ class ExamResultController extends CommonController{
                     }
                 }
             }
-            //下载安装包
-            $this->downloadfiles('WebComponents.exe',public_path('download').'/WebComponents.exe');
 
             return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
         } catch (\Exception $ex) {
@@ -325,7 +323,12 @@ class ExamResultController extends CommonController{
         }
     }
 
-    private function downloadfiles($filename,$filepath){
+    //下载安装包
+    public function getdownloadComponents(){
+        $this->downloadComponents('WebComponents.exe',public_path('download').'/WebComponents.exe');
+    }
+
+    private function downloadComponents($filename,$filepath){
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));
