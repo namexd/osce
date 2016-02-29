@@ -137,7 +137,7 @@ class SubjectStatisticsController  extends CommonController
         ];
         $subject = new Subject();
         $subjectlist= $subject->select('id','title')->get()->toarray();
-         dd($StrList);
+        // dd($StrList);
         //dd($rew);
         //ajax请求判断返回不同数据
           if($request->ajax()){
