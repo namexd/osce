@@ -272,6 +272,7 @@ class ExamResultController extends CommonController{
         header('Pragma: public');
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
+
     }
 
     /**
@@ -282,6 +283,7 @@ class ExamResultController extends CommonController{
      */
     public function getResultVideo(Request $request)
     {
+
         try {
             $this->validate($request,[
                 'exam_id' => 'required|integer',
@@ -314,11 +316,27 @@ class ExamResultController extends CommonController{
                     }
                 }
             }
+            //下载安装包
+            $this->downloadfiles('WebComponents.exe',public_path('download').'/WebComponents.exe');
+
             return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
         } catch (\Exception $ex) {
             return response()->back()->withErrors($ex->getMessage());
         }
     }
+
+    private function downloadfiles($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
+
 
     /**
      *ajax请求获取当前考试下的考站
