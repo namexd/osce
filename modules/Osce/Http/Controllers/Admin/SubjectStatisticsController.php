@@ -35,9 +35,9 @@ class SubjectStatisticsController  extends CommonController
 
         //\DB::connection('osce_mis')->enableQueryLog();
         //查询统计所需数据
-        $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList(274);
+        $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList(326);
         //主要用来统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList(274,true);
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList(326,true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
         $standardStr = '';
         $timeAvgStr = '';
@@ -73,7 +73,7 @@ class SubjectStatisticsController  extends CommonController
 
         //dd($rew);
         //dd($StrList);
-        //dd($examlist);
+       // dd($examlist);
 
        /*    $list[]=array();
         //dd($examlist);
