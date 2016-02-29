@@ -49,11 +49,13 @@ class SubjectStatisticsController  extends CommonController
         foreach($rew as $key => $val){
 
             $rew[$key]['qualifiedPass'] = '0%';
+            $rew[$key]['number']=$key+1;
             foreach($rewTwo as $v){
                 if($val['subjectId'] == $v['subjectId']){
 
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
-                    $rew[$key]['number']=$key+1;
+                    //给结果展示列表中序号列加入数据
+
                 }
             }
             if($standardStr){
@@ -78,8 +80,6 @@ class SubjectStatisticsController  extends CommonController
         $examlist= $exam->where('status','=','2')->select('id','name')->orderBy('end_dt','desc')->get()->toarray();
         //dd($examlist);
        // dd($StrList);
-
-       // dd($rew);
         //dd($rew);
        //dd($examlist);
 
@@ -110,7 +110,7 @@ class SubjectStatisticsController  extends CommonController
         //dd('科目难度分析');
         //查询分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74);
-       dd($rew);
+
 
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74,true);
@@ -127,6 +127,8 @@ class SubjectStatisticsController  extends CommonController
                 if($val['subjectId'] == $v['subjectId']){
 
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
+                    //给结果展示列表中序号列加入数据
+                    $rew[$key]['number']=$key+1;
                 }
             }
             if($standardStr){
@@ -148,7 +150,8 @@ class SubjectStatisticsController  extends CommonController
             'scoreAvgStr' => $scoreAvgStr
         ];
         $subject = new Subject();
-        $subjectlist= $subject->select('id','title')->get()->toarray();
+        $subjectlist= $subject->select('id','title')->oderby('')->get()->toarray();
+        dd($rew);
         //dd($subjectlist);
         //把二维数组转换为一维数组
         dd($StrList);
