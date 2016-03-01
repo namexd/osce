@@ -96,10 +96,14 @@ class Teacher extends CommonModel
                     'case_name'=>$Teacher['cname'],
                     'case_id'=>$Teacher['caseId'],
                 ];
-                $openId= Teacher::find($Teacher['id'])->userInfo;
-//                dd($openId);
-                $list[$k]['openid']=$openId['openid'];
+                $userInfo   = Teacher::find($Teacher['id'])->userInfo;
+                if(!is_null($userInfo))
+                {
+                    throw new \Exception('没有找到对应的用户信息');
+                }
+                $list[$k]['openid']=$userInfo->openid;
             }
+
             return $list;
 
         }catch (\Exception $ex) {
