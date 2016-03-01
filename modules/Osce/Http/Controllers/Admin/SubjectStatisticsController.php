@@ -80,7 +80,7 @@ class SubjectStatisticsController  extends CommonController
         if($request->ajax()){
             return $this->success_data(['list'=>$rew,'StrList'=>$StrList],1,'成功');
         }
-        return  view('osce::admin.statistics_query.subject_statistics',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
+        return  view('osce::admin.statisticalanalysis.statistics_subject',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
 
     }
 
@@ -164,7 +164,7 @@ class SubjectStatisticsController  extends CommonController
         //dd($subjectlist);
         //dd($rew);
 
-        return view('osce::admin.statistics_query.subject_level', ['list' => $rew, 'subjectList' => $subjectList, 'StrList' => $StrList]);
+        return view('osce::admin.statisticalanalysis.statistics_subject_level', ['list' => $rew, 'subjectList' => $subjectList, 'StrList' => $StrList]);
     }
 
 
