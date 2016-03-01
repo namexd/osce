@@ -40,6 +40,15 @@ class MyController  extends CommonController
                 $examInfo[$k]['name'] = $v->name;
             }
         }
+        //获取科目列表信息
+        $subjectList = $subjectStatisticsRepositories->GetSubjectList();
+        $subjectInfo = '';
+        if(count($subjectList)>0){
+            foreach($subjectList as $k=>$v){
+                $subjectInfo[$k]['id'] = $v->id;
+                $subjectInfo[$k]['title'] = $v->title;
+            }
+        }
         //验证
         $this->validate($request, [
             'examId' => 'sometimes|int',//考试编号
@@ -51,8 +60,9 @@ class MyController  extends CommonController
         $list = $subjectStatisticsRepositories->GetSubjectStationStatisticsList('326', '52');
         $datas = [];
         if(count($list) > 0){
-            foreach($list as $item){
+            foreach($list as $k=>$item){
                 $datas[] = [
+                    'number'           => $k+1,//序号
                     'stationId'        => $item->stationId,//考站id
                     'stationName'      => $item->stationName,//考站名称
                     'teacherName'      => $item->teacherName,//评分老师
@@ -63,10 +73,11 @@ class MyController  extends CommonController
                 ];
             }
         }
-        dd($examInfo);
+        //dd($subjectInfo);
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.stationGradeList', [
+        return view('osce::admin.statistics_query.examation_statistics', [
             'examInfo' =>$examInfo ,//考试列表
+            'subjectInfo' =>$subjectInfo ,//科目列表
             'stationList'=>$datas //考站成绩分析列表
         ]);
     }
@@ -125,7 +136,7 @@ class MyController  extends CommonController
                     }
                 }
                 $datas[] = [
-                    'standardId'     => $val->standardId,//评分标准id
+                    'number'         =>$key+1, //序号
                     'standardContent'     => $val->standardContent,//考核点名称
                     'pid'                   => $val->pid,//评分标准父编号
                     'scoreAvg'             => $val->scoreAvg,//平均成绩
@@ -156,11 +167,12 @@ class MyController  extends CommonController
     public function standardDetails(Request $request,MyRepositories $subjectStatisticsRepositories){
         $standardPid = urldecode(e($request->input('standardPid')));
         //查询考核点分析所需数据
-        $result = $subjectStatisticsRepositories->GetStandardDetails('540');
-        //所点击的考核点的自考核点对应的数据
+        $result = $subjectStatisticsRepositories->GetStandardDetails('558');
+        //所点击的考核点的子考核点对应的数据
         $datainfo=[];
         if(count($result['data'])>0){
             foreach($result['data'] as $k=>$v){
+                $datainfo[$k]['number'] = $k+1;//序号
                 $datainfo[$k]['content'] = $v->content;//考核内容
                 $datainfo[$k]['standardScore'] = $v->standardScore; //总分
                 $datainfo[$k]['grade'] = $v->grade; //成绩

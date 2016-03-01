@@ -42,40 +42,12 @@ function subject_statistics(){
     //默认加载最近一次考试
     var $subId = $(".subject_select").children().first().val();
     var url = pars.ajaxUrl;
-    $.ajax({
-        url:url+'?id='+$subId,
-        type:'get',
-        cache:false,
-        success:function(res){
-            var standardStr = res.data.StrList.standardStr.split(",");
-            var scoreAvgStr=res.data.StrList.scoreAvgStr.split(",");
-            if(standardStr){echartsSubject(standardStr,scoreAvgStr);}//科目成绩分析。
-            $(res.data.list).each(function(){
-                $(".subjectBody").append('<tr>' +
-                    '<td>'+this.number+'</td>' +
-                    '<td>'+this.title+'</td>' +
-                    '<td>'+this.mins+'</td>' +
-                    '<td>'+this.timeAvg+'</td>' +
-                    '<td>'+this.scoreAvg+'</td>' +
-                    '<td>'+this.studentQuantity+'</td>' +
-                    '<td>'+this.qualifiedPass+'</td>' +
-                    '<td>' +
-                    '<a href="">' +
-                    '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
-                    '</a>' +
-                    '</td></tr>')
-            })
-        }
-    });
-    //筛选
-    $("#search").click(function(){
-        var id = $(".subject_select").val();
+    function ajax(id){
         $.ajax({
             url:url+'?id='+id,
             type:'get',
             cache:false,
             success:function(res){
-                console.log(res);
                 $(".subjectBody").empty();
                 var standardStr = res.data.StrList.standardStr.split(",");
                 var scoreAvgStr=res.data.StrList.scoreAvgStr.split(",");
@@ -96,7 +68,13 @@ function subject_statistics(){
                         '</td></tr>')
                 })
             }
-        })
+        });
+    }
+    ajax($subId);
+    //筛选
+    $("#search").click(function(){
+        var id = $(".subject_select").val();
+        ajax(id);
     });
 };
 

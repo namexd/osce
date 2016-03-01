@@ -148,13 +148,14 @@ class MyRepositories  extends BaseRepository
             ->where('exam_screening.exam_id','=',$ExamId)
             ->groupBy('standard.pid')
             ->select(
-                'standard.id as standardId',
                 'standard.pid as pid',
                 $DB->raw('avg(exam_score.score) as scoreAvg'),
                 $DB->raw('count(exam_result.student_id) as studentQuantity')
             )->get();
 
+
         $pid = $this->GetPidArr($data);
+
 
         //获取考核点名称
         if(count($pid)>0){
@@ -187,21 +188,33 @@ class MyRepositories  extends BaseRepository
         });
         $data = $builder->select(
             'standard.pid',//评分标准父编号
-            'standard.content',//考核内容
             'standard.score as standardScore', //总分
-            'exam_score.score as grade',//成绩
-            $DB->raw('sum(exam_score.score) as totalGrade') //总成绩
+            'exam_score.score as grade'//成绩
+            //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
         )->where('standard.pid','=',$standardPid)->get();
+        dd($data);
 
+        $id = $this->GetIdArr($data);
+        dd($id);
+        //获取子项考核点名称
+        if(count($id)>0){
+            $standardModel = new Standard();
+            $content = $standardModel->whereIn('id', $id)->select('content')->select('content')->get();
+            foreach($data as $k=>$v){
+                $data[$k]['standardContent'] = $content[$k]['content'];
+            }
+        }
+
+
+        dd($data);
         $pidData = $this->StandardModel->select(
             'standard.pid',//评分标准父编号
-            'standard.content',//考核内容
             'standard.score as totalScore' //总分
         )->where('standard.id','=',$standardPid)->first();
 
         return [
             'data'=>$data,
-            'pidData'=>$pidData
+          //  'pidData'=>$pidData
         ];
     }
 
@@ -222,5 +235,25 @@ class MyRepositories  extends BaseRepository
             }
         }
         return  $PidArr;
+    }
+
+
+    /**
+     * 去除pid 构建数组
+     * @method
+     * @url /osce/
+     * @access public
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2016年2月26日16:34:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetIdArr($data){
+        $idArr = [];
+        if(count($data)>0){
+            foreach($data as $v){
+                $idArr[] = $v['pid'];
+            }
+        }
+        return  $idArr;
     }
 }

@@ -11,7 +11,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
-
+use Illuminate\Http\Request;
 
 /**
  * Class SubjectStatisticsController
@@ -31,7 +31,7 @@ class SubjectStatisticsController  extends CommonController
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function SubjectGradeList(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
+    public function SubjectGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
          $examid=\Input::get('id');
         //\DB::connection('osce_mis')->enableQueryLog();
@@ -114,17 +114,18 @@ class SubjectStatisticsController  extends CommonController
             //给结果展示列表中序号列加入数据
             $rew[$key]['number'] = $key + 1;
             $rew[$key]['qualifiedPass'] = '0%';
+            $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,10);
             foreach ($rewTwo as $v) {
                 if ($val['subjectId'] == $v['subjectId']) {
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100) . '%';
                 }
             }
             if ($standardStr) {
-                $standardStr .= ',' . $val['ExamName'];
+                $standardStr .= ',' . $val['ExamBeginTime'];
                 $timeAvgStr .= ',' . $val['timeAvg'];
                 $scoreAvgStr .= ',' . $val['scoreAvg'];
             } else {
-                $standardStr .= $val['ExamName'];
+                $standardStr .= $val['ExamBeginTime'];
                 $timeAvgStr .= $val['timeAvg'];
                 $scoreAvgStr .= $val['scoreAvg'];
             }
@@ -138,8 +139,8 @@ class SubjectStatisticsController  extends CommonController
 
         $subject = new Subject();
         $subjectList = $subject->select('id', 'title')->get()->toarray();
-        // dd($StrList);
-        //dd($rew);
+        //dd($StrList);
+        // dd($rew);
         //ajax请求判断返回不同数据
         if ($request->ajax()) {
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
