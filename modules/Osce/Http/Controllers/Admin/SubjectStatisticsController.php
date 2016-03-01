@@ -11,7 +11,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
-
+use Illuminate\Http\Request;
 
 /**
  * Class SubjectStatisticsController
@@ -31,7 +31,7 @@ class SubjectStatisticsController  extends CommonController
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function SubjectGradeList(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
+    public function SubjectGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
          $examid=\Input::get('id');
         //\DB::connection('osce_mis')->enableQueryLog();
