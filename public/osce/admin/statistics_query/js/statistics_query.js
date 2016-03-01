@@ -589,12 +589,14 @@ $(function(){
     })
     //选择标记点跳转视频
     $(".points li").click(function(){
-        var point=($(this).find("span").text()).split('~')[0];
+        //拿到标记点初始时间
+        var point=$(this).find("span").text();
         var pointTime=new Date(point.split(" ")[0].split("-")[0],point.split(" ")[0].split("-")[1]-1,point.split(" ")[0].split("-")[2],
             point.split(" ")[1].split(":")[0], point.split(" ")[1].split(":")[1], point.split(" ")[1].split(":")[2]);
         pointTime=Date.parse(pointTime);
-        var move=(pointTime/1000-start)/step;//点击锚点时进度条应跳的位置
-        time_count = pointTime/1000-start;
+        var move=(pointTime/1000-start)/600;//点击锚点时进度条应跳的位置
+        //传入计算出的进度条长度
+        time_count = (pointTime/1000-start)/step;
         clearTimeout(timer);
         progressMove(time_count);
         courseObserveDetail.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
