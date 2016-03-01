@@ -111,7 +111,7 @@ class Invite extends CommonModel
                 if(count($openIdList)<2)
                 {
                     $userInfo   =   $openIdList[0];
-                    Common::sendWeiXin($userInfo['openid'],$message);//单发
+                    Common::sendWeiXin($userInfo['openid'],'13');//单发
                 }
                 else
                 {
