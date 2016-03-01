@@ -8,6 +8,61 @@
     <!-- ECharts -->
     <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
 <script>
+    $(function() {
+        var h = echarts.init(document.getElementById("echarts-Subject")),
+                d = {
+
+                    tooltip: {
+                        trigger: "axis"
+                    },
+                    legend: {
+                        orient: "vertical",
+                        x: "right",
+                        y: "bottom",
+                        data: ["考生成绩", "平均分"]
+                    },
+                    polar: [{
+                        indicator: [{
+                            text: "冠心病问病史",
+                            max: 100
+                        },
+                            {
+                                text: "肠胃炎问病史",
+                                max: 100
+                            },
+                            {
+                                text: "发热咳嗽问病史",
+                                max: 100
+                            },
+                            {
+                                text: "体格检查",
+                                max: 100
+                            },
+                            {
+                                text: "无菌操作",
+                                max: 100
+                            },
+                            {
+                                text: "心血管疾病",
+                                max: 100
+                            }]
+                    }],
+                    calculable: !0,
+                    series: [{
+                        name: "预算 vs 开销",
+                        type: "radar",
+                        data: [{
+                            value: [50, 60, 70, 80, 90, 85],
+                            name: "考生成绩"
+                        },
+                        {
+                            value: [65, 75, 36, 85, 36, 86],
+                            name: "平均分"
+                        }]
+                    }]
+                };
+        h.setOption(d);
+    })
 
 
 </script>
