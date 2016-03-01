@@ -136,17 +136,15 @@ class AutomaticPlanArrangement
             foreach ($this->screen as $item) {
                 $this->screenPlan($examId, $item);
                 //判断是否还有必要进行下场排考
+                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->first();  //通过查询数据表中是否有没有写入end_dt的数据
+                if (count($this->_S_ING) == 0 && count($this->_S) == 0 && is_null($examPlanNull)) {
+                    return $this->output($examId);
+                }
             }
-
-            if (count($this->_S_ING) == 0 && count($this->_S) == 0) {
-                return $this->output($examId);
-            } else {
-                throw new \Exception('人数太多，所设时间无法完成考试');
-            }
+            throw new \Exception('人数太多，所设时间无法完成考试');
         } catch (\Exception $ex) {
             throw $ex;
         }
-
     }
 
     /**
