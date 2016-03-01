@@ -49,6 +49,8 @@ class SubjectStatisticsController  extends CommonController
         foreach($rew as $key => $val){
 
             $rew[$key]['qualifiedPass'] = '0%';
+            $rew[$key]['scoreAvg'] =sprintf('%.2f',$val['scoreAvg']);
+            $rew[$key]['timeAvg'] =sprintf('%.2f',$val['timeAvg']);
             //给结果展示列表中序号列加入数据
             $rew[$key]['number']=$key+1;
             foreach($rewTwo as $v){
@@ -78,7 +80,7 @@ class SubjectStatisticsController  extends CommonController
         if($request->ajax()){
             return $this->success_data(['list'=>$rew,'StrList'=>$StrList],1,'成功');
         }
-        return  view('osce::admin.statistics_query.subject_statistics',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
+        return  view('osce::admin.statisticalanalysis.statistics_subject',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
 
     }
 
@@ -101,7 +103,7 @@ class SubjectStatisticsController  extends CommonController
         //查询分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList($subid);
 
-
+        // dd($rew);
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList($subid, true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
@@ -116,7 +118,10 @@ class SubjectStatisticsController  extends CommonController
             //给结果展示列表中序号列加入数据
             $rew[$key]['number'] = $key + 1;
             $rew[$key]['qualifiedPass'] = '0';
+            $rew[$key]['scoreAvg'] =sprintf('%.2f',$val['scoreAvg']);
+            $rew[$key]['timeAvg'] =sprintf('%.2f',$val['timeAvg']);
             $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,7);
+
             foreach ($rewTwo as $v) {
                 if ($val['ExamId'] == $v['ExamId']) {
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100);
@@ -153,13 +158,13 @@ class SubjectStatisticsController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
         }
-         //dd($rew);
+        // dd($rew);
          //dd($StrList);
          //dd($subjectList);
         //dd($subjectlist);
         //dd($rew);
 
-        return view('osce::admin.statistics_query.subject_level', ['list' => $rew, 'subjectList' => $subjectList, 'StrList' => $StrList]);
+        return view('osce::admin.statisticalanalysis.statistics_subject_level', ['list' => $rew, 'subjectList' => $subjectList, 'StrList' => $StrList]);
     }
 
 
