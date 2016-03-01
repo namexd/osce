@@ -12,6 +12,7 @@ use Modules\Osce\Repositories\MyRepositories;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
 use Illuminate\Http\Request;
+use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 
 /**
  * Class SubjectStatisticsController
@@ -30,9 +31,9 @@ class MyController  extends CommonController
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function stationGradeList(Request $request,MyRepositories $subjectStatisticsRepositories){
+    public function stationGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
         //获取考试列表信息
-        $examList = $subjectStatisticsRepositories->GetExamList();
+        $examList = $subject->GetExamList();
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){

@@ -45,23 +45,7 @@ class MyRepositories  extends BaseRepository
         $this->ExamResultModel = $examResult;
         $this->StandardModel = $Standard;
     }
-
-    /**
-     * 获取考试列表
-     * @method
-     * @url /osce/
-     * @access public
-     * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function GetExamList(){
-        $exam = new Exam();
-        $data = $exam->select('id','name')->get();
-        return $data;
-    }
-
+    
     /**
      * 获取科目列表
      * @method
