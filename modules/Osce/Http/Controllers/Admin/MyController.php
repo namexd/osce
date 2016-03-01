@@ -72,8 +72,8 @@ class MyController  extends CommonController
                     'stationName'      => $item->stationName,//考站名称
                     'teacherName'      => $item->teacherName,//评分老师
                     'examMins'          => $item->examMins,//考试限时
-                    'timeAvg'           => $item->timeAvg,//平均耗时
-                    'scoreAvg'          => $item->scoreAvg,//平均成绩
+                    'timeAvg'           => sprintf("%01.2f", $item->timeAvg),//平均耗时
+                    'scoreAvg'          => sprintf("%01.2f", $item->scoreAvg),//平均成绩
                     'studentQuantity'  => $item->studentQuantity,//考试人数
                 ];
                 if($stationNameStr){
@@ -169,7 +169,7 @@ class MyController  extends CommonController
                     'number'         =>$key+1, //序号
                     'standardContent'     => $val->standardContent,//考核点名称
                     'pid'                   => $val->pid,//评分标准父编号
-                    'scoreAvg'             => $val->scoreAvg,//平均成绩
+                    'scoreAvg'             => sprintf("%01.2f", $val->scoreAvg),//平均成绩
                     'studentQuantity'     => $val->studentQuantity,//考试人数
                     'qualifiedPass'       => $val->qualifiedPass.'%',//合格率
                 ];
