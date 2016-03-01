@@ -54,10 +54,10 @@ class MyController  extends CommonController
             'examId' => 'sometimes|int',//考试编号
             'subjectId' => 'sometimes|int',//科目编号
         ]);
-        $examId = $request->input('examId');
-        $subjectId = $request->input('subjectId');
+        $examId = $request->input('examId',0);
+        $subjectId = $request->input('subjectId',0);
         //获取考站分析列表
-        $list = $subjectStatisticsRepositories->GetSubjectStationStatisticsList('326', '52');
+        $list = $subjectStatisticsRepositories->GetSubjectStationStatisticsList($examId, $subjectId);
         $datas = [];
         $stationNameStr = '';
         $scoreAvgStr = '';

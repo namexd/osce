@@ -70,10 +70,10 @@ class TestScoreRepositories  extends BaseRepository
                 'subject.id'
             );
         }
-        $builder = $builder->where('exam_station.exam_id','=',$examid)->leftJoin('student', function($join){
+        $builder = $builder->where('exam_screening.exam_id','=',$examid)->leftJoin('student', function($join){
             $join -> on('student.id', '=', 'exam_result.student_id');
-        })->leftJoin('exam_station', function($join){
-            $join -> on('exam_station.station_id', '=', 'exam_result.station_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=', 'exam_result.exam_screening_id');
         })->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
@@ -116,8 +116,8 @@ class TestScoreRepositories  extends BaseRepository
         $builder = new ExamResult();
         $builder = $builder->where('exam_result.student_id','=',$stuid)->leftJoin('student', function($join){
             $join -> on('student.id', '=', 'exam_result.student_id');
-        })->leftJoin('exam_station', function($join){
-            $join -> on('exam_station.station_id', '=', 'exam_result.station_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=', 'exam_result.exam_screening_id');
         })->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
@@ -140,7 +140,7 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $builder = new ExamResult();
         if($student_id){
-            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','station.mins','exam_result.time','exam_result.score','subject.id');
+            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','station.mins','exam_result.begin_dt','exam_result.time','exam_result.score','subject.id');
         }else{
             $builder = $builder->select(
                 $DB->raw('avg(exam_result.time) as timeAvg'),
@@ -150,14 +150,14 @@ class TestScoreRepositories  extends BaseRepository
         }
         $builder = $builder->where('subject.id','=',$subject_id)->leftJoin('student', function($join){
             $join -> on('student.id', '=', 'exam_result.student_id');
-        })->leftJoin('exam_station', function($join){
-            $join -> on('exam_station.station_id', '=', 'exam_result.station_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=', 'exam_result.exam_screening_id');
         })->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
             $join -> on('subject.id', '=', 'station.subject_id');
         })->leftJoin('exam', function($join){
-            $join -> on('exam.id', '=', 'exam_station.exam_id');
+            $join -> on('exam.id', '=', 'exam_screening.exam_id');
         })->groupBy('exam.id')->get();
         return $builder;
     }

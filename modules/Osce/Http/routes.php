@@ -55,7 +55,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//考生成绩统计
 		Route::get('testscores/student-subject-list',['uses'=>'TestScoresController@studentSubjectList','as'=>'osce.admin.TestScoresController.studentSubjectList']);
 		//ajax获取考生所考过得科目
-		Route::get('testscores/ajax-get-subject',['uses'=>'TestScoresController@ajaxGetSubject','as'=>'osce.admin.TestScoresController.ajaxGetSubject']);
+		Route::get('testscores/ajax-get-subject',['uses'=>'TestScoresController@getAjaxGetSubject','as'=>'osce.admin.TestScoresController.getAjaxGetSubject']);
+		Route::get('testscores/ajax-get-subjectlist',['uses'=>'TestScoresController@ajaxGetSubjectlist','as'=>'osce.admin.TestScoresController.ajaxGetSubjectlist']);
 		//ajax获取考生所考过得科目成绩
 		Route::get('testscores/ajax-get-student-test-count',['uses'=>'TestScoresController@ajaxGetStudentTestCount','as'=>'osce.admin.TestScoresController.ajaxGetStudentTestCount']);
 		//考试科目详细信息查询
