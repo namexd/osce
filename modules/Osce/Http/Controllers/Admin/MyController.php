@@ -96,7 +96,7 @@ class MyController  extends CommonController
         }
         //dd($datas);
         //将数据展示到页面
-        return view('osce::admin.statistics_query.examation_statistics', [
+        return view('osce::admin.statisticalanalysis.statistics_examation', [
             'examInfo' =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'stationList'=>$datas, //考站成绩分析列表
@@ -146,6 +146,7 @@ class MyController  extends CommonController
 
 //        dd($examId);
         //查询考核点分析所需数据
+
         $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId);//326,52
         //统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId,true);//326,52
@@ -190,7 +191,7 @@ class MyController  extends CommonController
         }
         //将数据展示到页面
 //        dd($datas);
-        return view('osce::admin.statistics_query.statistics_check', [
+        return view('osce::admin.statisticalanalysis.statistics_check', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'standardList' =>$datas, //考核点分析列表
