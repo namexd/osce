@@ -141,13 +141,14 @@ class MyRepositories  extends BaseRepository
 
         $pid = $this->GetPidArr($data);
 
-
         //获取考核点名称
         if(count($pid)>0){
             $standardModel = new Standard();
-            $content = $standardModel->whereIn('id', $pid)->select('content')->select('content')->get();
+            $content = $standardModel->whereIn('id', $pid)->select('content')->get();
+            $contentTwo = $standardModel->whereIn('pid', $pid)->select($DB->raw('count(pid) as pidNum'))->groupBy('pid')->get();
             foreach($data as $k=>$v){
                 $data[$k]['standardContent'] = $content[$k]['content'];
+                $data[$k]['studentQuantity'] = $data[$k]['studentQuantity']/$contentTwo[$k]['pidNum'];
             }
         }
         return  $data;
