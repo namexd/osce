@@ -171,7 +171,7 @@ class DrawlotsController extends CommonController
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $examId);
             } else {
-                throw new \Exception('考试模式不存在！');
+                throw new \Exception('考试模式不存在！', -703);
             }
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
@@ -182,7 +182,7 @@ class DrawlotsController extends CommonController
     /**
      * 根据传入的腕表编号和房间id分配应该要去考站(接口)
      * @method POST
-     * @url api/1.0  /osce/drawlots/station
+     * @url api/1.0  /osce/pad/station
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
@@ -221,9 +221,9 @@ class DrawlotsController extends CommonController
                 throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
 
+            //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
-
             if (!$watchLog) {
                 throw new \Exception('没有找到学生对应的腕表信息！', 3200);
             }
@@ -357,6 +357,9 @@ class DrawlotsController extends CommonController
                 return Station::findOrFail($temp->station_id);
             }
 
+            //获得plan表中应该要去哪些考站
+            $this->whetherInthisEntity($student, $examId, $roomId);
+
             //判断如果是以考场分组，就抽签
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
                 //获取当前小组信息
@@ -377,8 +380,6 @@ class DrawlotsController extends CommonController
                     $stationIds = collect([]);
                 }
 
-                //获得已经被选择的考站id对象
-
                 //将其变成一个一维数组
                 $stationIdeds = $stationIds->all();
 
@@ -389,11 +390,8 @@ class DrawlotsController extends CommonController
                     )
                     ->get();
                 $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
-                //随机获取一个考站
-//                $stationIds = $stationIds->pluck('station_id');
 
                 $ranStationId = $stationIds[array_rand($stationIds)];
-//                dd($student->id,$examId);
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
                     ->where('room_id', $roomId)
@@ -444,28 +442,27 @@ class DrawlotsController extends CommonController
                     throw new \Exception('当前考生走错了考场！请去' . Room::findOrFail($shouldRoomId)->name, 7000);
                 }
 
-                //获得plan表中应该要去哪些考站
-                $examPlanStationIds = ExamPlan::where('student_id', '=', $student->id)
-                    ->where('exam_id', '=', $examId)
-                    ->orderBy('begin_dt', 'asc')
-                    //->get()->pluck('station_id');
-                    ->get()->pluck('room_id');
-
-                //判断当前考站在计划表中的顺序
-                $stationIdKey = $examPlanStationIds->search($roomId);
-                if ($stationIdKey === false) {
-                    throw new \Exception('该名考生不在计划中！', 3800);
-                }
-
-                $tempExamQueue = ExamQueue::where('student_id', $student->id)
-                    ->where('exam_id', $examId)
-                    ->orderBy('begin_dt', 'asc')
-                    ->get();
-
-                $tempStationIdKey = $stationIdKey - 1;
-                if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
-                    throw new \Exception('当前考生走错了考场！', 3400);
-                }
+//                $examPlanStationIds = ExamPlan::where('student_id', '=', $student->id)
+//                    ->where('exam_id', '=', $examId)
+//                    ->orderBy('begin_dt', 'asc')
+//                    ->get()->pluck('room_id');
+//
+//                //判断当前考站在计划表中的顺序
+//                $stationIdKey = $examPlanStationIds->search($roomId);
+//                if ($stationIdKey === false) {
+//                    throw new \Exception('该名考生不在计划中！', 3800);
+//                }
+//
+//                $tempExamQueue = ExamQueue::where('student_id', $student->id)
+//                    ->where('exam_id', $examId)
+//                    ->orderBy('begin_dt', 'asc')
+//                    ->get();
+//
+//                //判断其是否应该在这个考站考试
+//                $tempStationIdKey = $stationIdKey - 1;
+//                if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
+//                    throw new \Exception('当前考生走错了考场！', 3400);
+//                }
 
 
                 //将队列状态变更为1
@@ -545,4 +542,44 @@ class DrawlotsController extends CommonController
         }
     }
 
+    /**
+     * 判断当前考生是否应该在这个考点考试
+     * @param $student 学生实例
+     * @param $examId
+     * @param $roomId
+     * @return bool
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-01
+     */
+    private function whetherInthisEntity($student, $examId, $roomId) {
+        try {
+            //获得plan表中应该要去哪些考站
+            $examPlanStationIds = ExamPlan::where('student_id', '=', $student->id)
+                ->where('exam_id', '=', $examId)
+                ->orderBy('begin_dt', 'asc')
+                ->get()->pluck('room_id');
+
+            //判断当前考站在计划表中的顺序
+            $stationIdKey = $examPlanStationIds->search($roomId);
+            if ($stationIdKey === false) {
+                throw new \Exception('该名考生不在计划中！', 3800);
+            }
+
+            $tempExamQueue = ExamQueue::where('student_id', $student->id)
+                ->where('exam_id', $examId)
+                ->orderBy('begin_dt', 'asc')
+                ->get();
+
+            //判断其是否应该在这个考站考试
+            $tempStationIdKey = $stationIdKey - 1;
+            if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
+                throw new \Exception('当前考生走错了考场！', 3400);
+            }
+
+            return true;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
