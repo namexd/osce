@@ -97,7 +97,7 @@ class Teacher extends CommonModel
                     'case_id'=>$Teacher['caseId'],
                 ];
                 $openId= Teacher::find($Teacher['id'])->userInfo;
-//                dd($openId);
+                dump($openId);
                 $list[$k]['openid']=$openId['openid'];
             }
             return $list;
