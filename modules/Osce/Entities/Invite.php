@@ -101,7 +101,7 @@ class Invite extends CommonModel
                         'url' => $url,
                     ],
                 ];
-                $openIdList[]   =   $userInfo['openid'];
+                $openIdList[]   =   $userInfo;
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
 //            oI7UquLMNUjVyUNaeMP0sRcF4VyU
@@ -110,17 +110,23 @@ class Invite extends CommonModel
                 $message = Common::CreateWeiXinMessage($msgData);
                 if(count($openIdList)<2)
                 {
-                    $openId   =   $openIdList[0];
-                    Common::sendWeiXin($openId,$message);//单发
+                    $userInfo   =   $openIdList[0];
+                    Common::sendWeiXin($userInfo['openid'],$message);//单发
                 }
                 else
                 {
-                    Common::sendWeixinToMany($message,$openIdList);
+                    Common::sendWeixinToMany($message,array_pluck($openIdList,'openid'));
                 }
-
             } catch (\Exception $ex_msg) {
-                dd($openId);
-                throw new \Exception('温馨提示'.$openIdList['teacher_name'] . '目前还没有登录过微信号');
+                if(count($openIdList)<2)
+                {
+                    throw new \Exception('温馨提示'.$openIdList[0]['teacher_name'] . '目前还没有登录过微信号');
+                }
+                else
+                {
+                    $nameList   =   array_pluck($openIdList,'teacher_name');
+                    throw new \Exception('温馨提示'.implode(',',$nameList) . '目前还没有登录过微信号');
+                }
             }
         } catch (\Exception $ex) {
             throw $ex;
