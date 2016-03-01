@@ -230,7 +230,7 @@ class Common{
         }
         catch(\Exception $ex)
         {
-            dd($ex);
+            dd($ex->getCode());
             throw $ex;
         }
     }
