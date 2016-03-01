@@ -182,7 +182,7 @@ class MyController  extends CommonController
             return $this->success_data(['standardList'=>$datas,'StrList'=>$StrList]);
         }
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.standardGradeList', [
+        return view('osce::admin.statistics_query.statistics_check', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'standardList' =>$datas, //考核点分析列表
