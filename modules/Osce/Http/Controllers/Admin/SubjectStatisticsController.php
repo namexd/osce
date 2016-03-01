@@ -108,8 +108,8 @@ class SubjectStatisticsController  extends CommonController
         //统计合格率
         // dd($rewTwo);
         $standardStr = '';
-        $timeAvgStr = '';
-        $scoreAvgStr = '';
+       // $timeAvgStr = '';
+       // $scoreAvgStr = '';
         $qualifiedPass='';
         foreach ($rew as $key => $val) {
             //dd($val);
@@ -124,21 +124,21 @@ class SubjectStatisticsController  extends CommonController
             }
             if ($standardStr) {
                 $standardStr .= ',' . $val['ExamBeginTime'];
-                $timeAvgStr .= ',' . $val['timeAvg'];
-                $scoreAvgStr .= ',' . $val['scoreAvg'];
+               // $timeAvgStr .= ',' . $val['timeAvg'];
+                //$scoreAvgStr .= ',' . $val['scoreAvg'];
                 $qualifiedPass.=','.$val['qualifiedPass'];
             } else {
                 $standardStr .= $val['ExamBeginTime'];
-                $timeAvgStr .= $val['timeAvg'];
-                $scoreAvgStr .= $val['scoreAvg'];
+               // $timeAvgStr .= $val['timeAvg'];
+               // $scoreAvgStr .= $val['scoreAvg'];
                 $qualifiedPass.=$val['qualifiedPass'];
             }
 
         }
         $StrList = [
             'standardStr' => $standardStr,
-            'timeAvgStr' => $timeAvgStr,
-            'scoreAvgStr' => $scoreAvgStr,
+           // 'timeAvgStr' => $timeAvgStr,
+           // 'scoreAvgStr' => $scoreAvgStr,
             'qualifiedPass'=>$qualifiedPass
         ];
 
@@ -150,7 +150,7 @@ class SubjectStatisticsController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
         }
-        // dd($rew);
+         //dd($rew);
          //dd($StrList);
          //dd($subjectList);
         //dd($subjectlist);
