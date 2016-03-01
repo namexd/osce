@@ -148,13 +148,14 @@ class MyRepositories  extends BaseRepository
             ->where('exam_screening.exam_id','=',$ExamId)
             ->groupBy('standard.pid')
             ->select(
-                'standard.id as standardId',
                 'standard.pid as pid',
                 $DB->raw('avg(exam_score.score) as scoreAvg'),
                 $DB->raw('count(exam_result.student_id) as studentQuantity')
             )->get();
 
+
         $pid = $this->GetPidArr($data);
+
 
         //获取考核点名称
         if(count($pid)>0){
@@ -187,21 +188,32 @@ class MyRepositories  extends BaseRepository
         });
         $data = $builder->select(
             'standard.pid',//评分标准父编号
-            'standard.content',//考核内容
             'standard.score as standardScore', //总分
-            'exam_score.score as grade',//成绩
-            $DB->raw('sum(exam_score.score) as totalGrade') //总成绩
+            'exam_score.score as grade'//成绩
+            //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
         )->where('standard.pid','=',$standardPid)->get();
 
+        //获取子项考核点名称
+        if(count($data)>0){
+            $standardModel = new Standard();
+            $id = $standardModel->where('id', $data[0]['pid'])->get();
+            dd($id);
+            $content = $standardModel->whereIn('id', $data[0]['pid'])->select('content')->select('content')->get();
+            foreach($data as $k=>$v){
+                $data[$k]['standardContent'] = $content[$k]['content'];
+            }
+        }
+
+
+        dd($data);
         $pidData = $this->StandardModel->select(
             'standard.pid',//评分标准父编号
-            'standard.content',//考核内容
             'standard.score as totalScore' //总分
         )->where('standard.id','=',$standardPid)->first();
 
         return [
             'data'=>$data,
-            'pidData'=>$pidData
+          //  'pidData'=>$pidData
         ];
     }
 
