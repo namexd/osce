@@ -200,8 +200,6 @@ class MyController  extends CommonController
               'StrList'=>$StrList
         ]);
     }
-
-
     /**考核点查看（详情）
      * @method GET
      * @url  /osce/admin/subject-statistics/standardDetails
@@ -247,7 +245,7 @@ class MyController  extends CommonController
     }
     /**
      * 动态获取ajax列表
-     * @author Jiangzhiheng
+     * @author
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -268,8 +266,6 @@ class MyController  extends CommonController
             return response()->json($this->fail($ex));
         }
     }
-
-
     /**
      * 出科目的下拉菜单
      * @param $examId
