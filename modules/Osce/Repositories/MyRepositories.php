@@ -114,16 +114,14 @@ class MyRepositories  extends BaseRepository
      */
     public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$qualified=0){
         $DB = \DB::connection('osce_mis');
-        $builder = $this->ExamResultModel->leftJoin('station', function($join){
-            $join -> on('station.id', '=', 'exam_result.station_id');
-        })->leftJoin('subject', function($join){
-            $join -> on('subject.id', '=','station.subject_id');
-        })->leftJoin('exam_screening', function($join){
+        $builder = $this->ExamResultModel->leftJoin('exam_screening', function($join){
             $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
         })->leftJoin('exam_score', function($join){
             $join -> on('exam_score.exam_result_id', '=','exam_result.id');
         })->leftJoin('standard', function($join){
             $join -> on('standard.id', '=','exam_score.standard_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','exam_score.subject_id');
         });
         //TODO 加上该条件为统计合格人数
         if($qualified){
@@ -135,9 +133,11 @@ class MyRepositories  extends BaseRepository
             ->select(
                 'standard.pid as pid',
                 $DB->raw('avg(exam_score.score) as scoreAvg'),
-                $DB->raw('count(exam_result.student_id) as studentQuantity')
-            )->get();
+                $DB->raw('count(exam_result.student_id) as studentQuantity'),
+                $DB->raw('sum(exam_score.score) as chengji'),
+                $DB->raw('sum(standard.score) as zchengji')
 
+            )->get();
 
         $pid = $this->GetPidArr($data);
 
