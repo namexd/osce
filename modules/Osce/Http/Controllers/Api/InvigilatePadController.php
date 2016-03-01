@@ -251,6 +251,7 @@ class InvigilatePadController extends CommonController
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * upload_document_id 音频 图片id集合
      */
 
     public function postSaveExamResult(Request $request)
@@ -321,11 +322,10 @@ class InvigilatePadController extends CommonController
 //                \Log::alert(json_encode($result));
         if ($result) {
             //修改exam_attach表里的结果id
-
-
             return response()->json($this->success_data([], 1, '成绩提交成功'));
                 }
         } catch (\Exception $ex) {
+//       return response()->json($this->fail($ex));
             \Log::alert($ex->getMessage());
                 return response()->json(
                      $this->fail(new \Exception('成绩提交失败'))
