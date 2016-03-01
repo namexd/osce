@@ -36,17 +36,17 @@
                 <div class="input-group" style="margin:20px 0;">
                     <label for="" class="pull-left exam-name">考试名称：</label>
                     <select name="name" class="input-sm form-control exam_select" style="width: 210px;height: 34px">
-                        @foreach(@$examlist as $exam)
-                        <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
+                        @foreach(@$examInfo as $exam)
+                            <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
                         @endforeach
                     </select>
                     <label for="" class="pull-left exam-name" style="margin-left: 20px;">科目名称：</label>
                     <select name="name" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
-                        @foreach(@$examlist as $exam)
-                            <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
+                        @foreach(@$subjectInfo as $subject)
+                            <option value="{{ $subject['id'] }}">{{ $subject['title'] }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
+                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
                 </div>
                 <div class="list_all">
                     <div class="row">

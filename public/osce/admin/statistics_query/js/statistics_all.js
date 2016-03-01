@@ -238,5 +238,66 @@ function examation_statistics(){
 }
 //考核点分析
 function statistics_check(){
-
+    //图表插件
+    function echartsSubject(stationNameStr,scoreAvgStr){
+        var t = echarts.init(document.getElementById("echarts-Subject")),
+            n = {
+                tooltip: {
+                    trigger: "axis"
+                },
+                legend: {
+                    data: ["平均成绩"]
+                },
+                calculable: !0,
+                xAxis: [{
+                    type: "category",
+                    data: stationNameStr
+                }],
+                yAxis: [{
+                    type: "value"
+                }],
+                series: [
+                    {
+                        name: "平均成绩",
+                        type: "bar",
+                        data: scoreAvgStr
+                    }]
+            };
+        t.setOption(n);
+    }
+    //默认加载最近一次考试
+    var $examId = $(".exam_select").children().first().val();
+    var $subjectId = $(".subject_select").children().first().val();
+    var url = pars.ajaxUrl;
+    console.log(url);
+    function ajax(examId,subjectId){
+        $.ajax({
+            url:url+"?examId="+examId+"&subjectId="+subjectId,
+            type:"get",
+            cache:false,
+            success:function(res){
+                console.log(res);
+                $(".subjectBody").empty();
+                var stationNameStr = res.data.StrList.stationNameStr.split(",");
+                var scoreAvgStr = res.data.StrList.scoreAvgStr.split(",");
+                if(stationNameStr){echartsSubject(stationNameStr,scoreAvgStr);}
+                $(res.data.stationList).each(function(){
+                    $(".subjectBody").append('<tr>' +
+                        '<td>'+this.number+'</td>' +
+                        '<td>'+this.stationName+'</td>' +
+                        '<td>'+this.teacherName+'</td>' +
+                        '<td>'+this.examMins+'</td>' +
+                        '<td>'+this.timeAvg+'</td>' +
+                        '<td>'+this.scoreAvg+'</td>' +
+                        '<td>'+this.studentQuantity+'</td>' +
+                        '<td>' +
+                        '<a href="">' +
+                        '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
+                        '</a>' +
+                        '</td></tr>')
+                })
+            }
+        })
+    }
+    ajax($examId,$subjectId);
 }
