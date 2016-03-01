@@ -40,6 +40,15 @@ class MyController  extends CommonController
                 $examInfo[$k]['name'] = $v->name;
             }
         }
+        //获取科目列表信息
+        $subjectList = $subjectStatisticsRepositories->GetSubjectList();
+        $subjectInfo = '';
+        if(count($subjectList)>0){
+            foreach($subjectList as $k=>$v){
+                $subjectInfo[$k]['id'] = $v->id;
+                $subjectInfo[$k]['title'] = $v->title;
+            }
+        }
         //验证
         $this->validate($request, [
             'examId' => 'sometimes|int',//考试编号
@@ -64,10 +73,11 @@ class MyController  extends CommonController
                 ];
             }
         }
-        dd($datas);
+        //dd($subjectInfo);
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.stationGradeList', [
+        return view('osce::admin.statistics_query.examation_statistics', [
             'examInfo' =>$examInfo ,//考试列表
+            'subjectInfo' =>$subjectInfo ,//科目列表
             'stationList'=>$datas //考站成绩分析列表
         ]);
     }
