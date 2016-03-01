@@ -59,7 +59,8 @@ class MyController  extends CommonController
             'examId' => 'sometimes|int',//考试编号
             'subjectId' => 'sometimes|int',//科目编号
         ]);
-        $examId = $request->input('examId',0);
+        $examId = $request->input('examId',count($examInfo)>0?$examInfo[0]['id']:0);
+
         $subjectId = $request->input('subjectId',0);
         //获取考站分析列表
         $list = $subjectStatisticsRepositories->GetSubjectStationStatisticsList($examId, $subjectId);
@@ -96,6 +97,8 @@ class MyController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['stationList'=>$datas,'StrList'=>$StrList]);
         }
+        $subjectList = $this->subjectDownlist($examId);
+        $subjectInfo = count($subjectList)?$subjectList:$subjectInfo;
         //dd($datas);
         //将数据展示到页面
         return view('osce::admin.statisticalanalysis.statistics_examation', [
@@ -121,6 +124,7 @@ class MyController  extends CommonController
     public function standardGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
         //获取考试列表信息
         $examList = $subject->GetExamList();
+
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
@@ -143,8 +147,12 @@ class MyController  extends CommonController
             'subjectId' => 'sometimes|int',//科目编号
         ]);
 
-        $examId = $request->input('examId',0);
+
+        $examId = $request->input('examId',count($examInfo)>0?$examInfo[0]['id']:0);
+
+
         $subjectId = $request->input('subjectId',0);
+
 
 //        dd($examId);
         //查询考核点分析所需数据
@@ -191,13 +199,15 @@ class MyController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['standardList'=>$datas,'StrList'=>$StrList]);
         }
+        $subjectList = $this->subjectDownlist($examId);
+        $subjectInfo = count($subjectList)?$subjectList:$subjectInfo;
         //将数据展示到页面
 //        dd($datas);
         return view('osce::admin.statisticalanalysis.statistics_check', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'standardList' =>$datas, //考核点分析列表
-              'StrList'=>$StrList
+            'StrList'=>$StrList,
         ]);
     }
     /**考核点查看（详情）
