@@ -76,7 +76,7 @@ class InvitationController extends CommonController
             $data[$key]['exam_screening_id'] = $examscreening->id;
             $data[$key]['station_id'] = $stationId;
         }
-        dd($data);
+
         $InviteModel = new Invite();
         try {
             if ($InviteModel->addInvite($data)) {

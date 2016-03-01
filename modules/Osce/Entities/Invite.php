@@ -90,28 +90,36 @@ class Invite extends CommonModel
 
     public function sendMsg($data)
     {
-
+        $openIdList =   [];
         try {
-            foreach ($data as $key => $openIdList) {
-                $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['id']]);
+            foreach ($data as $key => $userInfo) {
+                $url = route('osce.wechat.invitation.getMsg', ['id' => $userInfo['id']]);
                 $msgData = [
                     [
                         'title' => '邀请通知',
-                        'desc' => '邀请您参加'.$openIdList['exam_name'] . '考试',
+                        'desc' => '邀请您参加'.$userInfo['exam_name'] . '考试',
                         'url' => $url,
                     ],
                 ];
-                try {
-                    $message = Common::CreateWeiXinMessage($msgData);
-                    Common::sendWeiXin($openIdList['openid'],$message);//单发
-                } catch (\Exception $ex_msg) {
-
-                    throw new \Exception('温馨提示'.$openIdList['teacher_name'] . '目前还没有登录过微信号');
-                }
-
+                $openIdList[]   =   $userInfo['openid'];
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
 //            oI7UquLMNUjVyUNaeMP0sRcF4VyU
+            }
+            try {
+                $message = Common::CreateWeiXinMessage($msgData);
+                if(count($openIdList)<2)
+                {
+                    $openId   =   $openIdList[0];
+                    Common::sendWeiXin($openId,$message);//单发
+                }
+                else
+                {
+                    Common::sendWeixinToMany($msgData,$openIdList);
+                }
+
+            } catch (\Exception $ex_msg) {
+                throw new \Exception('温馨提示'.$openIdList['teacher_name'] . '目前还没有登录过微信号');
             }
         } catch (\Exception $ex) {
             throw $ex;
