@@ -198,6 +198,7 @@ class MyController  extends CommonController
         ]);
     }
 
+
     /**考核点查看（详情）
      * @method GET
      * @url  /osce/admin/subject-statistics/standardDetails
