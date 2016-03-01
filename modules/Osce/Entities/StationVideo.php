@@ -100,8 +100,10 @@ class StationVideo extends CommonModel
 
         return  StationVideo::where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
+            ->groupBy('station_video.begin_dt')
             ->get();
     }
+
 
     // TODO 临时修改运用
     static public function label($examId, $studentId, $stationId,$examScreeningIds)
