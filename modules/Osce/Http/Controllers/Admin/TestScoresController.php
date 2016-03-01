@@ -27,7 +27,7 @@ class TestScoresController  extends CommonController
     public function TestScoreList(Request $request){
         //查找所有考试信息
         $examlist = Exam::get();
-        return view('osce::admin.statistics_query.student_statistics',[
+        return view('osce::admin.statisticalanalysis.statistics_student_score',[
             'examlist'=>$examlist
         ]);
     }
@@ -115,7 +115,6 @@ class TestScoresController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ajaxGetSubjectlist(Request $request,TestScoreRepositories $TestScoreRepositories){
-
         $stuid = $request->student_id;
         $studentSublist = $TestScoreRepositories->getStudentSubject($stuid);
         return $studentSublist;

@@ -25,8 +25,8 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">考生成绩分析</a></li>
-                        <li><a href="#">考生科目分析</a></li>
+                        <li class="active"><a href="/osce/admin/testscores/test-score-list">考生成绩分析</a></li>
+                        <li><a href="/osce/admin/testscores/student-subject-list">考生科目分析</a></li>
                     </ul>
                 </div>
             </div>
