@@ -278,5 +278,22 @@ class SubjectStatisticsRepositories  extends BaseRepository
         }
         return  $PidArr;
     }
-
+    /**
+     * 获取所有已经完成的考试
+     * @method
+     * @url /osce/
+     * @access public
+     * @param int $status
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月1日11:47:49
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetExamList($status = 2){
+        return $this->ExamModel->where('status','=',$status)
+            ->select('id','name')
+            ->orderBy('end_dt','desc')
+            ->get()
+            ->toarray();
+    }
 }
