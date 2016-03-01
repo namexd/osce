@@ -65,7 +65,7 @@ class StationController extends CommonController
         $data = $model->showList($order,  $ajax = false, $name);
 
         //将展示数据放在页面上
-        return view('osce::admin.resourcemanage.test_station',['data' => $data, 'placeCate'=>$placeCate, 'name'=>$name]);
+        return view('osce::admin.resourcemanage.exam_station',['data' => $data, 'placeCate'=>$placeCate, 'name'=>$name]);
 
     }
 
@@ -87,7 +87,7 @@ class StationController extends CommonController
         //获得上次的时间限制
         $time = session('time');
         //将下拉菜单的数据传到页面上
-        return view('osce::admin.resourcemanage.test_station_add',
+        return view('osce::admin.resourcemanage.exam_station_add',
             ['placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case, 'room' => $room, 'subject' => $subject, 'time' => $time]);
     }
 
@@ -192,7 +192,7 @@ class StationController extends CommonController
         $status = empty($examFlowStation)? 0 : 1;
 
         //将下拉菜单的数据传到页面上
-        return view('osce::admin.resourcemanage.test_station_edit',
+        return view('osce::admin.resourcemanage.exam_station_edit',
             [   'placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case,
                 'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg,
                 'status' => $status

@@ -55,7 +55,7 @@ class RoomController extends CommonController
             $area = config('osce.room_cate');
             //展示页面
             $cateList   =   Area::groupBy('cate')->get();
-            return view('osce::admin.resourcemanage.examroom', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            return view('osce::admin.resourcemanage.site_manage', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -103,7 +103,7 @@ class RoomController extends CommonController
             $data->vcr_id = 0;
         }
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data,'cateList'=>$cateList, 'vcr'=>$vcr, 'type'=>$type]);
+        return view('osce::admin.resourcemanage.site_manage_edit', ['data' => $data,'cateList'=>$cateList, 'vcr'=>$vcr, 'type'=>$type]);
     }
 
     /**
@@ -179,7 +179,7 @@ class RoomController extends CommonController
             ->select(['id', 'name'])->get();     //关联摄像机
 
         $cateList   =   Area::groupBy('cate')->get();
-        return view('osce::admin.resourcemanage.examroom_add',['vcr' =>$vcr,'cateList'=>$cateList, 'type' => $type]);
+        return view('osce::admin.resourcemanage.site_manage_add',['vcr' =>$vcr,'cateList'=>$cateList, 'type' => $type]);
     }
 
     /**

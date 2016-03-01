@@ -140,7 +140,7 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getAddExam(){
-        return view('osce::admin.exammanage.exam_add');
+        return view('osce::admin.exammanage.exam_assignment_add');
     }
 
     /**
@@ -266,7 +266,7 @@ class ExamController extends CommonController
             $examData = Exam::findOrFail($id);
             $examScreeningData = ExamScreening::where(['exam_id' => $id])->get();
 
-            return view('osce::admin.exammanage.add_basic',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
+            return view('osce::admin.exammanage.basic_info',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -461,7 +461,7 @@ class ExamController extends CommonController
      */
     public function getAddExaminee(Request $request){
         $id = $request->get('id');
-        return view('osce::admin.exammanage.examinee_add', ['id' => $id]);
+        return view('osce::admin.exammanage.examinee_manage_add', ['id' => $id]);
     }
 
     /**
@@ -537,7 +537,7 @@ class ExamController extends CommonController
         $id =   $request    ->  get('id');
         $student    =   Student::findOrFail($id);
 
-        return view('osce::admin.exammanage.examinee_edit', ['item' => $student]);
+        return view('osce::admin.exammanage.examinee_manage_edit', ['item' => $student]);
     }
 
     public function postEditExaminee(Request $request){
@@ -801,7 +801,7 @@ class ExamController extends CommonController
         }
 //        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
-        return view('osce::admin.exammanage.examroom_assignment', [
+        return view('osce::admin.exammanage.exam_room_assignment', [
             'id'                => $exam_id,
             'status'            => $status,
             'examRoomData'      => $serialnumberGroup,
@@ -1393,7 +1393,7 @@ class ExamController extends CommonController
             }
         }
        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
-        return view('osce::admin.exammanage.station_assignment', [
+        return view('osce::admin.exammanage.exam_station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
             'stationData' => $stationData,

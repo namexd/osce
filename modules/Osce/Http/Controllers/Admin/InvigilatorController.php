@@ -51,7 +51,7 @@ class InvigilatorController extends CommonController
         $list       =   $Invigilator    ->getSpInvigilatorInfo();
 
         $isSpValues =   $Invigilator    ->getIsSpValues();
-        return view('osce::admin.resourcemanage.sp_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
+        return view('osce::admin.resourcemanage.staff_manage_invigilator_sp',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
 
     /**
@@ -82,7 +82,7 @@ class InvigilatorController extends CommonController
         $isSpValues =   $Invigilator    ->  getIsSpValues();
 
 
-        return view('osce::admin.resourcemanage.invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
+        return view('osce::admin.resourcemanage.staff_manage_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
     /**
      *  新增监考老师 表单显示页面
@@ -102,7 +102,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function getAddInvigilator(Request $request){
-        return view('osce::admin.resourcemanage.invigilator_add');
+        return view('osce::admin.resourcemanage.staff_manage_invigilator_add');
     }
 
     /**
@@ -120,7 +120,7 @@ class InvigilatorController extends CommonController
      */
     public function getAddSpInvigilator(Request $request){
         $list   =   CaseModel::get();
-        return view('osce::admin.resourcemanage.sp_invigilator_add',['list'=>$list]);
+        return view('osce::admin.resourcemanage.staff_manage_invigilator_sp_add',['list'=>$list]);
     }
     /**
      * 新增监考老师 提交表单
@@ -296,7 +296,7 @@ class InvigilatorController extends CommonController
         $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
 
-        return view('osce::admin.resourcemanage.invigilator_edit',['item'=>$invigilator]);
+        return view('osce::admin.resourcemanage.staff_manage_invigilator_edit',['item'=>$invigilator]);
     }
 
     /**
@@ -328,7 +328,7 @@ class InvigilatorController extends CommonController
         $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
         $list   =   CaseModel::get();
-        return view('osce::admin.resourcemanage.sp_invigilator_edit',['item'=>$invigilator,'list'=>$list]);
+        return view('osce::admin.resourcemanage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'list'=>$list]);
     }
 
     /**
