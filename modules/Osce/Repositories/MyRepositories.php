@@ -192,14 +192,13 @@ class MyRepositories  extends BaseRepository
             'exam_score.score as grade'//成绩
             //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
         )->where('standard.pid','=',$standardPid)->get();
-        dd($data);
 
-        $id = $this->GetIdArr($data);
-        dd($id);
         //获取子项考核点名称
-        if(count($id)>0){
+        if(count($data)>0){
             $standardModel = new Standard();
-            $content = $standardModel->whereIn('id', $id)->select('content')->select('content')->get();
+            $id = $standardModel->where('id', $data[0]['pid'])->get();
+            dd($id);
+            $content = $standardModel->whereIn('id', $data[0]['pid'])->select('content')->select('content')->get();
             foreach($data as $k=>$v){
                 $data[$k]['standardContent'] = $content[$k]['content'];
             }
@@ -235,25 +234,5 @@ class MyRepositories  extends BaseRepository
             }
         }
         return  $PidArr;
-    }
-
-
-    /**
-     * 去除pid 构建数组
-     * @method
-     * @url /osce/
-     * @access public
-     * @author tangjun <tangjun@misrobot.com>
-     * @date 2016年2月26日16:34:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function GetIdArr($data){
-        $idArr = [];
-        if(count($data)>0){
-            foreach($data as $v){
-                $idArr[] = $v['pid'];
-            }
-        }
-        return  $idArr;
     }
 }

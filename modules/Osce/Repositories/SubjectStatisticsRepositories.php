@@ -149,7 +149,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
                 $DB->raw('avg(exam_result.score) as scoreAvg'),
                 $DB->raw('count(exam_result.student_id) as studentQuantity'),
                 $DB->raw('exam_result.score/subject.score as a')
-            );
+            )->orderBy('ExamBeginTime','desc');
         return  $builder->get();
     }
 
