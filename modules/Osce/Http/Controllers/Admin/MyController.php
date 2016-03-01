@@ -112,9 +112,9 @@ class MyController  extends CommonController
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function standardGradeList(Request $request,MyRepositories $subjectStatisticsRepositories){
+    public function standardGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
         //获取考试列表信息
-        $examList = $subjectStatisticsRepositories->GetExamList();
+        $examList = $subject->GetExamList();
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
@@ -136,15 +136,15 @@ class MyController  extends CommonController
             'examId' => 'sometimes|int',//考试编号
             'subjectId' => 'sometimes|int',//科目编号
         ]);
-        $examId = $request->input('examId');
-        $subjectId = $request->input('subjectId');
+        $examId = $request->input('examId',0);
+        $subjectId = $request->input('subjectId',0);
         //查询考核点分析所需数据
-        $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList('326', '52');
+        $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId);//326,52
         //统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList('326', '52',true);
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId,true);//326,52
         $datas = [];
-        $standardContent = '';
-        $qualifiedPass = '';
+        $standardContent = '';//考核点
+        $qualifiedPass = '';//合格率
         if(count($rew) > 0){
             foreach($rew as $key=>$val){
                 $rew[$key]['qualifiedPass'] = '0%';
@@ -201,13 +201,13 @@ class MyController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardDetails(Request $request,MyRepositories $subjectStatisticsRepositories){
-        $standardPid = urldecode(e($request->input('standardPid')));
+        $standardPid = $request->input('standardPid',0);
         //查询考核点分析所需数据
-        $result = $subjectStatisticsRepositories->GetStandardDetails('558');
+        $result = $subjectStatisticsRepositories->GetStandardDetails(558);//558
         //所点击的考核点的子考核点对应的数据
         $datainfo=[];
-        $content = '';
-        $grade = '';
+        $content = '';//考核点
+        $grade = '';//分数
         if(count($result)>0){
             foreach($result as $k=>$v){
                 $datainfo[$k]['number'] = $k+1;//序号

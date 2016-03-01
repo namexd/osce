@@ -39,7 +39,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
 
     public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $SubjectItem,Station $Station,Subject $Subject)
     {
-        //$this->ExamModel = $exam;
+        $this->ExamModel = $exam;
         $this->ExamResultModel = $examResult;
         //$this->ExamStationModel = $ExamStation;
         //$this->SubjectItemModel = $SubjectItem;
