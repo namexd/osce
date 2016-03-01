@@ -8,10 +8,11 @@ $(function(){
     switch(pars.pagename){
         case "subject_statistics":subject_statistics();break;//科目成绩分析
         case "subject_level":subject_level();break;//科目难度分析
+        case "examation_statistics":examation_statistics();break;//考站成绩分析
     }
 });
 
-
+//科目成绩分析
 function subject_statistics(){
     function echartsSubject(standardStr,scoreAvgStr){//科目成绩分析。
         var t = echarts.init(document.getElementById("echarts-Subject")),
@@ -76,9 +77,8 @@ function subject_statistics(){
         var id = $(".subject_select").val();
         ajax(id);
     });
-};
-
-
+}
+//科目难度分析
 function subject_level(){
     function echartsSubject(standardStr,scoreAvgStr){//科目成绩分析。
         var e = echarts.init(document.getElementById("echarts-Subject")),
@@ -186,3 +186,37 @@ function subject_level(){
         })
     });
 };
+
+//考站成绩分析
+function examation_statistics(){
+    //图表插件
+    function echartsSubject(standardStr,scoreAvgStr){
+        var t = echarts.init(document.getElementById("echarts-Subject")),
+            n = {
+                tooltip: {
+                    trigger: "axis"
+                },
+                legend: {
+                    data: ["平均成绩"]
+                },
+                calculable: !0,
+                xAxis: [{
+                    type: "category",
+                    data: standardStr
+                }],
+                yAxis: [{
+                    type: "value"
+                }],
+                series: [
+                    {
+                        name: "平均成绩",
+                        type: "bar",
+                        data: scoreAvgStr
+                    }]
+            };
+        t.setOption(n);
+    }
+    //默认加载最近一次考试
+    var $examId = $(".exam_select").children().first().val();
+    //var $subjectId =
+}
