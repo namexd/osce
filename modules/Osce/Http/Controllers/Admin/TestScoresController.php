@@ -99,7 +99,7 @@ class TestScoresController  extends CommonController
     public function studentSubjectList(TestScoreRepositories $TestScoreRepositories){
         //获取已考过试的所有学生
         $studentList = $TestScoreRepositories->getStudent();
-        return view('osce::admin.statistics_query.teach_statistics',[
+        return view('osce::admin.statisticalanalysis.statistics_student_subject',[
             'studentList' => $studentList
         ]);
     }
