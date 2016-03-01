@@ -115,12 +115,14 @@ class SubjectStatisticsController  extends CommonController
             //dd($val);
             //给结果展示列表中序号列加入数据
             $rew[$key]['number'] = $key + 1;
-            $rew[$key]['qualifiedPass'] = '0%';
+            $rew[$key]['qualifiedPass'] = '0';
             $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,7);
             foreach ($rewTwo as $v) {
                 if ($val['ExamId'] == $v['ExamId']) {
-                    $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100) . '%';
+                    $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100);
                 }
+
+
             }
             if ($standardStr) {
                 $standardStr .= ',' . $val['ExamBeginTime'];
@@ -133,6 +135,7 @@ class SubjectStatisticsController  extends CommonController
                // $scoreAvgStr .= $val['scoreAvg'];
                 $qualifiedPass.=$val['qualifiedPass'];
             }
+             $val['qualifiedPass']=$val['qualifiedPass'].'%';
 
         }
         $StrList = [
