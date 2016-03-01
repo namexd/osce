@@ -136,8 +136,11 @@ class MyController  extends CommonController
             'examId' => 'sometimes|int',//考试编号
             'subjectId' => 'sometimes|int',//科目编号
         ]);
+
         $examId = $request->input('examId',0);
         $subjectId = $request->input('subjectId',0);
+
+//        dd($examId);
         //查询考核点分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId);//326,52
         //统计合格的人数
@@ -147,13 +150,13 @@ class MyController  extends CommonController
         $qualifiedPass = '';//合格率
         if(count($rew) > 0){
             foreach($rew as $key=>$val){
-                $rew[$key]['qualifiedPass'] = '0%';
+                $rew[$key]['qualifiedPass'] = '0';
                 //统计合格率
                 if(count($rewTwo) > 0){
                     foreach($rewTwo as $v){
                         if($val['pid'] == $v['pid']){
                             //$v['studentQuantity']:合格人数，$val['studentQuantity']总人数
-                            $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';//合格率
+                            $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100);//合格率
                         }
                     }
                 }
@@ -172,6 +175,7 @@ class MyController  extends CommonController
                     $standardContent .= $val->standardContent;
                     $qualifiedPass .= $val->qualifiedPass;
                 }
+                $rew[$key]['qualifiedPass'] = $rew[$key]['qualifiedPass'].'%';
             }
         }
         $StrList = [
@@ -182,6 +186,7 @@ class MyController  extends CommonController
             return $this->success_data(['standardList'=>$datas,'StrList'=>$StrList]);
         }
         //将数据展示到页面
+//        dd($datas);
         return view('osce::admin.statistics_query.statistics_check', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表

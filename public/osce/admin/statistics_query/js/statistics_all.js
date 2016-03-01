@@ -82,6 +82,7 @@ function subject_statistics(){
 //科目难度分析
 function subject_level(){
     function echartsSubject(timeStr,passStr){//科目成绩分析。
+
         var e = echarts.init(document.getElementById("echarts-Subject")),
             a = {
                 tooltip: {
@@ -99,7 +100,7 @@ function subject_level(){
                 yAxis: [{
                     type: "value",
                     axisLabel: {
-                        formatter: "value"
+                        formatter: "{value} %"
                     }
                 }],
                 series: [{
@@ -115,12 +116,6 @@ function subject_level(){
                                 type: "min",
                                 name: "最小值"
                             }]
-                    },
-                    markLine: {
-                        data: [{
-                            type: "average",
-                            name: "平均值"
-                        }]
                     }
                 }]
             };
@@ -238,5 +233,69 @@ function examation_statistics(){
 }
 //考核点分析
 function statistics_check(){
-
+    //图表插件
+    function echartsSubject(standardContentStr,qualifiedPassStr){
+        var t = echarts.init(document.getElementById("echarts-Subject")),
+            n = {
+                tooltip: {
+                    trigger: "axis"
+                },
+                legend: {
+                    data: ["合格率"]
+                },
+                calculable: !0,
+                xAxis: [{
+                    type: "category",
+                    data: standardContentStr
+                }],
+                yAxis: [{
+                    type: "value"
+                }],
+                series: [
+                    {
+                        name: "平均成绩",
+                        type: "bar",
+                        data: qualifiedPassStr
+                    }]
+            };
+        t.setOption(n);
+    }
+    //默认加载最近一次考试
+    var $examId = $(".exam_select").children().first().val();
+    var $subjectId = $(".subject_select").children().first().val();
+    var url = pars.ajaxUrl;
+    console.log(url);
+    function ajax(examId,subjectId){
+        $.ajax({
+            url:url+"?examId="+examId+"&subjectId="+subjectId,
+            type:"get",
+            cache:false,
+            success:function(res){
+                $(".subjectBody").empty();
+                var standardContentStr = res.data.StrList.standardContent.split(",");
+                var qualifiedPassStr = res.data.StrList.qualifiedPass.split(",");
+                if(standardContentStr){echartsSubject(standardContentStr,qualifiedPassStr);}
+                $(res.data.standardList).each(function(){
+                    $(".subjectBody").append('<tr>' +
+                        '<td>'+this.number+'</td>' +
+                        '<td>'+this.standardContent+'</td>' +
+                        '<td>'+this.scoreAvg+'</td>' +
+                        '<td>'+this.studentQuantity+'</td>' +
+                        '<td>'+this.qualifiedPass+'</td>' +
+                        '<td>' +
+                        '<a href="">' +
+                        '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
+                        '</a>' +
+                        '</td></tr>')
+                })
+            }
+        })
+    }
+    ajax($examId,$subjectId);
+    //筛选
+    $("#search").click(function(){
+        var subjectId = $(".subject_select").val();
+        var examId = $(".exam_select").val();
+        ajax(examId,subjectId);
+    });
 }
