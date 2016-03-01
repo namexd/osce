@@ -161,29 +161,29 @@ class TestScoreRepositories  extends BaseRepository
         })->groupBy('exam.id')->get();
         return $builder;
     }
-    /**
-     * 考生成绩和科目成绩详情
-     * @access public
-     * @param $ExamId
-     * @param int $qualified
-     * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
-     * @date    2016-2-29 09:29:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getStudentDataList($student,$id,$type){
-        //获取学生考试结果
-        $builder = new ExamResult();
-        $builder = $builder->where('subject.id','=',$id)->where('student.id','=',$student)->leftJoin('student', function($join){
-            $join -> on('student.id', '=', 'exam_result.student_id');
-        })->leftJoin('exam_station', function($join){
-            $join -> on('exam_station.station_id', '=', 'exam_result.station_id');
-        })->leftJoin('station', function($join){
-            $join -> on('station.id', '=', 'exam_result.station_id');
-        })->leftJoin('subject', function($join){
-            $join -> on('subject.id', '=', 'station.subject_id');
-        })->leftJoin('exam', function($join){
-            $join -> on('exam.id', '=', 'exam_station.exam_id');
-        })->groupBy('exam.id')->get();
-    }
+//    /**
+//     * 考生成绩和科目成绩详情
+//     * @access public
+//     * @param $ExamId
+//     * @param int $qualified
+//     * @return mixed
+//     * @author weihuiguo <weihuiguo@misrobot.com>
+//     * @date    2016-2-29 09:29:59
+//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+//     */
+//    public function getStudentDataList($student,$id,$type){
+//        //获取学生考试结果
+//        $builder = new ExamResult();
+//        if($type == 1){
+//            $builder->where('exam.id','=',$id)->where('exam_result.student_id','=',$student);
+//        }else{
+//            $builder->where('subject.id','=',$id)->where('exam_result.student_id','=',$student);
+//        }
+//        $builder = $builder->leftJoin('student', function($join){
+//            $join -> on('student.id', '=', 'exam_result.student_id');
+//        })->get();
+//        dd($builder);
+//    }
 }
+
+

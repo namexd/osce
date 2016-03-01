@@ -12,7 +12,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_statistics','standardStr':'{{ $StrList["standardStr"] }}','scoreAvgStr':'{{ $StrList["scoreAvgStr"] }}','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.SubjectGradeList') }}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_level','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -23,21 +23,21 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li><a href="#">科目成绩分析</a></li>
-                        <li class="active"><a href="#">科目难度分析</a></li>
-                        <li><a href="#">考站成绩分析</a></li>
-                        <li><a href="#">考核点分析</a></li>
+                        <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">科目成绩分析</a></li>
+                        <li class="active"><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}">科目难度分析</a></li>
+                        <li><a href="{{ route('osce.admin.SubjectStatisticsController.stationGradeList') }}">考站成绩分析</a></li>
+                        <li><a href="{{ route('osce.admin.SubjectStatisticsController.standardGradeList') }}">考核点分析</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
-                <label for="" class="pull-left exam-name">科目名称：</label>
                 <div class="input-group" style="margin:20px 0;">
+                    <label for="" class="pull-left exam-name">科目名称：</label>
                     <select name="name" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
-                        @foreach(@$examlist as $exam)
-                        <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
+                        @foreach($subjectList as $subject)
+                        <option value="{{ $subject['id'] }}">{{ $subject['title'] }}</option>
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
