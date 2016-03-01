@@ -65,9 +65,14 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//考生成绩详情
 		Route::get('testscores/get-tester-score-detail',['uses'=>'TestScoresController@getTesterScoreDetail','as'=>'osce.admin.TestScoresController.getTesterScoreDetail']);
 		//考站成绩分析
-		Route::get('subject-statistics/station-grade-list',['uses'=>'SubjectStatisticsController@stationGradeList','as'=>'osce.admin.SubjectStatisticsController.stationGradeList']);
+		Route::get('subject-statistics/station-grade-list',['uses'=>'MyController@stationGradeList','as'=>'osce.admin.SubjectStatisticsController.stationGradeList']);
 		//考核点分析
-		Route::get('subject-statistics/standard-grade-list',['uses'=>'SubjectStatisticsController@standardGradeList','as'=>'osce.admin.SubjectStatisticsController.standardGradeList']);
+		Route::get('subject-statistics/standard-grade-list',['uses'=>'MyController@standardGradeList','as'=>'osce.admin.SubjectStatisticsController.standardGradeList']);
+
+		//考核点查看（详情）
+		Route::get('subject-statistics/standardDetails',['uses'=>'MyController@standardDetails','as'=>'osce.admin.SubjectStatisticsController.standardDetails']);
+
+
 	});
 
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
