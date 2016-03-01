@@ -121,11 +121,11 @@ class SubjectStatisticsController  extends CommonController
                 }
             }
             if ($standardStr) {
-                $standardStr .= ',' . $val['ExamName'];
+                $standardStr .= ',' . $val['ExamBeginTime'];
                 $timeAvgStr .= ',' . $val['timeAvg'];
                 $scoreAvgStr .= ',' . $val['scoreAvg'];
             } else {
-                $standardStr .= $val['ExamName'];
+                $standardStr .= $val['ExamBeginTime'];
                 $timeAvgStr .= $val['timeAvg'];
                 $scoreAvgStr .= $val['scoreAvg'];
             }
