@@ -13,6 +13,8 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
 use Illuminate\Http\Request;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
+use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationTeacher;
 
 /**
  * Class SubjectStatisticsController
@@ -57,7 +59,8 @@ class MyController  extends CommonController
             'examId' => 'sometimes|int',//考试编号
             'subjectId' => 'sometimes|int',//科目编号
         ]);
-        $examId = $request->input('examId',0);
+        $examId = $request->input('examId',count($examInfo)>0?$examInfo[0]['id']:0);
+
         $subjectId = $request->input('subjectId',0);
         //获取考站分析列表
         $list = $subjectStatisticsRepositories->GetSubjectStationStatisticsList($examId, $subjectId);
@@ -94,6 +97,8 @@ class MyController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['stationList'=>$datas,'StrList'=>$StrList]);
         }
+        $subjectList = $this->subjectDownlist($examId);
+        $subjectInfo = count($subjectList)?$subjectList:$subjectInfo;
         //dd($datas);
         //将数据展示到页面
         return view('osce::admin.statisticalanalysis.statistics_examation', [
@@ -119,6 +124,7 @@ class MyController  extends CommonController
     public function standardGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
         //获取考试列表信息
         $examList = $subject->GetExamList();
+
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
@@ -141,8 +147,12 @@ class MyController  extends CommonController
             'subjectId' => 'sometimes|int',//科目编号
         ]);
 
-        $examId = $request->input('examId',0);
+
+        $examId = $request->input('examId',count($examInfo)>0?$examInfo[0]['id']:0);
+
+
         $subjectId = $request->input('subjectId',0);
+
 
 //        dd($examId);
         //查询考核点分析所需数据
@@ -189,17 +199,17 @@ class MyController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['standardList'=>$datas,'StrList'=>$StrList]);
         }
+        $subjectList = $this->subjectDownlist($examId);
+        $subjectInfo = count($subjectList)?$subjectList:$subjectInfo;
         //将数据展示到页面
 //        dd($datas);
         return view('osce::admin.statisticalanalysis.statistics_check', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'standardList' =>$datas, //考核点分析列表
-              'StrList'=>$StrList
+            'StrList'=>$StrList,
         ]);
     }
-
-
     /**考核点查看（详情）
      * @method GET
      * @url  /osce/admin/subject-statistics/standardDetails
@@ -242,5 +252,51 @@ class MyController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['datainfo'=>$datainfo,'StrList'=>$StrList]);
         }
+    }
+    /**
+     * 动态获取ajax列表
+     * @author
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSubject(Request $request)
+    {
+        //验证
+        $this->validate($request, [
+            'exam_id'=>'sometimes|integer'
+        ]);
+
+        $examId = $request->input('exam_id',"");
+
+        try {
+            $subjectList = $this->subjectDownlist($examId);
+
+            return response()->json($this->success_data($subjectList->toArray()));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+    }
+    /**
+     * 出科目的下拉菜单
+     * @param $examId
+     * @return array|\Illuminate\Support\Collection
+     * @author Jiangzhiheng
+     */
+    private function subjectDownlist($examId)
+    {
+        /*
+         * 给考试对应的科目下拉数据
+         */
+        $subjectIdList = StationTeacher::where('exam_id', $examId)
+            ->groupBy('station_id')->get()->pluck('station_id');
+
+        $stationList = Station::whereIn('id', $subjectIdList)->groupBy('subject_id')->get();
+
+        $subjectList = [];
+        foreach ($stationList as $value) {
+            $subjectList[] = $value->subject;
+        }
+        $subjectList = collect($subjectList);
+        return $subjectList;
     }
 }

@@ -6,174 +6,140 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "statistics_student_subject":statistics_student_subject();break;//科目成绩分析
+        case "statistics_student_score":statistics_student_score();break;//考生成绩分析
         case "subject_level":subject_level();break;//科目难度分析
 
     }
 });
 
-//科目成绩分析
-function subject_statistics(){
-    function echartsSubject(standardStr,scoreAvgStr){//科目成绩分析。
-        var t = echarts.init(document.getElementById("echarts-Subject")),
-            n = {
+//考生成绩分析
+function statistics_student_score(){
+    //默认加载select
+    var $selectId = $(".exam_select").val();
+    function select(selectId){
+        $(".student_select").empty();
+        var url ='/osce/admin/testscores/ajax-get-tester';
+        $.ajax({
+            url:url+'?examid='+selectId,
+            type:"post",
+            cache:false,
+            async:false,
+            success:function(res){
+                $(res).each(function(){
+                    $(".student_select").append('<option value="'+this.id+'">'+this.name+'</option>');
+                });
+            }
+        })
+    }
+    select($selectId);
+    //筛选联动
+    $(".exam_select").change(function(){
+        var id = $(this).val();
+        select(id);
+    });
+    var $studentId = $(".student_select").val();
+    function echartsSubject(studentScoreStr,scoreAvgStr){//科目成绩分析。
+        var h = echarts.init(document.getElementById("echarts-Subject")),
+            d = {
                 tooltip: {
                     trigger: "axis"
                 },
                 legend: {
-                    data: ["平均成绩"]
+                    orient: "vertical",
+                    x: "right",
+                    y: "bottom",
+                    data: ["考生成绩", "平均分"]
                 },
+                polar: [{
+                    indicator: [{
+                        text: "冠心病问病史",
+                        max: 100
+                    },
+                        {
+                            text: "肠胃炎问病史",
+                            max: 100
+                        },
+                        {
+                            text: "发热咳嗽问病史",
+                            max: 100
+                        },
+                        {
+                            text: "体格检查",
+                            max: 100
+                        },
+                        {
+                            text: "无菌操作",
+                            max: 100
+                        },
+                        {
+                            text: "心血管疾病",
+                            max: 100
+                        }]
+                }],
                 calculable: !0,
-                xAxis: [{
-                    type: "category",
-                    data: standardStr
-                }],
-                yAxis: [{
-                    type: "value"
-                }],
-                series: [
-                    {
-                        name: "平均成绩",
-                        type: "bar",
-                        data: scoreAvgStr
-                    }]
+                series: [{
+                    name: "预算 vs 开销",
+                    type: "radar",
+                    data: [{
+                        value: studentScoreStr,
+                        name: "考生成绩"
+                    },
+                        {
+                            value: scoreAvgStr,
+                            name: "平均分"
+                        }]
+                }]
             };
-        t.setOption(n);
+        h.setOption(d);
     }
     //默认加载最近一次考试
-    var $subId = $(".subject_select").children().first().val();
-    var url = pars.ajaxUrl;
-    function ajax(id){
+    function ajax(examId,studentId){
+        var url = '/osce/admin/testscores/ajax-get-subject';
         $.ajax({
-            url:url+'?id='+id,
-            type:'get',
+            url:url+'?examid='+examId+'&student_id='+studentId,
+            type:"get",
             cache:false,
             success:function(res){
                 $(".subjectBody").empty();
-                var standardStr = res.data.StrList.standardStr.split(",");
-                var scoreAvgStr=res.data.StrList.scoreAvgStr.split(",");
-                if(standardStr){echartsSubject(standardStr,scoreAvgStr);}//科目成绩分析。
-                $(res.data.list).each(function(){
+                console.log(res);
+                var scoreAvgStr = [];
+                var studentScoreStr = [];
+                var subjectStr = [];
+                $(res.avgdata).each(function(){
+                    scoreAvgStr.push(this.scoreAvg);
+                });
+                $(res.singledata).each(function(){
+                    studentScoreStr.push(this.score);
+                    subjectStr.push(this.title);
+                });
+                $(res.list).each(function(i){
                     $(".subjectBody").append('<tr>' +
-                        '<td>'+this.number+'</td>' +
+                        '<td>'+this.i+'</td>' +
                         '<td>'+this.title+'</td>' +
                         '<td>'+this.mins+'</td>' +
                         '<td>'+this.timeAvg+'</td>' +
                         '<td>'+this.scoreAvg+'</td>' +
-                        '<td>'+this.studentQuantity+'</td>' +
-                        '<td>'+this.qualifiedPass+'</td>' +
+                        '<td>'+this.time+'</td>' +
+                        '<td>'+this.score+'</td>' +
                         '<td>' +
+                        '<a href="/osce/admin/testscores/student-subject-list?examid='+examId+'&student_id='+studentId+'">' +
+                        '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
+                        '</a>' +
                         '<a href="">' +
                         '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
                         '</a>' +
                         '</td></tr>')
-                })
+                });
+                if(studentScoreStr){echartsSubject(studentScoreStr,scoreAvgStr);}
             }
-        });
+        })
     }
-    ajax($subId);
+    ajax($selectId,$studentId);
     //筛选
     $("#search").click(function(){
-        var id = $(".subject_select").val();
-        ajax(id);
+        ajax($selectId,$studentId);
     });
 }
-//科目难度分析
-function statistics_student_subject(){
-    function echartsSubject(timeStr,passStr){//科目成绩分析。
 
-        var e = echarts.init(document.getElementById("echarts-Subject")),
-            a = {
-                tooltip: {
-                    trigger: "axis"
-                },
-                legend: {
-                    data: ["得分","平均分"]
-                },
-                calculable: !0,
-                xAxis: [{
-                    type: "category",
-                    boundaryGap: !1,
-                    data:["2016-02", "2016-03", "2016-04", "2016-05"]
-                }],
-                yAxis: [{
-                    type: "value",
-                    axisLabel: {
-                        formatter: "{value}"
-                    }
-                }],
-                series: [{
-                    name: "得分",
-                    type: "line",
-                    data: [70,60,70,50],
-                    markPoint: {
-                        data: [{
-                            type: "max",
-                            name: "最大值"
-                        },
-                            {
-                                type: "min",
-                                name: "最小值"
-                            }]
-                    }
-                },{
-                    name: "平均分",
-                    type: "line",
-                    data: [30,50,20,70],
-                    markPoint: {
-                        data: [{
-                            type: "max",
-                            name: "最大值"
-                        },
-                            {
-                                type: "min",
-                                name: "最小值"
-                            }]
-                    }
-                }]
-            };
-        e.setOption(a);
-    }
-    //默认加载最近一次考试
-    var $subId = $(".subject_select").children().first().val();
-    var url = pars.ajaxUrl;
-    function ajax(id){
-        $.ajax({
-            url:url+'?id='+id,
-            type:'get',
-            cache:false,
-            success:function(res){
-                console.log(res);
-                $(".subjectBody").empty();
-                var timeStr = res.data.StrList.standardStr.split(",");
-                var passStr=res.data.StrList.qualifiedPass.split(",");
-                console.log(passStr);
-                if(timeStr){echartsSubject(timeStr,passStr);}
-                $(res.data.list).each(function(){
-                    $(".subjectBody").append('<tr>' +
-                        '<td>'+this.number+'</td>' +
-                        '<td>'+this.ExamName+'</td>' +
-                        '<td>'+this.ExamBeginTime+'</td>' +
-                        '<td>'+this.timeAvg+'</td>' +
-                        '<td>'+this.scoreAvg+'</td>' +
-                        '<td>'+this.studentQuantity+'</td>' +
-                        '<td>'+this.qualifiedPass+'</td>' +
-                        '<td>' +
-                        '<a href="">' +
-                        '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
-                        '</a>' +
-                        '</td></tr>')
-                })
-            }
-        });
-    }
-    echartsSubject();
-   // ajax($subId);
-    //筛选
-    $("#search").click(function(){
-        var id = $(".subject_select").val();
-        ajax(id);
-    });
-};
 
 

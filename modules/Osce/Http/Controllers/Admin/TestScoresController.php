@@ -96,11 +96,30 @@ class TestScoresController  extends CommonController
      * @date    2016年2月26日14:56:58
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function studentSubjectList(TestScoreRepositories $TestScoreRepositories){
+    public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreRepositories){
         //获取已考过试的所有学生
-        $studentList = $TestScoreRepositories->getStudent();
+        $student_id = $request->student_id;
+        $subid = $request->subject_id;
+        //获取学生科目成绩
+        $singledata = $TestScoreRepositories->getStudentScoreCount($student_id,$subid)->toArray();
+        //获取科目平均成绩
+        $avgdata = $TestScoreRepositories->getStudentScoreCount('',$subid)->toArray();
+        foreach($singledata as $k=>$v){
+            if($avgdata[$k]['id'] == $v['id']){
+                $singledata[$k]['timeAvg'] = $avgdata[$k]['timeAvg'];
+                $singledata[$k]['scoreAvg'] = $avgdata[$k]['scoreAvg'];
+                $singledata[$k]['time'] = date("Y年m月",strtotime($v['begin_dt']));
+                unset($singledata[$k]['begin_dt']);
+            }
+        }
+        $data = [
+            'list' => $singledata,//列表
+            'singledata' => $singledata,//雷达图学生成绩
+            'avgdata' => $avgdata//平均成绩
+        ];
+        dd($data);
         return view('osce::admin.statisticalanalysis.statistics_student_subject',[
-            'studentList' => $studentList
+            'data' => $data
         ]);
     }
 

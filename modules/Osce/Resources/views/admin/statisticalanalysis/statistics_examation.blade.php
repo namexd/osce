@@ -8,6 +8,35 @@
     <!-- ECharts -->
     <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
     <script src="{{asset('osce/admin/statisticalanalysis/statistics_subject.js')}}"></script>
+
+<script>
+    $(function(){
+        $('#exam-id').change(function(){
+            var examId = $(this).val();
+            $.ajax({
+                type:'get',
+                url:'{{route("osce.admin.SubjectStatisticsController.getSubject")}}',
+                data:{exam_id:examId},
+                success:function(res){
+                    if(res.code!=1){
+                        layer.alert(res.message);
+                    }else{
+                        var data = res.data;
+                        var html = '';
+                        for(var i in data){
+                            html += '<option value="'+data[i].id+'">'+data[i].title+'</option>';
+                        }
+
+                        $('#subject-id').html(html);
+                    }
+                },
+                error:function(res){
+                    layer.alert('通讯失败！')
+                }
+            });
+        });
+    })
+</script>
 @stop
 
 
@@ -35,13 +64,13 @@
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="margin:20px 0;">
                     <label for="" class="pull-left exam-name">考试名称：</label>
-                    <select name="name" class="input-sm form-control exam_select" style="width: 210px;height: 34px">
+                    <select name="name" id="exam-id" class="input-sm form-control exam_select" style="width: 210px;height: 34px">
                         @foreach(@$examInfo as $exam)
                         <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
                         @endforeach
                     </select>
                     <label for="" class="pull-left exam-name" style="margin-left: 20px">科目名称：</label>
-                    <select name="name" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
+                    <select name="name" id="subject-id" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
                         @foreach(@$subjectInfo as $subject)
                             <option value="{{ $subject['id'] }}">{{ $subject['title'] }}</option>
                         @endforeach
