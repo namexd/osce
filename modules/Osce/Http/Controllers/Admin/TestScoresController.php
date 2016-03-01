@@ -51,7 +51,7 @@ class TestScoresController  extends CommonController
             //获取当前考试下的所有学生
             $tester = $TestScoreRepositories->getTester($examId);
         }
-        return $this->success_data($tester);
+        return $tester;
     }
 
     /**
@@ -151,8 +151,7 @@ class TestScoresController  extends CommonController
             'singledata' => $singledata,//雷达图学生成绩
             'avgdata' => $avgdata//平均成绩
         ];
-        dd($data);
-        return response()->json($this->success_data($data));
+        return $this->success_data($data);
     }
 
 //    /**

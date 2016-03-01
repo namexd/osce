@@ -80,10 +80,9 @@ function subject_statistics(){
 }
 //科目难度分析
 function subject_level(){
-    function echartsSubject(standardStr,scoreAvgStr){//科目成绩分析。
+    function echartsSubject(timeStr,passStr){//科目成绩分析。
         var e = echarts.init(document.getElementById("echarts-Subject")),
             a = {
-
                 tooltip: {
                     trigger: "axis"
                 },
@@ -94,7 +93,7 @@ function subject_level(){
                 xAxis: [{
                     type: "category",
                     boundaryGap: !1,
-                    data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+                    data: timeStr
                 }],
                 yAxis: [{
                     type: "value",
@@ -103,9 +102,9 @@ function subject_level(){
                     }
                 }],
                 series: [{
-                    name: "最高气温",
+                    name: "合格率",
                     type: "line",
-                    data: [11, 11, 15, 13, 12, 13, 10],
+                    data: passStr,
                     markPoint: {
                         data: [{
                             type: "max",
@@ -129,34 +128,7 @@ function subject_level(){
     //默认加载最近一次考试
     var $subId = $(".subject_select").children().first().val();
     var url = pars.ajaxUrl;
-    $.ajax({
-        url:url+'?id='+$subId,
-        type:'get',
-        cache:false,
-        success:function(res){
-            var standardStr = res.data.StrList.standardStr.split(",");
-            var scoreAvgStr=res.data.StrList.scoreAvgStr.split(",");
-            if(standardStr){echartsSubject(standardStr,scoreAvgStr);}//科目成绩分析。
-            $(res.data.list).each(function(){
-                $(".subjectBody").append('<tr>' +
-                    '<td>'+this.number+'</td>' +
-                    '<td>'+this.title+'</td>' +
-                    '<td>'+this.mins+'</td>' +
-                    '<td>'+this.timeAvg+'</td>' +
-                    '<td>'+this.scoreAvg+'</td>' +
-                    '<td>'+this.studentQuantity+'</td>' +
-                    '<td>'+this.qualifiedPass+'</td>' +
-                    '<td>' +
-                    '<a href="">' +
-                    '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
-                    '</a>' +
-                    '</td></tr>')
-            })
-        }
-    });
-    //筛选
-    $("#search").click(function(){
-        var id = $(".subject_select").val();
+    function ajax(id){
         $.ajax({
             url:url+'?id='+id,
             type:'get',
@@ -164,14 +136,15 @@ function subject_level(){
             success:function(res){
                 console.log(res);
                 $(".subjectBody").empty();
-                var standardStr = res.data.StrList.standardStr.split(",");
-                var scoreAvgStr=res.data.StrList.scoreAvgStr.split(",");
-                if(standardStr){echartsSubject(standardStr,scoreAvgStr);}//科目成绩分析。
+                var timeStr = res.data.StrList.standardStr.split(",");
+                var passStr=res.data.StrList.qualifiedPass.split(",");
+                console.log(passStr);
+                if(timeStr){echartsSubject(timeStr,passStr);}
                 $(res.data.list).each(function(){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+this.number+'</td>' +
-                        '<td>'+this.title+'</td>' +
-                        '<td>'+this.mins+'</td>' +
+                        '<td>'+this.ExamName+'</td>' +
+                        '<td>'+this.ExamBeginTime+'</td>' +
                         '<td>'+this.timeAvg+'</td>' +
                         '<td>'+this.scoreAvg+'</td>' +
                         '<td>'+this.studentQuantity+'</td>' +
@@ -183,7 +156,13 @@ function subject_level(){
                         '</td></tr>')
                 })
             }
-        })
+        });
+    }
+    ajax($subId);
+    //筛选
+    $("#search").click(function(){
+        var id = $(".subject_select").val();
+        ajax(id);
     });
 };
 

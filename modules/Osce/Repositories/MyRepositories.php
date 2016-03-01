@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Repositories;
+use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
@@ -44,22 +45,6 @@ class MyRepositories  extends BaseRepository
     {
         $this->ExamResultModel = $examResult;
         $this->StandardModel = $Standard;
-    }
-
-    /**
-     * 获取考试列表
-     * @method
-     * @url /osce/
-     * @access public
-     * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function GetExamList(){
-        $exam = new Exam();
-        $data = $exam->select('id','name')->get();
-        return $data;
     }
 
     /**
@@ -186,35 +171,29 @@ class MyRepositories  extends BaseRepository
         $builder = $this->StandardModel->leftJoin('exam_score', function($join){
             $join -> on('exam_score.standard_id', '=','standard.id');
         });
-        $data = $builder->select(
+        $data = $builder->where('standard.pid','=',$standardPid)
+            ->groupBy('standard.id')
+            ->select(
             'standard.pid',//评分标准父编号
-            'standard.score as standardScore', //总分
+            'standard.content',//名称
+            'standard.score', //总分
             'exam_score.score as grade'//成绩
             //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
-        )->where('standard.pid','=',$standardPid)->get();
-
-        //获取子项考核点名称
-        if(count($data)>0){
-            $standardModel = new Standard();
-            $id = $standardModel->where('id', $data[0]['pid'])->get();
-            dd($id);
-            $content = $standardModel->whereIn('id', $data[0]['pid'])->select('content')->select('content')->get();
-            foreach($data as $k=>$v){
-                $data[$k]['standardContent'] = $content[$k]['content'];
-            }
+        )->get();
+        //dd($data);
+        return $data;
+    }
+    public function GetStandardDetails1($standardPid){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->StandardModel->where('pid','=',$standardPid)->get();
+        $examScore = new ExamScore();
+        $id = $this->GetIdArr($builder);
+        if(count($id)>0){
+            $grade = $examScore->whereIn('standard_id', $id)->get();
+            dd($grade);
         }
 
-
-        dd($data);
-        $pidData = $this->StandardModel->select(
-            'standard.pid',//评分标准父编号
-            'standard.score as totalScore' //总分
-        )->where('standard.id','=',$standardPid)->first();
-
-        return [
-            'data'=>$data,
-          //  'pidData'=>$pidData
-        ];
+        dd($builder);
     }
 
     /**
@@ -234,5 +213,15 @@ class MyRepositories  extends BaseRepository
             }
         }
         return  $PidArr;
+    }
+
+    public function GetIdArr($StandardData){
+        $idArr = [];
+        if(count($StandardData)>0){
+            foreach($StandardData as $v){
+                $idArr[] = $v['id'];
+            }
+        }
+        return  $idArr;
     }
 }
