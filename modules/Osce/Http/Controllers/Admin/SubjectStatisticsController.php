@@ -27,7 +27,7 @@ class SubjectStatisticsController  extends CommonController
      * @url /osce/admin/subject-statistics/subject-grade-list
      * @access public
      * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
-     * @author tangjun <tangjun@misrobot.com>
+     * @author yangshaolin <yangshaolin@misrobot.com>
      * @date    2016年2月23日15:43:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -39,6 +39,7 @@ class SubjectStatisticsController  extends CommonController
         $rew = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid);
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectStatisticsList($examid,true);
+        //dd($rewTwo);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
         $standardStr = '';
         $timeAvgStr = '';
@@ -98,25 +99,26 @@ class SubjectStatisticsController  extends CommonController
     public function  SubjectGradeAnalyze(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $subid = \Input::get('id');
         //查询分析所需数据
-        $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74);
+        $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(53);
 
 
         //主要用来统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(74, true);
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(53, true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
         //统计合格率
         // dd($rewTwo);
         $standardStr = '';
         $timeAvgStr = '';
         $scoreAvgStr = '';
+        $qualifiedPass='';
         foreach ($rew as $key => $val) {
             //dd($val);
             //给结果展示列表中序号列加入数据
             $rew[$key]['number'] = $key + 1;
             $rew[$key]['qualifiedPass'] = '0%';
-            $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,10);
+            $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,7);
             foreach ($rewTwo as $v) {
-                if ($val['subjectId'] == $v['subjectId']) {
+                if ($val['ExamId'] == $v['ExamId']) {
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100) . '%';
                 }
             }
@@ -124,17 +126,20 @@ class SubjectStatisticsController  extends CommonController
                 $standardStr .= ',' . $val['ExamBeginTime'];
                 $timeAvgStr .= ',' . $val['timeAvg'];
                 $scoreAvgStr .= ',' . $val['scoreAvg'];
+                $qualifiedPass.=','.$val['qualifiedPass'];
             } else {
                 $standardStr .= $val['ExamBeginTime'];
                 $timeAvgStr .= $val['timeAvg'];
                 $scoreAvgStr .= $val['scoreAvg'];
+                $qualifiedPass.=$val['qualifiedPass'];
             }
 
         }
         $StrList = [
             'standardStr' => $standardStr,
             'timeAvgStr' => $timeAvgStr,
-            'scoreAvgStr' => $scoreAvgStr
+            'scoreAvgStr' => $scoreAvgStr,
+            'qualifiedPass'=>$qualifiedPass
         ];
 
         $subject = new Subject();
@@ -145,7 +150,7 @@ class SubjectStatisticsController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
         }
-         //dd($rew);
+        // dd($rew);
          //dd($StrList);
          //dd($subjectList);
         //dd($subjectlist);
