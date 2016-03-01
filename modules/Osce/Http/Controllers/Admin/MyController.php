@@ -13,6 +13,8 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
 use Illuminate\Http\Request;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
+use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationTeacher;
 
 /**
  * Class SubjectStatisticsController
@@ -242,5 +244,53 @@ class MyController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['datainfo'=>$datainfo,'StrList'=>$StrList]);
         }
+    }
+    /**
+     * 动态获取ajax列表
+     * @author Jiangzhiheng
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSubject(Request $request)
+    {
+        //验证
+        $this->validate($request, [
+            'exam_id'=>'sometimes|integer'
+        ]);
+
+        $examId = $request->input('exam_id',"");
+
+        try {
+            $subjectList = $this->subjectDownlist($examId);
+
+            return response()->json($this->success_data($subjectList->toArray()));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+    }
+
+
+    /**
+     * 出科目的下拉菜单
+     * @param $examId
+     * @return array|\Illuminate\Support\Collection
+     * @author Jiangzhiheng
+     */
+    private function subjectDownlist($examId)
+    {
+        /*
+         * 给考试对应的科目下拉数据
+         */
+        $subjectIdList = StationTeacher::where('exam_id', $examId)
+            ->groupBy('station_id')->get()->pluck('station_id');
+
+        $stationList = Station::whereIn('id', $subjectIdList)->groupBy('subject_id')->get();
+
+        $subjectList = [];
+        foreach ($stationList as $value) {
+            $subjectList[] = $value->subject;
+        }
+        $subjectList = collect($subjectList);
+        return $subjectList;
     }
 }
