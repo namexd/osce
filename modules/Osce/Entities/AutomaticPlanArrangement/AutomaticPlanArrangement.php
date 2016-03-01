@@ -121,6 +121,7 @@ class AutomaticPlanArrangement
             if (count($this->_S) == 0) {
                 throw new \Exception('当前考试没有安排学生！', -705);
             }
+
             /*
              * 排考的时候删除原先的所有数据
              */
@@ -141,6 +142,7 @@ class AutomaticPlanArrangement
                     return $this->output($examId);
                 }
             }
+
             throw new \Exception('人数太多，所设时间无法完成考试');
         } catch (\Exception $ex) {
             throw $ex;
@@ -195,7 +197,7 @@ class AutomaticPlanArrangement
                         //拼装数据
                         $data = $this->dataBuilder($examId, $screen, $student, $station, $i);
                         $result = ExamPlanRecord::create($data);
-
+//                        dump($result);
                         if (!$result) {
                             throw new \Exception('关门失败！', -11);
                         }
@@ -206,10 +208,6 @@ class AutomaticPlanArrangement
                     //反之，则是关门状态
                 } else {
                     $tempValues = $this->examPlanRecordIsOpenDoor($station, $screen);
-                    //判断是否要开门
-//                    dump($station->mins);
-//                    dump($station->id);
-//                    echo '===========================';
 
                     if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60) {
                         $station->timer = 0;
@@ -225,6 +223,7 @@ class AutomaticPlanArrangement
                     }
                 }
             }
+//            sleep(1);
         }
 
         //找到未考完的考生
@@ -239,7 +238,8 @@ class AutomaticPlanArrangement
         $ExamFlowModel = new ExamFlow();
         $flowsNum = $ExamFlowModel->studentExamSum($examId);
         //SELECT count(`id`) as total,`student_id` FROM `exam_plan_record` where`exam_id` = 25 Group by `student_id` Having total <> 2
-        $studentList = ExamPlanRecord::  where('exam_id', '<>', $examId)
+        $studentList = ExamPlanRecord::  where('exam_id', '=', $examId)
+            ->whereNotNull('end_dt')
             ->groupBy('student_id')
             ->select(\DB::raw(
                 implode(',',
@@ -260,12 +260,13 @@ class AutomaticPlanArrangement
             }
         }
 
+
         //删除未考完学生记录
-        if (!$undoneStudentsIds->isEmpty()) {
-            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
-                throw new \Exception('删除未考完考生记录失败！', -2101);
-            }
-        }
+//        if (!$undoneStudentsIds->isEmpty()) {
+//            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
+//                throw new \Exception('删除未考完考生记录失败！', -2101);
+//            }
+//        }
 
 
         //获取候考区学生清单,并将未考完的考生还入总清单
@@ -274,6 +275,7 @@ class AutomaticPlanArrangement
     }
 
     /**
+     * 获取流程时间
      * @return int
      * @author Jiangzhiheng
      * @time 2016-02-17 10:24
@@ -759,6 +761,7 @@ class AutomaticPlanArrangement
      * @param $station
      * @param $screen
      * @return mixed
+     * @throws \Exception
      * @author Jiangzhiheng
      * @time
      */
@@ -774,6 +777,8 @@ class AutomaticPlanArrangement
                 ->where('exam_screening_id', '=', $screen->id)
                 ->whereNull('end_dt')
                 ->get();
+        } else {
+            throw new \Exception('没有选定的考试模式！', -706);
         }
 
     }

@@ -45,7 +45,7 @@
                 <tr>
                     <td>{{$key+1}}</td>
                     <td>{{$item->id}}</td>
-                    <td>{{$item->name}}</td>
+                    <td><a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}">{{$item->name}}</a> </td>
                     <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i', strtotime($item->end_dt))}}</td>
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
