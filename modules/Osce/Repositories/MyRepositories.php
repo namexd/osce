@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Repositories;
+use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
@@ -179,7 +180,20 @@ class MyRepositories  extends BaseRepository
             'exam_score.score as grade'//成绩
             //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
         )->get();
+        //dd($data);
         return $data;
+    }
+    public function GetStandardDetails1($standardPid){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->StandardModel->where('pid','=',$standardPid)->get();
+        $examScore = new ExamScore();
+        $id = $this->GetIdArr($builder);
+        if(count($id)>0){
+            $grade = $examScore->whereIn('standard_id', $id)->get();
+            dd($grade);
+        }
+
+        dd($builder);
     }
 
     /**
@@ -199,5 +213,15 @@ class MyRepositories  extends BaseRepository
             }
         }
         return  $PidArr;
+    }
+
+    public function GetIdArr($StandardData){
+        $idArr = [];
+        if(count($StandardData)>0){
+            foreach($StandardData as $v){
+                $idArr[] = $v['id'];
+            }
+        }
+        return  $idArr;
     }
 }
