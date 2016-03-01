@@ -115,10 +115,11 @@ class Invite extends CommonModel
                 }
                 else
                 {
-                    Common::sendWeixinToMany($msgData,$openIdList);
+                    Common::sendWeixinToMany($message,$openIdList);
                 }
 
             } catch (\Exception $ex_msg) {
+                dd($openId);
                 throw new \Exception('温馨提示'.$openIdList['teacher_name'] . '目前还没有登录过微信号');
             }
         } catch (\Exception $ex) {
