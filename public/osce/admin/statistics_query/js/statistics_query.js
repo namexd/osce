@@ -599,7 +599,7 @@ $(function(){
         clearTimeout(timer);
 
         progressMove(time_count);
-        console.log(time_count);
+        console.log(move);
         courseObserveDetail.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
     })
 })
