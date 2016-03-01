@@ -12,7 +12,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_statistics','standardStr':'{{ $StrList["standardStr"] }}','scoreAvgStr':'{{ $StrList["scoreAvgStr"] }}','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.SubjectGradeList') }}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_statistics','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.SubjectGradeList') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -23,8 +23,8 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">科目成绩分析</a></li>
-                        <li><a href="#">科目难度分析</a></li>
+                        <li class="active"><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">科目成绩</a></li>
+                        <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}">科目难度分析</a></li>
                         <li><a href="#">考站成绩分析</a></li>
                         <li><a href="#">考核点分析</a></li>
                     </ul>
