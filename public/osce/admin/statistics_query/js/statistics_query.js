@@ -377,9 +377,10 @@ $(function(){
     courseObserveDetail.download('',{id:$('.active').parent().attr('value'),start:$('#start').val(),end:$('#end').val()});
 
     function progressMove(count/*传入时间参数*/){
-        var i= count;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
+        var i= 0;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
         i  ++;
         $(".progress-bar").css("width",i+"px");
+        step = count/600;
 
         if(i>=600){
             clearTimeout(timer);
@@ -589,14 +590,17 @@ $(function(){
     })
     //选择标记点跳转视频
     $(".points li").click(function(){
+        //拿到标记点初始时间
         var point=($(this).find("span").text()).split('~')[0];
         var pointTime=new Date(point.split(" ")[0].split("-")[0],point.split(" ")[0].split("-")[1]-1,point.split(" ")[0].split("-")[2],
             point.split(" ")[1].split(":")[0], point.split(" ")[1].split(":")[1], point.split(" ")[1].split(":")[2]);
         pointTime=Date.parse(pointTime);
         var move=(pointTime/1000-start)/step;//点击锚点时进度条应跳的位置
-        time_count = pointTime/1000-start;
+        time_count = (pointTime-start)/1000;
         clearTimeout(timer);
+
         progressMove(time_count);
+        console.log(time_count);
         courseObserveDetail.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
     })
 })

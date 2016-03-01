@@ -281,7 +281,6 @@ class InvigilatePadController extends CommonController
         if(!$studentExamTime){
             throw new \Exception('没有查询到该学生队列',-100);
         }
-
         $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt))/60;
         $data = [
             'station_id' => $stationId,
@@ -322,6 +321,7 @@ class InvigilatePadController extends CommonController
 //                \Log::alert(json_encode($result));
         if ($result) {
             //修改exam_attach表里的结果id
+
 
             return response()->json($this->success_data([], 1, '成绩提交成功'));
                 }
