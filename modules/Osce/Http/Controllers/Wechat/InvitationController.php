@@ -60,6 +60,7 @@ class InvitationController extends CommonController
         //根据老师id查询老师的信息和openid
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);
+
         //根据考试id查询出考试相关信息
         $ExamModel = new Exam();
 //        $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
