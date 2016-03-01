@@ -21,14 +21,16 @@ use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 class MyController  extends CommonController
 {
 
-    /**
-     * 考站成绩分析列表
-     * @method  GET
+    /**考站成绩分析列表
+     * @method GET
      * @url /osce/admin/subject-statistics/station-grade-list
      * @access public
-     * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年2月23日15:43:34
+     * @param Request $request
+     * @param MyRepositories $subjectStatisticsRepositories
+     * @param SubjectStatisticsRepositories $subject
+     * @return \Illuminate\View\View|string
+     * @author xumin <xumin@misrobot.com>
+     * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function stationGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
@@ -102,14 +104,16 @@ class MyController  extends CommonController
         ]);
     }
 
-    /**
-     * 考核点分析列表
-     * @method  GET
+    /**考核点分析列表
+     * @method GET
      * @url /osce/admin/subject-statistics/standard-grade-list
      * @access public
+     * @param Request $request
      * @param MyRepositories $subjectStatisticsRepositories
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年2月23日15:43:34
+     * @param SubjectStatisticsRepositories $subject
+     * @return \Illuminate\View\View|string
+     * @author xumin <xumin@misrobot.com>
+     * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
@@ -166,7 +170,7 @@ class MyController  extends CommonController
                     'pid'                   => $val->pid,//评分标准父编号
                     'scoreAvg'             => $val->scoreAvg,//平均成绩
                     'studentQuantity'     => $val->studentQuantity,//考试人数
-                    'qualifiedPass'       => $val->qualifiedPass,//合格率
+                    'qualifiedPass'       => $val->qualifiedPass.'%',//合格率
                 ];
                 if($standardContent){
                     $standardContent .= ','.$val->standardContent;
@@ -175,7 +179,6 @@ class MyController  extends CommonController
                     $standardContent .= $val->standardContent;
                     $qualifiedPass .= $val->qualifiedPass;
                 }
-                $rew[$key]['qualifiedPass'] = $rew[$key]['qualifiedPass'].'%';
             }
         }
         $StrList = [
@@ -195,14 +198,15 @@ class MyController  extends CommonController
         ]);
     }
 
-    /**
-     * 考核点查看（详情）
-     * @method  GET
-     * @url /osce/admin/subject-statistics/standardDetails
+    /**考核点查看（详情）
+     * @method GET
+     * @url  /osce/admin/subject-statistics/standardDetails
      * @access public
+     * @param Request $request
      * @param MyRepositories $subjectStatisticsRepositories
-     * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年2月23日15:43:34
+     * @return string
+     * @author xumin <xumin@misrobot.com>
+     * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardDetails(Request $request,MyRepositories $subjectStatisticsRepositories){
