@@ -20,36 +20,17 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">考生科目分析</h5>
+                <h5 class="title-label">考生成绩分析</h5>
             </div>
         </div>
-        <div class="container-fluid ibox-content">
-            <div class="panel-heading">
-                <div class="panel-options">
-                    <ul class="nav nav-tabs">
-                        <li><a href="/osce/admin/testscores/test-score-list">考生成绩分析</a></li>
-                        <li class="active"><a href="/osce/admin/testscores/student-subject-list">考生科目分析</a></li>
-                    </ul>
-                </div>
-            </div>
+        <div class="ibox-content">
+            <span class="student_name">李雷</span>
+            <span class="marl_10 student_subject">冠心病问病史</span>
+            <span>历史成绩分析</span>
+            <button class="btn btn-sm btn-primary marl_10 right">返回</button>
         </div>
         <div class="panel blank-panel">
-            <div class="container-fluid ibox-content" style="border: none;">
-                <div class="input-group" style="margin:20px 0;">
-                    <label for="" class="pull-left exam-name">考生名称：</label>
-                    <select name="name" class="input-sm form-control student_select" style="width: 210px;height: 34px">
-
-                            <option value=""></option>
-
-                    </select>
-                    <label for="" class="pull-left exam-name" style="margin-left: 20px;">科目名称：</label>
-                    <select name="name" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
-
-                            <option value=""></option>
-
-                    </select>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
-                </div>
+            <div class="container-fluid ibox-content" style="border: none">
                 <div class="list_all">
                     <div class="row">
                         <div class="col-sm-12">
