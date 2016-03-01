@@ -146,7 +146,7 @@ class SubjectStatisticsController  extends CommonController
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
         }
          //dd($rew);
-         dd($StrList);
+         //dd($StrList);
          //dd($subjectList);
         //dd($subjectlist);
         //dd($rew);
