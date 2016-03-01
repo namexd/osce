@@ -64,12 +64,20 @@
                     <h4>标记点</h4>
                     <hr style="margin-top: 10px;margin-bottom: 10px">
                     <ul class="points">
-                        @forelse($data as $item)
+
+                            @forelse($anchor as $item)
+                                <li><span class="year">{{$item->begin_dt}}~{{$item->end_dt}}</span></li>
+
+                            @empty
+                                @foreach($data as $item)
+
                             <li><span class="year">{{$item->anchor}}~{{$item->end_dt}}</span></li>
 
-                        @empty
+                            @endforeach
 
-                        @endforelse
+                            @endforelse
+
+
                     </ul>
                 </div>
                 <div class="col-sm-9 video">

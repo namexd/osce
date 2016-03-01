@@ -204,7 +204,6 @@ class StudentWatchController extends CommonController
             $examQueueModel = new ExamQueue();
             $endStudentExam = $examQueueModel->getEndStudentQueueExam();
 
-
         };
         $data=[
             'code'      =>  4,
