@@ -82,6 +82,7 @@ function subject_statistics(){
 //科目难度分析
 function subject_level(){
     function echartsSubject(timeStr,passStr){//科目成绩分析。
+
         var e = echarts.init(document.getElementById("echarts-Subject")),
             a = {
                 tooltip: {
@@ -99,7 +100,7 @@ function subject_level(){
                 yAxis: [{
                     type: "value",
                     axisLabel: {
-                        formatter: "value"
+                        formatter: "{value} %"
                     }
                 }],
                 series: [{
@@ -115,12 +116,6 @@ function subject_level(){
                                 type: "min",
                                 name: "最小值"
                             }]
-                    },
-                    markLine: {
-                        data: [{
-                            type: "average",
-                            name: "平均值"
-                        }]
                     }
                 }]
             };
