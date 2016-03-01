@@ -97,7 +97,7 @@ class Teacher extends CommonModel
                     'case_id'=>$Teacher['caseId'],
                 ];
                 $userInfo   = Teacher::find($Teacher['id'])->userInfo;
-                if(!is_null($userInfo))
+                if(is_null($userInfo))
                 {
                     throw new \Exception('没有找到对应的用户信息');
                 }
