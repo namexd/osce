@@ -143,6 +143,8 @@ class SubjectStatisticsRepositories  extends BaseRepository
             ->select(
                 'exam.id as ExamId',
                 'exam.name as ExamName',
+                'subject.id as subjectId',
+                'subject.title as subjectName',
                 'exam.begin_dt as ExamBeginTime',
                 'exam.end_dt as ExamEndTime',
                 $DB->raw('avg(exam_result.time) as timeAvg'),
