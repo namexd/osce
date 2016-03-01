@@ -291,6 +291,7 @@ class PadController extends  CommonController{
             //通过考生的腕表id来找到对应的队列id
             $studentId = $request->input('student_id');
 
+            /** @var 学生id $studentId */
             $queue = ExamQueue::endStudentQueueExam($studentId);
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {

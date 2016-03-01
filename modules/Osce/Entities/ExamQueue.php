@@ -486,7 +486,7 @@ class ExamQueue extends CommonModel
     static public function findQueueIdByStudentId($studentId)
     {
         try {
-            //通过腕表id找到$examScreening和$student的实例
+            //通过学生id找到对应的examScreeningStudent实例
             $examScreening = ExamScreeningStudent::where('student_id', $studentId)->first();
 
             if (is_null($examScreening)) {
@@ -575,9 +575,6 @@ class ExamQueue extends CommonModel
     static public function endStudentQueueExam($studentId)
     {
         try {
-            //获取正在进行中的考试
-            $exam = Exam::doingExam();
-
             //获取当前的服务器时间
             $date = date('Y-m-d H:i:s');
 
