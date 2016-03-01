@@ -62,7 +62,7 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $builder = new ExamResult();
         if($student_id){
-            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','station.mins','exam_result.time','exam_result.score','subject.id');
+            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','subject.score as subscore','station.mins','exam_result.time','exam_result.score','subject.id');
         }else{
             $builder = $builder->select(
                 $DB->raw('avg(exam_result.time) as timeAvg'),
@@ -139,7 +139,7 @@ class TestScoreRepositories  extends BaseRepository
                 'subject.id'
             );
         }
-        $builder = $builder->where('subject.id','=',$subject_id)->leftJoin('student', function($join){
+        $builder = $builder->where('exam_screening.exam_id','=',$subject_id)->leftJoin('student', function($join){
             $join -> on('student.id', '=', 'exam_result.student_id');
         })->leftJoin('exam_screening', function($join){
             $join -> on('exam_screening.id', '=', 'exam_result.exam_screening_id');

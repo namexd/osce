@@ -70,20 +70,24 @@ class TestScoresController  extends CommonController
         $student_id = $request->student_id;
         //查找学生所有科目考试数据
         $singledata = $TestScoreRepositories->getTestSubject($examid,$student_id)->toArray();
-        //dd(1111);
         //查找当前考试所有科目平均成绩
         $avgdata = $TestScoreRepositories->getTestSubject($examid,'')->toArray();
+        //dd($avgdata);
         foreach($singledata as $k=>$v){
-            if($avgdata[$k]['id'] == $v['id']){
-                $singledata[$k]['timeAvg'] = $avgdata[$k]['timeAvg'];
-                $singledata[$k]['scoreAvg'] = $avgdata[$k]['scoreAvg'];
+            foreach($avgdata as $kk=>$vv){
+                if($v['id'] == $vv['id']){
+                    $singledata[$k]['timeAvg'] = $avgdata[$kk]['timeAvg'];
+                    $singledata[$k]['scoreAvg'] = $avgdata[$kk]['scoreAvg'];
+                }
             }
         }
+        //dd($singledata);
         $data = [
             'list' => $singledata,//列表
             'singledata' => $singledata,//雷达图学生成绩
             'avgdata' => $avgdata//平均成绩
         ];
+       /// dd($data);
         return $data;
     }
     /**
@@ -99,27 +103,50 @@ class TestScoresController  extends CommonController
     public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreRepositories){
         //获取已考过试的所有学生
         $student_id = $request->student_id;
-        $subid = $request->subject_id;
+        $subid = $request->examid;
         //获取学生科目成绩
         $singledata = $TestScoreRepositories->getStudentScoreCount($student_id,$subid)->toArray();
         //获取科目平均成绩
+
         $avgdata = $TestScoreRepositories->getStudentScoreCount('',$subid)->toArray();
         foreach($singledata as $k=>$v){
-            if($avgdata[$k]['id'] == $v['id']){
-                $singledata[$k]['timeAvg'] = $avgdata[$k]['timeAvg'];
-                $singledata[$k]['scoreAvg'] = $avgdata[$k]['scoreAvg'];
-                $singledata[$k]['time'] = date("Y年m月",strtotime($v['begin_dt']));
-                unset($singledata[$k]['begin_dt']);
+            foreach($avgdata as $kk=>$vv){
+                if($v['id'] == $vv['id']){
+                    $singledata[$k]['timeAvg'] = $vv['timeAvg'];
+                    $singledata[$k]['scoreAvg'] = $vv['scoreAvg'];
+                    $singledata[$k]['time'] = date("Y年m月",strtotime($vv['begin_dt']));
+                    unset($singledata[$k]['begin_dt']);
+                }else{
+                    $singledata[$k]['timeAvg'] = 0;
+                    $singledata[$k]['scoreAvg'] = 0;
+//                    $singledata[$k]['time'] = date("Y年m月",strtotime($vv['begin_dt']));
+//                    unset($singledata[$k]['begin_dt']);
+                }
             }
+
+        }
+        foreach($singledata as $kk=>$vvv){
+            if($kk == 0){
+                $avg = $vvv['scoreAvg'];
+                $totle = $vvv['score'];
+                $time = $vvv['time'];
+                continue;
+            }
+            $avg .= ','.$vv['scoreAvg'];
+            $totle .= ','.$vv['score'];
+            $time .= ','.$vv['time'];
         }
         $data = [
             'list' => $singledata,//列表
             'singledata' => $singledata,//雷达图学生成绩
             'avgdata' => $avgdata//平均成绩
         ];
-        dd($data);
+        //dd($avg);
         return view('osce::admin.statisticalanalysis.statistics_student_subject',[
-            'data' => $data
+            'data' => $data,
+            'avg' => $avg,
+            'totle' => $totle,
+            'time' => $time,
         ]);
     }
 

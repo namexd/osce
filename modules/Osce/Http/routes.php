@@ -70,7 +70,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//考核点分析
 		Route::get('subject-statistics/standard-grade-list',['uses'=>'MyController@standardGradeList','as'=>'osce.admin.SubjectStatisticsController.standardGradeList']);
 		Route::get('subject-statistics/subject',['uses'=>'MyController@getSubject','as'=>'osce.admin.SubjectStatisticsController.getSubject']);
-
+		Route::post('testscores/ajax-get-tester',['uses'=>'TestScoresController@postAjaxGetTester','as'=>'osce.admin.TestScoresController.postAjaxGetTester']);
 		//考核点查看（详情）
 		Route::get('subject-statistics/standardDetails',['uses'=>'MyController@standardDetails','as'=>'osce.admin.SubjectStatisticsController.standardDetails']);
 

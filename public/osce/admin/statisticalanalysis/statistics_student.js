@@ -7,7 +7,7 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "statistics_student_score":statistics_student_score();break;//考生成绩分析
-        case "subject_level":subject_level();break;//科目难度分析
+        case "subject_level":subject_level();break;//历史详情
 
     }
 });
@@ -38,7 +38,7 @@ function statistics_student_score(){
         select(id);
     });
     var $studentId = $(".student_select").val();
-    function echartsSubject(studentScoreStr,scoreAvgStr){//科目成绩分析。
+    function echartsSubject(subStr,studentScoreStr,scoreAvgStr){//科目成绩分析。
         var h = echarts.init(document.getElementById("echarts-Subject")),
             d = {
                 tooltip: {
@@ -51,30 +51,7 @@ function statistics_student_score(){
                     data: ["考生成绩", "平均分"]
                 },
                 polar: [{
-                    indicator: [{
-                        text: "冠心病问病史",
-                        max: 100
-                    },
-                        {
-                            text: "肠胃炎问病史",
-                            max: 100
-                        },
-                        {
-                            text: "发热咳嗽问病史",
-                            max: 100
-                        },
-                        {
-                            text: "体格检查",
-                            max: 100
-                        },
-                        {
-                            text: "无菌操作",
-                            max: 100
-                        },
-                        {
-                            text: "心血管疾病",
-                            max: 100
-                        }]
+                    indicator: subStr
                 }],
                 calculable: !0,
                 series: [{
@@ -101,20 +78,26 @@ function statistics_student_score(){
             cache:false,
             success:function(res){
                 $(".subjectBody").empty();
-                console.log(res);
                 var scoreAvgStr = [];
                 var studentScoreStr = [];
                 var subjectStr = [];
+                var subStr = [];
                 $(res.avgdata).each(function(){
                     scoreAvgStr.push(this.scoreAvg);
                 });
                 $(res.singledata).each(function(){
                     studentScoreStr.push(this.score);
                     subjectStr.push(this.title);
+                    subStr.push({
+                        text: this.title,
+                        max: this.subscore
+                    });
                 });
+                console.log(res.list);
                 $(res.list).each(function(i){
+
                     $(".subjectBody").append('<tr>' +
-                        '<td>'+this.i+'</td>' +
+                        '<td>'+( i+1 )+'</td>' +
                         '<td>'+this.title+'</td>' +
                         '<td>'+this.mins+'</td>' +
                         '<td>'+this.timeAvg+'</td>' +
@@ -130,7 +113,7 @@ function statistics_student_score(){
                         '</a>' +
                         '</td></tr>')
                 });
-                if(studentScoreStr){echartsSubject(studentScoreStr,scoreAvgStr);}
+                if(studentScoreStr){echartsSubject(subStr,studentScoreStr,scoreAvgStr);}
             }
         })
     }
@@ -140,6 +123,69 @@ function statistics_student_score(){
         ajax($selectId,$studentId);
     });
 }
-
+//历史详情
+function subject_level (){
+    var avg = pars.avg.split(',');
+    var totle = pars.totle.split(',');
+    var time = pars.time.split(',');
+    function echartsSubject(time,avg,totle){
+        var e = echarts.init(document.getElementById("echarts-Subject")),
+            a = {
+                tooltip: {
+                    trigger: "axis"
+                },
+                legend: {
+                    data: ["得分","平均分"]
+                },
+                calculable: !0,
+                xAxis: [{
+                    type: "category",
+                    boundaryGap: !1,
+                    data:time
+                }],
+                yAxis: [{
+                    type: "value",
+                    axisLabel: {
+                        formatter: "{value}"
+                    }
+                }],
+                series: [{
+                    name: "得分",
+                    type: "line",
+                    data: totle,
+                    markPoint: {
+                        data: [{
+                            type: "max",
+                            name: "最大值"
+                        },
+                            {
+                                type: "min",
+                                name: "最小值"
+                            }]
+                    }
+                },{
+                    name: "平均分",
+                    type: "line",
+                    data: avg,
+                    markPoint: {
+                        data: [{
+                            type: "max",
+                            name: "最大值"
+                        },
+                            {
+                                type: "min",
+                                name: "最小值"
+                            }]
+                    }
+                }]
+            };
+        e.setOption(a);
+    }
+    if(totle){echartsSubject(time,avg,totle);}
+    //返回
+    $("#back").click(function(){
+        history.go(-1);
+    })
+}
 
 

@@ -16,7 +16,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'statistics_student_subject','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.stationGradeList') }}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_level','avg':'{{$avg}}','totle':'{{$totle}}','time':'{{$time}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -27,7 +27,7 @@
             <span class="student_name">李雷</span>
             <span class="marl_10 student_subject">冠心病问病史</span>
             <span>历史成绩分析</span>
-            <button class="btn btn-sm btn-primary marl_10 right">返回</button>
+            <button class="btn btn-sm btn-primary marl_10 right" id="back">返回</button>
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none">
@@ -53,7 +53,24 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
-
+                        @if(!empty(@$data['list']))
+                            @foreach(@$data['list'] as $k=>$v)
+                                <tr>
+                                    <td>{{@$k+1}}</td>
+                                    <td>{{@$v['title']}}</td>
+                                    <td>{{@$v['time']}}</td>
+                                    <td>{{@$v['timeAvg']}}</td>
+                                    <td>{{@$v['scoreAvg']}}</td>
+                                    <td>{{@$v['mins']}}</td>
+                                    <td>{{@$v['score']}}</td>
+                                    <td>
+                                        <a href="">
+                                            <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>
