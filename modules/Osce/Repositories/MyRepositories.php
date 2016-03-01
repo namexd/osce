@@ -45,7 +45,7 @@ class MyRepositories  extends BaseRepository
         $this->ExamResultModel = $examResult;
         $this->StandardModel = $Standard;
     }
-    
+
     /**
      * 获取科目列表
      * @method
@@ -170,35 +170,16 @@ class MyRepositories  extends BaseRepository
         $builder = $this->StandardModel->leftJoin('exam_score', function($join){
             $join -> on('exam_score.standard_id', '=','standard.id');
         });
-        $data = $builder->select(
+        $data = $builder->where('standard.pid','=',$standardPid)
+            ->groupBy('standard.id')
+            ->select(
             'standard.pid',//评分标准父编号
-            'standard.score as standardScore', //总分
+            'standard.content',//名称
+            'standard.score', //总分
             'exam_score.score as grade'//成绩
             //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
-        )->where('standard.pid','=',$standardPid)->get();
-
-        //获取子项考核点名称
-        if(count($data)>0){
-            $standardModel = new Standard();
-            $id = $standardModel->where('id', $data[0]['pid'])->get();
-            dd($id);
-            $content = $standardModel->whereIn('id', $data[0]['pid'])->select('content')->select('content')->get();
-            foreach($data as $k=>$v){
-                $data[$k]['standardContent'] = $content[$k]['content'];
-            }
-        }
-
-
-        dd($data);
-        $pidData = $this->StandardModel->select(
-            'standard.pid',//评分标准父编号
-            'standard.score as totalScore' //总分
-        )->where('standard.id','=',$standardPid)->first();
-
-        return [
-            'data'=>$data,
-          //  'pidData'=>$pidData
-        ];
+        )->get();
+        return $data;
     }
 
     /**

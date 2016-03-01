@@ -143,6 +143,8 @@ class MyController  extends CommonController
         //统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList('326', '52',true);
         $datas = [];
+        $standardContent = '';
+        $qualifiedPass = '';
         if(count($rew) > 0){
             foreach($rew as $key=>$val){
                 $rew[$key]['qualifiedPass'] = '0%';
@@ -163,14 +165,28 @@ class MyController  extends CommonController
                     'studentQuantity'     => $val->studentQuantity,//考试人数
                     'qualifiedPass'       => $val->qualifiedPass,//合格率
                 ];
+                if($standardContent){
+                    $standardContent .= ','.$val->standardContent;
+                    $qualifiedPass .= ','.$val->qualifiedPass;
+                }else{
+                    $standardContent .= $val->standardContent;
+                    $qualifiedPass .= $val->qualifiedPass;
+                }
             }
         }
-        dd($datas);
+        $StrList = [
+            'standardContent' => $standardContent,
+            'qualifiedPass' => $qualifiedPass,
+        ];
+        if ($request->ajax()) {
+            return $this->success_data(['standardList'=>$datas,'StrList'=>$StrList]);
+        }
         //将数据展示到页面
         return view('osce::admin.resourcemanage.standardGradeList', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
-            'standardList' =>$datas //考核点分析列表
+            'standardList' =>$datas, //考核点分析列表
+              'StrList'=>$StrList
         ]);
     }
 
@@ -190,26 +206,30 @@ class MyController  extends CommonController
         $result = $subjectStatisticsRepositories->GetStandardDetails('558');
         //所点击的考核点的子考核点对应的数据
         $datainfo=[];
-        if(count($result['data'])>0){
-            foreach($result['data'] as $k=>$v){
+        $content = '';
+        $grade = '';
+        if(count($result)>0){
+            foreach($result as $k=>$v){
                 $datainfo[$k]['number'] = $k+1;//序号
                 $datainfo[$k]['content'] = $v->content;//考核内容
-                $datainfo[$k]['standardScore'] = $v->standardScore; //总分
+                $datainfo[$k]['score'] = $v->score; //总分
                 $datainfo[$k]['grade'] = $v->grade; //成绩
+
+                if($content){
+                    $content .= ','.$v->content;
+                    $grade .= ','.$v->grade;
+                }else{
+                    $content .= $v-> content;
+                    $grade .= $v->grade;
+                }
             }
         }
-        //所点击的考核点对应的数据
-        $datainfoPid = [];
-        if($result['pidData']){
-            $datainfoPid['pid'] = $result['pidData']->pid;//考核内容
-            $datainfoPid['content'] = $result['pidData']->content;//考核内容
-            $datainfoPid['totalScore'] = $result['pidData']->totalScore; //总分
-            if(count($result['data'])>0){
-                $datainfoPid['totalGrade'] = $result['data'][0]->totalGrade; //总成绩
-            }
+        $StrList = [
+            'content' => $content,
+            'grade' => $grade,
+        ];
+        if ($request->ajax()) {
+            return $this->success_data(['datainfo'=>$datainfo,'StrList'=>$StrList]);
         }
-        dd($datainfo);
-        dd($datainfoPid);
-        //die(json_encode($datainfo));
     }
 }
