@@ -119,7 +119,7 @@ class SubjectStatisticsController  extends CommonController
             $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,7);
             foreach ($rewTwo as $v) {
                 if ($val['ExamId'] == $v['ExamId']) {
-                    $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100) . '%';
+                    $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100);
                 }
             }
             if ($standardStr) {
@@ -133,6 +133,7 @@ class SubjectStatisticsController  extends CommonController
                // $scoreAvgStr .= $val['scoreAvg'];
                 $qualifiedPass.=$val['qualifiedPass'];
             }
+            $val['qualifiedPass']=$val['qualifiedPass'].'%';
 
         }
         $StrList = [
