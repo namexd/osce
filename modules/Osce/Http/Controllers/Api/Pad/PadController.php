@@ -291,19 +291,8 @@ class PadController extends  CommonController{
             //通过考生的腕表id来找到对应的队列id
             $studentId = $request->input('student_id');
 
-            //找到对应的方法找到queue实例
-            $queue = ExamQueue::findQueueIdByStudentId($studentId);
-            //todo 判断学生考试是否结束了
-            if($queue->status==3){
-                throw new \Exception('该考生时间已到，考试已结束',2300);
-            }
-            //修改状态
-            $queue->status = 3;
-            $queue->end_dt = $date;
-
-            if (!$queue->save()) {
-                throw new \Exception('状态修改失败！请重试',2000);
-            }
+            /** @var 学生id $studentId */
+            $queue = ExamQueue::endStudentQueueExam($studentId);
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));

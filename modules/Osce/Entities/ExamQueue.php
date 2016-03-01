@@ -8,6 +8,8 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Doctrine\Common\Persistence\ObjectManager;
+use Modules\Osce\Entities\Exam;
 
 class ExamQueue extends CommonModel
 {
@@ -484,7 +486,7 @@ class ExamQueue extends CommonModel
     static public function findQueueIdByStudentId($studentId)
     {
         try {
-            //通过腕表id找到$examScreening和$student的实例
+            //通过学生id找到对应的examScreeningStudent实例
             $examScreening = ExamScreeningStudent::where('student_id', $studentId)->first();
 
             if (is_null($examScreening)) {
@@ -564,16 +566,35 @@ class ExamQueue extends CommonModel
 
     /**
      * 结束学生队列考试
-     * @param $room_id $exam_id
-     * @return
+     * @param $studentId 学生id
+     * @return Object 返回队列表对应的对象
      * @throws \Exception
-     * @author zhouqiang
+     * @author Jiangzhiheng
      */
 
-    public function getEndStudentQueueExam()
+    static public function endStudentQueueExam($studentId)
     {
+        try {
+            //获取当前的服务器时间
+            $date = date('Y-m-d H:i:s');
 
+            //找到对应的方法找到queue实例
+            $queue = ExamQueue::findQueueIdByStudentId($studentId);
+            //todo 判断学生考试是否结束了
+            if($queue->status != 2){
+                throw new \Exception('系统错误，请重试',2300);
+            }
+            //修改状态
+            $queue->status = 3;
+            $queue->end_dt = $date;
+            if (!$queue->save()) {
+                throw new \Exception('状态修改失败！请重试',2000);
+            }
 
+            return $queue;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
 }
