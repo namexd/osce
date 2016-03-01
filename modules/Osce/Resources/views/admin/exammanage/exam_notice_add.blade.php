@@ -41,7 +41,7 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
- <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
+ <script src="{{asset('osce/admin/exammanage/exammanage.js')}}" ></script>
 @stop
 
 @section('content')
