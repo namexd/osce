@@ -103,9 +103,8 @@ function categories(){
         var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
             flag = true;
-           
+
             if($(elem).find('input').val()==''){
-            	console.log($(elem).find('input'));
                 flag = false;
                 return false;
             }
