@@ -25,25 +25,41 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="/osce/admin/testscores/test-score-list">考生成绩分析</a></li>
-                        <li><a href="/osce/admin/testscores/student-subject-list">考生科目分析</a></li>
+                        <li class="active"><a href="">考生成绩分析</a></li>
+                        <li><a href="">考生科目分析</a></li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="ibox-content">
-                    <div class="echarts" id="echarts-bar-chart"></div>
-                </div>
-            </div>
-        </div>
         <div class="panel blank-panel">
-            <div class="container-fluid ibox-content">
-                <table class="table table-striped" id="table-striped" style="background:#fff">
-                    <thead>
+            <div class="container-fluid ibox-content" style="border: none;">
+                <div class="input-group" style="margin:20px 0;">
+                    <label for="" class="pull-left exam-name">考生名称：</label>
+                    <select name="name" class="input-sm form-control student_select" style="width: 210px;height: 34px">
+
+                        <option value=""></option>
+
+                    </select>
+                    <label for="" class="pull-left exam-name" style="margin-left: 20px;">考试名称：</label>
+                    <select name="name" class="input-sm form-control exam_select" style="width: 210px;height: 34px">
+
+                        <option value=""></option>
+
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
+                </div>
+                <div class="list_all">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="ibox-content" style="border: none;">
+                                <div class="echarts" id="echarts-Subject"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-striped" id="table-striped" style="background:#fff">
+                        <thead>
                         <tr>
-                            <th>#</th>
+                            <th>序号</th>
                             <th>科目</th>
                             <th>考试限时</th>
                             <th>平均耗时</th>
@@ -52,24 +68,12 @@
                             <th>成绩</th>
                             <th>操作</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <a href="">
-                                    <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="subjectBody">
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
