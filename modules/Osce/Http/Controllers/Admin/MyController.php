@@ -34,7 +34,6 @@ class MyController  extends CommonController
     public function stationGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
         //获取考试列表信息
         $examList = $subject->GetExamList();
-        dd($examList);
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
@@ -42,7 +41,6 @@ class MyController  extends CommonController
                 $examInfo[$k]['name'] = $v['name'];
             }
         }
-        dd($examInfo);
         //获取科目列表信息
         $subjectList = $subjectStatisticsRepositories->GetSubjectList();
         $subjectInfo = '';
