@@ -121,11 +121,11 @@ class SubjectStatisticsController  extends CommonController
                 }
             }
             if ($standardStr) {
-                $standardStr .= ',' . $val['ExamName'];
+                $standardStr .= ',' . $val['ExamBeginTime'];
                 $timeAvgStr .= ',' . $val['timeAvg'];
                 $scoreAvgStr .= ',' . $val['scoreAvg'];
             } else {
-                $standardStr .= $val['ExamName'];
+                $standardStr .= $val['ExamBeginTime'];
                 $timeAvgStr .= $val['timeAvg'];
                 $scoreAvgStr .= $val['scoreAvg'];
             }
@@ -146,7 +146,7 @@ class SubjectStatisticsController  extends CommonController
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
         }
          //dd($rew);
-         //dd($StrList);
+         dd($StrList);
          //dd($subjectList);
         //dd($subjectlist);
         //dd($rew);
