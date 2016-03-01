@@ -9,6 +9,7 @@ $(function(){
         case "subject_statistics":subject_statistics();break;//科目成绩分析
         case "subject_level":subject_level();break;//科目难度分析
         case "examation_statistics":examation_statistics();break;//考站成绩分析
+        case "statistics_check":statistics_check();break;//考核点分析
     }
 });
 
@@ -234,4 +235,8 @@ function examation_statistics(){
         var examId = $(".exam_select").val();
         ajax(examId,subjectId);
     });
+}
+//考核点分析
+function statistics_check(){
+
 }

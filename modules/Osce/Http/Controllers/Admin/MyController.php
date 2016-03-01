@@ -37,8 +37,8 @@ class MyController  extends CommonController
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
-                $examInfo[$k]['id'] = $v->id;
-                $examInfo[$k]['name'] = $v->name;
+                $examInfo[$k]['id'] = $v['id'];
+                $examInfo[$k]['name'] = $v['name'];
             }
         }
         //获取科目列表信息
@@ -118,8 +118,8 @@ class MyController  extends CommonController
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
-                $examInfo[$k]['id'] = $v->id;
-                $examInfo[$k]['name'] = $v->name;
+                $examInfo[$k]['id'] = $v['id'];
+                $examInfo[$k]['name'] = $v['name'];
             }
         }
         //获取科目列表信息
@@ -182,7 +182,7 @@ class MyController  extends CommonController
             return $this->success_data(['standardList'=>$datas,'StrList'=>$StrList]);
         }
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.standardGradeList', [
+        return view('osce::admin.statistics_query.statistics_check', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'standardList' =>$datas, //考核点分析列表
