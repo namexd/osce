@@ -11,7 +11,7 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
+    <script src="{{asset('osce/admin/resourcemanage/resourcemanage.js')}}" ></script> 
     
     <script>
 		$(function(){

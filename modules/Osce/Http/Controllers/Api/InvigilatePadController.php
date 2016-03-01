@@ -251,10 +251,14 @@ class InvigilatePadController extends CommonController
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * upload_document_id 音频 图片id集合
      */
 
     public function postSaveExamResult(Request $request)
     {
+
+   try {
+
         $this->validate($request, [
             'score' => 'required',
             'student_id' => 'required',
@@ -267,13 +271,24 @@ class InvigilatePadController extends CommonController
             'score.required' => '请检查评分标准分值',
         ]);
         $score = Input::get('score');
-        $time = strtotime(Input::get('end_dt')) - strtotime(Input::get('begin_dt'));
+        $stationId  = Input::get('station_id');
+        $studentId = Input::get('student_id');
+        $examScreeningId =Input::get('exam_screening_id');
+        //到队列表里查询出学生的开始和结束时间
+        $studentExamTime = ExamQueue::where('station_id','=',$stationId)
+            ->where('student_id','=',$studentId)
+            ->where('exam_screening_id','=',$examScreeningId)
+            ->first();
+        if(!$studentExamTime){
+            throw new \Exception('没有查询到该学生队列',-100);
+        }
+        $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt))/60;
         $data = [
-            'station_id' => Input::get('station_id'),
-            'student_id' => Input::get('student_id'),
-            'exam_screening_id' => Input::get('exam_screening_id'),
-            'begin_dt' => Input::get('begin_dt'),//考试开始时间
-            'end_dt' => Input::get('end_dt'),//考试实际结束时间
+            'station_id' => $stationId,
+            'student_id' => $studentId,
+            'exam_screening_id' => $examScreeningId,
+            'begin_dt' => $studentExamTime->begin_dt,//考试开始时间
+            'end_dt' => $studentExamTime->end_dt,//考试实际结束时间
             'time' => $time,//考试用时
             'score_dt' => Input::get('end_dt'),//评分时间
             'teacher_id' => Input::get('teacher_id'),
@@ -291,7 +306,7 @@ class InvigilatePadController extends CommonController
         $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
         //查询出学生当前已完成的考试
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
-        try {
+
 
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
@@ -307,17 +322,14 @@ class InvigilatePadController extends CommonController
 //                \Log::alert(json_encode($result));
         if ($result) {
             //修改exam_attach表里的结果id
-
             return response()->json($this->success_data([], 1, '成绩提交成功'));
-        } else {
-            return response()->json(
-                $this->fail(new \Exception('成绩提交失败'))
-                 );
-            }
-
+                }
         } catch (\Exception $ex) {
+//       return response()->json($this->fail($ex));
             \Log::alert($ex->getMessage());
-            return response()->json($this->fail($ex));
+                return response()->json(
+                     $this->fail(new \Exception('成绩提交失败'))
+            );
         }
 
     }

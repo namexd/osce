@@ -90,28 +90,51 @@ class Invite extends CommonModel
 
     public function sendMsg($data)
     {
-
+        $openIdList =   [];
         try {
-            foreach ($data as $key => $openIdList) {
-                $url = route('osce.wechat.invitation.getMsg', ['id' => $openIdList['id']]);
+            foreach ($data as $key => $userInfo) {
+                $url = route('osce.wechat.invitation.getMsg', ['id' => $userInfo['id']]);
                 $msgData = [
                     [
                         'title' => '邀请通知',
-                        'desc' => '邀请您参加'.$openIdList['exam_name'] . '考试',
+                        'desc' => '邀请您参加'.$userInfo['exam_name'] . '考试',
                         'url' => $url,
                     ],
                 ];
-                try {
-                    $message = Common::CreateWeiXinMessage($msgData);
-                    Common::sendWeiXin($openIdList['openid'],$message);//单发
-                } catch (\Exception $ex_msg) {
-
-                    throw new \Exception('温馨提示'.$openIdList['teacher_name'] . '目前还没有登录过微信号');
-                }
-
+                $openIdList[]   =   $userInfo;
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
 //            oI7UquLMNUjVyUNaeMP0sRcF4VyU
+            }
+            try {
+                $message = Common::CreateWeiXinMessage($msgData);
+                if(count($openIdList)<2)
+                {
+                    $userInfo   =   $openIdList[0];
+                    Common::sendWeiXin($userInfo['openid'],$message);//单发
+                }
+                else
+                {
+                    Common::sendWeixinToMany($message,array_pluck($openIdList,'openid'));
+                }
+            } catch (\Exception $ex_msg) {
+                if(count($openIdList)<2)
+                {
+                    if($ex_msg->getCode()==45015)
+                    {
+                        throw new \Exception('温馨提示'.$openIdList[0]['teacher_name'] . '长期未与公众号互动，无法发送');
+                    }
+                    throw new \Exception('温馨提示'.$openIdList[0]['teacher_name'] . '目前还没有登录过微信号');
+                }
+                else
+                {
+                    $nameList   =   array_pluck($openIdList,'teacher_name');
+                    if($ex_msg->getCode()==45015)
+                    {
+                        throw new \Exception('温馨提示'.implode(',',$nameList). '长期未与公众号互动，无法发送');
+                    }
+                    throw new \Exception('温馨提示'.implode(',',$nameList) . '目前还没有登录过微信号');
+                }
             }
         } catch (\Exception $ex) {
             throw $ex;
