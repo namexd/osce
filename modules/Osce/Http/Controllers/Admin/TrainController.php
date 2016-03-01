@@ -45,7 +45,7 @@ class TrainController extends  CommonController{
 //        $pagination=$trainModel->getPaginate();
 //        $list=InformTrain::select()->orderBy('begin_dt','DESC')->get();
         $list=$trainModel->getInformList();
-        return view('osce::admin.exammanage.train_list',['list'=>$list]);
+        return view('osce::admin.examManage.train_list',['list'=>$list]);
 
     }
 
@@ -166,7 +166,7 @@ class TrainController extends  CommonController{
         if($data['attachments']){
             $data['attachments']=unserialize($data['attachments']);
         }
-        return view('osce::admin.exammanage.train_edit')->with(['data'=>$data,'url'=>$url]);
+        return view('osce::admin.examManage.train_edit')->with(['data'=>$data,'url'=>$url]);
     }
 
     /**
@@ -330,7 +330,7 @@ class TrainController extends  CommonController{
 ////            $data -> attachments = serialize($data -> attachments);
 //            $data -> attachments = unserialize($data -> attachments);
 //        }
-        return view('osce::admin.exammanage.train_detail')->with('data',$data);
+        return view('osce::admin.examManage.train_detail')->with('data',$data);
     }
 
     /**
@@ -430,7 +430,7 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getAddTrain(){
-    	return view('osce::admin.exammanage.train_add');
+    	return view('osce::admin.examManage.train_add');
     }
 
     /**

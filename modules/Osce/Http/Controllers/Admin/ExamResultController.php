@@ -110,7 +110,7 @@ class ExamResultController extends CommonController{
              $item->time = date('H:i:s',$item->time);
              date_default_timezone_set("PRC");
          }
-         return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
+         return view('osce::admin.examManage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
     }
 
     /**
@@ -226,7 +226,7 @@ class ExamResultController extends CommonController{
             $avg[$index] = $standardModel->getCheckPointAvg($index, $result['subject_id']);
         }
 
-        return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
+        return view('osce::admin.examManage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
 
     }
 

@@ -43,7 +43,7 @@ class TopicController extends CommonController
         $name   =   e($request->get('name'));
         $Subject    =   new Subject;
         $list       =   $Subject    ->  getList($name);
-        return view('osce::admin.resourcemanage.subject_manage',['list'=>$list, 'name'=>$name]);
+        return view('osce::admin.resourceManage.subject_manage',['list'=>$list, 'name'=>$name]);
     }
 
     /**
@@ -196,7 +196,7 @@ class TopicController extends CommonController
      *
      */
     public function getAddTopic(){
-        return view('osce::admin.resourcemanage.subject_manage_add');
+        return view('osce::admin.resourceManage.subject_manage_add');
     }
 
     /**
@@ -251,7 +251,7 @@ class TopicController extends CommonController
                 }
             }
         }
-        return view('osce::admin.resourcemanage.subject_manage_edit',['item'=>$subject,'list'=>$items,'prointNum'=>$prointNum,'optionNum'=>$optionNum]);
+        return view('osce::admin.resourceManage.subject_manage_edit',['item'=>$subject,'list'=>$items,'prointNum'=>$prointNum,'optionNum'=>$optionNum]);
     }
 
     /**
