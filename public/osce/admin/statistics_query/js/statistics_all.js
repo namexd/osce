@@ -249,11 +249,14 @@ function statistics_check(){
                     data: standardContentStr
                 }],
                 yAxis: [{
-                    type: "value"
+                    type: "value",
+                    axisLabel: {
+                        formatter: "{value} %"
+                    }
                 }],
                 series: [
                     {
-                        name: "平均成绩",
+                        name: "合格率",
                         type: "bar",
                         data: qualifiedPassStr
                     }]
