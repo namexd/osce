@@ -114,6 +114,7 @@ class SubjectStatisticsController  extends CommonController
             //给结果展示列表中序号列加入数据
             $rew[$key]['number'] = $key + 1;
             $rew[$key]['qualifiedPass'] = '0%';
+            $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,10);
             foreach ($rewTwo as $v) {
                 if ($val['subjectId'] == $v['subjectId']) {
                     $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100) . '%';
@@ -138,8 +139,8 @@ class SubjectStatisticsController  extends CommonController
 
         $subject = new Subject();
         $subjectList = $subject->select('id', 'title')->get()->toarray();
-        // dd($StrList);
-        //dd($rew);
+        //dd($StrList);
+        // dd($rew);
         //ajax请求判断返回不同数据
         if ($request->ajax()) {
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
