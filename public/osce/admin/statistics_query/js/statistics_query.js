@@ -377,7 +377,7 @@ $(function(){
     courseObserveDetail.download('',{id:$('.active').parent().attr('value'),start:$('#start').val(),end:$('#end').val()});
 
     function progressMove(count/*传入时间参数*/){
-        var i= 0;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
+        var i= count;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
         i  ++;
         $(".progress-bar").css("width",i+"px");
         step = count/600;
@@ -600,7 +600,7 @@ $(function(){
         clearTimeout(timer);
 
         progressMove(time_count);
-        console.log(time_count);
+        console.log(move);
         courseObserveDetail.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
     })
 })
