@@ -7,11 +7,7 @@
 @section('only_js')
     <!-- ECharts -->
     <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
-    <script src="{{asset('osce/admin/statistics_query/js/statistics_all.js')}}"></script>
-@stop
-
-
-@section('content')
+<script src="{{asset('osce/admin/statisticalanalysis/statistics_subject.js')}}"></script>
     <input type="hidden" id="parameter" value="{'pagename':'subject_statistics','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.SubjectGradeList') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">

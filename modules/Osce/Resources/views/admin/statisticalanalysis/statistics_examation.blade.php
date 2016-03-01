@@ -7,7 +7,7 @@
 @section('only_js')
     <!-- ECharts -->
     <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
-    <script src="{{asset('osce/admin/statistics_query/js/statistics_all.js')}}"></script>
+    <script src="{{asset('osce/admin/statisticalanalysis/statistics_subject.js')}}"></script>
 @stop
 
 
