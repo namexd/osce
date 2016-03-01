@@ -40,6 +40,15 @@ class MyController  extends CommonController
                 $examInfo[$k]['name'] = $v->name;
             }
         }
+        //获取科目列表信息
+        $subjectList = $subjectStatisticsRepositories->GetSubjectList();
+        $subjectInfo = '';
+        if(count($subjectList)>0){
+            foreach($subjectList as $k=>$v){
+                $subjectInfo[$k]['id'] = $v->id;
+                $subjectInfo[$k]['title'] = $v->title;
+            }
+        }
         //验证
         $this->validate($request, [
             'examId' => 'sometimes|int',//考试编号
@@ -50,6 +59,8 @@ class MyController  extends CommonController
         //获取考站分析列表
         $list = $subjectStatisticsRepositories->GetSubjectStationStatisticsList('326', '52');
         $datas = [];
+        $stationNameStr = '';
+        $scoreAvgStr = '';
         if(count($list) > 0){
             foreach($list as $k=>$item){
                 $datas[] = [
@@ -62,13 +73,31 @@ class MyController  extends CommonController
                     'scoreAvg'          => $item->scoreAvg,//平均成绩
                     'studentQuantity'  => $item->studentQuantity,//考试人数
                 ];
+                if($stationNameStr){
+                    $stationNameStr .= ','.$item->stationName;
+                    $scoreAvgStr .= ','.$item->scoreAvg;
+                }else{
+                    $stationNameStr .= $item->stationName;
+                    $scoreAvgStr .= $item->scoreAvg;
+                }
             }
         }
-        dd($datas);
+
+        $StrList = [
+            'stationNameStr' => $stationNameStr,
+            'scoreAvgStr' => $scoreAvgStr,
+        ];
+
+        if ($request->ajax()) {
+            return $this->success_data(['stationList'=>$datas,'StrList'=>$StrList]);
+        }
+        //dd($datas);
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.stationGradeList', [
+        return view('osce::admin.statistics_query.examation_statistics', [
             'examInfo' =>$examInfo ,//考试列表
-            'stationList'=>$datas //考站成绩分析列表
+            'subjectInfo' =>$subjectInfo ,//科目列表
+            'stationList'=>$datas, //考站成绩分析列表
+            'StrList'=>$StrList
         ]);
     }
 
