@@ -111,7 +111,7 @@ class Invite extends CommonModel
                 if(count($openIdList)<2)
                 {
                     $userInfo   =   $openIdList[0];
-                    Common::sendWeiXin($userInfo['openid'],'13');//单发
+                    Common::sendWeiXin($userInfo['openid'],$message);//单发
                 }
                 else
                 {
@@ -120,11 +120,19 @@ class Invite extends CommonModel
             } catch (\Exception $ex_msg) {
                 if(count($openIdList)<2)
                 {
+                    if($ex_msg->getCode()==45015)
+                    {
+                        throw new \Exception('温馨提示'.$openIdList[0]['teacher_name'] . '长期未与公众号互动，无法发送');
+                    }
                     throw new \Exception('温馨提示'.$openIdList[0]['teacher_name'] . '目前还没有登录过微信号');
                 }
                 else
                 {
                     $nameList   =   array_pluck($openIdList,'teacher_name');
+                    if($ex_msg->getCode()==45015)
+                    {
+                        throw new \Exception('温馨提示'.implode(',',$nameList). '长期未与公众号互动，无法发送');
+                    }
                     throw new \Exception('温馨提示'.implode(',',$nameList) . '目前还没有登录过微信号');
                 }
             }
