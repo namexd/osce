@@ -457,8 +457,6 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 
 	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
 	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
-//	$result3 = \Modules\Osce\Entities\ExamQueue::where('exam_id', $exam_id)->delete();
-//	$result4 = \Modules\Osce\Entities\ExamPlan::where('exam_id', $exam_id)->delete();
 	$exam = new \Modules\Osce\Entities\Exam();
 	if($exam->emptyData($exam_id)){
 		return '成功';
