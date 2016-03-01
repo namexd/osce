@@ -119,7 +119,7 @@ class AutomaticPlanArrangement
     {
         try {
             if (count($this->_S) == 0) {
-                throw new \Exception('当前考试没有安排学生！',-705);
+                throw new \Exception('当前考试没有安排学生！', -705);
             }
             /*
              * 排考的时候删除原先的所有数据
@@ -136,17 +136,15 @@ class AutomaticPlanArrangement
             foreach ($this->screen as $item) {
                 $this->screenPlan($examId, $item);
                 //判断是否还有必要进行下场排考
+                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->first();  //通过查询数据表中是否有没有写入end_dt的数据
+                if (count($this->_S_ING) == 0 && count($this->_S) == 0 && is_null($examPlanNull)) {
+                    return $this->output($examId);
+                }
             }
-
-            if (count($this->_S_ING) == 0 && count($this->_S) == 0) {
-                return $this->output($examId);
-            } else {
-                throw new \Exception('人数太多，所设时间无法完成考试');
-            }
+            throw new \Exception('人数太多，所设时间无法完成考试');
         } catch (\Exception $ex) {
             throw $ex;
         }
-
     }
 
     /**
@@ -238,12 +236,12 @@ class AutomaticPlanArrangement
         }
 
         //获取未走完流程的考生
-        $ExamFlowModel  =   new ExamFlow();
-        $flowsNum   =   $ExamFlowModel->studentExamSum($examId);
+        $ExamFlowModel = new ExamFlow();
+        $flowsNum = $ExamFlowModel->studentExamSum($examId);
         //SELECT count(`id`) as total,`student_id` FROM `exam_plan_record` where`exam_id` = 25 Group by `student_id` Having total <> 2
-        $studentList    =   ExamPlanRecord  ::  where('exam_id','<>',$examId)
-            ->  groupBy('student_id')
-            ->  select(\DB::raw(
+        $studentList = ExamPlanRecord::  where('exam_id', '<>', $examId)
+            ->groupBy('student_id')
+            ->select(\DB::raw(
                 implode(',',
                     [
                         'count(`id`) as flowsNum',
@@ -252,22 +250,20 @@ class AutomaticPlanArrangement
                     ]
                 )
             ))
-            ->  Having('flowsNum','<',$flowsNum)
-            ->  get();
-        if(count($studentList))
-        {
-            $studentNotOver =   $studentList->pluck('student_id');
+            ->Having('flowsNum', '<', $flowsNum)
+            ->get();
+        if (count($studentList)) {
+            $studentNotOver = $studentList->pluck('student_id');
             //删除未走完流程的考生
-            if(!ExamPlanRecord::whereIn('student_id',$studentNotOver->toArray())->delete())
-            {
-                throw new \Exception('考试未完成学生移动失败',-2100);
+            if (!ExamPlanRecord::whereIn('student_id', $studentNotOver->toArray())->delete()) {
+                throw new \Exception('考试未完成学生移动失败', -2100);
             }
         }
 
         //删除未考完学生记录
         if (!$undoneStudentsIds->isEmpty()) {
             if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
-                throw new \Exception('删除未考完考生记录失败！',-2101);
+                throw new \Exception('删除未考完考生记录失败！', -2101);
             }
         }
 
@@ -416,9 +412,8 @@ class AutomaticPlanArrangement
                             }
                         }
                     }
-                }
-                else{
-                    $result =  $testStudents;
+                } else {
+                    $result = $testStudents;
                 }
 //                echo '===================================================';
                 break;
@@ -549,7 +544,8 @@ class AutomaticPlanArrangement
      * @author Jiangzhiheng
      * @time
      */
-    private function pollTestStudents($station, $screen){
+    private function pollTestStudents($station, $screen)
+    {
         $tempArrays = ExamPlanRecord::pollBeginStudent($station, $screen, $this->sequenceMode);
 
         $num = $this->waitingStudentSql($screen);
@@ -567,7 +563,8 @@ class AutomaticPlanArrangement
         return $this->testingStudents($arrays);
     }
 
-    private function orderTestStudent($station,$screen) {
+    private function orderTestStudent($station, $screen)
+    {
         /**
          * 需要查当前的实例是不是第一个
          * 如果等于1，就说明是第一个，直接从侯考区取人
@@ -578,7 +575,7 @@ class AutomaticPlanArrangement
             $tempArrays = ExamPlanRecord::orderBeginStudent($screen, $station->serialnumber,
                 $this->sequenceMode);
             if (count($tempArrays) != 0) {
-                $a = Student::whereIn('id',$tempArrays)->get();
+                $a = Student::whereIn('id', $tempArrays)->get();
 //                dump($a);
                 return $a;
             } else {
@@ -676,7 +673,7 @@ class AutomaticPlanArrangement
     }
 
     /**
-     *
+     *获取实体需要的时间
      * @param $station
      * @param $testStudents
      * @param $result

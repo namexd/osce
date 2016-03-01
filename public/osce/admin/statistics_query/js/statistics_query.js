@@ -354,7 +354,7 @@ $(function(){
     var step=allTime/600;//代表几秒向右前进1px;
     var time_count = -20; //时间计数器
     //初始化
-    courseObserveDetail.initVideo(600,300,1,"divPlugin",'');
+    courseObserveDetail.initVideo(600,300,1,"divPlugin",pars.download);
     //登录
     courseObserveDetail.Login({ip:pars.ip,ports:pars.port,user:pars.username,passwd:pars.password});
     //切换视频
@@ -589,7 +589,7 @@ $(function(){
     })
     //选择标记点跳转视频
     $(".points li").click(function(){
-        var point=$(this).find("span").text();
+        var point=($(this).find("span").text()).split('~')[0];
         var pointTime=new Date(point.split(" ")[0].split("-")[0],point.split(" ")[0].split("-")[1]-1,point.split(" ")[0].split("-")[2],
             point.split(" ")[1].split(":")[0], point.split(" ")[1].split(":")[1], point.split(" ")[1].split(":")[2]);
         pointTime=Date.parse(pointTime);

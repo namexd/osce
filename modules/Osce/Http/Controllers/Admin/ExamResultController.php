@@ -272,6 +272,7 @@ class ExamResultController extends CommonController{
         header('Pragma: public');
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
+
     }
 
     /**
@@ -282,6 +283,7 @@ class ExamResultController extends CommonController{
      */
     public function getResultVideo(Request $request)
     {
+
         try {
             $this->validate($request,[
                 'exam_id' => 'required|integer',
@@ -296,22 +298,48 @@ class ExamResultController extends CommonController{
             //根据考试id拿到场次id临时修改
             $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get();
             $examScreening = [];
-              foreach ($examScreeningId as $data) {
-            $examScreening[] = [
-                'id' => $data->id,
-            ];
-        }
-
-            
+            foreach ($examScreeningId as $data) {
+                $examScreening[] = [
+                    'id' => $data->id,
+                ];
+            }
             $examScreeningIds = array_column($examScreening, 'id');
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningIds);
-//            dd($examId,$studentId,$stationId,$data->toArray());
-            return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
+            //查询出时间锚点追加到数组中
+            $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationId);
+//            if($anchor){
+//                foreach($data as $key=>&$item){
+//                    foreach($anchor as $key1=>$list){
+//                        $item['anchor'] = $list['begin_dt'];
+////                        $item['end_dt'] = $list['end_dt'];
+//                    }
+//                }
+//            }
+
+            return view('osce::admin.statistics_query.exam_vcr',['data'=>$data,'anchor'=>$anchor]);
         } catch (\Exception $ex) {
             return response()->back()->withErrors($ex->getMessage());
         }
     }
+
+    //下载安装包
+    public function getdownloadComponents(){
+        $this->downloadComponents('WebComponents.exe',public_path('download').'/WebComponents.exe');
+    }
+
+    private function downloadComponents($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
+
 
     /**
      *ajax请求获取当前考试下的考站

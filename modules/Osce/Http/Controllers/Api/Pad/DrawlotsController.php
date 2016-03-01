@@ -108,10 +108,11 @@ class DrawlotsController extends CommonController
                 $station = StationTeacher::where('exam_id', '=', $exam->id)
                     ->where('user_id', '=', $id)
                     ->first();
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
                 if (is_null($station)) {
                     throw new \Exception('你没有参加此次考试');
                 }
+
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
             } else {
                 throw new \Exception('没有这种考试模式！', -702);
             }
@@ -230,7 +231,7 @@ class DrawlotsController extends CommonController
             if (!$student = $watchLog->student) {
                 throw new \Exception('没有找到对应的学生信息！', 3300);
             }
-
+            //获得考生的id
             $studentId = $watchLog->student_id;
 
             //判断当前学生是否在当前小组中
@@ -251,12 +252,15 @@ class DrawlotsController extends CommonController
             }
 
             if ($exam->sequence_mode == 1) {
-                //从队列表中通过考场ID得到对应的考生信息
+                //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
+                if (!in_array($studentId, $examQueue->pluck('student_id')->toArray())) {
+                    throw new \Exception('当前考生并非在当前地点考试', 7200);
+                }
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
                 if (!in_array($studentId, $examQueue->pluck('student_id')->toArray())) {
-                    throw new \Exception('当前考生并非在当前地点考试', 7200);
+                    throw new \Exception('当前考生并非在当前地点考试', 7201);
                 }
             }
             //如果考生走错了房间

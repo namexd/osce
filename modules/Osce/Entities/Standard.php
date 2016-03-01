@@ -36,37 +36,41 @@ class Standard extends CommonModel
     }
 
     public function ItmeList($subjectId){
-        $prointList =   $this->where('subject_id','=',$subjectId)->get();
-        $data       =   [];
-        foreach($prointList as $item)
-        {
-            $data[$item->pid][] =   $item;
-        }
-        $return =   [];
-        foreach($data[0] as $proint)
-        {
-            $prointData =   $proint;
+        try{
+            $prointList =   $this->where('subject_id','=',$subjectId)->get();
+            $data       =   [];
+            foreach($prointList as $item)
+            {
+                $data[$item->pid][] =   $item;
+            }
+            $return =   [];
+            foreach($data[0] as $proint)
+            {
+                $prointData =   $proint;
 
 //            $prointData['test_term']=0;
-            //$prointData['test_point']['test_term']    =   $data[$proint->id];
-            if(array_key_exists($proint->id,$data))
-            {
-                $prointData['test_term']    =   $data[$proint->id];
+                //$prointData['test_point']['test_term']    =   $data[$proint->id];
+                if(array_key_exists($proint->id,$data))
+                {
+                    $prointData['test_term']    =   $data[$proint->id];
 
-            }
-            else
-            {
-                $prointData['test_term']    =   [];
-            }
-            $return[]=$prointData;
-            foreach($return as $proint){
-                foreach($proint['test_term'] as $str){
-                    $str['real']= '0' ;
+                }
+                else
+                {
+                    $prointData['test_term']    =   [];
+                }
+                $return[]=$prointData;
+                foreach($return as $proint){
+                    foreach($proint['test_term'] as $str){
+                        $str['real']= '0' ;
+                    }
                 }
             }
-        }
 
-        return $return;
+            return $return;
+        }catch (\Exception $ex){
+           throw $ex;
+        }
     }
 
 
