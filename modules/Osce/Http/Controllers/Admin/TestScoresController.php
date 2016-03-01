@@ -115,8 +115,7 @@ class TestScoresController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ajaxGetSubjectlist(Request $request,TestScoreRepositories $TestScoreRepositories){
-        $stuid = $request->student_id;
-        $studentSublist = $TestScoreRepositories->getStudentSubject($stuid);
+        $studentSublist = $TestScoreRepositories->getStudentSubject();
         return $studentSublist;
     }
 

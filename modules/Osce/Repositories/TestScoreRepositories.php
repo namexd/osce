@@ -112,17 +112,8 @@ class TestScoreRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentSubject($stuid){
-        $DB = \DB::connection('osce_mis');
-        $builder = new ExamResult();
-        $builder = $builder->where('exam_result.student_id','=',$stuid)->leftJoin('student', function($join){
-            $join -> on('student.id', '=', 'exam_result.student_id');
-        })->leftJoin('exam_screening', function($join){
-            $join -> on('exam_screening.id', '=', 'exam_result.exam_screening_id');
-        })->leftJoin('station', function($join){
-            $join -> on('station.id', '=', 'exam_result.station_id');
-        })->leftJoin('subject', function($join){
-            $join -> on('subject.id', '=', 'station.subject_id');
-        })->select('subject.title','subject.id')->groupBy('station.subject_id')->get();
+        $builder = new Subject();
+        $builder = $builder->get();
         return $builder;
     }
 
