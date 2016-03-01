@@ -234,19 +234,19 @@ function examation_statistics(){
 //考核点分析
 function statistics_check(){
     //图表插件
-    function echartsSubject(stationNameStr,scoreAvgStr){
+    function echartsSubject(standardContentStr,qualifiedPassStr){
         var t = echarts.init(document.getElementById("echarts-Subject")),
             n = {
                 tooltip: {
                     trigger: "axis"
                 },
                 legend: {
-                    data: ["平均成绩"]
+                    data: ["合格率"]
                 },
                 calculable: !0,
                 xAxis: [{
                     type: "category",
-                    data: stationNameStr
+                    data: standardContentStr
                 }],
                 yAxis: [{
                     type: "value"
@@ -255,7 +255,7 @@ function statistics_check(){
                     {
                         name: "平均成绩",
                         type: "bar",
-                        data: scoreAvgStr
+                        data: qualifiedPassStr
                     }]
             };
         t.setOption(n);
@@ -271,20 +271,17 @@ function statistics_check(){
             type:"get",
             cache:false,
             success:function(res){
-                console.log(res);
                 $(".subjectBody").empty();
-                var stationNameStr = res.data.StrList.stationNameStr.split(",");
-                var scoreAvgStr = res.data.StrList.scoreAvgStr.split(",");
-                if(stationNameStr){echartsSubject(stationNameStr,scoreAvgStr);}
-                $(res.data.stationList).each(function(){
+                var standardContentStr = res.data.StrList.standardContent.split(",");
+                var qualifiedPassStr = res.data.StrList.qualifiedPass.split(",");
+                if(standardContentStr){echartsSubject(standardContentStr,qualifiedPassStr);}
+                $(res.data.standardList).each(function(){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+this.number+'</td>' +
-                        '<td>'+this.stationName+'</td>' +
-                        '<td>'+this.teacherName+'</td>' +
-                        '<td>'+this.examMins+'</td>' +
-                        '<td>'+this.timeAvg+'</td>' +
+                        '<td>'+this.standardContent+'</td>' +
                         '<td>'+this.scoreAvg+'</td>' +
                         '<td>'+this.studentQuantity+'</td>' +
+                        '<td>'+this.qualifiedPass+'</td>' +
                         '<td>' +
                         '<a href="">' +
                         '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
@@ -295,4 +292,10 @@ function statistics_check(){
         })
     }
     ajax($examId,$subjectId);
+    //筛选
+    $("#search").click(function(){
+        var subjectId = $(".subject_select").val();
+        var examId = $(".exam_select").val();
+        ajax(examId,subjectId);
+    });
 }

@@ -142,9 +142,9 @@ class MyController  extends CommonController
 
 //        dd($examId);
         //查询考核点分析所需数据
-        $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(326, 52);//326,52
+        $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId);//326,52
         //统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(326, 52,true);//326,52
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId,true);//326,52
         $datas = [];
         $standardContent = '';//考核点
         $qualifiedPass = '';//合格率
