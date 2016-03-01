@@ -266,7 +266,7 @@ class ExamController extends CommonController
             $examData = Exam::findOrFail($id);
             $examScreeningData = ExamScreening::where(['exam_id' => $id])->get();
 
-            return view('osce::admin.exammanage.basic_info',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
+            return view('osce::admin.exammanage.exam_basic_info',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -1635,7 +1635,7 @@ class ExamController extends CommonController
         $id = $request->input('id');
         $suc= $request->get('suc');
         $data = Exam::where('id',$id)->select(['rules','status'])->first();
-        return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
+        return view('osce::admin.exammanage.exam_waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
     }
 
     public function postExamRemind(Request $request)
