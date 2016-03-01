@@ -99,11 +99,11 @@ class SubjectStatisticsController  extends CommonController
     public function  SubjectGradeAnalyze(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $subid = \Input::get('id');
         //查询分析所需数据
-        $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(53);
+        $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList($subid);
 
 
         //主要用来统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList(53, true);
+        $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList($subid, true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
         //统计合格率
         // dd($rewTwo);
