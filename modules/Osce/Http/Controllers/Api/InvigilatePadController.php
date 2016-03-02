@@ -82,7 +82,6 @@ class InvigilatePadController extends CommonController
             if (!file_exists($savePath)) {
                 mkdir($savePath, 0755, true);
             }
-            dd($fileName, $savePath);
             //将文件放到自己的定义的目录下
 //            $file->move($savePath, iconv("UTF-8", "gb2312", $fileName));
             $file->move($savePath, $fileName);
