@@ -173,6 +173,7 @@ class UserController  extends CommonController
      */
     public function getLogin(){
         $getOpenid = env('OPENID',true);
+        var_dump($getOpenid);
         try{
             $nowTime =time();
             if($getOpenid){
@@ -191,6 +192,8 @@ class UserController  extends CommonController
             }else{
                 \Illuminate\Support\Facades\Session::put('openid','dfdsfds');
             }
+
+            var_dump('@@');
             return view('osce::wechat.user.login');
         }
         catch(\Exception $ex)
