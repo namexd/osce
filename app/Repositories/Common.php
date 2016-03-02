@@ -421,4 +421,21 @@ class Common{
 
         return $ret;
     }
+
+    /**
+     * 判断图片文件的MIME类型
+     * @param $image
+     * @return bool
+     * @author Jiangzhiheng
+     * @time 2016-03-02 10:09
+     */
+    static public function imageMimeCheck($image) {
+        $fileMime =  $image->getMimeType();
+        $allowType = ['image/png','image/gif','image/jpeg'];
+        if (in_array($fileMime,$allowType)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
