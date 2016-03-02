@@ -412,7 +412,7 @@ class Common{
         {
             $streamData =   call_user_func($encrypt,$streamData);
         }
-        
+
         if($streamData!=''){
             $ret = file_put_contents($path, $streamData, true);
         }else{
