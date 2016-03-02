@@ -19,8 +19,8 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">科目成绩</a></li>
-                        <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}">科目难度分析</a></li>
+                        <li class="active"><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">单次考试分析</a></li>
+                        <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}">科目成绩趋势</a></li>
                         <li><a href="{{ route('osce.admin.SubjectStatisticsController.stationGradeList') }}">考站成绩分析</a></li>
                         <li><a href="{{ route('osce.admin.SubjectStatisticsController.standardGradeList') }}">考核点分析</a></li>
                     </ul>
