@@ -143,7 +143,7 @@ class AutomaticPlanArrangement
                 }
             }
 
-            throw new \Exception('人数太多，所设时间无法完成考试');
+            throw new \Exception('人数太多，所设时间无法完成考试', -888);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -226,14 +226,6 @@ class AutomaticPlanArrangement
 //            sleep(1);
         }
 
-        //找到未考完的考生
-        $undoneStudents = [];
-        $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
-        $undoneStudentsIds = $examPlanEntity->pluck('student_id');
-        foreach ($undoneStudentsIds as $undoneStudentsId) {
-            $undoneStudents[] = Student::findOrFail($undoneStudentsId);
-        }
-
         //获取未走完流程的考生
         $ExamFlowModel = new ExamFlow();
         $flowsNum = $ExamFlowModel->studentExamSum($examId);
@@ -252,22 +244,33 @@ class AutomaticPlanArrangement
             ))
             ->Having('flowsNum', '<', $flowsNum)
             ->get();
+        $undoneStudents = [];
         if (count($studentList)) {
-            $studentNotOver = $studentList->pluck('student_id');
+            $studentNotOvers = $studentList->pluck('student_id');
+            foreach ($studentNotOvers as $studentNotOver) {
+                $undoneStudents[] = Student::find($studentNotOver);
+            }
+
             //删除未走完流程的考生
-            if (!ExamPlanRecord::whereIn('student_id', $studentNotOver->toArray())->delete()) {
+            if (!ExamPlanRecord::whereIn('student_id', $studentNotOvers->toArray())->delete()) {
                 throw new \Exception('考试未完成学生移动失败', -2100);
             }
         }
-
-
-        //删除未考完学生记录
+//        dump($studentList);
+        //找到未考完的考生
+//        $undoneStudents = [];
+//        $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
+//        $undoneStudentsIds = $examPlanEntity->pluck('student_id');
+//        foreach ($undoneStudentsIds as $undoneStudentsId) {
+//            $undoneStudents[] = Student::findOrFail($undoneStudentsId);
+//        }
+//
+//        //删除未考完学生记录
 //        if (!$undoneStudentsIds->isEmpty()) {
 //            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
 //                throw new \Exception('删除未考完考生记录失败！', -2101);
 //            }
 //        }
-
 
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_ING);
