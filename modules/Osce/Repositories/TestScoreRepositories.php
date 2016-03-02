@@ -154,29 +154,7 @@ class TestScoreRepositories  extends BaseRepository
         })->groupBy('exam.id')->get();
         return $builder;
     }
-//    /**
-//     * 考生成绩和科目成绩详情
-//     * @access public
-//     * @param $ExamId
-//     * @param int $qualified
-//     * @return mixed
-//     * @author weihuiguo <weihuiguo@misrobot.com>
-//     * @date    2016-2-29 09:29:59
-//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-//     */
-//    public function getStudentDataList($student,$id,$type){
-//        //获取学生考试结果
-//        $builder = new ExamResult();
-//        if($type == 1){
-//            $builder->where('exam.id','=',$id)->where('exam_result.student_id','=',$student);
-//        }else{
-//            $builder->where('subject.id','=',$id)->where('exam_result.student_id','=',$student);
-//        }
-//        $builder = $builder->leftJoin('student', function($join){
-//            $join -> on('student.id', '=', 'exam_result.student_id');
-//        })->get();
-//        dd($builder);
-//    }
+
 
     /**
      * 查找科目
@@ -193,6 +171,40 @@ class TestScoreRepositories  extends BaseRepository
         $subjectlist = $subject->get()->toArray();
         return $subjectlist;
     }
+
+    /**
+     * 获取考试数据
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-3-2 16:56:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamList(){
+        $exam = new Exam();
+        $examlist = $exam->where('status','=',2)->select('id','name')->get()->toArray();
+        return $examlist;
+    }
+
+    /**
+     * 获取科目
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-3-2 16:56:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getSubjectlist($examid){
+        $exam = new Exam();
+        $examlist = $exam->leftjoin('');
+        return $examlist;
+    }
+
+
 }
 
 

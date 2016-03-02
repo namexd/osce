@@ -107,7 +107,7 @@ function statistics_student_score(){
 
 
                 });
-                
+
                 $(res.list).each(function(i){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+( i+1 )+'</td>' +
