@@ -103,18 +103,14 @@ class SubjectStatisticsController  extends CommonController
         //查询分析所需数据
         $rew = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList($subid);
 
-        // dd($rew);
         //主要用来统计合格的人数
         $rewTwo = $subjectStatisticsRepositories->GetSubjectDifficultyStatisticsList($subid, true);
         //$queries = \DB::connection('osce_mis')->getQueryLog();
-        //统计合格率
-        // dd($rewTwo);
+
         $standardStr = '';
-       // $timeAvgStr = '';
-       // $scoreAvgStr = '';
         $qualifiedPass='';
         foreach ($rew as $key => $val) {
-            //dd($val);
+
             //给结果展示列表中序号列加入数据
             $rew[$key]['number'] = $key + 1;
             $rew[$key]['qualifiedPass'] = '0';
@@ -131,13 +127,9 @@ class SubjectStatisticsController  extends CommonController
             }
             if ($standardStr) {
                 $standardStr .= ',' . $val['ExamBeginTime'];
-               // $timeAvgStr .= ',' . $val['timeAvg'];
-                //$scoreAvgStr .= ',' . $val['scoreAvg'];
                 $qualifiedPass.=','.$val['qualifiedPass'];
             } else {
                 $standardStr .= $val['ExamBeginTime'];
-               // $timeAvgStr .= $val['timeAvg'];
-               // $scoreAvgStr .= $val['scoreAvg'];
                 $qualifiedPass.=$val['qualifiedPass'];
             }
              $val['qualifiedPass']=$val['qualifiedPass'].'%';
@@ -145,26 +137,20 @@ class SubjectStatisticsController  extends CommonController
         }
         $StrList = [
             'standardStr' => $standardStr,
-           // 'timeAvgStr' => $timeAvgStr,
-           // 'scoreAvgStr' => $scoreAvgStr,
             'qualifiedPass'=>$qualifiedPass
         ];
-
-        $subject = new Subject();
-        $subjectList = $subject->select('id', 'title')->get()->toarray();
-        //dd($StrList);
-        // dd($rew);
+        //获取有效的考试项目
+        $ExamList = $subjectStatisticsRepositories->GetExamList();
+        $SubjectList = [];
+        if(count($ExamList)>0){
+            $SubjectList = $subjectStatisticsRepositories->subjectDownlist($ExamList->pluck('id'));
+        }
         //ajax请求判断返回不同数据
         if ($request->ajax()) {
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
         }
-        // dd($rew);
-         //dd($StrList);
-         //dd($subjectList);
-        //dd($subjectlist);
-        //dd($rew);
 
-        return view('osce::admin.statisticalanalysis.statistics_subject_level', ['list' => $rew, 'subjectList' => $subjectList, 'StrList' => $StrList]);
+        return view('osce::admin.statisticalanalysis.statistics_subject_level', ['list' => $rew, 'subjectList' => $SubjectList, 'StrList' => $StrList]);
     }
 
 

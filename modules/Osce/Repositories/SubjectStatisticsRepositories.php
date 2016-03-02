@@ -14,6 +14,7 @@ use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
+use Modules\Osce\Entities\StationTeacher;
 /**
  * Class StatisticsRepositories
  * @package Modules\Osce\Repositories
@@ -293,7 +294,42 @@ class SubjectStatisticsRepositories  extends BaseRepository
         return $this->ExamModel->where('status','=',$status)
             ->select('id','name')
             ->orderBy('end_dt','desc')
+            ->get();
+    }
+
+    /**
+     * 出科目的下拉菜单
+     * @param $examId
+     * @return array|\Illuminate\Support\Collection
+     * @author Jiangzhiheng
+     */
+    public function subjectDownlist($examId)
+    {
+        /*
+         * 给考试对应的科目下拉数据
+         */
+        $StationTeacherBuilder = '';
+
+        if (is_object($examId)) {
+            $StationTeacherBuilder = StationTeacher::whereIn('exam_id', $examId);
+        } else {
+            $StationTeacherBuilder = StationTeacher::where('exam_id', $examId);
+        }
+
+        $subjectIdList = $StationTeacherBuilder
+            ->groupBy('station_id')
             ->get()
-            ->toarray();
+            ->pluck('station_id');
+
+        $stationList = Station::whereIn('id', $subjectIdList)->groupBy('subject_id')->get();
+
+        $subjectList = [];
+        foreach ($stationList as $value) {
+            $subjectList[] = $value->subject;
+        }
+
+        $subjectList = collect($subjectList);
+
+        return $subjectList;
     }
 }

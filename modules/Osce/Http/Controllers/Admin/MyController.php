@@ -296,7 +296,9 @@ class MyController  extends CommonController
         foreach ($stationList as $value) {
             $subjectList[] = $value->subject;
         }
+
         $subjectList = collect($subjectList);
+
         return $subjectList;
     }
 }
