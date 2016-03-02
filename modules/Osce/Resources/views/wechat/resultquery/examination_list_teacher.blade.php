@@ -2,7 +2,7 @@
 
 @section('only_head_css')
 <link rel="stylesheet" href="{{asset('osce/wechat/css/resultquery.css')}}" type="text/css" />
-<link rel="stylesheet" href="{{asset('osce/wechat/css/weui.min.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{asset('osce/wechat/common/css/weui.min.css')}}" type="text/css" />
 <style type="text/css">
 	.form-group{border-bottom:1px solid #e7eaec;}
 	.cj_tab tr{border-bottom:1px solid #e7eaec;}
@@ -34,7 +34,7 @@
        		<i class="icon_share"><img src="{{asset('osce/wechat/common/img/share.png')}}" width="18"/></i>
        	</a>
     </div>
-    <div class="form-group">
+    <div class="form-group" style="border: none;">
 	    <span class="form-control normal_select select_indent invigilation" id="showActionSheet">请选择考试</span>
 	    <div id="actionSheet_wrap">
 	        <div class="weui_mask_transition" id="mask"></div>
@@ -43,7 +43,6 @@
 	            @foreach($ExamList as $list)
 	            	<div class="weui_actionsheet_cell" value="{{$list->exam_id}}" data-id="{{$list->station_id}}">{{$list->exam_name}}</div>
 	            @endforeach
-	            <div class="weui_actionsheet_cell">20160301考场二选一+必考第六次两个时间</div>
 	            </div>
 	            <div class="weui_actionsheet_action">
 	                <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
