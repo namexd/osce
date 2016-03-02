@@ -283,7 +283,7 @@ class PadController extends  CommonController{
     {
         $this->validate($request, [
             'student_id' => 'required|integer',
-            'station_id' => 'required|integer'
+//            'station_id' => 'required|integer'
         ]);
 
         try {
@@ -291,7 +291,7 @@ class PadController extends  CommonController{
             $date = date('Y-m-d H:i:s');
             //通过考生的腕表id来找到对应的队列id
             $studentId = $request->input('student_id');
-            $stationId = $request->input('station_id');
+            $stationId = $request->input('station_id', null);
 
             /** @var 学生id $studentId */
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId);
