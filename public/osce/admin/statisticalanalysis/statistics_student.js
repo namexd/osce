@@ -55,7 +55,7 @@ function statistics_student_score(){
                 }],
                 calculable: !0,
                 series: [{
-                    name: "预算 vs 开销",
+                    name: "考生成绩 vs 平均分",
                     type: "radar",
                     data: [{
                         value: studentScoreStr,
@@ -82,25 +82,33 @@ function statistics_student_score(){
                 var studentScoreStr = [];
                 var subjectStr = [];
                 var subStr = [];
+                var singledata = res.singledata;
                 var stuname = $(".student_select option:selected").html();
-                $(res.avgdata).each(function(){
-                    scoreAvgStr.push(this.scoreAvg);
-                });
+                var scoreAvg = res.avgdata;
                 $(res.singledata).each(function(){
-                    studentScoreStr.push(this.score);
                     subjectStr.push(this.title);
 
                 });
-
-                $(res.subject).each(function(){
+                $(res.subject).each(function(i){
                     subStr.push({
                         text: this.title,
                         max: this.score
                     });
-                });
-                //console.log(subStr);
-                $(res.list).each(function(i){
+                    if(singledata[i]){
+                        studentScoreStr.push(Number(singledata[i]['score']));
+                    }else{
+                        studentScoreStr.push(0);
+                    }
+                    if(scoreAvg[i]){
+                        scoreAvgStr.push(Number(scoreAvg[i]['scoreAvg']));
+                    }else{
+                        scoreAvgStr.push(0);
+                    }
 
+
+                });
+                
+                $(res.list).each(function(i){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+( i+1 )+'</td>' +
                         '<td>'+this.title+'</td>' +
