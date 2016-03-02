@@ -107,9 +107,7 @@ function statistics_student_score(){
 
 
                 });
-                console.log(studentScoreStr);
-                console.log(scoreAvgStr);
-                console.log(subStr);
+                
                 $(res.list).each(function(i){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+( i+1 )+'</td>' +
