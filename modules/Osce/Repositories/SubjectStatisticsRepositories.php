@@ -38,6 +38,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
     //TODO 考试项目模型
     protected $SubjectModel;
 
+
     public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $SubjectItem,Station $Station,Subject $Subject)
     {
         $this->ExamModel = $exam;
@@ -336,5 +337,50 @@ class SubjectStatisticsRepositories  extends BaseRepository
         $subjectList = collect($subjectList);
 
         return $subjectList;
+    }
+
+    /**
+     * 获取科目列表
+     * @method
+     * @url /osce/
+     * @access public
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年2月26日15:36:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetSubjectList(){
+        $subject = new Subject();
+        $data = $subject->select('id','title')->get();
+        return $data;
+    }
+    /**
+     * 用于考核点查看（详情）
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $ExamId
+     * @param $standardPid 评分标准父编号
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年2月26日15:36:25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetStandardDetails($standardPid){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->SubjectItemModel->leftJoin('exam_score', function($join){
+            $join -> on('exam_score.standard_id', '=','standard.id');
+        });
+        $data = $builder->where('standard.pid','=',$standardPid)
+            ->groupBy('standard.id')
+            ->select(
+                'standard.pid',//评分标准父编号
+                'standard.content',//名称
+                'standard.score', //总分
+                'exam_score.score as grade'//成绩
+            //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
+            )->get();
+        //dd($data);
+        return $data;
     }
 }

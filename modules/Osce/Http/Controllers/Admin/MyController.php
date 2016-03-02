@@ -277,6 +277,7 @@ class MyController  extends CommonController
             return $this->success_data(['datainfo'=>$datainfo,'StrList'=>$StrList]);
         }
     }
+
     /**
      * 动态获取ajax列表
      * @author
