@@ -339,7 +339,8 @@ class ExamQueue extends CommonModel
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
                     } else {
                         //这是已考场安排的需拿到room_id
-                        $stationTime = $this->getRoomStationMaxTime($item->room_id);
+                        $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);
+                        \Log::alert($stationTime.'以考场安排');
                     }
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         $lateTime = time() - strtotime($item->begin_dt);
@@ -360,8 +361,7 @@ class ExamQueue extends CommonModel
 //                            'begin_dt' => date('Y-m-d H:i:s', $nowTime),
 //                            'end_dt' => date('Y-m-d H:i:s', $nowTime + $stationTime * 60)
 //                        ];
-                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=',
-                            $stationId)->first();
+                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
                         if (is_null($ExamTime)) {
                             throw new \Exception('没有找到对应的队列信息', -104);
                         }

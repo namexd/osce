@@ -22,7 +22,7 @@ input.laydate-icon{
 @section('only_js')
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-<script src="{{asset('osce/admin/exammanage/exammanage.js')}}" ></script>
+<script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script>
 @stop
 
 
