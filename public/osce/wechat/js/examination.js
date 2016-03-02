@@ -14,7 +14,7 @@ function examination_list(){
 
 		var id=$(this).val();
 		var url=pars.ajaxurl;
-		alert(id);
+		console.log('id',id);
 		if(id==0){
 			$("#exmination_ul li").remove();
 			$(".time").text("");
@@ -26,12 +26,12 @@ function examination_list(){
 			async:true,
 			data:{exam_id:id},
 			success:function(res){
-				alert(res);
+				console.log('data',res);
 				$("#exmination_ul li").remove();
 				$(".time").text("");
 			    //console.log(res);
 				for (var i=0;i<res.data.length;i++) {
-					alert(res.data[i].type);
+					console.log('type',res.data[i].type);
 					var type=res.data[i].type;
 					var begin_time=(res.data[i].begin_dt).substring(0,10);
 					var end_time=(res.data[i].begin_dt).substring(0,10);
@@ -84,7 +84,7 @@ function examination_list(){
 						default:
 							break;
 					}
-					alert(str);
+					console.log('dom',str);
 					$("#exmination_ul").append(str);
 				}
 			}
