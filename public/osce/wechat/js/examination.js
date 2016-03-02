@@ -14,12 +14,12 @@ function examination_list(){
 
 		var id=$(this).val();
 		var url=pars.ajaxurl;
+		alert(id);
 		if(id==0){
 			$("#exmination_ul li").remove();
 			$(".time").text("");
 			return false;
 		}
-		alert(id);
 		$.ajax({
 			type:"get",
 			url:url,
