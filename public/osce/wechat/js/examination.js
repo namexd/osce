@@ -26,7 +26,6 @@ function examination_list(){
 
 		var id=$(this).attr('value');
 		var url=pars.ajaxurl;
-		console.log('id',id);
 		if(id==0){
 			$("#exmination_ul li").remove();
 			$(".time").text("");
@@ -38,10 +37,8 @@ function examination_list(){
 			async:true,
 			data:{exam_id:id},
 			success:function(res){
-				console.log('data',res);
 				$("#exmination_ul li").remove();
 				$(".time").text("");
-			    //console.log(res);
 				for (var i=0;i<res.data.length;i++) {
 					console.log('type1',typeof res.data[i].type);
 					var type=parseInt(res.data[i].type);
