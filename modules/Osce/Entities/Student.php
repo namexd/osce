@@ -423,6 +423,7 @@ class Student extends CommonModel
      */
     static public function getStudentByExamAndSubject($examId, $subjectId)
     {
+        //357,88
         return Student::leftJoin('exam_result','exam_result.student_id','=','student.id')
             ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
             ->leftJoin('exam','exam.id','=','exam_screening.exam_id')
@@ -439,6 +440,7 @@ class Student extends CommonModel
                 'exam_result.time as exam_result_time'
             )
             ->paginate(config('osce.page_size'));
+
     }
 
     /**
