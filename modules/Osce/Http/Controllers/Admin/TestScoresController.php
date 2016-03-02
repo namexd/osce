@@ -118,7 +118,7 @@ class TestScoresController  extends CommonController
                 if($v['id'] == $vv['id']){
                     $singledata[$k]['timeAvg'] = $vv['timeAvg'];
                     $singledata[$k]['scoreAvg'] = $vv['scoreAvg'];
-                    $singledata[$k]['time'] = date("Y年m月",strtotime($vv['begin_dt']));
+                    $singledata[$k]['time'] = date("Y年m月",strtotime($v['begin_dt']));
                     unset($singledata[$k]['begin_dt']);
                 }else{
                     $singledata[$k]['timeAvg'] = 0;
