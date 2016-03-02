@@ -81,6 +81,7 @@ function examination_list(){
 						default:
 							break;
 					}
+					alert(str);
 					$("#exmination_ul").append(str);
 				}
 			}
