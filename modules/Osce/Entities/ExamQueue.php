@@ -332,6 +332,7 @@ class ExamQueue extends CommonModel
                     {
                         //这是已考场安排的需拿到room_id
                         $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);
+                        \Log::alert($stationTime);
                     }
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         $lateTime = time() - strtotime($item->begin_dt);
@@ -377,7 +378,7 @@ class ExamQueue extends CommonModel
 
     }
 
-    private function getRoomStationMaxTime($roomdId){
+    private function  getRoomStationMaxTime($roomdId){
         $tempStations   =   RoomStation::where('room_id','=',$roomdId)->get();
         $mins = 0;
         //循环数组，找到mins最大的值
