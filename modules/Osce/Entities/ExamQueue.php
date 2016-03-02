@@ -486,7 +486,7 @@ class ExamQueue extends CommonModel
     }
 
     /**
-     * 通过腕表id找到对应的
+     * 通过学生id找到对应的队列实例
      * @param $studentId
      * @return
      * @throws \Exception
