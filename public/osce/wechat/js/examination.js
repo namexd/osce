@@ -31,8 +31,9 @@ function examination_list(){
 				$(".time").text("");
 			    //console.log(res);
 				for (var i=0;i<res.data.length;i++) {
-					console.log('type',typeof res.data[i].type);
-					var type=res.data[i].type;
+					console.log('type1',typeof res.data[i].type);
+					var type=parseInt(res.data[i].type);
+					console.log('type2',typeof res.data[i].type);
 					var begin_time=(res.data[i].begin_dt).substring(0,10);
 					var end_time=(res.data[i].begin_dt).substring(0,10);
 					var time="";
