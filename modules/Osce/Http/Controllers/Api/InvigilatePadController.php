@@ -77,7 +77,7 @@ class InvigilatePadController extends CommonController
             //取得保存路径
             $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
             $savePath = public_path($savePath);
-            $savePath = iconv("UTF-8", "gb2312", $savePath);
+//            $savePath = iconv("UTF-8", "gb2312", $savePath);
             //如果没有这个文件夹，就新建一个文件夹
             if (!file_exists($savePath)) {
                 mkdir($savePath, 0755, true);
