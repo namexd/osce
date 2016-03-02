@@ -1,8 +1,5 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-	<style type="text/css">
-		.ibox-content{}
-	</style>
 @stop
 
 @section('only_js')

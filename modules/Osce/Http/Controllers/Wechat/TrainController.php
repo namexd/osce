@@ -151,7 +151,12 @@ class TrainController extends  CommonController{
         }
         return view('osce::wechat.train.train_detail')->with('data',$data);
     }
-	
+
+    /**
+     * @method GET
+     * @url /osce/wechat/train/train-lists
+     * @access public
+     */
 	public function getTrainlists(){
 		return view('osce::wechat.train.train_list');
 	}

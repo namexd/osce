@@ -2,6 +2,17 @@
 
 @section('only_head_css')
 <link rel="stylesheet" href="{{asset('osce/wechat/css/resultquery.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{asset('osce/wechat/common/css/weui.min.css')}}" type="text/css" />
+<style>
+    .form-group label{z-index:0!important;}
+    .invigilation{
+        margin:10px 3% 0;
+        width:94%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
 @stop
 @section('only_head_js')
 	<script type="text/javascript" src="{{asset('osce/wechat/js/examination.js')}}" ></script>
@@ -18,13 +29,21 @@
             <i class="fa fa-home clof font26 icon_return"></i>
         </a>
     </div>
-    <div class="form-group">
-        <select  id="examination" class="form-control normal_select select_indent" name="student_type" required>
-        	<option value="">请选择考试</option>
-        	@foreach($ExamList as $list)
-            	<option value="{{$list->id}}">{{$list->name}}</option>
-	        @endforeach
-        </select>
+    <div class="form-group" style="border: none;">
+        <span class="form-control normal_select select_indent invigilation" id="showActionSheet">请选择考试</span>
+        <div id="actionSheet_wrap">
+            <div class="weui_mask_transition" id="mask"></div>
+            <div class="weui_actionsheet" id="weui_actionsheet">
+                <div class="weui_actionsheet_menu" >
+                @foreach($ExamList as $list)
+                    <div class="weui_actionsheet_cell" value="{{$list->id}}">{{$list->name}}</div>
+                @endforeach
+                </div>
+                <div class="weui_actionsheet_action">
+                    <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="examination_time">
 		<span class="tit">&nbsp;&nbsp;考试时间</span>&nbsp;&nbsp;<span class="time"></span>

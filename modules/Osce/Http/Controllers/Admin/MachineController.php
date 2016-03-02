@@ -146,14 +146,14 @@ class MachineController extends CommonController
         switch($cate_id)
         {
             case 2:
-                return view('osce::admin.resourcemanage.equipment_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
+                return view('osce::admin.resourceManage.equipment_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 3:
-                return view('osce::admin.resourcemanage.equipment_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
+                return view('osce::admin.resourceManage.equipment_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 1:
             default:
-                return view('osce::admin.resourcemanage.equipment_manage_video',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
+                return view('osce::admin.resourceManage.equipment_manage_video',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
         }
     }
 
@@ -467,7 +467,7 @@ class MachineController extends CommonController
     public function getAddCameras(){
         $model = new Vcr();
         $status   =   $model  ->  getMachineStatuValues();
-        return view('osce::admin.resourcemanage.equipment_manage_video_add', ['status'=>$status]);
+        return view('osce::admin.resourceManage.equipment_manage_video_add', ['status'=>$status]);
     }
 
     /**
@@ -497,7 +497,7 @@ class MachineController extends CommonController
         $status   =   $model  ->  getMachineStatuValues();
         $vcr    =   Vcr::find($id);
 
-        return view('osce::admin.resourcemanage.equipment_manage_video_edit',['item'=>$vcr, 'status'=>$status]);
+        return view('osce::admin.resourceManage.equipment_manage_video_edit',['item'=>$vcr, 'status'=>$status]);
     }
 
     /**
@@ -619,7 +619,7 @@ class MachineController extends CommonController
     public function getAddPad(){
         $model = new Pad();
         $status   =   $model  ->  getMachineStatuValues();
-        return view('osce::admin.resourcemanage.equipment_manage_pad_add',['status'=>$status]);
+        return view('osce::admin.resourceManage.equipment_manage_pad_add',['status'=>$status]);
     }
 
     /**
@@ -649,7 +649,7 @@ class MachineController extends CommonController
         $status   =   $model  ->  getMachineStatuValues();
         $pad    =   Pad::find($id);
 
-        return view('osce::admin.resourcemanage.equipment_manage_pad_edit',['item'=>$pad, 'status'=>$status]);
+        return view('osce::admin.resourceManage.equipment_manage_pad_edit',['item'=>$pad, 'status'=>$status]);
     }
 
     /**
@@ -820,7 +820,7 @@ class MachineController extends CommonController
     public function getAddWatch(){
         $model = new Watch();
         $status   =   $model  ->  getMachineStatuValues();
-        return view('osce::admin.resourcemanage.equipment_manage_watch_add',['status'=>$status]);
+        return view('osce::admin.resourceManage.equipment_manage_watch_add',['status'=>$status]);
     }
 
     /**
@@ -850,7 +850,7 @@ class MachineController extends CommonController
         $status   =   $model  ->  getMachineStatuValues();
         $watch  =   Watch::find($id);
 
-        return view('osce::admin.resourcemanage.equipment_manage_watch_edit',['item'=>$watch, 'status'=>$status]);
+        return view('osce::admin.resourceManage.equipment_manage_watch_edit',['item'=>$watch, 'status'=>$status]);
     }
 
     /**
@@ -984,6 +984,6 @@ class MachineController extends CommonController
             }
         }
 
-        return view('osce::admin.resourcemanage.equipment_manage_watch_uselist')->with(['list'=>$list,'code'=>$code,'student_name'=>$studentName,'begin_dt'=>$beginDt,'end_dt'=>$endDt]);
+        return view('osce::admin.resourceManage.equipment_manage_watch_uselist')->with(['list'=>$list,'code'=>$code,'student_name'=>$studentName,'begin_dt'=>$beginDt,'end_dt'=>$endDt]);
     }
 }

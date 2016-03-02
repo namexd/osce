@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Api;
 
 
+use App\Repositories\Common;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
@@ -77,13 +78,13 @@ class InvigilatePadController extends CommonController
             //取得保存路径
             $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
             $savePath = public_path($savePath);
-            $savePath = iconv("UTF-8", "gb2312", $savePath);
+            //TODO iconv用在windows环境下
+//            $savePath = iconv("UTF-8", "gb2312", $savePath);
             //如果没有这个文件夹，就新建一个文件夹
             if (!file_exists($savePath)) {
                 mkdir($savePath, 0755, true);
             }
-
-            //将文件放到自己的定义的目录下
+            //将文件放到自己的定义的目录下 TODO iconv用在windows环境下
 //            $file->move($savePath, iconv("UTF-8", "gb2312", $fileName));
             $file->move($savePath, $fileName);
             //生成附件url地址
@@ -357,8 +358,6 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
-        \Log::info('test');
-        \Log::info(json_encode($request->file('photo')));
         try {
             //获取数据
             $studentId = $request->input('student_id');
@@ -396,6 +395,11 @@ class InvigilatePadController extends CommonController
                 if (!$photos->isValid()) {
                     throw new \Exception('上传的照片出错', -110);
                 }
+                //判断照片类型是否不对
+                if (!Common::imageMimeCheck($photos)) {
+                    throw new \Exception('上传的文件类型不合法！', -120);
+                }
+
 
                 //拼装文件名,并插入数据库
                 $result = self::uploadFileBuilder($photos, $date, $params, $standardId);
