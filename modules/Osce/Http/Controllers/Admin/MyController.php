@@ -245,7 +245,7 @@ class MyController  extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function standardDetails(Request $request,MyRepositories $subjectStatisticsRepositories){
+    public function standardDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $standardPid = $request->input('standardPid',0);
         //查询考核点分析所需数据
         $result = $subjectStatisticsRepositories->GetStandardDetails(558);//558

@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin;
+use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 use Modules\Osce\Entities\Exam;
@@ -427,8 +428,64 @@ class SubjectStatisticsController  extends CommonController
     public function standardDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
         $standardPid = $request->input('standardPid',0);
+        $examId = $request->input('examId',0);
+        $subjectId = $request->input('subjectId',0);
         //查询考核点分析所需数据
-        $result = $subjectStatisticsRepositories->GetStandardDetails($standardPid);//558
+        $result = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(361,88,784);//558
+
+        $datas = [];
+        $number = 1;//序号
+        //重构数组
+        if(!empty($result)){
+            foreach($result as $k => $v){
+                if($k>=1){
+                    //证明是同一个考核点下的子考核点
+                    if($result[$k]['standard_id'] == $result[$k-1]['standard_id']){
+                        continue;
+                    }
+                }
+
+                //统计该考核点的人数
+                $result[$k]['studentCount'] = 0;
+                //统计该考核点的总分数
+                $result[$k]['studentTotalScore'] = 0;
+                //统计该考核点的平均分数
+                $result[$k]['studentAvgScore'] = 0;
+                //统计该考核点的合格人数
+                $result[$k]['studentQualifiedCount'] = 0;
+                //统计该考核点的合格率
+                $result[$k]['studentQualifiedPercentage'] = 0;
+                foreach($result as $key => $val){
+                    //证明是同一个考核点下的子考核点
+                    if($v['standard_id'] == $val['standard_id']){
+                        $result[$k]['studentCount'] = $result[$k]['studentCount']+1;
+                        $result[$k]['studentTotalScore'] = $result[$k]['studentTotalScore']+$val['score'];
+                        if($val['Zscore'] != 0){
+                            if($val['score']/$val['Zscore'] >= 0.6){
+                                $result[$k]['studentQualifiedCount'] = $result[$k]['studentQualifiedCount']+1;
+                            }
+                        }
+
+                    }
+                }
+                //计算该考核点的平均分数
+                $result[$k]['studentAvgScore'] = sprintf("%.2f",$result[$k]['studentTotalScore']/$result[$k]['studentCount']);
+                //计算该考核点的合格率
+                $result[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$result[$k]['studentQualifiedCount']/$result[$k]['studentCount'])*100;
+                //获取该考核点名称
+                $content = SubjectItem::where('id','=',$v['standard_id'])->select('content')->first();
+
+                $datas[] = [
+                    'number'               => $number++,//序号
+                    'standardContent'     => !empty($content)?$content['content']:'-',//考核点名称
+                    'id'                   => $v['standard_id'],//评分标准父编号
+                    'scoreAvg'             => $result[$k]['studentAvgScore'],//平均成绩
+                    'studentQuantity'     => $result[$k]['studentCount'],//考试人数
+                    'qualifiedPass'       => $result[$k]['studentQualifiedPercentage'].'%',//合格率
+                ];
+            }
+        }
+        dd($datas);
         //所点击的考核点的子考核点对应的数据
         $datainfo=[];
         $content = '';//考核点

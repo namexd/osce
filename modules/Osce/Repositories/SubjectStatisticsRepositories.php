@@ -264,13 +264,13 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @access public
      * @param $ExamId
      * @param $SubjectId
-     * @param $type; 默认为 0 统计考核项父节点  1统计子考核项
+     * @param $standardPid; 默认为 0 统计考核项父节点，  统计对应父考核点的考核子项
      * @return mixed
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年2月26日15:36:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$type=0){
+    public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$standardPid=0){
         $DB = \DB::connection('osce_mis');
 
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
@@ -290,14 +290,16 @@ class SubjectStatisticsRepositories  extends BaseRepository
             ->where('exam_screening.exam_id','=',$ExamId);
 
         //根据需求 group不同的字段
-        if($type){
-            $builder->groupBy($DB->raw('standard.id,exam_result.student_id'));
+        if($standardPid){
+            $builder = $builder->where('standard.pid','=',$standardPid)
+                ->groupBy($DB->raw('standard.id,exam_result.student_id'));
         }else{
-            $builder->groupBy($DB->raw('standard.pid,exam_result.student_id'));
+            $builder = $builder->groupBy($DB->raw('standard.pid,exam_result.student_id'));
         }
 
         $builder->select(
                 'standard.pid as pid',
+                'standard.id as standard_id',
                 'exam_result.student_id',
                 $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分
                 $DB->raw('SUM(standard.score) as Zscore')   //该科目所有考核点总分
@@ -336,11 +338,14 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetContent($id){
-        return  $this->SubjectItemModel
+        $data = $this->SubjectItemModel
             ->where('id','=',$id)
             ->select('content')
-            ->first()
-            ->pluck('content');
+            ->first();
+        if(!empty($data)){
+            $data = $data->pluck('content');
+        }
+        return  $data;
     }
     /**
      * 获取所有已经完成的考试
