@@ -208,6 +208,55 @@ class SubjectStatisticsRepositories  extends BaseRepository
         return  $builder->get();
     }
 
+    /**用于考站成绩分析详情
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $stationId 考站id
+     * @return mixed
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetStationDetails($examId,$subjectId,$stationId){
+        $DB = \DB::connection('osce_mis');
+
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('student', function($join){
+            $join -> on('exam_result.student_id', '=','student.id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
+        })->leftJoin('teacher', function($join){
+            $join -> on('teacher.id', '=','exam_result.teacher_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam', function($join){
+            $join -> on('exam.id', '=','exam_screening.exam_id');
+        });
+
+        $builder = $builder->where('station.id','=',$stationId)
+            ->where('subject.id','=',$subjectId)
+            ->where('exam.id','=',$examId)
+            ->groupBy('student.id')
+            ->select(
+                'exam.name as examName', //考试名称
+                'exam_screening.begin_dt',//考试开始时间
+                'exam_screening.end_dt',//考试结束时间
+                'subject.title as subjectTitle',//科目名称
+                'station.name as stationName',//考站名称
+                'student.name as studentName',//考生名字
+                'exam_result.time',//耗时
+                'exam_result.score',//成绩
+                'teacher.name as teacherName'//老师
+            );
+        return  $builder->get();
+    }
+
+
+
+
+
     /**
      * 用于考核点分析
      * @method
@@ -215,12 +264,13 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @access public
      * @param $ExamId
      * @param $SubjectId
+     * @param $type; 默认为 0 统计考核项父节点  1统计子考核项
      * @return mixed
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年2月26日15:36:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetSubjectStandardStatisticsList($ExamId,$SubjectId){
+    public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$type=0){
         $DB = \DB::connection('osce_mis');
 
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
@@ -237,9 +287,16 @@ class SubjectStatisticsRepositories  extends BaseRepository
 
 
         $builder = $builder->where('subject.id','=',$SubjectId)
-            ->where('exam_screening.exam_id','=',$ExamId)
-            ->groupBy($DB->raw('standard.pid,exam_result.student_id'))
-            ->select(
+            ->where('exam_screening.exam_id','=',$ExamId);
+
+        //根据需求 group不同的字段
+        if($type){
+            $builder->groupBy($DB->raw('standard.id,exam_result.student_id'));
+        }else{
+            $builder->groupBy($DB->raw('standard.pid,exam_result.student_id'));
+        }
+
+        $builder->select(
                 'standard.pid as pid',
                 'exam_result.student_id',
                 $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分

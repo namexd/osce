@@ -205,23 +205,36 @@ class TestScoresController  extends CommonController
         return $this->success_data($data);
     }
 
-//    /**
-//     * 考生成绩和科目成绩详情
-//     * @method  POST
-//     * @url ajax-get-student-test-count
-//     * @access public
-//     * @param Request $request,TestScoreRepositories $TestScoreRepositories
-//     * @author weihuiguo <weihuiguo@misrobot.com>
-//     * @date    2016-2-29 15:12:37
-//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-//     */
-//    public function getTesterScoreDetail(Request $request,TestScoreRepositories $TestScoreRepositories){
-//        //根据传过来的ID和类型判断是成绩还是科目
-//        $id = $request->id;
-//        $type = $request->type;
-//        $studentid = $request->student_id;
-//        $datalist = $TestScoreRepositories->getStudentDataList($studentid,$id,$type);
-//    }
+    /**
+     * 教学成绩分析
+     * @method  POST
+     * @url testscores/standardDetails
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-3-2 16:51:27 .com Inc. All Rights Reserved
+     */
+    public function testScoresCount(Request $request,TestScoreRepositories $TestScoreRepositories){
+        //获取考试的数据
+        $examlist = $TestScoreRepositories->getExamList();
+        return view('osce::admin.statisticalanalysis.statistics_student_subject',[
+            'examlist' => $examlist,
+        ]);
+    }
+
+    /**
+     * 教学成绩分析-请求科目数据
+     * @method  POST
+     * @url testscores/standardDetails
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-3-2 17:00:10 .com Inc. All Rights Reserved
+     */
+    public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $examid = $request->examid;
+        $datalist = $TestScoreRepositories->getSubjectlist($examid);
+    }
 }
 
 

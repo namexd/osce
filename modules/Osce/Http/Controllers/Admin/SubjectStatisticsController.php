@@ -240,6 +240,50 @@ class SubjectStatisticsController  extends CommonController
             'StrList'=>$StrList
         ]);
     }
+
+    /**考站成绩分析详情
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function stationDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
+
+        $examId = $request->input('examId',0); //获取考试id
+        $subjectId = $request->input('subjectId',0); //获取科目id
+        $stationId = $request->input('stationId',0); //获取考站id
+        $data = $subjectStatisticsRepositories->GetStationDetails(361,88,49);
+        $stationDetails = [];//详情数据
+        $title = '';//详情头部数据
+        if(count($data)>0){
+            foreach($data as $k=>$v){
+                $stationDetails[$k]['number'] = $k+1;//编号
+                $stationDetails[$k]['studentName'] = $v->studentName;//考生名字
+                $stationDetails[$k]['begin_dt'] = $v->begin_dt;//考试时间
+                $stationDetails[$k]['time'] = $v->time;//耗时
+                $stationDetails[$k]['score'] = $v->score;//成绩
+                $stationDetails[$k]['teacherName'] = $v->teacherName;//评价老师
+            }
+            $title['examName'] = $data[0]['examName'];//考试名称
+            $title['time'] = $data[0]['begin_dt'].'~'.date('H:i:s',strtotime($data[0]['end_dt']));//考试时间
+            $title['subjectTitle'] = $data[0]['subjectTitle'];//科目名称
+            $title['stationName'] = $data[0]['stationName'];//考站名称
+        }
+        dd($stationDetails);
+        //将数据展示到页面
+        return view('osce::admin.statisticalanalysis.statistics_examation', [
+            'title' =>$title ,//头部数据
+            'stationDetails' =>$stationDetails ,//考站详情
+        ]);
+    }
+
+
+
     /**考核点分析列表
      * @method GET
      * @url /osce/admin/subject-statistics/standard-grade-list
