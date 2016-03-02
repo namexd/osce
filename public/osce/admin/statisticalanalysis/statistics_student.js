@@ -82,18 +82,23 @@ function statistics_student_score(){
                 var studentScoreStr = [];
                 var subjectStr = [];
                 var subStr = [];
+                var stuname = $(".student_select").children().first().html();
                 $(res.avgdata).each(function(){
                     scoreAvgStr.push(this.scoreAvg);
                 });
                 $(res.singledata).each(function(){
                     studentScoreStr.push(this.score);
                     subjectStr.push(this.title);
+
+                });
+
+                $(res.subject).each(function(){
                     subStr.push({
                         text: this.title,
-                        max: this.subscore
+                        max: this.score
                     });
                 });
-                console.log(res.list);
+                //console.log(subStr);
                 $(res.list).each(function(i){
 
                     $(".subjectBody").append('<tr>' +
@@ -105,7 +110,7 @@ function statistics_student_score(){
                         '<td>'+this.time+'</td>' +
                         '<td>'+this.score+'</td>' +
                         '<td>' +
-                        '<a href="/osce/admin/testscores/student-subject-list?examid='+examId+'&student_id='+studentId+'">' +
+                        '<a href="/osce/admin/testscores/student-subject-list?examid='+examId+'&stuname='+stuname+'&subject='+this.title+'&student_id='+studentId+'&subid='+this.id+'">' +
                         '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
                         '</a>' +
                         '<a href="">' +
