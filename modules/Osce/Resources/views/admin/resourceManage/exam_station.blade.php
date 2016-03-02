@@ -12,7 +12,7 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script> 
+    <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script> 
 @stop
 
 

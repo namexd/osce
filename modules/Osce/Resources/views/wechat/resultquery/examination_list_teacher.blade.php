@@ -17,6 +17,7 @@
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
 	}
+	.fa.fa-sort-desc{float: right;}
 </style>
 @stop
 @section('only_head_js')
@@ -35,7 +36,7 @@
         </a>
     </div>
     <div class="form-group" style="border: none;">
-	    <span class="form-control normal_select select_indent invigilation" id="showActionSheet">请选择考试</span>
+	    <span class="form-control normal_select select_indent invigilation" id="showActionSheet"><span>请选择考试</span><i class="fa fa-sort-desc"></i></span>
 	    <div id="actionSheet_wrap">
 	        <div class="weui_mask_transition" id="mask"></div>
 	        <div class="weui_actionsheet" id="weui_actionsheet">

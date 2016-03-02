@@ -11,7 +11,7 @@
 @stop
 
 @section('only_js')
-   <script src="{{asset('osce/admin/exammanage/exammanage.js')}}" ></script> 
+   <script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script> 
 @stop
 
 
