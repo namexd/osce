@@ -93,7 +93,7 @@ class ExamController extends CommonController
             $item->constitute = $this->getExamConstitute($item['id']);
         }
 
-        return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
+        return view('osce::admin.examManage.exam_assignment', ['data' => $data]);
 
     }
 
@@ -140,7 +140,7 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getAddExam(){
-        return view('osce::admin.exammanage.exam_assignment_add');
+        return view('osce::admin.examManage.exam_assignment_add');
     }
 
     /**
@@ -266,7 +266,7 @@ class ExamController extends CommonController
             $examData = Exam::findOrFail($id);
             $examScreeningData = ExamScreening::where(['exam_id' => $id])->get();
 
-            return view('osce::admin.exammanage.exam_basic_info',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
+            return view('osce::admin.examManage.exam_basic_info',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -395,7 +395,7 @@ class ExamController extends CommonController
 
             $status=Exam::where('id','=',$exam_id)->select()->first()->status;
             //展示页面
-            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status]);
+            return view('osce::admin.examManage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withError($ex);
@@ -461,7 +461,7 @@ class ExamController extends CommonController
      */
     public function getAddExaminee(Request $request){
         $id = $request->get('id');
-        return view('osce::admin.exammanage.examinee_manage_add', ['id' => $id]);
+        return view('osce::admin.examManage.examinee_manage_add', ['id' => $id]);
     }
 
     /**
@@ -537,7 +537,7 @@ class ExamController extends CommonController
         $id =   $request    ->  get('id');
         $student    =   Student::findOrFail($id);
 
-        return view('osce::admin.exammanage.examinee_manage_edit', ['item' => $student]);
+        return view('osce::admin.examManage.examinee_manage_edit', ['item' => $student]);
     }
 
     public function postEditExaminee(Request $request){
@@ -688,7 +688,7 @@ class ExamController extends CommonController
         //从模型得到数据
         $data=$examModel->getList($formData);
         //展示页面
-        return view('osce::admin.exammanage.examinee_query', ['data'=>$data, 'exam_name'=>$exam_name, 'student_name'=>$student_name]);
+        return view('osce::admin.examManage.examinee_query', ['data'=>$data, 'exam_name'=>$exam_name, 'student_name'=>$student_name]);
     }
 
     /**
@@ -726,7 +726,7 @@ class ExamController extends CommonController
 
 
         //TODO:请蒋志恒 确认行代码还可以跑    如果 非必要 请及时删除 2016-01-17 22:28 罗海华
-        //return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
+        //return view('osce::admin.examManage.sp_invitation', ['data' => $data]);
     }
 
     /**
@@ -801,7 +801,7 @@ class ExamController extends CommonController
         }
 //        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
-        return view('osce::admin.exammanage.exam_room_assignment', [
+        return view('osce::admin.examManage.exam_room_assignment', [
             'id'                => $exam_id,
             'status'            => $status,
             'examRoomData'      => $serialnumberGroup,
@@ -1238,13 +1238,13 @@ class ExamController extends CommonController
             if ($ex->getCode() == 9999) {
                 $user   =   Auth::user();
                 $plan = [];
-                return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
+                return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
             }
         }
 //        $plan   =   $this           ->  getEmptyTime($plan);
         $user   =   Auth::user();
 
-        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
+        return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
 
     /**
@@ -1393,7 +1393,7 @@ class ExamController extends CommonController
             }
         }
        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
-        return view('osce::admin.exammanage.exam_station_assignment', [
+        return view('osce::admin.examManage.exam_station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
             'stationData' => $stationData,
@@ -1635,7 +1635,7 @@ class ExamController extends CommonController
         $id = $request->input('id');
         $suc= $request->get('suc');
         $data = Exam::where('id',$id)->select(['rules','status'])->first();
-        return view('osce::admin.exammanage.exam_waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
+        return view('osce::admin.examManage.exam_waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
     }
 
     public function postExamRemind(Request $request)
@@ -1782,7 +1782,7 @@ class ExamController extends CommonController
         $id =   $request    ->  get('id');
         $student    =   Student::find($id);
 
-        return view('osce::admin.exammanage.examinee_query_detail', ['item' => $student]);
+        return view('osce::admin.examManage.examinee_query_detail', ['item' => $student]);
     }
 
     /**

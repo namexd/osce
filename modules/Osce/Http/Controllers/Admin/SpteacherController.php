@@ -129,13 +129,13 @@ class SpteacherController extends CommonController
 //             dd($stationTeacher);
             dump($stationTeacher);
 
-            return view('osce::admin.exammanage.sp_invitation', [
+            return view('osce::admin.examManage.sp_invitation', [
                 'id' => $request->input('id'),
                 'data' => $stationTeacher,
 
             ]);
         }
-        return redirect()->route('osce::admin.exammanage.sp_invitation');//还不确定。
+        return redirect()->route('osce::admin.examManage.sp_invitation');//还不确定。
 
     }
 
