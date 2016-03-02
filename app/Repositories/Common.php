@@ -401,8 +401,8 @@ class Common{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    static public function receiveStreamFile($path,callable $encrypt=null){
-        $streamData = isset($GLOBALS['HTTP_RAW_POST_DATA'])? $GLOBALS['HTTP_RAW_POST_DATA'] : '';
+    static public function receiveStreamFile($path, callable $encrypt=null){
+        $streamData = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : '';
 
         if(empty($streamData)){
             $streamData = file_get_contents('php://input');
@@ -410,15 +410,32 @@ class Common{
 
         if(!is_null($encrypt))
         {
-            $streamData =   call_user_func($encrypt,$streamData);
+            $streamData = call_user_func($encrypt,$streamData);
         }
         
-        if($streamData!=''){
+        if($streamData != ''){
             $ret = file_put_contents($path, $streamData, true);
         }else{
             $ret = false;
         }
 
         return $ret;
+    }
+
+    /**
+     * 判断图片文件的MIME类型
+     * @param $image
+     * @return bool
+     * @author Jiangzhiheng
+     * @time 2016-03-02 10:09
+     */
+    static public function imageMimeCheck($image) {
+        $fileMime =  $image->getMimeType();
+        $allowType = ['image/png','image/gif','image/jpeg'];
+        if (in_array($fileMime,$allowType)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

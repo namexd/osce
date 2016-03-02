@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Api;
 
 
+use App\Repositories\Common;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
@@ -394,6 +395,11 @@ class InvigilatePadController extends CommonController
                 if (!$photos->isValid()) {
                     throw new \Exception('上传的照片出错', -110);
                 }
+                //判断照片类型是否不对
+                if (!Common::imageMimeCheck($photos)) {
+                    throw new \Exception('上传的文件类型不合法！', -120);
+                }
+
 
                 //拼装文件名,并插入数据库
                 $result = self::uploadFileBuilder($photos, $date, $params, $standardId);
