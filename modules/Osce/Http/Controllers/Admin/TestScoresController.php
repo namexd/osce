@@ -76,8 +76,8 @@ class TestScoresController  extends CommonController
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
-                    $singledata[$k]['timeAvg'] = $avgdata[$kk]['timeAvg'];
-                    $singledata[$k]['scoreAvg'] = $avgdata[$kk]['scoreAvg'];
+                    $singledata[$k]['timeAvg'] = sprintf('%.1f',$avgdata[$kk]['timeAvg']);
+                    $singledata[$k]['scoreAvg'] = sprintf('%.1f',$avgdata[$kk]['scoreAvg']);
                 }
             }
         }
@@ -116,8 +116,8 @@ class TestScoresController  extends CommonController
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
-                    $singledata[$k]['timeAvg'] = $vv['timeAvg'];
-                    $singledata[$k]['scoreAvg'] = $vv['scoreAvg'];
+                    $singledata[$k]['timeAvg'] = sprintf('%.1f',$vv['timeAvg']);
+                    $singledata[$k]['scoreAvg'] = sprintf('%.1f',$vv['scoreAvg']);
                     $singledata[$k]['time'] = date("Y年m月",strtotime($v['begin_dt']));
                     unset($singledata[$k]['begin_dt']);
                 }else{

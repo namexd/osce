@@ -125,6 +125,7 @@ function statistics_student_score(){
     ajax($selectId,$studentId);
     //筛选
     $("#search").click(function(){
+        var $studentId = $(".student_select option:selected").val();
         ajax($selectId,$studentId);
     });
 }
