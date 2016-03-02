@@ -242,8 +242,8 @@ class SubjectStatisticsRepositories  extends BaseRepository
             ->select(
                 'standard.pid as pid',
                 'exam_result.student_id',
-                $DB->raw('SUM(exam_score.score) as score'),
-                $DB->raw('SUM(standard.score) as Zscore')
+                $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分
+                $DB->raw('SUM(standard.score) as Zscore')   //该科目所有考核点总分
             );
 
         return  $builder->get();

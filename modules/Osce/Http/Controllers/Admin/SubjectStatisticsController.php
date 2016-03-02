@@ -297,10 +297,12 @@ class SubjectStatisticsController  extends CommonController
         if(!empty($rew)){
             foreach($rew as $k => $v){
                 if($k>=1){
+                    //证明是同一个考核点下的子考核点
                     if($rew[$k]['pid'] == $rew[$k-1]['pid']){
                         continue;
                     }
                 }
+
                 //统计该考核点的人数
                 $rew[$k]['studentCount'] = 0;
                 //统计该考核点的总分数
@@ -312,6 +314,7 @@ class SubjectStatisticsController  extends CommonController
                 //统计该考核点的合格率
                 $rew[$k]['studentQualifiedPercentage'] = 0;
                 foreach($rew as $key => $val){
+                    //证明是同一个考核点下的子考核点
                     if($v['pid'] == $val['pid']){
                         $rew[$k]['studentCount'] = $rew[$k]['studentCount']+1;
                         $rew[$k]['studentTotalScore'] = $rew[$k]['studentTotalScore']+$val['score'];
@@ -325,8 +328,9 @@ class SubjectStatisticsController  extends CommonController
                 }
                 //计算该考核点的平均分数
                 $rew[$k]['studentAvgScore'] = sprintf("%.2f",$rew[$k]['studentTotalScore']/$rew[$k]['studentCount']);
+                //计算该考核点的合格率
                 $rew[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$rew[$k]['studentQualifiedCount']/$rew[$k]['studentCount'])*100;
-
+                //获取该考核点名称
                 $content = $subjectStatisticsRepositories->GetContent($v['pid']);
                 $datas[] = [
                     'number'               => $number++,//序号
