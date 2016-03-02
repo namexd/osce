@@ -42,7 +42,7 @@ function examination_list(){
 				for (var i=0;i<res.data.length;i++) {
 					console.log('type1',typeof res.data[i].type);
 					var type=parseInt(res.data[i].type);
-					console.log('type2',typeof res.data[i].type);
+					console.log('type2',typeof type);
 					var begin_time=(res.data[i].begin_dt).substring(0,10);
 					var end_time=(res.data[i].begin_dt).substring(0,10);
 					var time="";
