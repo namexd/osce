@@ -19,16 +19,19 @@ function examination_list(){
 			$(".time").text("");
 			return false;
 		}
+		alert(id);
 		$.ajax({
 			type:"get",
 			url:url,
 			async:true,
 			data:{exam_id:id},
 			success:function(res){
+				alert(res);
 				$("#exmination_ul li").remove();
 				$(".time").text("");
 			    //console.log(res);
 				for (var i=0;i<res.data.length;i++) {
+					alert(res.data[i].type);
 					var type=res.data[i].type;
 					var begin_time=(res.data[i].begin_dt).substring(0,10);
 					var end_time=(res.data[i].begin_dt).substring(0,10);
