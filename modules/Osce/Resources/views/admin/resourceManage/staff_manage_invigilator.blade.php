@@ -14,7 +14,7 @@
     </style>
 @stop
 @section('only_js')
-    <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
+    <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 @stop
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}','firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}'}" />
