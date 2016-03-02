@@ -193,7 +193,7 @@ class UserController  extends CommonController
                 \Illuminate\Support\Facades\Session::put('openid','dfdsfds');
             }
 
-            var_dump('@@');
+            dd('@@');
             return view('osce::wechat.user.login');
         }
         catch(\Exception $ex)
