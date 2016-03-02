@@ -26,7 +26,7 @@ class TestScoresController  extends CommonController
      */
     public function TestScoreList(Request $request){
         //查找所有考试信息
-        $examlist = Exam::get();
+        $examlist = Exam::where('status','=',2)->get();
         return view('osce::admin.statisticalanalysis.statistics_student_score',[
             'examlist'=>$examlist
         ]);
@@ -81,13 +81,15 @@ class TestScoresController  extends CommonController
                 }
             }
         }
-        //dd($singledata);
+        //查找所有科目
+        $subject = $TestScoreRepositories->getSubList();
         $data = [
             'list' => $singledata,//列表
             'singledata' => $singledata,//雷达图学生成绩
-            'avgdata' => $avgdata//平均成绩
+            'avgdata' => $avgdata,//平均成绩
+            'subject' => $subject
         ];
-       /// dd($data);
+       // dd($data);
         return $data;
     }
     /**
@@ -103,12 +105,14 @@ class TestScoresController  extends CommonController
     public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreRepositories){
         //获取已考过试的所有学生
         $student_id = $request->student_id;
-        $subid = $request->examid;
+        $examid = $request->examid;
+        $subid = $request->subid;
         //获取学生科目成绩
-        $singledata = $TestScoreRepositories->getStudentScoreCount($student_id,$subid)->toArray();
+        $singledata = $TestScoreRepositories->getStudentScoreCount($student_id,$examid,$subid)->toArray();
+        //dd($singledata);
         //获取科目平均成绩
-
-        $avgdata = $TestScoreRepositories->getStudentScoreCount('',$subid)->toArray();
+        //dd($singledata);
+        $avgdata = $TestScoreRepositories->getStudentScoreCount('',$examid,$subid)->toArray();
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
@@ -147,6 +151,8 @@ class TestScoresController  extends CommonController
             'avg' => $avg,
             'totle' => $totle,
             'time' => $time,
+            'stuname' => $request->stuname,
+            'subject' => $request->subject,
         ]);
     }
 
@@ -193,7 +199,8 @@ class TestScoresController  extends CommonController
         $data = [
             'list' => $singledata,//列表
             'singledata' => $singledata,//雷达图学生成绩
-            'avgdata' => $avgdata//平均成绩
+            'avgdata' => $avgdata,//平均成绩
+
         ];
         return $this->success_data($data);
     }

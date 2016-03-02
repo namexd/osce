@@ -127,7 +127,7 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016-2-29 09:29:59
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentScoreCount($student_id,$subject_id){
+    public function getStudentScoreCount($student_id,$subject_id,$subid){
         $DB = \DB::connection('osce_mis');
         $builder = new ExamResult();
         if($student_id){
@@ -139,7 +139,7 @@ class TestScoreRepositories  extends BaseRepository
                 'subject.id'
             );
         }
-        $builder = $builder->where('exam_screening.exam_id','=',$subject_id)->leftJoin('student', function($join){
+        $builder = $builder->where('subject.id','=',$subid)->where('exam_screening.exam_id','=',$subject_id)->leftJoin('student', function($join){
             $join -> on('student.id', '=', 'exam_result.student_id');
         })->leftJoin('exam_screening', function($join){
             $join -> on('exam_screening.id', '=', 'exam_result.exam_screening_id');
@@ -175,6 +175,22 @@ class TestScoreRepositories  extends BaseRepository
 //        })->get();
 //        dd($builder);
 //    }
+
+    /**
+     * 查找科目
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-2-29 09:29:59
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getSubList(){
+        $subject = new Subject();
+        $subjectlist = $subject->get()->toArray();
+        return $subjectlist;
+    }
 }
 
 
