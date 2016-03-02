@@ -223,23 +223,23 @@ class SubjectStatisticsRepositories  extends BaseRepository
 
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
-        })->leftJoin('subject', function($join){
-            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('student', function($join){
+            $join -> on('exam_result.student_id', '=','student.id');
         })->leftJoin('exam_screening', function($join){
             $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
-        })->leftJoin('exam', function($join){
-            $join -> on('exam.id', '=','exam_screening.exam_id');
-        })->leftJoin('student', function($join){
-            $join -> on('exam.id', '=','student.exam_id');
         })->leftJoin('teacher', function($join){
             $join -> on('teacher.id', '=','exam_result.teacher_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam', function($join){
+            $join -> on('exam.id', '=','exam_screening.exam_id');
         });
 
         $builder = $builder->where('station.id','=',$stationId)
             ->where('subject.id','=',$subjectId)
             ->where('exam.id','=',$examId)
+            ->groupBy('student.id')
             ->select(
-                'station.id as stationId',
                 'exam.name as examName', //考试名称
                 'exam_screening.begin_dt',//考试开始时间
                 'exam_screening.end_dt',//考试结束时间

@@ -270,7 +270,7 @@ class SubjectStatisticsController  extends CommonController
                 $stationDetails[$k]['teacherName'] = $v->teacherName;//评价老师
             }
             $title['examName'] = $data[0]['examName'];//考试名称
-            $title['time'] = $data[0]['begin_dt'].'~'.$data[0]['end_dt'];//考试时间
+            $title['time'] = $data[0]['begin_dt'].'~'.date('H:i:s',strtotime($data[0]['end_dt']));//考试时间
             $title['subjectTitle'] = $data[0]['subjectTitle'];//科目名称
             $title['stationName'] = $data[0]['stationName'];//考站名称
         }
