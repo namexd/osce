@@ -62,12 +62,13 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $builder = new ExamResult();
         if($student_id){
-            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','subject.score as subscore','station.mins','exam_result.time','exam_result.score','subject.id');
+            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','subject.score as subscore','station.mins','exam_result.id as result_id','exam_result.time','exam_result.score','subject.id');
         }else{
             $builder = $builder->select(
                 $DB->raw('avg(exam_result.time) as timeAvg'),
                 $DB->raw('avg(exam_result.score) as scoreAvg'),
-                'subject.id'
+                'subject.id',
+                'exam_result.id as result_id'
             );
         }
         $builder = $builder->where('exam_screening.exam_id','=',$examid)->leftJoin('student', function($join){
@@ -131,12 +132,13 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $builder = new ExamResult();
         if($student_id){
-            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','station.mins','exam_result.begin_dt','exam_result.time','exam_result.score','subject.id');
+            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','station.mins','exam_result.begin_dt','exam_result.id as result_id','exam_result.time','exam_result.score','subject.id');
         }else{
             $builder = $builder->select(
                 $DB->raw('avg(exam_result.time) as timeAvg'),
                 $DB->raw('avg(exam_result.score) as scoreAvg'),
-                'subject.id'
+                'subject.id',
+                'exam_result.id as result_id'
             );
         }
         $builder = $builder->where('subject.id','=',$subid)->where('exam_screening.exam_id','=',$subject_id)->leftJoin('student', function($join){

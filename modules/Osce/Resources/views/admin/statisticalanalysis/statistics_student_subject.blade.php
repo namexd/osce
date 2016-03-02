@@ -64,7 +64,7 @@
                                     <td>{{@$v['mins']}}</td>
                                     <td>{{@$v['score']}}</td>
                                     <td>
-                                        <a href="">
+                                        <a href="/osce/admin/exam/exam-result-detail?id={{$v['result_id']}}">
                                             <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                                         </a>
                                     </td>

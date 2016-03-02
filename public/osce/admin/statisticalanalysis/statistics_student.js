@@ -113,7 +113,7 @@ function statistics_student_score(){
                         '<a href="/osce/admin/testscores/student-subject-list?examid='+examId+'&stuname='+stuname+'&subject='+this.title+'&student_id='+studentId+'&subid='+this.id+'">' +
                         '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
                         '</a>' +
-                        '<a href="">' +
+                        '<a href="/osce/admin/exam/exam-result-detail?id='+this.result_id+'">' +
                         '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
                         '</a>' +
                         '</td></tr>')
