@@ -17,6 +17,7 @@
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
 	}
+	.fa.fa-sort-desc{float: right;}
 </style>
 @stop
 @section('only_head_js')
@@ -30,12 +31,12 @@
             <i class="fa fa-angle-left clof font26 icon_return"></i>
         </a>
        	成绩查询
-       	<a class="right header_btn nou clof header_a" href="#">
-       		<i class="icon_share"><img src="{{asset('osce/wechat/common/img/share.png')}}" width="18"/></i>
-       	</a>
+       	<a class="right header_btn" href="{{route('osce.wechat.index.getIndex')}}">
+            <i class="fa fa-home clof font26 icon_return"></i>
+        </a>
     </div>
     <div class="form-group" style="border: none;">
-	    <span class="form-control normal_select select_indent invigilation" id="showActionSheet">请选择考试</span>
+	    <span class="form-control normal_select select_indent invigilation" id="showActionSheet"><span>请选择考试</span><i class="fa fa-sort-desc"></i></span>
 	    <div id="actionSheet_wrap">
 	        <div class="weui_mask_transition" id="mask"></div>
 	        <div class="weui_actionsheet" id="weui_actionsheet">

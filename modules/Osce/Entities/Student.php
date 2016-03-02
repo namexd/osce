@@ -248,9 +248,8 @@ class Student extends CommonModel
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
                 //手机号未注册，查询手机号码是否已经使用
                 $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
-
-                if(!empty($mobile)){
-
+                //该手机号码已经使用
+                if($mobile){
                     throw new \Exception('手机号已经存在，请输入新的手机号');
                 }
                 $password   =   '123456';
@@ -265,9 +264,9 @@ class Student extends CommonModel
             }
             //根据用户ID和考试号查找考生
             $student = $this->where('user_id', '=', $user->id)
-                ->where('exam_id', '=', $exam_id)->first();
+                            ->where('exam_id', '=', $exam_id)->first();
 
-            //存在考生信息,则更新数据, 否则新增
+            //存在考生信息,则提示已添加, 否则新增
             if($student){
                 throw new \Exception((empty($key)?'':('第'.$key.'行')).'该考生已经存在，不能再次添加！');
 
@@ -275,11 +274,11 @@ class Student extends CommonModel
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
                 $examineeData['create_user_id'] = $operator->id;
-
+                //新增考试对应的考生
                 if(!$result = $this->create($examineeData)){
                     throw new \Exception('新增考生失败！');
                 }
-                //更新考试信息
+                //更新考试对应的考生数量
                 $exam = new Exam();
                 $examData = ['total' => count(Student::where('exam_id', $exam_id)->get())];
                 if (!$result = $exam->updateData($exam_id, $examData)) {
@@ -291,6 +290,9 @@ class Student extends CommonModel
             return true;
 
         } catch(\Exception $ex) {
+            if($ex->getCode()== 23000){
+                throw new \Exception((empty($key)?'':('第'.$key.'行')).'该手机号码已经使用，请输入新的手机号');
+            }
             $connection->rollBack();
             throw $ex;
         }
