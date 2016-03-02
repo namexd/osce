@@ -42,7 +42,7 @@ class UserController extends CommonController
      */
     public function getStaffList(Request $request,Common $common){
         $list   =   $common->getUserList();
-        return view('osce::admin.sysmanage.user_manage',['list'=>$list]);
+        return view('osce::admin.systemManage.user_manage',['list'=>$list]);
     }
 
     public function getEditStaff(Request $request){
@@ -53,7 +53,7 @@ class UserController extends CommonController
         $id =   $request    ->get('id');
 
         $staff  =   User::find($id);
-        return view('osce::admin.sysmanage.user_manage_edit',['item'=>$staff]);
+        return view('osce::admin.systemManage.user_manage_edit',['item'=>$staff]);
     }
 
     /**
@@ -70,7 +70,7 @@ class UserController extends CommonController
      *
      */
     public function getAddUser(){
-        return view('osce::admin.sysmanage.user_manage_add');
+        return view('osce::admin.systemManage.user_manage_add');
     }
 
     /**
@@ -241,7 +241,7 @@ class UserController extends CommonController
 
          }
 
-         return view('osce::admin.sysmanage.user_manage_change_role')->with(['role_id'=>$roleId,'data'=>$data,'user_id'=>$id]);
+         return view('osce::admin.systemManage.user_manage_change_role')->with(['role_id'=>$roleId,'data'=>$data,'user_id'=>$id]);
     }
 
     /**

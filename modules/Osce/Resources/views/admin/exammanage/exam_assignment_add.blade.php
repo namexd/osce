@@ -19,6 +19,13 @@ input.laydate-icon{
 @stop
 
 
+@section('only_js')
+<script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
+<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+<script src="{{asset('osce/admin/exammanage/exammanage.js')}}" ></script>
+@stop
+
+
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'exam_add','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -113,10 +120,3 @@ input.laydate-icon{
 
 </div>
 @stop{{-- 内容主体区域 --}}
-
-
-@section('only_js')
-<script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
-<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-<script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
-@stop

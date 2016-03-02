@@ -172,7 +172,7 @@
 
 <script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-<script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}" ></script>
+<script src="{{asset('osce/admin/exammanage/exammanage.js')}}" ></script>
 
 <script>
     $(function(){

@@ -29,7 +29,7 @@
 @section('only_js')
     <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
-    <script src="{{asset('osce/admin/exammanage/js/exammanage.js')}}"></script>
+    <script src="{{asset('osce/admin/exammanage/exammanage.js')}}"></script>
     <script>
         $(function () {
             /*{}{

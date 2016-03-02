@@ -44,7 +44,7 @@ class ConfigController extends CommonController
             $tempDB = [];
             $tempDB[0]['value'] = [];
         }
-        return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
+        return view('osce::admin.systemManage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
     }
 
     /**
@@ -142,7 +142,7 @@ class ConfigController extends CommonController
         //从数据库之中获取配置
         $data = Area::all();
 
-        return view('osce::admin.sysmanage.system_settings_room', ['data' => $data]);
+        return view('osce::admin.systemManage.system_settings_room', ['data' => $data]);
 
     }
 
@@ -162,7 +162,7 @@ class ConfigController extends CommonController
      */
     public function getAreaStore()
     {
-        return view('osce::admin.sysmanage.system_add');
+        return view('osce::admin.systemManage.system_add');
     }
 
     /**
@@ -282,7 +282,7 @@ class ConfigController extends CommonController
             'token'        =>   $token,
             'encoding_key' =>   $encoding_key,
             ];
-        $str    =    view('osce::admin.sysmanage.wechat_config',$data)->render();
+        $str    =    view('osce::admin.systemManage.wechat_config',$data)->render();
         $str    =   '<?php '.$str;
         try
         {
@@ -314,7 +314,7 @@ class ConfigController extends CommonController
             'email_password'    =>   $emailPassword
         ];
 
-        $str = view('osce::admin.sysmanage.mail_config',$data)->render();
+        $str = view('osce::admin.systemManage.mail_config',$data)->render();
         $str = '<?php ' . $str;
 
         try
@@ -347,7 +347,7 @@ class ConfigController extends CommonController
      */
     public function getWeChatHelp(Request $request){
         $current_url    =   $_SERVER['HTTP_HOST'];
-        return view('osce::admin.sysmanage.system_help',['url'=>$current_url]);
+        return view('osce::admin.systemManage.system_help',['url'=>$current_url]);
 
     }
 }
