@@ -294,7 +294,7 @@ class SubjectStatisticsController  extends CommonController
      * @param SubjectStatisticsRepositories $subject
      * @return \Illuminate\View\View|string
      * @author xumin <xumin@misrobot.com>
-     * @date
+     * @date    2016年3月2日18:21:59
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
@@ -422,7 +422,7 @@ class SubjectStatisticsController  extends CommonController
      * @param SubjectStatisticsController $subjectStatisticsRepositories
      * @return string
      * @author xumin <xumin@misrobot.com>
-     * @date
+     * @date    2016年3月2日18:21:51
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
@@ -430,8 +430,15 @@ class SubjectStatisticsController  extends CommonController
         $standardPid = $request->input('standardPid',0);
         $examId = $request->input('examId',0);
         $subjectId = $request->input('subjectId',0);
+        //验证
+        $this->validate($request, [
+            'examId' => 'required|integer',
+            'subjectId' => 'required|integer',
+            'standardPid' => 'required|integer'
+        ]);
+        
         //查询考核点分析所需数据
-        $result = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(361,88,784);//558
+        $result = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(361,88,788);//558
 
         $datas = [];
         $number = 1;//序号
@@ -485,33 +492,9 @@ class SubjectStatisticsController  extends CommonController
                 ];
             }
         }
-        dd($datas);
-        //所点击的考核点的子考核点对应的数据
-        $datainfo=[];
-        $content = '';//考核点
-        $grade = '';//分数
-        if(count($result)>0){
-            foreach($result as $k=>$v){
-                $datainfo[$k]['number'] = $k+1;//序号
-                $datainfo[$k]['content'] = $v->content;//考核内容
-                $datainfo[$k]['score'] = $v->score; //总分
-                $datainfo[$k]['grade'] = $v->grade; //成绩
 
-                if($content){
-                    $content .= ','.$v->content;
-                    $grade .= ','.$v->grade;
-                }else{
-                    $content .= $v-> content;
-                    $grade .= $v->grade;
-                }
-            }
-        }
-        $StrList = [
-            'content' => $content,
-            'grade' => $grade,
-        ];
         if ($request->ajax()) {
-            return $this->success_data(['datainfo'=>$datainfo,'StrList'=>$StrList]);
+            return $this->success_data(['datainfo'=>$datas]);
         }
     }
 
