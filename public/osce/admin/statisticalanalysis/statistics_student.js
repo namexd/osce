@@ -82,7 +82,7 @@ function statistics_student_score(){
                 var studentScoreStr = [];
                 var subjectStr = [];
                 var subStr = [];
-                var stuname = $(".student_select").children().first().html();
+                var stuname = $(".student_select option:selected").html();
                 $(res.avgdata).each(function(){
                     scoreAvgStr.push(this.scoreAvg);
                 });
