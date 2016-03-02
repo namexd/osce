@@ -55,7 +55,7 @@ class SubjectStatisticsController  extends CommonController
             $rew[$key]['number']=$key+1;
             foreach($rewTwo as $v){
                 if($val['subjectId'] == $v['subjectId']){
-                    $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
+                    $rew[$key]['qualifiedPass'] = sprintf("%.2f", ($v['studentQuantity']/$val['studentQuantity'])*100).'%';
                 }
             }
             if($standardStr){
@@ -120,7 +120,7 @@ class SubjectStatisticsController  extends CommonController
 
             foreach ($rewTwo as $v) {
                 if ($val['ExamId'] == $v['ExamId']) {
-                    $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity'] / $val['studentQuantity']) * 100);
+                    $rew[$key]['qualifiedPass'] = sprintf("%.2f", ($v['studentQuantity'] / $val['studentQuantity']) * 100);
                 }
 
 

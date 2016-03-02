@@ -114,6 +114,7 @@ class MyRepositories  extends BaseRepository
      */
     public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$qualified=0){
         $DB = \DB::connection('osce_mis');
+
         $builder = $this->ExamResultModel->leftJoin('exam_screening', function($join){
             $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
         })->leftJoin('exam_score', function($join){
@@ -125,27 +126,25 @@ class MyRepositories  extends BaseRepository
         });
         //TODO 加上该条件为统计合格人数
         if($qualified){
-            $builder->having($DB->raw('sum(exam_score.score)/sum(standard.score)'),'>','0.6');
+            $builder->having($DB->raw('sum(exam_score.score)/sum(standard.score)'),'>=','0.6');
         }
         $data = $builder->where('subject.id','=',$SubjectId)
             ->where('exam_screening.exam_id','=',$ExamId)
-            ->groupBy('standard.pid')
+            ->groupBy($DB->raw('standard.pid'))
             ->select(
                 'standard.pid as pid',
                 $DB->raw('avg(exam_score.score) as scoreAvg'),
-                $DB->raw('count(exam_result.student_id) as studentQuantity'),
-                $DB->raw('sum(exam_score.score) as chengji'),
-                $DB->raw('sum(standard.score) as zchengji')
-
+                $DB->raw('count(exam_result.student_id) as studentQuantity')
             )->get();
 
-        $pid = $this->GetPidArr($data);
+        $pid = $data->pluck('pid');
 
         //获取考核点名称
-        if(count($pid)>0){
+        if(is_object($pid)){
             $standardModel = new Standard();
-            $content = $standardModel->whereIn('id', $pid)->select('content')->get();
+            $content = $standardModel->whereIn('id', $pid)->select('id','content')->get();
             $contentTwo = $standardModel->whereIn('pid', $pid)->select($DB->raw('count(pid) as pidNum'))->groupBy('pid')->get();
+
             foreach($data as $k=>$v){
                 $data[$k]['standardContent'] = $content[$k]['content'];
                 $data[$k]['studentQuantity'] = $data[$k]['studentQuantity']/$contentTwo[$k]['pidNum'];

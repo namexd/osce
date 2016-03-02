@@ -124,7 +124,6 @@ class MyController  extends CommonController
     public function standardGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
         //获取考试列表信息
         $examList = $subject->GetExamList();
-
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
@@ -141,6 +140,7 @@ class MyController  extends CommonController
                 $subjectInfo[$k]['title'] = $v->title;
             }
         }
+
         //验证
         $this->validate($request, [
             'examId' => 'sometimes|int',//考试编号
@@ -149,49 +149,74 @@ class MyController  extends CommonController
 
 
         $examId = $request->input('examId',count($examInfo)>0?$examInfo[0]['id']:0);
+        //获取考试项目数据
+        $subjectList = $this->subjectDownlist($examId);
+        $subjectInfo = count($subjectList)?$subjectList:$subjectInfo;
 
+        $subjectId = $request->input('subjectId',count($subjectInfo)>0?$subjectInfo[0]['id']:0);
 
-        $subjectId = $request->input('subjectId',0);
+        //统计相关数据方便  下一步运算
+        $rew = $subject->GetSubjectStandardStatisticsList($examId,$subjectId);
 
-
-//        dd($examId);
-        //查询考核点分析所需数据
-
-        $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId);//326,52
-        //统计合格的人数
-        $rewTwo = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId, $subjectId,true);//326,52
         $datas = [];
         $standardContent = '';//考核点
         $qualifiedPass = '';//合格率
-        if(count($rew) > 0){
-            foreach($rew as $key=>$val){
-                $rew[$key]['qualifiedPass'] = '0';
-                //统计合格率
-                if(count($rewTwo) > 0){
-                    foreach($rewTwo as $v){
-                        if($val['pid'] == $v['pid']){
-                            //$v['studentQuantity']:合格人数，$val['studentQuantity']总人数
-                            $rew[$key]['qualifiedPass'] = sprintf("%.0f", ($v['studentQuantity']/$val['studentQuantity'])*100);//合格率
-                        }
+        $number = 1;//序号
+        //重构数组
+        if(!empty($rew)){
+            foreach($rew as $k => $v){
+                if($k>=1){
+                    if($rew[$k]['pid'] == $rew[$k-1]['pid']){
+                        continue;
                     }
                 }
-                $datas[] = [
-                    'number'         =>$key+1, //序号
-                    'standardContent'     => $val->standardContent,//考核点名称
-                    'pid'                   => $val->pid,//评分标准父编号
-                    'scoreAvg'             => sprintf("%01.2f", $val->scoreAvg),//平均成绩
-                    'studentQuantity'     => $val->studentQuantity,//考试人数
-                    'qualifiedPass'       => $val->qualifiedPass.'%',//合格率
-                ];
-                if($standardContent){
-                    $standardContent .= ','.$val->standardContent;
-                    $qualifiedPass .= ','.$val->qualifiedPass;
-                }else{
-                    $standardContent .= $val->standardContent;
-                    $qualifiedPass .= $val->qualifiedPass;
+                //统计该考核点的人数
+                $rew[$k]['studentCount'] = 0;
+                //统计该考核点的总分数
+                $rew[$k]['studentTotalScore'] = 0;
+                //统计该考核点的平均分数
+                $rew[$k]['studentAvgScore'] = 0;
+                //统计该考核点的合格人数
+                $rew[$k]['studentQualifiedCount'] = 0;
+                //统计该考核点的合格率
+                $rew[$k]['studentQualifiedPercentage'] = 0;
+                foreach($rew as $key => $val){
+                        if($v['pid'] == $val['pid']){
+                            $rew[$k]['studentCount'] = $rew[$k]['studentCount']+1;
+                            $rew[$k]['studentTotalScore'] = $rew[$k]['studentTotalScore']+$val['score'];
+                            if($val['Zscore'] != 0){
+                                if($val['score']/$val['Zscore'] >= 0.6){
+                                    $rew[$k]['studentQualifiedCount'] = $rew[$k]['studentQualifiedCount']+1;
+                                }
+                            }
+
+                        }
                 }
+                //计算该考核点的平均分数
+                $rew[$k]['studentAvgScore'] = sprintf("%.2f",$rew[$k]['studentTotalScore']/$rew[$k]['studentCount']);
+                $rew[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$rew[$k]['studentQualifiedCount']/$rew[$k]['studentCount'])*100;
+
+                $content = $subject->GetContent($v['pid']);
+                $datas[] = [
+                    'number'               => $number++,//序号
+                    'standardContent'     => $content,//考核点名称
+                    'pid'                   => $v['pid'],//评分标准父编号
+                    'scoreAvg'             => $rew[$k]['studentAvgScore'],//平均成绩
+                    'studentQuantity'     => $rew[$k]['studentCount'],//考试人数
+                    'qualifiedPass'       => $rew[$k]['studentQualifiedPercentage'].'%',//合格率
+                ];
+
+                if($standardContent){
+                    $standardContent .= ','.$content;
+                    $qualifiedPass .= ','.$rew[$k]['studentQualifiedPercentage'];
+                }else{
+                    $standardContent .= $content;
+                    $qualifiedPass .= $rew[$k]['studentQualifiedPercentage'];
+                }
+
             }
         }
+
         $StrList = [
             'standardContent' => $standardContent,
             'qualifiedPass' => $qualifiedPass,
@@ -199,8 +224,7 @@ class MyController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['standardList'=>$datas,'StrList'=>$StrList]);
         }
-        $subjectList = $this->subjectDownlist($examId);
-        $subjectInfo = count($subjectList)?$subjectList:$subjectInfo;
+
         //将数据展示到页面
 //        dd($datas);
         return view('osce::admin.statisticalanalysis.statistics_check', [

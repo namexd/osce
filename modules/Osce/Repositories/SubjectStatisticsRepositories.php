@@ -43,7 +43,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
         $this->ExamModel = $exam;
         $this->ExamResultModel = $examResult;
         //$this->ExamStationModel = $ExamStation;
-        //$this->SubjectItemModel = $SubjectItem;
+        $this->SubjectItemModel = $SubjectItem;
         //$this->StationModel = $Station;
         //$this->SubjectModel = $Subject;
 
@@ -81,7 +81,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
 
         //TODO 加上该条件为统计合格人数
         if($qualified){
-            $builder->where($DB->raw('exam_result.score/subject.score'),'>','0.6');
+            $builder->where($DB->raw('exam_result.score/subject.score'),'>=','0.6');
         }
 
         $return = $builder->groupBy('subjectId')
@@ -137,7 +137,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
 
         //TODO 加上该条件为统计合格人数
         if($qualified){
-            $builder->where($DB->raw('exam_result.score/subject.score'),'>','0.6');
+            $builder->where($DB->raw('exam_result.score/subject.score'),'>=','0.6');
         }
         $builder = $builder->where('subject.id','=',$SubjectId)
             ->groupBy('exam.id')
@@ -219,19 +219,8 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @date    2016年2月26日15:36:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$qualified=0){
+    public function GetSubjectStandardStatisticsList($ExamId,$SubjectId){
         $DB = \DB::connection('osce_mis');
-/*        $builder = $this->ExamResultModel->leftJoin('station', function($join){
-            $join -> on('station.id', '=', 'exam_result.station_id');
-        })->leftJoin('subject', function($join){
-            $join -> on('subject.id', '=','station.subject_id');
-        })->leftJoin('exam_station', function($join){
-            $join -> on('exam_station.station_id', '=','station.id');
-        })->leftJoin('exam_score', function($join){
-            $join -> on('exam_score.exam_result_id', '=','exam_result.id');
-        })->leftJoin('standard', function($join){
-            $join -> on('standard.id', '=','exam_score.standard_id');
-        });*/
 
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
@@ -244,18 +233,16 @@ class SubjectStatisticsRepositories  extends BaseRepository
         })->leftJoin('standard', function($join){
             $join -> on('standard.id', '=','exam_score.standard_id');
         });
-        //TODO 加上该条件为统计合格人数
-        if($qualified){
-            $builder->having($DB->raw('sum(exam_score.score)/sum(standard.score)'),'>','0.6');
-        }
+
 
         $builder = $builder->where('subject.id','=',$SubjectId)
             ->where('exam_screening.exam_id','=',$ExamId)
-            ->groupBy('standard.pid')
+            ->groupBy($DB->raw('standard.pid,exam_result.student_id'))
             ->select(
                 'standard.pid as pid',
-                $DB->raw('avg(exam_score.score) as scoreAvg'),
-                $DB->raw('count(exam_result.student_id) as studentQuantity')
+                'exam_result.student_id',
+                $DB->raw('SUM(exam_score.score) as score'),
+                $DB->raw('SUM(standard.score) as Zscore')
             );
 
         return  $builder->get();
@@ -278,6 +265,24 @@ class SubjectStatisticsRepositories  extends BaseRepository
             }
         }
         return  $PidArr;
+    }
+
+    /**
+     * 根据考核点id 获取考核点内容
+     * @method
+     * @access public
+     * @param $id
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月2日12:56:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetContent($id){
+        return  $this->SubjectItemModel
+            ->where('id','=',$id)
+            ->select('content')
+            ->first()
+            ->pluck('content');
     }
     /**
      * 获取所有已经完成的考试
