@@ -42,11 +42,14 @@ function subject_statistics(){
         t.setOption(n);
     }
     //默认加载最近一次考试
-    var $subId = $(".subject_select").children().first().val();
-    var url = pars.ajaxUrl;
-    function ajax(id){
+    var examObj = $(".subject_select");
+    var $subId = examObj.children().first().val();
+    var ajaxUrl = pars.ajaxUrl;
+    var exam_id = examObj.val();
+    var jumpUrl = pars.jumpUrl;
+    function ajax(id,exam_name){
         $.ajax({
-            url:url+'?id='+id,
+            url:ajaxUrl+'?id='+id,
             type:'get',
             cache:false,
             success:function(res){
@@ -55,6 +58,9 @@ function subject_statistics(){
                 var scoreAvgStr=res.data.StrList.scoreAvgStr.split(",");
                 if(standardStr){echartsSubject(standardStr,scoreAvgStr);}//科目成绩分析。
                 $(res.data.list).each(function(){
+                    //拼接URL 链接
+                    var url = '';
+                    url = jumpUrl+'?exam_id='+id+'&subject_id='+this.subjectId+'&exam='+exam_name+'&subject='+this.title+'&avg_score='+this.scoreAvg+'&avg_time='+this.timeAvg;
                     $(".subjectBody").append('<tr>' +
                         '<td>'+this.number+'</td>' +
                         '<td>'+this.title+'</td>' +
@@ -64,7 +70,7 @@ function subject_statistics(){
                         '<td>'+this.studentQuantity+'</td>' +
                         '<td>'+this.qualifiedPass+'</td>' +
                         '<td>' +
-                        '<a href="">' +
+                        '<a href="'+url+'">' +
                         '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
                         '</a>' +
                         '</td></tr>')
@@ -72,11 +78,13 @@ function subject_statistics(){
             }
         });
     }
-    ajax($subId);
+    var exam_name = $(".subject_select option:selected").html();
+    ajax($subId,exam_name);
     //筛选
     $("#search").click(function(){
-        var id = $(".subject_select").val();
-        ajax(id);
+        var exam_id = $(".subject_select option:selected").val();
+        exam_name = $(".subject_select option:selected").html();
+        ajax(exam_id,exam_name);
     });
 }
 //科目难度分析
@@ -122,11 +130,15 @@ function subject_level(){
         e.setOption(a);
     }
     //默认加载最近一次考试
-    var $subId = $(".subject_select").children().first().val();
-    var url = pars.ajaxUrl;
-    function ajax(id){
+    var examObj = $(".subject_select");
+    var $subId = examObj.children().first().val();
+    var ajaxUrl = pars.ajaxUrl;
+    var subject_id = examObj.val();
+    var subject_name = $(".subject_select option:selected").html();
+    var jumpUrl = pars.jumpUrl;
+    function ajax(id,subject_name){
         $.ajax({
-            url:url+'?id='+id,
+            url:ajaxUrl+'?id='+id,
             type:'get',
             cache:false,
             success:function(res){
@@ -134,9 +146,11 @@ function subject_level(){
                 $(".subjectBody").empty();
                 var timeStr = res.data.StrList.standardStr.split(",");
                 var passStr=res.data.StrList.qualifiedPass.split(",");
-                console.log(passStr);
                 if(timeStr){echartsSubject(timeStr,passStr);}
                 $(res.data.list).each(function(){
+                    //拼接URL 链接
+                    var url = '';
+                    url = jumpUrl+'?subject_id='+id+'&exam_id='+this.ExamId+'&exam='+this.ExamName+'&subject='+subject_name+'&avg_score='+this.scoreAvg+'&avg_time='+this.timeAvg;
                     $(".subjectBody").append('<tr>' +
                         '<td>'+this.number+'</td>' +
                         '<td>'+this.ExamName+'</td>' +
@@ -146,7 +160,7 @@ function subject_level(){
                         '<td>'+this.studentQuantity+'</td>' +
                         '<td>'+this.qualifiedPass+'</td>' +
                         '<td>' +
-                        '<a href="">' +
+                        '<a href="'+url+'">' +
                         '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
                         '</a>' +
                         '</td></tr>')
@@ -154,11 +168,12 @@ function subject_level(){
             }
         });
     }
-    ajax($subId);
+    ajax($subId,subject_name);
     //筛选
     $("#search").click(function(){
         var id = $(".subject_select").val();
-        ajax(id);
+        subject_name = $(".subject_select option:selected").html();
+        ajax(id,subject_name);
     });
 };
 

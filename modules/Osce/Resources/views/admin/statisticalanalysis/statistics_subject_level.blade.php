@@ -8,7 +8,7 @@
     <!-- ECharts -->
     <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
     <script src="{{asset('osce/admin/statisticalanalysis/statistics_subject.js')}}"></script>
-    <input type="hidden" id="parameter" value="{'pagename':'subject_level','ajaxUrl':'{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_level','ajaxUrl':'{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}','jumpUrl':'{{ route('osce.admin.course.getStudent') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

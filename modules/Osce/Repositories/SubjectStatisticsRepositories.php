@@ -208,6 +208,55 @@ class SubjectStatisticsRepositories  extends BaseRepository
         return  $builder->get();
     }
 
+    /**用于考站成绩分析详情
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $stationId 考站id
+     * @return mixed
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetStationDetails($examId,$subjectId,$stationId){
+        $DB = \DB::connection('osce_mis');
+
+        $builder = $this->ExamResultModel->leftJoin('station', function($join){
+            $join -> on('station.id', '=', 'exam_result.station_id');
+        })->leftJoin('subject', function($join){
+            $join -> on('subject.id', '=','station.subject_id');
+        })->leftJoin('exam_screening', function($join){
+            $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
+        })->leftJoin('exam', function($join){
+            $join -> on('exam.id', '=','exam_screening.exam_id');
+        })->leftJoin('student', function($join){
+            $join -> on('exam.id', '=','student.exam_id');
+        })->leftJoin('teacher', function($join){
+            $join -> on('teacher.id', '=','exam_result.teacher_id');
+        });
+
+        $builder = $builder->where('station.id','=',$stationId)
+            ->where('subject.id','=',$subjectId)
+            ->where('exam.id','=',$examId)
+            ->select(
+                'station.id as stationId',
+                'exam.name as examName', //考试名称
+                'exam_screening.begin_dt',//考试开始时间
+                'exam_screening.end_dt',//考试结束时间
+                'subject.title as subjectTitle',//科目名称
+                'station.name as stationName',//考站名称
+                'student.name as studentName',//考生名字
+                'exam_result.time',//耗时
+                'exam_result.score',//成绩
+                'teacher.name as teacherName'//老师
+            );
+        return  $builder->get();
+    }
+
+
+
+
+
     /**
      * 用于考核点分析
      * @method
@@ -242,8 +291,8 @@ class SubjectStatisticsRepositories  extends BaseRepository
             ->select(
                 'standard.pid as pid',
                 'exam_result.student_id',
-                $DB->raw('SUM(exam_score.score) as score'),
-                $DB->raw('SUM(standard.score) as Zscore')
+                $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分
+                $DB->raw('SUM(standard.score) as Zscore')   //该科目所有考核点总分
             );
 
         return  $builder->get();
