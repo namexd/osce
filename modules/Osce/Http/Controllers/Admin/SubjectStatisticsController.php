@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin;
+use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 use Modules\Osce\Entities\Exam;
@@ -270,7 +271,7 @@ class SubjectStatisticsController  extends CommonController
                 $stationDetails[$k]['teacherName'] = $v->teacherName;//评价老师
             }
             $title['examName'] = $data[0]['examName'];//考试名称
-            $title['time'] = $data[0]['begin_dt'].'~'.$data[0]['end_dt'];//考试时间
+            $title['time'] = $data[0]['begin_dt'].'~'.date('H:i:s',strtotime($data[0]['end_dt']));//考试时间
             $title['subjectTitle'] = $data[0]['subjectTitle'];//科目名称
             $title['stationName'] = $data[0]['stationName'];//考站名称
         }
@@ -293,7 +294,7 @@ class SubjectStatisticsController  extends CommonController
      * @param SubjectStatisticsRepositories $subject
      * @return \Illuminate\View\View|string
      * @author xumin <xumin@misrobot.com>
-     * @date
+     * @date    2016年3月2日18:21:59
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
@@ -421,40 +422,79 @@ class SubjectStatisticsController  extends CommonController
      * @param SubjectStatisticsController $subjectStatisticsRepositories
      * @return string
      * @author xumin <xumin@misrobot.com>
-     * @date
+     * @date    2016年3月2日18:21:51
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function standardDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
         $standardPid = $request->input('standardPid',0);
+        $examId = $request->input('examId',0);
+        $subjectId = $request->input('subjectId',0);
+        //验证
+        $this->validate($request, [
+            'examId' => 'required|integer',
+            'subjectId' => 'required|integer',
+            'standardPid' => 'required|integer'
+        ]);
+        
         //查询考核点分析所需数据
-        $result = $subjectStatisticsRepositories->GetStandardDetails($standardPid);//558
-        //所点击的考核点的子考核点对应的数据
-        $datainfo=[];
-        $content = '';//考核点
-        $grade = '';//分数
-        if(count($result)>0){
-            foreach($result as $k=>$v){
-                $datainfo[$k]['number'] = $k+1;//序号
-                $datainfo[$k]['content'] = $v->content;//考核内容
-                $datainfo[$k]['score'] = $v->score; //总分
-                $datainfo[$k]['grade'] = $v->grade; //成绩
+        $result = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(361,88,788);//558
 
-                if($content){
-                    $content .= ','.$v->content;
-                    $grade .= ','.$v->grade;
-                }else{
-                    $content .= $v-> content;
-                    $grade .= $v->grade;
+        $datas = [];
+        $number = 1;//序号
+        //重构数组
+        if(!empty($result)){
+            foreach($result as $k => $v){
+                if($k>=1){
+                    //证明是同一个考核点下的子考核点
+                    if($result[$k]['standard_id'] == $result[$k-1]['standard_id']){
+                        continue;
+                    }
                 }
+
+                //统计该考核点的人数
+                $result[$k]['studentCount'] = 0;
+                //统计该考核点的总分数
+                $result[$k]['studentTotalScore'] = 0;
+                //统计该考核点的平均分数
+                $result[$k]['studentAvgScore'] = 0;
+                //统计该考核点的合格人数
+                $result[$k]['studentQualifiedCount'] = 0;
+                //统计该考核点的合格率
+                $result[$k]['studentQualifiedPercentage'] = 0;
+                foreach($result as $key => $val){
+                    //证明是同一个考核点下的子考核点
+                    if($v['standard_id'] == $val['standard_id']){
+                        $result[$k]['studentCount'] = $result[$k]['studentCount']+1;
+                        $result[$k]['studentTotalScore'] = $result[$k]['studentTotalScore']+$val['score'];
+                        if($val['Zscore'] != 0){
+                            if($val['score']/$val['Zscore'] >= 0.6){
+                                $result[$k]['studentQualifiedCount'] = $result[$k]['studentQualifiedCount']+1;
+                            }
+                        }
+
+                    }
+                }
+                //计算该考核点的平均分数
+                $result[$k]['studentAvgScore'] = sprintf("%.2f",$result[$k]['studentTotalScore']/$result[$k]['studentCount']);
+                //计算该考核点的合格率
+                $result[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$result[$k]['studentQualifiedCount']/$result[$k]['studentCount'])*100;
+                //获取该考核点名称
+                $content = SubjectItem::where('id','=',$v['standard_id'])->select('content')->first();
+
+                $datas[] = [
+                    'number'               => $number++,//序号
+                    'standardContent'     => !empty($content)?$content['content']:'-',//考核点名称
+                    'id'                   => $v['standard_id'],//评分标准父编号
+                    'scoreAvg'             => $result[$k]['studentAvgScore'],//平均成绩
+                    'studentQuantity'     => $result[$k]['studentCount'],//考试人数
+                    'qualifiedPass'       => $result[$k]['studentQualifiedPercentage'].'%',//合格率
+                ];
             }
         }
-        $StrList = [
-            'content' => $content,
-            'grade' => $grade,
-        ];
+
         if ($request->ajax()) {
-            return $this->success_data(['datainfo'=>$datainfo,'StrList'=>$StrList]);
+            return $this->success_data(['datainfo'=>$datas]);
         }
     }
 

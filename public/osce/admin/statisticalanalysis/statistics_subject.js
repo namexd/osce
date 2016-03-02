@@ -47,9 +47,21 @@ function subject_statistics(){
     var ajaxUrl = pars.ajaxUrl;
     var exam_id = examObj.val();
     var jumpUrl = pars.jumpUrl;
-    function ajax(id,exam_name){
+    var getStorage = localStorage.getItem("session");
+    if(getStorage){
+        getStorage =JSON.parse(getStorage);
+        exam_id=getStorage.exam_id;
+        exam_name=getStorage.exam_name;
+        examObj.children().each(function(){
+            if(exam_id==$(this).val()){
+                $(this).attr("selected",true);
+            }
+        });
+        $subId=exam_id;//如果存在缓存，则保留之前的搜索条件
+    }
+    function ajax(exam_id,exam_name){
         $.ajax({
-            url:ajaxUrl+'?id='+id,
+            url:ajaxUrl+'?id='+exam_id,
             type:'get',
             cache:false,
             success:function(res){
@@ -60,7 +72,7 @@ function subject_statistics(){
                 $(res.data.list).each(function(){
                     //拼接URL 链接
                     var url = '';
-                    url = jumpUrl+'?exam_id='+id+'&subject_id='+this.subjectId+'&exam='+exam_name+'&subject='+this.title+'&avg_score='+this.scoreAvg+'&avg_time='+this.timeAvg;
+                    url = jumpUrl+'?exam_id='+exam_id+'&subject_id='+this.subjectId+'&exam='+exam_name+'&subject='+this.title+'&avg_score='+this.scoreAvg+'&avg_time='+this.timeAvg;
                     $(".subjectBody").append('<tr>' +
                         '<td>'+this.number+'</td>' +
                         '<td>'+this.title+'</td>' +
@@ -84,13 +96,14 @@ function subject_statistics(){
     $("#search").click(function(){
         var exam_id = $(".subject_select option:selected").val();
         exam_name = $(".subject_select option:selected").html();
+        var pageName = "subject_statistics";
+        setStorage(pageName,exam_id,exam_name);
         ajax(exam_id,exam_name);
     });
 }
 //科目难度分析
 function subject_level(){
     function echartsSubject(timeStr,passStr){//科目成绩分析。
-
         var e = echarts.init(document.getElementById("echarts-Subject")),
             a = {
                 tooltip: {
@@ -136,6 +149,18 @@ function subject_level(){
     var subject_id = examObj.val();
     var subject_name = $(".subject_select option:selected").html();
     var jumpUrl = pars.jumpUrl;
+    var getStorage = localStorage.getItem("session1");
+    if(getStorage){
+        getStorage =JSON.parse(getStorage);
+        id = getStorage.id;
+        subject_name = getStorage.subject_name;
+        examObj.children().each(function(){
+            if(id==$(this).val()){
+                $(this).attr("selected",true);
+            }
+        });
+        $subId = id;
+    }
     function ajax(id,subject_name){
         $.ajax({
             url:ajaxUrl+'?id='+id,
@@ -173,10 +198,11 @@ function subject_level(){
     $("#search").click(function(){
         var id = $(".subject_select").val();
         subject_name = $(".subject_select option:selected").html();
+        var pageName = "subject_level";
+        setStorage(pageName,id,subject_name);
         ajax(id,subject_name);
     });
-};
-
+}
 //考站成绩分析
 function examation_statistics(){
     //图表插件
@@ -317,3 +343,23 @@ function statistics_check(){
         ajax(examId,subjectId);
     });
 }
+//本地存储
+function setStorage(pageName,setId,setName,setId2,setName2){
+    //科目成绩分析存储
+    if(pageName=="subject_statistics"){
+        var session = {};
+        session.pageName = pageName;
+        session.exam_id = setId;
+        session.exam_name = setName;
+        localStorage.setItem("session",JSON.stringify(session));//设置本地存储
+    }
+    //科目难度分析存储
+    if(pageName=="subject_level"){
+        var session1 = {};
+        session1.pageName = pageName;
+        session1.id = setId;
+        session1.subject_name = setName;
+        localStorage.setItem("session1",JSON.stringify(session1));//设置本地存储
+    }
+}
+
