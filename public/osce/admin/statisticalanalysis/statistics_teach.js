@@ -1,0 +1,145 @@
+/**
+ * Created by Administrator on 2016/2/29 bywulengmei
+ * 统计分析
+ */
+var pars;
+$(function(){
+    pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
+    switch(pars.pagename){
+        case "statistics_teach_score":statistics_teach_score();break;//教学成绩分析
+        case "teach_detail":teach_detail();break;//教学成绩分析详情
+    }
+});
+
+//教学成绩分析
+function statistics_teach_score(){
+    //默认加载select
+    var $selectId = $(".exam_select").val();
+    function select(selectId){
+        $(".student_select").empty();
+        var url ='/osce/admin/testscores/ajax-get-tester';
+        $.ajax({
+            url:url+'?examid='+selectId,
+            type:"post",
+            cache:false,
+            async:false,
+            success:function(res){
+                $(res).each(function(){
+                    $(".student_select").append('<option value="'+this.id+'">'+this.name+'</option>');
+                });
+            }
+        })
+    }
+    select($selectId);
+    //筛选联动
+    $(".exam_select").change(function(){
+        var id = $(this).val();
+        select(id);
+    });
+    var $studentId = $(".student_select").val();
+    function echartsSubject(subStr,studentScoreStr,scoreAvgStr){//科目成绩分析。
+        var h = echarts.init(document.getElementById("echarts-Subject")),
+            d = {
+                tooltip: {
+                    trigger: "axis"
+                },
+                legend: {
+                    orient: "vertical",
+                    x: "right",
+                    y: "bottom",
+                    data: ["考生成绩", "平均分"]
+                },
+                polar: [{
+                    indicator: subStr
+                }],
+                calculable: !0,
+                series: [{
+                    name: "考生成绩 vs 平均分",
+                    type: "radar",
+                    data: [{
+                        value: studentScoreStr,
+                        name: "考生成绩"
+                    },
+                        {
+                            value: scoreAvgStr,
+                            name: "平均分"
+                        }]
+                }]
+            };
+        h.setOption(d);
+    }
+    //默认加载最近一次考试
+    function ajax(examId,studentId){
+        var url = '/osce/admin/testscores/ajax-get-subject';
+        $.ajax({
+            url:url+'?examid='+examId+'&student_id='+studentId,
+            type:"get",
+            cache:false,
+            success:function(res){
+                $(".subjectBody").empty();
+                var scoreAvgStr = [];
+                var studentScoreStr = [];
+                var subjectStr = [];
+                var subStr = [];
+                var singledata = res.singledata;
+                var stuname = $(".student_select option:selected").html();
+                var scoreAvg = res.avgdata;
+                $(res.singledata).each(function(){
+                    subjectStr.push(this.title);
+
+                });
+                $(res.subject).each(function(i){
+                    subStr.push({
+                        text: this.title,
+                        max: this.score
+                    });
+                    if(singledata[i]){
+                        studentScoreStr.push(Number(singledata[i]['score']));
+                    }else{
+                        studentScoreStr.push(0);
+                    }
+                    if(scoreAvg[i]){
+                        scoreAvgStr.push(Number(scoreAvg[i]['scoreAvg']));
+                    }else{
+                        scoreAvgStr.push(0);
+                    }
+
+
+                });
+
+                $(res.list).each(function(i){
+                    $(".subjectBody").append('<tr>' +
+                        '<td>'+( i+1 )+'</td>' +
+                        '<td>'+this.title+'</td>' +
+                        '<td>'+this.mins+'</td>' +
+                        '<td>'+this.timeAvg+'</td>' +
+                        '<td>'+this.scoreAvg+'</td>' +
+                        '<td>'+this.time+'</td>' +
+                        '<td>'+this.score+'</td>' +
+                        '<td>' +
+                        '<a href="/osce/admin/testscores/student-subject-list?examid='+examId+'&stuname='+stuname+'&subject='+this.title+'&student_id='+studentId+'&subid='+this.id+'">' +
+                        '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
+                        '</a>' +
+                        '<a href="/osce/admin/exam/exam-result-detail?id='+this.result_id+'">' +
+                        '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
+                        '</a>' +
+                        '</td></tr>')
+                });
+                if(studentScoreStr){echartsSubject(subStr,studentScoreStr,scoreAvgStr);}
+            }
+        })
+    }
+    ajax($selectId,$studentId);
+    //筛选
+    $("#search").click(function(){
+        var $studentId = $(".student_select option:selected").val();
+        ajax($selectId,$studentId);
+    });
+}
+//教学成绩分析详情
+function teach_detail(){
+
+}
+
+
+
