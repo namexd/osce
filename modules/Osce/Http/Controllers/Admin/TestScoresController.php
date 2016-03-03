@@ -277,8 +277,8 @@ class TestScoresController  extends CommonController
             'datalist' => $datalist,
             'teacherStr' => trim($teacherStr,','),
             'avgStr' => trim($avgStr,','),
-            'maxScore' => $maxScore,
-            'minScore' => $minScore
+            'maxScore' => trim($maxScore,','),
+            'minScore' => trim($minScore,',')
         ];
         return $this->success_data(['data'=>$data]);
     }
