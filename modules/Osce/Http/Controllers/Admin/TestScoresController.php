@@ -265,13 +265,12 @@ class TestScoresController  extends CommonController
             if($v->avgScore){
                 $avgStr .= sprintf('%.1f',$v->avgScore).',';
             }
-
             if($v->maxScore){
-                $maxScore .= $v->$maxScore.',';
+                $maxScore .= $v->maxScore.',';
             }
 
             if($v->minScore){
-                $minScore .= $v->$minScore.',';
+                $minScore .= $v->minScore.',';
             }
         }
         $data = [
